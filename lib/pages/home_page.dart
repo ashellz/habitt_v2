@@ -5,6 +5,9 @@ import 'package:habitt/pages/main%20pages/habits_page.dart';
 import 'package:habitt/pages/main%20pages/settings_page.dart';
 import 'package:habitt/pages/main%20pages/stats_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/get_capitalized_first.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,6 +29,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final colorProvider = context.watch<ColorProvider>();
+    final Color darkerStandardColor =
+        colorProvider.colorScheme.darkerStandardColor;
 
     return Scaffold(
       body: AnimatedSwitcher(
@@ -43,14 +49,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: const TextStyle(
-            fontFamily: "PP Neue Montreal",
-            color: Color(0xFF212121),
+          selectedLabelStyle: TextStyle(
+            color: darkerStandardColor,
             fontSize: 12,
           ),
           unselectedLabelStyle: const TextStyle(
-            fontFamily: "PP Neue Montreal",
-            color: Color(0xFF212121),
+            color: Color(0xFF212529),
             fontSize: 12,
           ),
           currentIndex: _currentIndex,
@@ -66,14 +70,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 transitionBuilder:
                     (child, animation) =>
                         FadeTransition(opacity: animation, child: child),
-                child: SvgPicture.asset(
+                child: SizedBox(
                   key: ValueKey<bool>(_currentIndex == 0),
-                  _currentIndex == 0
-                      ? "assets/images/svg/task-selected.svg"
-                      : "assets/images/svg/task-unselected.svg",
+                  height: 20,
+                  width: 20,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/habits.svg",
+                    colorFilter: ColorFilter.mode(
+                      _currentIndex == 0
+                          ? darkerStandardColor
+                          : Color(0xFF212529),
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
-              label: localizations.habits,
+              label: capitalizeFirst(localizations.habits),
             ),
             BottomNavigationBarItem(
               icon: AnimatedSwitcher(
@@ -81,11 +93,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 transitionBuilder:
                     (child, animation) =>
                         FadeTransition(opacity: animation, child: child),
-                child: SvgPicture.asset(
+                child: SizedBox(
                   key: ValueKey<bool>(_currentIndex == 1),
-                  _currentIndex == 1
-                      ? "assets/images/svg/dashboard-selected.svg"
-                      : "assets/images/svg/dashboard-unselected.svg",
+                  height: 20,
+                  width: 20,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/calendar.svg",
+                    colorFilter: ColorFilter.mode(
+                      _currentIndex == 1
+                          ? darkerStandardColor
+                          : Color(0xFF212529),
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
               label: localizations.calendar,
@@ -96,11 +116,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 transitionBuilder:
                     (child, animation) =>
                         FadeTransition(opacity: animation, child: child),
-                child: SvgPicture.asset(
+                child: SizedBox(
                   key: ValueKey<bool>(_currentIndex == 2),
-                  _currentIndex == 2
-                      ? "assets/images/svg/favorite-selected.svg"
-                      : "assets/images/svg/favorite-unselected.svg",
+                  height: 20,
+                  width: 20,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/stats.svg",
+                    colorFilter: ColorFilter.mode(
+                      _currentIndex == 2
+                          ? darkerStandardColor
+                          : Color(0xFF212529),
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
               label: localizations.stats,
@@ -111,11 +139,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 transitionBuilder:
                     (child, animation) =>
                         FadeTransition(opacity: animation, child: child),
-                child: SvgPicture.asset(
+                child: SizedBox(
                   key: ValueKey<bool>(_currentIndex == 3),
-                  _currentIndex == 3
-                      ? "assets/images/svg/settings-selected.svg"
-                      : "assets/images/svg/settings-unselected.svg",
+                  height: 20,
+                  width: 20,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/settings.svg",
+                    colorFilter: ColorFilter.mode(
+                      _currentIndex == 3
+                          ? darkerStandardColor
+                          : Color(0xFF212529),
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
               label: localizations.settings,
