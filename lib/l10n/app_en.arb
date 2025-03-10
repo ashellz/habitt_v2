@@ -1,0 +1,15 @@
+{
+    "habits": "habits",
+    "habit": "habit",
+    "calendar": "Calendar",
+    "stats": "Stats",
+    "settings": "Settings",
+    "hello": "Hello",
+    "all": "All",
+    "anyTime": "Any time",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "completed": "Completed",
+    "notCompleted": "Not completed"
+}

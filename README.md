@@ -1,4 +1,4 @@
-# habitt_v2
+# habitt
 
 A new Flutter project.
 
