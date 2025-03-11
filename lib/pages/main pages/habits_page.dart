@@ -19,7 +19,6 @@ class _HabitsPageState extends State<HabitsPage> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final colorProvider = context.watch<ColorProvider>();
-    final categoryProvider = context.watch<CategoryProvider>();
 
     return Scaffold(
       body: DefaultTextStyle(
@@ -28,18 +27,8 @@ class _HabitsPageState extends State<HabitsPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ListView(
-              children: [
-                Greeting(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Row(
-                    children: [
-                      for (final category in categoryProvider.categories)
-                        SelectCategoryWidget(category: category),
-                    ],
-                  ),
-                ),
-              ],
+              physics: BouncingScrollPhysics(),
+              children: [Greeting(), CategoriesList()],
             ),
           ),
         ),
@@ -48,10 +37,87 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 }
 
+class CategoriesList extends StatefulWidget {
+  const CategoriesList({super.key});
+
+  @override
+  State<CategoriesList> createState() => _CategoriesListState();
+}
+
+class _CategoriesListState extends State<CategoriesList> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToSelectedCategory();
+    });
+  }
+
+  void _scrollToSelectedCategory() {
+    final categoryProvider = context.read<CategoryProvider>();
+    final selectedId = categoryProvider.selectedCategoryId;
+    final categories = categoryProvider.categories;
+
+    if (_scrollController.hasClients && categories.isNotEmpty) {
+      int selectedIndex = categories.indexWhere((c) => c.id == selectedId);
+      if (selectedIndex != -1) {
+        // Estimate position by multiplying index by item width (assumed 120px)
+        double itemWidth = 120.0; // Adjust based on actual category width
+        double screenWidth = MediaQuery.of(context).size.width;
+        double scrollOffset =
+            (selectedIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+
+        // (selectedIndex * itemWidth) --> Gets to the end of the selected category
+        // (screenWidth / 2) --> Gets to the middle of the screen
+        // (itemWidth / 2) --> Gets to the middle of the category
+
+        _scrollController.animateTo(
+          scrollOffset.clamp(
+            0.0,
+            _scrollController.position.maxScrollExtent,
+          ), // Keep within bounds
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final categoryProvider = context.watch<CategoryProvider>();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: SizedBox(
+        height: 56,
+        child: ListView(
+          controller: _scrollController,
+          physics: const BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (final category in categoryProvider.categories)
+              SelectCategoryWidget(
+                category: category,
+                onTap: () {
+                  categoryProvider.selectCategory(category.id);
+                  _scrollToSelectedCategory();
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SelectCategoryWidget extends StatelessWidget {
-  const SelectCategoryWidget({super.key, required this.category});
+  const SelectCategoryWidget({super.key, required this.category, this.onTap});
 
   final Category category;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +128,7 @@ class SelectCategoryWidget extends StatelessWidget {
     final bool isSelected = category.id == selectedId;
 
     return GestureDetector(
-      onTap: () => categoryProvider.selectCategory(category.id),
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: AnimatedContainer(
@@ -99,7 +165,7 @@ class SelectCategoryWidget extends StatelessWidget {
                     category.name,
                     style: const TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       height: 1,
                     ),
                   ),
