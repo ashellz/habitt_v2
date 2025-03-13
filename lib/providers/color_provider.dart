@@ -3,6 +3,7 @@ import 'package:habitt/models/custom_color_scheme.dart';
 
 class ColorProvider extends ChangeNotifier {
   Color textColor = Color(0xFF212529);
+  Color mutedTextColor = Color(0xFF6C757D);
 
   CustomColorScheme colorScheme = CustomColorScheme(
     disabledColor: Color(0xFFF8F9FA),

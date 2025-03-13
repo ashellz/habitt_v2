@@ -69,7 +69,7 @@ class SelectCategoryWidget extends StatelessWidget {
                 child:
                     isSelected
                         ? Text(
-                          "${category.habits} ${localizations.habits}",
+                          "${category.habits} ${category.habits == 1 ? localizations.habit : localizations.habits}",
                           style: const TextStyle(
                             fontSize: 10,
                             color: Color(0xFF6C757D),
