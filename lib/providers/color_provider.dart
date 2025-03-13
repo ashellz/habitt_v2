@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/custom_color_scheme.dart';
 
 class ColorProvider extends ChangeNotifier {
+  Color textColor = Color(0xFF212529);
+
   CustomColorScheme colorScheme = CustomColorScheme(
     disabledColor: Color(0xFFF8F9FA),
     standardColor: Color(0xFFEDEDED),
