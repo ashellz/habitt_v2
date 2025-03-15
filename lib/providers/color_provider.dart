@@ -12,6 +12,18 @@ class ColorProvider extends ChangeNotifier {
     colorScheme = _green;
   }
 
+  void changeColorScheme(String color) {
+    switch (color) {
+      case "blue":
+        colorScheme = _blue;
+        break;
+      case "green":
+        colorScheme = _green;
+        break;
+    }
+    notifyListeners();
+  }
+
   CustomColorScheme colorScheme = CustomColorScheme(
     disabledColor: Color(0xFFE9F7F1),
     standardColor: Color(0xFFDEF3EA),

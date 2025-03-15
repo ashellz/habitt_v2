@@ -1,0 +1,43 @@
+class Habit {
+  final int id;
+  String name;
+  String description;
+  String iconPath;
+  String category; // Any time, Morning, Afternoon, Evening
+  String tag; // Custom tags
+  bool completed;
+  int amount; // Number of times to do
+  int amountCompleted; // Number of times completed
+  int duration; // How long to do
+  int durationCompleted; // How long has been done
+  int streak;
+
+  Habit({
+    required this.id,
+    required this.name,
+    this.description = "",
+    required this.iconPath,
+    required this.category,
+    this.tag = "No tag",
+    this.completed = false,
+    this.amount = 0,
+    this.amountCompleted = 0,
+    this.duration = 0,
+    this.durationCompleted = 0,
+    this.streak = 0,
+  });
+
+  void updateHabit(Habit habit) {
+    name = habit.name;
+    description = habit.description;
+    iconPath = habit.iconPath;
+    category = habit.category;
+    tag = habit.tag;
+    completed = habit.completed;
+    amount = habit.amount;
+    amountCompleted = habit.amountCompleted;
+    duration = habit.duration;
+    durationCompleted = habit.durationCompleted;
+    streak = habit.streak;
+  }
+}

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/habits_page/categories/select_category_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({super.key});
@@ -54,7 +56,9 @@ class _CategoriesListState extends State<CategoriesList> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
+    final habitProvider = context.watch<HabitProvider>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
@@ -68,8 +72,8 @@ class _CategoriesListState extends State<CategoriesList> {
             SelectCategoryWidget(
               category: Category(
                 id: 0,
-                name: "All",
-                habits: categoryProvider.categories.length,
+                name: localizations.all,
+                habits: habitProvider.habits.length,
               ),
               onTap: () {
                 categoryProvider.selectCategory(0);

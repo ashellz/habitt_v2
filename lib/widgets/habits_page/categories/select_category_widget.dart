@@ -3,6 +3,7 @@ import 'package:habitt/models/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/get_localized_category_name.dart';
 import 'package:provider/provider.dart';
 
 class SelectCategoryWidget extends StatelessWidget {
@@ -54,7 +55,7 @@ class SelectCategoryWidget extends StatelessWidget {
                   duration: const Duration(milliseconds: 150),
                   opacity: isSelected ? 1.0 : 0.5,
                   child: Text(
-                    category.name,
+                    getLocalizedCategoryName(category, localizations),
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
