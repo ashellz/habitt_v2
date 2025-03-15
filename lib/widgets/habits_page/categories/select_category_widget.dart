@@ -3,6 +3,7 @@ import 'package:habitt/models/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/util/get_localized_category_name.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class SelectCategoryWidget extends StatelessWidget {
     final categoryProvider = context.watch<CategoryProvider>();
     final int selectedId = categoryProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
+    final int categoryHabits = getCategoryLength(category, context);
 
     return GestureDetector(
       onTap: onTap,
@@ -70,7 +72,7 @@ class SelectCategoryWidget extends StatelessWidget {
                 child:
                     isSelected
                         ? Text(
-                          "${category.habits} ${category.habits == 1 ? localizations.habit : localizations.habits}",
+                          "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
                           style: const TextStyle(
                             fontSize: 10,
                             color: Color(0xFF6C757D),

@@ -70,11 +70,7 @@ class _CategoriesListState extends State<CategoriesList> {
           scrollDirection: Axis.horizontal,
           children: [
             SelectCategoryWidget(
-              category: Category(
-                id: 0,
-                name: localizations.all,
-                habits: habitProvider.habits.length,
-              ),
+              category: Category(id: 0, name: localizations.all),
               onTap: () {
                 categoryProvider.selectCategory(0);
                 _scrollToSelectedCategory();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
@@ -67,14 +68,18 @@ class HabitCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Category title
-        HabitCategoryTitle(category: category),
+    return Padding(
+      padding: EdgeInsets.only(top: category.id == 1 ? 0 : 8),
+      child: Column(
+        children: [
+          // Category title
+          HabitCategoryTitle(category: category),
 
-        // Category habits
-        HabitWidget(),
-      ],
+          // Category habits
+          HabitWidget(),
+          HabitWidget(),
+        ],
+      ),
     );
   }
 }
@@ -88,7 +93,7 @@ class HabitWidget extends StatelessWidget {
 
     // Main container
     return Container(
-      margin: EdgeInsets.only(top: 4),
+      margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       height: 74,
       width: double.infinity,
@@ -238,6 +243,7 @@ class HabitCategoryTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final localizations = AppLocalizations.of(context)!;
+    final int categoryHabits = getCategoryLength(category, context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,7 +253,7 @@ class HabitCategoryTitle extends StatelessWidget {
           style: TextStyle(color: colorProvider.mutedTextColor),
         ),
         Text(
-          "${category.habits} ${category.habits == 1 ? localizations.habit : localizations.habits}",
+          "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
           style: TextStyle(color: colorProvider.mutedTextColor),
         ),
       ],
