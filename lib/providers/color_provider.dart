@@ -4,8 +4,23 @@ import 'package:habitt/models/custom_color_scheme.dart';
 class ColorProvider extends ChangeNotifier {
   Color textColor = Color(0xFF212529);
   Color mutedTextColor = Color(0xFF6C757D);
+  Color habitColor = Color(0xFFEDEDED);
+  Color iconBackgroundColor = Color(0xFFD9D9D9);
+  Color backgroundColor = Color(0xFFF8F9FA);
+
+  ColorProvider() {
+    colorScheme = _green;
+  }
 
   CustomColorScheme colorScheme = CustomColorScheme(
+    disabledColor: Color(0xFFE9F7F1),
+    standardColor: Color(0xFFDEF3EA),
+    strokeColor: Color(0xFF97B7A5),
+    vividColor: Color(0xFF26B170),
+    darkerStandardColor: Color(0xFF1D8554),
+  );
+
+  final CustomColorScheme _blue = CustomColorScheme(
     disabledColor: Color(0xFFF8F9FA),
     standardColor: Color(0xFFEDEDED),
     strokeColor: Color(0xFF97A5B7),
@@ -13,11 +28,11 @@ class ColorProvider extends ChangeNotifier {
     darkerStandardColor: Color(0xFF01377D),
   );
 
-  final CustomColorScheme _blue = CustomColorScheme(
-    disabledColor: Color(0xFFE6F0FF),
-    standardColor: Color(0xFFCBE0FF),
-    strokeColor: Color(0xFF569BFF),
-    vividColor: Color(0xFF569BFF),
-    darkerStandardColor: Color(0xFF457CCC),
+  final CustomColorScheme _green = CustomColorScheme(
+    disabledColor: Color(0xFFE9F7F1),
+    standardColor: Color(0xFFDEF3EA),
+    strokeColor: Color(0xFF97B7A5),
+    vividColor: Color(0xFF26B170),
+    darkerStandardColor: Color(0xFF1D8554),
   );
 }

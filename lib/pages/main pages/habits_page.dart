@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -67,7 +68,165 @@ class HabitCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [HabitCategoryTitle(category: category)]);
+    return Column(
+      children: [
+        // Category title
+        HabitCategoryTitle(category: category),
+
+        // Category habits
+        HabitWidget(),
+      ],
+    );
+  }
+}
+
+class HabitWidget extends StatelessWidget {
+  const HabitWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorProvider = context.watch<ColorProvider>();
+
+    // Main container
+    return Container(
+      margin: EdgeInsets.only(top: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      height: 74,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: colorProvider.habitColor,
+      ),
+      // Inside of the container
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left side
+          Row(
+            children: [
+              // Icon circle container
+              Container(
+                width: 50,
+                height: 50,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colorProvider.iconBackgroundColor,
+                ),
+                // Icon
+                child: Image.asset("assets/images/icons/compass.png"),
+              ),
+              // Text
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: SizedBox(
+                  width:
+                      MediaQuery.of(context).size.width -
+                      32 - // 32 padding
+                      100 - // 100 on the right
+                      70, // 70 on the left
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Habit name",
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: colorProvider.textColor,
+                        ),
+                      ),
+                      Text(
+                        "Habit description goes here",
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: colorProvider.mutedTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Completion and streak
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 5),
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Stack(
+                    children: [
+                      Image.asset("assets/images/icons/streak.png"),
+                      Center(
+                        child: Transform.translate(
+                          offset: Offset(0, 1.5),
+                          child: FittedBox(
+                            child: Text(
+                              "4",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: colorProvider.textColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Completion
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    stops: [0.6, 0.6],
+                    colors: [
+                      colorProvider.colorScheme.vividColor,
+                      colorProvider.colorScheme.strokeColor,
+                    ],
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "6",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: colorProvider.backgroundColor,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Divider(height: 5, thickness: 2),
+                    ),
+                    Text(
+                      "10",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: colorProvider.backgroundColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 

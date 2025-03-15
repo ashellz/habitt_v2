@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/widgets/habits_page/categories/select_category_widget.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +25,10 @@ class _CategoriesListState extends State<CategoriesList> {
   void _scrollToSelectedCategory() {
     final categoryProvider = context.read<CategoryProvider>();
     final selectedId = categoryProvider.selectedCategoryId;
-    final categories = categoryProvider.categories;
+    List<Category> categories = categoryProvider.categories;
 
     if (_scrollController.hasClients && categories.isNotEmpty) {
-      int selectedIndex = categories.indexWhere((c) => c.id == selectedId);
+      int selectedIndex = categories.indexWhere((c) => c.id == selectedId) + 1;
       if (selectedIndex != -1) {
         // Estimate position by multiplying index by item width (assumed 120px)
         double itemWidth = 120.0; // Adjust based on actual category width
@@ -64,6 +65,17 @@ class _CategoriesListState extends State<CategoriesList> {
           physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           children: [
+            SelectCategoryWidget(
+              category: Category(
+                id: 0,
+                name: "All",
+                habits: categoryProvider.categories.length,
+              ),
+              onTap: () {
+                categoryProvider.selectCategory(0);
+                _scrollToSelectedCategory();
+              },
+            ),
             for (final category in categoryProvider.categories)
               SelectCategoryWidget(
                 category: category,
