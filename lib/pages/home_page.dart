@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/pages/main%20pages/calendar_page.dart';
-import 'package:habitt/pages/main%20pages/habits_page.dart';
-import 'package:habitt/pages/main%20pages/settings_page.dart';
-import 'package:habitt/pages/main%20pages/stats_page.dart';
+import 'package:habitt/pages/main_pages/calendar_page.dart';
+import 'package:habitt/pages/main_pages/habits_page.dart';
+import 'package:habitt/pages/main_pages/settings_page.dart';
+import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_capitalized_first.dart';

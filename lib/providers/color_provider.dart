@@ -7,9 +7,11 @@ class ColorProvider extends ChangeNotifier {
   Color habitColor = Color(0xFFEDEDED);
   Color iconBackgroundColor = Color(0xFFD9D9D9);
   Color backgroundColor = Color(0xFFF8F9FA);
+  Color standardColor = Color(0xFFEDEDED);
+  Color disabledColor = Color(0xFFF8F9FA);
 
   ColorProvider() {
-    colorScheme = _green;
+    colorScheme = _blue;
   }
 
   void changeColorScheme(String color) {
@@ -25,16 +27,16 @@ class ColorProvider extends ChangeNotifier {
   }
 
   CustomColorScheme colorScheme = CustomColorScheme(
-    disabledColor: Color(0xFFE9F7F1),
-    standardColor: Color(0xFFDEF3EA),
-    strokeColor: Color(0xFF97B7A5),
-    vividColor: Color(0xFF26B170),
-    darkerStandardColor: Color(0xFF1D8554),
+    disabledColor: Color(0xFFF8F9FA),
+    standardColor: Color(0xFFEDEDED),
+    strokeColor: Color(0xFF97A5B7),
+    vividColor: Color(0xFF01377D),
+    darkerStandardColor: Color(0xFF01377D),
   );
 
   final CustomColorScheme _blue = CustomColorScheme(
-    disabledColor: Color(0xFFF8F9FA),
-    standardColor: Color(0xFFEDEDED),
+    disabledColor: Color(0xFFE6EBF2),
+    standardColor: Color(0xFFE9EBF8),
     strokeColor: Color(0xFF97A5B7),
     vividColor: Color(0xFF01377D),
     darkerStandardColor: Color(0xFF01377D),

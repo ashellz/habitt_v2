@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
+import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
@@ -25,7 +26,10 @@ class _HabitsPageState extends State<HabitsPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: colorProvider.colorScheme.darkerStandardColor,
-        onPressed: () {},
+        onPressed:
+            () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => AddHabitPage())),
         child: Icon(Icons.add, color: Colors.white),
       ),
       body: DefaultTextStyle(
