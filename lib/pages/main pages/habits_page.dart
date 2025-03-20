@@ -20,7 +20,14 @@ class HabitsPage extends StatefulWidget {
 class _HabitsPageState extends State<HabitsPage> {
   @override
   Widget build(BuildContext context) {
+    final ColorProvider colorProvider = context.watch<ColorProvider>();
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: colorProvider.colorScheme.darkerStandardColor,
+        onPressed: () {},
+        child: Icon(Icons.add, color: Colors.white),
+      ),
       body: DefaultTextStyle(
         style: TextStyle(color: Color(0xFF212529)),
         child: GradientBackground(
@@ -33,6 +40,7 @@ class _HabitsPageState extends State<HabitsPage> {
                 CategoriesList(),
                 HabitsCompletedWidget(),
                 Habits(),
+                SizedBox(height: 80),
               ],
             ),
           ),
