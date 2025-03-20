@@ -7,7 +7,18 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CategoriesList extends StatefulWidget {
-  const CategoriesList({super.key});
+  const CategoriesList({
+    super.key,
+    this.topPadding = 16,
+    this.standardColor = false,
+    this.showAll = true,
+    this.habitsCount = true,
+  });
+
+  final double topPadding;
+  final bool standardColor;
+  final bool showAll;
+  final bool habitsCount;
 
   @override
   State<CategoriesList> createState() => _CategoriesListState();
@@ -61,7 +72,7 @@ class _CategoriesListState extends State<CategoriesList> {
     final habitProvider = context.watch<HabitProvider>();
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
+      padding: EdgeInsets.only(top: widget.topPadding),
       child: SizedBox(
         height: 56,
         child: ListView(
@@ -69,15 +80,20 @@ class _CategoriesListState extends State<CategoriesList> {
           physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           children: [
-            SelectCategoryWidget(
-              category: Category(id: 0, name: localizations.all),
-              onTap: () {
-                categoryProvider.selectCategory(0);
-                _scrollToSelectedCategory();
-              },
-            ),
+            if (widget.showAll)
+              SelectCategoryWidget(
+                standardColor: widget.standardColor,
+                habitsCount: widget.habitsCount,
+                category: Category(id: 0, name: localizations.all),
+                onTap: () {
+                  categoryProvider.selectCategory(0);
+                  _scrollToSelectedCategory();
+                },
+              ),
             for (final category in categoryProvider.categories)
               SelectCategoryWidget(
+                standardColor: widget.standardColor,
+                habitsCount: widget.habitsCount,
                 category: category,
                 onTap: () {
                   categoryProvider.selectCategory(category.id);

@@ -11,5 +11,7 @@
     "afternoon": "Afternoon",
     "evening": "Evening",
     "completed": "Completed",
-    "notCompleted": "Not completed"
+    "notCompleted": "Not completed",
+    "selected": "Selected",
+    "newHabit": "New Habit"
 }

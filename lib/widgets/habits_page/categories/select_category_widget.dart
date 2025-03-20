@@ -8,15 +8,24 @@ import 'package:habitt/util/get_localized_category_name.dart';
 import 'package:provider/provider.dart';
 
 class SelectCategoryWidget extends StatelessWidget {
-  const SelectCategoryWidget({super.key, required this.category, this.onTap});
+  const SelectCategoryWidget({
+    super.key,
+    required this.category,
+    this.onTap,
+    required this.habitsCount,
+    required this.standardColor,
+  });
 
   final Category category;
   final VoidCallback? onTap;
+  final bool habitsCount;
+  final bool standardColor;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final colorScheme = context.watch<ColorProvider>().colorScheme;
+    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final colorScheme = colorProvider.colorScheme;
     final categoryProvider = context.watch<CategoryProvider>();
     final int selectedId = categoryProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
@@ -32,7 +41,11 @@ class SelectCategoryWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color:
                 isSelected
-                    ? colorScheme.standardColor
+                    ? standardColor
+                        ? colorProvider.standardColor
+                        : colorScheme.standardColor
+                    : standardColor
+                    ? colorProvider.disabledColor
                     : colorScheme.disabledColor,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -72,7 +85,9 @@ class SelectCategoryWidget extends StatelessWidget {
                 child:
                     isSelected
                         ? Text(
-                          "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
+                          habitsCount
+                              ? "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}"
+                              : localizations.selected,
                           style: const TextStyle(
                             fontSize: 10,
                             color: Color(0xFF6C757D),
