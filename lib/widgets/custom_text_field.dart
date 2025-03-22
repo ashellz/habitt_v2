@@ -83,6 +83,7 @@ class CustomTextField extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: colorProvider.textColor,
           ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: title,
         ),
       ),

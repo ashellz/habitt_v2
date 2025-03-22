@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,16 +26,18 @@ class SelectHabitTypeWidget extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width - 40;
 
     return GestureDetector(
+      // Used for selecting the widget
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.only(right: type == HabitType.amount ? 8 : 0),
         child: AnimatedContainer(
           width:
+              // Only works when in a row with one more of this widget
               selectedType == HabitType.none
                   ? screenWidth / 2
                   : isSelected
-                  ? screenWidth / 1.5
-                  : screenWidth / 3,
+                  ? screenWidth / 1.75
+                  : screenWidth / 2.35,
           duration: const Duration(milliseconds: 150),
           curve: Curves.decelerate,
           decoration: BoxDecoration(
@@ -57,48 +58,53 @@ class SelectHabitTypeWidget extends StatelessWidget {
           height: 56,
           child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AnimatedAlign(
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.decelerate,
-                    alignment:
-                        isSelected ? Alignment.center : Alignment.centerLeft,
-                    child: AnimatedOpacity(
+              // Expanded used for alignment
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedAlign(
                       duration: const Duration(milliseconds: 150),
-                      opacity: isSelected ? 1.0 : 0.5,
-                      child: Text(
-                        type == HabitType.amount
-                            ? localizations.amount
-                            : localizations.duration,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          height: 1,
+                      curve: Curves.decelerate,
+                      alignment:
+                          isSelected ? Alignment.centerLeft : Alignment.center,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 150),
+                        opacity: isSelected ? 1.0 : 0.5,
+                        child: FittedBox(
+                          child: Text(
+                            type == HabitType.amount
+                                ? localizations.amount
+                                : localizations.duration,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              height: 1,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.decelerate,
-                    child:
-                        isSelected
-                            ? Text(
-                              localizations.selected,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Color(0xFF6C757D),
-                              ),
-                            )
-                            : const SizedBox.shrink(),
-                  ),
-                ],
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 150),
+                      curve: Curves.decelerate,
+                      child:
+                          isSelected
+                              ? Text(
+                                localizations.selected,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xFF6C757D),
+                                ),
+                              )
+                              : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
               AnimatedContainer(
+                width: isSelected ? 40 : 0,
                 duration: const Duration(milliseconds: 150),
                 curve: Curves.decelerate,
                 child: AnimatedOpacity(
