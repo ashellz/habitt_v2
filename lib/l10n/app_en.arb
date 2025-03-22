@@ -16,5 +16,7 @@
     "newHabit": "New Habit",
     "habitName": "Habit Name",
     "notes": "Notes",
-    "moreOptions": "More options"
+    "moreOptions": "More options",
+    "amount": "Amount",
+    "duration": "Duration"
 }
