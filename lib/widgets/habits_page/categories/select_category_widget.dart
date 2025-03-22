@@ -51,7 +51,9 @@ class SelectCategoryWidget extends StatelessWidget {
             border: Border.all(
               color:
                   isSelected
-                      ? colorScheme.vividColor
+                      ? standardColor
+                          ? colorScheme.strokeColor
+                          : colorScheme.vividColor
                       : colorScheme.standardColor,
               width: 2,
             ),
