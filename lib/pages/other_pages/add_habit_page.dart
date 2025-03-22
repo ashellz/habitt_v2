@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/main_pages/habits_page.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -8,8 +9,23 @@ import 'package:habitt/widgets/select_habit_type_options.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddHabitPage extends StatelessWidget {
+class AddHabitPage extends StatefulWidget {
   const AddHabitPage({super.key});
+
+  @override
+  State<AddHabitPage> createState() => _AddHabitPageState();
+}
+
+class _AddHabitPageState extends State<AddHabitPage> {
+  @override
+  void initState() {
+    super.initState();
+    final categoryProvider = context.read<CategoryProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      categoryProvider.selectCategory(1);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

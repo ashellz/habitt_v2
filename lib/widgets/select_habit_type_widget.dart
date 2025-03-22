@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
-enum HabitType { amount, duration }
+enum HabitType { none, amount, duration }
 
 class SelectHabitTypeWidget extends StatelessWidget {
   const SelectHabitTypeWidget({
@@ -23,12 +24,19 @@ class SelectHabitTypeWidget extends StatelessWidget {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
     final colorScheme = colorProvider.colorScheme;
     final bool isSelected = type == selectedType;
+    final double screenWidth = MediaQuery.of(context).size.width - 40;
 
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(right: 8.0),
+        padding: EdgeInsets.only(right: type == HabitType.amount ? 8 : 0),
         child: AnimatedContainer(
+          width:
+              selectedType == HabitType.none
+                  ? screenWidth / 2
+                  : isSelected
+                  ? screenWidth / 1.5
+                  : screenWidth / 3,
           duration: const Duration(milliseconds: 150),
           curve: Curves.decelerate,
           decoration: BoxDecoration(
@@ -36,7 +44,6 @@ class SelectHabitTypeWidget extends StatelessWidget {
                 isSelected
                     ? colorProvider.standardColor
                     : colorProvider.disabledColor,
-
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color:
@@ -46,44 +53,66 @@ class SelectHabitTypeWidget extends StatelessWidget {
               width: 2,
             ),
           ),
-          padding: EdgeInsets.fromLTRB(12, 8, isSelected ? 63 : 12, 8),
+          padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
           height: 56,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             children: [
-              AnimatedAlign(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.decelerate,
-                alignment: isSelected ? Alignment.center : Alignment.centerLeft,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 150),
-                  opacity: isSelected ? 1.0 : 0.5,
-                  child: Text(
-                    type == HabitType.amount
-                        ? localizations.amount
-                        : localizations.duration,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      height: 1,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedAlign(
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.decelerate,
+                    alignment:
+                        isSelected ? Alignment.center : Alignment.centerLeft,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 150),
+                      opacity: isSelected ? 1.0 : 0.5,
+                      child: Text(
+                        type == HabitType.amount
+                            ? localizations.amount
+                            : localizations.duration,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          height: 1,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.decelerate,
+                    child:
+                        isSelected
+                            ? Text(
+                              localizations.selected,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Color(0xFF6C757D),
+                              ),
+                            )
+                            : const SizedBox.shrink(),
+                  ),
+                ],
               ),
-              AnimatedSize(
+              Spacer(),
+              AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 curve: Curves.decelerate,
-                child:
-                    isSelected
-                        ? Text(
-                          localizations.selected,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Color(0xFF6C757D),
-                          ),
-                        )
-                        : const SizedBox.shrink(),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 150),
+                  opacity: isSelected ? 1.0 : 0,
+                  curve: Curves.decelerate,
+                  child: Image.asset(
+                    type == HabitType.amount
+                        ? "assets/images/icons/counter.png"
+                        : "assets/images/icons/duration.png",
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
               ),
             ],
           ),
