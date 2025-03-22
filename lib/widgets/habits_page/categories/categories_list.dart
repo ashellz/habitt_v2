@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/habits_page/categories/select_category_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -69,7 +68,6 @@ class _CategoriesListState extends State<CategoriesList> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
-    final habitProvider = context.watch<HabitProvider>();
 
     return Padding(
       padding: EdgeInsets.only(top: widget.topPadding),

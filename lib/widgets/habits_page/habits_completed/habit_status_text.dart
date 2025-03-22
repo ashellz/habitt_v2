@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:habitt/providers/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 class HabitsStatus extends StatelessWidget {
@@ -16,9 +14,6 @@ class HabitsStatus extends StatelessWidget {
     final textColor = colorProvider.textColor;
     final colorScheme = colorProvider.colorScheme;
     final localizations = AppLocalizations.of(context)!;
-
-    final habitsProvider = context.watch<HabitProvider>();
-    final categoryProvider = context.watch<CategoryProvider>();
 
     const numberOfHabits = 1;
 

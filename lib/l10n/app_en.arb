@@ -14,5 +14,7 @@
     "notCompleted": "Not completed",
     "selected": "Selected",
     "newHabit": "New Habit",
-    "habitName": "Habit Name"
+    "habitName": "Habit Name",
+    "notes": "Notes",
+    "moreOptions": "More options"
 }
