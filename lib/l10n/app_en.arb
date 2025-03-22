@@ -13,5 +13,6 @@
     "completed": "Completed",
     "notCompleted": "Not completed",
     "selected": "Selected",
-    "newHabit": "New Habit"
+    "newHabit": "New Habit",
+    "habitName": "Habit Name"
 }
