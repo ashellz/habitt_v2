@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/widgets/select_habit_type_widget.dart';
+import 'package:habitt/widgets/wheel_number_picker.dart';
 
 class SelectHabitTypeOptions extends StatefulWidget {
   const SelectHabitTypeOptions({super.key});
@@ -22,13 +23,18 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
             SelectHabitTypeWidget(
               type: HabitType.amount,
               selectedType: selectedType,
-              onTap:
-                  () => setState(() {
-                    selectedType =
-                        selectedType == HabitType.amount
-                            ? HabitType.none
-                            : HabitType.amount;
-                  }),
+              onTap: () {
+                setState(() {
+                  selectedType =
+                      selectedType == HabitType.amount
+                          ? HabitType.none
+                          : HabitType.amount;
+                });
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => NumberPickerScreen()),
+                );
+              },
             ),
 
             SelectHabitTypeWidget(
