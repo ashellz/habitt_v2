@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/widgets/select_habit_type_widget.dart';
-import 'package:habitt/widgets/wheel_number_picker.dart';
+import 'package:habitt/pages/other_pages/enter_amount_page.dart';
 
 class SelectHabitTypeOptions extends StatefulWidget {
   const SelectHabitTypeOptions({super.key});

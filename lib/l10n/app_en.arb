@@ -18,5 +18,6 @@
     "notes": "Notes",
     "moreOptions": "More options",
     "amount": "Amount",
-    "duration": "Duration"
+    "duration": "Duration",
+    "enterYourAmount": "Enter your amount"
 }

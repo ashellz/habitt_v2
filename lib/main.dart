@@ -38,12 +38,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
+        fontFamily: 'Poppins',
         textTheme: ThemeData.light().textTheme.apply(
           fontFamily: 'Poppins',
-          bodyColor: Color(0xFF212529),
-          displayColor: Color(0xFF212529),
+          bodyColor: const Color(0xFF212529),
+          displayColor: const Color(0xFF212529),
+          decorationColor: const Color(0xFF212529),
         ),
       ),
+      themeMode: ThemeMode.light,
       supportedLocales: L10n.all,
       localizationsDelegates: const [
         AppLocalizations.delegate,
