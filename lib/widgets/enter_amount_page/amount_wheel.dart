@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class InteractiveWheel extends StatefulWidget {
   const InteractiveWheel({
@@ -138,16 +139,15 @@ class GradientPainter extends CustomPainter {
     final double radius = size.width / 1.5;
     final Offset center = Offset(size.width / 2, size.height / 2);
 
+    final Color darkColor = colorProvider.colorScheme.darkerStandardColor;
+
     final LinearGradient saturatedGradient = LinearGradient(
-      colors: [Color(0xFF01377D), Color.fromARGB(255, 38, 101, 194)],
+      colors: [darkColor, darkColor.lighten(10)],
       stops: [0.3, 1.0],
     );
 
     final LinearGradient gradient = LinearGradient(
-      colors: [
-        Color.fromARGB(255, 18, 63, 122),
-        Color.fromARGB(255, 62, 115, 194),
-      ],
+      colors: [darkColor.desaturate(20), darkColor.lighten(10).desaturate(20)],
       stops: [0.3, 1.0],
     );
 

@@ -38,6 +38,7 @@ dependencies:
   provider: ^6.1.2
   flutter_spinbox: ^0.13.1
   circle_wheel: ^0.0.1+2
+  tinycolor2: ^3.0.1
 
 dev_dependencies:
   flutter_test:
