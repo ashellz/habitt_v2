@@ -4,6 +4,7 @@ import 'package:habitt/widgets/enter_amount_page/amount_wheel.dart';
 import 'package:habitt/widgets/enter_amount_page/enter_amount_text.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NumberPickerScreen extends StatefulWidget {
   const NumberPickerScreen({super.key});
@@ -31,6 +32,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   @override
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: GradientBackground(
@@ -47,6 +49,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                       wheelValue.toString(),
                       style: TextStyle(
                         fontSize: 56,
+                        height: 0,
+                        fontWeight: FontWeight.bold,
                         color: colorProvider.textColor,
                       ),
                     ),

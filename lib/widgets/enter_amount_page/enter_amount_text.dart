@@ -15,10 +15,9 @@ class EnterAmountText extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 2,
       child: Text(
-        "${localizations.enterYourAmount}:",
+        "${localizations.enterYourAmount}:".toUpperCase(),
         style: TextStyle(
           fontSize: 38,
-          fontWeight: FontWeight.w600,
           color: colorProvider.colorScheme.darkerStandardColor,
         ),
       ),
