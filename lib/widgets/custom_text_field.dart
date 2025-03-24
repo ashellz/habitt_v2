@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
     this.maxTextLength = 9999,
     this.maxLines = 1,
     this.topPadding = 24,
+    this.onTap,
   });
 
   final String title;
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
   final int maxTextLength;
   final int maxLines;
   final double topPadding;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class CustomTextField extends StatelessWidget {
       padding: EdgeInsets.only(top: topPadding),
       child: TextFormField(
         controller: controller,
+        onTap: () => onTap?.call(),
         keyboardAppearance:
             Theme.of(context).brightness == Brightness.dark
                 ? Brightness.dark
