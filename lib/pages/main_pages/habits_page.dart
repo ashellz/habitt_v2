@@ -4,6 +4,7 @@ import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -28,9 +29,18 @@ class _HabitsPageState extends State<HabitsPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: colorProvider.colorScheme.darkerStandardColor,
         onPressed:
-            () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => AddHabitPage())),
+            () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AddHabitPage()))
+                .whenComplete(() {
+                  // Reset the state provider
+                  if (!context.mounted) return;
+                  final stateProvider = context.read<StateProvider>();
+                  stateProvider.reset();
+
+                  // Reset the category provider
+                  final categoryProvider = context.read<CategoryProvider>();
+                  categoryProvider.selectCategory(0);
+                }),
         child: Icon(Icons.add, color: Colors.white),
       ),
       body: DefaultTextStyle(
@@ -61,6 +71,19 @@ class Habits extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryProvider = context.watch<CategoryProvider>();
+    final habitProvider = context.watch<HabitProvider>();
+    final habits = habitProvider.habits;
+
+    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    if (habits.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: Text(
+          "No habits yet.",
+          style: TextStyle(color: colorProvider.mutedTextColor),
+        ),
+      );
+    }
 
     return Column(
       children: [
@@ -86,6 +109,8 @@ class HabitCategory extends StatelessWidget {
         habitProvider.habits
             .where((habit) => habit.categoryId == category.id)
             .toList();
+
+    if (categoryHabits.isEmpty) return Container();
 
     return Padding(
       padding: EdgeInsets.only(top: category.id == 1 ? 0 : 8),
