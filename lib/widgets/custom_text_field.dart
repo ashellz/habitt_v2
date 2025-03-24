@@ -26,7 +26,7 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: topPadding),
       child: TextFormField(
-        textInputAction: TextInputAction.done,
+        controller: controller,
         keyboardAppearance:
             Theme.of(context).brightness == Brightness.dark
                 ? Brightness.dark

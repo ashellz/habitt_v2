@@ -17,6 +17,9 @@ class AddHabitPage extends StatefulWidget {
 }
 
 class _AddHabitPageState extends State<AddHabitPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +56,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 8),
-                    child: HabitWidget(),
+                    child: HabitWidget(
+                      name: nameController.text,
+                      desc: descController.text,
+                    ),
                   ),
                   CategoriesList(
                     topPadding: 8,
@@ -63,12 +69,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                   CustomTextField(
                     title: localizations.habitName,
-                    controller: TextEditingController(),
+                    controller: nameController,
                   ),
                   CustomTextField(
                     topPadding: 16,
                     title: localizations.notes,
-                    controller: TextEditingController(),
+                    controller: descController,
                     maxLines: 5,
                   ),
                   MoreOptionsText(localizations: localizations),

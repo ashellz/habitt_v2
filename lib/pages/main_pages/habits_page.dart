@@ -3,6 +3,7 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -80,16 +81,20 @@ class HabitCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final habitProvider = context.watch<HabitProvider>();
+    final categoryHabits =
+        habitProvider.habits
+            .where((habit) => habit.categoryId == category.id)
+            .toList();
+
     return Padding(
       padding: EdgeInsets.only(top: category.id == 1 ? 0 : 8),
       child: Column(
         children: [
           // Category title
           HabitCategoryTitle(category: category),
-
-          // Category habits
-          HabitWidget(),
-          HabitWidget(),
+          for (final habit in categoryHabits)
+            HabitWidget(name: habit.name, desc: habit.description),
         ],
       ),
     );
@@ -97,7 +102,10 @@ class HabitCategory extends StatelessWidget {
 }
 
 class HabitWidget extends StatelessWidget {
-  const HabitWidget({super.key});
+  const HabitWidget({super.key, required this.name, required this.desc});
+
+  final String name;
+  final String desc;
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +154,7 @@ class HabitWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Habit name",
+                        name,
                         overflow: TextOverflow.ellipsis,
                         softWrap: false,
                         style: TextStyle(
@@ -155,9 +163,10 @@ class HabitWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Habit description goes here",
+                        desc,
                         overflow: TextOverflow.ellipsis,
                         softWrap: false,
+                        maxLines: 1,
                         style: TextStyle(
                           fontSize: 14,
                           color: colorProvider.mutedTextColor,

@@ -44,7 +44,7 @@ class _CategoriesListState extends State<CategoriesList> {
       int selectedIndex = categories.indexWhere((c) => c.id == selectedId) + 1;
       if (selectedIndex != -1) {
         // Estimate position by multiplying index by item width (assumed 120px)
-        double itemWidth = 120.0; // Adjust based on actual category width
+        double itemWidth = 110.0; // Adjust based on actual category width
         double screenWidth = MediaQuery.of(context).size.width;
         double scrollOffset =
             (selectedIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
