@@ -107,8 +107,13 @@ class _CategoriesListState extends State<CategoriesList> {
               ) {
                 Category category = categoryProvider.categories[index];
 
-                if (!hasHabits[index]) {
-                  return Container();
+                // showAll is used in AddHabitsPage and in this check
+                // it will all categories except "All"
+                if (widget.showAll) {
+                  // Show only categories with habits
+                  if (!hasHabits[index]) {
+                    return Container();
+                  }
                 }
 
                 return SelectCategoryWidget(
