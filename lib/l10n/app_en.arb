@@ -21,5 +21,6 @@
     "duration": "Duration",
     "enterYourAmount": "Enter your amount",
     "times": "times",
-    "edit": "Edit"
+    "edit": "Edit",
+    "youCanPressNumberAbove": "You can also press the number above to change amount"
 }

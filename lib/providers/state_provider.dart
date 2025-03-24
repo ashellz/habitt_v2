@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
 class StateProvider extends ChangeNotifier {
-  int _wheelAmount = 0;
+  int _habitAmount = 0;
+  Duration _habitDuration = Duration.zero;
 
-  set wheelAmount(int value) {
-    _wheelAmount = value;
+  set habitAmount(int value) {
+    _habitAmount = value;
     notifyListeners();
   }
 
-  int get wheelAmount => _wheelAmount;
+  set habitDuration(Duration value) {
+    _habitDuration = value;
+    notifyListeners();
+  }
+
+  int get habitAmount => _habitAmount;
+  Duration get habitDuration => _habitDuration;
 }

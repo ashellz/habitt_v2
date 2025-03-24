@@ -31,9 +31,17 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
                           : HabitType.amount;
                 });
 
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => NumberPickerScreen()),
-                );
+                if (selectedType == HabitType.amount) {
+                  Future.delayed(Duration(milliseconds: 150)).then((value) {
+                    if (context.mounted) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => NumberPickerScreen(),
+                        ),
+                      );
+                    }
+                  });
+                }
               },
             ),
 

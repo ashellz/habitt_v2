@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/enter_amount_page/amount_wheel.dart';
 import 'package:habitt/widgets/enter_amount_page/enter_amount_text.dart';
@@ -15,24 +16,30 @@ class NumberPickerScreen extends StatefulWidget {
 }
 
 class _NumberPickerScreenState extends State<NumberPickerScreen> {
-  int wheelValue = 0;
+  int wheelValue = 2;
 
   void increaseWheelValue() {
-    setState(() {
-      wheelValue++;
-    });
+    if (wheelValue < 10000) {
+      setState(() {
+        wheelValue++;
+      });
+    }
   }
 
   void decreaseWheelValue() {
-    setState(() {
-      wheelValue--;
-    });
+    if (wheelValue > 2) {
+      setState(() {
+        wheelValue--;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
     final localizations = AppLocalizations.of(context)!;
+    final double width = MediaQuery.of(context).size.width;
+    final double offset = width / 4;
 
     return Scaffold(
       body: GradientBackground(
@@ -45,14 +52,90 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     EnterAmountText(colorProvider: colorProvider),
-                    Text(
-                      wheelValue.toString(),
-                      style: TextStyle(
-                        fontSize: 56,
-                        height: 0,
-                        fontWeight: FontWeight.bold,
-                        color: colorProvider.textColor,
+                    // Amount value
+                    GestureDetector(
+                      onTap:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (context) => Dialog(
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    child: SpinBox(
+                                      textInputAction: TextInputAction.done,
+                                      cursorColor: colorProvider.textColor,
+                                      enableInteractiveSelection: true,
+                                      iconColor: WidgetStateProperty.all<Color>(
+                                        colorProvider.textColor,
+                                      ),
+                                      decoration: InputDecoration(
+                                        border: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: colorProvider.standardColor,
+                                        labelStyle: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: colorProvider.textColor,
+                                        ),
+                                        labelText: localizations.amount,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            15.0,
+                                          ),
+                                          borderSide: BorderSide(
+                                            color:
+                                                colorProvider
+                                                    .colorScheme
+                                                    .strokeColor,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            color:
+                                                colorProvider
+                                                    .colorScheme
+                                                    .strokeColor,
+                                          ),
+                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              vertical: 20,
+                                              horizontal: 20,
+                                            ),
+                                      ),
+                                      min: 2,
+                                      max: 9999,
+                                      value: wheelValue.toDouble(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          wheelValue = value.toInt();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                          ),
+                      child: Text(
+                        wheelValue.toString(),
+                        style: TextStyle(
+                          fontSize: 56,
+                          height: 0,
+                          fontWeight: FontWeight.bold,
+                          color: colorProvider.textColor,
+                        ),
                       ),
+                    ),
+                    TipText(
+                      width: width,
+                      localizations: localizations,
+                      colorProvider: colorProvider,
                     ),
                   ],
                 ),
@@ -63,8 +146,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             Stack(
               children: [
                 Positioned(
-                  left: 100,
-                  bottom: -100,
+                  left: offset,
+                  bottom: -offset,
                   child: InteractiveWheel(
                     wheelValue: wheelValue,
                     decreaseWheelValue: decreaseWheelValue,
@@ -75,6 +158,30 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class TipText extends StatelessWidget {
+  const TipText({
+    super.key,
+    required this.width,
+    required this.localizations,
+    required this.colorProvider,
+  });
+
+  final double width;
+  final AppLocalizations localizations;
+  final ColorProvider colorProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width / 2,
+      child: Text(
+        localizations.youCanPressNumberAbove,
+        style: TextStyle(color: colorProvider.textColor),
       ),
     );
   }

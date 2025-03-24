@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:provider/provider.dart';
 
 enum HabitType { none, amount, duration }
@@ -24,6 +25,11 @@ class SelectHabitTypeWidget extends StatelessWidget {
     final colorScheme = colorProvider.colorScheme;
     final bool isSelected = type == selectedType;
     final double screenWidth = MediaQuery.of(context).size.width - 40;
+
+    final stateProvider = context.watch<StateProvider>();
+    final String habitAmount = stateProvider.habitAmount.toString();
+    final String habitDuration =
+        "${stateProvider.habitDuration.inHours}h${stateProvider.habitDuration.inHours % 60}m";
 
     return GestureDetector(
       // Used for selecting the widget
@@ -92,7 +98,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                       child:
                           isSelected
                               ? Text(
-                                localizations.selected,
+                                "${localizations.selected}: ${type == HabitType.amount ? habitAmount : habitDuration}",
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: Color(0xFF6C757D),

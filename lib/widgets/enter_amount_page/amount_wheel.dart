@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:provider/provider.dart';
 
 class InteractiveWheel extends StatefulWidget {
@@ -22,17 +23,10 @@ class InteractiveWheel extends StatefulWidget {
 
 class _InteractiveWheelState extends State<InteractiveWheel>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
   double _rotationAngle = 0.0;
   double _startAngle = 0.0;
   double _previousAngle = 0.0;
   double _cumulativeRotation = 0.0;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   void _onPanStart(DragStartDetails details) {
     _startAngle = _rotationAngle;
@@ -50,10 +44,8 @@ class _InteractiveWheelState extends State<InteractiveWheel>
     final double deltaY = touchPosition.dy - center.dy;
     final double angle = _startAngle + atan2(deltaY, deltaX);
 
-    // Calculate the change in angle (delta)
     final double deltaAngle = angle - _previousAngle;
 
-    // Normalize the delta to handle wrapping around 2 * pi
     final double normalizedDelta = (deltaAngle + pi) % (2 * pi) - pi;
 
     // Step size (in radians) required to increment/decrement the wheel value by 1
@@ -87,6 +79,8 @@ class _InteractiveWheelState extends State<InteractiveWheel>
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final double width = MediaQuery.of(context).size.width;
+    final Size size = Size(width, width);
 
     return GestureDetector(
       onPanStart: _onPanStart,
@@ -95,18 +89,38 @@ class _InteractiveWheelState extends State<InteractiveWheel>
         alignment: Alignment.center,
         children: [
           // Static Gradient (no rotation)
-          CustomPaint(
-            size: Size(400, 400),
-            painter: GradientPainter(colorProvider),
-          ),
+          CustomPaint(size: size, painter: GradientPainter(colorProvider)),
 
           // Rotating Ticks
           Transform.rotate(
             angle: _rotationAngle,
             child: CustomPaint(
-              size: Size(400, 400),
+              size: size,
               painter: TicksPainter(colorProvider),
             ),
+          ),
+
+          // Button
+          IconButton(
+            style: ButtonStyle(
+              shadowColor: WidgetStatePropertyAll(
+                colorProvider.colorScheme.standardColor,
+              ),
+              elevation: WidgetStatePropertyAll(5),
+
+              fixedSize: WidgetStatePropertyAll(size / 5),
+              backgroundColor: WidgetStatePropertyAll(
+                colorProvider.colorScheme.standardColor,
+              ),
+            ),
+            onPressed: () {
+              final stateProvider = context.read<StateProvider>();
+
+              stateProvider.habitAmount = widget.wheelValue;
+
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_forward),
           ),
         ],
       ),
@@ -189,8 +203,8 @@ class TicksPainter extends CustomPainter {
           ..strokeWidth = 1.0
           ..style = PaintingStyle.stroke;
 
-    // Draw 100 ticks around the circle
-    final int numberOfTicks = 100;
+    // Draws 75 ticks around the circle
+    final int numberOfTicks = 75;
     final double tickLength = 10.0;
     for (int i = 0; i < numberOfTicks; i++) {
       final double angle = (2 * pi / numberOfTicks) * i;

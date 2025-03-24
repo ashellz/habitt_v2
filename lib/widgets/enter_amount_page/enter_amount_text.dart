@@ -18,6 +18,7 @@ class EnterAmountText extends StatelessWidget {
         "${localizations.enterYourAmount}:".toUpperCase(),
         style: TextStyle(
           fontSize: 38,
+          height: 1.2,
           color: colorProvider.colorScheme.darkerStandardColor,
         ),
       ),
