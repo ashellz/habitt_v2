@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/habits_page/categories/select_category_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -68,6 +69,18 @@ class _CategoriesListState extends State<CategoriesList> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
+    final habitProvider = context.watch<HabitProvider>();
+    final habitsList = habitProvider.habits;
+    final List<bool> hasHabits = [];
+
+    for (Category category in categoryProvider.categories) {
+      int categoryHabits =
+          habitsList
+              .where((habit) => habit.categoryId == category.id)
+              .toList()
+              .length;
+      hasHabits.add(categoryHabits > 0);
+    }
 
     return Padding(
       padding: EdgeInsets.only(top: widget.topPadding),
@@ -88,16 +101,27 @@ class _CategoriesListState extends State<CategoriesList> {
                   _scrollToSelectedCategory();
                 },
               ),
-            for (final category in categoryProvider.categories)
-              SelectCategoryWidget(
-                standardColor: widget.standardColor,
-                habitsCount: widget.habitsCount,
-                category: category,
-                onTap: () {
-                  categoryProvider.selectCategory(category.id);
-                  _scrollToSelectedCategory();
-                },
-              ),
+            Row(
+              children: List.generate(categoryProvider.categories.length, (
+                index,
+              ) {
+                Category category = categoryProvider.categories[index];
+
+                if (!hasHabits[index]) {
+                  return Container();
+                }
+
+                return SelectCategoryWidget(
+                  standardColor: widget.standardColor,
+                  habitsCount: widget.habitsCount,
+                  category: category,
+                  onTap: () {
+                    categoryProvider.selectCategory(category.id);
+                    _scrollToSelectedCategory();
+                  },
+                );
+              }),
+            ),
           ],
         ),
       ),

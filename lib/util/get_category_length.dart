@@ -6,6 +6,6 @@ import 'package:provider/provider.dart';
 int getCategoryLength(Category category, BuildContext context) {
   final habitProvider = context.watch<HabitProvider>();
   final int categoryHabits =
-      habitProvider.habits.where((h) => h.category == category.name).length;
+      habitProvider.habits.where((h) => h.categoryId == category.id).length;
   return categoryHabits;
 }

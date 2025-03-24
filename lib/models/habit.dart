@@ -3,7 +3,7 @@ class Habit {
   String name;
   String description;
   String iconPath;
-  String category; // Any time, Morning, Afternoon, Evening
+  int categoryId; // Any time, Morning, Afternoon, Evening
   String tag; // Custom tags
   bool completed;
   int amount; // Number of times to do
@@ -17,7 +17,7 @@ class Habit {
     required this.name,
     this.description = "",
     required this.iconPath,
-    required this.category,
+    required this.categoryId,
     this.tag = "No tag",
     this.completed = false,
     this.amount = 0,
@@ -31,7 +31,7 @@ class Habit {
     name = habit.name;
     description = habit.description;
     iconPath = habit.iconPath;
-    category = habit.category;
+    categoryId = habit.categoryId;
     tag = habit.tag;
     completed = habit.completed;
     amount = habit.amount;
