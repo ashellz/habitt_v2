@@ -36,39 +36,47 @@ class _AddHabitPageState extends State<AddHabitPage> {
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ListView(
-            children: [
-              Text(
-                localizations.newHabit,
-                style: TextStyle(
-                  fontSize: 38,
-                  fontWeight: FontWeight.bold,
-                  color: colorProvider.colorScheme.darkerStandardColor,
-                ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView(
+                children: [
+                  Text(
+                    localizations.newHabit,
+                    style: TextStyle(
+                      fontSize: 38,
+                      fontWeight: FontWeight.bold,
+                      color: colorProvider.colorScheme.darkerStandardColor,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: HabitWidget(),
+                  ),
+                  CategoriesList(
+                    topPadding: 8,
+                    showAll: false,
+                    standardColor: true,
+                    habitsCount: false,
+                  ),
+                  CustomTextField(
+                    title: localizations.habitName,
+                    controller: TextEditingController(),
+                  ),
+                  CustomTextField(
+                    topPadding: 16,
+                    title: localizations.notes,
+                    controller: TextEditingController(),
+                    maxLines: 5,
+                  ),
+                  MoreOptionsText(localizations: localizations),
+                  SelectHabitTypeOptions(),
+                ],
               ),
-              Padding(padding: EdgeInsets.only(top: 8), child: HabitWidget()),
-              CategoriesList(
-                topPadding: 8,
-                showAll: false,
-                standardColor: true,
-                habitsCount: false,
-              ),
-              CustomTextField(
-                title: localizations.habitName,
-                controller: TextEditingController(),
-              ),
-              CustomTextField(
-                topPadding: 16,
-                title: localizations.notes,
-                controller: TextEditingController(),
-                maxLines: 5,
-              ),
-              MoreOptionsText(localizations: localizations),
-              SelectHabitTypeOptions(),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
