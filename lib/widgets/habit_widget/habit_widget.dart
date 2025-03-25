@@ -3,10 +3,26 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 class HabitWidget extends StatelessWidget {
-  const HabitWidget({super.key, required this.name, required this.desc});
+  const HabitWidget({
+    super.key,
+    required this.name,
+    required this.desc,
+    required this.amount,
+    required this.duration,
+    required this.amountCompleted,
+    required this.durationCompleted,
+    required this.streak,
+    required this.completed,
+  });
 
   final String name;
   final String desc;
+  final int amount;
+  final int duration;
+  final int amountCompleted;
+  final int durationCompleted;
+  final int streak;
+  final bool completed;
 
   @override
   Widget build(BuildContext context) {
@@ -83,75 +99,214 @@ class HabitWidget extends StatelessWidget {
           // Completion and streak
           Row(
             children: [
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Stack(
-                    children: [
-                      Image.asset("assets/images/icons/streak.png"),
-                      Center(
-                        child: Transform.translate(
-                          offset: Offset(0, 1.5),
-                          child: FittedBox(
-                            child: Text(
-                              "4",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: colorProvider.textColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              if (streak > 0)
+                StreakDisplay(streak: streak, colorProvider: colorProvider),
               // Completion
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    stops: [0.6, 0.6],
-                    colors: [
-                      colorProvider.colorScheme.vividColor,
-                      colorProvider.colorScheme.strokeColor,
-                    ],
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "6",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colorProvider.backgroundColor,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Divider(height: 5, thickness: 2),
-                    ),
-                    Text(
-                      "10",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colorProvider.backgroundColor,
-                      ),
-                    ),
-                  ],
-                ),
+              CompletionDisplay(
+                colorProvider: colorProvider,
+                amount: amount,
+                duration: duration,
+                amountCompleted: amountCompleted,
+                durationCompleted: durationCompleted,
+                completed: completed,
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CompletionDisplay extends StatelessWidget {
+  const CompletionDisplay({
+    super.key,
+    required this.colorProvider,
+    required this.amount,
+    required this.duration,
+    required this.amountCompleted,
+    required this.durationCompleted,
+    required this.completed,
+  });
+
+  final ColorProvider colorProvider;
+  final int amount;
+  final int duration;
+  final int amountCompleted;
+  final int durationCompleted;
+  final bool completed;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget centerIcon() {
+      return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        transitionBuilder:
+            (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+        child: Center(
+          key: ValueKey<bool>(completed),
+          child: Icon(
+            completed ? Icons.check : Icons.close,
+            color: colorProvider.backgroundColor,
+          ),
+        ),
+      );
+    }
+
+    Widget getCompletionWidget() {
+      if (amount > 0) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              amountCompleted.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: colorProvider.backgroundColor,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Divider(height: 5, thickness: 2),
+            ),
+            Text(
+              amount.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: colorProvider.backgroundColor,
+              ),
+            ),
+          ],
+        );
+      } else if (duration > 0) {
+        final String durationCopmletedString =
+            "${durationCompleted / 60}h${durationCompleted % 60}m";
+
+        final String durationString = "${duration / 60}h${duration % 60}m";
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              durationCopmletedString,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: colorProvider.backgroundColor,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Divider(height: 5, thickness: 2),
+            ),
+            Text(
+              durationString,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: colorProvider.backgroundColor,
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Container(
+          clipBehavior: Clip.hardEdge,
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: RotatedBox(
+                  quarterTurns: -1,
+                  child: TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.easeInOut,
+                    tween: Tween<double>(begin: 0, end: completed ? 1 : 0),
+                    builder: (context, value, _) {
+                      return LinearProgressIndicator(
+                        value: value,
+                        color: colorProvider.colorScheme.darkerStandardColor,
+                        backgroundColor: colorProvider.colorScheme.strokeColor,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              centerIcon(),
+            ],
+          ),
+        );
+      }
+    }
+
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      height: 50,
+      width: 50,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: RotatedBox(
+              quarterTurns: -1,
+              child: TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                tween: Tween<double>(begin: 0, end: completed ? 1 : 0),
+                builder: (context, value, _) {
+                  return LinearProgressIndicator(
+                    value: value,
+                    color: colorProvider.colorScheme.darkerStandardColor,
+                    backgroundColor: colorProvider.colorScheme.strokeColor,
+                  );
+                },
+              ),
+            ),
+          ),
+          getCompletionWidget(),
+        ],
+      ),
+    );
+  }
+}
+
+class StreakDisplay extends StatelessWidget {
+  const StreakDisplay({
+    super.key,
+    required this.streak,
+    required this.colorProvider,
+  });
+
+  final int streak;
+  final ColorProvider colorProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 5),
+      child: SizedBox(
+        width: 30,
+        height: 30,
+        child: Stack(
+          children: [
+            Image.asset("assets/images/icons/streak.png"),
+            Center(
+              child: Transform.translate(
+                offset: Offset(0, 1.5),
+                child: FittedBox(
+                  child: Text(
+                    "$streak",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: colorProvider.textColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

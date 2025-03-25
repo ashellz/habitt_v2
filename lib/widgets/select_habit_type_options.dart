@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/select_habit_type_widget.dart';
 import 'package:habitt/pages/other_pages/enter_amount_page.dart';
+import 'package:provider/provider.dart';
 
 class SelectHabitTypeOptions extends StatefulWidget {
   const SelectHabitTypeOptions({super.key});
@@ -14,6 +16,8 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   @override
   Widget build(BuildContext context) {
+    final stateProvider = context.watch<StateProvider>();
+
     return Padding(
       padding: EdgeInsets.only(top: 16),
       child: SizedBox(
@@ -24,6 +28,10 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
               type: HabitType.amount,
               selectedType: selectedType,
               onTap: () {
+                if (selectedType == HabitType.amount) {
+                  stateProvider.habitAmount = 0;
+                }
+
                 setState(() {
                   selectedType =
                       selectedType == HabitType.amount
@@ -50,6 +58,10 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
               selectedType: selectedType,
               onTap:
                   () => setState(() {
+                    if (selectedType == HabitType.duration) {
+                      stateProvider.habitDuration = Duration.zero;
+                    }
+
                     selectedType =
                         selectedType == HabitType.duration
                             ? HabitType.none

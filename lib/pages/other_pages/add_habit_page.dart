@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
+import 'package:habitt/widgets/more_options_text.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -69,21 +69,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       color: colorProvider.colorScheme.darkerStandardColor,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: descController,
-                      builder:
-                          (context, value, child) =>
-                              ValueListenableBuilder<TextEditingValue>(
-                                valueListenable: nameController,
-                                builder:
-                                    (context, value, child) => HabitWidget(
-                                      name: value.text,
-                                      desc: descController.text,
-                                    ),
-                              ),
-                    ),
+                  SelectedHabitDisplay(
+                    descController: descController,
+                    nameController: nameController,
+                    amount: stateProvider.habitAmount,
+                    duration: stateProvider.habitDuration.inMinutes,
                   ),
                   CategoriesList(
                     topPadding: 8,
@@ -114,23 +104,41 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 }
 
-class MoreOptionsText extends StatelessWidget {
-  const MoreOptionsText({super.key, required this.localizations});
+class SelectedHabitDisplay extends StatelessWidget {
+  const SelectedHabitDisplay({
+    super.key,
+    required this.descController,
+    required this.nameController,
+    required this.amount,
+    required this.duration,
+  });
 
-  final AppLocalizations localizations;
+  final TextEditingController descController;
+  final TextEditingController nameController;
+  final int amount;
+  final int duration;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 24),
-      child: Row(
-        children: [
-          SvgPicture.asset("assets/images/svg/slider.svg"),
-          Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Text(localizations.moreOptions),
-          ),
-        ],
+      padding: EdgeInsets.only(top: 8),
+      child: ValueListenableBuilder<TextEditingValue>(
+        valueListenable: descController,
+        builder:
+            (context, value, child) => ValueListenableBuilder<TextEditingValue>(
+              valueListenable: nameController,
+              builder:
+                  (context, value, child) => HabitWidget(
+                    name: value.text,
+                    desc: descController.text,
+                    streak: 0,
+                    amount: amount,
+                    duration: duration,
+                    amountCompleted: 0,
+                    durationCompleted: 0,
+                    completed: false,
+                  ),
+            ),
       ),
     );
   }
