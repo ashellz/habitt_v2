@@ -85,7 +85,9 @@ class HabitWidget extends StatelessWidget {
               // Text
               Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: SizedBox(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 150),
+                  height: desc.isEmpty ? 23 : 43,
                   width:
                       MediaQuery.of(context).size.width -
                       32 - // 32 padding
@@ -104,8 +106,11 @@ class HabitWidget extends StatelessWidget {
                           color: colorProvider.textColor,
                         ),
                       ),
-                      if (desc.isNotEmpty)
-                        Text(
+
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 150),
+                        height: desc.isEmpty ? 0 : 20,
+                        child: Text(
                           desc,
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
@@ -115,6 +120,7 @@ class HabitWidget extends StatelessWidget {
                             color: colorProvider.mutedTextColor,
                           ),
                         ),
+                      ),
                     ],
                   ),
                 ),

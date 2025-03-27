@@ -28,10 +28,6 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
               type: HabitType.amount,
               selectedType: selectedType,
               onTap: () {
-                if (selectedType == HabitType.amount) {
-                  stateProvider.habitAmount = 0;
-                }
-
                 setState(() {
                   selectedType =
                       selectedType == HabitType.amount
@@ -39,7 +35,10 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
                           : HabitType.amount;
                 });
 
-                if (selectedType == HabitType.amount) {
+                if (selectedType == HabitType.none) {
+                  stateProvider.habitAmount = 0;
+                } else if (selectedType == HabitType.amount) {
+                  stateProvider.habitDuration = Duration.zero;
                   Future.delayed(Duration(milliseconds: 150)).then((value) {
                     if (context.mounted) {
                       Navigator.of(context).push(
@@ -56,17 +55,20 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
             SelectHabitTypeWidget(
               type: HabitType.duration,
               selectedType: selectedType,
-              onTap:
-                  () => setState(() {
-                    if (selectedType == HabitType.duration) {
-                      stateProvider.habitDuration = Duration.zero;
-                    }
+              onTap: () {
+                setState(() {
+                  selectedType =
+                      selectedType == HabitType.duration
+                          ? HabitType.none
+                          : HabitType.duration;
+                });
 
-                    selectedType =
-                        selectedType == HabitType.duration
-                            ? HabitType.none
-                            : HabitType.duration;
-                  }),
+                if (selectedType == HabitType.none) {
+                  stateProvider.habitDuration = Duration.zero;
+                } else if (selectedType == HabitType.duration) {
+                  stateProvider.habitAmount = 0;
+                }
+              },
             ),
           ],
         ),

@@ -3,10 +3,10 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
-import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
+import 'package:habitt/widgets/selected_habit_display.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -94,44 +94,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class SelectedHabitDisplay extends StatelessWidget {
-  const SelectedHabitDisplay({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final stateProvider = context.watch<StateProvider>();
-    final descController = stateProvider.descController;
-    final nameController = stateProvider.nameController;
-    final amount = stateProvider.habitAmount;
-    final duration = stateProvider.habitDuration.inMinutes;
-    final iconPath = stateProvider.iconPath;
-
-    return Padding(
-      padding: EdgeInsets.only(top: 8),
-      child: ValueListenableBuilder<TextEditingValue>(
-        valueListenable: descController,
-        builder:
-            (context, value, child) => ValueListenableBuilder<TextEditingValue>(
-              valueListenable: nameController,
-              builder:
-                  (context, value, child) => HabitWidget(
-                    name: value.text,
-                    desc: descController.text,
-                    iconPath: iconPath,
-                    streak: 0,
-                    amount: amount,
-                    duration: duration,
-                    amountCompleted: 0,
-                    durationCompleted: 0,
-                    completed: false,
-                    editable: true,
-                  ),
-            ),
       ),
     );
   }
