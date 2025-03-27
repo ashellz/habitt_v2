@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/generated/assets.gen.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,10 @@ class SelectedHabitDisplay extends StatelessWidget {
                   (context, value, child) => HabitWidget(
                     name: value.text,
                     desc: descController.text,
-                    iconPath: iconPath,
+                    iconPath:
+                        iconPath == ""
+                            ? Assets.images.icons.book.path
+                            : iconPath,
                     streak: 0,
                     amount: amount,
                     duration: duration,

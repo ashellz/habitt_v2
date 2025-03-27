@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
-class SaveButton extends StatelessWidget {
-  const SaveButton({super.key, required this.showButton});
+class FloatingBottomButton extends StatelessWidget {
+  const FloatingBottomButton({
+    super.key,
+    required this.showButton,
+    required this.onPressed,
+    required this.label,
+  });
 
   final bool showButton;
+  final Function onPressed;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +26,7 @@ class SaveButton extends StatelessWidget {
         height: 50,
         width: MediaQuery.of(context).size.width - 32,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () => onPressed(),
           style: ElevatedButton.styleFrom(
             backgroundColor: colorProvider.colorScheme.darkerStandardColor,
             shape: const RoundedRectangleBorder(
@@ -27,7 +34,7 @@ class SaveButton extends StatelessWidget {
             ),
           ),
           child: Text(
-            "Save Changes",
+            label,
             style: TextStyle(color: colorProvider.backgroundColor),
           ),
         ),

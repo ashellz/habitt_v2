@@ -270,6 +270,14 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/tie.png
   AssetGenImage get tie => const AssetGenImage('assets/images/icons/tie.png');
 
+  /// File path: assets/images/icons/tooth.png
+  AssetGenImage get tooth =>
+      const AssetGenImage('assets/images/icons/tooth.png');
+
+  /// File path: assets/images/icons/toothbrush.png
+  AssetGenImage get toothbrush =>
+      const AssetGenImage('assets/images/icons/toothbrush.png');
+
   /// File path: assets/images/icons/walk.png
   AssetGenImage get walk => const AssetGenImage('assets/images/icons/walk.png');
 
@@ -375,6 +383,8 @@ class $AssetsImagesIconsGen {
         streak,
         swim,
         tie,
+        tooth,
+        toothbrush,
         walk,
         water,
         water2,

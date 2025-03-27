@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/generated/assets.gen.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
+import 'package:habitt/widgets/floating_bottom_button.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
@@ -30,6 +34,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
       final localizations = AppLocalizations.of(context)!;
       categoryProvider.selectCategory(1);
       stateProvider.nameController.text = localizations.habitName;
+      stateProvider.iconPath = Assets.images.icons.book.path;
     });
   }
 
@@ -44,6 +49,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
   @override
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final habitProvider = context.watch<HabitProvider>();
+    final categoryProvider = context.watch<CategoryProvider>();
     final localizations = AppLocalizations.of(context)!;
 
     final stateProvider = context.watch<StateProvider>();
@@ -91,6 +98,29 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   SelectHabitTypeOptions(),
                 ],
               ),
+            ),
+            FloatingBottomButton(
+              showButton: true,
+              onPressed: () {
+                habitProvider.addHabit(
+                  Habit(
+                    id: 0,
+                    name: nameController.text,
+                    description: descController.text,
+                    iconPath: stateProvider.iconPath,
+                    categoryId: categoryProvider.selectedCategoryId,
+                    tag: "No tag",
+                    completed: false,
+                    amount: stateProvider.habitAmount,
+                    amountCompleted: 0,
+                    duration: stateProvider.habitDuration.inMinutes,
+                    durationCompleted: 0,
+                    streak: 0,
+                  ),
+                );
+                Navigator.of(context).pop();
+              },
+              label: "Add Habit",
             ),
           ],
         ),
