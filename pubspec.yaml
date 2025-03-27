@@ -39,8 +39,10 @@ dependencies:
   flutter_spinbox: ^0.13.1
   circle_wheel: ^0.0.1+2
   tinycolor2: ^3.0.1
+  build_runner: ^2.4.15
 
 dev_dependencies:
+  flutter_gen_runner: ^5.3.1
   flutter_test:
     sdk: flutter
 
@@ -90,3 +92,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_gen:
+  output: lib/generated/
+

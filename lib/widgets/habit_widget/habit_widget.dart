@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/pages/other_pages/icons_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,16 +14,20 @@ class HabitWidget extends StatelessWidget {
     required this.durationCompleted,
     required this.streak,
     required this.completed,
+    required this.editable,
+    required this.iconPath,
   });
 
   final String name;
   final String desc;
+  final String iconPath;
   final int amount;
   final int duration;
   final int amountCompleted;
   final int durationCompleted;
   final int streak;
   final bool completed;
+  final bool editable;
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +51,36 @@ class HabitWidget extends StatelessWidget {
           Row(
             children: [
               // Icon circle container
-              Container(
-                width: 50,
-                height: 50,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: colorProvider.iconBackgroundColor,
+              InkWell(
+                onTap: () {
+                  if (editable) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => IconsPage()),
+                    );
+                  }
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorProvider.iconBackgroundColor,
+                  ),
+                  // Icon
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 150),
+                    transitionBuilder:
+                        (child, animation) =>
+                            ScaleTransition(scale: animation, child: child),
+                    switchInCurve: Curves.decelerate,
+                    switchOutCurve: Curves.decelerate,
+                    child: Image.asset(
+                      key: ValueKey<String>(iconPath),
+                      iconPath,
+                    ),
+                  ),
                 ),
-                // Icon
-                child: Image.asset("assets/images/icons/compass.png"),
               ),
               // Text
               Padding(

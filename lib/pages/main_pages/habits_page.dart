@@ -128,6 +128,8 @@ class HabitCategory extends StatelessWidget {
               amountCompleted: habit.amountCompleted,
               durationCompleted: habit.durationCompleted,
               completed: habit.completed,
+              editable: false,
+              iconPath: habit.iconPath,
             ),
         ],
       ),

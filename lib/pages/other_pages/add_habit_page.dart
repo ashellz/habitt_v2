@@ -69,12 +69,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       color: colorProvider.colorScheme.darkerStandardColor,
                     ),
                   ),
-                  SelectedHabitDisplay(
-                    descController: descController,
-                    nameController: nameController,
-                    amount: stateProvider.habitAmount,
-                    duration: stateProvider.habitDuration.inMinutes,
-                  ),
+                  SelectedHabitDisplay(),
                   CategoriesList(
                     topPadding: 8,
                     showAll: false,
@@ -105,21 +100,17 @@ class _AddHabitPageState extends State<AddHabitPage> {
 }
 
 class SelectedHabitDisplay extends StatelessWidget {
-  const SelectedHabitDisplay({
-    super.key,
-    required this.descController,
-    required this.nameController,
-    required this.amount,
-    required this.duration,
-  });
-
-  final TextEditingController descController;
-  final TextEditingController nameController;
-  final int amount;
-  final int duration;
+  const SelectedHabitDisplay({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final stateProvider = context.watch<StateProvider>();
+    final descController = stateProvider.descController;
+    final nameController = stateProvider.nameController;
+    final amount = stateProvider.habitAmount;
+    final duration = stateProvider.habitDuration.inMinutes;
+    final iconPath = stateProvider.iconPath;
+
     return Padding(
       padding: EdgeInsets.only(top: 8),
       child: ValueListenableBuilder<TextEditingValue>(
@@ -131,12 +122,14 @@ class SelectedHabitDisplay extends StatelessWidget {
                   (context, value, child) => HabitWidget(
                     name: value.text,
                     desc: descController.text,
+                    iconPath: iconPath,
                     streak: 0,
                     amount: amount,
                     duration: duration,
                     amountCompleted: 0,
                     durationCompleted: 0,
                     completed: false,
+                    editable: true,
                   ),
             ),
       ),
