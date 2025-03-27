@@ -120,7 +120,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 );
                 Navigator.of(context).pop();
               },
-              label: "Add Habit",
+              label: localizations.addHabit,
             ),
           ],
         ),

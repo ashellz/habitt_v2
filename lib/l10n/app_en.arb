@@ -22,5 +22,6 @@
     "enterYourAmount": "Enter your amount",
     "times": "times",
     "edit": "Edit",
-    "youCanPressNumberAbove": "You can also press the number above to change amount"
+    "youCanPressNumberAbove": "You can also press the number above to change amount",
+    "addHabit": "Add Habit"
 }
