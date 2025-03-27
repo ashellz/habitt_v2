@@ -113,7 +113,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       if (!canAddHabit()) return;
                       habitProvider.addHabit(
                         Habit(
-                          id: 1,
+                          id: 2,
                           name: nameController.text,
                           description: descController.text,
                           iconPath: stateProvider.iconPath,

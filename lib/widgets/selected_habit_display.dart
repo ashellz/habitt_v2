@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/generated/assets.gen.dart';
+import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ class SelectedHabitDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
+    final categoryProvider = context.watch<CategoryProvider>();
     final descController = stateProvider.descController;
     final nameController = stateProvider.nameController;
     final amount = stateProvider.habitAmount;
@@ -25,18 +28,22 @@ class SelectedHabitDisplay extends StatelessWidget {
               valueListenable: nameController,
               builder:
                   (context, value, child) => HabitWidget(
-                    name: value.text == "" ? "Habit Name" : value.text,
-                    desc: descController.text,
-                    iconPath:
-                        iconPath == ""
-                            ? Assets.images.icons.book.path
-                            : iconPath,
-                    streak: 0,
-                    amount: amount,
-                    duration: duration,
-                    amountCompleted: 0,
-                    durationCompleted: 0,
-                    completed: false,
+                    habit: Habit(
+                      id: 0,
+                      categoryId: categoryProvider.selectedCategoryId,
+                      name: value.text == "" ? "Habit Name" : value.text,
+                      description: descController.text,
+                      iconPath:
+                          iconPath == ""
+                              ? Assets.images.icons.book.path
+                              : iconPath,
+                      streak: 0,
+                      amount: amount,
+                      duration: duration,
+                      amountCompleted: 0,
+                      durationCompleted: 0,
+                      completed: false,
+                    ),
                     editable: true,
                   ),
             ),

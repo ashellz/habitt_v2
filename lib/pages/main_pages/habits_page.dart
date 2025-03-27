@@ -151,18 +151,7 @@ class _HabitCategoryState extends State<HabitCategory> {
         children: [
           HabitCategoryTitle(category: widget.category),
           for (final habit in categoryHabits)
-            HabitWidget(
-              name: habit.name,
-              desc: habit.description,
-              streak: habit.streak,
-              amount: habit.amount,
-              duration: habit.duration,
-              amountCompleted: habit.amountCompleted,
-              durationCompleted: habit.durationCompleted,
-              completed: habit.completed,
-              editable: false,
-              iconPath: habit.iconPath,
-            ),
+            HabitWidget(habit: habit, editable: false),
         ],
       ),
     );
