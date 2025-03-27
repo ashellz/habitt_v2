@@ -25,7 +25,7 @@ class SelectedHabitDisplay extends StatelessWidget {
               valueListenable: nameController,
               builder:
                   (context, value, child) => HabitWidget(
-                    name: value.text,
+                    name: value.text == "" ? "Habit Name" : value.text,
                     desc: descController.text,
                     iconPath:
                         iconPath == ""

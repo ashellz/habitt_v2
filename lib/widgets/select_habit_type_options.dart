@@ -39,6 +39,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
                   stateProvider.habitAmount = 0;
                 } else if (selectedType == HabitType.amount) {
                   stateProvider.habitDuration = Duration.zero;
+                  stateProvider.habitAmount = 2;
                   Future.delayed(Duration(milliseconds: 150)).then((value) {
                     if (context.mounted) {
                       Navigator.of(context).push(

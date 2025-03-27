@@ -8,34 +8,40 @@ class FloatingBottomButton extends StatelessWidget {
     required this.showButton,
     required this.onPressed,
     required this.label,
+    this.enabled = true,
   });
 
   final bool showButton;
   final Function onPressed;
   final String label;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-      transform: Matrix4.translationValues(0, showButton ? -30 : 50, 0),
-      child: SizedBox(
-        height: 50,
-        width: MediaQuery.of(context).size.width - 32,
-        child: ElevatedButton(
-          onPressed: () => onPressed(),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colorProvider.colorScheme.darkerStandardColor,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 150),
+      opacity: enabled ? 1 : 0.5,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+        transform: Matrix4.translationValues(0, showButton ? -30 : 50, 0),
+        child: SizedBox(
+          height: 50,
+          width: MediaQuery.of(context).size.width - 32,
+          child: ElevatedButton(
+            onPressed: () => onPressed(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorProvider.colorScheme.darkerStandardColor,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
             ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(color: colorProvider.backgroundColor),
+            child: Text(
+              label,
+              style: TextStyle(color: colorProvider.backgroundColor),
+            ),
           ),
         ),
       ),

@@ -57,6 +57,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
 
+    bool canAddHabit() {
+      return nameController.text.isNotEmpty;
+    }
+
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: GestureDetector(
@@ -99,28 +103,34 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ],
               ),
             ),
-            FloatingBottomButton(
-              showButton: true,
-              onPressed: () {
-                habitProvider.addHabit(
-                  Habit(
-                    id: 0,
-                    name: nameController.text,
-                    description: descController.text,
-                    iconPath: stateProvider.iconPath,
-                    categoryId: categoryProvider.selectedCategoryId,
-                    tag: "No tag",
-                    completed: false,
-                    amount: stateProvider.habitAmount,
-                    amountCompleted: 0,
-                    duration: stateProvider.habitDuration.inMinutes,
-                    durationCompleted: 0,
-                    streak: 0,
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: nameController,
+              builder:
+                  (context, value, child) => FloatingBottomButton(
+                    showButton: true,
+                    enabled: canAddHabit(),
+                    onPressed: () {
+                      if (!canAddHabit()) return;
+                      habitProvider.addHabit(
+                        Habit(
+                          id: 1,
+                          name: nameController.text,
+                          description: descController.text,
+                          iconPath: stateProvider.iconPath,
+                          categoryId: categoryProvider.selectedCategoryId,
+                          tag: "No tag",
+                          completed: false,
+                          amount: stateProvider.habitAmount,
+                          amountCompleted: 0,
+                          duration: stateProvider.habitDuration.inMinutes,
+                          durationCompleted: 0,
+                          streak: 0,
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    label: localizations.addHabit,
                   ),
-                );
-                Navigator.of(context).pop();
-              },
-              label: localizations.addHabit,
             ),
           ],
         ),

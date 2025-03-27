@@ -85,6 +85,21 @@ class Habits extends StatelessWidget {
       );
     }
 
+    if (categoryProvider.selectedCategoryId != 0) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: HabitCategory(
+              category: categoryProvider.categories.firstWhere(
+                (c) => c.id == categoryProvider.selectedCategoryId,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       children: [
         for (final category in categoryProvider.categories)
@@ -97,27 +112,44 @@ class Habits extends StatelessWidget {
   }
 }
 
-class HabitCategory extends StatelessWidget {
+class HabitCategory extends StatefulWidget {
   const HabitCategory({super.key, required this.category});
 
   final Category category;
+
+  @override
+  State<HabitCategory> createState() => _HabitCategoryState();
+}
+
+class _HabitCategoryState extends State<HabitCategory> {
+  double _opacity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        _opacity = 1;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
     final categoryHabits =
         habitProvider.habits
-            .where((habit) => habit.categoryId == category.id)
+            .where((habit) => habit.categoryId == widget.category.id)
             .toList();
 
     if (categoryHabits.isEmpty) return Container();
 
-    return Padding(
-      padding: EdgeInsets.only(top: category.id == 1 ? 0 : 8),
+    return AnimatedOpacity(
+      opacity: _opacity,
+      duration: const Duration(milliseconds: 150),
       child: Column(
         children: [
-          // Category title
-          HabitCategoryTitle(category: category),
+          HabitCategoryTitle(category: widget.category),
           for (final habit in categoryHabits)
             HabitWidget(
               name: habit.name,
