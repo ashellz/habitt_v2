@@ -151,6 +151,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    // Center icon
     Widget centerIcon() {
       return AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
@@ -167,6 +168,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
       );
     }
 
+    // Middle child inside of the container (checkmark or amount/duration)
     Widget getCompletionWidget() {
       if (widget.habit.amount > 0) {
         return Column(
@@ -227,6 +229,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
       }
     }
 
+    // Main widget
     return GestureDetector(
       onTap:
           widget.editable
@@ -246,15 +249,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                     widget.habit.completed = !widget.habit.completed;
                   });
                 } else {
-                  if (widget.habit.amount > 0) {
-                    setState(() {
-                      widget.habit.amountCompleted = widget.habit.amount;
-                    });
-                  } else if (widget.habit.duration > 0) {
-                    setState(() {
-                      widget.habit.durationCompleted = widget.habit.duration;
-                    });
-                  }
+                  // TODO: Open dialog for selecting amount/duration completion
                 }
               },
       onTapDown: (context) {
@@ -270,6 +265,11 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
           (context) => setState(() {
             _scale = 1.0;
           }),
+      onLongPress: () {
+        setState(() {
+          widget.habit.completed = !widget.habit.completed;
+        });
+      },
       child: AnimatedScale(
         duration: const Duration(milliseconds: 150),
         scale: _scale,

@@ -20,27 +20,29 @@ class FloatingBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
 
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 150),
-      opacity: enabled ? 1 : 0.5,
-      child: AnimatedContainer(
+    return Transform.translate(
+      offset: Offset(0, showButton ? -30 : 50),
+      child: AnimatedOpacity(
         duration: const Duration(milliseconds: 150),
-        curve: Curves.easeOut,
-        transform: Matrix4.translationValues(0, showButton ? -30 : 50, 0),
-        child: SizedBox(
-          height: 50,
-          width: MediaQuery.of(context).size.width - 32,
-          child: ElevatedButton(
-            onPressed: () => onPressed(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorProvider.colorScheme.darkerStandardColor,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+        opacity: enabled ? 1 : 0.5,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          child: SizedBox(
+            height: 50,
+            width: MediaQuery.of(context).size.width - 32,
+            child: ElevatedButton(
+              onPressed: () => enabled ? onPressed() : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorProvider.colorScheme.darkerStandardColor,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
               ),
-            ),
-            child: Text(
-              label,
-              style: TextStyle(color: colorProvider.backgroundColor),
+              child: Text(
+                label,
+                style: TextStyle(color: colorProvider.backgroundColor),
+              ),
             ),
           ),
         ),
