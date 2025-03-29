@@ -23,9 +23,13 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void completeHabit(int id) {
-    // Sets habit to opposite of current completion value
-    habits.where((h) => h.id == id).first.completed =
-        !habits.where((h) => h.id == id).first.completed;
+    final habit = habits.firstWhere((h) => h.id == id);
+
+    habit.completed = !habit.completed;
+
+    habit.amountCompleted = habit.completed ? habit.amount : 0;
+    habit.durationCompleted = habit.completed ? habit.duration : 0;
+
     notifyListeners();
   }
 

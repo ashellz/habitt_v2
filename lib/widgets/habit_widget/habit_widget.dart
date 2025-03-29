@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/other_pages/icons_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/habit_widget/line_through.dart';
+import 'package:habitt/widgets/habit_widget/habit_icon.dart';
+import 'package:habitt/widgets/habit_widget/habit_text.dart';
 import 'package:provider/provider.dart';
 
 class HabitWidget extends StatelessWidget {
@@ -44,94 +44,19 @@ class HabitWidget extends StatelessWidget {
               Row(
                 children: [
                   // Icon circle container
-                  InkWell(
-                    onTap: () {
-                      if (editable) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => IconsPage()),
-                        );
-                      }
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color:
-                            Color.lerp(
-                              colorProvider.iconBackgroundColor.withAlpha(
-                                alpha,
-                              ),
-                              colorProvider.iconBackgroundColor,
-                              value,
-                            )!,
-                      ),
-                      // Icon
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 150),
-                        transitionBuilder:
-                            (child, animation) =>
-                                ScaleTransition(scale: animation, child: child),
-                        switchInCurve: Curves.decelerate,
-                        switchOutCurve: Curves.decelerate,
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 150),
-                          opacity: habit.completed ? 0.5 : 1,
-                          child: Image.asset(
-                            key: ValueKey<String>(habit.iconPath),
-                            habit.iconPath,
-                          ),
-                        ),
-                      ),
-                    ),
+                  HabitIcon(
+                    editable: editable,
+                    colorProvider: colorProvider,
+                    alpha: alpha,
+                    habit: habit,
+                    value: value,
                   ),
                   // Text
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 150),
-                      height: habit.description.isEmpty ? 23 : 43,
-                      width:
-                          MediaQuery.of(context).size.width -
-                          32 - // 32 padding
-                          100 - // 100 on the right
-                          70, // 70 on the left
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          HabitNameDisplay(
-                            text: habit.name,
-                            completed: habit.completed,
-                            textColor:
-                                Color.lerp(
-                                  colorProvider.textColor.withAlpha(alpha),
-                                  colorProvider.textColor,
-                                  value,
-                                )!,
-                          ),
-
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 150),
-                            height:
-                                habit.description.isEmpty || habit.completed
-                                    ? 0
-                                    : 20,
-                            child: Text(
-                              habit.completed ? "" : habit.description,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: colorProvider.mutedTextColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  HabitText(
+                    habit: habit,
+                    colorProvider: colorProvider,
+                    alpha: alpha,
+                    value: value,
                   ),
                 ],
               ),
@@ -182,84 +107,6 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   Widget build(BuildContext context) {
     final habitProvider = context.read<HabitProvider>();
 
-    // Center icon
-    Widget centerIcon() {
-      return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        transitionBuilder:
-            (child, animation) =>
-                FadeTransition(opacity: animation, child: child),
-        child: Center(
-          key: ValueKey<bool>(widget.habit.completed),
-          child: Icon(
-            widget.habit.completed ? Icons.check : Icons.close,
-            color: widget.colorProvider.backgroundColor,
-          ),
-        ),
-      );
-    }
-
-    // Middle child inside of the container (checkmark or amount/duration)
-    Widget getCompletionWidget() {
-      if (widget.habit.amount > 0) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.habit.amountCompleted.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: widget.colorProvider.backgroundColor,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Divider(height: 5, thickness: 2),
-            ),
-            Text(
-              widget.habit.amount.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: widget.colorProvider.backgroundColor,
-              ),
-            ),
-          ],
-        );
-      } else if (widget.habit.duration > 0) {
-        final String durationCopmletedString =
-            "${widget.habit.durationCompleted / 60}h${widget.habit.durationCompleted % 60}m";
-
-        final String durationString =
-            "${widget.habit.duration / 60}h${widget.habit.duration % 60}m";
-
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              durationCopmletedString,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: widget.colorProvider.backgroundColor,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Divider(height: 5, thickness: 2),
-            ),
-            Text(
-              durationString,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: widget.colorProvider.backgroundColor,
-              ),
-            ),
-          ],
-        );
-      } else {
-        return centerIcon();
-      }
-    }
-
     // Main widget
     return GestureDetector(
       onTap:
@@ -276,7 +123,8 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 });
 
                 // If no amount or duration, toggle completion
-                if (widget.habit.amount == 0 && widget.habit.duration == 0) {
+                if (widget.habit.amount == 0 && widget.habit.duration == 0 ||
+                    widget.habit.completed) {
                   habitProvider.completeHabit(widget.habit.id);
                 } else {
                   // TODO: Open dialog for selecting amount/duration completion
@@ -308,69 +156,132 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
           child: Stack(
             children: [
-              if (widget.habit.amount == 0 && widget.habit.duration == 0)
-                Positioned.fill(
-                  child: RotatedBox(
-                    quarterTurns: -1,
-                    child: TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                      tween: Tween<double>(
-                        begin: 0,
-                        end: widget.habit.completed ? 1 : 0,
-                      ),
-                      builder: (context, value, _) {
-                        return LinearProgressIndicator(
-                          value: value,
-                          color:
-                              widget
-                                  .colorProvider
-                                  .colorScheme
-                                  .darkerStandardColor,
-                          backgroundColor:
-                              widget.colorProvider.colorScheme.strokeColor,
-                        );
-                      },
+              Positioned.fill(
+                child: RotatedBox(
+                  quarterTurns: -1,
+                  child: TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    tween: Tween<double>(
+                      begin: 0,
+                      end:
+                          // Really complicated logic here but it works
+                          // Basically checks if habit has amount or duration
+                          // If not its filled from 0 to 1 if completed or not
+                          // Otherwise fills it by amount or duration completed accordingly
+                          widget.habit.amount == 0 &&
+                                      widget.habit.duration == 0 ||
+                                  widget.habit.completed
+                              ? widget.habit.completed
+                                  ? 1
+                                  : 0
+                              : widget.habit.amount > 1
+                              ? widget.habit.amountCompleted /
+                                  widget.habit.amount
+                              : widget.habit.durationCompleted /
+                                  widget.habit.duration,
                     ),
-                  ),
-                )
-              else
-                Positioned.fill(
-                  child: RotatedBox(
-                    quarterTurns: -1,
-                    child: TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                      tween: Tween<double>(
-                        begin: 0,
-                        end:
-                            widget.habit.amount > 1
-                                ? widget.habit.amountCompleted /
-                                    widget.habit.amount
-                                : widget.habit.durationCompleted /
-                                    widget.habit.duration,
-                      ),
-                      builder: (context, value, _) {
-                        return LinearProgressIndicator(
-                          value: value,
-                          color:
-                              widget
-                                  .colorProvider
-                                  .colorScheme
-                                  .darkerStandardColor,
-                          backgroundColor:
-                              widget.colorProvider.colorScheme.strokeColor,
-                        );
-                      },
-                    ),
+                    builder: (context, value, _) {
+                      return LinearProgressIndicator(
+                        value: value,
+                        color:
+                            widget
+                                .colorProvider
+                                .colorScheme
+                                .darkerStandardColor,
+                        backgroundColor:
+                            widget.colorProvider.colorScheme.strokeColor,
+                      );
+                    },
                   ),
                 ),
-              getCompletionWidget(),
+              ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder:
+                    (child, animation) =>
+                        FadeTransition(opacity: animation, child: child),
+                child: KeyedSubtree(
+                  key: ValueKey<bool>(widget.habit.completed),
+                  child: getCompletionWidget(),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  // Center icon
+  Widget centerIcon() {
+    return Center(
+      child: Icon(
+        widget.habit.completed ? Icons.check : Icons.close,
+        color: widget.colorProvider.backgroundColor,
+      ),
+    );
+  }
+
+  // Middle child inside of the container (checkmark or amount/duration)
+  Widget getCompletionWidget() {
+    if (widget.habit.amount > 0 && !widget.habit.completed) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            widget.habit.amountCompleted.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: widget.colorProvider.backgroundColor,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Divider(height: 5, thickness: 2),
+          ),
+          Text(
+            widget.habit.amount.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: widget.colorProvider.backgroundColor,
+            ),
+          ),
+        ],
+      );
+    } else if (widget.habit.duration > 0 && !widget.habit.completed) {
+      final String durationCopmletedString =
+          "${widget.habit.durationCompleted / 60}h${widget.habit.durationCompleted % 60}m";
+
+      final String durationString =
+          "${widget.habit.duration / 60}h${widget.habit.duration % 60}m";
+
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            durationCopmletedString,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: widget.colorProvider.backgroundColor,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Divider(height: 5, thickness: 2),
+          ),
+          Text(
+            durationString,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: widget.colorProvider.backgroundColor,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return centerIcon();
+    }
   }
 }
 
