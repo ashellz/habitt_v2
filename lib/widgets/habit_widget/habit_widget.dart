@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/icons_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/widgets/habit_widget/line_through.dart';
 import 'package:provider/provider.dart';
 
 class HabitWidget extends StatelessWidget {
@@ -13,119 +15,146 @@ class HabitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final int alpha = 100;
 
     // Main container
-    return Container(
-      margin: EdgeInsets.only(top: 8),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-      height: 74,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: colorProvider.habitColor,
-      ),
-      // Inside of the container
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Left side
-          Row(
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: habit.completed ? 0 : 1),
+      duration: const Duration(milliseconds: 200),
+      builder: (context, double value, child) {
+        return Container(
+          margin: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          height: 74,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color:
+                Color.lerp(
+                  colorProvider.habitColor.withAlpha(alpha),
+                  colorProvider.habitColor,
+                  value,
+                )!,
+          ),
+          // Inside of the container
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Icon circle container
-              InkWell(
-                onTap: () {
-                  if (editable) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => IconsPage()),
-                    );
-                  }
-                },
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: colorProvider.iconBackgroundColor,
-                  ),
-                  // Icon
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 150),
-                    transitionBuilder:
-                        (child, animation) =>
-                            ScaleTransition(scale: animation, child: child),
-                    switchInCurve: Curves.decelerate,
-                    switchOutCurve: Curves.decelerate,
-                    child: Image.asset(
-                      key: ValueKey<String>(habit.iconPath),
-                      habit.iconPath,
-                    ),
-                  ),
-                ),
-              ),
-              // Text
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 150),
-                  height: habit.description.isEmpty ? 23 : 43,
-                  width:
-                      MediaQuery.of(context).size.width -
-                      32 - // 32 padding
-                      100 - // 100 on the right
-                      70, // 70 on the left
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        habit.name,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: colorProvider.textColor,
-                        ),
+              // Left side
+              Row(
+                children: [
+                  // Icon circle container
+                  InkWell(
+                    onTap: () {
+                      if (editable) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => IconsPage()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            Color.lerp(
+                              colorProvider.iconBackgroundColor.withAlpha(
+                                alpha,
+                              ),
+                              colorProvider.iconBackgroundColor,
+                              value,
+                            )!,
                       ),
-
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 150),
-                        height: habit.description.isEmpty ? 0 : 20,
-                        child: Text(
-                          habit.description,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: colorProvider.mutedTextColor,
+                      // Icon
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 150),
+                        transitionBuilder:
+                            (child, animation) =>
+                                ScaleTransition(scale: animation, child: child),
+                        switchInCurve: Curves.decelerate,
+                        switchOutCurve: Curves.decelerate,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 150),
+                          opacity: habit.completed ? 0.5 : 1,
+                          child: Image.asset(
+                            key: ValueKey<String>(habit.iconPath),
+                            habit.iconPath,
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  // Text
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 150),
+                      height: habit.description.isEmpty ? 23 : 43,
+                      width:
+                          MediaQuery.of(context).size.width -
+                          32 - // 32 padding
+                          100 - // 100 on the right
+                          70, // 70 on the left
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          HabitNameDisplay(
+                            text: habit.name,
+                            completed: habit.completed,
+                            textColor:
+                                Color.lerp(
+                                  colorProvider.textColor.withAlpha(alpha),
+                                  colorProvider.textColor,
+                                  value,
+                                )!,
+                          ),
+
+                          AnimatedContainer(
+                            duration: Duration(milliseconds: 150),
+                            height:
+                                habit.description.isEmpty || habit.completed
+                                    ? 0
+                                    : 20,
+                            child: Text(
+                              habit.completed ? "" : habit.description,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: colorProvider.mutedTextColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Completion and streak
+              Row(
+                children: [
+                  if (habit.streak > 0)
+                    StreakDisplay(
+                      streak: habit.streak,
+                      colorProvider: colorProvider,
+                    ),
+                  // Completion
+                  CompletionDisplay(
+                    editable: editable,
+                    colorProvider: colorProvider,
+                    habit: habit,
+                  ),
+                ],
               ),
             ],
           ),
-          // Completion and streak
-          Row(
-            children: [
-              if (habit.streak > 0)
-                StreakDisplay(
-                  streak: habit.streak,
-                  colorProvider: colorProvider,
-                ),
-              // Completion
-              CompletionDisplay(
-                editable: editable,
-                colorProvider: colorProvider,
-                habit: habit,
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -151,6 +180,8 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    final habitProvider = context.read<HabitProvider>();
+
     // Center icon
     Widget centerIcon() {
       return AnimatedSwitcher(
@@ -244,10 +275,9 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   });
                 });
 
+                // If no amount or duration, toggle completion
                 if (widget.habit.amount == 0 && widget.habit.duration == 0) {
-                  setState(() {
-                    widget.habit.completed = !widget.habit.completed;
-                  });
+                  habitProvider.completeHabit(widget.habit.id);
                 } else {
                   // TODO: Open dialog for selecting amount/duration completion
                 }
@@ -266,9 +296,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
             _scale = 1.0;
           }),
       onLongPress: () {
-        setState(() {
-          widget.habit.completed = !widget.habit.completed;
-        });
+        habitProvider.completeHabit(widget.habit.id);
       },
       child: AnimatedScale(
         duration: const Duration(milliseconds: 150),

@@ -61,6 +61,14 @@ class _AddHabitPageState extends State<AddHabitPage> {
       return nameController.text.isNotEmpty;
     }
 
+    int getUniqueId() {
+      int id = 0;
+      while (habitProvider.habits.any((h) => h.id == id)) {
+        id++;
+      }
+      return id;
+    }
+
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: GestureDetector(
@@ -115,7 +123,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       print("Adding habit...");
                       habitProvider.addHabit(
                         Habit(
-                          id: 2,
+                          id: getUniqueId(),
                           name: nameController.text,
                           description: descController.text,
                           iconPath: stateProvider.iconPath,
