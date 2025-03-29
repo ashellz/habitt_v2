@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/custom_color_scheme.dart';
 
 class ColorProvider extends ChangeNotifier {
+  String colorSchemeString = "blue";
   Color textColor = Color(0xFF212529);
   Color mutedTextColor = Color(0xFF6C757D);
   Color habitColor = Color(0xFFEDEDED);
@@ -12,15 +13,18 @@ class ColorProvider extends ChangeNotifier {
 
   ColorProvider() {
     colorScheme = _blue;
+    colorSchemeString = "blue";
   }
 
   void changeColorScheme(String color) {
     switch (color) {
       case "blue":
         colorScheme = _blue;
+        colorSchemeString = "blue";
         break;
       case "green":
         colorScheme = _green;
+        colorSchemeString = "green";
         break;
     }
     notifyListeners();

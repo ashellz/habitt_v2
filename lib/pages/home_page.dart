@@ -49,10 +49,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: TextStyle(
-            color: darkerStandardColor,
-            fontSize: 12,
-          ),
+          selectedItemColor: darkerStandardColor,
+          selectedLabelStyle: TextStyle(fontSize: 12),
           unselectedLabelStyle: const TextStyle(
             color: Color(0xFF212529),
             fontSize: 12,
@@ -79,7 +77,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     colorFilter: ColorFilter.mode(
                       _currentIndex == 0
                           ? darkerStandardColor
-                          : Color(0xFF212529),
+                          : colorProvider.textColor,
                       BlendMode.srcIn,
                     ),
                   ),

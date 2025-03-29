@@ -15,7 +15,10 @@ class GradientBackground extends StatelessWidget {
       children: [
         Image.asset(
           "assets/images/gradient_background.png",
-          color: colorProvider.colorScheme.darkerStandardColor,
+          color:
+              colorProvider.colorSchemeString == "blue"
+                  ? colorProvider.colorScheme.darkerStandardColor
+                  : colorProvider.colorScheme.standardColor,
           colorBlendMode: BlendMode.color,
           fit: BoxFit.cover,
           width: double.infinity,

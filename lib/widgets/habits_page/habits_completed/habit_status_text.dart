@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/util/get_category_length.dart';
 import 'package:provider/provider.dart';
 
 class HabitsStatus extends StatelessWidget {
@@ -11,11 +13,27 @@ class HabitsStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final categoryProvider = context.watch<CategoryProvider>();
+    final int selectedCategoryId = categoryProvider.selectedCategoryId;
     final textColor = colorProvider.textColor;
     final colorScheme = colorProvider.colorScheme;
     final localizations = AppLocalizations.of(context)!;
 
-    const numberOfHabits = 1;
+    int numberOfHabits = 0;
+
+    if (isCompleted) {
+      for (var category in categoryProvider.categories) {
+        if (category.id == selectedCategoryId) {
+          numberOfHabits = getCompletedHabits(category, context);
+        }
+      }
+    } else {
+      for (var category in categoryProvider.categories) {
+        if (category.id == selectedCategoryId) {
+          numberOfHabits = getNotCompletedHabits(category, context);
+        }
+      }
+    }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
