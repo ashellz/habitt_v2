@@ -51,12 +51,10 @@ class HabitIcon extends StatelessWidget {
           switchInCurve: Curves.decelerate,
           switchOutCurve: Curves.decelerate,
           child: AnimatedOpacity(
+            key: ValueKey<String>(habit.iconPath),
             duration: const Duration(milliseconds: 150),
             opacity: habit.completed ? 0.5 : 1,
-            child: Image.asset(
-              key: ValueKey<String>(habit.iconPath),
-              habit.iconPath,
-            ),
+            child: Image.asset(habit.iconPath),
           ),
         ),
       ),
