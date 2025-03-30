@@ -19,10 +19,10 @@ class InteractiveWheel extends StatefulWidget {
   final Function onDone;
 
   @override
-  _InteractiveWheelState createState() => _InteractiveWheelState();
+  InteractiveWheelState createState() => InteractiveWheelState();
 }
 
-class _InteractiveWheelState extends State<InteractiveWheel>
+class InteractiveWheelState extends State<InteractiveWheel>
     with SingleTickerProviderStateMixin {
   double _rotationAngle = 0.0;
   double _startAngle = 0.0;
@@ -114,7 +114,7 @@ class _InteractiveWheelState extends State<InteractiveWheel>
                 colorProvider.colorScheme.standardColor,
               ),
             ),
-            onPressed: widget.onDone(),
+            onPressed: () => widget.onDone(),
             icon: Icon(Icons.arrow_forward),
           ),
         ],

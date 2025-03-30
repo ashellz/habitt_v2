@@ -75,22 +75,18 @@ class NumberPickerScreenState extends State<NumberPickerScreen> {
   void onDone() {
     final stateProvider = context.read<StateProvider>();
 
-    Future.microtask(() {
-      if (widget.type == HabitType.amount) {
-        stateProvider.habitAmount = wheelValue;
-      } else {
-        stateProvider.habitDuration = durationValue;
-      }
-    });
+    if (widget.type == HabitType.amount) {
+      stateProvider.habitAmount = wheelValue;
+    } else {
+      stateProvider.habitDuration = durationValue;
+    }
 
     Navigator.pop(context);
   }
 
   void switchValues() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        editingHours = !editingHours;
-      });
+    setState(() {
+      editingHours = !editingHours;
     });
   }
 
@@ -419,7 +415,7 @@ class SwitchValuesArrow extends StatelessWidget {
         curve: Curves.decelerate,
         duration: Duration(milliseconds: 150),
         child: GestureDetector(
-          onTap: switchValues,
+          onTap: () => switchValues(),
           child: SvgPicture.asset(
             width: 30,
             height: 30,

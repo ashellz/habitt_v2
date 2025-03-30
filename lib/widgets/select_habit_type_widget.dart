@@ -29,7 +29,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
     final stateProvider = context.watch<StateProvider>();
     final String habitAmount = stateProvider.habitAmount.toString();
     final String habitDuration =
-        "${stateProvider.habitDuration.inHours}h${stateProvider.habitDuration.inHours % 60}m";
+        "${stateProvider.habitDuration.inHours}h${stateProvider.habitDuration.inMinutes % 60}m";
 
     return GestureDetector(
       // Used for selecting the widget
