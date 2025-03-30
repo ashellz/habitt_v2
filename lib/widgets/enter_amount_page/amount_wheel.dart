@@ -1,8 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -12,11 +10,13 @@ class InteractiveWheel extends StatefulWidget {
     required this.wheelValue,
     required this.increaseWheelValue,
     required this.decreaseWheelValue,
+    required this.onDone,
   });
 
   final int wheelValue;
   final Function increaseWheelValue;
   final Function decreaseWheelValue;
+  final Function onDone;
 
   @override
   _InteractiveWheelState createState() => _InteractiveWheelState();
@@ -114,13 +114,7 @@ class _InteractiveWheelState extends State<InteractiveWheel>
                 colorProvider.colorScheme.standardColor,
               ),
             ),
-            onPressed: () {
-              final stateProvider = context.read<StateProvider>();
-
-              stateProvider.habitAmount = widget.wheelValue;
-
-              Navigator.pop(context);
-            },
+            onPressed: widget.onDone(),
             icon: Icon(Icons.arrow_forward),
           ),
         ],

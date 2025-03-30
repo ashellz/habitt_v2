@@ -20,8 +20,11 @@
     "amount": "Amount",
     "duration": "Duration",
     "enterYourAmount": "Enter your amount",
+    "enterYourDuration": "Enter your duration",
     "times": "times",
     "edit": "Edit",
-    "youCanPressNumberAbove": "You can also press the number above to change amount",
-    "addHabit": "Add Habit"
+    "youCanPressNumberAbove": "You can also press the number above to change {type}",
+    "addHabit": "Add Habit",
+    "hours": "Hours",
+    "minutes": "Minutes"
 }

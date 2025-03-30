@@ -28,27 +28,35 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
               type: HabitType.amount,
               selectedType: selectedType,
               onTap: () {
+                print("Selected type: $selectedType");
                 setState(() {
                   selectedType =
                       selectedType == HabitType.amount
                           ? HabitType.none
                           : HabitType.amount;
                 });
+                print("New selected type: $selectedType");
 
                 if (selectedType == HabitType.none) {
+                  print("Resetting amount");
                   stateProvider.habitAmount = 0;
                 } else if (selectedType == HabitType.amount) {
+                  print("Setting duration to 0 and amount to 2");
                   stateProvider.habitDuration = Duration.zero;
                   stateProvider.habitAmount = 2;
-                  Future.delayed(Duration(milliseconds: 150)).then((value) {
-                    if (context.mounted) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NumberPickerScreen(),
-                        ),
-                      );
-                    }
-                  });
+
+                  try {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                NumberPickerScreen(type: HabitType.amount),
+                      ),
+                    );
+                    print("Navigating to page!");
+                  } catch (e) {
+                    print("Error: $e");
+                  }
                 }
               },
             ),
@@ -68,6 +76,15 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
                   stateProvider.habitDuration = Duration.zero;
                 } else if (selectedType == HabitType.duration) {
                   stateProvider.habitAmount = 0;
+                  stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              NumberPickerScreen(type: HabitType.duration),
+                    ),
+                  );
                 }
               },
             ),

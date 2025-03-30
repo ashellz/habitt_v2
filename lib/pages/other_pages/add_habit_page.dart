@@ -118,9 +118,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     showButton: true,
                     enabled: canAddHabit(),
                     onPressed: () {
-                      print("Button pressed!");
                       if (!canAddHabit()) return;
-                      print("Adding habit...");
+
                       habitProvider.addHabit(
                         Habit(
                           id: getUniqueId(),

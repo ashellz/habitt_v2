@@ -21,7 +21,7 @@ class HabitWidget extends StatelessWidget {
     // Main container
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: habit.completed ? 0 : 1),
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 150),
       builder: (context, double value, child) {
         return Container(
           margin: EdgeInsets.only(top: 8),

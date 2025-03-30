@@ -2,25 +2,41 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/select_habit_type_widget.dart';
 
-class EnterAmountText extends StatelessWidget {
-  const EnterAmountText({super.key, required this.colorProvider});
+class EnterAmountDurationText extends StatelessWidget {
+  const EnterAmountDurationText({
+    super.key,
+    required this.colorProvider,
+    required this.type,
+  });
 
   final ColorProvider colorProvider;
+  final HabitType type;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final text =
+        "${type == HabitType.duration ? localizations.enterYourDuration : localizations.enterYourAmount}:"
+            .toUpperCase();
 
-    return SizedBox(
-      width: MediaQuery.of(context).size.width / 2,
-      child: Text(
-        "${localizations.enterYourAmount}:".toUpperCase(),
-        style: TextStyle(
-          fontSize: 38,
-          height: 1.2,
-          color: colorProvider.colorScheme.darkerStandardColor,
-        ),
+    return Text.rich(
+      TextSpan(
+        children:
+            text.split(' ').map((word) {
+              final isLast = text.split(' ').last == word;
+              return TextSpan(
+                text: isLast ? word : "$word\n",
+                style: TextStyle(
+                  letterSpacing: 2,
+                  fontSize: 48,
+                  fontWeight: FontWeight.w200,
+                  height: 1.2,
+                  color: colorProvider.colorScheme.darkerStandardColor,
+                ),
+              );
+            }).toList(),
       ),
     );
   }
