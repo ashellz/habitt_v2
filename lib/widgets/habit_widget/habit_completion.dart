@@ -122,14 +122,17 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   ),
                 ),
               ),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder:
-                    (child, animation) =>
-                        FadeTransition(opacity: animation, child: child),
-                child: KeyedSubtree(
-                  key: ValueKey<bool>(widget.habit.completed),
-                  child: getCompletionWidget(),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder:
+                      (child, animation) =>
+                          FadeTransition(opacity: animation, child: child),
+                  child: KeyedSubtree(
+                    key: ValueKey<bool>(widget.habit.completed),
+                    child: getCompletionWidget(),
+                  ),
                 ),
               ),
             ],
@@ -164,7 +167,11 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Divider(height: 5, thickness: 2),
+            child: Divider(
+              height: 2,
+              thickness: 2,
+              color: widget.colorProvider.backgroundColor,
+            ),
           ),
           Text(
             widget.habit.amount.toString(),
@@ -176,37 +183,139 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
         ],
       );
     } else if (widget.habit.duration > 0 && !widget.habit.completed) {
-      final String durationCopmletedString =
-          "${widget.habit.durationCompleted / 60}h${widget.habit.durationCompleted % 60}m";
-
-      final String durationString =
-          "${widget.habit.duration / 60}h${widget.habit.duration % 60}m";
-
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            durationCopmletedString,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: widget.colorProvider.backgroundColor,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Divider(height: 5, thickness: 2),
-          ),
-          Text(
-            durationString,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: widget.colorProvider.backgroundColor,
-            ),
-          ),
-        ],
-      );
+      return DurationDisplay(habit: widget.habit);
     } else {
       return centerIcon();
     }
+  }
+}
+
+class DurationDisplay extends StatefulWidget {
+  const DurationDisplay({super.key, required this.habit});
+
+  final Habit habit;
+
+  @override
+  State<DurationDisplay> createState() => DurationDisplayState();
+}
+
+class DurationDisplayState extends State<DurationDisplay> {
+  double _fontSize = 12;
+  String? _lastBottomText;
+  final TextPainter _painter = TextPainter(
+    textDirection: TextDirection.ltr,
+    maxLines: 1,
+  );
+
+  @override
+  void didUpdateWidget(DurationDisplay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.habit.duration != oldWidget.habit.duration) {
+      _adjustFontSize();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _adjustFontSize());
+  }
+
+  void _adjustFontSize() {
+    final currentBottomText = _getDurationString(widget.habit.duration);
+
+    // Only recalculate if text changed or we haven't calculated before
+    if (_lastBottomText == currentBottomText) return;
+
+    _lastBottomText = currentBottomText;
+    const maxWidth = 48 * 0.85; // 85% of container width as safety margin
+    const double minFontSize = 8;
+    const double maxFontSize = 12;
+
+    double testFontSize = maxFontSize;
+    bool foundFit = false;
+
+    while (testFontSize >= minFontSize && !foundFit) {
+      _painter.text = TextSpan(
+        text: currentBottomText,
+        style: TextStyle(fontSize: testFontSize, fontWeight: FontWeight.bold),
+      );
+
+      _painter.layout(minWidth: 0, maxWidth: double.infinity);
+
+      debugPrint(
+        'Testing "${currentBottomText}" at $testFontSize: '
+        '${_painter.width} vs $maxWidth',
+      );
+
+      if (_painter.width <= maxWidth) {
+        foundFit = true;
+      } else {
+        testFontSize -= 0.5;
+      }
+    }
+
+    final newFontSize = foundFit ? testFontSize : minFontSize;
+    if (_fontSize != newFontSize) {
+      setState(() => _fontSize = newFontSize);
+    }
+  }
+
+  String _getDurationString(int duration) {
+    return duration ~/ 60 == 0
+        ? "${duration % 60}m"
+        : duration % 60 == 0
+        ? "${duration ~/ 60}h"
+        : "${duration ~/ 60}h${duration % 60}m";
+  }
+
+  @override
+  void dispose() {
+    _painter.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorProvider = context.watch<ColorProvider>();
+
+    final durationCompletedString = _getDurationString(
+      widget.habit.durationCompleted,
+    );
+    final durationString = _getDurationString(widget.habit.duration);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          durationCompletedString,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: colorProvider.backgroundColor,
+            fontSize: _fontSize,
+          ),
+          maxLines: 1,
+          softWrap: false,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Divider(
+            height: 2,
+            thickness: 2,
+            color: colorProvider.backgroundColor,
+          ),
+        ),
+        Text(
+          durationString,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: colorProvider.backgroundColor,
+            fontSize: _fontSize,
+          ),
+          maxLines: 1,
+          softWrap: false,
+        ),
+      ],
+    );
   }
 }
