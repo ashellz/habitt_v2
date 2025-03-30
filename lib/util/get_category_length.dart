@@ -18,8 +18,9 @@ int getCategoryLength(Category category, BuildContext context) {
 int getCompletedHabits(Category category, BuildContext context) {
   final habitProvider = context.watch<HabitProvider>();
   if (habitProvider.habits.isEmpty) return 0;
+
   if (category.id == 0) {
-    return habitProvider.habits.length;
+    return habitProvider.habits.where((h) => h.completed).length;
   }
 
   final int categoryHabits =
@@ -32,8 +33,9 @@ int getCompletedHabits(Category category, BuildContext context) {
 int getNotCompletedHabits(Category category, BuildContext context) {
   final habitProvider = context.watch<HabitProvider>();
   if (habitProvider.habits.isEmpty) return 0;
+
   if (category.id == 0) {
-    return habitProvider.habits.length;
+    return habitProvider.habits.where((h) => !h.completed).length;
   }
 
   final int categoryHabits =

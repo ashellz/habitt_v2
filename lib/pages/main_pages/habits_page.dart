@@ -5,6 +5,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -100,10 +101,11 @@ class Habits extends StatelessWidget {
     return Column(
       children: [
         for (final category in categoryProvider.categories)
-          Padding(
-            padding: EdgeInsets.only(top: 12),
-            child: HabitCategory(category: category),
-          ),
+          if (getCategoryLength(category, context) > 0)
+            Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: HabitCategory(category: category),
+            ),
       ],
     );
   }
