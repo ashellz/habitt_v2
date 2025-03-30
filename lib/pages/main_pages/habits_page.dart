@@ -43,21 +43,18 @@ class _HabitsPageState extends State<HabitsPage> {
                 }),
         child: Icon(Icons.add, color: Colors.white),
       ),
-      body: DefaultTextStyle(
-        style: TextStyle(color: Color(0xFF212529)),
-        child: GradientBackground(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                Greeting(),
-                CategoriesList(),
-                HabitsCompletedWidget(),
-                Habits(),
-                SizedBox(height: 80),
-              ],
-            ),
+      body: GradientBackground(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            children: [
+              Greeting(),
+              CategoriesList(),
+              HabitsCompletedWidget(),
+              Habits(),
+              SizedBox(height: 80),
+            ],
           ),
         ),
       ),

@@ -22,6 +22,7 @@ class Greeting extends StatelessWidget {
           "Shellz",
           style: TextStyle(
             fontSize: 38,
+            height: 1,
             color: colorProvider.colorScheme.darkerStandardColor,
             fontWeight: FontWeight.bold,
           ),
