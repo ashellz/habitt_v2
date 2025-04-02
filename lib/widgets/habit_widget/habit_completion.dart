@@ -244,7 +244,7 @@ class DurationDisplayState extends State<DurationDisplay> {
       _painter.layout(minWidth: 0, maxWidth: double.infinity);
 
       debugPrint(
-        'Testing "${currentBottomText}" at $testFontSize: '
+        'Testing "$currentBottomText" at $testFontSize: '
         '${_painter.width} vs $maxWidth',
       );
 
