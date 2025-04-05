@@ -121,11 +121,34 @@ class NumberPickerScreenState extends State<NumberPickerScreen> {
                                 (context) => SelectAmountDurationDialog(
                                   wheelValue: wheelValue,
                                   durationValue: durationValue,
-                                  onChanged: (value) {
+                                  onChangedAmount: (value) {
                                     WidgetsBinding.instance
                                         .addPostFrameCallback((_) {
                                           setState(() {
                                             wheelValue = value;
+                                          });
+                                        });
+                                  },
+                                  onChangedHours: (value) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          setState(() {
+                                            durationValue = Duration(
+                                              hours: value,
+                                              minutes:
+                                                  durationValue.inMinutes % 60,
+                                            );
+                                          });
+                                        });
+                                  },
+                                  onChangedMinutes: (value) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          setState(() {
+                                            durationValue = Duration(
+                                              hours: durationValue.inHours,
+                                              minutes: value,
+                                            );
                                           });
                                         });
                                   },

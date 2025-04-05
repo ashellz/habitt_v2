@@ -6,13 +6,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class SelectAmountDurationDialog extends StatelessWidget {
   const SelectAmountDurationDialog({
     super.key,
-    required this.onChanged,
+    required this.onChangedAmount,
     required this.wheelValue,
     required this.type,
     required this.durationValue,
+    required this.onChangedHours,
+    required this.onChangedMinutes,
   });
 
-  final ValueChanged<int> onChanged;
+  final ValueChanged<int> onChangedAmount;
+  final ValueChanged<int> onChangedHours;
+  final ValueChanged<int> onChangedMinutes;
   final int wheelValue;
   final Duration durationValue;
   final HabitType type;
@@ -31,7 +35,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                   min: 2,
                   max: 9999,
                   value: wheelValue.toDouble(),
-                  onChanged: onChanged,
+                  onChanged: onChangedAmount,
                 )
                 : Column(
                   mainAxisSize: MainAxisSize.min,
@@ -41,7 +45,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                       min: 0,
                       max: 23,
                       value: durationValue.inHours.toDouble(),
-                      onChanged: onChanged,
+                      onChanged: onChangedHours,
                     ),
                     const SizedBox(height: 12),
                     CustomSpinBox(
@@ -50,7 +54,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                       max: 59,
 
                       value: durationValue.inMinutes % 60,
-                      onChanged: onChanged,
+                      onChanged: onChangedMinutes,
                     ),
                   ],
                 ),
