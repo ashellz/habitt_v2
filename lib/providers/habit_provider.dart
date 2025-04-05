@@ -40,4 +40,12 @@ class HabitProvider extends ChangeNotifier {
         .updateHabitAmountCompleted(amountCompleted);
     notifyListeners();
   }
+
+  void updateHabitDurationCompleted(int id, int durationCompleted) {
+    habits
+        .where((h) => h.id == id)
+        .first
+        .updateHabitDurationCompleted(durationCompleted);
+    notifyListeners();
+  }
 }
