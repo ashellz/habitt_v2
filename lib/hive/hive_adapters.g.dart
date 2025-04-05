@@ -1,0 +1,77 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'hive_adapters.dart';
+
+// **************************************************************************
+// AdaptersGenerator
+// **************************************************************************
+
+class HabitAdapter extends TypeAdapter<Habit> {
+  @override
+  final int typeId = 0;
+
+  @override
+  Habit read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Habit(
+      id: (fields[0] as num).toInt(),
+      name: fields[1] as String,
+      description: fields[2] == null ? "" : fields[2] as String,
+      iconPath: fields[3] as String,
+      categoryId: (fields[4] as num).toInt(),
+      amountName: fields[7] == null ? "times" : fields[7] as String,
+      tag: fields[5] == null ? "No tag" : fields[5] as String,
+      completed: fields[6] == null ? false : fields[6] as bool,
+      amount: fields[8] == null ? 0 : (fields[8] as num).toInt(),
+      amountCompleted: fields[9] == null ? 0 : (fields[9] as num).toInt(),
+      duration: fields[10] == null ? 0 : (fields[10] as num).toInt(),
+      durationCompleted: fields[11] == null ? 0 : (fields[11] as num).toInt(),
+      streak: fields[12] == null ? 0 : (fields[12] as num).toInt(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Habit obj) {
+    writer
+      ..writeByte(13)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.description)
+      ..writeByte(3)
+      ..write(obj.iconPath)
+      ..writeByte(4)
+      ..write(obj.categoryId)
+      ..writeByte(5)
+      ..write(obj.tag)
+      ..writeByte(6)
+      ..write(obj.completed)
+      ..writeByte(7)
+      ..write(obj.amountName)
+      ..writeByte(8)
+      ..write(obj.amount)
+      ..writeByte(9)
+      ..write(obj.amountCompleted)
+      ..writeByte(10)
+      ..write(obj.duration)
+      ..writeByte(11)
+      ..write(obj.durationCompleted)
+      ..writeByte(12)
+      ..write(obj.streak);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HabitAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

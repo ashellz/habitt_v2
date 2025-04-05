@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:hive_ce/hive.dart';
 
 class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
+  final habitBox = Hive.box<Habit>('habits');
 
   HabitProvider() {
     _loadHabits();
   }
 
   void _loadHabits() {
-    // TODO: Load habits from database
+    habits = habitBox.values.toList();
+  }
+
+  void updateHabitInDB(Habit habit) {
+    habitBox.putAt(habitBox.values.toList().indexOf(habit), habit);
   }
 
   void addHabit(Habit habit) {
     habits.add(habit);
+    habitBox.add(habit);
     notifyListeners();
   }
 
@@ -25,11 +32,13 @@ class HabitProvider extends ChangeNotifier {
   void completeHabit(int id) {
     final habit = habits.firstWhere((h) => h.id == id);
     habit.completeHabit();
+    updateHabitInDB(habit);
     notifyListeners();
   }
 
   void updateHabit(Habit habit) {
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
+    updateHabitInDB(habit);
     notifyListeners();
   }
 
@@ -38,6 +47,7 @@ class HabitProvider extends ChangeNotifier {
         .where((h) => h.id == id)
         .first
         .updateHabitAmountCompleted(amountCompleted);
+    updateHabitInDB(habits.firstWhere((h) => h.id == id));
     notifyListeners();
   }
 
@@ -46,6 +56,7 @@ class HabitProvider extends ChangeNotifier {
         .where((h) => h.id == id)
         .first
         .updateHabitDurationCompleted(durationCompleted);
+    updateHabitInDB(habits.firstWhere((h) => h.id == id));
     notifyListeners();
   }
 }

@@ -319,87 +319,90 @@ class $AssetsImagesIconsGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-        apple,
-        art,
-        bag,
-        basketball,
-        battery,
-        battery2,
-        book,
-        bread,
-        breakfast,
-        breakfast2,
-        cake,
-        cake2,
-        candy,
-        car,
-        chocolate,
-        church,
-        church2,
-        coffee,
-        compass,
-        computer,
-        controller,
-        cookie,
-        counter,
-        dog,
-        dog2,
-        dogFood,
-        duration,
-        food,
-        football,
-        fries,
-        hamburger,
-        horse,
-        horseMan,
-        horseWoman,
-        iceCream,
-        iceCream2,
-        joystick,
-        juice,
-        juice2,
-        laptop,
-        macbook,
-        mosque,
-        note,
-        notebook,
-        office,
-        pen,
-        phone,
-        pie,
-        pingPong,
-        pizza,
-        plate,
-        pray,
-        pray2,
-        pray3,
-        pushup,
-        quran,
-        run,
-        shirt,
-        squat,
-        stadium,
-        strawberry,
-        streak,
-        swim,
-        tie,
-        tooth,
-        toothbrush,
-        walk,
-        water,
-        water2,
-        workout,
-        workout2,
-        workout3,
-        workout4,
-        workout5,
-        wrench,
-        write
-      ];
+    apple,
+    art,
+    bag,
+    basketball,
+    battery,
+    battery2,
+    book,
+    bread,
+    breakfast,
+    breakfast2,
+    cake,
+    cake2,
+    candy,
+    car,
+    chocolate,
+    church,
+    church2,
+    coffee,
+    compass,
+    computer,
+    controller,
+    cookie,
+    counter,
+    dog,
+    dog2,
+    dogFood,
+    duration,
+    food,
+    football,
+    fries,
+    hamburger,
+    horse,
+    horseMan,
+    horseWoman,
+    iceCream,
+    iceCream2,
+    joystick,
+    juice,
+    juice2,
+    laptop,
+    macbook,
+    mosque,
+    note,
+    notebook,
+    office,
+    pen,
+    phone,
+    pie,
+    pingPong,
+    pizza,
+    plate,
+    pray,
+    pray2,
+    pray3,
+    pushup,
+    quran,
+    run,
+    shirt,
+    squat,
+    stadium,
+    strawberry,
+    streak,
+    swim,
+    tie,
+    tooth,
+    toothbrush,
+    walk,
+    water,
+    water2,
+    workout,
+    workout2,
+    workout3,
+    workout4,
+    workout5,
+    wrench,
+    write,
+  ];
 }
 
 class $AssetsImagesSvgGen {
   const $AssetsImagesSvgGen();
+
+  /// File path: assets/images/svg/arrow-back.svg
+  String get arrowBack => 'assets/images/svg/arrow-back.svg';
 
   /// File path: assets/images/svg/calendar.svg
   String get calendar => 'assets/images/svg/calendar.svg';
@@ -417,7 +420,14 @@ class $AssetsImagesSvgGen {
   String get stats => 'assets/images/svg/stats.svg';
 
   /// List of all assets
-  List<String> get values => [calendar, habits, settings, slider, stats];
+  List<String> get values => [
+    arrowBack,
+    calendar,
+    habits,
+    settings,
+    slider,
+    stats,
+  ];
 }
 
 class Assets {
@@ -427,11 +437,7 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -491,15 +497,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

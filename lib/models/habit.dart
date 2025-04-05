@@ -1,4 +1,6 @@
-class Habit {
+import 'package:hive_ce_flutter/hive_flutter.dart';
+
+class Habit extends HiveObject {
   final int id;
   String name;
   String description;
