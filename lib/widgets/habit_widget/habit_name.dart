@@ -13,10 +13,10 @@ class HabitNameDisplay extends StatefulWidget {
   final Color textColor;
 
   @override
-  _HabitNameDisplayState createState() => _HabitNameDisplayState();
+  HabitNameDisplayState createState() => HabitNameDisplayState();
 }
 
-class _HabitNameDisplayState extends State<HabitNameDisplay>
+class HabitNameDisplayState extends State<HabitNameDisplay>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _lineWidth;
@@ -30,6 +30,11 @@ class _HabitNameDisplayState extends State<HabitNameDisplay>
     );
 
     _lineWidth = Tween<double>(begin: 0, end: 0).animate(_controller);
+
+    if (widget.completed) {
+      // Animate from 0 to full width when completed becomes true
+      _controller.forward();
+    }
   }
 
   @override
@@ -55,7 +60,6 @@ class _HabitNameDisplayState extends State<HabitNameDisplay>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Update animation values dynamically
         _lineWidth = Tween<double>(
           begin: 0,
           end: constraints.maxWidth,
@@ -70,13 +74,13 @@ class _HabitNameDisplayState extends State<HabitNameDisplay>
               style: TextStyle(fontSize: 16, color: widget.textColor),
             ),
             Positioned(
-              top: 10,
+              top: 12,
               left: 0,
               child: AnimatedBuilder(
                 animation: _lineWidth,
                 builder: (context, child) {
                   return Container(
-                    height: 1, // Thickness of the strike-through line
+                    height: 1,
                     width: _lineWidth.value,
                     color: widget.textColor,
                   );
