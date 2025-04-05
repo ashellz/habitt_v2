@@ -26,5 +26,7 @@
     "youCanPressNumberAbove": "You can also press the number above to change {type}",
     "addHabit": "Add Habit",
     "hours": "Hours",
-    "minutes": "Minutes"
+    "minutes": "Minutes",
+    "done": "Done",
+    "cancel": "Cancel"
 }

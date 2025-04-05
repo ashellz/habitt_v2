@@ -24,17 +24,20 @@ class HabitProvider extends ChangeNotifier {
 
   void completeHabit(int id) {
     final habit = habits.firstWhere((h) => h.id == id);
-
-    habit.completed = !habit.completed;
-
-    habit.amountCompleted = habit.completed ? habit.amount : 0;
-    habit.durationCompleted = habit.completed ? habit.duration : 0;
-
+    habit.completeHabit();
     notifyListeners();
   }
 
   void updateHabit(Habit habit) {
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
+    notifyListeners();
+  }
+
+  void updateHabitAmountCompleted(int id, int amountCompleted) {
+    habits
+        .where((h) => h.id == id)
+        .first
+        .updateHabitAmountCompleted(amountCompleted);
     notifyListeners();
   }
 }

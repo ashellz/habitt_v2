@@ -6,6 +6,7 @@ class Habit {
   int categoryId; // Any time, Morning, Afternoon, Evening
   String tag; // Custom tags
   bool completed;
+  String amountName;
   int amount; // Number of times to do
   int amountCompleted; // Number of times completed
   int duration; // How long to do
@@ -18,6 +19,7 @@ class Habit {
     this.description = "",
     required this.iconPath,
     required this.categoryId,
+    this.amountName = "times",
     this.tag = "No tag",
     this.completed = false,
     this.amount = 0,
@@ -39,5 +41,25 @@ class Habit {
     duration = habit.duration;
     durationCompleted = habit.durationCompleted;
     streak = habit.streak;
+  }
+
+  void completeHabit() {
+    completed = !completed;
+    amountCompleted = completed ? amount : 0;
+    durationCompleted = completed ? duration : 0;
+  }
+
+  void updateHabitAmountCompleted(int amountCompleted) {
+    if (amountCompleted == amount) {
+      completed = true;
+    }
+    this.amountCompleted = amountCompleted;
+  }
+
+  void updateHabitDurationCompleted(int durationCompleted) {
+    if (durationCompleted == duration) {
+      completed = true;
+    }
+    this.durationCompleted = durationCompleted;
   }
 }

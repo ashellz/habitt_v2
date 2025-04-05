@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/habit_widget/habit_completion.dart';
+import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/habit_streak.dart';
 import 'package:habitt/widgets/habit_widget/habit_text.dart';

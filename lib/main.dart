@@ -32,11 +32,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorProvider = context.watch<ColorProvider>();
+    final Color seedColor = colorProvider.colorScheme.vividColor;
+
     return MaterialApp(
       title: 'habitt',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
         useMaterial3: true,
         fontFamily: 'Poppins',
         textTheme: ThemeData.light().textTheme.apply(
