@@ -34,6 +34,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
       final localizations = AppLocalizations.of(context)!;
       categoryProvider.selectCategory(1);
       stateProvider.nameController.text = localizations.habitName;
+      stateProvider.habitAmountLabelController.text = localizations.times;
       stateProvider.iconPath = Assets.images.icons.book.path;
     });
   }
@@ -130,6 +131,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           tag: "No tag",
                           completed: false,
                           amount: stateProvider.habitAmount,
+                          amountLabel:
+                              stateProvider.habitAmountLabelController.text,
                           amountCompleted: 0,
                           duration: stateProvider.habitDuration.inMinutes,
                           durationCompleted: 0,

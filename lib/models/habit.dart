@@ -8,7 +8,7 @@ class Habit extends HiveObject {
   int categoryId; // Any time, Morning, Afternoon, Evening
   String tag; // Custom tags
   bool completed;
-  String amountName;
+  String amountLabel;
   int amount; // Number of times to do
   int amountCompleted; // Number of times completed
   int duration; // How long to do
@@ -21,7 +21,7 @@ class Habit extends HiveObject {
     this.description = "",
     required this.iconPath,
     required this.categoryId,
-    this.amountName = "times",
+    this.amountLabel = "times",
     this.tag = "No tag",
     this.completed = false,
     this.amount = 0,

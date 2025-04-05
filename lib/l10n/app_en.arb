@@ -24,9 +24,11 @@
     "times": "times",
     "edit": "Edit",
     "youCanPressNumberAbove": "You can also press the number above to change {type}",
+    "orToChangeLabel": "or the amount label",
     "addHabit": "Add Habit",
     "hours": "Hours",
     "minutes": "Minutes",
     "done": "Done",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "label": "Label"
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class StateProvider extends ChangeNotifier {
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
+  TextEditingController habitAmountLabelController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController descController = TextEditingController();
   String _iconPath = "";
@@ -29,6 +30,7 @@ class StateProvider extends ChangeNotifier {
   void reset() {
     _habitAmount = 0;
     _habitDuration = Duration.zero;
+    habitAmountLabelController.clear();
     nameController.clear();
     descController.clear();
     _iconPath = "";

@@ -11,6 +11,8 @@ class CustomTextField extends StatelessWidget {
     this.maxTextLength = 9999,
     this.maxLines = 1,
     this.topPadding = 24,
+    this.digitsOnly = false,
+    this.textOnly = false,
     this.onTap,
   });
 
@@ -20,6 +22,8 @@ class CustomTextField extends StatelessWidget {
   final int maxLines;
   final double topPadding;
   final VoidCallback? onTap;
+  final bool digitsOnly;
+  final bool textOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,14 @@ class CustomTextField extends StatelessWidget {
             Theme.of(context).brightness == Brightness.dark
                 ? Brightness.dark
                 : Brightness.light,
-        inputFormatters: [LengthLimitingTextInputFormatter(maxTextLength)],
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(maxTextLength),
+          textOnly
+              ? FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
+              : digitsOnly
+              ? FilteringTextInputFormatter.digitsOnly
+              : FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
+        ],
         cursorColor: colorProvider.textColor,
         cursorWidth: 1.0,
         cursorHeight: 20.0,

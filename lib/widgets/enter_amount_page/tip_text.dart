@@ -22,11 +22,7 @@ class TipText extends StatelessWidget {
     return SizedBox(
       width: width / 2,
       child: Text(
-        localizations.youCanPressNumberAbove(
-          type == HabitType.amount
-              ? localizations.amount.toLowerCase()
-              : localizations.duration.toLowerCase(),
-        ),
+        "${localizations.youCanPressNumberAbove(type == HabitType.amount ? localizations.amount.toLowerCase() : localizations.duration.toLowerCase())} ${type == HabitType.amount ? localizations.orToChangeLabel : ""}",
         style: TextStyle(color: colorProvider.textColor),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/get_capitalized_first.dart';
 import 'package:habitt/widgets/custom_spinbox.dart';
 import 'package:habitt/widgets/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
@@ -122,7 +123,7 @@ class _CompletionDialogContentState extends State<CompletionDialogContent> {
               Column(
                 children: [
                   CustomSpinBox(
-                    labelText: widget.habit.amountName,
+                    labelText: capitalizeFirst(widget.habit.amountLabel),
                     min: 0,
                     max: amount.toDouble(),
                     value: widget.stateProvider.habitAmount.toDouble(),

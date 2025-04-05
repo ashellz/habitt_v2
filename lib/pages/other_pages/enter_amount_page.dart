@@ -97,6 +97,9 @@ class NumberPickerScreenState extends State<NumberPickerScreen> {
     final localizations = AppLocalizations.of(context)!;
     final double width = MediaQuery.of(context).size.width;
     final double offset = width / 4;
+    final stateProvider = context.watch<StateProvider>();
+    final amountLabelController = stateProvider.habitAmountLabelController;
+    final amountLabel = amountLabelController.text;
 
     return Scaffold(
       body: GradientBackground(
@@ -121,6 +124,8 @@ class NumberPickerScreenState extends State<NumberPickerScreen> {
                                 (context) => SelectAmountDurationDialog(
                                   wheelValue: wheelValue,
                                   durationValue: durationValue,
+                                  habitAmountLabelController:
+                                      amountLabelController,
                                   onChangedAmount: (value) {
                                     WidgetsBinding.instance
                                         .addPostFrameCallback((_) {
@@ -154,16 +159,42 @@ class NumberPickerScreenState extends State<NumberPickerScreen> {
                                   },
                                   type: widget.type,
                                 ),
+                          ).whenComplete(
+                            () => setState(() {
+                              if (amountLabelController.text.isEmpty) {
+                                amountLabelController.text =
+                                    localizations.times;
+                              }
+                            }),
                           ),
                       child:
                           widget.type == HabitType.amount
-                              ? Text(
-                                wheelValue.toString(),
-                                style: TextStyle(
-                                  fontSize: 56,
-                                  height: 0,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorProvider.textColor,
+                              ? SizedBox(
+                                width: width - 32,
+                                child: Text.rich(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '$wheelValue ',
+                                        style: TextStyle(
+                                          fontSize: 56,
+                                          height: 0,
+                                          fontWeight: FontWeight.bold,
+                                          color: colorProvider.textColor,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: amountLabel,
+                                        style: TextStyle(
+                                          fontSize: 42,
+                                          height: 0,
+                                          color: colorProvider.textColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               )
                               : Row(

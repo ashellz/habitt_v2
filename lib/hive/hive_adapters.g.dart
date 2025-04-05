@@ -22,7 +22,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       description: fields[2] == null ? "" : fields[2] as String,
       iconPath: fields[3] as String,
       categoryId: (fields[4] as num).toInt(),
-      amountName: fields[7] == null ? "times" : fields[7] as String,
+      amountLabel: fields[7] == null ? "times" : fields[7] as String,
       tag: fields[5] == null ? "No tag" : fields[5] as String,
       completed: fields[6] == null ? false : fields[6] as bool,
       amount: fields[8] == null ? 0 : (fields[8] as num).toInt(),
@@ -52,7 +52,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(6)
       ..write(obj.completed)
       ..writeByte(7)
-      ..write(obj.amountName)
+      ..write(obj.amountLabel)
       ..writeByte(8)
       ..write(obj.amount)
       ..writeByte(9)
