@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/get_duration_string.dart';
 import 'package:provider/provider.dart';
 
 enum HabitType { none, amount, duration }
@@ -28,8 +29,9 @@ class SelectHabitTypeWidget extends StatelessWidget {
 
     final stateProvider = context.watch<StateProvider>();
     final String habitAmount = stateProvider.habitAmount.toString();
-    final String habitDuration =
-        "${stateProvider.habitDuration.inHours}h${stateProvider.habitDuration.inMinutes % 60}m";
+    final String habitDuration = getDurationString(
+      stateProvider.habitDuration.inMinutes,
+    );
 
     return GestureDetector(
       // Used for selecting the widget
