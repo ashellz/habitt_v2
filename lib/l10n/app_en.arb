@@ -30,5 +30,6 @@
     "minutes": "Minutes",
     "done": "Done",
     "cancel": "Cancel",
-    "label": "Label"
+    "label": "Label",
+    "editHabit": "Edit Habit"
 }

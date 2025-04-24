@@ -129,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  circle_wheel:
-    dependency: "direct main"
-    description:
-      name: circle_wheel
-      sha256: "212a2ac93e618da0bff14f1b428b77296451f7374c2b31be7004848933f02309"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+2"
   clock:
     dependency: transitive
     description:

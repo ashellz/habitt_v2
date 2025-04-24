@@ -29,7 +29,9 @@ class StateProvider extends ChangeNotifier {
 
   void reset() {
     _habitAmount = 0;
+
     _habitDuration = Duration.zero;
+
     habitAmountLabelController.clear();
     nameController.clear();
     descController.clear();
@@ -38,6 +40,8 @@ class StateProvider extends ChangeNotifier {
   }
 
   int get habitAmount => _habitAmount;
+
   Duration get habitDuration => _habitDuration;
+
   String get iconPath => _iconPath;
 }

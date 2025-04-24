@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/generated/assets.gen.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/floating_bottom_button.dart';
@@ -14,14 +12,16 @@ import 'package:habitt/widgets/selected_habit_display.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddHabitPage extends StatefulWidget {
-  const AddHabitPage({super.key});
+class EditHabitPage extends StatefulWidget {
+  const EditHabitPage({super.key, required this.habit});
+
+  final Habit habit;
 
   @override
-  State<AddHabitPage> createState() => _AddHabitPageState();
+  State<EditHabitPage> createState() => _EditHabitPageState();
 }
 
-class _AddHabitPageState extends State<AddHabitPage> {
+class _EditHabitPageState extends State<EditHabitPage> {
   bool shouldReset = true;
 
   @override
@@ -31,11 +31,14 @@ class _AddHabitPageState extends State<AddHabitPage> {
     final stateProvider = context.read<StateProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final localizations = AppLocalizations.of(context)!;
-      categoryProvider.selectCategory(1);
-      stateProvider.nameController.text = localizations.habitName;
-      stateProvider.habitAmountLabelController.text = localizations.times;
-      stateProvider.iconPath = Assets.images.icons.book.path;
+      // Loads habit values
+      categoryProvider.selectCategory(widget.habit.categoryId);
+      stateProvider.nameController.text = widget.habit.name;
+      stateProvider.descController.text = widget.habit.description;
+      stateProvider.habitAmount = widget.habit.amount;
+      stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
+      stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
+      stateProvider.iconPath = widget.habit.iconPath;
     });
   }
 
@@ -50,8 +53,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
   @override
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
-    final habitProvider = context.watch<HabitProvider>();
-    final categoryProvider = context.watch<CategoryProvider>();
     final localizations = AppLocalizations.of(context)!;
 
     final stateProvider = context.watch<StateProvider>();
@@ -60,14 +61,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
     bool canAddHabit() {
       return nameController.text.isNotEmpty;
-    }
-
-    int getUniqueId() {
-      int id = 0;
-      while (habitProvider.habits.any((h) => h.id == id)) {
-        id++;
-      }
-      return id;
     }
 
     return Scaffold(
@@ -82,7 +75,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               child: ListView(
                 children: [
                   Text(
-                    localizations.newHabit,
+                    localizations.editHabit,
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
@@ -90,10 +83,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     ),
                   ),
                   SelectedHabitDisplay(
-                    streak: 0,
-                    amountCompleted: 0,
-                    durationCompleted: 0,
-                    completed: false,
+                    completed: widget.habit.completed,
+                    amountCompleted: widget.habit.amountCompleted,
+                    durationCompleted: widget.habit.durationCompleted,
+                    streak: widget.habit.streak,
                   ),
                   CategoriesList(
                     topPadding: 8,
@@ -126,24 +119,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     onPressed: () {
                       if (!canAddHabit()) return;
 
-                      habitProvider.addHabit(
-                        Habit(
-                          id: getUniqueId(),
-                          name: nameController.text,
-                          description: descController.text,
-                          iconPath: stateProvider.iconPath,
-                          categoryId: categoryProvider.selectedCategoryId,
-                          tag: "No tag",
-                          completed: false,
-                          amount: stateProvider.habitAmount,
-                          amountLabel:
-                              stateProvider.habitAmountLabelController.text,
-                          amountCompleted: 0,
-                          duration: stateProvider.habitDuration.inMinutes,
-                          durationCompleted: 0,
-                          streak: 0,
-                        ),
-                      );
                       Navigator.of(context).pop();
                     },
                     label: localizations.addHabit,

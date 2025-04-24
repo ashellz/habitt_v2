@@ -17,6 +17,14 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
+    final amount = stateProvider.habitAmount;
+    final duration = stateProvider.habitDuration.inMinutes;
+
+    if (amount > 0) {
+      selectedType = HabitType.amount;
+    } else if (duration > 0) {
+      selectedType = HabitType.duration;
+    }
 
     return Padding(
       padding: EdgeInsets.only(top: 16),

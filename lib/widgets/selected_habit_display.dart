@@ -7,7 +7,18 @@ import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:provider/provider.dart';
 
 class SelectedHabitDisplay extends StatelessWidget {
-  const SelectedHabitDisplay({super.key});
+  const SelectedHabitDisplay({
+    super.key,
+    required this.streak,
+    required this.amountCompleted,
+    required this.durationCompleted,
+    required this.completed,
+  });
+
+  final int streak;
+  final int amountCompleted;
+  final int durationCompleted;
+  final bool completed;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +48,12 @@ class SelectedHabitDisplay extends StatelessWidget {
                           iconPath == ""
                               ? Assets.images.icons.book.path
                               : iconPath,
-                      streak: 0,
+                      streak: streak,
                       amount: amount,
                       duration: duration,
-                      amountCompleted: 0,
-                      durationCompleted: 0,
-                      completed: false,
+                      amountCompleted: amountCompleted,
+                      durationCompleted: durationCompleted,
+                      completed: completed,
                     ),
                     editable: true,
                   ),
