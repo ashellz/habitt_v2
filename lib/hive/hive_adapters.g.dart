@@ -22,7 +22,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       description: fields[2] == null ? "" : fields[2] as String,
       iconPath: fields[3] as String,
       categoryId: (fields[4] as num).toInt(),
-      amountLabel: fields[7] == null ? "times" : fields[7] as String,
+      amountLabel: fields[13] == null ? "times" : fields[13] as String,
       tag: fields[5] == null ? "No tag" : fields[5] as String,
       completed: fields[6] == null ? false : fields[6] as bool,
       amount: fields[8] == null ? 0 : (fields[8] as num).toInt(),
@@ -51,8 +51,6 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..write(obj.tag)
       ..writeByte(6)
       ..write(obj.completed)
-      ..writeByte(7)
-      ..write(obj.amountLabel)
       ..writeByte(8)
       ..write(obj.amount)
       ..writeByte(9)
@@ -62,7 +60,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(11)
       ..write(obj.durationCompleted)
       ..writeByte(12)
-      ..write(obj.streak);
+      ..write(obj.streak)
+      ..writeByte(13)
+      ..write(obj.amountLabel);
   }
 
   @override
@@ -72,6 +72,43 @@ class HabitAdapter extends TypeAdapter<Habit> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HabitAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class DayAdapter extends TypeAdapter<Day> {
+  @override
+  final int typeId = 1;
+
+  @override
+  Day read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Day(
+      date: fields[0] as DateTime,
+      habits: (fields[1] as List).cast<Habit>(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Day obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.date)
+      ..writeByte(1)
+      ..write(obj.habits);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DayAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
