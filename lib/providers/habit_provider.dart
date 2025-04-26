@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:hive_ce/hive.dart';
 
 class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
   final habitBox = Hive.box<Habit>('habits');
+  final daysBox = Hive.box<Day>('days');
 
   HabitProvider() {
     _loadHabits();
@@ -12,6 +14,15 @@ class HabitProvider extends ChangeNotifier {
 
   void _loadHabits() {
     habits = habitBox.values.toList();
+  }
+
+  void _saveHabitDay(DateTime day) {
+    final DateTime todaySimple = DateTime(day.year, day.month, day.day);
+
+    for (final day in daysBox.values) {
+      debugPrint(day.date.toString());
+      daysBox.put(todaySimple, day);
+    }
   }
 
   void updateHabitInDB(Habit habit) {

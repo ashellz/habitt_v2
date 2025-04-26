@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class DataProvider extends ChangeNotifier {
+  DateTime? _lastOpenedDate;
+
+  DataProvider() {
+    _init();
+  }
+
+  Future<void> _init() async {
+    _updateLastOpenedDate();
+  }
+
+  Future<void> _updateLastOpenedDate() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // I check if user has lastOpenedDate
+    final temp = prefs.getString("lastOpenedDate");
+    if (temp == null) {
+      // If not, I set it to now
+      _lastOpenedDate = DateTime.now();
+    } else {
+      // Else I set it to old one
+      _lastOpenedDate = DateTime.parse(temp);
+      // I check for new day
+      checkForNewDay(prefs);
+    }
+  }
+
+  void checkForNewDay(SharedPreferences prefs) {
+    final DateTime today = DateTime.now();
+
+    if (_lastOpenedDate!.day != today.day) {
+      // Before updating lastOpenedDate, I update daysBox with that date
+      // ...
+
+      //Now we reset habit status (completion, amountCompleted, durationCompleted)
+      // ...
+
+      // If new day, we now can update lastOpenedDate
+      _lastOpenedDate = today;
+      prefs.setString("lastOpenedDate", today.toString());
+
+      notifyListeners();
+    }
+  }
+
+  DateTime get lastOpenedDate => _lastOpenedDate ?? DateTime.now();
+}

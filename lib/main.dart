@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/l10n/l10n.dart';
+import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/data_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -19,6 +21,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapters();
   await Hive.openBox<Habit>('habits');
+  await Hive.openBox<Day>('days');
 
   runApp(
     MultiProvider(
@@ -27,6 +30,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => HabitProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => StateProvider()),
+        ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
       child: const MyApp(),
     ),

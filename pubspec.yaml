@@ -41,6 +41,7 @@ dependencies:
   build_runner: ^2.4.15
   hive_ce: ^2.10.1
   hive_ce_flutter: ^2.2.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_gen_runner: ^5.3.1
