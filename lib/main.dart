@@ -27,10 +27,15 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ColorProvider()),
-        ChangeNotifierProvider(create: (_) => HabitProvider()),
+        ChangeNotifierProvider(create: (_) => HabitProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => StateProvider()),
-        ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(
+          create:
+              (context) => DataProvider(
+                newHabitProvider: context.watch<HabitProvider>(),
+              ),
+        ),
       ],
       child: const MyApp(),
     ),

@@ -64,4 +64,10 @@ class Habit extends HiveObject {
     }
     this.durationCompleted = durationCompleted;
   }
+
+  void resetCompletion() {
+    completed = false;
+    amountCompleted = 0;
+    durationCompleted = 0;
+  }
 }

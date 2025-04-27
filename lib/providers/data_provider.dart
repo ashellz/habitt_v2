@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/day.dart';
+import 'package:habitt/providers/habit_provider.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataProvider extends ChangeNotifier {
   DateTime? _lastOpenedDate;
+  final daysBox = Hive.box<Day>('days');
+  HabitProvider? habitProvider;
 
-  DataProvider() {
-    _init();
+  DataProvider({required HabitProvider newHabitProvider}) {
+    _init(newHabitProvider);
   }
 
-  Future<void> _init() async {
+  Future<void> _init(HabitProvider newHabitProvider) async {
+    habitProvider = newHabitProvider;
     _updateLastOpenedDate();
   }
 
@@ -33,16 +39,24 @@ class DataProvider extends ChangeNotifier {
 
     if (_lastOpenedDate!.day != today.day) {
       // Before updating lastOpenedDate, I update daysBox with that date
-      // ...
+      _saveHabitDay(today);
 
       //Now we reset habit status (completion, amountCompleted, durationCompleted)
-      // ...
-
+      habitProvider!.resetCompletion();
       // If new day, we now can update lastOpenedDate
       _lastOpenedDate = today;
       prefs.setString("lastOpenedDate", today.toString());
 
       notifyListeners();
+    }
+  }
+
+  void _saveHabitDay(DateTime day) {
+    final DateTime todaySimple = DateTime(day.year, day.month, day.day);
+
+    for (final day in daysBox.values) {
+      debugPrint(day.date.toString());
+      daysBox.put(todaySimple, day);
     }
   }
 

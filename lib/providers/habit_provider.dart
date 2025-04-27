@@ -16,15 +16,6 @@ class HabitProvider extends ChangeNotifier {
     habits = habitBox.values.toList();
   }
 
-  void _saveHabitDay(DateTime day) {
-    final DateTime todaySimple = DateTime(day.year, day.month, day.day);
-
-    for (final day in daysBox.values) {
-      debugPrint(day.date.toString());
-      daysBox.put(todaySimple, day);
-    }
-  }
-
   void updateHabitInDB(Habit habit) {
     habitBox.putAt(habitBox.values.toList().indexOf(habit), habit);
   }
@@ -50,6 +41,14 @@ class HabitProvider extends ChangeNotifier {
   void updateHabit(Habit habit) {
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
     updateHabitInDB(habit);
+    notifyListeners();
+  }
+
+  void resetCompletion() {
+    for (final habit in habits) {
+      habit.resetCompletion();
+      updateHabitInDB(habit);
+    }
     notifyListeners();
   }
 
