@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_capitalized_first.dart';
@@ -18,6 +19,7 @@ class CompletionDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final habitProvider = context.read<HabitProvider>();
     final stateProvider = context.watch<StateProvider>();
+    final colorProvider = context.watch<ColorProvider>();
 
     HabitType type = HabitType.none;
 
@@ -30,6 +32,7 @@ class CompletionDialog extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) {
         return AlertDialog(
+          backgroundColor: colorProvider.backgroundColor,
           content: CompletionDialogContent(
             habit: habit,
             stateProvider: stateProvider,
@@ -40,13 +43,23 @@ class CompletionDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
-                  child: Text(localizations.cancel),
+                  child: Text(
+                    localizations.cancel,
+                    style: TextStyle(
+                      color: colorProvider.colorScheme.darkerStandardColor,
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                 ),
                 TextButton(
-                  child: Text(localizations.done),
+                  child: Text(
+                    localizations.done,
+                    style: TextStyle(
+                      color: colorProvider.colorScheme.darkerStandardColor,
+                    ),
+                  ),
                   onPressed: () {
                     if (type == HabitType.amount) {
                       habitProvider.updateHabitAmountCompleted(
