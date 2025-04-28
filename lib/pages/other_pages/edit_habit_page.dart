@@ -7,6 +7,7 @@ import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/floating_bottom_button.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
+import 'package:habitt/widgets/nav_back_button.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
 import 'package:habitt/widgets/selected_habit_display.dart';
 import 'package:provider/provider.dart';
@@ -74,6 +75,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ListView(
                 children: [
+                  NavBackButton(colorProvider: colorProvider),
                   Text(
                     localizations.editHabit,
                     style: TextStyle(
