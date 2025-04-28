@@ -13,6 +13,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +23,12 @@ Future<void> main() async {
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Day>('days');
 
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ColorProvider()),
+        ChangeNotifierProvider(create: (_) => ColorProvider(prefs: prefs)),
         ChangeNotifierProvider(create: (_) => HabitProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => StateProvider()),

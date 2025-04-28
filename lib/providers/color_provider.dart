@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/custom_color_scheme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ColorProvider extends ChangeNotifier {
-  bool isDarkMode = true;
+  bool isDarkMode = false;
   String colorSchemeString = "blue";
   Color textColor = Color(0xFF212529);
   Color mutedTextColor = Color(0xFF6C757D);
@@ -12,13 +13,23 @@ class ColorProvider extends ChangeNotifier {
   Color standardColor = Color(0xFFEDEDED);
   Color disabledColor = Color(0xFFF8F9FA);
 
-  ColorProvider() {
-    colorScheme = _blue;
-    colorSchemeString = "blue";
+  final SharedPreferences prefs;
+
+  ColorProvider({required this.prefs}) {
+    isDarkMode = prefs.getBool("isDarkMode") ?? false;
+    colorSchemeString = prefs.getString("colorScheme") ?? "blue";
+    changeColorScheme(colorSchemeString);
+    adaptModeColors();
   }
 
   void changeMode() {
     isDarkMode = !isDarkMode;
+    prefs.setBool("isDarkMode", isDarkMode);
+    adaptModeColors();
+    changeColorScheme(colorSchemeString);
+  }
+
+  void adaptModeColors() {
     if (isDarkMode) {
       textColor = Color(0xFFF8F9FA);
       iconBackgroundColor = Color.fromARGB(255, 46, 50, 55);
@@ -32,10 +43,11 @@ class ColorProvider extends ChangeNotifier {
       backgroundColor = Color(0xFFF8F9FA);
       standardColor = Color(0xFFEDEDED);
     }
-    changeColorScheme(colorSchemeString);
   }
 
   void changeColorScheme(String color) {
+    prefs.setString("colorScheme", color);
+
     switch (color) {
       case "blue":
         if (isDarkMode) {
