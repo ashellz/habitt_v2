@@ -33,7 +33,7 @@ class EnterAmountDurationText extends StatelessWidget {
                   fontSize: 48,
                   fontWeight: FontWeight.w200,
                   height: 1.2,
-                  color: colorProvider.colorScheme.darkerStandardColor,
+                  color: colorProvider.colorScheme.vividColor,
                 ),
               );
             }).toList(),

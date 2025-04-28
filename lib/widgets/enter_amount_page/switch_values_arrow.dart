@@ -33,6 +33,10 @@ class SwitchValuesArrow extends StatelessWidget {
             width: 30,
             height: 30,
             "assets/images/svg/arrow-back.svg",
+            colorFilter: ColorFilter.mode(
+              colorProvider.textColor,
+              BlendMode.srcIn,
+            ),
           ),
         ),
       ),

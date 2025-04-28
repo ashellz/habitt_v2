@@ -115,7 +115,7 @@ class InteractiveWheelState extends State<InteractiveWheel>
               ),
             ),
             onPressed: () => widget.onDone(),
-            icon: Icon(Icons.arrow_forward),
+            icon: Icon(Icons.arrow_forward, color: colorProvider.textColor),
           ),
         ],
       ),
@@ -167,7 +167,7 @@ class GradientPainter extends CustomPainter {
 
     final Paint outlinePaint =
         Paint()
-          ..color = colorProvider.colorScheme.strokeColor
+          ..color = colorProvider.mutedTextColor
           ..strokeWidth = 1.0
           ..style = PaintingStyle.stroke;
 
@@ -193,7 +193,7 @@ class TicksPainter extends CustomPainter {
 
     final Paint tickPaint =
         Paint()
-          ..color = colorProvider.backgroundColor
+          ..color = Color(0xFFF8F9FA)
           ..strokeWidth = 1.0
           ..style = PaintingStyle.stroke;
 

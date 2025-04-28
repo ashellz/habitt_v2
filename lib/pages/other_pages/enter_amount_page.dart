@@ -102,6 +102,7 @@ class NumberPickerScreenState extends State<NumberPickerScreen> {
     final amountLabel = amountLabelController.text;
 
     return Scaffold(
+      backgroundColor: colorProvider.backgroundColor,
       body: GradientBackground(
         child: Stack(
           children: [
