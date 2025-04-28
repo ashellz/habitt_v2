@@ -69,4 +69,13 @@ class HabitProvider extends ChangeNotifier {
     updateHabitInDB(habits.firstWhere((h) => h.id == id));
     notifyListeners();
   }
+
+  void saveHabitDay(DateTime day) {
+    final DateTime todaySimple = DateTime(day.year, day.month, day.day);
+
+    for (final day in daysBox.values) {
+      debugPrint(day.date.toString());
+      daysBox.put(todaySimple, day);
+    }
+  }
 }

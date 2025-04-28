@@ -6,8 +6,10 @@ import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/get_capitalized_first.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +20,34 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _currentIndex = 0;
+
+  // Check if app state has changed, therefore run _updateLastOpenedDate
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        updateLastOpenedDate(context.read<HabitProvider>());
+      });
+    }
+  }
+
+  // Do the same thing on initialization
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      updateLastOpenedDate(context.read<HabitProvider>());
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   static const List<Widget> _widgetOptions = <Widget>[
     HabitsPage(),
@@ -149,5 +179,47 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+}
+
+Future<void> updateLastOpenedDate(HabitProvider habitProvider) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  DateTime lastOpenedDate;
+
+  debugPrint("Running _updateLastOpenedDate");
+
+  // I check if user has lastOpenedDate
+  final temp = prefs.getString("lastOpenedDate");
+  debugPrint("temp: $temp");
+  if (temp == null) {
+    // If not, I set it to now
+    lastOpenedDate = DateTime.now();
+    final DateTime today = DateTime.now();
+    prefs.setString("lastOpenedDate", today.toString());
+  } else {
+    // Else I set it to old one
+    lastOpenedDate = DateTime.parse(temp);
+    lastOpenedDate = DateTime.now().add(Duration(days: 1));
+    // I check for new day
+    checkForNewDay(prefs, lastOpenedDate, habitProvider);
+  }
+}
+
+void checkForNewDay(
+  SharedPreferences prefs,
+  DateTime lastOpenedDate,
+  habitProvider,
+) {
+  DateTime today = DateTime.now();
+
+  if (lastOpenedDate.day != today.day) {
+    // Before updating lastOpenedDate, I update daysBox with that date
+    habitProvider.saveHabitDay(today);
+
+    //Now we reset habit status (completion, amountCompleted, durationCompleted)
+    habitProvider.resetCompletion();
+    // If new day, we now can update lastOpenedDate
+    today = today.subtract(Duration(days: 1));
+    prefs.setString("lastOpenedDate", today.toString());
   }
 }

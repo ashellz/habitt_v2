@@ -9,7 +9,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/data_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -27,15 +26,9 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ColorProvider()),
-        ChangeNotifierProvider(create: (_) => HabitProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => HabitProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => StateProvider()),
-        ChangeNotifierProvider(
-          create:
-              (context) => DataProvider(
-                newHabitProvider: context.watch<HabitProvider>(),
-              ),
-        ),
       ],
       child: const MyApp(),
     ),
