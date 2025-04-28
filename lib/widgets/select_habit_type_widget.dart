@@ -85,7 +85,8 @@ class SelectHabitTypeWidget extends StatelessWidget {
                             type == HabitType.amount
                                 ? localizations.amount
                                 : localizations.duration,
-                            style: const TextStyle(
+                            style: TextStyle(
+                              color: colorProvider.textColor,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               height: 1,
@@ -101,9 +102,9 @@ class SelectHabitTypeWidget extends StatelessWidget {
                           isSelected
                               ? Text(
                                 "${localizations.selected}: ${type == HabitType.amount ? habitAmount : habitDuration}",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 10,
-                                  color: Color(0xFF6C757D),
+                                  color: colorProvider.mutedTextColor,
                                 ),
                               )
                               : const SizedBox.shrink(),

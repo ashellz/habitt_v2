@@ -71,7 +71,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent),
+      backgroundColor: colorProvider.backgroundColor,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Stack(
@@ -86,7 +86,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
-                      color: colorProvider.colorScheme.darkerStandardColor,
+                      color: colorProvider.colorScheme.vividColor,
                     ),
                   ),
                   SelectedHabitDisplay(

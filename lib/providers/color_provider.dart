@@ -36,12 +36,14 @@ class ColorProvider extends ChangeNotifier {
       backgroundColor = Color.fromARGB(255, 18, 20, 22);
       standardColor = Color(0xFF212529);
       habitColor = Color(0xFF212529);
+      disabledColor = Color.fromARGB(255, 28, 31, 35);
     } else {
       textColor = Color(0xFF212529);
       habitColor = Color(0xFFEDEDED);
       iconBackgroundColor = Color(0xFFD9D9D9);
       backgroundColor = Color(0xFFF8F9FA);
       standardColor = Color(0xFFEDEDED);
+      disabledColor = Color(0xFFF8F9FA);
     }
   }
 

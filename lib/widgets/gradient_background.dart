@@ -13,14 +13,14 @@ class GradientBackground extends StatelessWidget {
 
     return Stack(
       children: [
-        Image.asset(
-          "assets/images/gradient_background.png",
-          color:
-              colorProvider.colorSchemeString == "blue"
-                  ? colorProvider.colorScheme.darkerStandardColor
-                  : colorProvider.colorScheme.standardColor,
-          fit: BoxFit.cover,
-          width: double.infinity,
+        Opacity(
+          opacity: 0.5,
+          child: Image.asset(
+            "assets/images/gradient_background.png",
+            color: colorProvider.colorScheme.vividColor,
+            fit: BoxFit.cover,
+            width: double.infinity,
+          ),
         ),
         child,
       ],

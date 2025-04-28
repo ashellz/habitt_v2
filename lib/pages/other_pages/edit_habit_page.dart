@@ -59,12 +59,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
 
-    bool canAddHabit() {
+    bool canEditHabit() {
       return nameController.text.isNotEmpty;
     }
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent),
+      backgroundColor: colorProvider.backgroundColor,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Stack(
@@ -79,7 +79,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
-                      color: colorProvider.colorScheme.darkerStandardColor,
+                      color: colorProvider.colorScheme.vividColor,
                     ),
                   ),
                   SelectedHabitDisplay(
@@ -115,9 +115,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
               builder:
                   (context, value, child) => FloatingBottomButton(
                     showButton: true,
-                    enabled: canAddHabit(),
+                    enabled: canEditHabit(),
                     onPressed: () {
-                      if (!canAddHabit()) return;
+                      if (!canEditHabit()) return;
 
                       Navigator.of(context).pop();
                     },

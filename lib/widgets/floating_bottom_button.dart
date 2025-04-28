@@ -39,10 +39,7 @@ class FloatingBottomButton extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
               ),
-              child: Text(
-                label,
-                style: TextStyle(color: colorProvider.backgroundColor),
-              ),
+              child: Text(label, style: TextStyle(color: Color(0xFFF8F9FA))),
             ),
           ),
         ),
