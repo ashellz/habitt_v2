@@ -16,14 +16,18 @@ class Greeting extends StatelessWidget {
       children: [
         Text(
           localizations.hello,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: colorProvider.textColor,
+          ),
         ),
         Text(
           "Shellz",
           style: TextStyle(
             fontSize: 38,
             height: 1,
-            color: colorProvider.colorScheme.darkerStandardColor,
+            color: colorProvider.colorScheme.vividColor,
             fontWeight: FontWeight.bold,
           ),
         ),

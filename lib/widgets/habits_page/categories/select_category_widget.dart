@@ -73,7 +73,8 @@ class SelectCategoryWidget extends StatelessWidget {
                   opacity: isSelected ? 1.0 : 0.5,
                   child: Text(
                     getLocalizedCategoryName(category, localizations),
-                    style: const TextStyle(
+                    style: TextStyle(
+                      color: colorProvider.textColor,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       height: 1,

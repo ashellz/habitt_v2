@@ -97,7 +97,7 @@ class DurationDisplayState extends State<DurationDisplay> {
           durationCompletedString,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: colorProvider.backgroundColor,
+            color: Color(0xFFF8F9FA),
             fontSize: _fontSize,
           ),
           maxLines: 1,
@@ -105,17 +105,13 @@ class DurationDisplayState extends State<DurationDisplay> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Divider(
-            height: 2,
-            thickness: 2,
-            color: colorProvider.backgroundColor,
-          ),
+          child: Divider(height: 2, thickness: 2, color: Color(0xFFF8F9FA)),
         ),
         Text(
           durationString,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: colorProvider.backgroundColor,
+            color: Color(0xFFF8F9FA),
             fontSize: _fontSize,
           ),
           maxLines: 1,

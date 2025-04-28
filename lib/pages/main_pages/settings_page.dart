@@ -10,6 +10,7 @@ class SettingsPage extends StatelessWidget {
     final colorProvider = context.watch<ColorProvider>();
 
     return Scaffold(
+      backgroundColor: colorProvider.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
@@ -29,7 +30,10 @@ class SettingsPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Change color"),
+                    Text(
+                      "Change color",
+                      style: TextStyle(color: colorProvider.textColor),
+                    ),
                     GestureDetector(
                       onTap: () {
                         if (colorProvider.colorSchemeString == "blue") {
@@ -43,7 +47,43 @@ class SettingsPage extends StatelessWidget {
                         width: 40,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: colorProvider.colorScheme.standardColor,
+                          color: colorProvider.colorScheme.vividColor,
+                          border: Border.all(
+                            color: colorProvider.colorScheme.strokeColor,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: colorProvider.standardColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Change mode",
+                      style: TextStyle(color: colorProvider.textColor),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        colorProvider.changeMode();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: colorProvider.standardColor,
                           border: Border.all(
                             color: colorProvider.colorScheme.strokeColor,
                             width: 2,

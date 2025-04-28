@@ -19,7 +19,6 @@ class GradientBackground extends StatelessWidget {
               colorProvider.colorSchemeString == "blue"
                   ? colorProvider.colorScheme.darkerStandardColor
                   : colorProvider.colorScheme.standardColor,
-          colorBlendMode: BlendMode.color,
           fit: BoxFit.cover,
           width: double.infinity,
         ),

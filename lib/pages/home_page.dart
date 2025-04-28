@@ -30,10 +30,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final colorProvider = context.watch<ColorProvider>();
-    final Color darkerStandardColor =
-        colorProvider.colorScheme.darkerStandardColor;
+    final Color vividColor = colorProvider.colorScheme.vividColor;
 
     return Scaffold(
+      backgroundColor: colorProvider.backgroundColor,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 100),
         transitionBuilder:
@@ -43,18 +43,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
+          canvasColor: colorProvider.backgroundColor,
           splashFactory: NoSplash.splashFactory,
           highlightColor: Colors.transparent,
         ),
         child: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: darkerStandardColor,
+          selectedItemColor: vividColor,
+          unselectedItemColor: colorProvider.textColor,
           selectedLabelStyle: TextStyle(fontSize: 12),
-          unselectedLabelStyle: const TextStyle(
-            color: Color(0xFF212529),
-            fontSize: 12,
-          ),
+          unselectedLabelStyle: TextStyle(fontSize: 12),
           currentIndex: _currentIndex,
           onTap: (index) {
             setState(() {
@@ -75,9 +74,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   child: SvgPicture.asset(
                     "assets/images/svg/habits.svg",
                     colorFilter: ColorFilter.mode(
-                      _currentIndex == 0
-                          ? darkerStandardColor
-                          : colorProvider.textColor,
+                      _currentIndex == 0 ? vividColor : colorProvider.textColor,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -98,9 +95,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   child: SvgPicture.asset(
                     "assets/images/svg/calendar.svg",
                     colorFilter: ColorFilter.mode(
-                      _currentIndex == 1
-                          ? darkerStandardColor
-                          : Color(0xFF212529),
+                      _currentIndex == 1 ? vividColor : colorProvider.textColor,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -121,9 +116,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   child: SvgPicture.asset(
                     "assets/images/svg/stats.svg",
                     colorFilter: ColorFilter.mode(
-                      _currentIndex == 2
-                          ? darkerStandardColor
-                          : Color(0xFF212529),
+                      _currentIndex == 2 ? vividColor : colorProvider.textColor,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -144,9 +137,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   child: SvgPicture.asset(
                     "assets/images/svg/settings.svg",
                     colorFilter: ColorFilter.mode(
-                      _currentIndex == 3
-                          ? darkerStandardColor
-                          : Color(0xFF212529),
+                      _currentIndex == 3 ? vividColor : colorProvider.textColor,
                       BlendMode.srcIn,
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/custom_color_scheme.dart';
 
 class ColorProvider extends ChangeNotifier {
+  bool isDarkMode = true;
   String colorSchemeString = "blue";
   Color textColor = Color(0xFF212529);
   Color mutedTextColor = Color(0xFF6C757D);
@@ -16,14 +17,40 @@ class ColorProvider extends ChangeNotifier {
     colorSchemeString = "blue";
   }
 
+  void changeMode() {
+    isDarkMode = !isDarkMode;
+    if (isDarkMode) {
+      textColor = Color(0xFFF8F9FA);
+      iconBackgroundColor = Color.fromARGB(255, 46, 50, 55);
+      backgroundColor = Color.fromARGB(255, 18, 20, 22);
+      standardColor = Color(0xFF212529);
+      habitColor = Color(0xFF212529);
+    } else {
+      textColor = Color(0xFF212529);
+      habitColor = Color(0xFFEDEDED);
+      iconBackgroundColor = Color(0xFFD9D9D9);
+      backgroundColor = Color(0xFFF8F9FA);
+      standardColor = Color(0xFFEDEDED);
+    }
+    changeColorScheme(colorSchemeString);
+  }
+
   void changeColorScheme(String color) {
     switch (color) {
       case "blue":
-        colorScheme = _blue;
+        if (isDarkMode) {
+          colorScheme = _blueDark;
+        } else {
+          colorScheme = _blue;
+        }
         colorSchemeString = "blue";
         break;
       case "green":
-        colorScheme = _green;
+        if (isDarkMode) {
+          colorScheme = _greenDark;
+        } else {
+          colorScheme = _green;
+        }
         colorSchemeString = "green";
         break;
     }
@@ -46,11 +73,27 @@ class ColorProvider extends ChangeNotifier {
     darkerStandardColor: Color(0xFF01377D),
   );
 
+  final CustomColorScheme _blueDark = CustomColorScheme(
+    disabledColor: Color.fromARGB(255, 30, 33, 37),
+    standardColor: Color.fromARGB(255, 31, 32, 33),
+    strokeColor: Color.fromARGB(255, 55, 60, 66),
+    vividColor: Color.fromARGB(255, 70, 123, 194),
+    darkerStandardColor: Color(0xFF01377D),
+  );
+
   final CustomColorScheme _green = CustomColorScheme(
     disabledColor: Color(0xFFE9F7F1),
     standardColor: Color(0xFFDEF3EA),
     strokeColor: Color(0xFF97B7A5),
     vividColor: Color(0xFF26B170),
+    darkerStandardColor: Color(0xFF1D8554),
+  );
+
+  final CustomColorScheme _greenDark = CustomColorScheme(
+    disabledColor: Color.fromARGB(255, 22, 27, 24),
+    standardColor: Color.fromARGB(255, 30, 32, 31),
+    strokeColor: Color.fromARGB(255, 55, 66, 59),
+    vividColor: Color.fromARGB(255, 70, 194, 99),
     darkerStandardColor: Color(0xFF1D8554),
   );
 }

@@ -156,7 +156,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     return Center(
       child: Icon(
         widget.habit.completed ? Icons.check : Icons.close,
-        color: widget.colorProvider.backgroundColor,
+        color: Color(0xFFF8F9FA),
       ),
     );
   }

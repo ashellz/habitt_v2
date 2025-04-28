@@ -27,6 +27,7 @@ class _HabitsPageState extends State<HabitsPage> {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
 
     return Scaffold(
+      backgroundColor: colorProvider.backgroundColor,
       floatingActionButton: FloatingActionButton(
         backgroundColor: colorProvider.colorScheme.darkerStandardColor,
         onPressed:
