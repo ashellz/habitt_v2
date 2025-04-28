@@ -46,7 +46,7 @@ class CompletionDialog extends StatelessWidget {
                   child: Text(
                     localizations.cancel,
                     style: TextStyle(
-                      color: colorProvider.colorScheme.darkerStandardColor,
+                      color: colorProvider.colorScheme.vividColor,
                     ),
                   ),
                   onPressed: () {
@@ -57,7 +57,7 @@ class CompletionDialog extends StatelessWidget {
                   child: Text(
                     localizations.done,
                     style: TextStyle(
-                      color: colorProvider.colorScheme.darkerStandardColor,
+                      color: colorProvider.colorScheme.vividColor,
                     ),
                   ),
                   onPressed: () {
