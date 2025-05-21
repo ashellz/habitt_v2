@@ -42,6 +42,7 @@ dependencies:
   hive_ce: ^2.10.1
   hive_ce_flutter: ^2.2.0
   shared_preferences: ^2.5.3
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_gen_runner: ^5.3.1
