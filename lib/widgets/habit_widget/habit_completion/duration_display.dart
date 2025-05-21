@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
-import 'package:provider/provider.dart';
 
 class DurationDisplay extends StatefulWidget {
   const DurationDisplay({super.key, required this.habit});
@@ -83,8 +81,6 @@ class DurationDisplayState extends State<DurationDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
-
     final durationCompletedString = getDurationString(
       widget.habit.durationCompleted,
     );
