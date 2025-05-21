@@ -43,6 +43,7 @@ dependencies:
   hive_ce_flutter: ^2.2.0
   shared_preferences: ^2.5.3
   flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_gen_runner: ^5.3.1
@@ -101,4 +102,11 @@ flutter:
 
 flutter_gen:
   output: lib/generated/
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  image: assets/images/icon.png
+  background_image: assets/images/gradient_background.png
 
