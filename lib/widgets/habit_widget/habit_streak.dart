@@ -29,7 +29,7 @@ class StreakDisplay extends StatelessWidget {
                     "$streak",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: colorProvider.textColor,
+                      color: Color(0xFF212529),
                     ),
                   ),
                 ),

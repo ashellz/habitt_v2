@@ -9,11 +9,28 @@ class HabitProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
 
   HabitProvider() {
-    _loadHabits();
+    init();
   }
 
-  void _loadHabits() {
+  Future<void> init() async {
+    await _loadHabits();
+    _fillToday();
+  }
+
+  Future<void> _loadHabits() async {
     habits = habitBox.values.toList();
+  }
+
+  void _fillToday() {
+    final today = DateTime.now();
+    final todayKey = today.toIso8601String().split('T').first;
+
+    final todayEntry = daysBox.get(todayKey);
+
+    if (todayEntry == null) {
+      debugPrint("Creating new day entry");
+      daysBox.put(todayKey, Day(date: today, habits: habits));
+    }
   }
 
   void updateHabitInDB(Habit habit) {
@@ -77,5 +94,44 @@ class HabitProvider extends ChangeNotifier {
       debugPrint(day.date.toString());
       daysBox.put(todaySimple, day);
     }
+  }
+
+  Future<void> assignStreaks() async {
+    debugPrint("Assigning streaks");
+    final sortedDays =
+        daysBox.values.toList()..sort((a, b) => b.date.compareTo(a.date));
+
+    debugPrint("Sorted days: ${sortedDays.length}");
+
+    final Map<int, int> currentStreaks = {};
+
+    for (final day in sortedDays) {
+      debugPrint("Checking day ${day.date}");
+      for (final habit in day.habits) {
+        debugPrint("Checking ${habit.name}");
+        final habitFromBox = habitBox.get(habit.id);
+        if (habitFromBox == null) continue;
+
+        if (!habit.completed) {
+          debugPrint("Resetting streak for ${habit.name}");
+          currentStreaks.remove(habit.id);
+          habitFromBox.streak = 0;
+        } else {
+          debugPrint("Continuing streak for ${habit.name}");
+          final previousStreak = currentStreaks[habit.id] ?? 0;
+          debugPrint("Previous streak: $previousStreak");
+          final newStreak = previousStreak + 1;
+          debugPrint("New streak: $newStreak");
+          currentStreaks[habit.id] = newStreak;
+          debugPrint("Current streaks: $currentStreaks");
+          habitFromBox.streak = newStreak;
+          debugPrint("Habit from box: ${habitFromBox.streak}");
+        }
+
+        debugPrint("Saving ${habit.name}, streak: ${habit.streak}");
+        await habitFromBox.save();
+      }
+    }
+    notifyListeners();
   }
 }
