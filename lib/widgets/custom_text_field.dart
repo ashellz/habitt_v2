@@ -48,9 +48,7 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         onTap: () => onTap?.call(),
         keyboardAppearance:
-            Theme.of(context).brightness == Brightness.dark
-                ? Brightness.dark
-                : Brightness.light,
+            colorProvider.isDarkMode ? Brightness.dark : Brightness.light,
         inputFormatters: [
           LengthLimitingTextInputFormatter(maxTextLength),
           getFilteringTextInputFormatter(textOnly, digitsOnly) ??
