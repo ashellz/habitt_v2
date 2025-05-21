@@ -190,6 +190,7 @@ Future<void> updateLastOpenedDate(HabitProvider habitProvider) async {
 
   // I check if user has lastOpenedDate
   final temp = prefs.getString("lastOpenedDate");
+
   debugPrint("temp: $temp");
   if (temp == null) {
     // If not, I set it to now
@@ -199,7 +200,6 @@ Future<void> updateLastOpenedDate(HabitProvider habitProvider) async {
   } else {
     // Else I set it to old one
     lastOpenedDate = DateTime.parse(temp);
-    lastOpenedDate = DateTime.now().add(Duration(days: 1));
     // I check for new day
     checkForNewDay(prefs, lastOpenedDate, habitProvider);
   }
@@ -208,7 +208,7 @@ Future<void> updateLastOpenedDate(HabitProvider habitProvider) async {
 void checkForNewDay(
   SharedPreferences prefs,
   DateTime lastOpenedDate,
-  habitProvider,
+  HabitProvider habitProvider,
 ) {
   DateTime today = DateTime.now();
 
@@ -218,6 +218,7 @@ void checkForNewDay(
 
     //Now we reset habit status (completion, amountCompleted, durationCompleted)
     habitProvider.resetCompletion();
+
     // If new day, we now can update lastOpenedDate
     today = today.subtract(Duration(days: 1));
     prefs.setString("lastOpenedDate", today.toString());
