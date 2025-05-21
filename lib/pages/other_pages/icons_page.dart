@@ -16,7 +16,7 @@ class IconsPage extends StatelessWidget {
         Assets.images.icons.values.map((e) => e.path).toList();
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent),
+      backgroundColor: colorProvider.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
