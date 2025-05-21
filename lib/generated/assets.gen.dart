@@ -16,6 +16,9 @@ class $AssetsImagesGen {
   AssetGenImage get gradientBackground =>
       const AssetGenImage('assets/images/gradient_background.png');
 
+  /// File path: assets/images/icon.png
+  AssetGenImage get icon => const AssetGenImage('assets/images/icon.png');
+
   /// Directory path: assets/images/icons
   $AssetsImagesIconsGen get icons => const $AssetsImagesIconsGen();
 
@@ -23,7 +26,7 @@ class $AssetsImagesGen {
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 
   /// List of all assets
-  List<AssetGenImage> get values => [gradientBackground];
+  List<AssetGenImage> get values => [gradientBackground, icon];
 }
 
 class $AssetsImagesIconsGen {
@@ -50,6 +53,13 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/battery2.png
   AssetGenImage get battery2 =>
       const AssetGenImage('assets/images/icons/battery2.png');
+
+  /// File path: assets/images/icons/bed.png
+  AssetGenImage get bed => const AssetGenImage('assets/images/icons/bed.png');
+
+  /// File path: assets/images/icons/bedding.png
+  AssetGenImage get bedding =>
+      const AssetGenImage('assets/images/icons/bedding.png');
 
   /// File path: assets/images/icons/book.png
   AssetGenImage get book => const AssetGenImage('assets/images/icons/book.png');
@@ -125,6 +135,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/dog_food.png
   AssetGenImage get dogFood =>
       const AssetGenImage('assets/images/icons/dog_food.png');
+
+  /// File path: assets/images/icons/double-bed.png
+  AssetGenImage get doubleBed =>
+      const AssetGenImage('assets/images/icons/double-bed.png');
 
   /// File path: assets/images/icons/duration.png
   AssetGenImage get duration =>
@@ -325,6 +339,8 @@ class $AssetsImagesIconsGen {
     basketball,
     battery,
     battery2,
+    bed,
+    bedding,
     book,
     bread,
     breakfast,
@@ -345,6 +361,7 @@ class $AssetsImagesIconsGen {
     dog,
     dog2,
     dogFood,
+    doubleBed,
     duration,
     food,
     football,
