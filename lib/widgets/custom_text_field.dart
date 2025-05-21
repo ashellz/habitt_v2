@@ -44,7 +44,9 @@ class CustomTextField extends StatelessWidget {
               ? FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
               : digitsOnly
               ? FilteringTextInputFormatter.digitsOnly
-              : FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
+              : FilteringTextInputFormatter.deny(
+                RegExp(r'[\s]'),
+              ), // Allow all characters (including special characters)
         ],
         cursorColor: colorProvider.textColor,
         cursorWidth: 1.0,
