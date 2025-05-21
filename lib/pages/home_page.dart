@@ -212,15 +212,12 @@ void checkForNewDay(
 ) {
   DateTime today = DateTime.now();
 
-  if (lastOpenedDate.day != today.day) {
-    // Before updating lastOpenedDate, I update daysBox with that date
+  if (lastOpenedDate.day != today.day ||
+      lastOpenedDate.month != today.month ||
+      lastOpenedDate.year != today.year) {
     habitProvider.saveHabitDay(today);
-
-    //Now we reset habit status (completion, amountCompleted, durationCompleted)
     habitProvider.resetCompletion();
 
-    // If new day, we now can update lastOpenedDate
-    today = today.subtract(Duration(days: 1));
     prefs.setString("lastOpenedDate", today.toString());
   }
 }
