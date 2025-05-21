@@ -29,6 +29,19 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
 
+    TextInputFormatter? getFilteringTextInputFormatter(
+      bool textOnly,
+      bool digitsOnly,
+    ) {
+      if (textOnly) {
+        return FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"));
+      } else if (digitsOnly) {
+        return FilteringTextInputFormatter.allow(RegExp("[0-9]"));
+      } else {
+        return null;
+      }
+    }
+
     return Padding(
       padding: EdgeInsets.only(top: topPadding),
       child: TextFormField(
@@ -40,13 +53,8 @@ class CustomTextField extends StatelessWidget {
                 : Brightness.light,
         inputFormatters: [
           LengthLimitingTextInputFormatter(maxTextLength),
-          textOnly
-              ? FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
-              : digitsOnly
-              ? FilteringTextInputFormatter.digitsOnly
-              : FilteringTextInputFormatter.deny(
-                RegExp(r'[\s]'),
-              ), // Allow all characters (including special characters)
+          getFilteringTextInputFormatter(textOnly, digitsOnly) ??
+              FilteringTextInputFormatter.deny(""),
         ],
         cursorColor: colorProvider.textColor,
         cursorWidth: 1.0,
