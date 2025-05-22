@@ -53,7 +53,6 @@ class SelectAmountDurationDialog extends StatelessWidget {
                           onChanged: onChangedAmount,
                         ),
                         CustomTextField(
-                          textOnly: true,
                           maxTextLength: 15,
                           topPadding: 12,
                           title: localizations.label,
