@@ -88,12 +88,9 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void saveHabitDay(DateTime day) {
-    final DateTime todaySimple = DateTime(day.year, day.month, day.day);
+    final DateTime daySimple = DateTime(day.year, day.month, day.day);
 
-    for (final day in daysBox.values) {
-      debugPrint(day.date.toString());
-      daysBox.put(todaySimple, day);
-    }
+    daysBox.put(daySimple, Day(date: daySimple, habits: habits));
   }
 
   Future<void> assignStreaks() async {

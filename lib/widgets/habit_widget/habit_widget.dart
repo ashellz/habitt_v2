@@ -30,6 +30,8 @@ class HabitWidget extends StatelessWidget {
               editable
                   ? null
                   : () {
+                    // For navigating to edit habit page
+
                     final CategoryProvider categoryProvider =
                         context.read<CategoryProvider>();
 
