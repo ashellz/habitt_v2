@@ -11,19 +11,33 @@ import 'package:habitt/widgets/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class NumberPickerScreen extends StatefulWidget {
-  const NumberPickerScreen({super.key, required this.type});
+class EnterAmountPage extends StatefulWidget {
+  const EnterAmountPage({
+    super.key,
+    required this.type,
+    this.wheelValue = 2,
+    this.durationValue = const Duration(hours: 0, minutes: 20),
+  });
 
   final HabitType type;
+  final int wheelValue;
+  final Duration durationValue;
 
   @override
-  NumberPickerScreenState createState() => NumberPickerScreenState();
+  EnterAmountPageState createState() => EnterAmountPageState();
 }
 
-class NumberPickerScreenState extends State<NumberPickerScreen> {
-  int wheelValue = 2;
-  Duration durationValue = const Duration(hours: 0, minutes: 20);
+class EnterAmountPageState extends State<EnterAmountPage> {
+  late int wheelValue;
+  late Duration durationValue;
   bool editingHours = true;
+
+  @override
+  void initState() {
+    super.initState();
+    wheelValue = widget.wheelValue;
+    durationValue = widget.durationValue;
+  }
 
   void increaseWheelValue() {
     if (widget.type == HabitType.amount) {

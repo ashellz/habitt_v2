@@ -11,6 +11,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
   const SelectHabitTypeWidget({
     super.key,
     this.onTap,
+    this.onLongPress,
     required this.type,
     required this.selectedType,
   });
@@ -18,6 +19,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
   final HabitType type;
   final HabitType selectedType;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
     return GestureDetector(
       // Used for selecting the widget
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Padding(
         padding: EdgeInsets.only(right: type == HabitType.amount ? 8 : 0),
         child: AnimatedContainer(

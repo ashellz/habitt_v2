@@ -14,6 +14,134 @@ class SelectHabitTypeOptions extends StatefulWidget {
 class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
   HabitType selectedType = HabitType.none;
 
+  void longPressDuration() {
+    final stateProvider = context.read<StateProvider>();
+    final previousType = selectedType;
+
+    setState(() {
+      selectedType = HabitType.duration;
+    });
+
+    if (selectedType == HabitType.duration) {
+      stateProvider.habitAmount = 0;
+      if (stateProvider.habitDuration.inMinutes == 0) {
+        stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+      }
+
+      if (previousType == HabitType.amount) {
+        Future.delayed(Duration(milliseconds: 150)).then((value) {
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EnterAmountPage(type: selectedType),
+              ),
+            );
+          }
+        });
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (context) => EnterAmountPage(
+                  type: selectedType,
+                  durationValue: stateProvider.habitDuration,
+                ),
+          ),
+        );
+      }
+    }
+  }
+
+  void longPressAmount() {
+    final stateProvider = context.read<StateProvider>();
+    final previousType = selectedType;
+
+    setState(() {
+      selectedType = HabitType.amount;
+    });
+
+    if (selectedType == HabitType.amount) {
+      stateProvider.habitDuration = Duration.zero;
+      if (stateProvider.habitAmount == 0) {
+        stateProvider.habitAmount = 2;
+      }
+
+      if (previousType == HabitType.duration) {
+        Future.delayed(Duration(milliseconds: 150)).then((value) {
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EnterAmountPage(type: selectedType),
+              ),
+            );
+          }
+        });
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:
+                (context) => EnterAmountPage(
+                  type: selectedType,
+                  wheelValue: stateProvider.habitAmount,
+                ),
+          ),
+        );
+      }
+    }
+  }
+
+  void onTapAmount() {
+    final stateProvider = context.read<StateProvider>();
+    setState(() {
+      selectedType =
+          selectedType == HabitType.amount ? HabitType.none : HabitType.amount;
+    });
+
+    if (selectedType == HabitType.none) {
+      stateProvider.habitAmount = 0;
+    } else if (selectedType == HabitType.amount) {
+      stateProvider.habitDuration = Duration.zero;
+      stateProvider.habitAmount = 2;
+
+      Future.delayed(Duration(milliseconds: 150)).then((value) {
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => EnterAmountPage(type: selectedType),
+            ),
+          );
+        }
+      });
+    }
+  }
+
+  void onTapDuration() {
+    final stateProvider = context.read<StateProvider>();
+    setState(() {
+      selectedType =
+          selectedType == HabitType.duration
+              ? HabitType.none
+              : HabitType.duration;
+    });
+
+    if (selectedType == HabitType.none) {
+      stateProvider.habitDuration = Duration.zero;
+    } else if (selectedType == HabitType.duration) {
+      stateProvider.habitAmount = 0;
+      stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+
+      Future.delayed(Duration(milliseconds: 150)).then((value) {
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => EnterAmountPage(type: selectedType),
+            ),
+          );
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
@@ -35,65 +163,15 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
             SelectHabitTypeWidget(
               type: HabitType.amount,
               selectedType: selectedType,
-              onTap: () {
-                setState(() {
-                  selectedType =
-                      selectedType == HabitType.amount
-                          ? HabitType.none
-                          : HabitType.amount;
-                });
-
-                if (selectedType == HabitType.none) {
-                  stateProvider.habitAmount = 0;
-                } else if (selectedType == HabitType.amount) {
-                  stateProvider.habitDuration = Duration.zero;
-                  stateProvider.habitAmount = 2;
-
-                  Future.delayed(Duration(milliseconds: 150)).then((value) {
-                    if (context.mounted) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  NumberPickerScreen(type: selectedType),
-                        ),
-                      );
-                    }
-                  });
-                }
-              },
+              onLongPress: longPressAmount,
+              onTap: onTapAmount,
             ),
 
             SelectHabitTypeWidget(
               type: HabitType.duration,
               selectedType: selectedType,
-              onTap: () {
-                setState(() {
-                  selectedType =
-                      selectedType == HabitType.duration
-                          ? HabitType.none
-                          : HabitType.duration;
-                });
-
-                if (selectedType == HabitType.none) {
-                  stateProvider.habitDuration = Duration.zero;
-                } else if (selectedType == HabitType.duration) {
-                  stateProvider.habitAmount = 0;
-                  stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
-
-                  Future.delayed(Duration(milliseconds: 150)).then((value) {
-                    if (context.mounted) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  NumberPickerScreen(type: selectedType),
-                        ),
-                      );
-                    }
-                  });
-                }
-              },
+              onLongPress: longPressDuration,
+              onTap: onTapDuration,
             ),
           ],
         ),
