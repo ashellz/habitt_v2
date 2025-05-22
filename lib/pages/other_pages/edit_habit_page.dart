@@ -50,14 +50,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
     });
   }
 
-  void onTap() {
-    if (shouldReset) {
-      final stateProvider = context.read<StateProvider>();
-      stateProvider.nameController.clear();
-      shouldReset = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
@@ -106,7 +98,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   CustomTextField(
                     title: localizations.habitName,
                     controller: nameController,
-                    onTap: onTap,
                   ),
                   CustomTextField(
                     topPadding: 16,
