@@ -25,6 +25,8 @@ class EditHabitPage extends StatefulWidget {
 
 class _EditHabitPageState extends State<EditHabitPage> {
   bool shouldReset = true;
+  late final Duration initialDuration;
+  late final int initialAmount;
 
   @override
   void initState() {
@@ -33,6 +35,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final stateProvider = context.read<StateProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Sets initial habit amount and duration
+      initialDuration = Duration(minutes: widget.habit.duration);
+      initialAmount = widget.habit.amount;
+
       // Loads habit values
       categoryProvider.selectCategory(widget.habit.categoryId);
       stateProvider.nameController.text = widget.habit.name;
@@ -125,6 +131,29 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       // Edit habit in state and database
                       final HabitProvider habitProvider =
                           context.read<HabitProvider>();
+                      final CategoryProvider categoryProvider =
+                          context.read<CategoryProvider>();
+
+                      // Checks for amount/duration changes
+
+                      if (stateProvider.habitAmount != initialAmount) {
+                        widget.habit.resetCompletion();
+                        widget.habit.amount = stateProvider.habitAmount;
+                      } else if (stateProvider.habitDuration !=
+                          initialDuration) {
+                        widget.habit.resetCompletion();
+                        widget.habit.duration =
+                            stateProvider.habitDuration.inMinutes;
+                      }
+
+                      widget.habit.name = nameController.text;
+                      widget.habit.description = descController.text;
+                      widget.habit.categoryId =
+                          categoryProvider.selectedCategoryId;
+                      widget.habit.amountLabel =
+                          stateProvider.habitAmountLabelController.text;
+                      widget.habit.iconPath = stateProvider.iconPath;
+
                       habitProvider.updateHabit(widget.habit);
 
                       Navigator.of(context).pop();
