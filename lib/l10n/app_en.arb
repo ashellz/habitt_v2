@@ -31,5 +31,6 @@
     "done": "Done",
     "cancel": "Cancel",
     "label": "Label",
-    "editHabit": "Edit Habit"
+    "editHabit": "Edit Habit",
+    "saveChanges": "Save Changes"
 }

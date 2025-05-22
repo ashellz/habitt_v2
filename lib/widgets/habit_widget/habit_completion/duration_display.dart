@@ -55,11 +55,6 @@ class DurationDisplayState extends State<DurationDisplay> {
 
       _painter.layout(minWidth: 0, maxWidth: double.infinity);
 
-      debugPrint(
-        'Testing "$currentBottomText" at $testFontSize: '
-        '${_painter.width} vs $maxWidth',
-      );
-
       if (_painter.width <= maxWidth) {
         foundFit = true;
       } else {

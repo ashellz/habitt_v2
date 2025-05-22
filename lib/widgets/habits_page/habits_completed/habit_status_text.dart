@@ -13,7 +13,6 @@ class HabitsStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Building habit status");
     final colorProvider = context.watch<ColorProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
     final int selectedCategoryId = categoryProvider.selectedCategoryId;

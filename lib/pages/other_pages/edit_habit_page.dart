@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/floating_bottom_button.dart';
@@ -122,10 +123,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       if (!canEditHabit()) return;
 
                       // Edit habit in state and database
+                      final HabitProvider habitProvider =
+                          context.read<HabitProvider>();
+                      habitProvider.updateHabit(widget.habit);
 
                       Navigator.of(context).pop();
                     },
-                    label: localizations.addHabit,
+                    label: localizations.saveChanges,
                   ),
             ),
           ],
