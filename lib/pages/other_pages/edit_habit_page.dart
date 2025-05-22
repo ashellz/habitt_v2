@@ -121,6 +121,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     onPressed: () {
                       if (!canEditHabit()) return;
 
+                      // Edit habit in state and database
+
                       Navigator.of(context).pop();
                     },
                     label: localizations.addHabit,

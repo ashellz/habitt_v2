@@ -33,8 +33,37 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  void updateHabitInDB(Habit habit) {
-    habitBox.putAt(habitBox.values.toList().indexOf(habit), habit);
+  Future<void> updateHabitInDB(Habit habit) async {
+    // Save the habit change
+    await habit.save();
+
+    // Save changes to current day in Day database
+    final today = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
+
+    // Get today's day entry
+    final day = daysBox.get(today.toString());
+
+    debugPrint("Day entry: $day");
+
+    if (day != null) {
+      // Find and update the matching habit inside today's habit list
+      final index = day.habits.indexWhere((h) => h.id == habit.id);
+      if (index != -1) {
+        day.habits[index] = habit;
+
+        // Save the updated Day object
+        await day.save();
+      }
+    } else {
+      debugPrint("Day entry is null");
+
+      // If day entry is null, create a new one
+      saveHabitDay(today);
+    }
   }
 
   void addHabit(Habit habit) {
