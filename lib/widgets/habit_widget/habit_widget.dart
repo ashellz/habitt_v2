@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';
@@ -28,12 +29,23 @@ class HabitWidget extends StatelessWidget {
           onTap:
               editable
                   ? null
-                  : () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditHabitPage(habit: habit),
-                    ),
-                  ),
+                  : () {
+                    final CategoryProvider categoryProvider =
+                        context.read<CategoryProvider>();
+
+                    // Save the selected category
+                    final int temp = categoryProvider.selectedCategoryId;
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditHabitPage(habit: habit),
+                      ),
+                    ).whenComplete(() {
+                      // Select the saved category
+                      categoryProvider.selectCategory(temp);
+                    });
+                  },
           child: Container(
             margin: EdgeInsets.only(top: 8),
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
