@@ -90,11 +90,12 @@ class HabitProvider extends ChangeNotifier {
   void saveHabitDay(DateTime day) {
     final DateTime daySimple = DateTime(day.year, day.month, day.day);
 
-    daysBox.put(daySimple, Day(date: daySimple, habits: habits));
+    daysBox.put(daySimple.toString(), Day(date: daySimple, habits: habits));
   }
 
   Future<void> assignStreaks() async {
     debugPrint("Assigning streaks");
+    debugPrint("Daybox key: ${daysBox.keyAt(0)}");
     final sortedDays =
         daysBox.values.toList()..sort((a, b) => b.date.compareTo(a.date));
 
@@ -102,7 +103,15 @@ class HabitProvider extends ChangeNotifier {
 
     final Map<int, int> currentStreaks = {};
 
+    // Checks all days in database
     for (final day in sortedDays) {
+      // If today, ignore
+      if (day.date.day == DateTime.now().day &&
+          day.date.month == DateTime.now().month &&
+          day.date.year == DateTime.now().year) {
+        continue;
+      }
+
       debugPrint("Checking day ${day.date}");
       for (final habit in day.habits) {
         debugPrint("Checking ${habit.name}");

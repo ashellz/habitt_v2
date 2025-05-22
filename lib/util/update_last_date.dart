@@ -35,7 +35,7 @@ void checkForNewDay(
   if (lastOpenedDate.day != today.day ||
       lastOpenedDate.month != today.month ||
       lastOpenedDate.year != today.year) {
-    habitProvider.saveHabitDay(today);
+    habitProvider.saveHabitDay(lastOpenedDate);
     habitProvider.resetCompletion();
 
     prefs.setString("lastOpenedDate", today.toString());
