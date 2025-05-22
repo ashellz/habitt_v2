@@ -62,11 +62,24 @@ class CompletionDialog extends StatelessWidget {
                   ),
                   onPressed: () {
                     if (type == HabitType.amount) {
+                      // If nothing changed then don't update unnecessarily
+                      if (habit.amountCompleted == stateProvider.habitAmount) {
+                        Navigator.pop(context);
+                        return;
+                      }
+
                       habitProvider.updateHabitAmountCompleted(
                         habit.id,
                         stateProvider.habitAmount,
                       );
                     } else {
+                      // If nothing changed then don't update unnecessarily
+                      if (habit.durationCompleted ==
+                          stateProvider.habitDuration.inMinutes) {
+                        Navigator.pop(context);
+                        return;
+                      }
+
                       habitProvider.updateHabitDurationCompleted(
                         habit.id,
                         stateProvider.habitDuration.inMinutes,
