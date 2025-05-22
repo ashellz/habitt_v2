@@ -5,10 +5,12 @@ class StreakDisplay extends StatelessWidget {
   const StreakDisplay({
     super.key,
     required this.streak,
+    required this.completed,
     required this.colorProvider,
   });
 
   final int streak;
+  final bool completed;
   final ColorProvider colorProvider;
 
   @override
@@ -26,7 +28,7 @@ class StreakDisplay extends StatelessWidget {
                 offset: Offset(0, 1.5),
                 child: FittedBox(
                   child: Text(
-                    "$streak",
+                    "${completed ? streak + 1 : streak}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF212529),

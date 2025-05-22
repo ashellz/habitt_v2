@@ -92,6 +92,7 @@ class HabitWidget extends StatelessWidget {
                     if (habit.streak > 0)
                       StreakDisplay(
                         streak: habit.streak,
+                        completed: habit.completed,
                         colorProvider: colorProvider,
                       ),
                     // Completion
