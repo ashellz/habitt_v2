@@ -10,6 +10,7 @@ class HabitIcon extends StatelessWidget {
     required this.colorProvider,
     required this.alpha,
     required this.habit,
+
     required this.value,
   });
 
@@ -17,11 +18,14 @@ class HabitIcon extends StatelessWidget {
   final ColorProvider colorProvider;
   final int alpha;
   final Habit habit;
+  // If habit is completed, opacity value from animation builder
   final double value;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      splashFactory: NoSplash.splashFactory,
+      enableFeedback: false,
       onTap: () {
         if (editable) {
           Navigator.of(
