@@ -89,7 +89,8 @@ class HabitWidget extends StatelessWidget {
                 // Completion and streak
                 Row(
                   children: [
-                    if (habit.streak > 0)
+                    if (habit.streak > 0 || habit.completed)
+                      // TODO: Add animation for the streak first appearing
                       StreakDisplay(
                         streak: habit.streak,
                         completed: habit.completed,
