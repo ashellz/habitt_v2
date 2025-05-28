@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/generated/assets.gen.dart';
 
 class StateProvider extends ChangeNotifier {
   int _habitAmount = 0;
@@ -35,7 +36,7 @@ class StateProvider extends ChangeNotifier {
     habitAmountLabelController.clear();
     nameController.clear();
     descController.clear();
-    _iconPath = "";
+    _iconPath = Assets.images.icons.book.path;
     notifyListeners();
   }
 
