@@ -30,14 +30,14 @@ void checkForNewDay(
   SharedPreferences prefs,
   DateTime lastOpenedDate,
   HabitProvider habitProvider,
-) {
+) async {
   DateTime today = DateTime.now();
 
   if (lastOpenedDate.day != today.day ||
       lastOpenedDate.month != today.month ||
       lastOpenedDate.year != today.year) {
     debugPrint("New day, resetting completion");
-    habitProvider.saveHabitDay(lastOpenedDate);
+    await habitProvider.saveHabitDay(lastOpenedDate);
     habitProvider.resetCompletion();
 
     prefs.setString("lastOpenedDate", today.toString());

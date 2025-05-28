@@ -53,11 +53,14 @@ class HabitProvider extends ChangeNotifier {
       DateTime.now().day,
     );
 
+    final todayKey = today.toIso8601String().split('T').first;
+
     // Get today's day entry
-    final day = daysBox.get(today.toString());
+    final day = daysBox.get(todayKey);
 
     if (day != null) {
       debugPrint("Day entry: ${day.date}");
+
       // Find and update the matching habit inside today's habit list
       final index = day.habits.indexWhere((h) => h.id == habit.id);
       if (index != -1) {
@@ -98,11 +101,11 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetCompletion() {
+  void resetCompletion() async {
     debugPrint("Resetting completion");
     for (final habit in habits) {
-      habit.resetCompletion();
-      updateHabitInDB(habit);
+      await habit.resetCompletion();
+      await updateHabitInDB(habit);
     }
     notifyListeners();
   }
@@ -125,59 +128,85 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveHabitDay(DateTime day) {
+  Future<void> saveHabitDay(DateTime day) async {
     final daySimple = DateTime(day.year, day.month, day.day);
     final String dayKey = daySimple.toIso8601String().split('T').first;
     debugPrint("Saving day at: $daySimple");
 
-    daysBox.put(dayKey, Day(date: daySimple, habits: habits));
+    final clonedHabits = habits.map((h) => h.copy()).toList();
+
+    daysBox.put(dayKey, Day(date: daySimple, habits: clonedHabits));
   }
 
   Future<void> assignStreaks() async {
     debugPrint("Assigning streaks");
-    debugPrint("Daybox key: ${daysBox.keyAt(0)}");
     final sortedDays =
         daysBox.values.toList()..sort((a, b) => b.date.compareTo(a.date));
 
-    debugPrint("Sorted days: ${sortedDays.length}");
+    // We now remove today from the list
+    sortedDays.removeWhere((day) => day.date.day == DateTime.now().day);
 
-    final Map<int, int> currentStreaks = {};
+    // We now have a list of days to work with
+    // from today to the day we started using the app
+    // day has a date and habits
 
-    // Checks all days in database
-    for (final day in sortedDays) {
-      // If today, ignore
-      if (day.date.day == DateTime.now().day &&
-          day.date.month == DateTime.now().month &&
-          day.date.year == DateTime.now().year) {
-        continue;
-      }
+    final currentHabits = habitBox.values;
 
-      debugPrint("Checking day ${day.date}");
-      for (final habit in day.habits) {
-        debugPrint("Checking ${habit.name}");
-        final habitFromBox = habitBox.get(habit.id);
-        if (habitFromBox == null) continue;
+    // We save all current habits from habitBox
 
-        if (!habit.completed) {
-          debugPrint("Resetting streak for ${habit.name}");
-          currentStreaks.remove(habit.id);
-          habitFromBox.streak = 0;
-        } else {
-          debugPrint("Continuing streak for ${habit.name}");
-          final previousStreak = currentStreaks[habit.id] ?? 0;
-          debugPrint("Previous streak: $previousStreak");
-          final newStreak = previousStreak + 1;
-          debugPrint("New streak: $newStreak");
-          currentStreaks[habit.id] = newStreak;
-          debugPrint("Current streaks: $currentStreaks");
-          habitFromBox.streak = newStreak;
-          debugPrint("Habit from box: ${habitFromBox.streak}");
+    // We should now check every single habit from currentHabits
+    // And for each habit we check every single day
+    // from today to the day we started using the app or the day habit isnt completed
+
+    for (final habit in currentHabits) {
+      debugPrint("Checking habit: ${habit.name}");
+
+      int streak = 0;
+      int longestStreak = habit.longestStreak;
+
+      bool shouldBreak = false;
+
+      bool completed = false;
+      bool skipped = false;
+
+      for (final day in sortedDays) {
+        debugPrint("Checking day: ${day.date} for habit: ${habit.name}");
+
+        for (final dayHabit in day.habits) {
+          if (dayHabit.id == habit.id) {
+            completed = dayHabit.completed;
+            skipped = dayHabit.skipped;
+
+            debugPrint(
+              "Completed: $completed, Skipped: $skipped, Streak: $streak on day ${day.date}",
+            );
+
+            if (completed) {
+              if (!skipped) {
+                streak++;
+              }
+            } else {
+              shouldBreak = true;
+              break;
+            }
+
+            if (streak > longestStreak) {
+              longestStreak = streak;
+            }
+          }
         }
 
-        debugPrint("Saving ${habit.name}, streak: ${habit.streak}");
-        await habitFromBox.save();
+        if (shouldBreak) {
+          break;
+        }
       }
+
+      habit.streak = streak;
+      habit.longestStreak = longestStreak;
+
+      debugPrint("Streak: $streak, Longest Streak: $longestStreak");
+
+      habit.save();
     }
-    notifyListeners();
   }
 }

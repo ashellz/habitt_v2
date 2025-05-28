@@ -8,12 +8,14 @@ class Habit extends HiveObject {
   int categoryId; // Any time, Morning, Afternoon, Evening
   String tag; // Custom tags
   bool completed;
+  bool skipped;
   String amountLabel;
   int amount; // Number of times to do
   int amountCompleted; // Number of times completed
   int duration; // How long to do
   int durationCompleted; // How long has been done
   int streak;
+  int longestStreak;
 
   Habit({
     required this.id,
@@ -24,12 +26,33 @@ class Habit extends HiveObject {
     this.amountLabel = "times",
     this.tag = "No tag",
     this.completed = false,
+    this.skipped = false,
     this.amount = 0,
     this.amountCompleted = 0,
     this.duration = 0,
     this.durationCompleted = 0,
     this.streak = 0,
+    this.longestStreak = 0,
   });
+
+  Habit copy() {
+    return Habit(
+      id: id,
+      name: name,
+      completed: completed,
+      skipped: skipped,
+      streak: streak,
+      longestStreak: longestStreak,
+      description: description,
+      iconPath: iconPath,
+      categoryId: categoryId,
+      tag: tag,
+      amount: amount,
+      amountCompleted: amountCompleted,
+      duration: duration,
+      durationCompleted: durationCompleted,
+    );
+  }
 
   void updateHabit(Habit habit) {
     name = habit.name;
@@ -38,11 +61,13 @@ class Habit extends HiveObject {
     categoryId = habit.categoryId;
     tag = habit.tag;
     completed = habit.completed;
+    skipped = habit.skipped;
     amount = habit.amount;
     amountCompleted = habit.amountCompleted;
     duration = habit.duration;
     durationCompleted = habit.durationCompleted;
     streak = habit.streak;
+    longestStreak = habit.longestStreak;
   }
 
   void completeHabit() {
@@ -65,7 +90,7 @@ class Habit extends HiveObject {
     this.durationCompleted = durationCompleted;
   }
 
-  void resetCompletion() {
+  Future<void> resetCompletion() async {
     completed = false;
     amountCompleted = 0;
     durationCompleted = 0;
