@@ -15,6 +15,11 @@ class HabitProvider extends ChangeNotifier {
   Future<void> init() async {
     await _loadHabits();
     _fillToday();
+
+    // Print out all days dates
+    for (var day in daysBox.values) {
+      debugPrint("Day: ${day.date}");
+    }
   }
 
   Future<void> _loadHabits() async {
@@ -22,7 +27,11 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void _fillToday() {
-    final today = DateTime.now();
+    final today = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
     final todayKey = today.toIso8601String().split('T').first;
 
     final todayEntry = daysBox.get(todayKey);
@@ -47,9 +56,8 @@ class HabitProvider extends ChangeNotifier {
     // Get today's day entry
     final day = daysBox.get(today.toString());
 
-    debugPrint("Day entry: $day");
-
     if (day != null) {
+      debugPrint("Day entry: ${day.date}");
       // Find and update the matching habit inside today's habit list
       final index = day.habits.indexWhere((h) => h.id == habit.id);
       if (index != -1) {
@@ -91,6 +99,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void resetCompletion() {
+    debugPrint("Resetting completion");
     for (final habit in habits) {
       habit.resetCompletion();
       updateHabitInDB(habit);
@@ -117,9 +126,11 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void saveHabitDay(DateTime day) {
-    final DateTime daySimple = DateTime(day.year, day.month, day.day);
+    final daySimple = DateTime(day.year, day.month, day.day);
+    final String dayKey = daySimple.toIso8601String().split('T').first;
+    debugPrint("Saving day at: $daySimple");
 
-    daysBox.put(daySimple.toString(), Day(date: daySimple, habits: habits));
+    daysBox.put(dayKey, Day(date: daySimple, habits: habits));
   }
 
   Future<void> assignStreaks() async {
