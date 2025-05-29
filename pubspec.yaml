@@ -107,7 +107,16 @@ flutter_native_splash:
   android: true
   ios: true
   web: false
-  image: assets/images/icon.png
+  image: assets/images/icon_light.png
   background_image: assets/images/gradient_background.png
-  color: "#121416"
+  color: "#f8F9fA"
+  color_dark: "#121416"
+  image_dark: assets/images/icon.png
+
+  android_12:
+    color: "#f8F9fA"
+    color_dark: "#121416"
+    image: assets/images/icon_light.png
+    image_dark: assets/images/icon.png
+
 
