@@ -30,9 +30,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Update last opened date, reset habit completion
         await updateLastOpenedDate(context.read<HabitProvider>());
-
-        // Calculating streaks for each habit
-        if (mounted) context.read<HabitProvider>().assignStreaks();
       });
     }
   }
@@ -46,9 +43,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Update last opened date, reset habit completion
       await updateLastOpenedDate(context.read<HabitProvider>());
-
-      // Calculating streaks for each habit
-      if (mounted) context.read<HabitProvider>().assignStreaks();
     });
   }
 

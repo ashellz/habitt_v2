@@ -39,6 +39,7 @@ void checkForNewDay(
     debugPrint("New day, resetting completion");
     await habitProvider.saveHabitDay(lastOpenedDate);
     habitProvider.resetCompletion();
+    habitProvider.assignStreaks();
 
     prefs.setString("lastOpenedDate", today.toString());
   }
