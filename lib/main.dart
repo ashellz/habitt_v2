@@ -7,6 +7,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -33,18 +34,35 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => StateProvider()),
       ],
-      child: const MyApp(),
+      child: MyApp(prefs: prefs),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key, required this.prefs});
 
+  final SharedPreferences prefs;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final Color seedColor = colorProvider.colorScheme.vividColor;
+
+    Widget getHomePage() {
+      final name = widget.prefs.getString('name');
+
+      if (name == null) {
+        return SetupNamePage(prefs: widget.prefs, stateSetter: setState);
+      } else {
+        return const HomePage();
+      }
+    }
 
     return MaterialApp(
       title: 'habitt',
@@ -60,7 +78,7 @@ class MyApp extends StatelessWidget {
           decorationColor: const Color(0xFF212529),
         ),
       ),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       supportedLocales: L10n.all,
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -68,7 +86,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const HomePage(),
+      home: getHomePage(),
     );
   }
 }

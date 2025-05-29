@@ -109,4 +109,5 @@ flutter_native_splash:
   web: false
   image: assets/images/icon.png
   background_image: assets/images/gradient_background.png
+  color: "#121416"
 

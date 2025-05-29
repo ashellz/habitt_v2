@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.shellz.habitt"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = 27
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

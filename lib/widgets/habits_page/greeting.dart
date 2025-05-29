@@ -2,9 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Greeting extends StatelessWidget {
+class Greeting extends StatefulWidget {
   const Greeting({super.key});
+
+  @override
+  State<Greeting> createState() => _GreetingState();
+}
+
+class _GreetingState extends State<Greeting> {
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        name = prefs.getString('name');
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +41,7 @@ class Greeting extends StatelessWidget {
           ),
         ),
         Text(
-          "Shellz",
+          name ?? "Guest",
           style: TextStyle(
             fontSize: 38,
             height: 1,

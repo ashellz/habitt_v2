@@ -16,7 +16,7 @@ class ColorProvider extends ChangeNotifier {
   final SharedPreferences prefs;
 
   ColorProvider({required this.prefs}) {
-    isDarkMode = prefs.getBool("isDarkMode") ?? false;
+    isDarkMode = prefs.getBool("isDarkMode") ?? true;
     colorSchemeString = prefs.getString("colorScheme") ?? "blue";
     changeColorScheme(colorSchemeString);
     adaptModeColors();
