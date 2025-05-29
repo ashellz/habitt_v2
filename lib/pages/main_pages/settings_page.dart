@@ -37,7 +37,11 @@ class SettingsPage extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (colorProvider.colorSchemeString == "blue") {
+                          colorProvider.changeColorScheme("teal");
+                        } else if (colorProvider.colorSchemeString == "teal") {
                           colorProvider.changeColorScheme("green");
+                        } else if (colorProvider.colorSchemeString == "green") {
+                          colorProvider.changeColorScheme("magenta");
                         } else {
                           colorProvider.changeColorScheme("blue");
                         }

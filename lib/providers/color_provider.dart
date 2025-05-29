@@ -59,6 +59,14 @@ class ColorProvider extends ChangeNotifier {
         }
         colorSchemeString = "blue";
         break;
+      case "teal":
+        if (isDarkMode) {
+          colorScheme = _tealDark;
+        } else {
+          colorScheme = _teal;
+        }
+        colorSchemeString = "teal";
+        break;
       case "green":
         if (isDarkMode) {
           colorScheme = _greenDark;
@@ -66,6 +74,14 @@ class ColorProvider extends ChangeNotifier {
           colorScheme = _green;
         }
         colorSchemeString = "green";
+        break;
+      case "magenta":
+        if (isDarkMode) {
+          colorScheme = _magentaDark;
+        } else {
+          colorScheme = _magenta;
+        }
+        colorSchemeString = "magenta";
         break;
     }
     notifyListeners();
@@ -95,6 +111,22 @@ class ColorProvider extends ChangeNotifier {
     darkerStandardColor: Color(0xFF01377D),
   );
 
+  final CustomColorScheme _teal = CustomColorScheme(
+    disabledColor: Color(0xFFE6F9F8), // soft cyan
+    standardColor: Color(0xFFD2F0F0), // light mint-teal
+    strokeColor: Color(0xFF88C7C5), // cool teal-gray
+    vividColor: Color(0xFF00CFC1), // bright aqua
+    darkerStandardColor: Color(0xFF009B8E), // deeper teal
+  );
+
+  final CustomColorScheme _tealDark = CustomColorScheme(
+    disabledColor: Color(0xFF122725), // dark sea green
+    standardColor: Color(0xFF1C2B2A), // darkened background
+    strokeColor: Color(0xFF33514F), // teal-gray border
+    vividColor: Color(0xFF2ED7D7), // strong highlight
+    darkerStandardColor: Color(0xFF009B8E), // deep vivid teal
+  );
+
   final CustomColorScheme _green = CustomColorScheme(
     disabledColor: Color(0xFFE9F7F1),
     standardColor: Color(0xFFDEF3EA),
@@ -109,5 +141,21 @@ class ColorProvider extends ChangeNotifier {
     strokeColor: Color.fromARGB(255, 55, 66, 59),
     vividColor: Color.fromARGB(255, 70, 194, 99),
     darkerStandardColor: Color(0xFF1D8554),
+  );
+
+  final CustomColorScheme _magenta = CustomColorScheme(
+    disabledColor: Color(0xFFF4EAF7), // soft lilac
+    standardColor: Color(0xFFF0E6F9), // gentle lavender
+    strokeColor: Color(0xFFB088C4), // medium purple-gray
+    vividColor: Color(0xFF8D2BA5), // rich magenta
+    darkerStandardColor: Color(0xFF6B1F79), // deep violet
+  );
+
+  final CustomColorScheme _magentaDark = CustomColorScheme(
+    disabledColor: Color(0xFF2A1D2D), // muted dark lilac
+    standardColor: Color(0xFF1F1A23), // dark background match
+    strokeColor: Color(0xFF49374D), // grayish purple
+    vividColor: Color(0xFFE38AFB), // bright highlight magenta
+    darkerStandardColor: Color(0xFF6B1F79), // deep violet again
   );
 }
