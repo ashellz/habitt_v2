@@ -96,19 +96,19 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _blue = CustomColorScheme(
-    disabledColor: Color(0xFFE6EBF2),
-    standardColor: Color(0xFFE9EBF8),
-    strokeColor: Color(0xFF97A5B7),
-    vividColor: Color(0xFF01377D),
-    darkerStandardColor: Color(0xFF01377D),
+    disabledColor: Color(0xFFEAF2FB), // softer, airier blue
+    standardColor: Color(0xFFD9E6F9), // light bluish mint
+    strokeColor: Color(0xFF7AA6D9), // clearer sky blue
+    vividColor: Color(0xFF0A75FF), // bolder and crisper blue
+    darkerStandardColor: Color(0xFF0055CC), // deeper and more saturated
   );
 
   final CustomColorScheme _blueDark = CustomColorScheme(
-    disabledColor: Color.fromARGB(255, 30, 33, 37),
-    standardColor: Color.fromARGB(255, 31, 32, 33),
-    strokeColor: Color.fromARGB(255, 55, 60, 66),
-    vividColor: Color.fromARGB(255, 70, 123, 194),
-    darkerStandardColor: Color(0xFF01377D),
+    disabledColor: Color(0xFF1A2431),
+    standardColor: Color(0xFF1F2C3A),
+    strokeColor: Color(0xFF355773),
+    vividColor: Color(0xFF409CFF), // comparable vibrancy to magenta
+    darkerStandardColor: Color(0xFF0055CC),
   );
 
   final CustomColorScheme _teal = CustomColorScheme(
@@ -126,21 +126,20 @@ class ColorProvider extends ChangeNotifier {
     vividColor: Color(0xFF2ED7D7), // strong highlight
     darkerStandardColor: Color(0xFF009B8E), // deep vivid teal
   );
-
   final CustomColorScheme _green = CustomColorScheme(
-    disabledColor: Color(0xFFE9F7F1),
-    standardColor: Color(0xFFDEF3EA),
-    strokeColor: Color(0xFF97B7A5),
-    vividColor: Color(0xFF26B170),
-    darkerStandardColor: Color(0xFF1D8554),
+    disabledColor: Color(0xFFE6FAF0), // softened like teal
+    standardColor: Color(0xFFD1F7E6), // brighter mint green
+    strokeColor: Color(0xFF7ABF9A), // cooler and clearer tone
+    vividColor: Color(0xFF00DB7C), // more vibrant green
+    darkerStandardColor: Color(0xFF00A85B), // rich teal-leaning green
   );
 
   final CustomColorScheme _greenDark = CustomColorScheme(
-    disabledColor: Color.fromARGB(255, 22, 27, 24),
-    standardColor: Color.fromARGB(255, 30, 32, 31),
-    strokeColor: Color.fromARGB(255, 55, 66, 59),
-    vividColor: Color.fromARGB(255, 70, 194, 99),
-    darkerStandardColor: Color(0xFF1D8554),
+    disabledColor: Color(0xFF132820), // darker but still green-tinted
+    standardColor: Color(0xFF1B2F26),
+    strokeColor: Color(0xFF355E4A), // like tealDark.strokeColor
+    vividColor: Color(0xFF2EDF8F), // brighter vivid for contrast
+    darkerStandardColor: Color(0xFF00A85B),
   );
 
   final CustomColorScheme _magenta = CustomColorScheme(
