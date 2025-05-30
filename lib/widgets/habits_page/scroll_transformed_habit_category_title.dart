@@ -7,9 +7,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // This widget contains the actual visual content of your original HabitCategoryTitle
 class _OriginalHabitCategoryTitleContent extends StatelessWidget {
-  const _OriginalHabitCategoryTitleContent({required this.category});
+  const _OriginalHabitCategoryTitleContent({
+    required this.category,
+    required this.isFirst,
+  });
 
   final Category category;
+  final bool isFirst;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +26,22 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          category.name, // Make sure category.name is not null
-          style: TextStyle(color: colorProvider.mutedTextColor),
+          category.name,
+          style: TextStyle(
+            color:
+                isFirst
+                    ? colorProvider.textColor
+                    : colorProvider.mutedTextColor,
+          ),
         ),
         Text(
           "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
-          style: TextStyle(color: colorProvider.mutedTextColor),
+          style: TextStyle(
+            color:
+                isFirst
+                    ? colorProvider.textColor
+                    : colorProvider.mutedTextColor,
+          ),
         ),
       ],
     );
@@ -36,16 +50,9 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
 
 // This is the new transforming wrapper widget
 class ScrollTransformedHabitCategoryTitle extends StatefulWidget {
-  final Category category;
-  // Scroll and transformation parameters (same as for ScrollTransformedHabitWidget)
-  final ScrollController scrollController;
-  final double bottomViewportEdgeGlobalY;
-  final double effectZoneHeight;
-  final double minScale;
-  final double stackOffsetFactor;
-
   const ScrollTransformedHabitCategoryTitle({
     super.key,
+    required this.isFirst,
     required this.category,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
@@ -53,6 +60,15 @@ class ScrollTransformedHabitCategoryTitle extends StatefulWidget {
     required this.minScale,
     required this.stackOffsetFactor,
   });
+
+  final bool isFirst;
+  final Category category;
+  // Scroll and transformation parameters (same as for ScrollTransformedHabitWidget)
+  final ScrollController scrollController;
+  final double bottomViewportEdgeGlobalY;
+  final double effectZoneHeight;
+  final double minScale;
+  final double stackOffsetFactor;
 
   @override
   State<ScrollTransformedHabitCategoryTitle> createState() =>
@@ -65,6 +81,7 @@ class _ScrollTransformedHabitCategoryTitleState
   Widget build(BuildContext context) {
     Widget originalContent = _OriginalHabitCategoryTitleContent(
       category: widget.category,
+      isFirst: widget.isFirst,
     );
 
     double scale = 1.0;

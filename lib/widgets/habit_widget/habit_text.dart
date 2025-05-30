@@ -20,33 +20,42 @@ class HabitText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool hasStreak = false;
+    if (habit.streak > 0 || habit.completed) {
+      hasStreak = true;
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 10),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 150),
-        height: habit.description.isEmpty ? 23 : 43,
+      child: SizedBox(
         width:
             MediaQuery.of(context).size.width -
             32 - // 32 padding
             100 - // 100 on the right
-            70, // 70 on the left
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HabitNameDisplay(
-              text: habit.name,
-              completed: habit.completed,
-              textColor:
-                  Color.lerp(
-                    colorProvider.textColor.withAlpha(alpha),
-                    colorProvider.textColor,
-                    value,
-                  )!,
-            ),
+            70 -
+            (hasStreak ? 35 : 0), // 70 on the left
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 150),
+          height: habit.description.isEmpty ? 23 : 43,
 
-            HabitDescDisplay(habit: habit, colorProvider: colorProvider),
-          ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HabitNameDisplay(
+                text: habit.name,
+                completed: habit.completed,
+                textColor:
+                    Color.lerp(
+                      colorProvider.textColor.withAlpha(alpha),
+                      colorProvider.textColor,
+                      value,
+                    )!,
+              ),
+
+              HabitDescDisplay(habit: habit, colorProvider: colorProvider),
+            ],
+          ),
         ),
       ),
     );

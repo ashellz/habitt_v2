@@ -5,6 +5,7 @@ import 'package:habitt/pages/main_pages/habits_page.dart';
 import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/get_capitalized_first.dart';
@@ -26,8 +27,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
+    final categoryProvider = context.read<CategoryProvider>();
+
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        categoryProvider.reorderCategoriesBasedOnTime();
+
         // Update last opened date, reset habit completion
         await updateLastOpenedDate(context.read<HabitProvider>());
       });

@@ -55,13 +55,26 @@ class HabitWidget extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color:
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
                   Color.lerp(
                     colorProvider.habitColor.withAlpha(alpha),
-                    colorProvider.habitColor,
+                    colorProvider.habitColor.withAlpha(alpha + 100),
                     value,
                   )!,
+                  Color.lerp(
+                    colorProvider.colorScheme.standardColor.withAlpha(alpha),
+                    colorProvider.colorScheme.standardColor.withAlpha(
+                      alpha + 100,
+                    ),
+                    value,
+                  )!,
+                ],
+              ),
             ),
+
             // Inside of the container
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

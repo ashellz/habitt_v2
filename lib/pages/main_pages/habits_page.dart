@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
+import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -8,7 +9,6 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
-import 'package:habitt/widgets/habits_page/category_title.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
 import 'package:habitt/widgets/habits_page/habits_completed/habits_completed_widget.dart';
 import 'package:habitt/widgets/habits_page/scroll_transformed_habit_category_title.dart';
@@ -162,7 +162,7 @@ class _HabitsPageState extends State<HabitsPage> {
 
 // Step 2: Modify Habits and HabitCategory to pass parameters down
 
-class Habits extends StatelessWidget {
+class Habits extends StatefulWidget {
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
   final double effectZoneHeight;
@@ -177,6 +177,31 @@ class Habits extends StatelessWidget {
     required this.minScale,
     required this.stackOffsetFactor,
   });
+
+  @override
+  State<Habits> createState() => _HabitsState();
+}
+
+class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..repeat(reverse: true);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,49 +230,82 @@ class Habits extends StatelessWidget {
                 (c) => c.id == categoryProvider.selectedCategoryId,
               ),
               // Pass parameters
-              scrollController: scrollController,
-              bottomViewportEdgeGlobalY: bottomViewportEdgeGlobalY,
-              effectZoneHeight: effectZoneHeight,
-              minScale: minScale,
-              stackOffsetFactor: stackOffsetFactor,
+              scrollController: widget.scrollController,
+              bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+              effectZoneHeight: widget.effectZoneHeight,
+              minScale: widget.minScale,
+              stackOffsetFactor: widget.stackOffsetFactor,
             ),
           ),
         ],
       );
     }
 
+    final List<Category> categories = categoryProvider.categoriesOrdered;
+
     return Column(
       children: [
-        for (final category in categoryProvider.categories)
+        for (final category in categories)
           if (getCategoryLength(category, context) > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: HabitCategory(
-                category: category,
+            // Check if category is first
+            if (category == categories.first)
+              // Put it in a glass box with animated gradient
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: colorProvider.colorScheme.standardColor.withAlpha(
+                      255,
+                    ),
+                  ),
+                  child: AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return CustomPaint(
+                        painter: GradientWavePainter(
+                          _animation.value,
+                          colorProvider,
+                        ),
+                        child: HabitCategory(
+                          isFirst: true,
+                          category: category,
 
-                scrollController: scrollController,
-                bottomViewportEdgeGlobalY: bottomViewportEdgeGlobalY,
-                effectZoneHeight: effectZoneHeight,
-                minScale: minScale,
-                stackOffsetFactor: stackOffsetFactor,
+                          scrollController: widget.scrollController,
+                          bottomViewportEdgeGlobalY:
+                              widget.bottomViewportEdgeGlobalY,
+                          effectZoneHeight: widget.effectZoneHeight,
+                          minScale: widget.minScale,
+                          stackOffsetFactor: widget.stackOffsetFactor,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: HabitCategory(
+                  category: category,
+
+                  scrollController: widget.scrollController,
+                  bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+                  effectZoneHeight: widget.effectZoneHeight,
+                  minScale: widget.minScale,
+                  stackOffsetFactor: widget.stackOffsetFactor,
+                ),
               ),
-            ),
       ],
     );
   }
 }
 
 class HabitCategory extends StatefulWidget {
-  final Category category;
-  // These parameters are passed down from HabitsPage -> Habits -> HabitCategory
-  final ScrollController scrollController;
-  final double bottomViewportEdgeGlobalY;
-  final double effectZoneHeight;
-  final double minScale;
-  final double stackOffsetFactor;
-
   const HabitCategory({
     super.key,
+    this.isFirst = false,
     required this.category,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
@@ -255,6 +313,15 @@ class HabitCategory extends StatefulWidget {
     required this.minScale,
     required this.stackOffsetFactor,
   });
+
+  final bool isFirst;
+  final Category category;
+  // These parameters are passed down from HabitsPage -> Habits -> HabitCategory
+  final ScrollController scrollController;
+  final double bottomViewportEdgeGlobalY;
+  final double effectZoneHeight;
+  final double minScale;
+  final double stackOffsetFactor;
 
   @override
   State<HabitCategory> createState() => _HabitCategoryState();
@@ -293,6 +360,7 @@ class _HabitCategoryState extends State<HabitCategory> {
         children: [
           // Use the new ScrollTransformedHabitCategoryTitle
           ScrollTransformedHabitCategoryTitle(
+            isFirst: widget.isFirst,
             category: widget.category,
             scrollController: widget.scrollController,
             bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
