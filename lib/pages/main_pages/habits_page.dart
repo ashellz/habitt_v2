@@ -11,6 +11,7 @@ import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/category_title.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
 import 'package:habitt/widgets/habits_page/habits_completed/habits_completed_widget.dart';
+import 'package:habitt/widgets/habits_page/scroll_transformed_habit_category_title.dart';
 import 'package:habitt/widgets/scroll_transformed_habit_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -47,10 +48,11 @@ class _HabitsPageState extends State<HabitsPage> {
   void _updateListViewportGeom() {
     if (!mounted || !_scrollController.hasClients) {
       // If not mounted or scroll controller not ready, try again after next frame
-      if (mounted)
+      if (mounted) {
         WidgetsBinding.instance.addPostFrameCallback(
           (_) => _updateListViewportGeom(),
         );
+      }
       return;
     }
 
@@ -237,7 +239,7 @@ class Habits extends StatelessWidget {
 
 class HabitCategory extends StatefulWidget {
   final Category category;
-
+  // These parameters are passed down from HabitsPage -> Habits -> HabitCategory
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
   final double effectZoneHeight;
@@ -259,11 +261,12 @@ class HabitCategory extends StatefulWidget {
 }
 
 class _HabitCategoryState extends State<HabitCategory> {
-  double _opacity = 0;
+  double _opacity = 0; // From your original code for initial fade-in
 
   @override
   void initState() {
     super.initState();
+    // Original fade-in animation
     Future.delayed(Duration.zero, () {
       if (mounted) {
         setState(() {
@@ -284,16 +287,25 @@ class _HabitCategoryState extends State<HabitCategory> {
     if (categoryHabits.isEmpty) return Container();
 
     return AnimatedOpacity(
-      opacity: _opacity,
+      opacity: _opacity, // For the initial fade-in of the whole category block
       duration: const Duration(milliseconds: 150),
       child: Column(
         children: [
-          HabitCategoryTitle(category: widget.category),
+          // Use the new ScrollTransformedHabitCategoryTitle
+          ScrollTransformedHabitCategoryTitle(
+            category: widget.category,
+            scrollController: widget.scrollController,
+            bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+            effectZoneHeight: widget.effectZoneHeight,
+            minScale: widget.minScale,
+            stackOffsetFactor: widget.stackOffsetFactor,
+          ),
+          // Individual habits also use their transforming wrapper
           for (final habit in categoryHabits)
-            // Use the new ScrollTransformedHabitWidget
             ScrollTransformedHabitWidget(
+              // Assuming this is the widget from the previous answer
               habit: habit,
-              editable: false, // Or however you determine this
+              editable: false, // Or your logic for this
               scrollController: widget.scrollController,
               bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
               effectZoneHeight: widget.effectZoneHeight,
