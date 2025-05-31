@@ -26,12 +26,18 @@ class _HabitsPageState extends State<HabitsPage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _listViewKey = GlobalKey();
 
+  // ====================================
   // Configuration for the stacking effect
-  final double _effectZoneHeight =
-      120.0; // Pixels from bottom of viewport where effect starts
-  final double _minScale = 0.85; // Smallest scale for a stacked item
-  final double _stackOffsetFactor =
-      0.15; // Factor of item height for upward offset (e.g., 0.15 = 15% of its height)
+  // ====================================
+
+  // Pixels from bottom of viewport where effect starts
+  final double _effectZoneHeight = 120.0;
+
+  // Smallest scale for a stacked item
+  final double _minScale = 0.85;
+
+  // Factor of item height for upward offset (e.g., 0.15 = 15% of its height)
+  final double _stackOffsetFactor = 0.15;
 
   double _bottomViewportEdgeGlobalY = 0;
 
@@ -79,6 +85,9 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 
   void _onScroll() {
+    // On scroll we use to update state and widgets after
+    // every scroll which is necessary to do
+
     if (!mounted) return;
     // We need to call _updateListViewportGeom in case the listview's position/size changes
     // for example, due to keyboard or other dynamic UI elements above it.
