@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
+import 'package:habitt/models/category_progress.dart';
 import 'package:habitt/providers/habit_provider.dart';
 
 class CategoryProvider extends ChangeNotifier {
@@ -35,20 +36,17 @@ class CategoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Assuming your classes are defined:
-  // class Category { final int id; final String name; Category({required this.id, required this.name}); }
-  // class Habit { final int categoryId; final bool completed; Habit({required this.categoryId, required this.completed}); }
-  // Assume _habitProvider, _categories, _categoriesOrdered, notifyListeners are available
-
   void reorderCategoriesBasedOnTime() {
-    // Define these based on your actual Category model and habit.categoryId values
+    // Category ids
     const int anytimeCategoryId = 1;
     const int morningCategoryId = 2;
     const int afternoonCategoryId = 3;
     const int eveningCategoryId = 4;
 
+    // Getting all habits from the habitProvider
     final habits = _habitProvider?.habits;
 
+    // If the provider failed to load, or we have no habits: abort
     if (habits == null || habits.isEmpty) {
       _categoriesOrdered = List<Category>.from(_categories);
       notifyListeners();
@@ -56,12 +54,12 @@ class CategoryProvider extends ChangeNotifier {
       return;
     }
 
-    debugPrint("Reordering categories based on time (Corrected)");
+    debugPrint("Reordering categories based on time");
 
-    // 1. Initialize progress map
-    final Map<int, _CategoryProgress> progressMap = {};
+    // 1. Initializing progress map
+    final Map<int, CategoryProgress> progressMap = {};
     for (Category category in _categories) {
-      progressMap[category.id] = _CategoryProgress(category.name, category.id);
+      progressMap[category.id] = CategoryProgress(category.name, category.id);
     }
 
     // 2. Calculate habit counts
@@ -89,8 +87,8 @@ class CategoryProvider extends ChangeNotifier {
       }
     }
 
-    _CategoryProgress getProgress(int id, String defaultNameIfMissing) {
-      return progressMap[id] ?? _CategoryProgress(defaultNameIfMissing, id);
+    CategoryProgress getProgress(int id, String defaultNameIfMissing) {
+      return progressMap[id] ?? CategoryProgress(defaultNameIfMissing, id);
     }
 
     // 3. Determine the main category
@@ -124,15 +122,16 @@ class CategoryProvider extends ChangeNotifier {
       currentTimeSlotFallbackId = eveningCategoryId;
       readinessCheckOrderIds = [
         eveningCategoryId,
+        afternoonCategoryId,
         anytimeCategoryId,
         morningCategoryId,
-        afternoonCategoryId,
       ];
     }
 
     // Find the first "ready" category
     for (int catId in readinessCheckOrderIds) {
-      // Ensure _categories contains all category IDs in readinessCheckOrderIds, or add orElse to firstWhere
+      // not real cat, it's short of category :p
+      // We ensure _categories contains all category IDs in readinessCheckOrderIds, or add orElse to firstWhere
       String catName =
           _categories
               .firstWhere(
@@ -144,16 +143,17 @@ class CategoryProvider extends ChangeNotifier {
                     ), // Safety for catName
               )
               .name;
+
+      // Applying the main category if it's ready, if it's not we check the next in order
+      // Orders are specified in the hour calculation, it's Anytime, Morning, Afternoon, Evening
+      // Except that the checking category is placed first
+
       if (getProgress(catId, catName).isReady) {
         mainDisplayCategory = _categories.firstWhere((c) => c.id == catId);
-        if (mainDisplayCategory != null) {
-          debugPrint(
-            "Primary selection: '${mainDisplayCategory.name}' is ready and highest priority.",
-          );
-          break; // <<< FIX 1: Exit loop once the highest-priority ready category is found
-        }
       }
     }
+
+    // -------
 
     // Fallback logic if no category was "ready"
     if (mainDisplayCategory == null) {
@@ -161,6 +161,9 @@ class CategoryProvider extends ChangeNotifier {
         "No category is 'ready'. Applying fallback logic for $currentTimeSlotName time.",
       );
       // Fallback 1: Current time slot's category, if it has habits
+      // Technically we don't need to worry about this because
+      // if there are no habits, a widget saying that will be displayed instead
+
       String fallbackCatName1 =
           _categories
               .firstWhere(
@@ -172,33 +175,24 @@ class CategoryProvider extends ChangeNotifier {
                     ),
               )
               .name;
+
       if (getProgress(currentTimeSlotFallbackId, fallbackCatName1).hasHabits) {
         mainDisplayCategory = _categories.firstWhere(
           (c) => c.id == currentTimeSlotFallbackId,
         );
-        if (mainDisplayCategory != null) {
-          debugPrint(
-            "Fallback 1: Using current time slot category '${mainDisplayCategory.name}' as it has habits.",
-          );
-        }
       }
 
       // Fallback 2: "Any time" category
-      if (mainDisplayCategory == null) {
-        // Only if Fallback 1 didn't set it
-        mainDisplayCategory = _categories.firstWhere(
-          (c) => c.id == anytimeCategoryId,
-        );
-        if (mainDisplayCategory != null) {
-          debugPrint(
-            "Fallback 2: Using 'Any time' category '${mainDisplayCategory.name}'.",
-          );
-        }
-      }
+      // Also we don't need this either, but it's nice to have
+      // because it may save us from future bugs or exploits
+
+      mainDisplayCategory ??= _categories.firstWhere(
+        (c) => c.id == anytimeCategoryId,
+      );
 
       // Fallback 3: Absolute fallback to the first category
-      if (mainDisplayCategory == null && _categories.isNotEmpty) {
-        // <<< FIX 2: Only if still null
+      // This is the last resort, if nothing else works, but we don't need it as well
+      if (_categories.isNotEmpty) {
         mainDisplayCategory = _categories.first;
         debugPrint(
           "Fallback 3: Using first available category '${mainDisplayCategory.name}'.",
@@ -212,53 +206,37 @@ class CategoryProvider extends ChangeNotifier {
         "Category '${progress.name}' (ID: $id): Total=${progress.totalHabits}, Completed=${progress.completedHabits}, HasHabits=${progress.hasHabits}, IsCompleted=${progress.isCompleted}, IsReady=${progress.isReady}",
       );
     });
-    // Corrected debug print for mainDisplayCategory (handles null)
+
+    // Corrected debug print for mainDisplayCategory
     debugPrint(
-      "Main category determined: ${mainDisplayCategory?.name ?? 'None'} (ID: ${mainDisplayCategory?.id ?? 'N/A'})",
+      "Main category determined: ${mainDisplayCategory.name} (ID: ${mainDisplayCategory.id})",
     );
 
-    // 4. Reorder categories
+    // 4. Reordering categories
+
+    // Creating a copy of the original categories list to avoid modifying it directly
     final categoriesCopy = List<Category>.from(_categories);
 
-    // <<< FIX 3: Restore the reordering logic
-    if (mainDisplayCategory != null) {
-      int index = categoriesCopy.indexWhere(
-        (c) => c.id == mainDisplayCategory!.id,
-      );
-      if (index != -1) {
-        Category itemToMove = categoriesCopy.removeAt(index);
-        categoriesCopy.insert(0, itemToMove);
-        debugPrint(
-          "Reordered: '${itemToMove.name}' is now the main display category.",
-        );
-      } else {
-        // This might happen if mainDisplayCategory.id is somehow not in _categories, which would be an issue.
-        debugPrint(
-          "Warning: Main category '${mainDisplayCategory!.name}' (ID: ${mainDisplayCategory!.id}) not found in categoriesCopy for reordering. List remains as is.",
-        );
-      }
-    } else {
+    // Getting the index of the main category
+    int index = categoriesCopy.indexWhere(
+      (c) => c.id == mainDisplayCategory!.id,
+    );
+
+    // If nothing is broken, index should be greater than or equal to 0
+    if (index != -1) {
+      Category itemToMove = categoriesCopy.removeAt(index);
+      categoriesCopy.insert(0, itemToMove);
       debugPrint(
-        "No main display category determined. Category order remains based on original _categories.",
+        "Reordered: '${itemToMove.name}' is now the main display category.",
+      );
+    } else {
+      // This might happen if mainDisplayCategory.id is somehow not in _categories, which would be an issue.
+      debugPrint(
+        "Warning: Main category '${mainDisplayCategory.name}' (ID: ${mainDisplayCategory.id}) not found in categoriesCopy for reordering. List remains as is.",
       );
     }
 
     _categoriesOrdered = categoriesCopy;
     notifyListeners();
   }
-}
-
-class _CategoryProgress {
-  final String name; // Name of the category (e.g., "Morning")
-  final int id; // Unique ID (e.g., morningCategoryId)
-  int totalHabits = 0;
-  int completedHabits = 0;
-
-  _CategoryProgress(this.name, this.id);
-
-  bool get hasHabits => totalHabits > 0;
-  // A category is completed if it has habits and all of them are completed.
-  bool get isCompleted => hasHabits && totalHabits == completedHabits;
-  // A category is "ready" if it has habits and they are not all completed.
-  bool get isReady => hasHabits && !isCompleted;
 }
