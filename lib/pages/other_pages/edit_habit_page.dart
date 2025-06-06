@@ -5,7 +5,8 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
-import 'package:habitt/widgets/floating_bottom_button.dart';
+import 'package:habitt/widgets/default_button.dart';
+import 'package:habitt/widgets/default_dialog.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
 import 'package:habitt/widgets/nav_back_button.dart';
@@ -62,60 +63,128 @@ class _EditHabitPageState extends State<EditHabitPage> {
       backgroundColor: colorProvider.backgroundColor,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ListView(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   NavBackButton(colorProvider: colorProvider),
-                  Text(
-                    localizations.editHabit,
-                    style: TextStyle(
-                      fontSize: 38,
-                      fontWeight: FontWeight.bold,
-                      color: colorProvider.colorScheme.vividColor,
+
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: GestureDetector(
+                      onTap:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (context) => DeleteHabitDialog(widget: widget),
+                          ),
+                      child: Icon(Icons.delete, color: colorProvider.textColor),
                     ),
-                  ),
-                  SelectedHabitDisplay(
-                    completed: widget.habit.completed,
-                    amountCompleted: widget.habit.amountCompleted,
-                    durationCompleted: widget.habit.durationCompleted,
-                    streak: widget.habit.streak,
-                  ),
-                  CategoriesList(
-                    topPadding: 8,
-                    showAll: false,
-                    standardColor: true,
-                    habitsCount: false,
-                  ),
-                  CustomTextField(
-                    title: localizations.habitName,
-                    controller: nameController,
-                  ),
-                  CustomTextField(
-                    topPadding: 16,
-                    title: localizations.notes,
-                    controller: descController,
-                    maxLines: 5,
-                  ),
-                  MoreOptionsText(localizations: localizations),
-                  SelectHabitTypeOptions(),
-                  EditHabitButton(
-                    nameController: nameController,
-                    stateProvider: stateProvider,
-                    initialAmount: initialAmount,
-                    widget: widget,
-                    initialDuration: initialDuration,
-                    descController: descController,
-                    localizations: localizations,
                   ),
                 ],
               ),
-            ),
-          ],
+              Text(
+                localizations.editHabit,
+                style: TextStyle(
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                  color: colorProvider.colorScheme.vividColor,
+                ),
+              ),
+              SelectedHabitDisplay(
+                completed: widget.habit.completed,
+                amountCompleted: widget.habit.amountCompleted,
+                durationCompleted: widget.habit.durationCompleted,
+                streak: widget.habit.streak,
+              ),
+              CategoriesList(
+                useHabitCategory: true,
+                topPadding: 8,
+                showAll: false,
+                standardColor: true,
+                habitsCount: false,
+              ),
+              CustomTextField(
+                title: localizations.habitName,
+                controller: nameController,
+              ),
+              CustomTextField(
+                topPadding: 16,
+                title: localizations.notes,
+                controller: descController,
+                maxLines: 5,
+              ),
+              MoreOptionsText(localizations: localizations),
+              SelectHabitTypeOptions(),
+              EditHabitButton(
+                nameController: nameController,
+                stateProvider: stateProvider,
+                initialAmount: initialAmount,
+                widget: widget,
+                initialDuration: initialDuration,
+                descController: descController,
+                localizations: localizations,
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class DeleteHabitDialog extends StatelessWidget {
+  const DeleteHabitDialog({super.key, required this.widget});
+
+  final EditHabitPage widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultDialog(
+      danger: true,
+      title: "Delete '${widget.habit.name}'?",
+      desc: "Are you sure you want to delete this habit?",
+      content: Row(
+        children: [
+          Expanded(
+            child: DefaultButton(
+              danger: true,
+              outlined: true,
+              onPressed: () => Navigator.pop(context),
+              label: "Cancel",
+            ),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: DefaultButton(
+              danger: true,
+              onPressed: () {
+                context.read<HabitProvider>().removeHabit(widget.habit);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Future.delayed(Duration(milliseconds: 300)).then((value) {
+                  if (!context.mounted) return;
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => DefaultDialog(
+                          title: "Success!",
+                          desc: "Habit has been deleted successfuly.",
+                          content: DefaultButton(
+                            onPressed: () => Navigator.pop(context),
+                            label: "Close",
+                          ),
+                        ),
+                  );
+                });
+              },
+              label: "Delete",
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -150,8 +219,7 @@ class EditHabitButton extends StatelessWidget {
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: nameController,
       builder:
-          (context, value, child) => FloatingBottomButton(
-            showButton: true,
+          (context, value, child) => DefaultButton(
             enabled: canEditHabit(),
             onPressed: () {
               if (!canEditHabit()) return;

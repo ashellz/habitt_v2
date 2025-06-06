@@ -12,6 +12,9 @@ class ColorProvider extends ChangeNotifier {
   Color backgroundColor = Color(0xFFF8F9FA);
   Color standardColor = Color(0xFFEDEDED);
   Color disabledColor = Color(0xFFF8F9FA);
+  Color redAccent = Color.fromARGB(255, 240, 210, 210);
+
+  Color red = Color.fromARGB(255, 215, 46, 46);
 
   final SharedPreferences prefs;
 
@@ -38,6 +41,7 @@ class ColorProvider extends ChangeNotifier {
       habitColor = Color(0xFF212529);
       disabledColor = Color.fromARGB(255, 28, 31, 35);
       mutedTextColor = Color.fromARGB(255, 150, 161, 171);
+      redAccent = Color.fromARGB(255, 43, 28, 28);
     } else {
       textColor = Color(0xFF212529);
       habitColor = Color(0xFFEDEDED);
@@ -46,6 +50,7 @@ class ColorProvider extends ChangeNotifier {
       standardColor = Color(0xFFEDEDED);
       disabledColor = Color(0xFFF8F9FA);
       mutedTextColor = Color(0xFF6C757D);
+      redAccent = Color.fromARGB(255, 240, 210, 210);
     }
   }
 

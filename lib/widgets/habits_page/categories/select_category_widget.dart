@@ -3,6 +3,7 @@ import 'package:habitt/models/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/util/get_localized_category_name.dart';
 import 'package:provider/provider.dart';
@@ -14,20 +15,27 @@ class SelectCategoryWidget extends StatelessWidget {
     this.onTap,
     required this.habitsCount,
     required this.standardColor,
+    this.useHabitCategory = false,
   });
 
   final Category category;
   final VoidCallback? onTap;
   final bool habitsCount;
   final bool standardColor;
+  final bool useHabitCategory;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final ColorProvider colorProvider = context.watch<ColorProvider>();
-    final colorScheme = colorProvider.colorScheme;
+    final StateProvider stateProvider = context.watch<StateProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
-    final int selectedId = categoryProvider.selectedCategoryId;
+
+    final colorScheme = colorProvider.colorScheme;
+    final int selectedId =
+        useHabitCategory
+            ? stateProvider.habitCategoryId
+            : categoryProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
     final int categoryHabits = getCategoryLength(category, context);
 

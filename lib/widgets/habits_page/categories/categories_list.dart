@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habits_page/categories/select_category_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,12 +14,14 @@ class CategoriesList extends StatefulWidget {
     this.standardColor = false,
     this.showAll = true,
     this.habitsCount = true,
+    this.useHabitCategory = false,
   });
 
   final double topPadding;
   final bool standardColor;
   final bool showAll;
   final bool habitsCount;
+  final bool useHabitCategory;
 
   @override
   State<CategoriesList> createState() => _CategoriesListState();
@@ -37,7 +40,11 @@ class _CategoriesListState extends State<CategoriesList> {
 
   void _scrollToSelectedCategory() {
     final categoryProvider = context.read<CategoryProvider>();
-    final selectedId = categoryProvider.selectedCategoryId;
+    final stateProvider = context.read<StateProvider>();
+    final selectedId =
+        widget.useHabitCategory
+            ? stateProvider.habitCategoryId
+            : categoryProvider.selectedCategoryId;
     List<Category> categories = categoryProvider.categories;
 
     if (_scrollController.hasClients && categories.isNotEmpty) {
@@ -70,6 +77,7 @@ class _CategoriesListState extends State<CategoriesList> {
     final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
     final habitProvider = context.watch<HabitProvider>();
+    final stateProvider = context.watch<StateProvider>();
     final habitsList = habitProvider.habits;
     final List<bool> hasHabits = [];
 
@@ -117,10 +125,16 @@ class _CategoriesListState extends State<CategoriesList> {
                 }
 
                 return SelectCategoryWidget(
+                  useHabitCategory: widget.useHabitCategory,
                   standardColor: widget.standardColor,
                   habitsCount: widget.habitsCount,
                   category: category,
                   onTap: () {
+                    if (widget.useHabitCategory) {
+                      stateProvider.habitCategoryId = category.id;
+                      _scrollToSelectedCategory();
+                      return;
+                    }
                     categoryProvider.selectCategory(category.id);
                     _scrollToSelectedCategory();
                   },

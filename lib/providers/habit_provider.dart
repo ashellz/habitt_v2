@@ -85,6 +85,8 @@ class HabitProvider extends ChangeNotifier {
 
   void removeHabit(Habit habit) {
     habits.remove(habit);
+    habitBox.delete(habit.id);
+    updateHabitInDB(habit);
     notifyListeners();
   }
 

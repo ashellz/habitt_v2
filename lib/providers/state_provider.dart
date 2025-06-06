@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/generated/assets.gen.dart';
 
 class StateProvider extends ChangeNotifier {
-  int _habitCategoryId = 0;
+  int _habitCategoryId = 1;
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
   TextEditingController habitAmountLabelController = TextEditingController();
@@ -39,7 +39,7 @@ class StateProvider extends ChangeNotifier {
 
     _habitDuration = Duration.zero;
 
-    _habitCategoryId = 0;
+    _habitCategoryId = 1;
     habitAmountLabelController.clear();
     nameController.clear();
     descController.clear();
