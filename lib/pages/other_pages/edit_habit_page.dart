@@ -204,21 +204,17 @@ class DeleteHabitDialog extends StatelessWidget {
                               ),
                             ),
                           )
-                          .animate(
-                            // Apply animations directly to your dialog widget
-                          )
+                          .animate()
                           .fade(
                             begin: 0.0,
                             end: 1.0,
                             curve: Curves.easeOut,
-                            duration: 300.ms, // Use .ms for Duration
+                            duration: 300.ms,
                           )
                           .scale(
                             begin: const Offset(0.5, 0.5),
                             end: const Offset(1.0, 1.0),
-                            curve:
-                                Curves
-                                    .easeOutBack, // A nice bouncy curve for scale
+                            curve: Curves.easeOutBack,
                             duration: 300.ms,
                           );
                     },
