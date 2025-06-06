@@ -25,8 +25,8 @@ class EditHabitPage extends StatefulWidget {
 
 class _EditHabitPageState extends State<EditHabitPage> {
   bool shouldReset = true;
-  late final Duration initialDuration;
-  late final int initialAmount;
+  Duration initialDuration = Duration.zero;
+  int initialAmount = 1;
 
   @override
   void initState() {
