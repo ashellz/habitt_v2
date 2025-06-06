@@ -31,7 +31,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
   @override
   void initState() {
     super.initState();
-    final categoryProvider = context.read<CategoryProvider>();
     final stateProvider = context.read<StateProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -40,7 +39,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       initialAmount = widget.habit.amount;
 
       // Loads habit values
-      categoryProvider.selectCategory(widget.habit.categoryId);
+      stateProvider.habitCategoryId = widget.habit.categoryId;
       stateProvider.nameController.text = widget.habit.name;
       stateProvider.descController.text = widget.habit.description;
       stateProvider.habitAmount = widget.habit.amount;

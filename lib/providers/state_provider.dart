@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/generated/assets.gen.dart';
 
 class StateProvider extends ChangeNotifier {
+  int _habitCategoryId = 0;
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
   TextEditingController habitAmountLabelController = TextEditingController();
@@ -16,6 +17,11 @@ class StateProvider extends ChangeNotifier {
         notifyListeners();
       });
     }
+  }
+
+  set habitCategoryId(int id) {
+    _habitCategoryId = id;
+    notifyListeners();
   }
 
   set habitAmount(int value) {
@@ -33,12 +39,15 @@ class StateProvider extends ChangeNotifier {
 
     _habitDuration = Duration.zero;
 
+    _habitCategoryId = 0;
     habitAmountLabelController.clear();
     nameController.clear();
     descController.clear();
     _iconPath = Assets.images.icons.book.path;
     notifyListeners();
   }
+
+  int get habitCategoryId => _habitCategoryId;
 
   int get habitAmount => _habitAmount;
 

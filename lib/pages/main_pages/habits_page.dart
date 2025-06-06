@@ -131,12 +131,6 @@ class _HabitsPageState extends State<HabitsPage> {
                   final stateProvider = context.read<StateProvider>();
 
                   stateProvider.reset();
-
-                  // Reset the category provider
-
-                  final categoryProvider = context.read<CategoryProvider>();
-
-                  categoryProvider.selectCategory(0);
                 }),
 
         child: Icon(Icons.add, color: Colors.white),

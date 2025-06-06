@@ -25,11 +25,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
   @override
   void initState() {
     super.initState();
-    final categoryProvider = context.read<CategoryProvider>();
     final stateProvider = context.read<StateProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      categoryProvider.selectCategory(1);
       stateProvider.reset();
     });
   }
