@@ -37,6 +37,7 @@ class ColorProvider extends ChangeNotifier {
       standardColor = Color(0xFF212529);
       habitColor = Color(0xFF212529);
       disabledColor = Color.fromARGB(255, 28, 31, 35);
+      mutedTextColor = Color.fromARGB(255, 150, 161, 171);
     } else {
       textColor = Color(0xFF212529);
       habitColor = Color(0xFFEDEDED);
@@ -44,6 +45,7 @@ class ColorProvider extends ChangeNotifier {
       backgroundColor = Color(0xFFF8F9FA);
       standardColor = Color(0xFFEDEDED);
       disabledColor = Color(0xFFF8F9FA);
+      mutedTextColor = Color(0xFF6C757D);
     }
   }
 

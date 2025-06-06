@@ -26,9 +26,20 @@ class MoreOptionsText extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(left: 12),
-            child: Text(
-              localizations.moreOptions,
-              style: TextStyle(color: colorProvider.textColor),
+            child: RichText(
+              text: TextSpan(
+                text: localizations.moreOptions,
+                style: TextStyle(color: colorProvider.textColor),
+                children: [
+                  TextSpan(
+                    text: " (not required)",
+                    style: TextStyle(
+                      color: colorProvider.mutedTextColor,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -91,9 +91,9 @@ class SelectCategoryWidget extends StatelessWidget {
                           habitsCount
                               ? "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}"
                               : localizations.selected,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
-                            color: Color(0xFF6C757D),
+                            color: colorProvider.mutedTextColor,
                           ),
                         )
                         : const SizedBox.shrink(),
