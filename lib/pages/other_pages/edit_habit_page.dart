@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -165,19 +166,69 @@ class DeleteHabitDialog extends StatelessWidget {
                 context.read<HabitProvider>().removeHabit(widget.habit);
                 Navigator.pop(context);
                 Navigator.pop(context);
-                Future.delayed(Duration(milliseconds: 300)).then((value) {
-                  if (!context.mounted) return;
-                  showDialog(
+                Future.delayed(Duration(milliseconds: 150)).then((value) {
+                  if (!context.mounted) {
+                    debugPrint("context not mounted");
+                    return;
+                  }
+                  showGeneralDialog(
                     context: context,
-                    builder:
-                        (context) => DefaultDialog(
-                          title: "Success!",
-                          desc: "Habit has been deleted successfuly.",
-                          content: DefaultButton(
-                            onPressed: () => Navigator.pop(context),
-                            label: "Close",
-                          ),
-                        ),
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return const SizedBox.shrink(); // Content handled by transitionBuilder
+                    },
+                    transitionBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      return FadeTransition(
+                            opacity: animation,
+                            child: ScaleTransition(
+                              scale: Tween<double>(
+                                begin: 0.5,
+                                end: 1.0,
+                              ).animate(
+                                CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeOutBack,
+                                ),
+                              ),
+                              child: DefaultDialog(
+                                title: "Success!",
+                                desc: "Habit has been deleted successfully.",
+                                content: DefaultButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  label: "Close",
+                                ),
+                              ),
+                            ),
+                          )
+                          .animate(
+                            // Apply animations directly to your dialog widget
+                          )
+                          .fade(
+                            begin: 0.0,
+                            end: 1.0,
+                            curve: Curves.easeOut,
+                            duration: 300.ms, // Use .ms for Duration
+                          )
+                          .scale(
+                            begin: const Offset(0.5, 0.5),
+                            end: const Offset(1.0, 1.0),
+                            curve:
+                                Curves
+                                    .easeOutBack, // A nice bouncy curve for scale
+                            duration: 300.ms,
+                          );
+                    },
+                    transitionDuration: const Duration(milliseconds: 300),
+                    barrierDismissible: true,
+                    barrierLabel:
+                        MaterialLocalizations.of(
+                          context,
+                        ).modalBarrierDismissLabel,
+                    barrierColor: Colors.black54,
                   );
                 });
               },
