@@ -44,18 +44,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
 
-    bool canAddHabit() {
-      return nameController.text.isNotEmpty;
-    }
-
-    int getUniqueId() {
-      int id = 0;
-      while (habitProvider.habits.any((h) => h.id == id)) {
-        id++;
-      }
-      return id;
-    }
-
     return Scaffold(
       backgroundColor: colorProvider.backgroundColor,
       body: GestureDetector(
@@ -100,44 +88,86 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                   MoreOptionsText(localizations: localizations),
                   SelectHabitTypeOptions(),
+                  AddHabitButton(
+                    nameController: nameController,
+                    habitProvider: habitProvider,
+                    descController: descController,
+                    stateProvider: stateProvider,
+                    categoryProvider: categoryProvider,
+                    localizations: localizations,
+                  ),
                 ],
               ),
-            ),
-            ValueListenableBuilder<TextEditingValue>(
-              valueListenable: nameController,
-              builder:
-                  (context, value, child) => FloatingBottomButton(
-                    showButton: true,
-                    enabled: canAddHabit(),
-                    onPressed: () {
-                      if (!canAddHabit()) return;
-
-                      habitProvider.addHabit(
-                        Habit(
-                          id: getUniqueId(),
-                          name: nameController.text,
-                          description: descController.text,
-                          iconPath: stateProvider.iconPath,
-                          categoryId: categoryProvider.selectedCategoryId,
-                          tag: "No tag",
-                          completed: false,
-                          amount: stateProvider.habitAmount,
-                          amountLabel:
-                              stateProvider.habitAmountLabelController.text,
-                          amountCompleted: 0,
-                          duration: stateProvider.habitDuration.inMinutes,
-                          durationCompleted: 0,
-                          streak: 0,
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    label: localizations.addHabit,
-                  ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class AddHabitButton extends StatelessWidget {
+  const AddHabitButton({
+    super.key,
+    required this.nameController,
+    required this.habitProvider,
+    required this.descController,
+    required this.stateProvider,
+    required this.categoryProvider,
+    required this.localizations,
+  });
+
+  final TextEditingController nameController;
+  final HabitProvider habitProvider;
+  final TextEditingController descController;
+  final StateProvider stateProvider;
+  final CategoryProvider categoryProvider;
+  final AppLocalizations localizations;
+
+  @override
+  Widget build(BuildContext context) {
+    bool canAddHabit() {
+      return nameController.text.isNotEmpty;
+    }
+
+    int getUniqueId() {
+      int id = 0;
+      while (habitProvider.habits.any((h) => h.id == id)) {
+        id++;
+      }
+      return id;
+    }
+
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: nameController,
+      builder:
+          (context, value, child) => FloatingBottomButton(
+            showButton: true,
+            enabled: canAddHabit(),
+            onPressed: () {
+              if (!canAddHabit()) return;
+
+              habitProvider.addHabit(
+                Habit(
+                  id: getUniqueId(),
+                  name: nameController.text,
+                  description: descController.text,
+                  iconPath: stateProvider.iconPath,
+                  categoryId: categoryProvider.selectedCategoryId,
+                  tag: "No tag",
+                  completed: false,
+                  amount: stateProvider.habitAmount,
+                  amountLabel: stateProvider.habitAmountLabelController.text,
+                  amountCompleted: 0,
+                  duration: stateProvider.habitDuration.inMinutes,
+                  durationCompleted: 0,
+                  streak: 0,
+                ),
+              );
+              Navigator.of(context).pop();
+            },
+            label: localizations.addHabit,
+          ),
     );
   }
 }

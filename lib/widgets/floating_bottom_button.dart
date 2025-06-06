@@ -20,8 +20,8 @@ class FloatingBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
 
-    return Transform.translate(
-      offset: Offset(0, showButton ? -30 : 50),
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 150),
         opacity: enabled ? 1 : 0.5,

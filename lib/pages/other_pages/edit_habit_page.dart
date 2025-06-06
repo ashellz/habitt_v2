@@ -59,10 +59,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
 
-    bool canEditHabit() {
-      return nameController.text.isNotEmpty;
-    }
-
     return Scaffold(
       backgroundColor: colorProvider.backgroundColor,
       body: GestureDetector(
@@ -107,54 +103,88 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                   MoreOptionsText(localizations: localizations),
                   SelectHabitTypeOptions(),
+                  EditHabitButton(
+                    nameController: nameController,
+                    stateProvider: stateProvider,
+                    initialAmount: initialAmount,
+                    widget: widget,
+                    initialDuration: initialDuration,
+                    descController: descController,
+                    localizations: localizations,
+                  ),
                 ],
               ),
-            ),
-            ValueListenableBuilder<TextEditingValue>(
-              valueListenable: nameController,
-              builder:
-                  (context, value, child) => FloatingBottomButton(
-                    showButton: true,
-                    enabled: canEditHabit(),
-                    onPressed: () {
-                      if (!canEditHabit()) return;
-
-                      // Edit habit in state and database
-                      final HabitProvider habitProvider =
-                          context.read<HabitProvider>();
-                      final CategoryProvider categoryProvider =
-                          context.read<CategoryProvider>();
-
-                      // Checks for amount/duration changes
-
-                      if (stateProvider.habitAmount != initialAmount) {
-                        widget.habit.resetCompletion();
-                        widget.habit.amount = stateProvider.habitAmount;
-                      } else if (stateProvider.habitDuration !=
-                          initialDuration) {
-                        widget.habit.resetCompletion();
-                        widget.habit.duration =
-                            stateProvider.habitDuration.inMinutes;
-                      }
-
-                      widget.habit.name = nameController.text;
-                      widget.habit.description = descController.text;
-                      widget.habit.categoryId =
-                          categoryProvider.selectedCategoryId;
-                      widget.habit.amountLabel =
-                          stateProvider.habitAmountLabelController.text;
-                      widget.habit.iconPath = stateProvider.iconPath;
-
-                      habitProvider.updateHabit(widget.habit);
-
-                      Navigator.of(context).pop();
-                    },
-                    label: localizations.saveChanges,
-                  ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class EditHabitButton extends StatelessWidget {
+  const EditHabitButton({
+    super.key,
+    required this.nameController,
+    required this.stateProvider,
+    required this.initialAmount,
+    required this.widget,
+    required this.initialDuration,
+    required this.descController,
+    required this.localizations,
+  });
+
+  final TextEditingController nameController;
+  final StateProvider stateProvider;
+  final int initialAmount;
+  final EditHabitPage widget;
+  final Duration initialDuration;
+  final TextEditingController descController;
+  final AppLocalizations localizations;
+
+  @override
+  Widget build(BuildContext context) {
+    bool canEditHabit() {
+      return nameController.text.isNotEmpty;
+    }
+
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: nameController,
+      builder:
+          (context, value, child) => FloatingBottomButton(
+            showButton: true,
+            enabled: canEditHabit(),
+            onPressed: () {
+              if (!canEditHabit()) return;
+
+              // Edit habit in state and database
+              final HabitProvider habitProvider = context.read<HabitProvider>();
+              final CategoryProvider categoryProvider =
+                  context.read<CategoryProvider>();
+
+              // Checks for amount/duration changes
+
+              if (stateProvider.habitAmount != initialAmount) {
+                widget.habit.resetCompletion();
+                widget.habit.amount = stateProvider.habitAmount;
+              } else if (stateProvider.habitDuration != initialDuration) {
+                widget.habit.resetCompletion();
+                widget.habit.duration = stateProvider.habitDuration.inMinutes;
+              }
+
+              widget.habit.name = nameController.text;
+              widget.habit.description = descController.text;
+              widget.habit.categoryId = categoryProvider.selectedCategoryId;
+              widget.habit.amountLabel =
+                  stateProvider.habitAmountLabelController.text;
+              widget.habit.iconPath = stateProvider.iconPath;
+
+              habitProvider.updateHabit(widget.habit);
+
+              Navigator.of(context).pop();
+            },
+            label: localizations.saveChanges,
+          ),
     );
   }
 }
