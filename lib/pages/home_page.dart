@@ -31,10 +31,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        categoryProvider.reorderCategoriesBasedOnTime();
-
         // Update last opened date, reset habit completion
         await updateLastOpenedDate(context.read<HabitProvider>());
+        categoryProvider.reorderCategoriesBasedOnTime();
       });
     }
   }
