@@ -83,10 +83,9 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeHabit(Habit habit) {
-    habits.remove(habit);
-    habitBox.delete(habit.id);
-    updateHabitInDB(habit);
+  void removeHabit(Habit habit) async {
+    habits.removeWhere((h) => h.id == habit.id);
+    await habitBox.delete(habit.key);
     notifyListeners();
   }
 

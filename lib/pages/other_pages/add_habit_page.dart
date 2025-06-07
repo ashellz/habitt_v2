@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -125,11 +127,16 @@ class AddHabitButton extends StatelessWidget {
     }
 
     int getUniqueId() {
-      int id = 0;
-      while (habitProvider.habits.any((h) => h.id == id)) {
-        id++;
-      }
-      return id;
+      final now = DateTime.now();
+      // Milliseconds since epoch provides the time component
+      final timeComponent = now.millisecondsSinceEpoch;
+
+      // Generate a random number between 0 and 999
+      final random = Random().nextInt(1000);
+
+      // Combine them. This makes the ID much more unique.
+      // The multiplication shifts the time component to make space for the random part.
+      return timeComponent * 1000 + random;
     }
 
     return ValueListenableBuilder<TextEditingValue>(
