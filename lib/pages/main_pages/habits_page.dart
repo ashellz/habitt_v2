@@ -111,24 +111,6 @@ class _HabitsPageState extends State<HabitsPage> {
 
     return Scaffold(
       backgroundColor: colorProvider.backgroundColor,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: colorProvider.colorScheme.darkerStandardColor,
-
-        onPressed:
-            () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddHabitPage()))
-                .whenComplete(() {
-                  // Reset the state provider
-
-                  if (!context.mounted) return;
-
-                  final stateProvider = context.read<StateProvider>();
-
-                  stateProvider.reset();
-                }),
-
-        child: Icon(Icons.add, color: Colors.white),
-      ),
       body: GradientBackground(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -137,7 +119,32 @@ class _HabitsPageState extends State<HabitsPage> {
             controller: _scrollController, // Assign the ScrollController
             physics: const BouncingScrollPhysics(),
             children: [
-              const Greeting(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Greeting(),
+                  FloatingActionButton(
+                    mini: true,
+                    elevation: 0,
+                    backgroundColor:
+                        colorProvider.colorScheme.darkerStandardColor,
+                    onPressed:
+                        () => Navigator.of(context)
+                            .push(
+                              MaterialPageRoute(
+                                builder: (context) => AddHabitPage(),
+                              ),
+                            )
+                            .whenComplete(() {
+                              if (!context.mounted) return;
+                              final stateProvider =
+                                  context.read<StateProvider>();
+                              stateProvider.reset();
+                            }),
+                    child: Icon(Icons.add, color: Colors.white),
+                  ),
+                ],
+              ),
               const CategoriesList(),
               const HabitsCompletedWidget(),
               // Pass down the necessary parameters for the effect
