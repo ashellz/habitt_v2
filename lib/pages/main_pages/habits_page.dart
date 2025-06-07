@@ -155,7 +155,7 @@ class _HabitsPageState extends State<HabitsPage> {
                 minScale: _minScale,
                 stackOffsetFactor: _stackOffsetFactor,
               ),
-              const SizedBox(height: 80),
+              const SizedBox(height: 100),
             ],
           ),
         ),

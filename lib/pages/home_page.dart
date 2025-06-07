@@ -473,14 +473,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final colorProvider = context.watch<ColorProvider>();
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(100),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           height: 62,
           padding: const EdgeInsets.all(8),
           decoration: ShapeDecoration(
-            color: colorProvider.standardColor.withOpacity(0.2),
+            color: colorProvider.colorScheme.standardColor.withOpacity(0.35),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
             ),
