@@ -1,16 +1,13 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/main_pages/calendar_page.dart';
 import 'package:habitt/pages/main_pages/habits_page.dart';
 import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/main_pages/stats_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/util/get_capitalized_first.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:provider/provider.dart';
 /*
@@ -416,9 +413,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 width: 20,
                 height: 20,
                 colorFilter: ColorFilter.mode(
-                  isSelected
-                      ? colorProvider.backgroundColor
-                      : colorProvider.textColor,
+                  colorProvider.textColor,
                   BlendMode.srcIn,
                 ),
               ),
@@ -450,7 +445,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                       ? DefaultTextStyle(
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: colorProvider.backgroundColor,
+                          color: Colors.white,
                         ),
                         child: Padding(
                           key: ValueKey<String>("text_${item.id}"),
