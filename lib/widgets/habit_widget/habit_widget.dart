@@ -9,11 +9,18 @@ import 'package:habitt/widgets/habit_widget/habit_streak.dart';
 import 'package:habitt/widgets/habit_widget/habit_text.dart';
 import 'package:provider/provider.dart';
 
-class HabitWidget extends StatelessWidget {
+class HabitWidget extends StatefulWidget {
   const HabitWidget({super.key, required this.editable, required this.habit});
 
   final Habit habit;
   final bool editable;
+
+  @override
+  State<HabitWidget> createState() => _HabitWidgetState();
+}
+
+class _HabitWidgetState extends State<HabitWidget> {
+   double _swipeOffset = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,104 +29,156 @@ class HabitWidget extends StatelessWidget {
 
     // Main container
     return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 0, end: habit.completed ? 0 : 1),
+      tween: Tween<double>(begin: 0, end: widget.habit.completed ? 0 : 1),
       duration: const Duration(milliseconds: 150),
       builder: (context, double value, child) {
-        return GestureDetector(
-          onTap:
-              editable
-                  ? null
-                  : () {
-                    // For navigating to edit habit page
+        return StatefulBuilder(
+          builder: (context, setStateTile) {
+            return GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                setStateTile(() {
+                  _swipeOffset =
+                      (_swipeOffset + details.delta.dx).clamp(0.0, 150.0);
+                });
+              },
+              onHorizontalDragEnd: (details) {
+                if (_swipeOffset > 100) {
+                  // Trigger your action
+                  print('Swiped enough to trigger action');
+                  // Reset position after action, reset it gradually so its animated
+setStateTile(() {
+                    _swipeOffset = 0.0;
+                  });
 
-                    final CategoryProvider categoryProvider =
-                        context.read<CategoryProvider>();
+                } else {
+                  // Reset position, reset it gradually so its animated
+                  setStateTile(() {
+                    _swipeOffset = 0.0;
+                  });
+                }
+              },
+              onTap:
+                  widget.editable
+                      ? null
+                      : () {
+                        // For navigating to edit habit page
+            
+                        final CategoryProvider categoryProvider =
+                            context.read<CategoryProvider>();
+            
+                        // Save the selected category
+                        final int temp = categoryProvider.selectedCategoryId;
+            
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditHabitPage(habit: widget.habit),
+                          ),
+                        ).whenComplete(() {
+                          // Select the saved category
+                          categoryProvider.selectCategory(temp);
+                        });
+                      },
+              child: Stack(
 
-                    // Save the selected category
-                    final int temp = categoryProvider.selectedCategoryId;
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditHabitPage(habit: habit),
+                children: [
+                    // Background action color
+                  Positioned.fill(
+                    child: AnimatedOpacity(
+                      opacity: (_swipeOffset/150).clamp(0, 1),
+                      duration: const Duration(milliseconds: 150),
+                      child: Container(
+                        margin: EdgeInsets.only(top: 8),
+                        decoration: BoxDecoration(
+                          color: colorProvider.colorScheme.strokeColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text("Skip", style: TextStyle(color: colorProvider.textColor, fontSize: 16),),
                       ),
-                    ).whenComplete(() {
-                      // Select the saved category
-                      categoryProvider.selectCategory(temp);
-                    });
-                  },
-          child: Container(
-            margin: EdgeInsets.only(top: 8),
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            height: 74,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Color.lerp(
-                    colorProvider.habitColor.withAlpha(alpha),
-                    colorProvider.habitColor.withAlpha(alpha + 100),
-                    value,
-                  )!,
-                  Color.lerp(
-                    colorProvider.colorScheme.standardColor.withAlpha(alpha),
-                    colorProvider.colorScheme.standardColor.withAlpha(
-                      alpha + 100,
                     ),
-                    value,
-                  )!,
+                  ),
+
+                  Transform.translate(
+                    offset: Offset(_swipeOffset, 0),
+                    child: Container(
+                      margin: EdgeInsets.only(top: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      height: 74,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Color.lerp(
+                              colorProvider.habitColor.withAlpha(alpha),
+                              colorProvider.habitColor.withAlpha(alpha + 100),
+                              value,
+                            )!,
+                            Color.lerp(
+                              colorProvider.colorScheme.standardColor.withAlpha(alpha),
+                              colorProvider.colorScheme.standardColor.withAlpha(
+                                alpha + 100,
+                              ),
+                              value,
+                            )!,
+                          ],
+                        ),
+                      ),
+                                
+                      // Inside of the container
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Left side
+                          Row(
+                            children: [
+                              // Icon circle container
+                              HabitIcon(
+                                editable: widget.editable,
+                                colorProvider: colorProvider,
+                                alpha: alpha,
+                                habit: widget.habit,
+                                value: value,
+                              ),
+                              // Text
+                              HabitText(
+                                habit: widget.habit,
+                                colorProvider: colorProvider,
+                                alpha: alpha,
+                                value: value,
+                              ),
+                            ],
+                          ),
+                          // Completion and streak
+                          Row(
+                            children: [
+                              if (widget.habit.streak > 0 || widget.habit.completed)
+                                // TODO: Add animation for the streak first appearing
+                                StreakDisplay(
+                                  streak: widget.habit.streak,
+                                  completed: widget.habit.completed,
+                                  colorProvider: colorProvider,
+                                ),
+                              // Completion
+                              CompletionDisplay(
+                                editable: widget.editable,
+                                colorProvider: colorProvider,
+                                habit: widget.habit,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-
-            // Inside of the container
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Left side
-                Row(
-                  children: [
-                    // Icon circle container
-                    HabitIcon(
-                      editable: editable,
-                      colorProvider: colorProvider,
-                      alpha: alpha,
-                      habit: habit,
-                      value: value,
-                    ),
-                    // Text
-                    HabitText(
-                      habit: habit,
-                      colorProvider: colorProvider,
-                      alpha: alpha,
-                      value: value,
-                    ),
-                  ],
-                ),
-                // Completion and streak
-                Row(
-                  children: [
-                    if (habit.streak > 0 || habit.completed)
-                      // TODO: Add animation for the streak first appearing
-                      StreakDisplay(
-                        streak: habit.streak,
-                        completed: habit.completed,
-                        colorProvider: colorProvider,
-                      ),
-                    // Completion
-                    CompletionDisplay(
-                      editable: editable,
-                      colorProvider: colorProvider,
-                      habit: habit,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+            );
+          }
         );
       },
     );
