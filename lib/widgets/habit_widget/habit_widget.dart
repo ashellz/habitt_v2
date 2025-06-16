@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/habit_streak.dart';
@@ -73,18 +74,27 @@ class _HabitWidgetState extends State<HabitWidget>
 
   @override
   Widget build(BuildContext context) {
+    final habitProvider = context.watch<HabitProvider>();
     final colorProvider = context.watch<ColorProvider>();
     final int alpha = 100;
 
     // Main container
     return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 0, end: widget.habit.completed ? 0 : 1),
+      tween: Tween<double>(
+        begin: 0,
+        end: widget.habit.completed || widget.habit.skipped ? 0 : 1,
+      ),
       duration: const Duration(milliseconds: 150),
       builder: (context, double value, child) {
         return StatefulBuilder(
           builder: (context, setStateTile) {
             return GestureDetector(
               onHorizontalDragUpdate: (details) {
+                if (widget.habit.skipped ||
+                    widget.habit.completed ||
+                    widget.editable) {
+                  return;
+                }
                 setStateTile(() {
                   _swipeOffset = (_swipeOffset + details.delta.dx).clamp(
                     0.0,
@@ -103,9 +113,16 @@ class _HabitWidgetState extends State<HabitWidget>
                 });
               },
               onHorizontalDragEnd: (details) {
+                if (widget.habit.skipped ||
+                    widget.habit.completed ||
+                    widget.editable) {
+                  return;
+                }
                 if (_swipeOffset > 100) {
-                  // Trigger your action
-                  print('Swiped enough to trigger action');
+                  debugPrint('Swiped enough to trigger action');
+
+                  habitProvider.skipHabit(widget.habit.id);
+
                   // Reset position after action, reset it gradually so its animated
                   animateBack(); // Smooth reset
                 } else {

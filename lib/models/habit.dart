@@ -40,9 +40,7 @@ class Habit extends HiveObject {
       id: id,
       name: name,
       completed: completed,
-      skipped: skipped,
       streak: streak,
-      longestStreak: longestStreak,
       description: description,
       iconPath: iconPath,
       categoryId: categoryId,
@@ -51,6 +49,8 @@ class Habit extends HiveObject {
       amountCompleted: amountCompleted,
       duration: duration,
       durationCompleted: durationCompleted,
+      longestStreak: longestStreak,
+      skipped: skipped,
     );
   }
 
@@ -70,10 +70,23 @@ class Habit extends HiveObject {
     longestStreak = habit.longestStreak;
   }
 
-  void completeHabit() {
+  Future<void> completeHabit() async {
+    if (skipped) {
+      completed = false;
+      skipped = false;
+      amountCompleted = 0;
+      durationCompleted = 0;
+      return;
+    }
+
     completed = !completed;
+    skipped = false;
     amountCompleted = completed ? amount : 0;
     durationCompleted = completed ? duration : 0;
+  }
+
+  Future<void> skipHabit() async {
+    skipped = !skipped;
   }
 
   void updateHabitAmountCompleted(int amountCompleted) {
@@ -92,6 +105,7 @@ class Habit extends HiveObject {
 
   Future<void> resetCompletion() async {
     completed = false;
+    skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
   }

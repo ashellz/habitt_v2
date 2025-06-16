@@ -10,7 +10,6 @@ class HabitIcon extends StatelessWidget {
     required this.colorProvider,
     required this.alpha,
     required this.habit,
-
     required this.value,
   });
 
@@ -57,7 +56,7 @@ class HabitIcon extends StatelessWidget {
           child: AnimatedOpacity(
             key: ValueKey<String>(habit.iconPath),
             duration: const Duration(milliseconds: 150),
-            opacity: habit.completed ? 0.5 : 1,
+            opacity: habit.completed || habit.skipped ? 0.5 : 1,
             child: Image.asset(habit.iconPath),
           ),
         ),

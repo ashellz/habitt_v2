@@ -109,6 +109,8 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                                   widget.habit.completed
                               ? widget.habit.completed
                                   ? 1
+                                  : widget.habit.skipped
+                                  ? 1
                                   : 0
                               : widget.habit.amount > 1
                               ? widget.habit.amountCompleted /
@@ -120,10 +122,12 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                       return LinearProgressIndicator(
                         value: value,
                         color:
-                            widget
-                                .colorProvider
-                                .colorScheme
-                                .darkerStandardColor,
+                            widget.habit.skipped
+                                ? widget.colorProvider.standardColor
+                                : widget
+                                    .colorProvider
+                                    .colorScheme
+                                    .darkerStandardColor,
                         backgroundColor:
                             widget.colorProvider.colorScheme.strokeColor,
                       );
@@ -155,7 +159,9 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   Widget centerIcon() {
     return Center(
       child: Icon(
-        widget.habit.completed ? Icons.check : Icons.close,
+        widget.habit.completed || widget.habit.skipped
+            ? Icons.check
+            : Icons.close,
         color: Color(0xFFF8F9FA),
       ),
     );

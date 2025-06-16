@@ -25,18 +25,20 @@ class HabitAdapter extends TypeAdapter<Habit> {
       amountLabel: fields[13] == null ? "times" : fields[13] as String,
       tag: fields[5] == null ? "No tag" : fields[5] as String,
       completed: fields[6] == null ? false : fields[6] as bool,
+      skipped: fields[14] == null ? false : fields[14] as bool,
       amount: fields[8] == null ? 0 : (fields[8] as num).toInt(),
       amountCompleted: fields[9] == null ? 0 : (fields[9] as num).toInt(),
       duration: fields[10] == null ? 0 : (fields[10] as num).toInt(),
       durationCompleted: fields[11] == null ? 0 : (fields[11] as num).toInt(),
       streak: fields[12] == null ? 0 : (fields[12] as num).toInt(),
+      longestStreak: fields[15] == null ? 0 : (fields[15] as num).toInt(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,7 +64,11 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(12)
       ..write(obj.streak)
       ..writeByte(13)
-      ..write(obj.amountLabel);
+      ..write(obj.amountLabel)
+      ..writeByte(14)
+      ..write(obj.skipped)
+      ..writeByte(15)
+      ..write(obj.longestStreak);
   }
 
   @override

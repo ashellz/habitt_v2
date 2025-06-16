@@ -6,10 +6,12 @@ class HabitNameDisplay extends StatefulWidget {
     required this.text,
     required this.completed,
     required this.textColor,
+    required this.skipped,
   });
 
   final String text;
   final bool completed;
+  final bool skipped;
   final Color textColor;
 
   @override
@@ -31,7 +33,7 @@ class HabitNameDisplayState extends State<HabitNameDisplay>
 
     _lineWidth = Tween<double>(begin: 0, end: 0).animate(_controller);
 
-    if (widget.completed) {
+    if (widget.completed || widget.skipped) {
       // Animate from 0 to full width when completed becomes true
       _controller.forward();
     }
@@ -41,10 +43,12 @@ class HabitNameDisplayState extends State<HabitNameDisplay>
   void didUpdateWidget(covariant HabitNameDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.completed && !oldWidget.completed) {
+    if (widget.completed && !oldWidget.completed ||
+        widget.skipped && !oldWidget.skipped) {
       // Animate from 0 to full width when completed becomes true
       _controller.forward();
-    } else if (!widget.completed && oldWidget.completed) {
+    } else if (!widget.completed && oldWidget.completed ||
+        !widget.skipped && oldWidget.skipped) {
       // Animate from full width to 0 when completed becomes false
       _controller.reverse();
     }

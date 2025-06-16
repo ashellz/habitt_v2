@@ -45,6 +45,7 @@ class HabitText extends StatelessWidget {
               HabitNameDisplay(
                 text: habit.name,
                 completed: habit.completed,
+                skipped: habit.skipped,
                 textColor:
                     Color.lerp(
                       colorProvider.textColor.withAlpha(alpha),

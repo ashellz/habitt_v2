@@ -20,6 +20,13 @@ class HabitProvider extends ChangeNotifier {
     for (var day in daysBox.values) {
       debugPrint("Day: ${day.date}");
     }
+
+    // Print out all habits
+    for (var habit in habits) {
+      debugPrint(
+        "Habit: ${habit.name}, completed: ${habit.completed}, skipped: ${habit.skipped}",
+      );
+    }
   }
 
   Future<void> _loadHabits() async {
@@ -45,6 +52,12 @@ class HabitProvider extends ChangeNotifier {
   Future<void> updateHabitInDB(Habit habit) async {
     // Save the habit change
     await habit.save();
+
+    // print out all habitbox habits and their skipped status
+
+    for (var h in habitBox.values) {
+      debugPrint("Habit: ${h.name}, skipped: ${h.skipped}");
+    }
 
     // Save changes to current day in Day database
     final today = DateTime(
@@ -89,9 +102,18 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void completeHabit(int id) {
+  void completeHabit(int id) async {
+    debugPrint("Completing habit: $id");
     final habit = habits.firstWhere((h) => h.id == id);
-    habit.completeHabit();
+    await habit.completeHabit();
+    updateHabitInDB(habit);
+    notifyListeners();
+  }
+
+  void skipHabit(int id) async {
+    debugPrint("Skipping habit: $id");
+    final habit = habits.firstWhere((h) => h.id == id);
+    await habit.skipHabit();
     updateHabitInDB(habit);
     notifyListeners();
   }

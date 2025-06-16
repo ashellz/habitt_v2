@@ -19,6 +19,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/images/icon.png');
 
+  /// File path: assets/images/icon_android12.png
+  AssetGenImage get iconAndroid12 =>
+      const AssetGenImage('assets/images/icon_android12.png');
+
+  /// File path: assets/images/icon_light.png
+  AssetGenImage get iconLight =>
+      const AssetGenImage('assets/images/icon_light.png');
+
   /// Directory path: assets/images/icons
   $AssetsImagesIconsGen get icons => const $AssetsImagesIconsGen();
 
@@ -26,7 +34,12 @@ class $AssetsImagesGen {
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 
   /// List of all assets
-  List<AssetGenImage> get values => [gradientBackground, icon];
+  List<AssetGenImage> get values => [
+    gradientBackground,
+    icon,
+    iconAndroid12,
+    iconLight,
+  ];
 }
 
 class $AssetsImagesIconsGen {
@@ -430,6 +443,9 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/settings.svg
   String get settings => 'assets/images/svg/settings.svg';
 
+  /// File path: assets/images/svg/skip.svg
+  String get skip => 'assets/images/svg/skip.svg';
+
   /// File path: assets/images/svg/slider.svg
   String get slider => 'assets/images/svg/slider.svg';
 
@@ -442,6 +458,7 @@ class $AssetsImagesSvgGen {
     calendar,
     habits,
     settings,
+    skip,
     slider,
     stats,
   ];
