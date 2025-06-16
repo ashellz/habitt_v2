@@ -6,7 +6,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';

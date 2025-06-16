@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Greeting extends StatefulWidget {

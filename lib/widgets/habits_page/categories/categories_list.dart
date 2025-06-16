@@ -5,7 +5,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habits_page/categories/select_category_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class CategoriesList extends StatefulWidget {
   const CategoriesList({

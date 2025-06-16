@@ -14,7 +14,7 @@ import 'package:habitt/widgets/nav_back_button.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
 import 'package:habitt/widgets/selected_habit_display.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class EditHabitPage extends StatefulWidget {
   const EditHabitPage({super.key, required this.habit});

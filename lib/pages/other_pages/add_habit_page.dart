@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -14,7 +15,6 @@ import 'package:habitt/widgets/nav_back_button.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
 import 'package:habitt/widgets/selected_habit_display.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddHabitPage extends StatefulWidget {
   const AddHabitPage({super.key});

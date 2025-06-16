@@ -3,7 +3,7 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_category_length.dart'; // Assuming this is still used
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 // This widget contains the actual visual content of your original HabitCategoryTitle
 class _OriginalHabitCategoryTitleContent extends StatelessWidget {
