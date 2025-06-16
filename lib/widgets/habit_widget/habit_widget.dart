@@ -19,8 +19,40 @@ class HabitWidget extends StatefulWidget {
   State<HabitWidget> createState() => _HabitWidgetState();
 }
 
-class _HabitWidgetState extends State<HabitWidget> {
+class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStateMixin {
    double _swipeOffset = 0;
+
+   late AnimationController _controller;
+  late Animation<double> _animation;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+  }
+
+
+  void animateBack() {
+    _animation = Tween<double>(begin: _swipeOffset, end: 0.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    )..addListener(() {
+        setState(() {
+          _swipeOffset = _animation.value;
+        });
+      });
+
+    _controller.forward(from: 0.0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +78,11 @@ class _HabitWidgetState extends State<HabitWidget> {
                   // Trigger your action
                   print('Swiped enough to trigger action');
                   // Reset position after action, reset it gradually so its animated
-setStateTile(() {
-                    _swipeOffset = 0.0;
-                  });
+                    animateBack(); // Smooth reset
 
                 } else {
                   // Reset position, reset it gradually so its animated
-                  setStateTile(() {
-                    _swipeOffset = 0.0;
-                  });
+                 animateBack(); // Smooth reset
                 }
               },
               onTap:
