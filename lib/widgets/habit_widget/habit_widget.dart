@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -19,12 +20,18 @@ class HabitWidget extends StatefulWidget {
   State<HabitWidget> createState() => _HabitWidgetState();
 }
 
-class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStateMixin {
-   double _swipeOffset = 0;
+class _HabitWidgetState extends State<HabitWidget>
+    with TickerProviderStateMixin {
+  double _swipeOffset = 0;
 
-   late AnimationController _controller;
+  // Animation controllers for swipe
+  late AnimationController _controller;
   late Animation<double> _animation;
 
+  // Animation controllers for svg rotation
+  late AnimationController _rotationController;
+  late Animation<double> _rotationAnimation;
+  bool _hasTriggeredRotation = false;
 
   @override
   void initState() {
@@ -33,17 +40,25 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-  }
 
+    _rotationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _rotationController, curve: Curves.easeOut),
+    );
+  }
 
   void animateBack() {
     _animation = Tween<double>(begin: _swipeOffset, end: 0.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     )..addListener(() {
-        setState(() {
-          _swipeOffset = _animation.value;
-        });
+      setState(() {
+        _swipeOffset = _animation.value;
       });
+    });
 
     _controller.forward(from: 0.0);
   }
@@ -51,6 +66,8 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
   @override
   void dispose() {
     _controller.dispose();
+    _rotationController.dispose();
+
     super.dispose();
   }
 
@@ -69,8 +86,20 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
             return GestureDetector(
               onHorizontalDragUpdate: (details) {
                 setStateTile(() {
-                  _swipeOffset =
-                      (_swipeOffset + details.delta.dx).clamp(0.0, 150.0);
+                  _swipeOffset = (_swipeOffset + details.delta.dx).clamp(
+                    0.0,
+                    150.0,
+                  );
+
+                  // Trigger rotation animation once when swipe crosses 100
+                  if ((_swipeOffset / 150).clamp(0, 1) >= 0.67 &&
+                      !_hasTriggeredRotation) {
+                    _rotationController.forward(from: 0);
+                    _hasTriggeredRotation = true;
+                  } else if ((_swipeOffset / 150).clamp(0, 1) < 0.67 &&
+                      _hasTriggeredRotation) {
+                    _hasTriggeredRotation = false;
+                  }
                 });
               },
               onHorizontalDragEnd: (details) {
@@ -78,29 +107,30 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                   // Trigger your action
                   print('Swiped enough to trigger action');
                   // Reset position after action, reset it gradually so its animated
-                    animateBack(); // Smooth reset
-
+                  animateBack(); // Smooth reset
                 } else {
                   // Reset position, reset it gradually so its animated
-                 animateBack(); // Smooth reset
+                  animateBack(); // Smooth reset
                 }
               },
+
               onTap:
                   widget.editable
                       ? null
                       : () {
                         // For navigating to edit habit page
-            
+
                         final CategoryProvider categoryProvider =
                             context.read<CategoryProvider>();
-            
+
                         // Save the selected category
                         final int temp = categoryProvider.selectedCategoryId;
-            
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditHabitPage(habit: widget.habit),
+                            builder:
+                                (context) => EditHabitPage(habit: widget.habit),
                           ),
                         ).whenComplete(() {
                           // Select the saved category
@@ -108,22 +138,60 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                         });
                       },
               child: Stack(
-
                 children: [
-                    // Background action color
+                  // Background action color
                   Positioned.fill(
                     child: AnimatedOpacity(
-                      opacity: (_swipeOffset/150).clamp(0, 1),
+                      opacity: (_swipeOffset / 150).clamp(0, 1),
                       duration: const Duration(milliseconds: 150),
                       child: Container(
                         margin: EdgeInsets.only(top: 8),
                         decoration: BoxDecoration(
-                          color: colorProvider.colorScheme.strokeColor,
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            stops: [0, 0.7],
+                            colors: [
+                              (_swipeOffset / 150).clamp(0, 1) >= 0.67
+                                  ? colorProvider.colorScheme.vividColor
+                                      .withAlpha(alpha)
+                                  : colorProvider.colorScheme.strokeColor
+                                      .withAlpha(alpha),
+                              Colors.transparent,
+                            ],
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(left: 20),
-                        child: Text("Skip", style: TextStyle(color: colorProvider.textColor, fontSize: 16),),
+                        child: AnimatedBuilder(
+                          animation: _rotationAnimation,
+                          builder: (context, child) {
+                            return Transform.rotate(
+                              angle:
+                                  _rotationAnimation.value * 2 * 3.1416, // 360°
+                              child: child,
+                            );
+                          },
+                          child: AnimatedScale(
+                            duration: const Duration(milliseconds: 50),
+                            scale:
+                                (_swipeOffset / 150).clamp(0, 1) >= 0.67
+                                    ? 1.2
+                                    : 1,
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: SvgPicture.asset(
+                                "assets/images/svg/skip.svg",
+                                colorFilter: ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -132,7 +200,10 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                     offset: Offset(_swipeOffset, 0),
                     child: Container(
                       margin: EdgeInsets.only(top: 8),
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 12,
+                      ),
                       height: 74,
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -147,7 +218,9 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                               value,
                             )!,
                             Color.lerp(
-                              colorProvider.colorScheme.standardColor.withAlpha(alpha),
+                              colorProvider.colorScheme.standardColor.withAlpha(
+                                alpha,
+                              ),
                               colorProvider.colorScheme.standardColor.withAlpha(
                                 alpha + 100,
                               ),
@@ -156,7 +229,7 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                           ],
                         ),
                       ),
-                                
+
                       // Inside of the container
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,7 +257,8 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                           // Completion and streak
                           Row(
                             children: [
-                              if (widget.habit.streak > 0 || widget.habit.completed)
+                              if (widget.habit.streak > 0 ||
+                                  widget.habit.completed)
                                 // TODO: Add animation for the streak first appearing
                                 StreakDisplay(
                                   streak: widget.habit.streak,
@@ -206,7 +280,7 @@ class _HabitWidgetState extends State<HabitWidget> with SingleTickerProviderStat
                 ],
               ),
             );
-          }
+          },
         );
       },
     );
