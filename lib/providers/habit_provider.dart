@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/stats_provider.dart';
 import 'package:hive_ce/hive.dart';
 
 class HabitProvider extends ChangeNotifier {
@@ -8,9 +9,11 @@ class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
 
-  HabitProvider() {
+  HabitProvider({required this.statsProvider}) {
     init();
   }
+
+  StatsProvider? statsProvider;
 
   Future<void> init() async {
     await _loadHabits();
@@ -50,6 +53,10 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> updateHabitInDB(Habit habit) async {
+    if (statsProvider != null) {
+      statsProvider!.shouldRefresh = true;
+    }
+
     // Save the habit change
     await habit.save();
 
@@ -72,14 +79,18 @@ class HabitProvider extends ChangeNotifier {
     final day = daysBox.get(todayKey);
 
     if (day != null) {
-      debugPrint("Day entry: ${day.date}");
-
       // Find and update the matching habit inside today's habit list
       final index = day.habits.indexWhere((h) => h.id == habit.id);
       if (index != -1) {
         day.habits[index] = habit;
 
         // Save the updated Day object
+        await day.save();
+      } else {
+        debugPrint("Habit not found in day entry");
+
+        // If habit is not found in day entry, add it
+        day.habits.add(habit);
         await day.save();
       }
     } else {

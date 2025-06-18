@@ -12,6 +12,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/stats_provider.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,10 +38,17 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => StatsProvider(), lazy: false),
         ChangeNotifierProvider(create: (_) => ColorProvider(prefs: prefs)),
-        ChangeNotifierProvider(create: (_) => HabitProvider(), lazy: false),
         ChangeNotifierProvider(
-          create: (_) => CategoryProvider(HabitProvider()),
+          create: (_) => HabitProvider(statsProvider: StatsProvider()),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create:
+              (_) => CategoryProvider(
+                HabitProvider(statsProvider: StatsProvider()),
+              ),
         ),
         ChangeNotifierProvider(create: (_) => StateProvider()),
       ],
