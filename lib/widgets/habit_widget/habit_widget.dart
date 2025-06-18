@@ -276,6 +276,7 @@ class _HabitWidgetState extends State<HabitWidget>
                                   completed: widget.habit.completed,
                                   colorProvider: colorProvider,
                                 ),
+
                               // Completion
                               CompletionDisplay(
                                 editable: widget.editable,

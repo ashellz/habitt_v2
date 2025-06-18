@@ -9,10 +9,12 @@ class StatsProvider extends ChangeNotifier {
 
   int _habitsCompleted = -1;
   int _highestAmountOfHabitsLastWeek = -1;
+  List<int> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
   List<StatsType> _refreshList = [];
 
   get habitsCompleted => getHabitsCompleted();
   get highestAmountOfHabitsLastWeek => getHighestAmountOfHabitsLastWeek();
+  get habitsCompletedLastWeek => getHabitsCompletedLastWeek();
 
   bool shouldRefresh(StatsType type) => _refreshList.contains(type);
 
@@ -38,9 +40,17 @@ class StatsProvider extends ChangeNotifier {
     return _highestAmountOfHabitsLastWeek;
   }
 
+  List<int> getHabitsCompletedLastWeek() {
+    if (_habitsCompletedLastWeek.every((element) => element == -1)) {
+      _habitsCompletedLastWeek = refreshHabitsCompletedLastWeek();
+    }
+    return _habitsCompletedLastWeek;
+  }
+
   void refreshStats() {
     if (_refreshList.contains(StatsType.habitsCompleted)) {
       _habitsCompleted = refreshHabitsCompleted();
+      _habitsCompletedLastWeek = refreshHabitsCompletedLastWeek();
     }
     if (_refreshList.contains(StatsType.highestAmountOfHabitsLastWeek)) {
       _highestAmountOfHabitsLastWeek = refreshHighestAmountOfHabitsLastWeek();
@@ -80,5 +90,31 @@ class StatsProvider extends ChangeNotifier {
     }
 
     return highestAmountOfHabits;
+  }
+
+  List<int> refreshHabitsCompletedLastWeek() {
+    List<int> habitsCompletedLastWeek = List.generate(7, (i) => 0);
+
+    // First we order the days by date
+    final orderedDays = daysBox.values.toList();
+    orderedDays.sort((a, b) => b.date.compareTo(a.date));
+
+    // Then we check the last 7 days
+    for (int i = 0; i < 7 && i < orderedDays.length; i++) {
+      final day = orderedDays[i];
+      int habitsCompleted = 0;
+      for (final habit in day.habits) {
+        if (habit.completed) {
+          habitsCompleted++;
+          debugPrint("Completed habit found, {$habitsCompleted} total");
+        }
+      }
+      habitsCompletedLastWeek[i] = habitsCompleted;
+    }
+
+    // Then we reverse the list
+    habitsCompletedLastWeek = habitsCompletedLastWeek.reversed.toList();
+
+    return habitsCompletedLastWeek;
   }
 }

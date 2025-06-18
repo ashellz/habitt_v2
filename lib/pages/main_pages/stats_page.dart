@@ -14,20 +14,24 @@ class StatsPage extends StatefulWidget {
 
 class _StatsPageState extends State<StatsPage> {
   String getDay(int day) {
-    switch (day) {
-      case 0:
+    final DateTime now = DateTime.now();
+    final DateTime targetDay = now.subtract(Duration(days: 6 - day));
+
+    // Get weekday name
+    switch (targetDay.weekday) {
+      case DateTime.monday:
         return "Mon";
-      case 1:
+      case DateTime.tuesday:
         return "Tue";
-      case 2:
+      case DateTime.wednesday:
         return "Wed";
-      case 3:
+      case DateTime.thursday:
         return "Thu";
-      case 4:
+      case DateTime.friday:
         return "Fri";
-      case 5:
+      case DateTime.saturday:
         return "Sat";
-      case 6:
+      case DateTime.sunday:
         return "Sun";
       default:
         return "";
@@ -42,6 +46,7 @@ class _StatsPageState extends State<StatsPage> {
     final habitsCompleted = statsProvider.habitsCompleted;
     final highestAmountOfHabitsLastWeek =
         statsProvider.highestAmountOfHabitsLastWeek;
+    final habitsCompletedLastWeek = statsProvider.habitsCompletedLastWeek;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -117,7 +122,7 @@ class _StatsPageState extends State<StatsPage> {
                           x: index,
                           barRods: [
                             BarChartRodData(
-                              toY: 2,
+                              toY: habitsCompletedLastWeek[index].toDouble(),
                               color: colorProvider.colorScheme.vividColor,
                               width: 5,
                             ),

@@ -97,12 +97,22 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void addHabit(Habit habit) {
+    if (statsProvider != null) {
+      statsProvider!.addShouldRefresh(StatsType.highestAmountOfHabitsLastWeek);
+    }
+
     habits.add(habit);
     habitBox.add(habit);
+    updateHabitInDB(habit);
+
     notifyListeners();
   }
 
   void removeHabit(Habit habit) async {
+    if (statsProvider != null) {
+      statsProvider!.addShouldRefresh(StatsType.highestAmountOfHabitsLastWeek);
+    }
+
     habits.removeWhere((h) => h.id == habit.id);
     await habitBox.delete(habit.key);
     notifyListeners();

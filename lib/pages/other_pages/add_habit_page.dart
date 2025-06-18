@@ -156,12 +156,14 @@ class AddHabitButton extends StatelessWidget {
                   categoryId: stateProvider.habitCategoryId,
                   tag: "No tag",
                   completed: false,
+                  skipped: false,
                   amount: stateProvider.habitAmount,
                   amountLabel: stateProvider.habitAmountLabelController.text,
                   amountCompleted: 0,
                   duration: stateProvider.habitDuration.inMinutes,
                   durationCompleted: 0,
                   streak: 0,
+                  longestStreak: 0,
                 ),
               );
               Navigator.of(context).pop();

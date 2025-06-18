@@ -25,6 +25,32 @@ class CompletionDisplay extends StatefulWidget {
 }
 
 class _CompletionDisplayState extends State<CompletionDisplay> {
+  double getProgressValue() {
+    final habit = widget.habit;
+
+    if (habit.amount == 0 && habit.duration == 0) {
+      // Basic habit (no amount/duration), just check if completed or skipped
+      if (habit.completed || habit.skipped) return 1.0;
+      return 0.0;
+    }
+
+    if (habit.amount > 0) {
+      // Habit tracked by amount
+      if (habit.amount == 0) return 0.0; // Avoid divide by zero
+      final progress = habit.amountCompleted / habit.amount;
+      return progress.clamp(0.0, 1.0);
+    }
+
+    if (habit.duration > 0) {
+      // Habit tracked by duration
+      if (habit.duration == 0) return 0.0; // Avoid divide by zero
+      final progress = habit.durationCompleted / habit.duration;
+      return progress.clamp(0.0, 1.0);
+    }
+
+    return 0.0;
+  }
+
   double _scale = 1.0;
 
   @override
@@ -98,27 +124,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   child: TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
-                    tween: Tween<double>(
-                      begin: 0,
-                      end:
-                          // Really complicated logic here but it works
-                          // Basically checks if habit has amount or duration
-                          // If not its filled from 0 to 1 if completed or not
-                          // Otherwise fills it by amount or duration completed accordingly
-                          widget.habit.amount == 0 &&
-                                      widget.habit.duration == 0 ||
-                                  widget.habit.completed
-                              ? widget.habit.completed
-                                  ? 1
-                                  : widget.habit.amount > 1
-                                  ? widget.habit.amountCompleted /
-                                      widget.habit.amount
-                                  : widget.habit.durationCompleted /
-                                      widget.habit.duration
-                              : widget.habit.skipped
-                              ? 1
-                              : 0,
-                    ),
+                    tween: Tween<double>(begin: 0, end: getProgressValue()),
                     builder: (context, value, _) {
                       return LinearProgressIndicator(
                         value: value,
@@ -136,6 +142,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   ),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: AnimatedSwitcher(
