@@ -17,7 +17,11 @@ class SettingsPage extends StatelessWidget {
           children: [
             Text(
               "Settings",
-              style: TextStyle(fontSize: 24, color: colorProvider.textColor),
+              style: TextStyle(
+                fontSize: 38,
+                color: colorProvider.textColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 12.0),
