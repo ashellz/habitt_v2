@@ -269,27 +269,13 @@ class _HabitWidgetState extends State<HabitWidget>
                           // Completion and streak
                           Row(
                             children: [
-                              AnimatedOpacity(
-                                opacity:
-                                    widget.habit.streak > 0 ||
-                                            widget.habit.completed
-                                        ? 1
-                                        : 0,
-                                duration: const Duration(milliseconds: 150),
-                                child: AnimatedScale(
-                                  duration: const Duration(milliseconds: 150),
-                                  scale:
-                                      widget.habit.streak > 0 ||
-                                              widget.habit.completed
-                                          ? 1
-                                          : 0,
-                                  child: StreakDisplay(
-                                    streak: widget.habit.streak,
-                                    completed: widget.habit.completed,
-                                    colorProvider: colorProvider,
-                                  ),
+                              if (widget.habit.streak > 0 ||
+                                  widget.habit.completed)
+                                StreakDisplay(
+                                  streak: widget.habit.streak,
+                                  completed: widget.habit.completed,
+                                  colorProvider: colorProvider,
                                 ),
-                              ),
                               // Completion
                               CompletionDisplay(
                                 editable: widget.editable,
