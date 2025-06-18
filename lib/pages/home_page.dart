@@ -92,10 +92,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         // stats page
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final statsProvider = context.read<StatsProvider>();
-          debugPrint("Should refresh is ${statsProvider.shouldRefresh}");
-          if (statsProvider.shouldRefresh) {
-            statsProvider.refreshStats();
-          }
+          statsProvider.refreshStats();
         });
       }
     }

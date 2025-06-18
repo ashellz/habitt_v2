@@ -40,6 +40,8 @@ class _StatsPageState extends State<StatsPage> {
     final statsProvider = context.watch<StatsProvider>();
 
     final habitsCompleted = statsProvider.habitsCompleted;
+    final highestAmountOfHabitsLastWeek =
+        statsProvider.highestAmountOfHabitsLastWeek;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -115,7 +117,7 @@ class _StatsPageState extends State<StatsPage> {
                           x: index,
                           barRods: [
                             BarChartRodData(
-                              toY: 12,
+                              toY: highestAmountOfHabitsLastWeek.toDouble(),
                               color: colorProvider.colorScheme.vividColor,
                               width: 5,
                             ),

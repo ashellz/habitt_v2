@@ -54,7 +54,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> updateHabitInDB(Habit habit) async {
     if (statsProvider != null) {
-      statsProvider!.shouldRefresh = true;
+      statsProvider!.addShouldRefresh(StatsType.habitsCompleted);
       debugPrint("Should refresh is ${statsProvider!.shouldRefresh}");
     }
 
