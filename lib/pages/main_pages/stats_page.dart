@@ -35,18 +35,6 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPersistentFrameCallback((_) {
-      final statsProvider = context.read<StatsProvider>();
-      if (statsProvider.shouldRefresh) {
-        statsProvider.refreshStats();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final statsProvider = context.watch<StatsProvider>();

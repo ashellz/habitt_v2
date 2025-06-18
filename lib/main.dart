@@ -34,22 +34,42 @@ Future<void> main() async {
   );
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-
   runApp(
     MultiProvider(
       providers: [
+        // 1. StatsProvider: No dependencies.
         ChangeNotifierProvider(create: (_) => StatsProvider(), lazy: false),
+
+        // Independent provider
         ChangeNotifierProvider(create: (_) => ColorProvider(prefs: prefs)),
-        ChangeNotifierProvider(
-          create: (_) => HabitProvider(statsProvider: StatsProvider()),
+
+        // 2. HabitProvider: Depends on StatsProvider.
+        ChangeNotifierProxyProvider<StatsProvider, HabitProvider>(
+          // `create` is called only once to build the initial instance.
+          // The dependency (StatsProvider) is not available here, so we create
+          // HabitProvider in its initial state.
+          create: (_) => HabitProvider(),
+
+          // `update` is called immediately after `create` and whenever
+          // StatsProvider notifies listeners. It reuses the `previous` instance.
+          update: (_, stats, previous) {
+            // The '!' asserts that `previous` will not be null after `create`.
+            // The '..' cascade operator calls the method and returns the object.
+            return previous!..updateDependencies(stats);
+          },
           lazy: false,
         ),
-        ChangeNotifierProvider(
-          create:
-              (_) => CategoryProvider(
-                HabitProvider(statsProvider: StatsProvider()),
-              ),
+
+        // 3. CategoryProvider: Depends on HabitProvider.
+        ChangeNotifierProxyProvider<HabitProvider, CategoryProvider>(
+          // Create the initial instance of CategoryProvider.
+          create: (_) => CategoryProvider(null),
+
+          // Update the existing instance when HabitProvider changes.
+          update: (_, habit, previous) => previous!..updateDependencies(habit),
         ),
+
+        // 4. StateProvider: No dependencies.
         ChangeNotifierProvider(create: (_) => StateProvider()),
       ],
       child: MyApp(prefs: prefs),

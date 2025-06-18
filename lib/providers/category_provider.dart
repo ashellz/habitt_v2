@@ -10,9 +10,17 @@ class CategoryProvider extends ChangeNotifier {
 
   HabitProvider? _habitProvider;
 
-  CategoryProvider(HabitProvider habitProvider) {
-    _habitProvider = habitProvider;
+  CategoryProvider(this._habitProvider) {
     _initializeCategories();
+  }
+
+  // Method to be called by the ProxyProvider's update callback
+  void updateDependencies(HabitProvider newHabitProvider) {
+    if (_habitProvider != newHabitProvider) {
+      _habitProvider = newHabitProvider;
+      // Logic to run on dependency update
+      notifyListeners();
+    }
   }
 
   void _initializeCategories() {

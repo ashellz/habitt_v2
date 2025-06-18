@@ -8,6 +8,7 @@ import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:provider/provider.dart';
 
@@ -86,6 +87,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       setState(() {
         _currentPageIndex = index;
       });
+
+      if (index == 2) {
+        // stats page
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final statsProvider = context.read<StatsProvider>();
+          debugPrint("Should refresh is ${statsProvider.shouldRefresh}");
+          if (statsProvider.shouldRefresh) {
+            statsProvider.refreshStats();
+          }
+        });
+      }
     }
   }
 

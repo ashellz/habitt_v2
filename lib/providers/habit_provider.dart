@@ -9,27 +9,27 @@ class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
 
-  HabitProvider({required this.statsProvider}) {
+  StatsProvider? statsProvider;
+
+  HabitProvider({this.statsProvider}) {
     init();
   }
 
-  StatsProvider? statsProvider;
+  // Method to be called by the ProxyProvider's update callback
+  void updateDependencies(StatsProvider newStatsProvider) {
+    // Only update and notify if the instance has actually changed
+    if (statsProvider != newStatsProvider) {
+      statsProvider = newStatsProvider;
+      // Add any logic that needs to run when the dependency is updated.
+      // For example, re-fetching habits that depend on stats.
+      // Then, notify listeners that this provider's data has changed.
+      notifyListeners();
+    }
+  }
 
   Future<void> init() async {
     await _loadHabits();
     _fillToday();
-
-    // Print out all days dates
-    for (var day in daysBox.values) {
-      debugPrint("Day: ${day.date}");
-    }
-
-    // Print out all habits
-    for (var habit in habits) {
-      debugPrint(
-        "Habit: ${habit.name}, completed: ${habit.completed}, skipped: ${habit.skipped}",
-      );
-    }
   }
 
   Future<void> _loadHabits() async {
@@ -55,16 +55,11 @@ class HabitProvider extends ChangeNotifier {
   Future<void> updateHabitInDB(Habit habit) async {
     if (statsProvider != null) {
       statsProvider!.shouldRefresh = true;
+      debugPrint("Should refresh is ${statsProvider!.shouldRefresh}");
     }
 
     // Save the habit change
     await habit.save();
-
-    // print out all habitbox habits and their skipped status
-
-    for (var h in habitBox.values) {
-      debugPrint("Habit: ${h.name}, skipped: ${h.skipped}");
-    }
 
     // Save changes to current day in Day database
     final today = DateTime(
@@ -133,14 +128,10 @@ class HabitProvider extends ChangeNotifier {
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
     updateHabitInDB(habit);
 
-    debugPrint("Updating habit: ${habit.name}");
-    debugPrint("Habit: ${habit.name}, category id: ${habit.categoryId}");
-
     notifyListeners();
   }
 
   void resetCompletion() async {
-    debugPrint("Resetting completion");
     for (final habit in habits) {
       await habit.resetCompletion();
       await updateHabitInDB(habit);

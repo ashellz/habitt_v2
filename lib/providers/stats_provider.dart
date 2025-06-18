@@ -6,9 +6,16 @@ class StatsProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
 
   int _habitsCompleted = 0;
-  bool shouldRefresh = false;
+  bool _shouldRefresh = false;
 
   get habitsCompleted => getHabitsCompleted();
+
+  bool get shouldRefresh => _shouldRefresh;
+
+  set shouldRefresh(bool value) {
+    _shouldRefresh = value;
+    notifyListeners();
+  }
 
   int getHabitsCompleted() {
     if (_habitsCompleted == 0) {
@@ -20,7 +27,7 @@ class StatsProvider extends ChangeNotifier {
 
   void refreshStats({bool notifiy = true}) {
     _habitsCompleted = refreshHabitsCompleted();
-    shouldRefresh = false;
+    _shouldRefresh = false;
     if (notifiy) {
       notifyListeners();
     }
