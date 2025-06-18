@@ -235,7 +235,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 width: 20,
                 height: 20,
                 colorFilter: ColorFilter.mode(
-                  colorProvider.textColor,
+                  isSelected ? Colors.white : colorProvider.textColor,
                   BlendMode.srcIn,
                 ),
               ),
