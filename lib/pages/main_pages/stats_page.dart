@@ -117,7 +117,7 @@ class _StatsPageState extends State<StatsPage> {
                           x: index,
                           barRods: [
                             BarChartRodData(
-                              toY: highestAmountOfHabitsLastWeek.toDouble(),
+                              toY: 2,
                               color: colorProvider.colorScheme.vividColor,
                               width: 5,
                             ),
@@ -152,6 +152,7 @@ class _StatsPageState extends State<StatsPage> {
                           ),
                         ),
                       ),
+                      maxY: highestAmountOfHabitsLastWeek.toDouble(),
                     ),
                   ),
                 ),
