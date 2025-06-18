@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -109,54 +110,65 @@ class _HabitsPageState extends State<HabitsPage> {
       (_) => _updateListViewportGeom(),
     );
 
-    return Scaffold(
-      backgroundColor: colorProvider.backgroundColor,
-      body: GradientBackground(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ListView(
-            key: _listViewKey, // Assign the GlobalKey
-            controller: _scrollController, // Assign the ScrollController
-            physics: const BouncingScrollPhysics(),
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Greeting(),
-                  FloatingActionButton(
-                    mini: true,
-                    elevation: 0,
-                    backgroundColor:
-                        colorProvider.colorScheme.darkerStandardColor,
-                    onPressed:
-                        () => Navigator.of(context)
-                            .push(
-                              MaterialPageRoute(
-                                builder: (context) => AddHabitPage(),
-                              ),
-                            )
-                            .whenComplete(() {
-                              if (!context.mounted) return;
-                              final stateProvider =
-                                  context.read<StateProvider>();
-                              stateProvider.reset();
-                            }),
-                    child: Icon(Icons.add, color: Colors.white),
-                  ),
-                ],
-              ),
-              const CategoriesList(),
-              const HabitsCompletedWidget(),
-              // Pass down the necessary parameters for the effect
-              Habits(
-                scrollController: _scrollController,
-                bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
-                effectZoneHeight: _effectZoneHeight,
-                minScale: _minScale,
-                stackOffsetFactor: _stackOffsetFactor,
-              ),
-              const SizedBox(height: 100),
-            ],
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: colorProvider.backgroundColor,
+        statusBarIconBrightness:
+            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            colorProvider.isDarkMode
+                ? Brightness.dark
+                : Brightness.light, // for iOS
+      ),
+      child: Scaffold(
+        backgroundColor: colorProvider.backgroundColor,
+        body: GradientBackground(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListView(
+              key: _listViewKey, // Assign the GlobalKey
+              controller: _scrollController, // Assign the ScrollController
+              physics: const BouncingScrollPhysics(),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Greeting(),
+                    FloatingActionButton(
+                      mini: true,
+                      elevation: 0,
+                      backgroundColor:
+                          colorProvider.colorScheme.darkerStandardColor,
+                      onPressed:
+                          () => Navigator.of(context)
+                              .push(
+                                MaterialPageRoute(
+                                  builder: (context) => AddHabitPage(),
+                                ),
+                              )
+                              .whenComplete(() {
+                                if (!context.mounted) return;
+                                final stateProvider =
+                                    context.read<StateProvider>();
+                                stateProvider.reset();
+                              }),
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
+                  ],
+                ),
+                const CategoriesList(),
+                const HabitsCompletedWidget(),
+                // Pass down the necessary parameters for the effect
+                Habits(
+                  scrollController: _scrollController,
+                  bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
+                  effectZoneHeight: _effectZoneHeight,
+                  minScale: _minScale,
+                  stackOffsetFactor: _stackOffsetFactor,
+                ),
+                const SizedBox(height: 100),
+              ],
+            ),
           ),
         ),
       ),

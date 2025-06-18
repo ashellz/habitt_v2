@@ -24,6 +24,14 @@ Future<void> main() async {
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Day>('days');
 
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.black, // Set status bar background to white
+      statusBarIconBrightness: Brightness.light, // Set icons to dark (black)
+      statusBarBrightness: Brightness.dark, // For iOS: dark icons
+    ),
+  );
+
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   runApp(
