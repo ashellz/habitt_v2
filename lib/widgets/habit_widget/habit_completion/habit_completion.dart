@@ -48,7 +48,8 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
                 // If no amount or duration, toggle completion
                 if (widget.habit.amount == 0 && widget.habit.duration == 0 ||
-                    widget.habit.completed) {
+                    widget.habit.completed ||
+                    widget.habit.skipped) {
                   habitProvider.completeHabit(widget.habit.id);
                 } else {
                   // Opens a dialog for selecting amount/duration completion
@@ -109,14 +110,14 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                                   widget.habit.completed
                               ? widget.habit.completed
                                   ? 1
-                                  : widget.habit.skipped
-                                  ? 1
-                                  : 0
-                              : widget.habit.amount > 1
-                              ? widget.habit.amountCompleted /
-                                  widget.habit.amount
-                              : widget.habit.durationCompleted /
-                                  widget.habit.duration,
+                                  : widget.habit.amount > 1
+                                  ? widget.habit.amountCompleted /
+                                      widget.habit.amount
+                                  : widget.habit.durationCompleted /
+                                      widget.habit.duration
+                              : widget.habit.skipped
+                              ? 1
+                              : 0,
                     ),
                     builder: (context, value, _) {
                       return LinearProgressIndicator(
@@ -169,12 +170,16 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   // Middle child inside of the container (checkmark or amount/duration)
   Widget getCompletionWidget() {
-    if (widget.habit.amount > 0 && !widget.habit.completed) {
+    if (widget.habit.amount > 0 &&
+        !widget.habit.completed &&
+        !widget.habit.skipped) {
       return AmountDisplay(
         habit: widget.habit,
         colorProvider: widget.colorProvider,
       );
-    } else if (widget.habit.duration > 0 && !widget.habit.completed) {
+    } else if (widget.habit.duration > 0 &&
+        !widget.habit.completed &&
+        !widget.habit.skipped) {
       return DurationDisplay(habit: widget.habit);
     } else {
       return centerIcon();

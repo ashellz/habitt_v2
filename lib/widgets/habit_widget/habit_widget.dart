@@ -269,7 +269,6 @@ class _HabitWidgetState extends State<HabitWidget>
                           // Completion and streak
                           Row(
                             children: [
-                              // TODO: Add animation for the streak first appearing
                               AnimatedOpacity(
                                 opacity:
                                     widget.habit.streak > 0 ||
