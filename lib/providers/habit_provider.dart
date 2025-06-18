@@ -121,6 +121,10 @@ class HabitProvider extends ChangeNotifier {
   void updateHabit(Habit habit) {
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
     updateHabitInDB(habit);
+
+    debugPrint("Updating habit: ${habit.name}");
+    debugPrint("Habit: ${habit.name}, category id: ${habit.categoryId}");
+
     notifyListeners();
   }
 

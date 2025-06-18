@@ -273,8 +273,6 @@ class EditHabitButton extends StatelessWidget {
 
               // Edit habit in state and database
               final HabitProvider habitProvider = context.read<HabitProvider>();
-              final CategoryProvider categoryProvider =
-                  context.read<CategoryProvider>();
 
               // Checks for amount/duration changes
 
@@ -288,7 +286,7 @@ class EditHabitButton extends StatelessWidget {
 
               widget.habit.name = nameController.text;
               widget.habit.description = descController.text;
-              widget.habit.categoryId = categoryProvider.selectedCategoryId;
+              widget.habit.categoryId = stateProvider.habitCategoryId;
               widget.habit.amountLabel =
                   stateProvider.habitAmountLabelController.text;
               widget.habit.iconPath = stateProvider.iconPath;

@@ -98,7 +98,7 @@ class _HabitWidgetState extends State<HabitWidget>
                 setStateTile(() {
                   _swipeOffset = (_swipeOffset + details.delta.dx).clamp(
                     0.0,
-                    150.0,
+                    105,
                   );
 
                   // Trigger rotation animation once when swipe crosses 100
