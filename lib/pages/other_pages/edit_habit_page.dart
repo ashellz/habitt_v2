@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';

@@ -98,16 +98,14 @@ class _HabitWidgetState extends State<HabitWidget>
                 setStateTile(() {
                   _swipeOffset = (_swipeOffset + details.delta.dx).clamp(
                     0.0,
-                    105,
+                    100,
                   );
 
                   // Trigger rotation animation once when swipe crosses 100
-                  if ((_swipeOffset / 150).clamp(0, 1) >= 0.67 &&
-                      !_hasTriggeredRotation) {
+                  if (_swipeOffset >= 100 && !_hasTriggeredRotation) {
                     _rotationController.forward(from: 0);
                     _hasTriggeredRotation = true;
-                  } else if ((_swipeOffset / 150).clamp(0, 1) < 0.67 &&
-                      _hasTriggeredRotation) {
+                  } else if (_swipeOffset < 100 && _hasTriggeredRotation) {
                     _hasTriggeredRotation = false;
                   }
                 });
@@ -118,7 +116,7 @@ class _HabitWidgetState extends State<HabitWidget>
                     widget.editable) {
                   return;
                 }
-                if (_swipeOffset > 100) {
+                if (_swipeOffset >= 100) {
                   debugPrint('Swiped enough to trigger action');
 
                   habitProvider.skipHabit(widget.habit.id);
@@ -169,7 +167,7 @@ class _HabitWidgetState extends State<HabitWidget>
                             end: Alignment.centerRight,
                             stops: [0, 0.7],
                             colors: [
-                              (_swipeOffset / 150).clamp(0, 1) >= 0.67
+                              _swipeOffset >= 100
                                   ? colorProvider.colorScheme.vividColor
                                       .withAlpha(alpha)
                                   : colorProvider.colorScheme.strokeColor
@@ -192,10 +190,7 @@ class _HabitWidgetState extends State<HabitWidget>
                           },
                           child: AnimatedScale(
                             duration: const Duration(milliseconds: 50),
-                            scale:
-                                (_swipeOffset / 150).clamp(0, 1) >= 0.67
-                                    ? 1.2
-                                    : 1,
+                            scale: _swipeOffset >= 100 ? 1.2 : 1,
                             child: SizedBox(
                               height: 40,
                               width: 40,
@@ -274,14 +269,28 @@ class _HabitWidgetState extends State<HabitWidget>
                           // Completion and streak
                           Row(
                             children: [
-                              if (widget.habit.streak > 0 ||
-                                  widget.habit.completed)
-                                // TODO: Add animation for the streak first appearing
-                                StreakDisplay(
-                                  streak: widget.habit.streak,
-                                  completed: widget.habit.completed,
-                                  colorProvider: colorProvider,
+                              // TODO: Add animation for the streak first appearing
+                              AnimatedOpacity(
+                                opacity:
+                                    widget.habit.streak > 0 ||
+                                            widget.habit.completed
+                                        ? 1
+                                        : 0,
+                                duration: const Duration(milliseconds: 150),
+                                child: AnimatedScale(
+                                  duration: const Duration(milliseconds: 150),
+                                  scale:
+                                      widget.habit.streak > 0 ||
+                                              widget.habit.completed
+                                          ? 1
+                                          : 0,
+                                  child: StreakDisplay(
+                                    streak: widget.habit.streak,
+                                    completed: widget.habit.completed,
+                                    colorProvider: colorProvider,
+                                  ),
                                 ),
+                              ),
                               // Completion
                               CompletionDisplay(
                                 editable: widget.editable,
