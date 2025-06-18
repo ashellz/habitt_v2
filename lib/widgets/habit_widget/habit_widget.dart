@@ -38,7 +38,7 @@ class _HabitWidgetState extends State<HabitWidget>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
 
@@ -54,7 +54,7 @@ class _HabitWidgetState extends State<HabitWidget>
 
   void animateBack() {
     _animation = Tween<double>(begin: _swipeOffset, end: 0.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+      CurvedAnimation(parent: _controller, curve: Curves.decelerate),
     )..addListener(() {
       setState(() {
         _swipeOffset = _animation.value;
@@ -158,7 +158,7 @@ class _HabitWidgetState extends State<HabitWidget>
                   Positioned.fill(
                     child: AnimatedOpacity(
                       opacity: (_swipeOffset / 150).clamp(0, 1),
-                      duration: const Duration(milliseconds: 150),
+                      duration: const Duration(milliseconds: 50),
                       child: Container(
                         margin: EdgeInsets.only(top: 8),
                         decoration: BoxDecoration(
