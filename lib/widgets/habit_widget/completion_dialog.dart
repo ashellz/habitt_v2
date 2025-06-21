@@ -249,12 +249,6 @@ class HabitSlider extends StatefulWidget {
 class _HabitSliderState extends State<HabitSlider> {
   late int currentFilled;
 
-  @override
-  void initState() {
-    super.initState();
-    currentFilled = widget.filledSegments;
-  }
-
   void _updateFill(Offset localPos, double height) {
     final value =
         (widget.totalSegments - (localPos.dy / height) * widget.totalSegments)
@@ -282,6 +276,7 @@ class _HabitSliderState extends State<HabitSlider> {
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final isSimpleSlider = widget.totalSegments > 50;
+    currentFilled = widget.filledSegments;
 
     return Stack(
       alignment: Alignment.center,
@@ -301,17 +296,20 @@ class _HabitSliderState extends State<HabitSlider> {
                     : _buildSegmentedSlider(colorProvider),
           ),
         ),
-        Container(
-          width: 100,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              currentFilled.toString(),
-              style: TextStyle(
-                color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
-                fontWeight: FontWeight.bold,
-                fontSize: getFontSize(),
+
+        IgnorePointer(
+          child: Container(
+            width: 100,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                currentFilled.toString(),
+                style: TextStyle(
+                  color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
+                  fontWeight: FontWeight.bold,
+                  fontSize: getFontSize(),
+                ),
               ),
             ),
           ),
