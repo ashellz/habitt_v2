@@ -3,7 +3,6 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/util/get_capitalized_first.dart';
 import 'package:habitt/widgets/custom_spinbox.dart';
 import 'package:habitt/widgets/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
@@ -148,6 +147,16 @@ class _CompletionDialogContentState extends State<CompletionDialogContent> {
             if (widget.habit.amount > 1)
               Column(
                 children: [
+                  HabitSlider(
+                    totalSegments: amount,
+                    filledSegments: widget.stateProvider.habitAmount,
+                    onChanged: (newValue) {
+                      setState(() {
+                        widget.stateProvider.habitAmount = newValue;
+                      });
+                    },
+                  ),
+                  /* 
                   CustomSpinBox(
                     labelText: capitalizeFirst(widget.habit.amountLabel),
                     min: 0,
@@ -157,7 +166,7 @@ class _CompletionDialogContentState extends State<CompletionDialogContent> {
                       // Sets the new amount
                       widget.stateProvider.habitAmount = value.toInt();
                     },
-                  ),
+                  ),*/
                 ],
               )
             else
@@ -217,6 +226,160 @@ class _CompletionDialogContentState extends State<CompletionDialogContent> {
           ],
         ),
       ],
+    );
+  }
+}
+
+class HabitSlider extends StatefulWidget {
+  final int totalSegments;
+  final int filledSegments;
+  final void Function(int) onChanged;
+
+  const HabitSlider({
+    required this.totalSegments,
+    required this.filledSegments,
+    required this.onChanged,
+    super.key,
+  });
+
+  @override
+  State<HabitSlider> createState() => _HabitSliderState();
+}
+
+class _HabitSliderState extends State<HabitSlider> {
+  late int currentFilled;
+
+  @override
+  void initState() {
+    super.initState();
+    currentFilled = widget.filledSegments;
+  }
+
+  void _updateFill(Offset localPos, double height) {
+    final value =
+        (widget.totalSegments - (localPos.dy / height) * widget.totalSegments)
+            .clamp(0, widget.totalSegments)
+            .floor();
+    if (value != currentFilled) {
+      setState(() => currentFilled = value);
+      widget.onChanged(currentFilled);
+    }
+  }
+
+  double getFontSize() {
+    if (currentFilled < 10) {
+      return 98;
+    } else if (currentFilled < 100) {
+      return 54;
+    } else if (currentFilled < 1000) {
+      return 44;
+    } else {
+      return 34;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorProvider = context.watch<ColorProvider>();
+    final isSimpleSlider = widget.totalSegments > 50;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onVerticalDragUpdate: (details) {
+            RenderBox box = context.findRenderObject() as RenderBox;
+            final localPos = box.globalToLocal(details.globalPosition);
+            _updateFill(localPos, box.size.height);
+          },
+          child: SizedBox(
+            width: 100,
+            height: 240,
+            child:
+                isSimpleSlider
+                    ? _buildSmoothSlider(colorProvider)
+                    : _buildSegmentedSlider(colorProvider),
+          ),
+        ),
+        Container(
+          width: 100,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              currentFilled.toString(),
+              style: TextStyle(
+                color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
+                fontWeight: FontWeight.bold,
+                fontSize: getFontSize(),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSegmentedSlider(ColorProvider colorProvider) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: Column(
+        children: List.generate(widget.totalSegments, (index) {
+          final reversedIndex = widget.totalSegments - index - 1;
+          final isFilled = reversedIndex < currentFilled;
+          return Expanded(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 0.5),
+              decoration: BoxDecoration(
+                color:
+                    isFilled
+                        ? colorProvider.colorScheme.vividColor
+                        : colorProvider.colorScheme.strokeColor.withOpacity(
+                          0.5,
+                        ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildSmoothSlider(ColorProvider colorProvider) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        final fillHeight = (currentFilled / widget.totalSegments) * height;
+        final fillRatio = currentFilled / widget.totalSegments;
+
+        // Calculate top radius based on how close to full it is
+        double topRadius = 0;
+        if (fillRatio > 0.9) {
+          topRadius = ((fillRatio - 0.9) / 0.1) * 30.clamp(0, 30);
+        }
+
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: colorProvider.colorScheme.strokeColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+            Container(
+              height: fillHeight,
+              decoration: BoxDecoration(
+                color: colorProvider.colorScheme.vividColor,
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(30),
+                  top: Radius.circular(topRadius),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
