@@ -164,13 +164,22 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
     }
   }
 
+  int amount = 0;
+  int duration = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final stateProvider = context.read<StateProvider>();
+      amount = stateProvider.habitAmount;
+      duration = stateProvider.habitDuration.inMinutes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final stateProvider = context.watch<StateProvider>();
-    final amount = stateProvider.habitAmount;
-    final duration = stateProvider.habitDuration.inMinutes;
-
-    if (amount > 0) {
+    if (amount > 1) {
       selectedType = HabitType.amount;
     } else if (duration > 0) {
       selectedType = HabitType.duration;
