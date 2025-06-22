@@ -108,6 +108,7 @@ class CategoryProvider extends ChangeNotifier {
     String currentTimeSlotName = "Unknown";
 
     if (currentHour >= 4 && currentHour < 12) {
+      debugPrint("Current hour is between 4 and 12");
       currentTimeSlotName = "Morning";
       currentTimeSlotFallbackId = morningCategoryId;
       readinessCheckOrderIds = [
@@ -117,6 +118,7 @@ class CategoryProvider extends ChangeNotifier {
         eveningCategoryId,
       ];
     } else if (currentHour >= 12 && currentHour < 19) {
+      debugPrint("Current hour is between 12 and 19");
       currentTimeSlotName = "Afternoon";
       currentTimeSlotFallbackId = afternoonCategoryId;
       readinessCheckOrderIds = [
@@ -126,6 +128,7 @@ class CategoryProvider extends ChangeNotifier {
         eveningCategoryId,
       ];
     } else {
+      debugPrint("Current hour is between 19 and 4");
       currentTimeSlotName = "Evening";
       currentTimeSlotFallbackId = eveningCategoryId;
       readinessCheckOrderIds = [
@@ -157,7 +160,11 @@ class CategoryProvider extends ChangeNotifier {
       // Except that the checking category is placed first
 
       if (getProgress(catId, catName).isReady) {
+        debugPrint("Category $catName with id $catId is ready");
         mainDisplayCategory = _categories.firstWhere((c) => c.id == catId);
+        break;
+      } else {
+        debugPrint("Category $catName with id $catId is not ready");
       }
     }
 
