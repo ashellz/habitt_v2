@@ -35,6 +35,25 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> _loadHabits() async {
     habits = habitBox.values.toList();
+
+    bool checkCategory(int category) {
+      return category == 1 || category == 2 || category == 3 || category == 4;
+    }
+
+    // Deletes all habits which category isnt 1,2,3 or 4
+    habits.removeWhere((habit) => !checkCategory(habit.categoryId));
+
+    // Also delete all of those habits from the database
+    for (final habit in habitBox.values) {
+      if (!checkCategory(habit.categoryId)) {
+        await habit.delete();
+      }
+    }
+
+    // Also delete from the days database
+    for (final day in daysBox.values) {
+      day.habits.removeWhere((habit) => !checkCategory(habit.categoryId));
+    }
   }
 
   void _fillToday() {
