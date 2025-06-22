@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -64,6 +65,7 @@ class InteractiveWheelState extends State<InteractiveWheel>
         // Counterclockwise rotation (down)
         widget.decreaseWheelValue();
       }
+      HapticFeedback.selectionClick();
       // Reset cumulative rotation
       _cumulativeRotation = 0.0;
     }
@@ -197,8 +199,8 @@ class TicksPainter extends CustomPainter {
           ..strokeWidth = 1.0
           ..style = PaintingStyle.stroke;
 
-    // Draws 75 ticks around the circle
-    final int numberOfTicks = 75;
+    // Draws 30 ticks around the circle
+    final int numberOfTicks = 30;
     final double tickLength = 10.0;
     for (int i = 0; i < numberOfTicks; i++) {
       final double angle = (2 * pi / numberOfTicks) * i;

@@ -129,7 +129,6 @@ class _CircleButtonState extends State<CircleButton> {
         }
       },
       onTapDown: (context) {
-        HapticFeedback.selectionClick();
         setState(() {
           scale = 0.9;
         });
@@ -141,7 +140,6 @@ class _CircleButtonState extends State<CircleButton> {
         });
       },
       onTapUp: (context) {
-        HapticFeedback.selectionClick();
         setState(() {
           scale = 1.0;
         });
