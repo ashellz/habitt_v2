@@ -75,7 +75,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                   SizedBox(height: 4),
                   CircleButton(
                     colorProvider: colorProvider,
-                    icon: Icon(Icons.close, color: Colors.white),
+                    icon: Icon(Icons.close, color: colorProvider.textColor),
                     color: colorProvider.colorScheme.standardColor,
                     onPressed: () => Navigator.pop(context),
                   ),

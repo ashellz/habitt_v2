@@ -34,13 +34,13 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
 
   double getFontSize() {
     if (currentFilled < 10) {
-      return 98;
+      return 108;
     } else if (currentFilled < 100) {
-      return 54;
+      return 84;
     } else if (currentFilled < 1000) {
-      return 44;
+      return 74;
     } else {
-      return 34;
+      return 64;
     }
   }
 
@@ -79,8 +79,15 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
                 child: Text(
                   currentFilled.toString(),
                   style: TextStyle(
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withAlpha(100),
+                        offset: const Offset(0, 1),
+                        blurRadius: 5,
+                      ),
+                    ],
                     color: colorProvider.colorScheme.strokeColor.withOpacity(
-                      0.5,
+                      0.75,
                     ),
                     fontWeight: FontWeight.bold,
                     fontSize: getFontSize(),
@@ -124,34 +131,24 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final fillHeight = (currentFilled / widget.totalSegments) * height;
-        final fillRatio = currentFilled / widget.totalSegments;
 
-        // Calculate top radius based on how close to full it is
-        double topRadius = 0;
-        if (fillRatio > 0.9) {
-          topRadius = ((fillRatio - 0.9) / 0.1) * 30.clamp(0, 30);
-        }
-
-        return Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: colorProvider.colorScheme.strokeColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            Container(
-              height: fillHeight,
-              decoration: BoxDecoration(
-                color: colorProvider.colorScheme.vividColor,
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(30),
-                  top: Radius.circular(topRadius),
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
-            ),
-          ],
+              Container(
+                height: fillHeight,
+                color: colorProvider.colorScheme.vividColor,
+              ),
+            ],
+          ),
         );
       },
     );
