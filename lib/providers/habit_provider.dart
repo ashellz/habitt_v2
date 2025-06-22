@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:hive_ce/hive.dart';
 
 class HabitProvider extends ChangeNotifier {
@@ -118,10 +119,11 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void completeHabit(int id) async {
+  void completeHabit(int id, BuildContext context) async {
     debugPrint("Completing habit: $id");
     final habit = habits.firstWhere((h) => h.id == id);
     await habit.completeHabit();
+    if (context.mounted) checkReorderCategories(context, habit);
     updateHabitInDB(habit);
     notifyListeners();
   }
@@ -149,20 +151,30 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHabitAmountCompleted(int id, int amountCompleted) {
-    habits
-        .where((h) => h.id == id)
-        .first
-        .updateHabitAmountCompleted(amountCompleted);
+  void updateHabitAmountCompleted(
+    int id,
+    int amountCompleted,
+    BuildContext context,
+  ) {
+    final habit = habits.firstWhere((h) => h.id == id);
+    habit.updateHabitAmountCompleted(amountCompleted);
+
+    if (context.mounted) checkReorderCategories(context, habit);
+
     updateHabitInDB(habits.firstWhere((h) => h.id == id));
     notifyListeners();
   }
 
-  void updateHabitDurationCompleted(int id, int durationCompleted) {
-    habits
-        .where((h) => h.id == id)
-        .first
-        .updateHabitDurationCompleted(durationCompleted);
+  void updateHabitDurationCompleted(
+    int id,
+    int durationCompleted,
+    BuildContext context,
+  ) {
+    final habit = habits.firstWhere((h) => h.id == id);
+    habit.updateHabitDurationCompleted(durationCompleted);
+
+    if (context.mounted) checkReorderCategories(context, habit);
+
     updateHabitInDB(habits.firstWhere((h) => h.id == id));
     notifyListeners();
   }

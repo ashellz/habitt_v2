@@ -32,6 +32,7 @@ class DurationCompletionDialog extends StatelessWidget {
         habitProvider.updateHabitDurationCompleted(
           habit.id,
           stateProvider.habitDuration.inMinutes,
+          context,
         );
 
         Navigator.pop(context);

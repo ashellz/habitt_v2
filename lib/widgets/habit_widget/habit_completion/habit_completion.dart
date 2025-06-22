@@ -79,7 +79,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 if (widget.habit.amount == 0 && widget.habit.duration == 0 ||
                     widget.habit.completed ||
                     widget.habit.skipped) {
-                  habitProvider.completeHabit(widget.habit.id);
+                  habitProvider.completeHabit(widget.habit.id, context);
                 } else {
                   // Opens a dialog for selecting amount/duration completion
 
@@ -116,7 +116,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
       },
       onLongPress: () {
         if (widget.editable) return;
-        habitProvider.completeHabit(widget.habit.id);
+        habitProvider.completeHabit(widget.habit.id, context);
       },
       child: AnimatedScale(
         duration: const Duration(milliseconds: 150),

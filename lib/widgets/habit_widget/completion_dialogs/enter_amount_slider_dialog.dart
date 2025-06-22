@@ -67,6 +67,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                       habitProvider.updateHabitAmountCompleted(
                         widget.habit.id,
                         stateProvider.habitAmount,
+                        context,
                       );
 
                       Navigator.pop(context);
