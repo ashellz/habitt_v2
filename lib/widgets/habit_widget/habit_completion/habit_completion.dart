@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/habit_widget/completion_dialog.dart';
+import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
+import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider_dialog.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/duration_display.dart';
 import 'package:provider/provider.dart';
@@ -79,11 +82,18 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   habitProvider.completeHabit(widget.habit.id);
                 } else {
                   // Opens a dialog for selecting amount/duration completion
-                  showCupertinoDialog(
-                    barrierDismissible: true,
-                    context: context,
-                    builder: (context) => CompletionDialog(habit: widget.habit),
-                  );
+
+                  if (widget.habit.amount > 0) {
+                    showAnimatedBlurDialog(context, widget.habit);
+                  } else {
+                    showCupertinoDialog(
+                      barrierDismissible: true,
+                      context: context,
+                      builder:
+                          (context) =>
+                              DurationCompletionDialog(habit: widget.habit),
+                    );
+                  }
                 }
               },
       onTapDown: (context) {
@@ -192,4 +202,51 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
       return centerIcon();
     }
   }
+}
+
+void showAnimatedBlurDialog(BuildContext context, Habit habit) {
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: 'Enter Amount',
+    transitionDuration: const Duration(
+      milliseconds: 150,
+    ), // Your animation duration
+    // This builder is for the content of the dialog.
+    // We pass the simplified dialog widget here.
+    pageBuilder: (context, animation, secondaryAnimation) {
+      return EnterAmountSliderDialog(habit: habit);
+    },
+
+    // This builder is for the transition animation.
+    // This is where we will build the BackdropFilter.
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      // The `animation` object here is an Animation<double> that goes from 0.0 to 1.0
+      // over the course of the `transitionDuration`.
+
+      // Animate the sigma value for the blur
+      final double blurValue = animation.value * 4; // Max blur of 8
+
+      // Animate the tint color's opacity
+      final double tintOpacity = animation.value * 0.1; // Max opacity of 0.2
+
+      return Stack(
+        children: [
+          // This BackdropFilter is now part of the transition,
+          // so it correctly blurs the screen behind the route.
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blurValue, sigmaY: blurValue),
+            child: Container(color: Colors.black.withOpacity(tintOpacity)),
+          ),
+
+          // Use a FadeTransition to fade in the dialog content itself.
+          // The `child` here is the EnterAmountSliderDialog built by pageBuilder.
+          FadeTransition(
+            opacity: animation, // Use the same animation controller
+            child: Center(child: child),
+          ),
+        ],
+      );
+    },
+  );
 }

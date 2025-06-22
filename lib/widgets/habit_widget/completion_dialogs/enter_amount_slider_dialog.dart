@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider.dart';
+import 'package:provider/provider.dart';
+
+class EnterAmountSliderDialog extends StatefulWidget {
+  const EnterAmountSliderDialog({super.key, required this.habit});
+
+  final Habit habit;
+
+  @override
+  State<EnterAmountSliderDialog> createState() =>
+      _EnterAmountSliderDialogState();
+}
+
+class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final stateProvider = context.read<StateProvider>();
+      stateProvider.habitAmount = widget.habit.amountCompleted;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stateProvider = context.watch<StateProvider>();
+    final colorProvider = context.watch<ColorProvider>();
+    final habitProvider = context.read<HabitProvider>();
+
+    return Dialog(
+      backgroundColor:
+          Colors.transparent, // Important for the blur to show through
+      insetPadding: EdgeInsets.zero,
+      child: IntrinsicWidth(
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              SizedBox(width: 8 + 50),
+              EnterAmountSlider(
+                totalSegments: widget.habit.amount,
+                filledSegments: stateProvider.habitAmount,
+                onChanged: (newValue) {
+                  stateProvider.habitAmount = newValue;
+                },
+              ),
+              SizedBox(width: 8),
+              Column(
+                children: [
+                  CircleButton(
+                    colorProvider: colorProvider,
+                    icon: Icon(Icons.check, color: Colors.white),
+                    color: colorProvider.colorScheme.darkerStandardColor,
+                    onPressed: () {
+                      if (widget.habit.amountCompleted ==
+                          stateProvider.habitAmount) {
+                        Navigator.pop(context);
+                        return;
+                      }
+
+                      habitProvider.updateHabitAmountCompleted(
+                        widget.habit.id,
+                        stateProvider.habitAmount,
+                      );
+
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(height: 4),
+                  CircleButton(
+                    colorProvider: colorProvider,
+                    icon: Icon(Icons.close, color: Colors.white),
+                    color: colorProvider.colorScheme.standardColor,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CircleButton extends StatelessWidget {
+  const CircleButton({
+    super.key,
+    required this.colorProvider,
+    required this.icon,
+    required this.color,
+    this.onPressed,
+  });
+
+  final ColorProvider colorProvider;
+  final Widget icon;
+  final Color color;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 50,
+        width: 50,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        padding: const EdgeInsets.all(8),
+
+        child: Center(child: icon),
+      ),
+    );
+  }
+}
