@@ -4,6 +4,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_spinbox.dart';
+import 'package:habitt/widgets/default_dialog.dart';
 import 'package:habitt/widgets/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -18,7 +19,6 @@ class CompletionDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final habitProvider = context.read<HabitProvider>();
     final stateProvider = context.watch<StateProvider>();
-    final colorProvider = context.watch<ColorProvider>();
 
     HabitType type = HabitType.none;
 
@@ -30,72 +30,53 @@ class CompletionDialog extends StatelessWidget {
 
     return StatefulBuilder(
       builder: (context, setState) {
-        return AlertDialog(
-          backgroundColor: colorProvider.backgroundColor,
+        return DefaultDialog(
+          leftButtonText: localizations.cancel,
+          leftButtonOutlined: true,
+          rightButtonText: localizations.done,
+          rightButtonCallback: () {
+            if (type == HabitType.amount) {
+              // If nothing changed then don't update unnecessarily
+              if (habit.amountCompleted == stateProvider.habitAmount) {
+                Navigator.pop(context);
+                return;
+              }
+
+              habitProvider.updateHabitAmountCompleted(
+                habit.id,
+                stateProvider.habitAmount,
+              );
+            } else {
+              // If nothing changed then don't update unnecessarily
+              if (habit.durationCompleted ==
+                  stateProvider.habitDuration.inMinutes) {
+                Navigator.pop(context);
+                return;
+              }
+
+              habitProvider.updateHabitDurationCompleted(
+                habit.id,
+                stateProvider.habitDuration.inMinutes,
+              );
+            }
+
+            Navigator.pop(context);
+          },
           content: CompletionDialogContent(
             habit: habit,
             stateProvider: stateProvider,
             type: type,
           ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  child: Text(
-                    localizations.cancel,
-                    style: TextStyle(
-                      color: colorProvider.colorScheme.vividColor,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: Text(
-                    localizations.done,
-                    style: TextStyle(
-                      color: colorProvider.colorScheme.vividColor,
-                    ),
-                  ),
-                  onPressed: () {
-                    if (type == HabitType.amount) {
-                      // If nothing changed then don't update unnecessarily
-                      if (habit.amountCompleted == stateProvider.habitAmount) {
-                        Navigator.pop(context);
-                        return;
-                      }
-
-                      habitProvider.updateHabitAmountCompleted(
-                        habit.id,
-                        stateProvider.habitAmount,
-                      );
-                    } else {
-                      // If nothing changed then don't update unnecessarily
-                      if (habit.durationCompleted ==
-                          stateProvider.habitDuration.inMinutes) {
-                        Navigator.pop(context);
-                        return;
-                      }
-
-                      habitProvider.updateHabitDurationCompleted(
-                        habit.id,
-                        stateProvider.habitDuration.inMinutes,
-                      );
-                    }
-
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ],
         );
       },
     );
   }
 }
+
+/*
+*/
+
+// Content above buttons
 
 class CompletionDialogContent extends StatefulWidget {
   const CompletionDialogContent({
@@ -140,12 +121,17 @@ class _CompletionDialogContentState extends State<CompletionDialogContent> {
     int hours = widget.habit.duration ~/ 60;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (widget.habit.amount > 1)
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   HabitSlider(
                     totalSegments: amount,
@@ -278,43 +264,47 @@ class _HabitSliderState extends State<HabitSlider> {
     final isSimpleSlider = widget.totalSegments > 50;
     currentFilled = widget.filledSegments;
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        GestureDetector(
-          onVerticalDragUpdate: (details) {
-            RenderBox box = context.findRenderObject() as RenderBox;
-            final localPos = box.globalToLocal(details.globalPosition);
-            _updateFill(localPos, box.size.height);
-          },
-          child: SizedBox(
-            width: 100,
-            height: 240,
-            child:
-                isSimpleSlider
-                    ? _buildSmoothSlider(colorProvider)
-                    : _buildSegmentedSlider(colorProvider),
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          GestureDetector(
+            onVerticalDragUpdate: (details) {
+              RenderBox box = context.findRenderObject() as RenderBox;
+              final localPos = box.globalToLocal(details.globalPosition);
+              _updateFill(localPos, box.size.height);
+            },
+            child: SizedBox(
+              width: 100,
+              height: 240,
+              child:
+                  isSimpleSlider
+                      ? _buildSmoothSlider(colorProvider)
+                      : _buildSegmentedSlider(colorProvider),
+            ),
           ),
-        ),
 
-        IgnorePointer(
-          child: Container(
-            width: 100,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                currentFilled.toString(),
-                style: TextStyle(
-                  color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
-                  fontWeight: FontWeight.bold,
-                  fontSize: getFontSize(),
+          IgnorePointer(
+            child: Container(
+              width: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  currentFilled.toString(),
+                  style: TextStyle(
+                    color: colorProvider.colorScheme.strokeColor.withOpacity(
+                      0.5,
+                    ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: getFontSize(),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
