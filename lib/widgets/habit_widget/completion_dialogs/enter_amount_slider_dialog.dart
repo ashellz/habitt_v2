@@ -87,7 +87,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
   }
 }
 
-class CircleButton extends StatelessWidget {
+class CircleButton extends StatefulWidget {
   const CircleButton({
     super.key,
     required this.colorProvider,
@@ -102,16 +102,58 @@ class CircleButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
+  State<CircleButton> createState() => _CircleButtonState();
+}
+
+class _CircleButtonState extends State<CircleButton> {
+  double scale = 1.0;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        padding: const EdgeInsets.all(8),
+      onTap: () {
+        setState(() {
+          scale = 0.9;
+        });
+        Future.delayed(const Duration(milliseconds: 150), () {
+          setState(() {
+            scale = 1.0;
+          });
+        });
 
-        child: Center(child: icon),
+        if (widget.onPressed != null) {
+          widget.onPressed!();
+        }
+      },
+      onTapDown: (context) {
+        setState(() {
+          scale = 0.9;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          scale = 1.0;
+        });
+      },
+      onTapUp: (context) {
+        setState(() {
+          scale = 1.0;
+        });
+      },
+      child: AnimatedScale(
+        duration: const Duration(milliseconds: 150),
+        scale: scale,
+        child: Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+            color: widget.color,
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(8),
+
+          child: Center(child: widget.icon),
+        ),
       ),
     );
   }
