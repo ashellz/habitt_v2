@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -46,6 +47,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                 filledSegments: stateProvider.habitAmount,
                 onChanged: (newValue) {
                   stateProvider.habitAmount = newValue;
+                  HapticFeedback.selectionClick();
                 },
               ),
               SizedBox(width: 8),
@@ -126,16 +128,19 @@ class _CircleButtonState extends State<CircleButton> {
         }
       },
       onTapDown: (context) {
+        HapticFeedback.selectionClick();
         setState(() {
           scale = 0.9;
         });
       },
+
       onTapCancel: () {
         setState(() {
           scale = 1.0;
         });
       },
       onTapUp: (context) {
+        HapticFeedback.selectionClick();
         setState(() {
           scale = 1.0;
         });
