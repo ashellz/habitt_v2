@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -98,6 +99,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
               },
       onTapDown: (context) {
         if (widget.editable) return;
+        HapticFeedback.selectionClick();
         setState(() {
           _scale = 0.9;
         });
@@ -110,6 +112,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
       },
       onTapUp: (context) {
         if (widget.editable) return;
+        HapticFeedback.selectionClick();
         setState(() {
           _scale = 1.0;
         });
