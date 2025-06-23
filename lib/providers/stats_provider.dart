@@ -146,7 +146,7 @@ class StatsProvider extends ChangeNotifier {
     // If all habits are completed, we add 1 to the streak
     // Else we stop there
 
-    for (int i = 0; i < orderedDays.length; i++) {
+    for (int i = 1; i < orderedDays.length; i++) {
       final day = orderedDays[i];
       int habitsCompleted = 0;
       int habitsSkipped = 0;
