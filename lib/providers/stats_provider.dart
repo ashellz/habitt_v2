@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:hive_ce/hive.dart';
 
-enum StatsType { habitsCompleted, highestAmountOfHabitsLastWeek }
+enum StatsType {
+  habitsCompleted,
+  highestAmountOfHabitsLastWeek,
+  allHabitsCompletedStreak,
+}
 
 class StatsProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
@@ -10,11 +14,13 @@ class StatsProvider extends ChangeNotifier {
   int _habitsCompleted = -1;
   int _highestAmountOfHabitsLastWeek = -1;
   List<int> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
+  int _allHabitsCompletedStreak = -1;
   List<StatsType> _refreshList = [];
 
   get habitsCompleted => getHabitsCompleted();
   get highestAmountOfHabitsLastWeek => getHighestAmountOfHabitsLastWeek();
   get habitsCompletedLastWeek => getHabitsCompletedLastWeek();
+  get allHabitsCompletedStreak => getAllHabitsCompletedStreak();
 
   bool shouldRefresh(StatsType type) => _refreshList.contains(type);
 
@@ -47,13 +53,24 @@ class StatsProvider extends ChangeNotifier {
     return _habitsCompletedLastWeek;
   }
 
-  void refreshStats() {
-    if (_refreshList.contains(StatsType.habitsCompleted)) {
+  int getAllHabitsCompletedStreak() {
+    if (_allHabitsCompletedStreak == -1) {
+      _allHabitsCompletedStreak = refreshAllHabitsCompletedStreak();
+    }
+    return _allHabitsCompletedStreak;
+  }
+
+  void refreshStats({bool force = false}) {
+    if (_refreshList.contains(StatsType.habitsCompleted) || force) {
       _habitsCompleted = refreshHabitsCompleted();
       _habitsCompletedLastWeek = refreshHabitsCompletedLastWeek();
     }
-    if (_refreshList.contains(StatsType.highestAmountOfHabitsLastWeek)) {
+    if (_refreshList.contains(StatsType.highestAmountOfHabitsLastWeek) ||
+        force) {
       _highestAmountOfHabitsLastWeek = refreshHighestAmountOfHabitsLastWeek();
+    }
+    if (_refreshList.contains(StatsType.allHabitsCompletedStreak) || force) {
+      _allHabitsCompletedStreak = refreshAllHabitsCompletedStreak();
     }
 
     _refreshList = [];
@@ -116,5 +133,39 @@ class StatsProvider extends ChangeNotifier {
     habitsCompletedLastWeek = habitsCompletedLastWeek.reversed.toList();
 
     return habitsCompletedLastWeek;
+  }
+
+  int refreshAllHabitsCompletedStreak() {
+    int allHabitsCompletedStreak = 0;
+
+    // First we order the days by date
+    final orderedDays = daysBox.values.toList();
+    orderedDays.sort((a, b) => b.date.compareTo(a.date));
+
+    // Then we check all days from yesterday to the day we started using the app
+    // If all habits are completed, we add 1 to the streak
+    // Else we stop there
+
+    for (int i = 0; i < orderedDays.length; i++) {
+      final day = orderedDays[i];
+      int habitsCompleted = 0;
+      int habitsSkipped = 0;
+      for (final habit in day.habits) {
+        if (habit.completed) {
+          habitsCompleted++;
+          debugPrint("Completed habit found, {$habitsCompleted} total");
+        } else if (habit.skipped) {
+          habitsSkipped++;
+          debugPrint("Skipped habit found, {$habitsSkipped} total");
+        }
+      }
+      if (habitsCompleted + habitsSkipped == day.habits.length) {
+        allHabitsCompletedStreak++;
+      } else {
+        break;
+      }
+    }
+
+    return allHabitsCompletedStreak;
   }
 }
