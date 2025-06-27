@@ -9,6 +9,17 @@ class StateProvider extends ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   TextEditingController descController = TextEditingController();
   String _iconPath = "";
+  bool _isAdditional = false;
+
+  toggleAditional() {
+    _isAdditional = !_isAdditional;
+    notifyListeners();
+  }
+
+  set isAdditional(bool value) {
+    _isAdditional = value;
+    notifyListeners();
+  }
 
   set iconPath(String newPath) {
     if (_iconPath != newPath) {
@@ -44,6 +55,7 @@ class StateProvider extends ChangeNotifier {
     nameController.clear();
     descController.clear();
     _iconPath = Assets.images.icons.book.path;
+    _isAdditional = false;
     notifyListeners();
   }
 
@@ -54,4 +66,6 @@ class StateProvider extends ChangeNotifier {
   Duration get habitDuration => _habitDuration;
 
   String get iconPath => _iconPath;
+
+  bool get isAdditional => _isAdditional;
 }

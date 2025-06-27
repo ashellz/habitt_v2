@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 16
+    nextIndex: 17
     fields:
       id:
         index: 0
@@ -37,6 +37,8 @@ types:
         index: 14
       longestStreak:
         index: 15
+      additional:
+        index: 16
   Day:
     typeId: 1
     nextIndex: 2

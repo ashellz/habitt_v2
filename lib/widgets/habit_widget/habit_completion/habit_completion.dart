@@ -178,14 +178,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   // Center icon
   Widget centerIcon() {
-    return Center(
-      child: Icon(
-        widget.habit.completed || widget.habit.skipped
-            ? Icons.check
-            : Icons.close,
-        color: Color(0xFFF8F9FA),
-      ),
-    );
+    return Center(child: Icon(Icons.check, color: Color(0xFFF8F9FA)));
   }
 
   // Middle child inside of the container (checkmark or amount/duration)

@@ -7,6 +7,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -86,6 +87,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
               ),
               MoreOptionsText(localizations: localizations),
               SelectHabitTypeOptions(),
+              AdditionalTaskSwitch(
+                colorProvider: colorProvider,
+                stateProvider: stateProvider,
+              ),
               AddHabitButton(
                 nameController: nameController,
                 habitProvider: habitProvider,
@@ -164,6 +169,7 @@ class AddHabitButton extends StatelessWidget {
                   durationCompleted: 0,
                   streak: 0,
                   longestStreak: 0,
+                  additional: stateProvider.isAdditional,
                 ),
               );
               Navigator.of(context).pop();

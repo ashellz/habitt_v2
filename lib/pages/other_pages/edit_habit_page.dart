@@ -3,6 +3,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/delete_habit_dialog.dart';
@@ -46,6 +47,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
       stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
       stateProvider.iconPath = widget.habit.iconPath;
+      stateProvider.isAdditional = widget.habit.additional;
     });
   }
 
@@ -118,6 +120,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
               ),
               MoreOptionsText(localizations: localizations),
               SelectHabitTypeOptions(),
+              AdditionalTaskSwitch(
+                colorProvider: colorProvider,
+                stateProvider: stateProvider,
+              ),
               EditHabitButton(
                 nameController: nameController,
                 stateProvider: stateProvider,

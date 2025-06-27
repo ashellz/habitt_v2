@@ -16,6 +16,7 @@ class Habit extends HiveObject {
   int durationCompleted; // How long has been done
   int streak;
   int longestStreak;
+  bool additional;
 
   Habit({
     required this.id,
@@ -33,6 +34,7 @@ class Habit extends HiveObject {
     this.durationCompleted = 0,
     this.streak = 0,
     this.longestStreak = 0,
+    this.additional = false,
   });
 
   Habit copy() {
@@ -47,10 +49,12 @@ class Habit extends HiveObject {
       tag: tag,
       amount: amount,
       amountCompleted: amountCompleted,
+      amountLabel: amountLabel,
       duration: duration,
       durationCompleted: durationCompleted,
       longestStreak: longestStreak,
       skipped: skipped,
+      additional: additional,
     );
   }
 
@@ -68,6 +72,7 @@ class Habit extends HiveObject {
     durationCompleted = habit.durationCompleted;
     streak = habit.streak;
     longestStreak = habit.longestStreak;
+    additional = habit.additional;
   }
 
   Future<void> completeHabit() async {
