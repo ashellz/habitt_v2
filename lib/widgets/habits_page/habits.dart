@@ -5,6 +5,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
+import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/habit_category.dart';
 import 'package:provider/provider.dart';
 
@@ -143,6 +144,13 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                   stackOffsetFactor: widget.stackOffsetFactor,
                 ),
               ),
+        AdditionalTasks(
+          scrollController: widget.scrollController,
+          bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+          effectZoneHeight: widget.effectZoneHeight,
+          minScale: widget.minScale,
+          stackOffsetFactor: widget.stackOffsetFactor,
+        ),
       ],
     );
   }
