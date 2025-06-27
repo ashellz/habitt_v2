@@ -151,6 +151,8 @@ class StatsProvider extends ChangeNotifier {
       int habitsCompleted = 0;
       int habitsSkipped = 0;
       for (final habit in day.habits) {
+        // If habit is additional, we dont count it
+        if (habit.additional) continue;
         if (habit.completed) {
           habitsCompleted++;
           debugPrint("Completed habit found, {$habitsCompleted} total");
