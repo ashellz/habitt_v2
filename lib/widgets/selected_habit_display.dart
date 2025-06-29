@@ -39,6 +39,7 @@ class SelectedHabitDisplay extends StatelessWidget {
               valueListenable: nameController,
               builder:
                   (context, value, child) => HabitWidget(
+                    isFirstCategory: true,
                     habit: Habit(
                       id: 0,
                       categoryId: categoryProvider.selectedCategoryId,

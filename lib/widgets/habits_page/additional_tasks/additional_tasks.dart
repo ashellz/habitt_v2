@@ -79,6 +79,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
           for (final habit in additionalTasks)
             ScrollTransformedHabitWidget(
               // Assuming this is the widget from the previous answer
+              isFirstCategory: false,
               habit: habit,
               editable: false, // Or your logic for this
               scrollController: widget.scrollController,

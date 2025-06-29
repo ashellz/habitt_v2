@@ -28,28 +28,31 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
       countAdditionalTasks,
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          category.name,
-          style: TextStyle(
-            color:
-                isFirst
-                    ? colorProvider.textColor
-                    : colorProvider.mutedTextColor,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: isFirst ? 0 : 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            category.name,
+            style: TextStyle(
+              color:
+                  isFirst
+                      ? colorProvider.textColor
+                      : colorProvider.mutedTextColor,
+            ),
           ),
-        ),
-        Text(
-          "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
-          style: TextStyle(
-            color:
-                isFirst
-                    ? colorProvider.textColor
-                    : colorProvider.mutedTextColor,
+          Text(
+            "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
+            style: TextStyle(
+              color:
+                  isFirst
+                      ? colorProvider.textColor
+                      : colorProvider.mutedTextColor,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

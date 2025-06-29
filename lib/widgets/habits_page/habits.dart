@@ -101,6 +101,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),

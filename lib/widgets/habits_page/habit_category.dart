@@ -82,6 +82,7 @@ class _HabitCategoryState extends State<HabitCategory> {
             ScrollTransformedHabitWidget(
               // Assuming this is the widget from the previous answer
               habit: habit,
+              isFirstCategory: widget.isFirst,
               editable: false, // Or your logic for this
               scrollController: widget.scrollController,
               bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,

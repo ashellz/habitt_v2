@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
@@ -12,10 +13,16 @@ import 'package:habitt/widgets/habit_widget/habit_text.dart';
 import 'package:provider/provider.dart';
 
 class HabitWidget extends StatefulWidget {
-  const HabitWidget({super.key, required this.editable, required this.habit});
+  const HabitWidget({
+    super.key,
+    required this.editable,
+    required this.habit,
+    required this.isFirstCategory,
+  });
 
   final Habit habit;
   final bool editable;
+  final bool isFirstCategory;
 
   @override
   State<HabitWidget> createState() => _HabitWidgetState();
@@ -104,6 +111,7 @@ class _HabitWidgetState extends State<HabitWidget>
                   // Trigger rotation animation once when swipe crosses 100
                   if (_swipeOffset >= 100 && !_hasTriggeredRotation) {
                     _rotationController.forward(from: 0);
+                    HapticFeedback.selectionClick();
                     _hasTriggeredRotation = true;
                   } else if (_swipeOffset < 100 && _hasTriggeredRotation) {
                     _hasTriggeredRotation = false;
@@ -211,7 +219,11 @@ class _HabitWidgetState extends State<HabitWidget>
                   Transform.translate(
                     offset: Offset(_swipeOffset, 0),
                     child: Container(
-                      margin: EdgeInsets.only(top: 8),
+                      margin: EdgeInsets.only(
+                        top: 8,
+                        left: widget.isFirstCategory ? 0 : 16,
+                        right: widget.isFirstCategory ? 0 : 16,
+                      ),
                       padding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 12,
@@ -220,26 +232,14 @@ class _HabitWidgetState extends State<HabitWidget>
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Color.lerp(
-                              colorProvider.habitColor.withAlpha(alpha),
-                              colorProvider.habitColor.withAlpha(alpha + 100),
-                              value,
-                            )!,
-                            Color.lerp(
-                              colorProvider.colorScheme.standardColor.withAlpha(
-                                alpha,
-                              ),
-                              colorProvider.colorScheme.standardColor.withAlpha(
-                                alpha + 100,
-                              ),
-                              value,
-                            )!,
-                          ],
-                        ),
+                        color: colorProvider.habitColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.25),
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
 
                       // Inside of the container

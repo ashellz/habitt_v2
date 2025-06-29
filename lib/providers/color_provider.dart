@@ -10,7 +10,7 @@ class ColorProvider extends ChangeNotifier {
 
   Color textColor = Color(0xFF212529);
   Color mutedTextColor = Color(0xFF6C757D);
-  Color habitColor = Color(0xFFEDEDED);
+  Color habitColor = Color.fromARGB(255, 218, 218, 218);
   Color iconBackgroundColor = Color(0xFFD9D9D9);
   Color backgroundColor = Color.fromARGB(255, 242, 242, 247);
   Color standardColor = Color(0xFFEDEDED);
@@ -140,7 +140,7 @@ class ColorProvider extends ChangeNotifier {
     disabledColor: Color(0xFFE6FAF0), // softened like teal
     standardColor: Color(0xFFD1F7E6), // brighter mint green
     strokeColor: Color(0xFF7ABF9A), // cooler and clearer tone
-    vividColor: Color(0xFF00DB7C), // more vibrant green
+    vividColor: Color.fromARGB(255, 0, 203, 115), // more vibrant green
     darkerStandardColor: Color(0xFF00A85B), // rich teal-leaning green
   );
 

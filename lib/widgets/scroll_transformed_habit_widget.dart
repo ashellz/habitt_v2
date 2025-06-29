@@ -12,6 +12,7 @@ class ScrollTransformedHabitWidget extends StatefulWidget {
   final double minScale; // Minimum scale factor
   final double
   stackOffsetFactor; // Upward offset factor (percentage of item height)
+  final bool isFirstCategory;
 
   const ScrollTransformedHabitWidget({
     super.key,
@@ -22,6 +23,7 @@ class ScrollTransformedHabitWidget extends StatefulWidget {
     required this.effectZoneHeight,
     required this.minScale,
     required this.stackOffsetFactor,
+    required this.isFirstCategory,
   });
 
   @override
@@ -38,6 +40,7 @@ class _ScrollTransformedHabitWidgetState
     Widget actualHabitWidgetContent = HabitWidget(
       habit: widget.habit,
       editable: widget.editable,
+      isFirstCategory: widget.isFirstCategory,
     );
 
     double scale = 1.0;

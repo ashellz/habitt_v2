@@ -123,53 +123,58 @@ class _HabitsPageState extends State<HabitsPage> {
       child: Scaffold(
         backgroundColor: colorProvider.backgroundColor,
         body: GradientBackground(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListView(
-              key: _listViewKey, // Assign the GlobalKey
-              controller: _scrollController, // Assign the ScrollController
-              physics: const BouncingScrollPhysics(),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: ListView(
+            key: _listViewKey, // Assign the GlobalKey
+            controller: _scrollController, // Assign the ScrollController
+            physics: const BouncingScrollPhysics(),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
                   children: [
-                    const Greeting(),
-                    FloatingActionButton(
-                      mini: true,
-                      elevation: 0,
-                      backgroundColor:
-                          colorProvider.colorScheme.darkerStandardColor,
-                      onPressed:
-                          () => Navigator.of(context)
-                              .push(
-                                MaterialPageRoute(
-                                  builder: (context) => AddHabitPage(),
-                                ),
-                              )
-                              .whenComplete(() {
-                                if (!context.mounted) return;
-                                final stateProvider =
-                                    context.read<StateProvider>();
-                                stateProvider.reset();
-                              }),
-                      child: const Icon(Icons.add, color: Colors.white),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Greeting(),
+                        FloatingActionButton(
+                          mini: true,
+                          elevation: 0,
+                          backgroundColor:
+                              colorProvider.colorScheme.darkerStandardColor,
+                          onPressed:
+                              () => Navigator.of(context)
+                                  .push(
+                                    MaterialPageRoute(
+                                      builder: (context) => AddHabitPage(),
+                                    ),
+                                  )
+                                  .whenComplete(() {
+                                    if (!context.mounted) return;
+                                    final stateProvider =
+                                        context.read<StateProvider>();
+                                    stateProvider.reset();
+                                  }),
+                          child: const Icon(Icons.add, color: Colors.white),
+                        ),
+                      ],
                     ),
+                    const CategoriesList(),
+                    const HabitsCompletedWidget(),
                   ],
                 ),
-                const CategoriesList(),
-                const HabitsCompletedWidget(),
-                // Pass down the necessary parameters for the effect
-                Habits(
-                  scrollController: _scrollController,
-                  bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
-                  effectZoneHeight: _effectZoneHeight,
-                  minScale: _minScale,
-                  stackOffsetFactor: _stackOffsetFactor,
-                ),
+              ),
 
-                const SizedBox(height: 100),
-              ],
-            ),
+              // Pass down the necessary parameters for the effect
+              Habits(
+                scrollController: _scrollController,
+                bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
+                effectZoneHeight: _effectZoneHeight,
+                minScale: _minScale,
+                stackOffsetFactor: _stackOffsetFactor,
+              ),
+
+              const SizedBox(height: 100),
+            ],
           ),
         ),
       ),
