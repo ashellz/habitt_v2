@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/glass_container.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
@@ -134,12 +135,8 @@ class _HabitsPageState extends State<HabitsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Greeting(),
-                    FloatingActionButton(
-                      mini: true,
-                      elevation: 0,
-                      backgroundColor:
-                          colorProvider.colorScheme.darkerStandardColor,
-                      onPressed:
+                    GestureDetector(
+                      onTap:
                           () => Navigator.of(context)
                               .push(
                                 MaterialPageRoute(
@@ -152,7 +149,13 @@ class _HabitsPageState extends State<HabitsPage> {
                                     context.read<StateProvider>();
                                 stateProvider.reset();
                               }),
-                      child: Icon(Icons.add, color: Colors.white),
+                      child: GlassContainer(
+                        height: 40,
+                        width: 40,
+                        borderRadius: 15,
+                        color: colorProvider.colorScheme.darkerStandardColor,
+                        child: const Icon(Icons.add, color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
