@@ -72,6 +72,10 @@ class CategoryProvider extends ChangeNotifier {
 
     // 2. Calculate habit counts
     for (var habit in habits) {
+      // Dont count additional habits
+      if (habit.additional) continue;
+
+      // Get the effective category id
       int effectiveCategoryId;
       if (habit.categoryId == morningCategoryId) {
         effectiveCategoryId = morningCategoryId;

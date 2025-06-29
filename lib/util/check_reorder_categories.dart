@@ -5,6 +5,8 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 void checkReorderCategories(BuildContext context, Habit habit) {
+  if (habit.additional) return;
+
   if (categoryStatusChanged(context, habit)) {
     final categoryProvider = context.read<CategoryProvider>();
     // Reorder categories
