@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/glass_container.dart';
 import 'package:provider/provider.dart';
 
 class EnterAmountSlider extends StatefulWidget {
@@ -103,39 +102,27 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
   }
 
   Widget _buildSegmentedSlider(ColorProvider colorProvider) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final fillHeight = (currentFilled / widget.totalSegments) * height;
-
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: Stack(
-            children: [
-              Column(
-                children: List.generate(widget.totalSegments, (index) {
-                  final reversedIndex = widget.totalSegments - index - 1;
-                  final isFilled = reversedIndex < currentFilled;
-                  return Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 0.5),
-                      decoration: BoxDecoration(
-                        color:
-                            isFilled
-                                ? colorProvider.colorScheme.vividColor
-                                : colorProvider.colorScheme.strokeColor
-                                    .withOpacity(0.5),
-                      ),
-                    ),
-                  );
-                }),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: Column(
+        children: List.generate(widget.totalSegments, (index) {
+          final reversedIndex = widget.totalSegments - index - 1;
+          final isFilled = reversedIndex < currentFilled;
+          return Expanded(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 0.5),
+              decoration: BoxDecoration(
+                color:
+                    isFilled
+                        ? colorProvider.colorScheme.vividColor
+                        : colorProvider.colorScheme.strokeColor.withOpacity(
+                          0.5,
+                        ),
               ),
-
-              GlassContainer(borderRadius: 30, height: height, blur: 0),
-            ],
-          ),
-        );
-      },
+            ),
+          );
+        }),
+      ),
     );
   }
 
@@ -150,15 +137,13 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              GlassContainer(
-                color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
-                borderRadius: 30,
-                alignment: Alignment.topCenter,
-                height: height,
+              Container(
+                decoration: BoxDecoration(
+                  color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
-              GlassContainer(
-                alignment: Alignment.bottomCenter,
-                borderRadius: 0,
+              Container(
                 height: fillHeight,
                 color: colorProvider.colorScheme.vividColor,
               ),
