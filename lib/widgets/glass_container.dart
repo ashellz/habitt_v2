@@ -12,9 +12,12 @@ class GlassContainer extends StatelessWidget {
   final Gradient gradient;
   final Color? color;
   final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final Alignment alignment;
 
   const GlassContainer({
     super.key,
+    this.alignment = Alignment.center,
     this.height = 200,
     this.width,
     this.child,
@@ -22,6 +25,7 @@ class GlassContainer extends StatelessWidget {
     this.blur = 10,
     this.borderColor = Colors.white24,
     this.padding,
+    this.margin,
     this.gradient = const LinearGradient(
       colors: [Colors.white24, Colors.white10],
       begin: Alignment.topLeft,
@@ -32,43 +36,46 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (color != null)
-            // Color overlay
+    return Padding(
+      padding: margin ?? const EdgeInsets.all(0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Stack(
+          alignment: alignment,
+          children: [
+            if (color != null)
+              // Color overlay
+              Container(
+                height: height,
+                width: width,
+                decoration: BoxDecoration(
+                  color: color,
+                  border: Border.all(color: borderColor),
+                  borderRadius: BorderRadius.circular(borderRadius),
+                ),
+                child: child,
+              ),
+
+            // Blur effect
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+              child: Container(),
+            ),
+
+            // Gradient overlay
             Container(
               height: height,
               width: width,
+              padding: padding,
               decoration: BoxDecoration(
-                color: color,
+                gradient: gradient,
                 border: Border.all(color: borderColor),
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               child: child,
             ),
-
-          // Blur effect
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-            child: Container(),
-          ),
-
-          // Gradient overlay
-          Container(
-            height: height,
-            width: width,
-            padding: padding,
-            decoration: BoxDecoration(
-              gradient: gradient,
-              border: Border.all(color: borderColor),
-              borderRadius: BorderRadius.circular(borderRadius),
-            ),
-            child: child,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

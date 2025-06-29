@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/glass_container.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider.dart';
 import 'package:provider/provider.dart';
 
@@ -147,13 +148,11 @@ class _CircleButtonState extends State<CircleButton> {
       child: AnimatedScale(
         duration: const Duration(milliseconds: 150),
         scale: scale,
-        child: Container(
+        child: GlassContainer(
           height: 50,
           width: 50,
-          decoration: BoxDecoration(
-            color: widget.color,
-            shape: BoxShape.circle,
-          ),
+          color: widget.color,
+          borderRadius: 100,
           padding: const EdgeInsets.all(8),
 
           child: Center(child: widget.icon),
