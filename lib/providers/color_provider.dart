@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ColorProvider extends ChangeNotifier {
   bool isDarkMode = false;
   String colorSchemeString = "blue";
+
+  Color darkStandardColor = Color(0xFF212529);
+
   Color textColor = Color(0xFF212529);
   Color mutedTextColor = Color(0xFF6C757D);
   Color habitColor = Color(0xFFEDEDED);
@@ -37,7 +40,7 @@ class ColorProvider extends ChangeNotifier {
       textColor = Color(0xFFF8F9FA);
       iconBackgroundColor = Color.fromARGB(255, 46, 50, 55);
       backgroundColor = Color.fromARGB(255, 18, 20, 22);
-      standardColor = Color(0xFF212529);
+      standardColor = darkStandardColor;
       habitColor = Color(0xFF212529);
       disabledColor = Color.fromARGB(255, 28, 31, 35);
       mutedTextColor = Color.fromARGB(255, 150, 161, 171);

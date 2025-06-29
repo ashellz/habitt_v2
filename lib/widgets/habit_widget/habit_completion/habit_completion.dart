@@ -12,6 +12,7 @@ import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slid
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/duration_display.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class CompletionDisplay extends StatefulWidget {
   const CompletionDisplay({
@@ -144,7 +145,10 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                         value: value,
                         color:
                             widget.habit.skipped
-                                ? widget.colorProvider.standardColor
+                                ? widget.colorProvider.colorScheme.strokeColor
+                                    .darken(
+                                      widget.colorProvider.isDarkMode ? 20 : 50,
+                                    )
                                 : widget
                                     .colorProvider
                                     .colorScheme
