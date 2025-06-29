@@ -11,6 +11,7 @@ import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/habit_streak.dart';
 import 'package:habitt/widgets/habit_widget/habit_text.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class HabitWidget extends StatefulWidget {
   const HabitWidget({
@@ -161,6 +162,7 @@ class _HabitWidgetState extends State<HabitWidget>
                         });
                       },
               child: Stack(
+                alignment: Alignment.centerLeft,
                 children: [
                   // Background action color
                   Positioned.fill(
@@ -168,7 +170,7 @@ class _HabitWidgetState extends State<HabitWidget>
                       opacity: (_swipeOffset / 150).clamp(0, 1),
                       duration: const Duration(milliseconds: 50),
                       child: Container(
-                        margin: EdgeInsets.only(top: 8),
+                        margin: EdgeInsets.only(top: 8, left: 16),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
@@ -216,6 +218,7 @@ class _HabitWidgetState extends State<HabitWidget>
                     ),
                   ),
 
+                  // Main container
                   Transform.translate(
                     offset: Offset(_swipeOffset, 0),
                     child: Container(
@@ -286,6 +289,33 @@ class _HabitWidgetState extends State<HabitWidget>
                             ],
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 24,
+                    left: 16,
+                    bottom: 16,
+
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      width: 2,
+                      margin: EdgeInsets.symmetric(
+                        vertical:
+                            widget.habit.completed || widget.habit.skipped
+                                ? 0
+                                : (40), // Initial size from the middle
+                      ),
+                      decoration: BoxDecoration(
+                        color:
+                            widget.habit.completed
+                                ? colorProvider.colorScheme.vividColor
+                                : widget.habit.skipped
+                                ? colorProvider.colorScheme.strokeColor.darken(
+                                  colorProvider.isDarkMode ? 20 : 50,
+                                )
+                                : Colors.transparent,
                       ),
                     ),
                   ),
