@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 class ScrollTransformedHabitCategoryDivider extends StatefulWidget {
   const ScrollTransformedHabitCategoryDivider({
     super.key,
+    this.hasHabits,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
     required this.effectZoneHeight,
@@ -13,6 +14,7 @@ class ScrollTransformedHabitCategoryDivider extends StatefulWidget {
     required this.stackOffsetFactor,
   });
 
+  final bool? hasHabits;
   // Scroll and transformation parameters (same as for ScrollTransformedHabitWidget)
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
@@ -29,7 +31,9 @@ class _ScrollTransformedHabitCategoryTitleState
     extends State<ScrollTransformedHabitCategoryDivider> {
   @override
   Widget build(BuildContext context) {
-    Widget originalContent = _OriginalDividerContent();
+    Widget originalContent = _OriginalDividerContent(
+      hasHabits: widget.hasHabits,
+    );
 
     double scale = 1.0;
     double offsetY = 0.0;
@@ -87,31 +91,39 @@ class _ScrollTransformedHabitCategoryTitleState
 }
 
 class _OriginalDividerContent extends StatelessWidget {
-  const _OriginalDividerContent();
+  const _OriginalDividerContent({this.hasHabits});
+
+  final bool? hasHabits;
 
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final bool isTitle = hasHabits != null && !hasHabits!;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        32,
-        32,
-        32,
-        24,
-      ), // 24 bc habit top margin is 8
+      padding:
+          isTitle
+              ? EdgeInsets.all(0)
+              : EdgeInsets.fromLTRB(
+                32,
+                32,
+                32,
+                24,
+              ), // 24 bc habit top margin is 8
       child: Row(
         children: [
-          Expanded(
-            child: Divider(thickness: 1, color: colorProvider.mutedTextColor),
-          ),
+          if (!isTitle)
+            Expanded(
+              child: Divider(thickness: 1, color: colorProvider.mutedTextColor),
+            ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.only(left: isTitle ? 0 : 8.0, right: 8.0),
             child: Text(
               "Additional tasks",
-              style: TextStyle(color: colorProvider.textColor),
+              style: TextStyle(color: colorProvider.mutedTextColor),
             ),
           ),
+
           Expanded(
             child: Divider(thickness: 1, color: colorProvider.mutedTextColor),
           ),

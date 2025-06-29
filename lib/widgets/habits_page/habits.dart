@@ -73,6 +73,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: HabitCategory(
+              showAdditionalTasks: true,
               category: categoryProvider.categories.firstWhere(
                 (c) => c.id == categoryProvider.selectedCategoryId,
               ),
@@ -93,7 +94,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
     return Column(
       children: [
         for (final category in categories)
-          if (getCategoryLength(category, context) > 0)
+          if (getCategoryLength(category, context, false) > 0)
             // Check if category is first
             if (category == categories.first)
               // Put it in a glass box with animated gradient
@@ -116,6 +117,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                           colorProvider,
                         ),
                         child: HabitCategory(
+                          showAdditionalTasks: false,
                           isFirst: true,
                           category: category,
 
@@ -136,7 +138,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                 padding: const EdgeInsets.only(top: 12),
                 child: HabitCategory(
                   category: category,
-
+                  showAdditionalTasks: false,
                   scrollController: widget.scrollController,
                   bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
                   effectZoneHeight: widget.effectZoneHeight,

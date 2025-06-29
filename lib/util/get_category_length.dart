@@ -3,7 +3,11 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:provider/provider.dart';
 
-int getCategoryLength(Category category, BuildContext context) {
+int getCategoryLength(
+  Category category,
+  BuildContext context,
+  bool countAdditionalTasks,
+) {
   final habitProvider = context.watch<HabitProvider>();
   if (habitProvider.habits.isEmpty) return 0;
   if (category.id == 0) {
@@ -11,7 +15,13 @@ int getCategoryLength(Category category, BuildContext context) {
   }
 
   final int categoryHabits =
-      habitProvider.habits.where((h) => h.categoryId == category.id).length;
+      habitProvider.habits
+          .where(
+            (h) =>
+                h.categoryId == category.id &&
+                (countAdditionalTasks ? true : !h.additional),
+          )
+          .length;
   return categoryHabits;
 }
 

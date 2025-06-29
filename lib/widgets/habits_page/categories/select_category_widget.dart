@@ -37,7 +37,7 @@ class SelectCategoryWidget extends StatelessWidget {
             ? stateProvider.habitCategoryId
             : categoryProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
-    final int categoryHabits = getCategoryLength(category, context);
+    final int categoryHabits = getCategoryLength(category, context, true);
 
     return GestureDetector(
       onTap: onTap,

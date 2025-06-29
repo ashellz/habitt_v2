@@ -10,17 +10,23 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
   const _OriginalHabitCategoryTitleContent({
     required this.category,
     required this.isFirst,
+    required this.countAdditionalTasks,
   });
 
   final Category category;
   final bool isFirst;
+  final bool countAdditionalTasks;
 
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final localizations = AppLocalizations.of(context)!;
     // Assuming getCategoryLength is available and correct
-    final int categoryHabits = getCategoryLength(category, context);
+    final int categoryHabits = getCategoryLength(
+      category,
+      context,
+      countAdditionalTasks,
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,6 +60,7 @@ class ScrollTransformedHabitCategoryTitle extends StatefulWidget {
     super.key,
     required this.isFirst,
     required this.category,
+    required this.countAdditionalTasks,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
     required this.effectZoneHeight,
@@ -63,6 +70,7 @@ class ScrollTransformedHabitCategoryTitle extends StatefulWidget {
 
   final bool isFirst;
   final Category category;
+  final bool countAdditionalTasks;
   // Scroll and transformation parameters (same as for ScrollTransformedHabitWidget)
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
@@ -82,6 +90,7 @@ class _ScrollTransformedHabitCategoryTitleState
     Widget originalContent = _OriginalHabitCategoryTitleContent(
       category: widget.category,
       isFirst: widget.isFirst,
+      countAdditionalTasks: widget.countAdditionalTasks,
     );
 
     double scale = 1.0;

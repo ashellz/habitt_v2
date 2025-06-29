@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks_divider.dart';
 import 'package:habitt/widgets/scroll_transformed_habit_widget.dart';
@@ -7,6 +8,8 @@ import 'package:provider/provider.dart';
 class AdditionalTasks extends StatefulWidget {
   const AdditionalTasks({
     super.key,
+    this.category,
+    this.hasHabits,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
     required this.effectZoneHeight,
@@ -14,6 +17,8 @@ class AdditionalTasks extends StatefulWidget {
     required this.stackOffsetFactor,
   });
 
+  final Category? category;
+  final bool? hasHabits;
   // These parameters are passed down from HabitsPage -> Habits -> AdditionalTasks
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
@@ -47,8 +52,16 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
 
     final additionalTasks =
         habitProvider.habits
-            .where((habit) => habit.additional)
+            .where(
+              (habit) =>
+                  habit.additional &&
+                  (widget.category != null
+                      ? habit.categoryId == widget.category!.id
+                      : true),
+            )
             .toList(); // It will show only additional habits/tasks
+
+    if (additionalTasks.isEmpty) return Container();
 
     return AnimatedOpacity(
       opacity: _opacity, // For the initial fade-in of the whole category block
@@ -56,6 +69,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
       child: Column(
         children: [
           ScrollTransformedHabitCategoryDivider(
+            hasHabits: widget.hasHabits,
             scrollController: widget.scrollController,
             bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
             effectZoneHeight: widget.effectZoneHeight,

@@ -6,15 +6,24 @@ import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
 class HabitCategoryTitle extends StatelessWidget {
-  const HabitCategoryTitle({super.key, required this.category});
+  const HabitCategoryTitle({
+    super.key,
+    required this.category,
+    required this.countAdditionalTasks,
+  });
 
   final Category category;
+  final bool countAdditionalTasks;
 
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final localizations = AppLocalizations.of(context)!;
-    final int categoryHabits = getCategoryLength(category, context);
+    final int categoryHabits = getCategoryLength(
+      category,
+      context,
+      countAdditionalTasks,
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

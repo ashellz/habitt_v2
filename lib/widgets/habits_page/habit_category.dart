@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/scroll_transformed_habit_category_title.dart';
 import 'package:habitt/widgets/scroll_transformed_habit_widget.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ class HabitCategory extends StatefulWidget {
   const HabitCategory({
     super.key,
     this.isFirst = false,
+    required this.showAdditionalTasks,
     required this.category,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
@@ -19,6 +21,7 @@ class HabitCategory extends StatefulWidget {
 
   final bool isFirst;
   final Category category;
+  final bool showAdditionalTasks;
   // These parameters are passed down from HabitsPage -> Habits -> HabitCategory
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
@@ -57,29 +60,39 @@ class _HabitCategoryState extends State<HabitCategory> {
             )
             .toList(); // It will not show additional habits/tasks
 
-    if (categoryHabits.isEmpty) return Container();
-
     return AnimatedOpacity(
       opacity: _opacity, // For the initial fade-in of the whole category block
       duration: const Duration(milliseconds: 150),
       child: Column(
         children: [
           // Using the new ScrollTransformedHabitCategoryTitle
-          ScrollTransformedHabitCategoryTitle(
-            isFirst: widget.isFirst,
-            category: widget.category,
-            scrollController: widget.scrollController,
-            bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
-            effectZoneHeight: widget.effectZoneHeight,
-            minScale: widget.minScale,
-            stackOffsetFactor: widget.stackOffsetFactor,
-          ),
+          if (categoryHabits.isNotEmpty)
+            ScrollTransformedHabitCategoryTitle(
+              isFirst: widget.isFirst,
+              category: widget.category,
+              countAdditionalTasks: false,
+              scrollController: widget.scrollController,
+              bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+              effectZoneHeight: widget.effectZoneHeight,
+              minScale: widget.minScale,
+              stackOffsetFactor: widget.stackOffsetFactor,
+            ),
           // Individual habits also use their transforming wrapper
           for (final habit in categoryHabits)
             ScrollTransformedHabitWidget(
               // Assuming this is the widget from the previous answer
               habit: habit,
               editable: false, // Or your logic for this
+              scrollController: widget.scrollController,
+              bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+              effectZoneHeight: widget.effectZoneHeight,
+              minScale: widget.minScale,
+              stackOffsetFactor: widget.stackOffsetFactor,
+            ),
+          if (widget.showAdditionalTasks)
+            AdditionalTasks(
+              hasHabits: categoryHabits.isNotEmpty,
+              category: widget.category,
               scrollController: widget.scrollController,
               bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
               effectZoneHeight: widget.effectZoneHeight,
