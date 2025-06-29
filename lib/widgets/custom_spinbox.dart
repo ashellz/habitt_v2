@@ -27,7 +27,8 @@ class CustomSpinBox extends StatelessWidget {
       textInputAction: TextInputAction.done,
       cursorColor: colorProvider.textColor,
       enableInteractiveSelection: true,
-
+      keyboardAppearance:
+          colorProvider.isDarkMode ? Brightness.dark : Brightness.light,
       iconColor: WidgetStateProperty.all<Color>(colorProvider.textColor),
       textStyle: TextStyle(color: colorProvider.textColor),
       decoration: InputDecoration(
@@ -45,11 +46,15 @@ class CustomSpinBox extends StatelessWidget {
 
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
-          borderSide: BorderSide(color: colorProvider.colorScheme.strokeColor),
+          borderSide: BorderSide(
+            color: colorProvider.colorScheme.darkerStandardColor,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          borderSide: BorderSide(color: colorProvider.colorScheme.strokeColor),
+          borderSide: BorderSide(
+            color: colorProvider.colorScheme.darkerStandardColor,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 20,
