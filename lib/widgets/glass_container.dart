@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class GlassContainer extends StatelessWidget {
@@ -57,10 +58,12 @@ class GlassContainer extends StatelessWidget {
               ),
 
             // Blur effect
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-              child: Container(),
-            ),
+            if (!kDebugMode)
+              BackdropFilter(
+                enabled: true,
+                filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                child: Container(),
+              ),
 
             // Gradient overlay
             Container(
