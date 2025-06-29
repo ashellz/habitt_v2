@@ -4,22 +4,24 @@ import 'package:flutter/material.dart';
 
 class GlassContainer extends StatelessWidget {
   final double height;
-  final double width;
+  final double? width;
   final Widget? child;
   final double borderRadius;
   final double blur;
   final Color borderColor;
   final Gradient gradient;
   final Color? color;
+  final EdgeInsets? padding;
 
   const GlassContainer({
     super.key,
     this.height = 200,
-    this.width = 300,
+    this.width,
     this.child,
     this.borderRadius = 15,
     this.blur = 10,
     this.borderColor = Colors.white24,
+    this.padding,
     this.gradient = const LinearGradient(
       colors: [Colors.white24, Colors.white10],
       begin: Alignment.topLeft,
@@ -33,13 +35,8 @@ class GlassContainer extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: Stack(
+        alignment: Alignment.center,
         children: [
-          // Blur effect
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-            child: Container(),
-          ),
-
           if (color != null)
             // Color overlay
             Container(
@@ -53,10 +50,17 @@ class GlassContainer extends StatelessWidget {
               child: child,
             ),
 
+          // Blur effect
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+            child: Container(),
+          ),
+
           // Gradient overlay
           Container(
             height: height,
             width: width,
+            padding: padding,
             decoration: BoxDecoration(
               gradient: gradient,
               border: Border.all(color: borderColor),

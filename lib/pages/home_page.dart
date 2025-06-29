@@ -10,6 +10,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
+import 'package:habitt/widgets/glass_container.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -222,71 +223,62 @@ class _BottomNavBarState extends State<BottomNavBar> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: ShapeDecoration(
-          color:
-              isSelected
-                  ? colorProvider.colorScheme.darkerStandardColor
-                  : colorProvider.standardColor.withOpacity(0.2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
           ),
         ),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 20,
-              height: 20,
+              width: 28,
+              height: 28,
               child: SvgPicture.asset(
                 item.svgPath,
                 width: 20,
                 height: 20,
                 colorFilter: ColorFilter.mode(
-                  isSelected ? Colors.white : colorProvider.textColor,
+                  isSelected
+                      ? colorProvider.colorScheme.vividColor
+                      : colorProvider.textColor.withOpacity(0.9),
                   BlendMode.srcIn,
                 ),
               ),
             ),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              layoutBuilder: (currentChild, previousChildren) {
-                return Stack(
-                  alignment: Alignment.centerLeft,
-                  children: <Widget>[
-                    ...previousChildren,
-                    if (currentChild != null) currentChild,
-                  ],
-                );
-              },
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return FadeTransition(
                   opacity: animation,
                   child: SizeTransition(
                     sizeFactor: animation,
                     axis: Axis.horizontal,
-                    axisAlignment: -1.0,
                     child: child,
                   ),
                 );
               },
-              child:
-                  isSelected
-                      ? DefaultTextStyle(
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          key: ValueKey<String>("text_${item.id}"),
-                          padding: const EdgeInsets.only(left: 8, top: 2),
-                          child: Text(item.defaultLabel),
-                        ),
-                      )
-                      : SizedBox.shrink(
-                        key: ValueKey<String>("empty_${item.id}"),
-                      ),
+              child: DefaultTextStyle(
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color:
+                      isSelected
+                          ? colorProvider.colorScheme.vividColor
+                          : colorProvider.textColor.withOpacity(0.9),
+                  fontSize: 12,
+                ),
+                child: Padding(
+                  key: ValueKey<String>("text_${item.id}"),
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(item.defaultLabel),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -296,9 +288,52 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    return GlassContainer(
+      padding: const EdgeInsets.all(2),
+      height: 64,
+      borderRadius: 100,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Animated pill that goes around the nav bar depending on the selected index
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            left: _selectedIndex * 73.5,
+            child: GlassContainer(
+              width: 95,
+              height: 60,
+              color: context.watch<ColorProvider>().standardColor,
+              borderRadius: 100,
+              borderColor: Colors.transparent,
+            ),
+          ),
 
-    return ClipRRect(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(_navItems.length, (index) {
+                Widget navItemWidget = _buildNavItem(index);
+                if (index > 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: navItemWidget,
+                  );
+                }
+                return navItemWidget;
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/*
+ClipRRect(
       borderRadius: BorderRadius.circular(100),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -311,7 +346,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          child: Row(
+          child: 
+        ),
+      ),
+    );
+
+
+Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(_navItems.length, (index) {
@@ -325,8 +366,5 @@ class _BottomNavBarState extends State<BottomNavBar> {
               return navItemWidget;
             }),
           ),
-        ),
-      ),
-    );
-  }
-}
+
+ */

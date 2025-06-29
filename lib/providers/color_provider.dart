@@ -9,7 +9,7 @@ class ColorProvider extends ChangeNotifier {
   Color mutedTextColor = Color(0xFF6C757D);
   Color habitColor = Color(0xFFEDEDED);
   Color iconBackgroundColor = Color(0xFFD9D9D9);
-  Color backgroundColor = Color(0xFFF8F9FA);
+  Color backgroundColor = Color.fromARGB(255, 242, 242, 247);
   Color standardColor = Color(0xFFEDEDED);
   Color disabledColor = Color(0xFFF8F9FA);
   Color redAccent = Color.fromARGB(255, 240, 210, 210);
@@ -46,7 +46,7 @@ class ColorProvider extends ChangeNotifier {
       textColor = Color(0xFF212529);
       habitColor = Color(0xFFEDEDED);
       iconBackgroundColor = Color(0xFFD9D9D9);
-      backgroundColor = Color(0xFFF8F9FA);
+      backgroundColor = Color.fromARGB(255, 242, 242, 247);
       standardColor = Color(0xFFEDEDED);
       disabledColor = Color(0xFFF8F9FA);
       mutedTextColor = Color(0xFF6C757D);
