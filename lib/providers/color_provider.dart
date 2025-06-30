@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ColorProvider extends ChangeNotifier {
   bool isDarkMode = false;
-  String colorSchemeString = "blue";
+  late String colorSchemeString;
 
   Color darkStandardColor = Color(0xFF212529);
 
@@ -17,15 +17,31 @@ class ColorProvider extends ChangeNotifier {
   Color disabledColor = Color(0xFFF8F9FA);
   Color redAccent = Color.fromARGB(255, 240, 210, 210);
 
+  late CustomColorScheme blueColorScheme;
+  late CustomColorScheme tealColorScheme;
+  late CustomColorScheme greenColorScheme;
+  late CustomColorScheme magentaColorScheme;
+
+  List<CustomColorScheme> colorSchemes = [];
+
   Color red = Color.fromARGB(255, 215, 46, 46);
 
   final SharedPreferences prefs;
 
   ColorProvider({required this.prefs}) {
     isDarkMode = prefs.getBool("isDarkMode") ?? true;
-    colorSchemeString = prefs.getString("colorScheme") ?? "blue";
-    changeColorScheme(colorSchemeString);
+    colorSchemeString = prefs.getString("colorScheme") ?? "green";
+
     adaptModeColors();
+
+    colorSchemes = [
+      blueColorScheme,
+      tealColorScheme,
+      greenColorScheme,
+      magentaColorScheme,
+    ];
+
+    changeColorScheme(colorSchemeString);
   }
 
   void changeMode() {
@@ -33,10 +49,16 @@ class ColorProvider extends ChangeNotifier {
     prefs.setBool("isDarkMode", isDarkMode);
     adaptModeColors();
     changeColorScheme(colorSchemeString);
+    notifyListeners();
   }
 
   void adaptModeColors() {
     if (isDarkMode) {
+      blueColorScheme = _blueDark;
+      tealColorScheme = _tealDark;
+      greenColorScheme = _greenDark;
+      magentaColorScheme = _magentaDark;
+
       textColor = Color(0xFFF8F9FA);
       iconBackgroundColor = Color.fromARGB(255, 46, 50, 55);
       backgroundColor = Color.fromARGB(255, 18, 20, 22);
@@ -46,6 +68,11 @@ class ColorProvider extends ChangeNotifier {
       mutedTextColor = Color.fromARGB(255, 150, 161, 171);
       redAccent = Color.fromARGB(255, 43, 28, 28);
     } else {
+      blueColorScheme = _blue;
+      tealColorScheme = _teal;
+      greenColorScheme = _green;
+      magentaColorScheme = _magenta;
+
       textColor = Color(0xFF212529);
       habitColor = Color(0xFFEDEDED);
       iconBackgroundColor = Color(0xFFD9D9D9);
@@ -55,49 +82,33 @@ class ColorProvider extends ChangeNotifier {
       mutedTextColor = Color(0xFF6C757D);
       redAccent = Color.fromARGB(255, 240, 210, 210);
     }
+
+    colorSchemes = [
+      blueColorScheme,
+      tealColorScheme,
+      greenColorScheme,
+      magentaColorScheme,
+    ];
+
+    notifyListeners();
   }
 
-  void changeColorScheme(String color) {
-    prefs.setString("colorScheme", color);
+  void changeColorScheme(String colorSchemeName) {
+    debugPrint("Changing color scheme to: $colorSchemeName");
 
-    switch (color) {
-      case "blue":
-        if (isDarkMode) {
-          colorScheme = _blueDark;
-        } else {
-          colorScheme = _blue;
-        }
-        colorSchemeString = "blue";
-        break;
-      case "teal":
-        if (isDarkMode) {
-          colorScheme = _tealDark;
-        } else {
-          colorScheme = _teal;
-        }
-        colorSchemeString = "teal";
-        break;
-      case "green":
-        if (isDarkMode) {
-          colorScheme = _greenDark;
-        } else {
-          colorScheme = _green;
-        }
-        colorSchemeString = "green";
-        break;
-      case "magenta":
-        if (isDarkMode) {
-          colorScheme = _magentaDark;
-        } else {
-          colorScheme = _magenta;
-        }
-        colorSchemeString = "magenta";
-        break;
-    }
+    prefs.setString("colorScheme", colorSchemeName);
+    colorSchemeString = colorSchemeName;
+
+    colorScheme = colorSchemes.firstWhere(
+      (scheme) => scheme.name == colorSchemeName,
+      orElse: () => colorSchemes.first,
+    );
+
     notifyListeners();
   }
 
   CustomColorScheme colorScheme = CustomColorScheme(
+    name: "nan",
     disabledColor: Color(0xFFF8F9FA),
     standardColor: Color(0xFFEDEDED),
     strokeColor: Color(0xFF97A5B7),
@@ -106,6 +117,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _blue = CustomColorScheme(
+    name: "blue",
     disabledColor: Color(0xFFEAF2FB), // softer, airier blue
     standardColor: Color(0xFFD9E6F9), // light bluish mint
     strokeColor: Color(0xFF7AA6D9), // clearer sky blue
@@ -114,6 +126,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _blueDark = CustomColorScheme(
+    name: "blue",
     disabledColor: Color(0xFF1A2431),
     standardColor: Color(0xFF1F2C3A),
     strokeColor: Color(0xFF355773),
@@ -122,6 +135,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _teal = CustomColorScheme(
+    name: "teal",
     disabledColor: Color(0xFFE6F9F8), // soft cyan
     standardColor: Color(0xFFD2F0F0), // light mint-teal
     strokeColor: Color(0xFF88C7C5), // cool teal-gray
@@ -130,6 +144,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _tealDark = CustomColorScheme(
+    name: "teal",
     disabledColor: Color(0xFF122725), // dark sea green
     standardColor: Color(0xFF1C2B2A), // darkened background
     strokeColor: Color(0xFF33514F), // teal-gray border
@@ -137,6 +152,7 @@ class ColorProvider extends ChangeNotifier {
     darkerStandardColor: Color(0xFF009B8E), // deep vivid teal
   );
   final CustomColorScheme _green = CustomColorScheme(
+    name: "green",
     disabledColor: Color(0xFFE6FAF0), // softened like teal
     standardColor: Color(0xFFD1F7E6), // brighter mint green
     strokeColor: Color(0xFF7ABF9A), // cooler and clearer tone
@@ -145,6 +161,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _greenDark = CustomColorScheme(
+    name: "green",
     disabledColor: Color(0xFF132820), // darker but still green-tinted
     standardColor: Color(0xFF1B2F26),
     strokeColor: Color(0xFF355E4A), // like tealDark.strokeColor
@@ -153,6 +170,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _magenta = CustomColorScheme(
+    name: "magenta",
     disabledColor: Color(0xFFF4EAF7), // soft lilac
     standardColor: Color(0xFFF0E6F9), // gentle lavender
     strokeColor: Color(0xFFB088C4), // medium purple-gray
@@ -161,6 +179,7 @@ class ColorProvider extends ChangeNotifier {
   );
 
   final CustomColorScheme _magentaDark = CustomColorScheme(
+    name: "magenta",
     disabledColor: Color(0xFF2A1D2D), // muted dark lilac
     standardColor: Color(0xFF1F1A23), // dark background match
     strokeColor: Color(0xFF49374D), // grayish purple
