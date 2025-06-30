@@ -59,7 +59,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
 
     if (habits.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.only(top: 12.0),
+        padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
         child: Text(
           "No habits yet.",
           style: TextStyle(color: colorProvider.mutedTextColor),

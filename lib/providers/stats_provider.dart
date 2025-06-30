@@ -161,6 +161,8 @@ class StatsProvider extends ChangeNotifier {
           debugPrint("Skipped habit found, {$habitsSkipped} total");
         }
       }
+      if (day.habits.isEmpty) continue;
+
       if (habitsCompleted + habitsSkipped == day.habits.length) {
         allHabitsCompletedStreak++;
       } else {
