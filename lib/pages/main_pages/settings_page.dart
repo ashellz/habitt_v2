@@ -71,38 +71,42 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       });
                     },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.color_lens,
-                          color: colorProvider.colorScheme.strokeColor,
-                          size: 32,
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ), // spacing between icon and text
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Accent Color",
-                                style: TextStyle(
-                                  color: colorProvider.textColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                "Select a color theme for your interface",
-                                style: TextStyle(
-                                  color: colorProvider.textColor,
-                                ),
-                              ),
-                            ],
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.transparent,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.color_lens,
+                            color: colorProvider.colorScheme.strokeColor,
+                            size: 32,
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            width: 16,
+                          ), // spacing between icon and text
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Accent Color",
+                                  style: TextStyle(
+                                    color: colorProvider.textColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  "Select a color theme for your interface",
+                                  style: TextStyle(
+                                    color: colorProvider.textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
