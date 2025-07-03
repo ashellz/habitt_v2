@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -12,21 +13,12 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  DateTime _focusedDay = DateTime(
-    DateTime.now().year,
-    DateTime.now().month,
-    DateTime.now().day,
-  );
-
-  void onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      _focusedDay = day;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final calendarProvider = context.watch<CalendarProvider>();
+
+    final focusedDay = calendarProvider.focusedDay;
 
     return Scaffold(
       backgroundColor: colorProvider.backgroundColor,
@@ -52,12 +44,12 @@ class _CalendarPageState extends State<CalendarPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TableCalendar(
-                  onDaySelected: onDaySelected,
+                  onDaySelected: calendarProvider.onDaySelected,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   firstDay: DateTime.utc(2025, 1, 1),
                   lastDay: DateTime.now().add(const Duration(days: 365)),
                   focusedDay: DateTime.now(),
-                  selectedDayPredicate: (day) => isSameDay(day, _focusedDay),
+                  selectedDayPredicate: (day) => isSameDay(day, focusedDay),
                   // calendarFormat: CalendarFormat.month,
                   startingDayOfWeek: StartingDayOfWeek.monday,
                   headerStyle: HeaderStyle(

@@ -294,7 +294,7 @@ class _HabitWidgetState extends State<HabitWidget>
                   ),
                   Positioned(
                     top: 24,
-                    left: 16,
+                    left: widget.isFirstCategory ? 0 : 16,
                     bottom: 16,
 
                     child: AnimatedContainer(

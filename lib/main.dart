@@ -8,6 +8,7 @@ import 'package:habitt/pages/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -71,6 +72,7 @@ Future<void> main() async {
 
         // 4. StateProvider: No dependencies.
         ChangeNotifierProvider(create: (_) => StateProvider()),
+        ChangeNotifierProvider(create: (_) => CalendarProvider()),
       ],
       child: MyApp(prefs: prefs),
     ),
