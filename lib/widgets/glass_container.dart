@@ -15,6 +15,7 @@ class GlassContainer extends StatelessWidget {
   final EdgeInsets? padding;
   final EdgeInsets? margin;
   final Alignment alignment;
+  final bool fakeBlur;
 
   const GlassContainer({
     super.key,
@@ -33,6 +34,7 @@ class GlassContainer extends StatelessWidget {
       end: Alignment.bottomRight,
     ),
     this.color,
+    this.fakeBlur = false,
   });
 
   @override
@@ -58,7 +60,7 @@ class GlassContainer extends StatelessWidget {
               ),
 
             // Blur effect
-            if (!kDebugMode)
+            if (!kDebugMode && !fakeBlur)
               BackdropFilter(
                 enabled: true,
                 filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
