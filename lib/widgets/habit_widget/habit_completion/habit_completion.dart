@@ -95,14 +95,20 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   // Opens a dialog for selecting amount/duration completion
 
                   if (widget.habit.amount > 0) {
-                    showAnimatedBlurDialog(context, widget.habit);
+                    showAnimatedBlurDialog(
+                      context,
+                      widget.habit,
+                      widget.isToday ? DateTime.now() : focusedDay,
+                    );
                   } else {
                     showCupertinoDialog(
                       barrierDismissible: true,
                       context: context,
                       builder:
-                          (context) =>
-                              DurationCompletionDialog(habit: widget.habit),
+                          (context) => DurationCompletionDialog(
+                            habit: widget.habit,
+                            day: widget.isToday ? DateTime.now() : focusedDay,
+                          ),
                     );
                   }
                 }
@@ -219,7 +225,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   }
 }
 
-void showAnimatedBlurDialog(BuildContext context, Habit habit) {
+void showAnimatedBlurDialog(BuildContext context, Habit habit, DateTime day) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -230,7 +236,7 @@ void showAnimatedBlurDialog(BuildContext context, Habit habit) {
     // This builder is for the content of the dialog.
     // We pass the simplified dialog widget here.
     pageBuilder: (context, animation, secondaryAnimation) {
-      return EnterAmountSliderDialog(habit: habit);
+      return EnterAmountSliderDialog(habit: habit, day: day);
     },
 
     // This builder is for the transition animation.

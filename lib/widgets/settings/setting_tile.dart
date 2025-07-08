@@ -92,22 +92,24 @@ class _SettingTileState extends State<SettingTile> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        color: widget.colorProvider.textColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          color: widget.colorProvider.textColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    Text(
-                      widget.desc,
-                      style: TextStyle(color: widget.colorProvider.textColor),
-                    ),
-                  ],
+                      Text(
+                        widget.desc,
+                        style: TextStyle(color: widget.colorProvider.textColor),
+                      ),
+                    ],
+                  ),
                 ),
                 if (widget.hasSwitch)
                   Padding(

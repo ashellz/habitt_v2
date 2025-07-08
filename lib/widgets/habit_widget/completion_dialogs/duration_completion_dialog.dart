@@ -8,9 +8,14 @@ import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
 class DurationCompletionDialog extends StatelessWidget {
-  const DurationCompletionDialog({super.key, required this.habit});
+  const DurationCompletionDialog({
+    super.key,
+    required this.habit,
+    required this.day,
+  });
 
   final Habit habit;
+  final DateTime day;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,7 @@ class DurationCompletionDialog extends StatelessWidget {
           habit.id,
           stateProvider.habitDuration.inMinutes,
           context,
+          day: day,
         );
 
         Navigator.pop(context);

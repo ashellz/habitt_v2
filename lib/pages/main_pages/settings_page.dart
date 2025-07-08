@@ -58,11 +58,11 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SettingTile(
                 colorProvider: colorProvider,
-                title: "App Theme",
-                desc: "Select a color theme for your interface",
-                iconData: Icons.light_mode,
+                title: "Dark Mode",
+                desc: "Change a color theme for your interface",
+                iconData: Icons.dark_mode,
                 hasSwitch: true,
-                switchValue: !colorProvider.isDarkMode,
+                switchValue: colorProvider.isDarkMode,
                 onTap: () {
                   colorProvider.changeMode();
                 },

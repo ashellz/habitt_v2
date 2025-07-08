@@ -134,6 +134,7 @@ class _HabitWidgetState extends State<HabitWidget>
 
                   habitProvider.skipHabit(
                     widget.habit.id,
+                    context,
                     day: widget.isToday ? DateTime.now() : focusedDay,
                   );
 

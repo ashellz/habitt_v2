@@ -9,9 +9,14 @@ import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slid
 import 'package:provider/provider.dart';
 
 class EnterAmountSliderDialog extends StatefulWidget {
-  const EnterAmountSliderDialog({super.key, required this.habit});
+  const EnterAmountSliderDialog({
+    super.key,
+    required this.habit,
+    required this.day,
+  });
 
   final Habit habit;
+  final DateTime day;
 
   @override
   State<EnterAmountSliderDialog> createState() =>
@@ -69,6 +74,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                         widget.habit.id,
                         stateProvider.habitAmount,
                         context,
+                        day: widget.day,
                       );
 
                       Navigator.pop(context);
