@@ -15,6 +15,7 @@ class AdditionalTasks extends StatefulWidget {
     required this.effectZoneHeight,
     required this.minScale,
     required this.stackOffsetFactor,
+    required this.isToday,
   });
 
   final Category? category;
@@ -25,6 +26,7 @@ class AdditionalTasks extends StatefulWidget {
   final double effectZoneHeight;
   final double minScale;
   final double stackOffsetFactor;
+  final bool isToday;
 
   @override
   State<AdditionalTasks> createState() => _AdditionalTasksState();
@@ -78,6 +80,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
           ),
           for (final habit in additionalTasks)
             ScrollTransformedHabitWidget(
+              isToday: widget.isToday,
               // Assuming this is the widget from the previous answer
               isFirstCategory: false,
               habit: habit,

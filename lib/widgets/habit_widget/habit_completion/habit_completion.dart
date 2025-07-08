@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/glass_container.dart';
@@ -20,11 +21,13 @@ class CompletionDisplay extends StatefulWidget {
     required this.colorProvider,
     required this.editable,
     required this.habit,
+    required this.isToday,
   });
 
   final ColorProvider colorProvider;
   final bool editable;
   final Habit habit;
+  final bool isToday;
 
   @override
   State<CompletionDisplay> createState() => _CompletionDisplayState();
@@ -62,6 +65,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.read<HabitProvider>();
+    final focusedDay = context.watch<CalendarProvider>().focusedDay;
 
     // Main widget
     return GestureDetector(
@@ -82,7 +86,11 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 if (widget.habit.amount == 0 && widget.habit.duration == 0 ||
                     widget.habit.completed ||
                     widget.habit.skipped) {
-                  habitProvider.completeHabit(widget.habit.id, context);
+                  habitProvider.completeHabit(
+                    widget.habit.id,
+                    context,
+                    day: widget.isToday ? DateTime.now() : focusedDay,
+                  );
                 } else {
                   // Opens a dialog for selecting amount/duration completion
 
@@ -121,7 +129,11 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
       },
       onLongPress: () {
         if (widget.editable) return;
-        habitProvider.completeHabit(widget.habit.id, context);
+        habitProvider.completeHabit(
+          widget.habit.id,
+          context,
+          day: widget.isToday ? DateTime.now() : focusedDay,
+        );
       },
       child: AnimatedScale(
         duration: const Duration(milliseconds: 150),

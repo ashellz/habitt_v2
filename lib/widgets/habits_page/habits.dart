@@ -87,6 +87,8 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: HabitCategory(
+              isToday: widget.daySelected == null,
+              habits: habits,
               showAdditionalTasks: true,
               category: categoryProvider.categories.firstWhere(
                 (c) => c.id == categoryProvider.selectedCategoryId,
@@ -135,10 +137,11 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                           colorProvider,
                         ),
                         child: HabitCategory(
+                          isToday: widget.daySelected == null,
                           showAdditionalTasks: false,
                           isFirst: true,
                           category: category,
-
+                          habits: habits,
                           scrollController: widget.scrollController,
                           bottomViewportEdgeGlobalY:
                               widget.bottomViewportEdgeGlobalY,
@@ -155,6 +158,8 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: HabitCategory(
+                  isToday: widget.daySelected == null,
+                  habits: habits,
                   category: category,
                   showAdditionalTasks: false,
                   scrollController: widget.scrollController,
@@ -165,6 +170,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                 ),
               ),
         AdditionalTasks(
+          isToday: widget.daySelected == null,
           scrollController: widget.scrollController,
           bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
           effectZoneHeight: widget.effectZoneHeight,

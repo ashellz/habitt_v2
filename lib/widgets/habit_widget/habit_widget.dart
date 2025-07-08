@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -19,11 +20,13 @@ class HabitWidget extends StatefulWidget {
     required this.editable,
     required this.habit,
     required this.isFirstCategory,
+    this.isToday = true,
   });
 
   final Habit habit;
   final bool editable;
   final bool isFirstCategory;
+  final bool isToday;
 
   @override
   State<HabitWidget> createState() => _HabitWidgetState();
@@ -84,6 +87,7 @@ class _HabitWidgetState extends State<HabitWidget>
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
     final colorProvider = context.watch<ColorProvider>();
+    final focusedDay = context.watch<CalendarProvider>().focusedDay;
     final int alpha = 100;
 
     // Main container
@@ -128,7 +132,10 @@ class _HabitWidgetState extends State<HabitWidget>
                 if (_swipeOffset >= 100) {
                   debugPrint('Swiped enough to trigger action');
 
-                  habitProvider.skipHabit(widget.habit.id);
+                  habitProvider.skipHabit(
+                    widget.habit.id,
+                    day: widget.isToday ? DateTime.now() : focusedDay,
+                  );
 
                   // Reset position after action, reset it gradually so its animated
                   animateBack(); // Smooth reset
@@ -139,7 +146,7 @@ class _HabitWidgetState extends State<HabitWidget>
               },
 
               onTap:
-                  widget.editable
+                  widget.editable || !widget.isToday
                       ? null
                       : () {
                         // For navigating to edit habit page
@@ -272,19 +279,21 @@ class _HabitWidgetState extends State<HabitWidget>
                           // Completion and streak
                           Row(
                             children: [
-                              if (widget.habit.streak > 0 ||
-                                  widget.habit.completed)
-                                StreakDisplay(
-                                  streak: widget.habit.streak,
-                                  completed: widget.habit.completed,
-                                  colorProvider: colorProvider,
-                                ),
+                              if (widget.isToday)
+                                if (widget.habit.streak > 0 ||
+                                    widget.habit.completed)
+                                  StreakDisplay(
+                                    streak: widget.habit.streak,
+                                    completed: widget.habit.completed,
+                                    colorProvider: colorProvider,
+                                  ),
 
                               // Completion
                               CompletionDisplay(
                                 editable: widget.editable,
                                 colorProvider: colorProvider,
                                 habit: widget.habit,
+                                isToday: widget.isToday,
                               ),
                             ],
                           ),

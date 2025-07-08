@@ -13,6 +13,7 @@ class ScrollTransformedHabitWidget extends StatefulWidget {
   final double
   stackOffsetFactor; // Upward offset factor (percentage of item height)
   final bool isFirstCategory;
+  final bool isToday;
 
   const ScrollTransformedHabitWidget({
     super.key,
@@ -24,6 +25,7 @@ class ScrollTransformedHabitWidget extends StatefulWidget {
     required this.minScale,
     required this.stackOffsetFactor,
     required this.isFirstCategory,
+    required this.isToday,
   });
 
   @override
@@ -41,6 +43,7 @@ class _ScrollTransformedHabitWidgetState
       habit: widget.habit,
       editable: widget.editable,
       isFirstCategory: widget.isFirstCategory,
+      isToday: widget.isToday,
     );
 
     double scale = 1.0;

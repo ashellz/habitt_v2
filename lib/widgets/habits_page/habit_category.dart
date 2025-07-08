@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/models/category.dart';
-import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/scroll_transformed_habit_category_title.dart';
 import 'package:habitt/widgets/scroll_transformed_habit_widget.dart';
-import 'package:provider/provider.dart';
 
 class HabitCategory extends StatefulWidget {
   const HabitCategory({
@@ -17,6 +16,8 @@ class HabitCategory extends StatefulWidget {
     required this.effectZoneHeight,
     required this.minScale,
     required this.stackOffsetFactor,
+    required this.habits,
+    required this.isToday,
   });
 
   final bool isFirst;
@@ -28,6 +29,8 @@ class HabitCategory extends StatefulWidget {
   final double effectZoneHeight;
   final double minScale;
   final double stackOffsetFactor;
+  final List<Habit> habits;
+  final bool isToday;
 
   @override
   State<HabitCategory> createState() => _HabitCategoryState();
@@ -51,9 +54,8 @@ class _HabitCategoryState extends State<HabitCategory> {
 
   @override
   Widget build(BuildContext context) {
-    final habitProvider = context.watch<HabitProvider>();
     final categoryHabits =
-        habitProvider.habits
+        widget.habits
             .where(
               (habit) =>
                   habit.categoryId == widget.category.id && !habit.additional,
@@ -77,13 +79,12 @@ class _HabitCategoryState extends State<HabitCategory> {
               minScale: widget.minScale,
               stackOffsetFactor: widget.stackOffsetFactor,
             ),
-          // Individual habits also use their transforming wrapper
           for (final habit in categoryHabits)
             ScrollTransformedHabitWidget(
-              // Assuming this is the widget from the previous answer
+              isToday: widget.isToday,
               habit: habit,
               isFirstCategory: widget.isFirst,
-              editable: false, // Or your logic for this
+              editable: false,
               scrollController: widget.scrollController,
               bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
               effectZoneHeight: widget.effectZoneHeight,
@@ -92,6 +93,7 @@ class _HabitCategoryState extends State<HabitCategory> {
             ),
           if (widget.showAdditionalTasks)
             AdditionalTasks(
+              isToday: widget.isToday,
               hasHabits: categoryHabits.isNotEmpty,
               category: widget.category,
               scrollController: widget.scrollController,

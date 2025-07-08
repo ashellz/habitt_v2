@@ -88,46 +88,44 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateHabitInDB(Habit habit) async {
+  Future<void> updateHabitInDB(Habit habit, {DateTime? day}) async {
     if (statsProvider != null) {
       statsProvider!.addShouldRefresh(StatsType.habitsCompleted);
     }
 
+    // Save changes to the given day in Day database
+    DateTime usedDay =
+        day ??
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
     // Save the habit change
     await habit.save();
 
-    // Save changes to current day in Day database
-    final today = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-    );
-
-    final todayKey = today.toIso8601String().split('T').first;
+    final dayKey = usedDay.toIso8601String().split('T').first;
 
     // Get today's day entry
-    final day = daysBox.get(todayKey);
+    final dayEntry = daysBox.get(dayKey);
 
-    if (day != null) {
+    if (dayEntry != null) {
       // Find and update the matching habit inside today's habit list
-      final index = day.habits.indexWhere((h) => h.id == habit.id);
+      final index = dayEntry.habits.indexWhere((h) => h.id == habit.id);
       if (index != -1) {
-        day.habits[index] = habit;
+        dayEntry.habits[index] = habit;
 
         // Save the updated Day object
-        await day.save();
+        await dayEntry.save();
       } else {
         debugPrint("Habit not found in day entry");
 
         // If habit is not found in day entry, add it
-        day.habits.add(habit);
-        await day.save();
+        dayEntry.habits.add(habit);
+        await dayEntry.save();
       }
     } else {
       debugPrint("Day entry is null");
 
       // If day entry is null, create a new one
-      saveHabitDay(today);
+      saveHabitDay(usedDay);
     }
   }
 
@@ -172,18 +170,41 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void completeHabit(int id, BuildContext context) async {
-    debugPrint("Completing habit: $id");
-    final habit = habits.firstWhere((h) => h.id == id);
+  void completeHabit(
+    int id,
+    BuildContext context, {
+    required DateTime day,
+  }) async {
+    debugPrint("Completing habit: $id, day: $day");
+    late Habit habit;
+
+    if (day == DateTime.now()) {
+      habit = habits.firstWhere((h) => h.id == id);
+    } else {
+      final List<Habit> dayHabits = getHabitsFromDay(day);
+      habit = dayHabits.firstWhere((h) => h.id == id);
+    }
+
     await habit.completeHabit();
-    if (context.mounted) checkReorderCategories(context, habit);
-    updateHabitInDB(habit);
+    if (context.mounted && day == DateTime.now()) {
+      checkReorderCategories(context, habit);
+    }
+
+    updateHabitInDB(habit, day: day);
     notifyListeners();
   }
 
-  void skipHabit(int id) async {
+  void skipHabit(int id, {required DateTime day}) async {
     debugPrint("Skipping habit: $id");
-    final habit = habits.firstWhere((h) => h.id == id);
+    late Habit habit;
+
+    if (day == DateTime.now()) {
+      habit = habits.firstWhere((h) => h.id == id);
+    } else {
+      final List<Habit> dayHabits = getHabitsFromDay(day);
+      habit = dayHabits.firstWhere((h) => h.id == id);
+    }
+
     await habit.skipHabit();
     updateHabitInDB(habit);
     notifyListeners();
