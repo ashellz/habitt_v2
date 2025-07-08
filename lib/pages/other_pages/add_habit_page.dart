@@ -70,7 +70,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               ),
               CategoriesList(
                 useHabitCategory: true,
-                topPadding: 8,
+                topPadding: 16,
                 showAll: false,
                 standardColor: true,
                 habitsCount: false,

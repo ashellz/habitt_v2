@@ -103,7 +103,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
               ),
               CategoriesList(
                 useHabitCategory: true,
-                topPadding: 8,
+                topPadding: 16,
                 showAll: false,
                 standardColor: true,
                 habitsCount: false,

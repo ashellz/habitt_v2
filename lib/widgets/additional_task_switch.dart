@@ -32,8 +32,8 @@ class AdditionalTaskSwitch extends StatelessWidget {
                 ),
               ),
               Switch(
-                activeTrackColor: colorProvider.colorScheme.strokeColor,
-                activeColor: colorProvider.colorScheme.darkerStandardColor,
+                activeTrackColor: colorProvider.colorScheme.darkerStandardColor,
+                activeColor: Colors.white,
                 inactiveThumbColor: colorProvider.textColor,
                 inactiveTrackColor: colorProvider.standardColor,
                 value: stateProvider.isAdditional,
