@@ -15,6 +15,7 @@ class Habits extends StatefulWidget {
   final double effectZoneHeight;
   final double minScale;
   final double stackOffsetFactor;
+  final bool hasMainCategory;
 
   const Habits({
     super.key,
@@ -23,6 +24,7 @@ class Habits extends StatefulWidget {
     required this.effectZoneHeight,
     required this.minScale,
     required this.stackOffsetFactor,
+    this.hasMainCategory = true,
   });
 
   @override
@@ -89,14 +91,17 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
       );
     }
 
-    final List<Category> categories = categoryProvider.categoriesOrdered;
+    final List<Category> categories =
+        widget.hasMainCategory
+            ? categoryProvider.categoriesOrdered
+            : categoryProvider.categories;
 
     return Column(
       children: [
         for (final category in categories)
           if (getCategoryLength(category, context, false) > 0)
             // Check if category is first
-            if (category == categories.first)
+            if (category == categories.first && widget.hasMainCategory)
               // Put it in a glass box with animated gradient
               Padding(
                 padding: const EdgeInsets.only(top: 12),
