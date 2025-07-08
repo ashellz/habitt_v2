@@ -88,8 +88,9 @@ class AllHabitsCompletedStreak extends StatelessWidget {
 
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: colorProvider.standardColor,
+            color: colorProvider.colorScheme.standardColor,
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: colorProvider.colorScheme.strokeColor),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,12 +210,24 @@ class CompletedHabits extends StatelessWidget {
           height: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: colorProvider.standardColor,
+            color: colorProvider.colorScheme.standardColor,
+            border: Border.all(color: colorProvider.colorScheme.strokeColor),
           ),
           padding: const EdgeInsets.all(12),
           width: double.infinity,
           child: BarChart(
             BarChartData(
+              // add horizontal lines for each interval 1
+              barTouchData: BarTouchData(
+                enabled: false,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipItem:
+                      (group, groupIndex, rod, rodIndex) => BarTooltipItem(
+                        rod.toY.toString(),
+                        TextStyle(color: colorProvider.textColor),
+                      ),
+                ),
+              ),
               barGroups: List.generate(
                 7,
                 (index) => BarChartGroupData(

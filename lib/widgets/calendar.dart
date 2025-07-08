@@ -24,8 +24,9 @@ class Calendar extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: colorProvider.standardColor,
+          color: colorProvider.colorScheme.standardColor,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colorProvider.colorScheme.strokeColor),
         ),
         child: TableCalendar(
           onDaySelected: calendarProvider.onDaySelected,
