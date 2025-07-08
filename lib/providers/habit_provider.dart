@@ -93,38 +93,38 @@ class HabitProvider extends ChangeNotifier {
       statsProvider!.addShouldRefresh(StatsType.habitsCompleted);
     }
 
-    // Save changes to the given day in Day database
     DateTime usedDay =
         day ??
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-    // Save the habit change
-    await habit.save();
+    // Trying to get the real, saved habit from habitBox using the ID
+    final realHabit = habitBox.values.firstWhere(
+      (h) => h.id == habit.id,
+      orElse: () => habit, // fallback to current one if not found
+    );
+
+    // Only save if habit is in box (not a detached copy)
+    if (realHabit.isInBox) {
+      await realHabit.save();
+    } else {
+      debugPrint("Habit is not in a box, skipping save()");
+    }
 
     final dayKey = usedDay.toIso8601String().split('T').first;
-
-    // Get today's day entry
     final dayEntry = daysBox.get(dayKey);
 
     if (dayEntry != null) {
-      // Find and update the matching habit inside today's habit list
       final index = dayEntry.habits.indexWhere((h) => h.id == habit.id);
       if (index != -1) {
-        dayEntry.habits[index] = habit;
-
-        // Save the updated Day object
+        dayEntry.habits[index] = habit; // still use passed-in habit copy
         await dayEntry.save();
       } else {
         debugPrint("Habit not found in day entry");
-
-        // If habit is not found in day entry, add it
         dayEntry.habits.add(habit);
         await dayEntry.save();
       }
     } else {
       debugPrint("Day entry is null");
-
-      // If day entry is null, create a new one
       saveHabitDay(usedDay);
     }
   }
