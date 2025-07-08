@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/enter_amount_page/amount_wheel.dart';
@@ -115,200 +116,212 @@ class EnterAmountPageState extends State<EnterAmountPage> {
     final amountLabelController = stateProvider.habitAmountLabelController;
     final amountLabel = amountLabelController.text;
 
-    return Scaffold(
-      backgroundColor: colorProvider.backgroundColor,
-      body: GradientBackground(
-        child: Stack(
-          children: [
-            SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    EnterAmountDurationText(
-                      colorProvider: colorProvider,
-                      type: widget.type,
-                    ),
-                    // Amount/Duration value
-                    GestureDetector(
-                      onTap:
-                          () => showDialog(
-                            context: context,
-                            builder:
-                                (context) => SelectAmountDurationDialog(
-                                  wheelValue: wheelValue,
-                                  durationValue: durationValue,
-                                  habitAmountLabelController:
-                                      amountLabelController,
-                                  onChangedAmount: (value) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                          setState(() {
-                                            wheelValue = value;
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: colorProvider.backgroundColor,
+        statusBarIconBrightness:
+            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            colorProvider.isDarkMode
+                ? Brightness.dark
+                : Brightness.light, // for iOS
+      ),
+      child: Scaffold(
+        backgroundColor: colorProvider.backgroundColor,
+        body: GradientBackground(
+          child: Stack(
+            children: [
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      EnterAmountDurationText(
+                        colorProvider: colorProvider,
+                        type: widget.type,
+                      ),
+                      // Amount/Duration value
+                      GestureDetector(
+                        onTap:
+                            () => showDialog(
+                              context: context,
+                              builder:
+                                  (context) => SelectAmountDurationDialog(
+                                    wheelValue: wheelValue,
+                                    durationValue: durationValue,
+                                    habitAmountLabelController:
+                                        amountLabelController,
+                                    onChangedAmount: (value) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                            setState(() {
+                                              wheelValue = value;
+                                            });
                                           });
-                                        });
-                                  },
-                                  onChangedHours: (value) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                          setState(() {
-                                            durationValue = Duration(
-                                              hours: value,
-                                              minutes:
-                                                  durationValue.inMinutes % 60,
-                                            );
+                                    },
+                                    onChangedHours: (value) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                            setState(() {
+                                              durationValue = Duration(
+                                                hours: value,
+                                                minutes:
+                                                    durationValue.inMinutes %
+                                                    60,
+                                              );
+                                            });
                                           });
-                                        });
-                                  },
-                                  onChangedMinutes: (value) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                          setState(() {
-                                            durationValue = Duration(
-                                              hours: durationValue.inHours,
-                                              minutes: value,
-                                            );
+                                    },
+                                    onChangedMinutes: (value) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                            setState(() {
+                                              durationValue = Duration(
+                                                hours: durationValue.inHours,
+                                                minutes: value,
+                                              );
+                                            });
                                           });
-                                        });
-                                  },
-                                  type: widget.type,
-                                ),
-                          ).whenComplete(
-                            () => setState(() {
-                              if (amountLabelController.text.isEmpty) {
-                                amountLabelController.text =
-                                    localizations.times;
-                              }
-                            }),
-                          ),
-                      child:
-                          widget.type == HabitType.amount
-                              ? SizedBox(
-                                width: width - 32,
-                                child: Text.rich(
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: '$wheelValue ',
-                                        style: TextStyle(
-                                          fontSize: 56,
-                                          height: 0,
-                                          fontWeight: FontWeight.bold,
-                                          color: colorProvider.textColor,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: amountLabel,
-                                        style: TextStyle(
-                                          fontSize: 42,
-                                          height: 0,
-                                          color: colorProvider.textColor,
-                                        ),
-                                      ),
-                                    ],
+                                    },
+                                    type: widget.type,
                                   ),
-                                ),
-                              )
-                              : Row(
-                                children: [
-                                  AnimatedOpacity(
-                                    opacity: editingHours ? 1 : 0.5,
-                                    duration: Duration(milliseconds: 150),
-                                    child: Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                durationValue.inHours
-                                                    .toString(),
-                                            style: TextStyle(
-                                              fontSize: 56,
-                                              height: 0,
-                                              fontWeight: FontWeight.bold,
-                                              color: colorProvider.textColor,
-                                            ),
+                            ).whenComplete(
+                              () => setState(() {
+                                if (amountLabelController.text.isEmpty) {
+                                  amountLabelController.text =
+                                      localizations.times;
+                                }
+                              }),
+                            ),
+                        child:
+                            widget.type == HabitType.amount
+                                ? SizedBox(
+                                  width: width - 32,
+                                  child: Text.rich(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '$wheelValue ',
+                                          style: TextStyle(
+                                            fontSize: 56,
+                                            height: 0,
+                                            fontWeight: FontWeight.bold,
+                                            color: colorProvider.textColor,
                                           ),
-                                          TextSpan(
-                                            text: 'h',
-                                            style: TextStyle(
-                                              fontSize: 56,
-                                              height: 0,
-                                              fontWeight: FontWeight.w200,
-                                              color: colorProvider.textColor,
-                                            ),
+                                        ),
+                                        TextSpan(
+                                          text: amountLabel,
+                                          style: TextStyle(
+                                            fontSize: 42,
+                                            height: 0,
+                                            color: colorProvider.textColor,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  AnimatedOpacity(
-                                    opacity: editingHours ? 0.5 : 1,
-                                    duration: Duration(milliseconds: 150),
-                                    child: Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                "${durationValue.inMinutes % 60}",
-                                            style: TextStyle(
-                                              fontSize: 56,
-                                              height: 0,
-                                              fontWeight: FontWeight.bold,
-                                              color: colorProvider.textColor,
+                                )
+                                : Row(
+                                  children: [
+                                    AnimatedOpacity(
+                                      opacity: editingHours ? 1 : 0.5,
+                                      duration: Duration(milliseconds: 150),
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text:
+                                                  durationValue.inHours
+                                                      .toString(),
+                                              style: TextStyle(
+                                                fontSize: 56,
+                                                height: 0,
+                                                fontWeight: FontWeight.bold,
+                                                color: colorProvider.textColor,
+                                              ),
                                             ),
-                                          ),
-                                          TextSpan(
-                                            text: 'm',
-                                            style: TextStyle(
-                                              fontSize: 56,
-                                              height: 0,
-                                              fontWeight: FontWeight.w200,
-                                              color: colorProvider.textColor,
+                                            TextSpan(
+                                              text: 'h',
+                                              style: TextStyle(
+                                                fontSize: 56,
+                                                height: 0,
+                                                fontWeight: FontWeight.w200,
+                                                color: colorProvider.textColor,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  SwitchValuesArrow(
-                                    editingHours: editingHours,
-                                    switchValues: switchValues,
-                                  ),
-                                ],
-                              ),
-                    ),
-                    TipText(
-                      width: width,
-                      localizations: localizations,
-                      colorProvider: colorProvider,
-                      type: widget.type,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            //Wheel itself
-            Stack(
-              children: [
-                Positioned(
-                  left: offset,
-                  bottom: -offset,
-                  child: InteractiveWheel(
-                    wheelValue: wheelValue,
-                    decreaseWheelValue: decreaseWheelValue,
-                    increaseWheelValue: increaseWheelValue,
-                    onDone: onDone,
+                                    const SizedBox(width: 8),
+                                    AnimatedOpacity(
+                                      opacity: editingHours ? 0.5 : 1,
+                                      duration: Duration(milliseconds: 150),
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text:
+                                                  "${durationValue.inMinutes % 60}",
+                                              style: TextStyle(
+                                                fontSize: 56,
+                                                height: 0,
+                                                fontWeight: FontWeight.bold,
+                                                color: colorProvider.textColor,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'm',
+                                              style: TextStyle(
+                                                fontSize: 56,
+                                                height: 0,
+                                                fontWeight: FontWeight.w200,
+                                                color: colorProvider.textColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SwitchValuesArrow(
+                                      editingHours: editingHours,
+                                      switchValues: switchValues,
+                                    ),
+                                  ],
+                                ),
+                      ),
+                      TipText(
+                        width: width,
+                        localizations: localizations,
+                        colorProvider: colorProvider,
+                        type: widget.type,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+
+              //Wheel itself
+              Stack(
+                children: [
+                  Positioned(
+                    left: offset,
+                    bottom: -offset,
+                    child: InteractiveWheel(
+                      wheelValue: wheelValue,
+                      decreaseWheelValue: decreaseWheelValue,
+                      increaseWheelValue: increaseWheelValue,
+                      onDone: onDone,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

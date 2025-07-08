@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -45,61 +46,72 @@ class _AddHabitPageState extends State<AddHabitPage> {
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
 
-    return Scaffold(
-      backgroundColor: colorProvider.backgroundColor,
-      body: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ListView(
-            children: [
-              NavBackButton(colorProvider: colorProvider),
-              Text(
-                localizations.newHabit,
-                style: TextStyle(
-                  fontSize: 38,
-                  fontWeight: FontWeight.bold,
-                  color: colorProvider.colorScheme.vividColor,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: colorProvider.backgroundColor,
+        statusBarIconBrightness:
+            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            colorProvider.isDarkMode
+                ? Brightness.dark
+                : Brightness.light, // for iOS
+      ),
+      child: Scaffold(
+        backgroundColor: colorProvider.backgroundColor,
+        body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListView(
+              children: [
+                NavBackButton(colorProvider: colorProvider),
+                Text(
+                  localizations.newHabit,
+                  style: TextStyle(
+                    fontSize: 38,
+                    fontWeight: FontWeight.bold,
+                    color: colorProvider.colorScheme.vividColor,
+                  ),
                 ),
-              ),
-              SelectedHabitDisplay(
-                streak: 0,
-                amountCompleted: 0,
-                durationCompleted: 0,
-                completed: false,
-              ),
-              CategoriesList(
-                useHabitCategory: true,
-                topPadding: 16,
-                showAll: false,
-                standardColor: true,
-                habitsCount: false,
-              ),
-              CustomTextField(
-                title: localizations.habitName,
-                controller: nameController,
-              ),
-              CustomTextField(
-                topPadding: 16,
-                title: localizations.notes,
-                controller: descController,
-                maxLines: 5,
-              ),
-              MoreOptionsText(localizations: localizations),
-              SelectHabitTypeOptions(),
-              AdditionalTaskSwitch(
-                colorProvider: colorProvider,
-                stateProvider: stateProvider,
-              ),
-              AddHabitButton(
-                nameController: nameController,
-                habitProvider: habitProvider,
-                descController: descController,
-                stateProvider: stateProvider,
-                categoryProvider: categoryProvider,
-                localizations: localizations,
-              ),
-            ],
+                SelectedHabitDisplay(
+                  streak: 0,
+                  amountCompleted: 0,
+                  durationCompleted: 0,
+                  completed: false,
+                ),
+                CategoriesList(
+                  useHabitCategory: true,
+                  topPadding: 16,
+                  showAll: false,
+                  standardColor: true,
+                  habitsCount: false,
+                ),
+                CustomTextField(
+                  title: localizations.habitName,
+                  controller: nameController,
+                ),
+                CustomTextField(
+                  topPadding: 16,
+                  title: localizations.notes,
+                  controller: descController,
+                  maxLines: 5,
+                ),
+                MoreOptionsText(localizations: localizations),
+                SelectHabitTypeOptions(),
+                AdditionalTaskSwitch(
+                  colorProvider: colorProvider,
+                  stateProvider: stateProvider,
+                ),
+                AddHabitButton(
+                  nameController: nameController,
+                  habitProvider: habitProvider,
+                  descController: descController,
+                  stateProvider: stateProvider,
+                  categoryProvider: categoryProvider,
+                  localizations: localizations,
+                ),
+              ],
+            ),
           ),
         ),
       ),
