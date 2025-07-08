@@ -13,4 +13,13 @@ class CalendarProvider extends ChangeNotifier {
     _focusedDay = day;
     notifyListeners();
   }
+
+  void resetFocusedDay() {
+    _focusedDay = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
+    notifyListeners();
+  }
 }

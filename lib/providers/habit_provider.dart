@@ -4,9 +4,12 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
+
+  DateTime? _dateJoined;
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
 
@@ -31,6 +34,19 @@ class HabitProvider extends ChangeNotifier {
   Future<void> init() async {
     await _loadHabits();
     _fillToday();
+    _loadDateJoined();
+  }
+
+  Future<void> _loadDateJoined() async {
+    final prefs = await SharedPreferences.getInstance();
+    final dateString = prefs.getString('dateJoined');
+    if (dateString != null) {
+      _dateJoined = DateTime.parse(dateString);
+    } else {
+      _dateJoined = DateTime.now();
+      prefs.setString("dateJoined", _dateJoined.toString());
+    }
+    notifyListeners();
   }
 
   Future<void> _loadHabits() async {
@@ -115,6 +131,25 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  // Function used to get list of habits from a specific day from database
+  getHabitsFromDay(DateTime day) {
+    final dayKey = day.toIso8601String().split('T').first;
+    Day? dayEntry = daysBox.get(dayKey);
+    List<Habit> dayHabits = dayEntry?.habits ?? [];
+
+    // If day is empty and is before tomorrow, add current habits to it
+    if (dayHabits.isEmpty &&
+        day.isBefore(DateTime.now().add(Duration(days: 1))) &&
+        day.isAfter(_dateJoined!.subtract(Duration(days: 1)))) {
+      saveHabitDay(day, resetCompletion: true);
+    }
+
+    dayEntry = daysBox.get(dayKey);
+    dayHabits = dayEntry?.habits ?? [];
+
+    return dayHabits;
+  }
+
   void addHabit(Habit habit) {
     if (statsProvider != null) {
       statsProvider!.addShouldRefresh(StatsType.highestAmountOfHabitsLastWeek);
@@ -197,12 +232,21 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveHabitDay(DateTime day) async {
+  Future<void> saveHabitDay(
+    DateTime day, {
+    bool resetCompletion = false,
+  }) async {
     final daySimple = DateTime(day.year, day.month, day.day);
     final String dayKey = daySimple.toIso8601String().split('T').first;
     debugPrint("Saving day at: $daySimple");
 
-    final clonedHabits = habits.map((h) => h.copy()).toList();
+    late final List<Habit> clonedHabits;
+
+    if (resetCompletion) {
+      clonedHabits = habits.map((h) => h.copyResetCompletion()).toList();
+    } else {
+      clonedHabits = habits.map((h) => h.copy()).toList();
+    }
 
     daysBox.put(dayKey, Day(date: daySimple, habits: clonedHabits));
   }

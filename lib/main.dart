@@ -35,6 +35,7 @@ Future<void> main() async {
   );
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+
   runApp(
     MultiProvider(
       providers: [

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/calendar.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -35,6 +35,11 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final calendarProvider = context.read<CalendarProvider>();
+      calendarProvider.resetFocusedDay();
+    });
+
     _scrollController.addListener(_onScroll);
     // Get initial geometry after the first frame
     WidgetsBinding.instance.addPostFrameCallback(
@@ -109,126 +114,55 @@ class _CalendarPageState extends State<CalendarPage> {
 
     final focusedDay = calendarProvider.focusedDay;
 
-    return Scaffold(
-      backgroundColor: colorProvider.backgroundColor,
-      body: ListView(
-        key: _listViewKey,
-        controller: _scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Calendar",
-                  style: TextStyle(
-                    fontSize: 38,
-                    color: colorProvider.textColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Calendar(
-                  colorProvider: colorProvider,
-                  calendarProvider: calendarProvider,
-                  focusedDay: focusedDay,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 24),
-          Habits(
-            hasMainCategory: false,
-            scrollController: _scrollController,
-            bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
-            effectZoneHeight: _effectZoneHeight,
-            minScale: _minScale,
-            stackOffsetFactor: _stackOffsetFactor,
-          ),
-          const SizedBox(height: 100),
-        ],
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: colorProvider.backgroundColor,
+        statusBarIconBrightness:
+            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            colorProvider.isDarkMode
+                ? Brightness.dark
+                : Brightness.light, // for iOS
       ),
-    );
-  }
-}
-
-class Calendar extends StatelessWidget {
-  const Calendar({
-    super.key,
-    required this.colorProvider,
-    required this.calendarProvider,
-    required this.focusedDay,
-  });
-
-  final ColorProvider colorProvider;
-  final CalendarProvider calendarProvider;
-  final DateTime focusedDay;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colorProvider.standardColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: TableCalendar(
-          onDaySelected: calendarProvider.onDaySelected,
-          availableGestures: AvailableGestures.horizontalSwipe,
-          firstDay: DateTime.utc(2025, 1, 1),
-          lastDay: DateTime.now().add(const Duration(days: 365)),
-          focusedDay: DateTime.now(),
-          selectedDayPredicate: (day) => isSameDay(day, focusedDay),
-          // calendarFormat: CalendarFormat.month,
-          startingDayOfWeek: StartingDayOfWeek.monday,
-          headerStyle: HeaderStyle(
-            titleTextStyle: TextStyle(
-              color: colorProvider.textColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      child: Scaffold(
+        backgroundColor: colorProvider.backgroundColor,
+        body: ListView(
+          key: _listViewKey,
+          controller: _scrollController,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Calendar",
+                    style: TextStyle(
+                      fontSize: 38,
+                      color: colorProvider.textColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Calendar(
+                    colorProvider: colorProvider,
+                    calendarProvider: calendarProvider,
+                    focusedDay: focusedDay,
+                  ),
+                ],
+              ),
             ),
-            formatButtonVisible: false,
-            leftChevronIcon: Icon(
-              Icons.chevron_left,
-              color: colorProvider.textColor,
+            SizedBox(height: 24),
+            Habits(
+              daySelected: focusedDay,
+              hasMainCategory: false,
+              scrollController: _scrollController,
+              bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
+              effectZoneHeight: _effectZoneHeight,
+              minScale: _minScale,
+              stackOffsetFactor: _stackOffsetFactor,
             ),
-            rightChevronIcon: Icon(
-              Icons.chevron_right,
-              color: colorProvider.textColor,
-            ),
-          ),
-          daysOfWeekStyle: DaysOfWeekStyle(
-            dowTextFormatter: (date, locale) {
-              return DateFormat.E(locale).format(date).toUpperCase();
-            },
-            weekendStyle: TextStyle(
-              color: colorProvider.textColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-            ),
-            weekdayStyle: TextStyle(
-              color: colorProvider.textColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-            ),
-          ),
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: colorProvider.colorScheme.strokeColor,
-              shape: BoxShape.circle,
-            ),
-            selectedDecoration: BoxDecoration(
-              color: colorProvider.colorScheme.darkerStandardColor,
-              shape: BoxShape.circle,
-            ),
-            outsideDaysVisible: false,
-
-            defaultTextStyle: TextStyle(color: colorProvider.textColor),
-            weekendTextStyle: TextStyle(color: colorProvider.textColor),
-          ),
+            const SizedBox(height: 100),
+          ],
         ),
       ),
     );

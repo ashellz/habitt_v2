@@ -58,6 +58,13 @@ class _SetupNamePageState extends State<SetupNamePage>
                     debugPrint("Setting name to: ${_nameController.text}");
                     widget.stateSetter(() {
                       widget.prefs.setString('name', _nameController.text);
+                      final dateJoined = widget.prefs.getString('dateJoined');
+                      if (dateJoined == null) {
+                        widget.prefs.setString(
+                          'dateJoined',
+                          DateTime.now().toString(),
+                        );
+                      }
                     });
                   },
                   child: Icon(

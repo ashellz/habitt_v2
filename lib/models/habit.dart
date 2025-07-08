@@ -58,6 +58,27 @@ class Habit extends HiveObject {
     );
   }
 
+  Habit copyResetCompletion() {
+    return Habit(
+      id: id,
+      name: name,
+      completed: false,
+      streak: streak,
+      description: description,
+      iconPath: iconPath,
+      categoryId: categoryId,
+      tag: tag,
+      amount: amount,
+      amountCompleted: 0,
+      amountLabel: amountLabel,
+      duration: duration,
+      durationCompleted: 0,
+      longestStreak: longestStreak,
+      skipped: false,
+      additional: additional,
+    );
+  }
+
   void updateHabit(Habit habit) {
     name = habit.name;
     description = habit.description;

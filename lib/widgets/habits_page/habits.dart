@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -16,6 +17,7 @@ class Habits extends StatefulWidget {
   final double minScale;
   final double stackOffsetFactor;
   final bool hasMainCategory;
+  final DateTime? daySelected;
 
   const Habits({
     super.key,
@@ -25,6 +27,7 @@ class Habits extends StatefulWidget {
     required this.minScale,
     required this.stackOffsetFactor,
     this.hasMainCategory = true,
+    this.daySelected,
   });
 
   @override
@@ -38,12 +41,21 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
     )..repeat(reverse: true);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+  }
+
+  List<Habit> _getHabits() {
+    final habitProvider = context.watch<HabitProvider>();
+
+    if (widget.daySelected == null) {
+      return habitProvider.habits;
+    }
+
+    return habitProvider.getHabitsFromDay(widget.daySelected!);
   }
 
   @override
@@ -55,8 +67,8 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final categoryProvider = context.watch<CategoryProvider>();
-    final habitProvider = context.watch<HabitProvider>();
-    final habits = habitProvider.habits;
+
+    final habits = _getHabits();
     final ColorProvider colorProvider = context.watch<ColorProvider>();
 
     if (habits.isEmpty) {
