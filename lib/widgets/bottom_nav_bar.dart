@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/glass_container.dart';
 import 'package:provider/provider.dart';
 
@@ -144,6 +145,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final canEdit = context.watch<StateProvider>().canEditCalendar;
+
+    final colorProvider = context.watch<ColorProvider>();
+
     return GlassContainer(
       padding: const EdgeInsets.all(2),
       height: 64,
@@ -156,30 +161,73 @@ class _BottomNavBarState extends State<BottomNavBar> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             left: _selectedIndex * MediaQuery.of(context).size.width / 5.85,
-            child: GlassContainer(
-              width: 92,
-              height: 60,
-              color: context.watch<ColorProvider>().standardColor,
-              borderRadius: 100,
-              borderColor: Colors.transparent,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 150),
+              opacity: canEdit ? 0 : 1,
+              child: GlassContainer(
+                width: 92,
+                height: 60,
+                color: context.watch<ColorProvider>().standardColor,
+                borderRadius: 100,
+                borderColor: Colors.transparent,
+              ),
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_navItems.length, (index) {
-                Widget navItemWidget = _buildNavItem(index);
-                if (index > 0) {
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: navItemWidget,
-                  );
-                }
-                return navItemWidget;
-              }),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 150),
+
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SizeTransition(
+                sizeFactor: animation,
+                axis: Axis.horizontal,
+                axisAlignment: 0.0,
+                child: FadeTransition(
+                  opacity: animation,
+                  child: Center(child: child),
+                ),
+              );
+            },
+            child: Padding(
+              key: ValueKey<bool>(canEdit),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child:
+                  canEdit
+                      ? Row(
+                        children: [
+                          Text(
+                            "Editing",
+                            style: TextStyle(
+                              color: colorProvider.textColor,
+                              decoration: TextDecoration.none,
+                              fontSize: 24,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: Image.asset(
+                              "assets/images/icons/pencil.png",
+                            ),
+                          ),
+                        ],
+                      )
+                      : Row(
+                        mainAxisSize: MainAxisSize.min,
+
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(_navItems.length, (index) {
+                          Widget navItemWidget = _buildNavItem(index);
+                          if (index > 0) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: navItemWidget,
+                            );
+                          }
+                          return navItemWidget;
+                        }),
+                      ),
             ),
           ),
         ],

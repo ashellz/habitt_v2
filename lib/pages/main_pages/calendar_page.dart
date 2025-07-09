@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/calendar.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
@@ -104,8 +105,6 @@ class _CalendarPageState extends State<CalendarPage> {
     super.dispose();
   }
 
-  bool canEdit = false;
-
   @override
   Widget build(BuildContext context) {
     // Ensure viewport geometry is updated if screen size changes (e.g. orientation)
@@ -115,7 +114,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
     final colorProvider = context.watch<ColorProvider>();
     final calendarProvider = context.watch<CalendarProvider>();
+    final stateProvider = context.watch<StateProvider>();
 
+    final canEdit = stateProvider.canEditCalendar;
     final focusedDay = calendarProvider.focusedDay;
 
     return AnnotatedRegion(
@@ -131,7 +132,13 @@ class _CalendarPageState extends State<CalendarPage> {
       child: Scaffold(
         backgroundColor: colorProvider.backgroundColor,
         body: GradientBackground(
-          child: _calendarPage(colorProvider, calendarProvider, focusedDay),
+          child: _calendarPage(
+            colorProvider,
+            calendarProvider,
+            focusedDay,
+            canEdit,
+            stateProvider,
+          ),
         ),
       ),
     );
@@ -141,6 +148,8 @@ class _CalendarPageState extends State<CalendarPage> {
     ColorProvider colorProvider,
     CalendarProvider calendarProvider,
     DateTime focusedDay,
+    bool canEdit,
+    StateProvider stateProvider,
   ) {
     return ListView(
       key: _listViewKey,
@@ -154,38 +163,77 @@ class _CalendarPageState extends State<CalendarPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FittedBox(
-                    child: Text(
-                      "Calendar",
-                      style: TextStyle(
-                        fontSize: 38,
-                        color: colorProvider.textColor,
-                        fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text(
+                          "Calendar",
+                          style: TextStyle(
+                            fontSize: 38,
+                            color: colorProvider.textColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  CupertinoButton(
-                    color: colorProvider.standardColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      "Edit",
-                      style: TextStyle(
-                        color: colorProvider.textColor,
-                        fontSize: 16,
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        canEdit = !canEdit;
-                      });
+                  Row(
+                    children: [
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        switchInCurve: Curves.easeOut,
+                        switchOutCurve: Curves.easeIn,
+                        transitionBuilder: (
+                          Widget child,
+                          Animation<double> animation,
+                        ) {
+                          final offsetAnimation = Tween<Offset>(
+                            begin: const Offset(0.3, 0), // from right to left
+                            end: Offset.zero,
+                          ).animate(animation);
 
-                      if (!canEdit) {
-                        // assign streaks
-                      }
-                    },
+                          return FadeTransition(
+                            opacity: animation,
+                            child: SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            ),
+                          );
+                        },
+                        child:
+                            canEdit
+                                ? Padding(
+                                  key: const ValueKey(
+                                    'cancel',
+                                  ), // Important for AnimatedSwitcher
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: DefaultCupertinoButton(
+                                    textColor: colorProvider.backgroundColor,
+                                    color: colorProvider.textColor,
+                                    onPressed:
+                                        () =>
+                                            stateProvider.canEditCalendar =
+                                                false,
+                                    text: "Cancel",
+                                  ),
+                                )
+                                : const SizedBox.shrink(
+                                  key: ValueKey('empty'),
+                                ), // No space
+                      ),
+                      DefaultCupertinoButton(
+                        textColor: Colors.white,
+                        onPressed: () {
+                          stateProvider.canEditCalendar = !canEdit;
+
+                          if (!canEdit) {
+                            // assign streaks
+                          }
+                        },
+                        text: canEdit ? "Save" : "Edit",
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -209,6 +257,40 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         const SizedBox(height: 100),
       ],
+    );
+  }
+}
+
+class DefaultCupertinoButton extends StatelessWidget {
+  const DefaultCupertinoButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+    this.color,
+    this.textColor,
+  });
+
+  final VoidCallback? onPressed;
+  final String text;
+  final Color? color;
+  final Color? textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorProvider = context.watch<ColorProvider>();
+
+    return CupertinoButton(
+      color: color ?? colorProvider.colorScheme.darkerStandardColor,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      borderRadius: BorderRadius.circular(24),
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: TextStyle(
+          color: textColor ?? colorProvider.textColor,
+          fontSize: 16,
+        ),
+      ),
     );
   }
 }
