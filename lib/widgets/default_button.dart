@@ -36,36 +36,42 @@ class DefaultButton extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           curve: Curves.easeOut,
-          child: SizedBox(
-            height: 50,
-            width: MediaQuery.of(context).size.width - 32,
-            child:
-                outlined
-                    ? OutlinedButton(
-                      onPressed: () => enabled ? onPressed() : null,
+          child: IgnorePointer(
+            ignoring: !enabled,
+            child: SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width - 32,
+              child:
+                  outlined
+                      ? OutlinedButton(
+                        onPressed: () => enabled ? onPressed() : null,
+                        style: OutlinedButton.styleFrom(
+                          enableFeedback: false,
+                          side: BorderSide(color: buttonColor),
 
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: buttonColor),
-
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(24)),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(24)),
+                          ),
+                        ),
+                        child: Text(
+                          label,
+                          style: TextStyle(color: colorProvider.textColor),
+                        ),
+                      )
+                      : ElevatedButton(
+                        onPressed: () => enabled ? onPressed() : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: buttonColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(24)),
+                          ),
+                        ),
+                        child: Text(
+                          label,
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      child: Text(
-                        label,
-                        style: TextStyle(color: colorProvider.textColor),
-                      ),
-                    )
-                    : ElevatedButton(
-                      onPressed: () => enabled ? onPressed() : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: buttonColor,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(24)),
-                        ),
-                      ),
-                      child: Text(label, style: TextStyle(color: Colors.white)),
-                    ),
+            ),
           ),
         ),
       ),
