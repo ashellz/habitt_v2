@@ -352,10 +352,8 @@ class HabitProvider extends ChangeNotifier {
             );
 
             if (completed) {
-              if (!skipped) {
-                streak++;
-              }
-            } else {
+              streak++;
+            } else if (!skipped) {
               shouldBreak = true;
               break;
             }
