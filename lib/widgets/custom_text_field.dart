@@ -71,19 +71,19 @@ class CustomTextField extends StatelessWidget {
 
           // Borders
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            borderRadius: BorderRadius.all(Radius.circular(24.0)),
             borderSide: BorderSide(
               color: colorProvider.colorScheme.strokeColor,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(24.0),
             borderSide: BorderSide(
               color: colorProvider.colorScheme.strokeColor,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            borderRadius: BorderRadius.all(Radius.circular(24.0)),
             borderSide: BorderSide(
               color: colorProvider.colorScheme.strokeColor,
             ),

@@ -123,7 +123,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(24),
                     color: colorProvider.colorScheme.standardColor.withAlpha(
                       255,
                     ),

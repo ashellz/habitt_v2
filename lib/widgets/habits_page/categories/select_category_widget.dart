@@ -55,7 +55,7 @@ class SelectCategoryWidget extends StatelessWidget {
                     : standardColor
                     ? colorProvider.disabledColor
                     : colorScheme.disabledColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color:
                   isSelected

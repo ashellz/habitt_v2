@@ -148,7 +148,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
           clipBehavior: Clip.hardEdge,
           height: 50,
           width: 50,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
           child: Stack(
             children: [
               Positioned.fill(

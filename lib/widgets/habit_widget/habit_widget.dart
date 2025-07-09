@@ -193,7 +193,7 @@ class _HabitWidgetState extends State<HabitWidget>
                               Colors.transparent,
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(left: 20),
@@ -242,7 +242,7 @@ class _HabitWidgetState extends State<HabitWidget>
                       height: 74,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(24),
                         color: colorProvider.habitColor,
                         boxShadow: [
                           BoxShadow(

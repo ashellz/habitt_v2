@@ -56,7 +56,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                 isSelected
                     ? colorProvider.standardColor
                     : colorProvider.disabledColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color:
                   isSelected

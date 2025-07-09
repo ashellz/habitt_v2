@@ -48,7 +48,7 @@ class DefaultButton extends StatelessWidget {
                         side: BorderSide(color: buttonColor),
 
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.all(Radius.circular(24)),
                         ),
                       ),
                       child: Text(
@@ -61,7 +61,7 @@ class DefaultButton extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: buttonColor,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.all(Radius.circular(24)),
                         ),
                       ),
                       child: Text(label, style: TextStyle(color: Colors.white)),

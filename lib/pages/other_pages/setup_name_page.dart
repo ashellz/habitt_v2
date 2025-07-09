@@ -126,7 +126,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                             color: colorProvider.mutedTextColor,
                           ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(24),
                             borderSide: BorderSide.none,
                           ),
                           suffix: getSuffixIcon(colorProvider),

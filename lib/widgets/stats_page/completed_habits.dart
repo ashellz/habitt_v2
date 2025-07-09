@@ -51,7 +51,7 @@ class CompletedHabits extends StatelessWidget {
         Container(
           height: 200,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(24),
             color: colorProvider.colorScheme.standardColor,
             border: Border.all(color: colorProvider.colorScheme.strokeColor),
           ),

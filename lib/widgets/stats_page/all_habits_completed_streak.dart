@@ -24,7 +24,7 @@ class AllHabitsCompletedStreak extends StatelessWidget {
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: colorProvider.colorScheme.standardColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(color: colorProvider.colorScheme.strokeColor),
           ),
           child: Column(
