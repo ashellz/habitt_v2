@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/settings/select_color_sheet.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
 import 'package:provider/provider.dart';
@@ -29,45 +30,47 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       child: Scaffold(
         backgroundColor: colorProvider.backgroundColor,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ListView(
-            children: [
-              Text(
-                "Settings",
-                style: TextStyle(
-                  fontSize: 38,
-                  color: colorProvider.textColor,
-                  fontWeight: FontWeight.bold,
+        body: GradientBackground(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              children: [
+                Text(
+                  "Settings",
+                  style: TextStyle(
+                    fontSize: 38,
+                    color: colorProvider.textColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
 
-              SettingTile(
-                colorProvider: colorProvider,
-                title: "Accent Color",
-                desc: "Select a color pallete for your interface",
-                iconData: Icons.color_lens,
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder:
-                        (context) =>
-                            SelectColorSheet(colorProvider: colorProvider),
-                  );
-                },
-              ),
-              SettingTile(
-                colorProvider: colorProvider,
-                title: "Dark Mode",
-                desc: "Change a color theme for your interface",
-                iconData: Icons.dark_mode,
-                hasSwitch: true,
-                switchValue: colorProvider.isDarkMode,
-                onTap: () {
-                  colorProvider.changeMode();
-                },
-              ),
-            ],
+                SettingTile(
+                  colorProvider: colorProvider,
+                  title: "Accent Color",
+                  desc: "Select a color pallete for your interface",
+                  iconData: Icons.color_lens,
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder:
+                          (context) =>
+                              SelectColorSheet(colorProvider: colorProvider),
+                    );
+                  },
+                ),
+                SettingTile(
+                  colorProvider: colorProvider,
+                  title: "Dark Mode",
+                  desc: "Change a color theme for your interface",
+                  iconData: Icons.dark_mode,
+                  hasSwitch: true,
+                  switchValue: colorProvider.isDarkMode,
+                  onTap: () {
+                    colorProvider.changeMode();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/calendar.dart';
+import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
 import 'package:provider/provider.dart';
 
@@ -102,6 +104,8 @@ class _CalendarPageState extends State<CalendarPage> {
     super.dispose();
   }
 
+  bool canEdit = false;
+
   @override
   Widget build(BuildContext context) {
     // Ensure viewport geometry is updated if screen size changes (e.g. orientation)
@@ -126,70 +130,85 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       child: Scaffold(
         backgroundColor: colorProvider.backgroundColor,
-        body: ListView(
-          key: _listViewKey,
-          controller: _scrollController,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FittedBox(
-                        child: Text(
-                          "Calendar",
-                          style: TextStyle(
-                            fontSize: 38,
-                            color: colorProvider.textColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorProvider.standardColor,
+        body: GradientBackground(
+          child: _calendarPage(colorProvider, calendarProvider, focusedDay),
+        ),
+      ),
+    );
+  }
 
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          "Edit",
-                          style: TextStyle(
-                            color: colorProvider.textColor,
-                            fontSize: 16,
-                          ),
-                        ),
+  ListView _calendarPage(
+    ColorProvider colorProvider,
+    CalendarProvider calendarProvider,
+    DateTime focusedDay,
+  ) {
+    return ListView(
+      key: _listViewKey,
+      controller: _scrollController,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FittedBox(
+                    child: Text(
+                      "Calendar",
+                      style: TextStyle(
+                        fontSize: 38,
+                        color: colorProvider.textColor,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
                   ),
-                  Calendar(
-                    colorProvider: colorProvider,
-                    calendarProvider: calendarProvider,
-                    focusedDay: focusedDay,
+                  CupertinoButton(
+                    color: colorProvider.standardColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: Text(
+                      "Edit",
+                      style: TextStyle(
+                        color: colorProvider.textColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        canEdit = !canEdit;
+                      });
+
+                      if (!canEdit) {
+                        // assign streaks
+                      }
+                    },
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 24),
-            Habits(
-              daySelected: focusedDay,
-              hasMainCategory: false,
-              scrollController: _scrollController,
-              bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
-              effectZoneHeight: _effectZoneHeight,
-              minScale: _minScale,
-              stackOffsetFactor: _stackOffsetFactor,
-            ),
-            const SizedBox(height: 100),
-          ],
+              Calendar(
+                colorProvider: colorProvider,
+                calendarProvider: calendarProvider,
+                focusedDay: focusedDay,
+              ),
+            ],
+          ),
         ),
-      ),
+        SizedBox(height: 24),
+        Habits(
+          daySelected: focusedDay,
+          hasMainCategory: false,
+          scrollController: _scrollController,
+          bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
+          effectZoneHeight: _effectZoneHeight,
+          minScale: _minScale,
+          stackOffsetFactor: _stackOffsetFactor,
+        ),
+        const SizedBox(height: 100),
+      ],
     );
   }
 }

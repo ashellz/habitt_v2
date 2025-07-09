@@ -14,13 +14,17 @@ class GradientBackground extends StatelessWidget {
     return SizedBox.expand(
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.5,
-              child: Image.asset(
-                "assets/images/gradient_background.png",
-                color: colorProvider.colorScheme.vividColor,
-                fit: BoxFit.cover,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  colorProvider.colorScheme.standardColor,
+                  colorProvider.backgroundColor,
+                  colorProvider.backgroundColor,
+                  colorProvider.colorScheme.standardColor,
+                ],
               ),
             ),
           ),
