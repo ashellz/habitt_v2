@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:math';
 
 import 'package:habitt/providers/color_provider.dart';
@@ -81,53 +82,64 @@ class _SetupNamePageState extends State<SetupNamePage>
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
 
-    return Scaffold(
-      backgroundColor: colorProvider.backgroundColor,
-      body: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return CustomPaint(
-            painter: GradientWavePainter(_animation.value, colorProvider),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "What should we call you?",
-                      style: TextStyle(
-                        color: colorProvider.textColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    TextField(
-                      controller: _nameController,
-                      style: TextStyle(color: colorProvider.textColor),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: colorProvider.mutedTextColor.withAlpha(50),
-                        hintText: "Your name",
-                        hintStyle: TextStyle(
-                          color: colorProvider.mutedTextColor,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: colorProvider.backgroundColor,
+        statusBarIconBrightness:
+            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            colorProvider.isDarkMode
+                ? Brightness.dark
+                : Brightness.light, // for iOS
+      ),
+      child: Scaffold(
+        backgroundColor: colorProvider.backgroundColor,
+        body: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return CustomPaint(
+              painter: GradientWavePainter(_animation.value, colorProvider),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "What should we call you?",
+                        style: TextStyle(
+                          color: colorProvider.textColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
                         ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        suffix: getSuffixIcon(colorProvider),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                      const SizedBox(height: 24),
+                      TextField(
+                        controller: _nameController,
+                        style: TextStyle(color: colorProvider.textColor),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: colorProvider.mutedTextColor.withAlpha(50),
+                          hintText: "Your name",
+                          hintStyle: TextStyle(
+                            color: colorProvider.mutedTextColor,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffix: getSuffixIcon(colorProvider),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
