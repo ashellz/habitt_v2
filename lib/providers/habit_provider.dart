@@ -137,8 +137,8 @@ class HabitProvider extends ChangeNotifier {
 
     // If day is empty and is before tomorrow, add current habits to it
     if (dayHabits.isEmpty &&
-        day.isBefore(DateTime.now().add(Duration(days: 1))) &&
-        day.isAfter(_dateJoined!.subtract(Duration(days: 1)))) {
+        day.isBefore(DateTime.now()) &&
+        day.isAfter(_dateJoined!)) {
       saveHabitDay(day, resetCompletion: true);
     }
 
