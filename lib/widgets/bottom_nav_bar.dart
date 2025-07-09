@@ -155,9 +155,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            left: _selectedIndex * MediaQuery.of(context).size.width / 5.96,
+            left: _selectedIndex * MediaQuery.of(context).size.width / 5.85,
             child: GlassContainer(
-              width: 96,
+              width: 92,
               height: 60,
               color: context.watch<ColorProvider>().standardColor,
               borderRadius: 100,

@@ -135,13 +135,38 @@ class _CalendarPageState extends State<CalendarPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Calendar",
-                    style: TextStyle(
-                      fontSize: 38,
-                      color: colorProvider.textColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FittedBox(
+                        child: Text(
+                          "Calendar",
+                          style: TextStyle(
+                            fontSize: 38,
+                            color: colorProvider.textColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorProvider.standardColor,
+
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          "Edit",
+                          style: TextStyle(
+                            color: colorProvider.textColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Calendar(
                     colorProvider: colorProvider,

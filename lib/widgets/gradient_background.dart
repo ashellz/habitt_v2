@@ -11,19 +11,22 @@ class GradientBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
 
-    return Stack(
-      children: [
-        Opacity(
-          opacity: 0.5,
-          child: Image.asset(
-            "assets/images/gradient_background.png",
-            color: colorProvider.colorScheme.vividColor,
-            fit: BoxFit.cover,
-            width: double.infinity,
+    return SizedBox.expand(
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.5,
+              child: Image.asset(
+                "assets/images/gradient_background.png",
+                color: colorProvider.colorScheme.vividColor,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
-        child,
-      ],
+          child,
+        ],
+      ),
     );
   }
 }

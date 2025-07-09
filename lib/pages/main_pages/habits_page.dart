@@ -122,10 +122,11 @@ class _HabitsPageState extends State<HabitsPage> {
       ),
       child: Scaffold(
         backgroundColor: colorProvider.backgroundColor,
+        extendBody: true,
         body: GradientBackground(
           child: ListView(
-            key: _listViewKey, // Assign the GlobalKey
-            controller: _scrollController, // Assign the ScrollController
+            key: _listViewKey,
+            controller: _scrollController,
             physics: const BouncingScrollPhysics(),
             children: [
               Padding(
