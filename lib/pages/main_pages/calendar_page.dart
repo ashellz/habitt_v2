@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/calendar.dart';
+import 'package:habitt/widgets/default_cupertino_button.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
 import 'package:provider/provider.dart';
@@ -204,9 +206,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         child:
                             canEdit
                                 ? Padding(
-                                  key: const ValueKey(
-                                    'cancel',
-                                  ), // Important for AnimatedSwitcher
+                                  key: const ValueKey('cancel'),
                                   padding: const EdgeInsets.only(right: 8),
                                   child: DefaultCupertinoButton(
                                     textColor: colorProvider.backgroundColor,
@@ -218,17 +218,15 @@ class _CalendarPageState extends State<CalendarPage> {
                                     text: "Cancel",
                                   ),
                                 )
-                                : const SizedBox.shrink(
-                                  key: ValueKey('empty'),
-                                ), // No space
+                                : const SizedBox.shrink(key: ValueKey('empty')),
                       ),
                       DefaultCupertinoButton(
                         textColor: Colors.white,
                         onPressed: () {
                           stateProvider.canEditCalendar = !canEdit;
 
-                          if (!canEdit) {
-                            // assign streaks
+                          if (canEdit) {
+                            context.read<HabitProvider>().assignStreaks();
                           }
                         },
                         text: canEdit ? "Save" : "Edit",
@@ -246,51 +244,20 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
         SizedBox(height: 24),
-        Habits(
-          daySelected: focusedDay,
-          hasMainCategory: false,
-          scrollController: _scrollController,
-          bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
-          effectZoneHeight: _effectZoneHeight,
-          minScale: _minScale,
-          stackOffsetFactor: _stackOffsetFactor,
+        IgnorePointer(
+          ignoring: !canEdit,
+          child: Habits(
+            daySelected: focusedDay,
+            hasMainCategory: false,
+            scrollController: _scrollController,
+            bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
+            effectZoneHeight: _effectZoneHeight,
+            minScale: _minScale,
+            stackOffsetFactor: _stackOffsetFactor,
+          ),
         ),
         const SizedBox(height: 100),
       ],
-    );
-  }
-}
-
-class DefaultCupertinoButton extends StatelessWidget {
-  const DefaultCupertinoButton({
-    super.key,
-    required this.onPressed,
-    required this.text,
-    this.color,
-    this.textColor,
-  });
-
-  final VoidCallback? onPressed;
-  final String text;
-  final Color? color;
-  final Color? textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
-
-    return CupertinoButton(
-      color: color ?? colorProvider.colorScheme.darkerStandardColor,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      borderRadius: BorderRadius.circular(24),
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor ?? colorProvider.textColor,
-          fontSize: 16,
-        ),
-      ),
     );
   }
 }

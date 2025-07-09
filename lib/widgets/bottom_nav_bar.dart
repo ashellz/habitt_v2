@@ -201,12 +201,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
                               color: colorProvider.textColor,
                               decoration: TextDecoration.none,
                               fontSize: 24,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "Poppins",
                             ),
                           ),
                           SizedBox(width: 8),
                           SizedBox(
-                            width: 30,
-                            height: 30,
+                            width: 24,
+                            height: 24,
                             child: Image.asset(
                               "assets/images/icons/pencil.png",
                             ),
