@@ -89,6 +89,10 @@ class $AssetsImagesIconsGen {
   AssetGenImage get breakfast2 =>
       const AssetGenImage('assets/images/icons/breakfast2.png');
 
+  /// File path: assets/images/icons/broom.png
+  AssetGenImage get broom =>
+      const AssetGenImage('assets/images/icons/broom.png');
+
   /// File path: assets/images/icons/cake.png
   AssetGenImage get cake => const AssetGenImage('assets/images/icons/cake.png');
 
@@ -230,6 +234,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/pen.png
   AssetGenImage get pen => const AssetGenImage('assets/images/icons/pen.png');
 
+  /// File path: assets/images/icons/pencil.png
+  AssetGenImage get pencil =>
+      const AssetGenImage('assets/images/icons/pencil.png');
+
   /// File path: assets/images/icons/phone.png
   AssetGenImage get phone =>
       const AssetGenImage('assets/images/icons/phone.png');
@@ -305,6 +313,10 @@ class $AssetsImagesIconsGen {
   AssetGenImage get toothbrush =>
       const AssetGenImage('assets/images/icons/toothbrush.png');
 
+  /// File path: assets/images/icons/vacum.png
+  AssetGenImage get vacum =>
+      const AssetGenImage('assets/images/icons/vacum.png');
+
   /// File path: assets/images/icons/walk.png
   AssetGenImage get walk => const AssetGenImage('assets/images/icons/walk.png');
 
@@ -358,6 +370,7 @@ class $AssetsImagesIconsGen {
     bread,
     breakfast,
     breakfast2,
+    broom,
     cake,
     cake2,
     candy,
@@ -395,6 +408,7 @@ class $AssetsImagesIconsGen {
     notebook,
     office,
     pen,
+    pencil,
     phone,
     pie,
     pingPong,
@@ -415,6 +429,7 @@ class $AssetsImagesIconsGen {
     tie,
     tooth,
     toothbrush,
+    vacum,
     walk,
     water,
     water2,
