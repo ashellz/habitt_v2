@@ -102,6 +102,8 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
+    debugPrint("Tapped amount");
+
     final stateProvider = context.read<StateProvider>();
 
     setState(() {
@@ -118,9 +120,12 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
       stateProvider.habitDuration = Duration.zero;
       stateProvider.habitAmount = 2;
 
+      debugPrint("Selected type: $selectedType");
+
       // Navigates to input page after short delay
       Future.delayed(Duration(milliseconds: 150)).then((value) {
         if (mounted) {
+          debugPrint("Selected type right before navigation: $selectedType");
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => EnterAmountPage(type: selectedType),
@@ -133,6 +138,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   // This toggles the duration type on tap, and navigates if selected
   void onTapDuration() {
+    debugPrint("Tapped duration");
     final stateProvider = context.read<StateProvider>();
 
     setState(() {
@@ -174,15 +180,25 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
       final stateProvider = context.read<StateProvider>();
       amount = stateProvider.habitAmount;
       duration = stateProvider.habitDuration.inMinutes;
+
+      setState(() {
+        if (amount > 1) {
+          selectedType = HabitType.amount;
+        } else if (duration > 0) {
+          selectedType = HabitType.duration;
+        } else {
+          selectedType = HabitType.none;
+        }
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (amount > 1) {
-      selectedType = HabitType.amount;
-    } else if (duration > 0) {
-      selectedType = HabitType.duration;
+    final stateProvider = context.read<StateProvider>();
+    if (selectedType == HabitType.duration &&
+        stateProvider.habitDuration == Duration.zero) {
+      selectedType = HabitType.none;
     }
 
     return Padding(
