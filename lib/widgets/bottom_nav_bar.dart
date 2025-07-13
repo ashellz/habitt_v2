@@ -146,6 +146,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       padding: const EdgeInsets.all(2),
       height: 64,
       borderRadius: 100,
+
+      borderColor: colorProvider.isDarkMode ? Colors.white24 : Colors.black26,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -157,7 +159,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 150),
               opacity: canEdit ? 0 : 1,
-              child: GlassContainer(borderRadius: 100, width: 92, height: 58),
+              child: GlassContainer(
+                borderColor:
+                    colorProvider.isDarkMode ? Colors.white24 : Colors.black12,
+                borderRadius: 100,
+                width: 92,
+                height: 58,
+              ),
             ),
           ),
 
