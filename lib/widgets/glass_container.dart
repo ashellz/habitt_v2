@@ -16,6 +16,7 @@ class GlassContainer extends StatelessWidget {
   final EdgeInsets? margin;
   final Alignment alignment;
   final bool fakeBlur;
+  final Border? border;
 
   const GlassContainer({
     super.key,
@@ -35,6 +36,7 @@ class GlassContainer extends StatelessWidget {
     ),
     this.color,
     this.fakeBlur = false,
+    this.border,
   });
 
   @override
@@ -53,7 +55,7 @@ class GlassContainer extends StatelessWidget {
                 width: width,
                 decoration: BoxDecoration(
                   color: color,
-                  border: Border.all(color: borderColor),
+                  border: border ?? Border.all(color: borderColor),
                   borderRadius: BorderRadius.circular(borderRadius),
                 ),
                 child: child,
@@ -74,7 +76,7 @@ class GlassContainer extends StatelessWidget {
               padding: padding,
               decoration: BoxDecoration(
                 gradient: gradient,
-                border: Border.all(color: borderColor),
+                border: border ?? Border.all(color: borderColor),
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               child: child,

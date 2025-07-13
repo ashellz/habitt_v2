@@ -61,85 +61,78 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final item = _navItems[index];
     final isSelected = _selectedIndex == index;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GestureDetector(
-          onTap: () {
-            if (_selectedIndex != index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            }
-            widget.onItemTapped?.call(index);
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+    return GestureDetector(
+      onTap: () {
+        if (_selectedIndex != index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        }
+        widget.onItemTapped?.call(index);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 28,
+              height: 28,
+              child: SvgPicture.asset(
+                item.svgPath,
+                width: 20,
+                height: 20,
+                colorFilter: ColorFilter.mode(
+                  isSelected
+                      ? colorProvider.colorScheme.vividColor
+                      : colorProvider.textColor.withOpacity(0.9),
+                  BlendMode.srcIn,
+                ),
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 28,
-                  height: 28,
-                  child: SvgPicture.asset(
-                    item.svgPath,
-                    width: 20,
-                    height: 20,
-                    colorFilter: ColorFilter.mode(
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: SizeTransition(
+                    sizeFactor: animation,
+                    axis: Axis.horizontal,
+                    child: child,
+                  ),
+                );
+              },
+              child: DefaultTextStyle(
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color:
                       isSelected
                           ? colorProvider.colorScheme.vividColor
                           : colorProvider.textColor.withOpacity(0.9),
-                      BlendMode.srcIn,
-                    ),
+                  fontSize: 12,
+                ),
+                child: Padding(
+                  key: ValueKey<String>("text_${item.id}"),
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(item.defaultLabel),
                   ),
                 ),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  transitionBuilder: (
-                    Widget child,
-                    Animation<double> animation,
-                  ) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: SizeTransition(
-                        sizeFactor: animation,
-                        axis: Axis.horizontal,
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: DefaultTextStyle(
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color:
-                          isSelected
-                              ? colorProvider.colorScheme.vividColor
-                              : colorProvider.textColor.withOpacity(0.9),
-                      fontSize: 12,
-                    ),
-                    child: Padding(
-                      key: ValueKey<String>("text_${item.id}"),
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(item.defaultLabel),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 
@@ -160,17 +153,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            left: _selectedIndex * MediaQuery.of(context).size.width / 5.85,
+            left: _selectedIndex * 70 + (_selectedIndex == 0 ? 2 : 0),
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 150),
               opacity: canEdit ? 0 : 1,
-              child: GlassContainer(
-                width: 92,
-                height: 60,
-                color: context.watch<ColorProvider>().standardColor,
-                borderRadius: 100,
-                borderColor: Colors.transparent,
-              ),
+              child: GlassContainer(borderRadius: 100, width: 92, height: 58),
             ),
           ),
 
@@ -215,20 +202,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           ),
                         ],
                       )
-                      : Row(
-                        mainAxisSize: MainAxisSize.min,
+                      : SizedBox(
+                        width: 280,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
 
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(_navItems.length, (index) {
-                          Widget navItemWidget = _buildNavItem(index);
-                          if (index > 0) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: navItemWidget,
-                            );
-                          }
-                          return navItemWidget;
-                        }),
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(_navItems.length, (index) {
+                            Widget navItemWidget = _buildNavItem(index);
+
+                            return navItemWidget;
+                          }),
+                        ),
                       ),
             ),
           ),
