@@ -12,20 +12,24 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/gradient_background.png
-  AssetGenImage get gradientBackground =>
-      const AssetGenImage('assets/images/gradient_background.png');
-
   /// File path: assets/images/icon.png
   AssetGenImage get icon => const AssetGenImage('assets/images/icon.png');
 
-  /// File path: assets/images/icon_android12.png
-  AssetGenImage get iconAndroid12 =>
-      const AssetGenImage('assets/images/icon_android12.png');
+  /// File path: assets/images/icon_android.png
+  AssetGenImage get iconAndroid =>
+      const AssetGenImage('assets/images/icon_android.png');
+
+  /// File path: assets/images/icon_background.png
+  AssetGenImage get iconBackground =>
+      const AssetGenImage('assets/images/icon_background.png');
 
   /// File path: assets/images/icon_light.png
   AssetGenImage get iconLight =>
       const AssetGenImage('assets/images/icon_light.png');
+
+  /// File path: assets/images/icon_splash_android.png
+  AssetGenImage get iconSplashAndroid =>
+      const AssetGenImage('assets/images/icon_splash_android.png');
 
   /// Directory path: assets/images/icons
   $AssetsImagesIconsGen get icons => const $AssetsImagesIconsGen();
@@ -35,10 +39,11 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-    gradientBackground,
     icon,
-    iconAndroid12,
+    iconAndroid,
+    iconBackground,
     iconLight,
+    iconSplashAndroid,
   ];
 }
 
@@ -118,6 +123,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/church2.png
   AssetGenImage get church2 =>
       const AssetGenImage('assets/images/icons/church2.png');
+
+  /// File path: assets/images/icons/clock.png
+  AssetGenImage get clock =>
+      const AssetGenImage('assets/images/icons/clock.png');
 
   /// File path: assets/images/icons/coffee.png
   AssetGenImage get coffee =>
@@ -378,6 +387,7 @@ class $AssetsImagesIconsGen {
     chocolate,
     church,
     church2,
+    clock,
     coffee,
     compass,
     computer,

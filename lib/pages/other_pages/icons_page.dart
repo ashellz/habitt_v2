@@ -38,7 +38,7 @@ class IconsPage extends StatelessWidget {
                               height: 60,
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: colorProvider.colorScheme.standardColor,
+                                color: colorProvider.standardColor,
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               child: Image.asset(icon),
