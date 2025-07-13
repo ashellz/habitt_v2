@@ -37,11 +37,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   double getProgressValue() {
     final habit = widget.habit;
 
-    if (habit.amount == 0 && habit.duration == 0) {
-      // Basic habit (no amount/duration), just check if completed or skipped
-      if (habit.completed || habit.skipped) return 1.0;
-      return 0.0;
-    }
+    if (habit.completed || habit.skipped) return 1.0;
 
     if (habit.amount > 0) {
       // Habit tracked by amount
