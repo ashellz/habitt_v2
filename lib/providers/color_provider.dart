@@ -154,7 +154,7 @@ class ColorProvider extends ChangeNotifier {
   final CustomColorScheme _green = CustomColorScheme(
     name: "green",
     disabledColor: Color(0xFFE6FAF0), // softened like teal
-    standardColor: Color(0xFFD1F7E6), // brighter mint green
+    standardColor: Color(0xFFd8f7da), // brighter mint green
     strokeColor: Color(0xFF7ABF9A), // cooler and clearer tone
     vividColor: Color.fromARGB(255, 0, 203, 115), // more vibrant green
     darkerStandardColor: Color(0xFF00A85B), // rich teal-leaning green
