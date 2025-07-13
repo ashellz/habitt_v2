@@ -303,9 +303,9 @@ class _HabitWidgetState extends State<HabitWidget>
                     ),
                   ),
                   Positioned(
-                    top: 24,
+                    top: 28,
                     left: widget.isFirstCategory ? 0 : 16,
-                    bottom: 16,
+                    bottom: 20,
 
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),

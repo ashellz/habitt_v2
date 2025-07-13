@@ -161,7 +161,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                             widget.habit.skipped
                                 ? widget.colorProvider.colorScheme.strokeColor
                                     .darken(
-                                      widget.colorProvider.isDarkMode ? 20 : 50,
+                                      widget.colorProvider.isDarkMode ? 20 : 45,
                                     )
                                 : widget
                                     .colorProvider
