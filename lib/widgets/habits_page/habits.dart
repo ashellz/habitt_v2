@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/habit_category.dart';
+import 'package:habitt/widgets/pulse_animation.dart';
 import 'package:provider/provider.dart';
 
 class Habits extends StatefulWidget {
@@ -132,7 +132,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                     animation: _animation,
                     builder: (context, child) {
                       return CustomPaint(
-                        painter: GradientWavePainter(
+                        painter: PulseAnimation(
                           _animation.value,
                           colorProvider,
                         ),

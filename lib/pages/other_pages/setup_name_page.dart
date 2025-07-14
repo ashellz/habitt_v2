@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math';
-
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/pulse_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,7 +97,7 @@ class _SetupNamePageState extends State<SetupNamePage>
           animation: _animation,
           builder: (context, child) {
             return CustomPaint(
-              painter: GradientWavePainter(_animation.value, colorProvider),
+              painter: PulseAnimation(_animation.value, colorProvider),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -142,42 +141,5 @@ class _SetupNamePageState extends State<SetupNamePage>
         ),
       ),
     );
-  }
-}
-
-class GradientWavePainter extends CustomPainter {
-  GradientWavePainter(this.animationValue, this.colorProvider);
-
-  final double animationValue;
-  final ColorProvider colorProvider;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-    final radius =
-        size.width * 0.9 * (0.8 + 0.2 * sin(animationValue * 2 * pi));
-
-    final gradient = RadialGradient(
-      colors: [
-        colorProvider.colorScheme.vividColor.withOpacity(0.25),
-        colorProvider.colorScheme.vividColor.withOpacity(0.06),
-        Colors.transparent,
-      ],
-      stops: const [0.0, 0.5, 1.0],
-    );
-
-    final paint =
-        Paint()
-          ..shader = gradient.createShader(
-            Rect.fromCircle(center: center, radius: radius),
-          )
-          ..blendMode = BlendMode.srcOver;
-
-    canvas.drawCircle(center, radius, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant GradientWavePainter oldDelegate) {
-    return animationValue != oldDelegate.animationValue;
   }
 }
