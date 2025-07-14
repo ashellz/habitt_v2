@@ -28,6 +28,12 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
       countAdditionalTasks,
     );
 
+    // If you're looking for the additional tasks divider
+    // It's actually separate from here
+    // It's in the AdditionalTasksDivider widget
+
+    // I lost around 20 minutes looking for it here...
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: isFirst ? 0 : 16),
       child: Row(

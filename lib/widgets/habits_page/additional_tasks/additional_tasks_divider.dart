@@ -103,7 +103,7 @@ class _OriginalDividerContent extends StatelessWidget {
     return Padding(
       padding:
           isTitle
-              ? EdgeInsets.all(0)
+              ? EdgeInsets.symmetric(horizontal: 16)
               : EdgeInsets.fromLTRB(
                 32,
                 32,

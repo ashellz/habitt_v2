@@ -178,7 +178,10 @@ class _HabitWidgetState extends State<HabitWidget>
                       opacity: (_swipeOffset / 150).clamp(0, 1),
                       duration: const Duration(milliseconds: 50),
                       child: Container(
-                        margin: EdgeInsets.only(top: 8, left: 16),
+                        margin: EdgeInsets.only(
+                          top: 8,
+                          left: widget.isFirstCategory ? 0 : 16,
+                        ),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
@@ -302,6 +305,8 @@ class _HabitWidgetState extends State<HabitWidget>
                       ),
                     ),
                   ),
+
+                  // Line indicator
                   Positioned(
                     top: 28,
                     left: widget.isFirstCategory ? 0 : 16,
