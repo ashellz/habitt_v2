@@ -8,6 +8,7 @@ import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/delete_habit_dialog.dart';
+import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
 import 'package:habitt/widgets/nav_back_button.dart';
@@ -73,82 +74,84 @@ class _EditHabitPageState extends State<EditHabitPage> {
       ),
       child: Scaffold(
         backgroundColor: colorProvider.backgroundColor,
-        body: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListView(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    NavBackButton(colorProvider: colorProvider),
+        body: GradientBackground(
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      NavBackButton(colorProvider: colorProvider),
 
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
-                      child: GestureDetector(
-                        onTap:
-                            () => showDialog(
-                              context: context,
-                              builder:
-                                  (context) =>
-                                      DeleteHabitDialog(widget: widget),
-                            ),
-                        child: Icon(
-                          Icons.delete,
-                          color: colorProvider.textColor,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 30),
+                        child: GestureDetector(
+                          onTap:
+                              () => showDialog(
+                                context: context,
+                                builder:
+                                    (context) =>
+                                        DeleteHabitDialog(widget: widget),
+                              ),
+                          child: Icon(
+                            Icons.delete,
+                            color: colorProvider.textColor,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  localizations.editHabit,
-                  style: TextStyle(
-                    fontSize: 38,
-                    fontWeight: FontWeight.bold,
-                    color: colorProvider.colorScheme.vividColor,
+                    ],
                   ),
-                ),
-                SelectedHabitDisplay(
-                  completed: widget.habit.completed,
-                  amountCompleted: widget.habit.amountCompleted,
-                  durationCompleted: widget.habit.durationCompleted,
-                  streak: widget.habit.streak,
-                ),
-                CategoriesList(
-                  useHabitCategory: true,
-                  topPadding: 16,
-                  showAll: false,
-                  standardColor: true,
-                  habitsCount: false,
-                ),
-                CustomTextField(
-                  title: localizations.habitName,
-                  controller: nameController,
-                ),
-                CustomTextField(
-                  topPadding: 16,
-                  title: localizations.notes,
-                  controller: descController,
-                  maxLines: 5,
-                ),
-                MoreOptionsText(localizations: localizations),
-                SelectHabitTypeOptions(),
-                AdditionalTaskSwitch(
-                  colorProvider: colorProvider,
-                  stateProvider: stateProvider,
-                ),
-                EditHabitButton(
-                  nameController: nameController,
-                  stateProvider: stateProvider,
-                  initialAmount: initialAmount,
-                  widget: widget,
-                  initialDuration: initialDuration,
-                  descController: descController,
-                  localizations: localizations,
-                ),
-              ],
+                  Text(
+                    localizations.editHabit,
+                    style: TextStyle(
+                      fontSize: 38,
+                      fontWeight: FontWeight.bold,
+                      color: colorProvider.colorScheme.vividColor,
+                    ),
+                  ),
+                  SelectedHabitDisplay(
+                    completed: widget.habit.completed,
+                    amountCompleted: widget.habit.amountCompleted,
+                    durationCompleted: widget.habit.durationCompleted,
+                    streak: widget.habit.streak,
+                  ),
+                  CategoriesList(
+                    useHabitCategory: true,
+                    topPadding: 16,
+                    showAll: false,
+                    standardColor: true,
+                    habitsCount: false,
+                  ),
+                  CustomTextField(
+                    title: localizations.habitName,
+                    controller: nameController,
+                  ),
+                  CustomTextField(
+                    topPadding: 16,
+                    title: localizations.notes,
+                    controller: descController,
+                    maxLines: 5,
+                  ),
+                  MoreOptionsText(localizations: localizations),
+                  SelectHabitTypeOptions(),
+                  AdditionalTaskSwitch(
+                    colorProvider: colorProvider,
+                    stateProvider: stateProvider,
+                  ),
+                  EditHabitButton(
+                    nameController: nameController,
+                    stateProvider: stateProvider,
+                    initialAmount: initialAmount,
+                    widget: widget,
+                    initialDuration: initialDuration,
+                    descController: descController,
+                    localizations: localizations,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

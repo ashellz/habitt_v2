@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:habitt/widgets/stats_page/value_text.dart';
 import 'package:provider/provider.dart';

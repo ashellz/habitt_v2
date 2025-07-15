@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class GlassContainer extends StatelessWidget {
+class GlassBlurContainer extends StatelessWidget {
   final double height;
   final double? width;
   final Widget? child;
@@ -18,7 +18,7 @@ class GlassContainer extends StatelessWidget {
   final bool fakeBlur;
   final Border? border;
 
-  const GlassContainer({
+  const GlassBlurContainer({
     super.key,
     this.alignment = Alignment.center,
     this.height = 200,

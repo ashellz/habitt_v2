@@ -7,7 +7,8 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/glass_container.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/widgets/glass_blur_container.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider_dialog.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
@@ -175,7 +176,9 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 ),
               ),
 
-              GlassContainer(),
+              GlassBlurContainer(
+                fakeBlur: !context.watch<PreferencesProvider>().glassFeel,
+              ),
 
               Padding(
                 padding: const EdgeInsets.all(4.0),

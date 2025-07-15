@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
-import 'package:inner_glow/inner_glow.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatelessWidget {

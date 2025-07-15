@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/glass_container.dart';
+import 'package:habitt/widgets/glass_blur_container.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -142,7 +142,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     final colorProvider = context.watch<ColorProvider>();
 
-    return GlassContainer(
+    return GlassBlurContainer(
       padding: const EdgeInsets.all(2),
       height: 64,
       borderRadius: 100,
@@ -159,7 +159,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 150),
               opacity: canEdit ? 0 : 1,
-              child: GlassContainer(
+              child: GlassBlurContainer(
                 borderColor:
                     colorProvider.isDarkMode ? Colors.white24 : Colors.black12,
                 borderRadius: 100,
