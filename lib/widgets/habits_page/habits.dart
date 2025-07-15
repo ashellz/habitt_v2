@@ -5,6 +5,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
+import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/habit_category.dart';
 import 'package:habitt/widgets/pulse_animation.dart';
@@ -119,15 +120,8 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
               // Put it in a glass box with animated gradient
               Padding(
                 padding: const EdgeInsets.only(top: 12),
-                child: Container(
+                child: GlassFeelContainer(
                   margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: colorProvider.colorScheme.standardColor.withAlpha(
-                      255,
-                    ),
-                  ),
                   child: AnimatedBuilder(
                     animation: _animation,
                     builder: (context, child) {

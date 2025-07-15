@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/settings/select_color_sheet.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
@@ -17,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final prefsProvider = context.watch<PreferencesProvider>();
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -45,7 +47,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
 
                 SettingTile(
-                  colorProvider: colorProvider,
                   title: "Accent Color",
                   desc: "Select a color pallete for your interface",
                   iconData: Icons.color_lens,
@@ -59,7 +60,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 SettingTile(
-                  colorProvider: colorProvider,
                   title: "Dark Mode",
                   desc: "Change a color theme for your interface",
                   iconData: Icons.dark_mode,
@@ -67,6 +67,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   switchValue: colorProvider.isDarkMode,
                   onTap: () {
                     colorProvider.changeMode();
+                  },
+                ),
+
+                SettingTile(
+                  title: "Glass Feel",
+                  desc: "Makes widgets look more glassy",
+                  iconData: Icons.blur_on,
+                  hasSwitch: true,
+                  switchValue: prefsProvider.glassFeel,
+                  onTap: () {
+                    prefsProvider.toggleGlassFeel();
                   },
                 ),
               ],

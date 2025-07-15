@@ -12,6 +12,7 @@ import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -74,6 +75,7 @@ Future<void> main() async {
         // 4. StateProvider: No dependencies.
         ChangeNotifierProvider(create: (_) => StateProvider()),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
+        ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
       ],
       child: MyApp(prefs: prefs),
     ),
