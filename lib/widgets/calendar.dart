@@ -22,7 +22,7 @@ class Calendar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
-      child: CalendarContainer(
+      child: GlassFeelContainer(
         child: TableCalendar(
           onDaySelected: calendarProvider.onDaySelected,
           availableGestures: AvailableGestures.horizontalSwipe,
@@ -83,16 +83,16 @@ class Calendar extends StatelessWidget {
   }
 }
 
-class CalendarContainer extends StatefulWidget {
-  const CalendarContainer({super.key, required this.child});
+class GlassFeelContainer extends StatefulWidget {
+  const GlassFeelContainer({super.key, required this.child});
 
   final Widget child;
 
   @override
-  State<CalendarContainer> createState() => _CalendarContainerState();
+  State<GlassFeelContainer> createState() => _GlassFeelContainerState();
 }
 
-class _CalendarContainerState extends State<CalendarContainer> {
+class _GlassFeelContainerState extends State<GlassFeelContainer> {
   final GlobalKey _containerKey = GlobalKey();
   double _height = 0;
 

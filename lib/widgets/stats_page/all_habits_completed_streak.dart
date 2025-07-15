@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/widgets/calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -18,15 +19,7 @@ class AllHabitsCompletedStreak extends StatelessWidget {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        Container(
-          width: double.infinity,
-
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: colorProvider.colorScheme.standardColor,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: colorProvider.colorScheme.strokeColor),
-          ),
+        GlassFeelContainer(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
