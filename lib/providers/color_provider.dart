@@ -21,6 +21,7 @@ class ColorProvider extends ChangeNotifier {
   late CustomColorScheme tealColorScheme;
   late CustomColorScheme greenColorScheme;
   late CustomColorScheme magentaColorScheme;
+  late CustomColorScheme cherryColorScheme;
 
   List<CustomColorScheme> colorSchemes = [];
 
@@ -39,6 +40,7 @@ class ColorProvider extends ChangeNotifier {
       tealColorScheme,
       greenColorScheme,
       magentaColorScheme,
+      cherryColorScheme,
     ];
 
     changeColorScheme(colorSchemeString);
@@ -58,6 +60,7 @@ class ColorProvider extends ChangeNotifier {
       tealColorScheme = _tealDark;
       greenColorScheme = _greenDark;
       magentaColorScheme = _magentaDark;
+      cherryColorScheme = _cherryDark;
 
       textColor = Color(0xFFF8F9FA);
       iconBackgroundColor = Color.fromARGB(255, 46, 50, 55);
@@ -72,6 +75,7 @@ class ColorProvider extends ChangeNotifier {
       tealColorScheme = _teal;
       greenColorScheme = _green;
       magentaColorScheme = _magenta;
+      cherryColorScheme = _cherry;
 
       textColor = Color(0xFF212529);
       habitColor = Color(0xFFEDEDED);
@@ -88,6 +92,7 @@ class ColorProvider extends ChangeNotifier {
       tealColorScheme,
       greenColorScheme,
       magentaColorScheme,
+      cherryColorScheme,
     ];
 
     notifyListeners();
@@ -185,5 +190,23 @@ class ColorProvider extends ChangeNotifier {
     strokeColor: Color(0xFF49374D), // grayish purple
     vividColor: Color(0xFFE38AFB), // bright highlight magenta
     darkerStandardColor: Color(0xFF6B1F79), // deep violet again
+  );
+
+  final CustomColorScheme _cherry = CustomColorScheme(
+    name: "cherry",
+    disabledColor: Color.fromARGB(255, 250, 237, 240),
+    standardColor: Color.fromARGB(255, 251, 228, 233),
+    strokeColor: Color.fromARGB(255, 192, 120, 133),
+    vividColor: Color(0xFFD20A2E), // rich magenta
+    darkerStandardColor: Color.fromARGB(255, 128, 12, 41), // deep violet
+  );
+
+  final CustomColorScheme _cherryDark = CustomColorScheme(
+    name: "cherry",
+    disabledColor: Color.fromARGB(255, 33, 25, 27),
+    standardColor: Color.fromARGB(255, 46, 30, 34),
+    strokeColor: Color.fromARGB(255, 86, 61, 66),
+    vividColor: Color.fromARGB(255, 255, 103, 131),
+    darkerStandardColor: Color.fromARGB(255, 118, 26, 49),
   );
 }

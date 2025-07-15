@@ -21,7 +21,6 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
     final localizations = AppLocalizations.of(context)!;
-    // Assuming getCategoryLength is available and correct
     final int categoryHabits = getCategoryLength(
       category,
       context,
