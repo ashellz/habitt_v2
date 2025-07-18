@@ -80,6 +80,34 @@ class _SettingsPageState extends State<SettingsPage> {
                     prefsProvider.toggleGlassFeel();
                   },
                 ),
+
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (
+                    Widget child,
+                    Animation<double> animation,
+                  ) {
+                    return SizeTransition(
+                      sizeFactor: animation,
+                      axisAlignment: -1.0,
+                      child: FadeTransition(opacity: animation, child: child),
+                    );
+                  },
+                  child:
+                      prefsProvider.glassFeel
+                          ? SettingTile(
+                            key: const ValueKey("glass_habits_tile"),
+                            title: "Glass Habits",
+                            desc: "Adds glassy feel to habits too",
+                            iconData: Icons.blur_on,
+                            hasSwitch: true,
+                            switchValue: prefsProvider.glassHabits,
+                            onTap: () {
+                              prefsProvider.toggleGlassHabits();
+                            },
+                          )
+                          : const SizedBox.shrink(key: ValueKey("empty_tile")),
+                ),
               ],
             ),
           ),

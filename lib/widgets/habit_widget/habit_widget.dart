@@ -7,6 +7,7 @@ import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/habit_streak.dart';
@@ -232,7 +233,8 @@ class _HabitWidgetState extends State<HabitWidget>
                   // Main container
                   Transform.translate(
                     offset: Offset(_swipeOffset, 0),
-                    child: Container(
+                    child: GlassFeelContainer(
+                      isHabit: true,
                       margin: EdgeInsets.only(
                         top: 8,
                         left: widget.isFirstCategory ? 0 : 16,
@@ -241,19 +243,6 @@ class _HabitWidgetState extends State<HabitWidget>
                       padding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 12,
-                      ),
-                      height: 74,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        color: colorProvider.habitColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.25),
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
                       ),
 
                       // Inside of the container

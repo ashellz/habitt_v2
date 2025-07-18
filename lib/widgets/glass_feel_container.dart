@@ -9,10 +9,16 @@ class GlassFeelContainer extends StatefulWidget {
     super.key,
     required this.child,
     this.margin = const EdgeInsets.all(0),
+    this.padding = const EdgeInsets.all(12),
+    this.height,
+    this.isHabit = false,
   });
 
   final Widget child;
   final EdgeInsets margin;
+  final EdgeInsets padding;
+  final double? height;
+  final bool isHabit;
 
   @override
   State<GlassFeelContainer> createState() => _GlassFeelContainerState();
@@ -25,8 +31,12 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
   @override
   void initState() {
     super.initState();
+
+    _height = widget.height ?? 0;
     // Wait for the first frame to get the size
-    WidgetsBinding.instance.addPostFrameCallback((_) => _updateHeight());
+    if (widget.height != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _updateHeight());
+    }
   }
 
   void _updateHeight() {
@@ -47,9 +57,31 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
     final prefsProvider = context.watch<PreferencesProvider>();
     final colorScheme = colorProvider.colorScheme;
 
-    if (!prefsProvider.glassFeel) {
+    if (!prefsProvider.glassFeel ||
+        widget.isHabit && !prefsProvider.glassHabits) {
+      if (widget.isHabit) {
+        return Container(
+          padding: widget.padding,
+          margin: widget.margin,
+
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            color: colorProvider.habitColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25),
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+
+          child: widget.child,
+        );
+      }
       return Container(
-        padding: const EdgeInsets.all(12),
+        padding: widget.padding,
         margin: widget.margin,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
@@ -90,7 +122,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
           margin: widget.margin,
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(12),
+            padding: widget.padding,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topRight,
