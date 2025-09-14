@@ -93,6 +93,7 @@ class _HabitCategoryState extends State<HabitCategory> {
             ),
           if (widget.showAdditionalTasks)
             AdditionalTasks(
+              habits: widget.habits,
               isToday: widget.isToday,
               hasHabits: categoryHabits.isNotEmpty,
               category: widget.category,

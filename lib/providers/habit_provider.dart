@@ -51,11 +51,12 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> _loadHabits() async {
     habits = habitBox.values.toList();
-
+    /*
     bool checkCategory(int category) {
       return category == 1 || category == 2 || category == 3 || category == 4;
     }
 
+    
     // Deletes all habits which category isnt 1,2,3 or 4
     habits.removeWhere((habit) => !checkCategory(habit.categoryId));
 
@@ -69,7 +70,7 @@ class HabitProvider extends ChangeNotifier {
     // Also delete from the days database
     for (final day in daysBox.values) {
       day.habits.removeWhere((habit) => !checkCategory(habit.categoryId));
-    }
+    }*/
   }
 
   void _fillToday() {
@@ -175,7 +176,6 @@ class HabitProvider extends ChangeNotifier {
     BuildContext context, {
     required DateTime day,
   }) async {
-    debugPrint("Completing habit: $id, day: $day");
     late Habit habit;
 
     final today = DateTime.now();
@@ -189,7 +189,9 @@ class HabitProvider extends ChangeNotifier {
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 
+    debugPrint("Completing habit: $id, day: $day");
     await habit.completeHabit();
+    debugPrint("Habit completed: ${habit.completed}");
     if (context.mounted && day == DateTime.now()) {
       checkReorderCategories(context, habit);
     }
@@ -310,8 +312,13 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> assignStreaks() async {
     debugPrint("Assigning streaks");
-    final sortedDays =
-        daysBox.values.toList()..sort((a, b) => b.date.compareTo(a.date));
+    final sortedDays = daysBox.values.toList();
+
+    sortedDays.sort(
+      (a, b) => (DateTime.now().difference(a.date).inDays).compareTo(
+        DateTime.now().difference(b.date).inDays,
+      ),
+    );
 
     // We now remove today from the list
     sortedDays.removeWhere((day) => day.date.day == DateTime.now().day);

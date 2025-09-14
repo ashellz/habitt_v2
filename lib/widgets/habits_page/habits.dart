@@ -165,6 +165,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
               ),
         AdditionalTasks(
           isToday: widget.daySelected == null,
+          habits: habits,
           scrollController: widget.scrollController,
           bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
           effectZoneHeight: widget.effectZoneHeight,
