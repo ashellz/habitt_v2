@@ -49,6 +49,8 @@ dependencies:
   super_tooltip: ^2.0.9
   table_calendar: ^3.2.0
   inner_glow: ^1.0.0
+  awesome_notifications_core: ^0.10.1
+  awesome_notifications: ^0.10.1
 
 dev_dependencies:
   flutter_gen_runner: ^5.3.1

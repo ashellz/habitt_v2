@@ -1,3 +1,5 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/hive/hive_registrar.g.dart';
@@ -26,6 +28,26 @@ Future<void> main() async {
   Hive.registerAdapters();
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Day>('days');
+
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelGroupKey: 'basic_channel_group',
+        channelKey: 'basic_channel',
+        channelName: 'Main notifications',
+        channelDescription: 'Notification channel for production',
+      ),
+    ],
+    // Channel groups are only visual and are not required
+    channelGroups: [
+      NotificationChannelGroup(
+        channelGroupKey: 'basic_channel_group',
+        channelGroupName: 'Basic group',
+      ),
+    ],
+    debug: kDebugMode,
+  );
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
