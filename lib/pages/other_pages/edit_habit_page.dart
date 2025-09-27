@@ -14,6 +14,7 @@ import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
 import 'package:habitt/widgets/nav_back_button.dart';
+import 'package:habitt/widgets/scheduling_and_alerts.dart';
 import 'package:habitt/widgets/select_habit_type_options.dart';
 import 'package:habitt/widgets/selected_habit_display.dart';
 import 'package:provider/provider.dart';
@@ -178,6 +179,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                   MoreOptionsText(localizations: localizations),
                   SelectHabitTypeOptions(),
+                  SchedulingAndAlerts(colorProvider: colorProvider),
                   AdditionalTaskSwitch(
                     colorProvider: colorProvider,
                     stateProvider: stateProvider,

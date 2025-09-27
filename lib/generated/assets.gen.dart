@@ -462,6 +462,12 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/calendar.svg
   String get calendar => 'assets/images/svg/calendar.svg';
 
+  /// File path: assets/images/svg/check.svg
+  String get check => 'assets/images/svg/check.svg';
+
+  /// File path: assets/images/svg/clock.svg
+  String get clock => 'assets/images/svg/clock.svg';
+
   /// File path: assets/images/svg/habits.svg
   String get habits => 'assets/images/svg/habits.svg';
 
@@ -481,6 +487,8 @@ class $AssetsImagesSvgGen {
   List<String> get values => [
     arrowBack,
     calendar,
+    check,
+    clock,
     habits,
     settings,
     skip,

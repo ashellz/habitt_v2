@@ -14,45 +14,42 @@ class AdditionalTaskSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Additional task",
-                  style: TextStyle(
-                    color: colorProvider.textColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                "Additional task",
+                style: TextStyle(
+                  color: colorProvider.textColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Switch(
-                activeTrackColor: colorProvider.colorScheme.darkerStandardColor,
-                activeColor: Colors.white,
-                inactiveThumbColor: colorProvider.textColor,
-                inactiveTrackColor: colorProvider.standardColor,
-                value: stateProvider.isAdditional,
-                onChanged: (value) => stateProvider.toggleAditional(),
-              ),
-            ],
-          ),
-          Transform.translate(
-            offset: Offset(0, -10),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 55),
-              child: Text(
-                "If checked, habit won't count for 'All habits completed streak'.",
-                style: TextStyle(color: colorProvider.textColor),
-              ),
+            ),
+            Switch(
+              activeTrackColor: colorProvider.colorScheme.darkerStandardColor,
+              activeColor: Colors.white,
+              inactiveThumbColor: colorProvider.textColor,
+              inactiveTrackColor: colorProvider.standardColor,
+              value: stateProvider.isAdditional,
+              onChanged: (value) => stateProvider.toggleAditional(),
+            ),
+          ],
+        ),
+        Transform.translate(
+          offset: Offset(0, -10),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 55),
+            child: Text(
+              "If checked, habit won't count for 'All habits completed streak'.",
+              style: TextStyle(color: colorProvider.textColor),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

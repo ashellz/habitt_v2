@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
-import 'package:habitt/pages/other_pages/select_habit_time_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -206,12 +205,6 @@ class _CategoriesListState extends State<CategoriesList> {
                                 if (widget.useHabitCategory) {
                                   stateProvider.habitCategoryId = category.id;
                                   _scrollToSelectedCategory();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => SelectHabitTimePage(),
-                                    ),
-                                  );
                                   return;
                                 }
                                 categoryProvider.selectCategory(category.id);

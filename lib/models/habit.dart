@@ -17,6 +17,9 @@ class Habit extends HiveObject {
   int streak;
   int longestStreak;
   bool additional;
+  bool timeIntervalEnabled;
+  int timeIntervalStart; // In minutes
+  int timeIntervalEnd; // In minutes
 
   Habit({
     required this.id,
@@ -35,6 +38,9 @@ class Habit extends HiveObject {
     this.streak = 0,
     this.longestStreak = 0,
     this.additional = false,
+    this.timeIntervalEnabled = false,
+    this.timeIntervalStart = 0,
+    this.timeIntervalEnd = 0,
   });
 
   Habit copy() {
@@ -55,6 +61,9 @@ class Habit extends HiveObject {
       longestStreak: longestStreak,
       skipped: skipped,
       additional: additional,
+      timeIntervalEnabled: timeIntervalEnabled,
+      timeIntervalStart: timeIntervalStart,
+      timeIntervalEnd: timeIntervalEnd,
     );
   }
 
@@ -76,6 +85,9 @@ class Habit extends HiveObject {
       longestStreak: longestStreak,
       skipped: false,
       additional: additional,
+      timeIntervalEnabled: timeIntervalEnabled,
+      timeIntervalStart: timeIntervalStart,
+      timeIntervalEnd: timeIntervalEnd,
     );
   }
 
@@ -94,6 +106,9 @@ class Habit extends HiveObject {
     streak = habit.streak;
     longestStreak = habit.longestStreak;
     additional = habit.additional;
+    timeIntervalEnabled = habit.timeIntervalEnabled;
+    timeIntervalStart = habit.timeIntervalStart;
+    timeIntervalEnd = habit.timeIntervalEnd;
   }
 
   Future<void> completeHabit() async {
