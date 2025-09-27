@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_switcher_wrapper.dart';
@@ -10,6 +9,7 @@ import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/default_dialog.dart';
 import 'package:habitt/widgets/delete_habit_dialog.dart';
+import 'package:habitt/widgets/edit_habit_button.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/more_options_text.dart';
@@ -247,74 +247,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class EditHabitButton extends StatelessWidget {
-  const EditHabitButton({
-    super.key,
-    required this.nameController,
-    required this.stateProvider,
-    required this.initialAmount,
-    required this.widget,
-    required this.initialDuration,
-    required this.descController,
-    required this.localizations,
-  });
-
-  final TextEditingController nameController;
-  final StateProvider stateProvider;
-  final int initialAmount;
-  final EditHabitPage widget;
-  final Duration initialDuration;
-  final TextEditingController descController;
-  final AppLocalizations localizations;
-
-  @override
-  Widget build(BuildContext context) {
-    bool canEditHabit() {
-      return nameController.text.isNotEmpty;
-    }
-
-    return ValueListenableBuilder<TextEditingValue>(
-      valueListenable: nameController,
-      builder:
-          (context, value, child) => DefaultButton(
-            enabled: canEditHabit(),
-            onPressed: () {
-              if (!canEditHabit()) return;
-
-              // Edit habit in state and database
-              final HabitProvider habitProvider = context.read<HabitProvider>();
-
-              // Checks for amount/duration changes
-
-              if (stateProvider.habitAmount != initialAmount) {
-                widget.habit.resetCompletion();
-                widget.habit.amount = stateProvider.habitAmount;
-              } else if (stateProvider.habitDuration != initialDuration) {
-                widget.habit.resetCompletion();
-                widget.habit.duration = stateProvider.habitDuration.inMinutes;
-              }
-
-              widget.habit.name = nameController.text;
-              widget.habit.description = descController.text;
-              widget.habit.categoryId = stateProvider.habitCategoryId;
-              widget.habit.amountLabel =
-                  stateProvider.habitAmountLabelController.text;
-              widget.habit.iconPath = stateProvider.iconPath;
-              widget.habit.additional = stateProvider.isAdditional;
-
-              habitProvider.updateHabit(widget.habit);
-
-              Navigator.of(context).pop();
-
-              stateProvider.alertText = "Changes saved!";
-              stateProvider.toggleAlert(show: true);
-            },
-            label: localizations.saveChanges,
-          ),
     );
   }
 }
