@@ -63,10 +63,14 @@ class GlassBlurContainer extends StatelessWidget {
 
             // Blur effect
             if (!kDebugMode && !fakeBlur)
-              BackdropFilter(
-                enabled: true,
-                filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-                child: Container(),
+              SizedBox(
+                height: height,
+                width: width,
+                child: BackdropFilter(
+                  enabled: true,
+                  filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                  child: Container(),
+                ),
               ),
 
             // Gradient overlay

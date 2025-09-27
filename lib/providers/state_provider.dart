@@ -12,11 +12,18 @@ class StateProvider extends ChangeNotifier {
   bool _isAdditional = false;
 
   String _alertText = "";
+  bool _showAlert = false;
 
   String get alertText => _alertText;
+  bool get showAlert => _showAlert;
 
   set alertText(String value) {
     _alertText = value;
+    notifyListeners();
+  }
+
+  void toggleAlert({bool? show}) {
+    _showAlert = show ?? !_showAlert;
     notifyListeners();
   }
 

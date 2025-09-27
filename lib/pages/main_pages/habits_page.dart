@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/glass_blur_container.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
@@ -134,6 +134,14 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
     final stateProvider = context.watch<StateProvider>();
 
+    if (stateProvider.showAlert) {
+      _togglePopup(true);
+      Future.delayed(const Duration(seconds: 3), () {
+        stateProvider.toggleAlert(show: false);
+        _togglePopup(false);
+      });
+    }
+
     // Ensure viewport geometry is updated if screen size changes (e.g. orientation)
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _updateListViewportGeom(),
@@ -243,12 +251,15 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                 textPainter.layout();
                 alertTextWidth = textPainter.width;
 
-                final width = alertTextWidth + 32 + 24;
+                final width = alertTextWidth + 64;
 
                 return IgnorePointer(
                   ignoring: progress == 0,
                   child: GestureDetector(
-                    onVerticalDragEnd: (details) => _togglePopup(false),
+                    onVerticalDragEnd: (details) {
+                      _togglePopup(false);
+                      stateProvider.toggleAlert(show: false);
+                    },
                     child: Stack(
                       children: [
                         // Positioned popup container
@@ -259,12 +270,14 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                           child: Transform.translate(
                             offset: Offset(0, offsetY),
                             child: Center(
-                              child: GlassFeelContainer(
+                              child: GlassBlurContainer(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
                                 width: width,
                                 height: popupHeight,
                                 margin: const EdgeInsets.symmetric(
                                   vertical: 12,
                                 ),
+                                borderRadius: 24,
 
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(

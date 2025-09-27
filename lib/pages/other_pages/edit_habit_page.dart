@@ -279,6 +279,9 @@ class EditHabitButton extends StatelessWidget {
               habitProvider.updateHabit(widget.habit);
 
               Navigator.of(context).pop();
+
+              stateProvider.alertText = "Changes saved!";
+              stateProvider.toggleAlert(show: true);
             },
             label: localizations.saveChanges,
           ),
