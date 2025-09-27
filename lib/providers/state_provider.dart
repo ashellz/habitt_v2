@@ -11,6 +11,15 @@ class StateProvider extends ChangeNotifier {
   String _iconPath = "";
   bool _isAdditional = false;
 
+  String _alertText = "";
+
+  String get alertText => _alertText;
+
+  set alertText(String value) {
+    _alertText = value;
+    notifyListeners();
+  }
+
   bool _canEditCalendar = false;
 
   bool get canEditCalendar => _canEditCalendar;

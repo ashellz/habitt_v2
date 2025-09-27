@@ -25,7 +25,16 @@ class CalendarDay extends StatelessWidget {
     int habitsCount = habits.length;
     int completedHabitsCount = habits.where((h) => h.completed).length;
 
-    if (date.isAfter(DateTime.now())) {
+    final dateJoinedLong = context.watch<HabitProvider>().dateJoined;
+    final dateJoined = DateTime(
+      dateJoinedLong.year,
+      dateJoinedLong.month,
+      dateJoinedLong.day,
+    );
+
+    if (habits.isEmpty ||
+        date.isBefore(dateJoined) ||
+        date.isAfter(DateTime.now())) {
       habitsCount = 1;
     }
 
@@ -105,6 +114,18 @@ class CalendarDay extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: SvgPicture.asset("assets/images/svg/check.svg"),
+                ),
+              ),
+            if (DateTime(date.year, date.month, date.day) == dateJoined)
+              Transform.translate(
+                offset: const Offset(7, 0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    height: double.infinity,
+                    width: 1,
+                    color: cp.colorScheme.strokeColor,
+                  ),
                 ),
               ),
           ],

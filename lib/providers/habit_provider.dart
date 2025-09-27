@@ -10,6 +10,7 @@ class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
 
   DateTime? _dateJoined;
+  DateTime get dateJoined => _dateJoined ?? DateTime.now();
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
 

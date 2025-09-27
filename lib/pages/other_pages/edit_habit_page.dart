@@ -7,6 +7,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/default_button.dart';
+import 'package:habitt/widgets/default_dialog.dart';
 import 'package:habitt/widgets/delete_habit_dialog.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -27,9 +28,24 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
-  bool shouldReset = true;
   Duration initialDuration = Duration.zero;
   int initialAmount = 1;
+
+  void setInitialValues() {
+    final stateProvider = context.read<StateProvider>();
+
+    initialDuration = Duration(minutes: widget.habit.duration);
+    initialAmount = widget.habit.amount;
+
+    stateProvider.habitCategoryId = widget.habit.categoryId;
+    stateProvider.nameController.text = widget.habit.name;
+    stateProvider.descController.text = widget.habit.description;
+    stateProvider.habitAmount = widget.habit.amount;
+    stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
+    stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
+    stateProvider.iconPath = widget.habit.iconPath;
+    stateProvider.isAdditional = widget.habit.additional;
+  }
 
   @override
   void initState() {
@@ -141,14 +157,59 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     colorProvider: colorProvider,
                     stateProvider: stateProvider,
                   ),
-                  EditHabitButton(
-                    nameController: nameController,
-                    stateProvider: stateProvider,
-                    initialAmount: initialAmount,
-                    widget: widget,
-                    initialDuration: initialDuration,
-                    descController: descController,
-                    localizations: localizations,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DefaultButton(
+                          onPressed:
+                              () => showDialog(
+                                context: context,
+                                builder:
+                                    (context) => DefaultDialog(
+                                      title: "Reset changes?",
+                                      desc:
+                                          "All changes you've made now will be reset.",
+                                      content: Row(
+                                        children: [
+                                          Expanded(
+                                            child: DefaultButton(
+                                              label: "Cancel",
+                                              outlined: true,
+                                              onPressed:
+                                                  () => Navigator.pop(context),
+                                            ),
+                                          ),
+                                          SizedBox(width: 16),
+                                          Expanded(
+                                            child: DefaultButton(
+                                              label: "Reset",
+                                              onPressed: () {
+                                                setInitialValues();
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                              ),
+                          label: "Reset",
+                          outlined: true,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: EditHabitButton(
+                          nameController: nameController,
+                          stateProvider: stateProvider,
+                          initialAmount: initialAmount,
+                          widget: widget,
+                          initialDuration: initialDuration,
+                          descController: descController,
+                          localizations: localizations,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

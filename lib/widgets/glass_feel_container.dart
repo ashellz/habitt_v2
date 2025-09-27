@@ -12,12 +12,14 @@ class GlassFeelContainer extends StatefulWidget {
     this.padding = const EdgeInsets.all(12),
     this.height,
     this.isHabit = false,
+    this.width,
   });
 
   final Widget child;
   final EdgeInsets margin;
   final EdgeInsets padding;
   final double? height;
+  final double? width;
   final bool isHabit;
 
   @override
@@ -64,7 +66,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
           padding: widget.padding,
           margin: widget.margin,
 
-          width: double.infinity,
+          width: widget.width ?? double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             color: colorProvider.habitColor,
@@ -88,7 +90,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
           color: colorScheme.standardColor,
           border: Border.all(color: colorScheme.strokeColor, width: 2),
         ),
-        width: double.infinity,
+        width: widget.width ?? double.infinity,
         child: widget.child,
       );
     }
@@ -121,7 +123,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
           padding: const EdgeInsets.all(1.5),
           margin: widget.margin,
           child: Container(
-            width: double.infinity,
+            width: widget.width ?? double.infinity,
             padding: widget.padding,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -142,7 +144,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
           padding: widget.margin,
           child: IgnorePointer(
             child: InnerGlow(
-              width: double.infinity,
+              width: widget.width ?? double.infinity,
               height: _height,
               thickness: colorProvider.isDarkMode ? 1 : 10,
               glowBlur: 15,
