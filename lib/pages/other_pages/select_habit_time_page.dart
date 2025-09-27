@@ -223,7 +223,7 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [titleAndSwitch(), timeIntervalButtons()]);
+    return Column(children: [titleAndSwitch(), timeIntervalButtons(context)]);
   }
 
   Row titleAndSwitch() {
@@ -264,10 +264,20 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
     );
   }
 
-  Row timeIntervalButtons() {
+  Row timeIntervalButtons(BuildContext context) {
     return Row(
       children: [
-        _selectIntervalButton(label: "From", onPressed: () {}, value: "9:00"),
+        _selectIntervalButton(
+          label: "From",
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder:
+                  (context) => TimePickerDialog(initialTime: TimeOfDay.now()),
+            );
+          },
+          value: "9:00",
+        ),
         SizedBox(width: 12),
         _selectIntervalButton(label: "To", onPressed: () {}, value: "9:30"),
       ],
