@@ -5,6 +5,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/additional_task_switch.dart';
+import 'package:habitt/widgets/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/default_dialog.dart';
@@ -30,6 +31,7 @@ class EditHabitPage extends StatefulWidget {
 class _EditHabitPageState extends State<EditHabitPage> {
   Duration initialDuration = Duration.zero;
   int initialAmount = 1;
+  bool showButtons = false;
 
   void setInitialValues() {
     final stateProvider = context.read<StateProvider>();
@@ -69,6 +71,23 @@ class _EditHabitPageState extends State<EditHabitPage> {
     });
   }
 
+  bool getShowButtonsValue(
+    StateProvider stateProvider,
+    TextEditingController nameController,
+    TextEditingController descController,
+  ) {
+    return stateProvider.habitCategoryId != widget.habit.categoryId ||
+        nameController.text != widget.habit.name ||
+        descController.text != widget.habit.description ||
+        stateProvider.habitAmount != widget.habit.amount ||
+        stateProvider.habitDuration !=
+            Duration(minutes: widget.habit.duration) ||
+        stateProvider.habitAmountLabelController.text !=
+            widget.habit.amountLabel ||
+        stateProvider.iconPath != widget.habit.iconPath ||
+        stateProvider.isAdditional != widget.habit.additional;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ColorProvider colorProvider = context.watch<ColorProvider>();
@@ -77,6 +96,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final stateProvider = context.watch<StateProvider>();
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
+
+    showButtons = getShowButtonsValue(
+      stateProvider,
+      nameController,
+      descController,
+    );
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -157,59 +182,64 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     colorProvider: colorProvider,
                     stateProvider: stateProvider,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: DefaultButton(
-                          onPressed:
-                              () => showDialog(
-                                context: context,
-                                builder:
-                                    (context) => DefaultDialog(
-                                      title: "Reset changes?",
-                                      desc:
-                                          "All changes you've made now will be reset.",
-                                      content: Row(
-                                        children: [
-                                          Expanded(
-                                            child: DefaultButton(
-                                              label: "Cancel",
-                                              outlined: true,
-                                              onPressed:
-                                                  () => Navigator.pop(context),
+                  CustomSwitcherWrapper(
+                    value: showButtons,
+                    widget: Row(
+                      key: const ValueKey("value"),
+                      children: [
+                        Expanded(
+                          child: DefaultButton(
+                            onPressed:
+                                () => showDialog(
+                                  context: context,
+                                  builder:
+                                      (context) => DefaultDialog(
+                                        title: "Reset changes?",
+                                        desc:
+                                            "All changes you've made now will be reset.",
+                                        content: Row(
+                                          children: [
+                                            Expanded(
+                                              child: DefaultButton(
+                                                label: "Cancel",
+                                                outlined: true,
+                                                onPressed:
+                                                    () =>
+                                                        Navigator.pop(context),
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 16),
-                                          Expanded(
-                                            child: DefaultButton(
-                                              label: "Reset",
-                                              onPressed: () {
-                                                setInitialValues();
-                                                Navigator.pop(context);
-                                              },
+                                            SizedBox(width: 16),
+                                            Expanded(
+                                              child: DefaultButton(
+                                                label: "Reset",
+                                                onPressed: () {
+                                                  setInitialValues();
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                              ),
-                          label: "Reset",
-                          outlined: true,
+                                ),
+                            label: "Reset",
+                            outlined: true,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: EditHabitButton(
-                          nameController: nameController,
-                          stateProvider: stateProvider,
-                          initialAmount: initialAmount,
-                          widget: widget,
-                          initialDuration: initialDuration,
-                          descController: descController,
-                          localizations: localizations,
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: EditHabitButton(
+                            nameController: nameController,
+                            stateProvider: stateProvider,
+                            initialAmount: initialAmount,
+                            widget: widget,
+                            initialDuration: initialDuration,
+                            descController: descController,
+                            localizations: localizations,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
