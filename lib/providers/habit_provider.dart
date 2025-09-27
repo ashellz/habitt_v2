@@ -327,6 +327,21 @@ class HabitProvider extends ChangeNotifier {
     // from today to the day we started using the app
     // day has a date and habits
 
+    // If the difference between last saved day and today is bigger then 1, then all streaks are 0
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // We start from the first one because that is the closest day to today
+    if (sortedDays.first.date.difference(today).inDays > 1) {
+      debugPrint("All habits are 0");
+      for (final habit in habits) {
+        habit.streak = 0;
+        habit.save();
+      }
+      notifyListeners();
+      return;
+    }
+
     final currentHabits = habitBox.values;
 
     // We save all current habits from habitBox
