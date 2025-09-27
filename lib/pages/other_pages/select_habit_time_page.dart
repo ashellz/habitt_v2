@@ -7,7 +7,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_localized_category_name.dart';
-import 'package:habitt/widgets/custom_text_field.dart';
+import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:provider/provider.dart';
@@ -157,7 +157,8 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final habitName = context.watch<StateProvider>().nameController.text;
+    final sp = context.watch<StateProvider>();
+    final habitName = sp.nameController.text;
 
     return FadedListView(
       scrollDirection: Axis.vertical,
@@ -244,7 +245,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
               ],
             ),
 
-            HabitTimeBottomOptions(cp: cp),
+            HabitTimeBottomOptions(cp: cp, sp: sp),
           ],
         ),
       ],
@@ -253,9 +254,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
 }
 
 class HabitTimeBottomOptions extends StatelessWidget {
-  const HabitTimeBottomOptions({super.key, required this.cp});
+  const HabitTimeBottomOptions({super.key, required this.cp, required this.sp});
 
   final ColorProvider cp;
+  final StateProvider sp;
 
   @override
   Widget build(BuildContext context) {
@@ -285,55 +287,96 @@ class HabitTimeBottomOptions extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 32,
-                  height: 32,
-                  child: SvgPicture.asset(
-                    "assets/images/svg/clock.svg",
-                    colorFilter: ColorFilter.mode(
-                      cp.textColor,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 12),
-                  child: Text(
-                    "Select time interval",
-                    style: TextStyle(
-                      color: cp.textColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomTextField(
-                    title: "From",
-
-                    controller: TextEditingController(),
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: CustomTextField(
-                    title: "To",
-                    controller: TextEditingController(),
-                  ),
-                ),
-              ],
-            ),
+            SelectTimeIntervalSwitch(cp: cp),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class SelectTimeIntervalSwitch extends StatelessWidget {
+  const SelectTimeIntervalSwitch({super.key, required this.cp});
+
+  final ColorProvider cp;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [titleAndSwitch(), timeIntervalButtons()]);
+  }
+
+  Row titleAndSwitch() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 32,
+          height: 32,
+          child: SvgPicture.asset(
+            "assets/images/svg/clock.svg",
+            colorFilter: ColorFilter.mode(cp.textColor, BlendMode.srcIn),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(
+            "Select time interval",
+            style: TextStyle(
+              color: cp.textColor,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Spacer(),
+        Switch(
+          activeTrackColor: cp.colorScheme.darkerStandardColor,
+          activeColor: Colors.white,
+          inactiveThumbColor: cp.textColor,
+          inactiveTrackColor: cp.standardColor,
+          value: false,
+          onChanged: (value) {},
+        ),
+      ],
+    );
+  }
+
+  Row timeIntervalButtons() {
+    return Row(
+      children: [
+        _selectIntervalButton(label: "From", onPressed: () {}, value: "9:00"),
+        SizedBox(width: 12),
+        _selectIntervalButton(label: "To", onPressed: () {}, value: "9:30"),
+      ],
+    );
+  }
+
+  Expanded _selectIntervalButton({
+    required String label,
+    required VoidCallback onPressed,
+    required String value,
+  }) {
+    return Expanded(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          DefaultButton(
+            label: label,
+            offsetLabel: true,
+            color: cp.standardColor,
+            borderColor: cp.colorScheme.strokeColor,
+            onPressed: onPressed,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Text(
+              value,
+              style: TextStyle(color: cp.textColor, fontSize: 16),
+            ),
+          ),
+        ],
       ),
     );
   }

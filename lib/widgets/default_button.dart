@@ -11,6 +11,9 @@ class DefaultButton extends StatelessWidget {
     this.enabled = true,
     this.outlined = false,
     this.danger = false,
+    this.offsetLabel = false,
+    this.color,
+    this.borderColor,
   });
 
   final Function onPressed;
@@ -18,6 +21,9 @@ class DefaultButton extends StatelessWidget {
   final bool enabled;
   final bool outlined;
   final bool danger;
+  final bool offsetLabel;
+  final Color? color;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,7 @@ class DefaultButton extends StatelessWidget {
     Color buttonColor =
         danger
             ? colorProvider.red
-            : colorProvider.colorScheme.darkerStandardColor;
+            : color ?? colorProvider.colorScheme.darkerStandardColor;
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -58,18 +64,50 @@ class DefaultButton extends StatelessWidget {
                           style: TextStyle(color: colorProvider.textColor),
                         ),
                       )
-                      : ElevatedButton(
-                        onPressed: () => enabled ? onPressed() : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: buttonColor,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(24)),
+                      : Stack(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () => enabled ? onPressed() : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: buttonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(24),
+                                  ),
+                                  side: BorderSide(
+                                    color: borderColor ?? Colors.transparent,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              child:
+                                  offsetLabel
+                                      ? null
+                                      : Text(
+                                        label,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          label,
-                          style: TextStyle(color: Colors.white),
-                        ),
+                          if (offsetLabel)
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Transform.translate(
+                                offset: const Offset(14, -7.75),
+                                child: Text(
+                                  label,
+                                  style: TextStyle(
+                                    color: colorProvider.textColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
             ),
           ),
