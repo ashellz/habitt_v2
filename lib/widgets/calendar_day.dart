@@ -22,6 +22,7 @@ class CalendarDay extends StatelessWidget {
     final List<Habit> habits = context.watch<HabitProvider>().getHabitsFromDay(
       date,
     );
+
     int habitsCount = habits.length;
     int completedHabitsCount = habits.where((h) => h.completed).length;
 

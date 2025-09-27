@@ -187,6 +187,9 @@ class AddHabitButton extends StatelessWidget {
                 ),
               );
               Navigator.of(context).pop();
+
+              stateProvider.alertText = "Habit added!";
+              stateProvider.toggleAlert(show: true);
             },
             label: localizations.addHabit,
           ),
