@@ -18,6 +18,7 @@ class MoreOptionsText extends StatelessWidget {
       child: Row(
         children: [
           SvgPicture.asset(
+            width: 24,
             "assets/images/svg/slider.svg",
             colorFilter: ColorFilter.mode(
               colorProvider.textColor,
