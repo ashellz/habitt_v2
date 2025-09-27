@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/l10n/app_localizations.dart';
-import 'package:habitt/models/category.dart';
-import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/util/get_localized_category_name.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/nav_back_button.dart';
 import 'package:provider/provider.dart';
 
 class SelectHabitTimePage extends StatelessWidget {
@@ -18,16 +15,6 @@ class SelectHabitTimePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
-    final stateProvider = context.watch<StateProvider>();
-
-    final selectedCategoryId = stateProvider.habitCategoryId;
-
-    Category getCategoryById(int id) {
-      final categoryProvider = context.read<CategoryProvider>();
-      return categoryProvider.categories.firstWhere((c) => c.id == id);
-    }
-
-    final selectedCategory = getCategoryById(selectedCategoryId);
 
     final listViewHeight = MediaQuery.of(context).size.height - 293;
 
@@ -51,8 +38,9 @@ class SelectHabitTimePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  NavBackButton(colorProvider: colorProvider),
                   Text(
-                    "SELECT HABIT TIME FOR",
+                    "SELECT HABIT TIME:",
                     style: TextStyle(
                       letterSpacing: 2,
                       fontSize: 48,
@@ -61,22 +49,7 @@ class SelectHabitTimePage extends StatelessWidget {
                       color: colorProvider.colorScheme.vividColor,
                     ),
                   ),
-                  Text(
-                    getLocalizedCategoryName(
-                      selectedCategory,
-                      AppLocalizations.of(context)!,
-                    ),
-                    style: TextStyle(
-                      fontSize: 56,
-                      height: 0,
-                      fontWeight: FontWeight.bold,
-                      color: colorProvider.textColor,
-                    ),
-                  ),
-                  SelectHabitTimeBody(
-                    listViewHeight: listViewHeight,
-                    selectedCategoryId: selectedCategoryId,
-                  ),
+                  SelectHabitTimeBody(listViewHeight: listViewHeight),
                 ],
               ),
             ),
@@ -88,14 +61,9 @@ class SelectHabitTimePage extends StatelessWidget {
 }
 
 class SelectHabitTimeBody extends StatefulWidget {
-  const SelectHabitTimeBody({
-    super.key,
-    required this.listViewHeight,
-    required this.selectedCategoryId,
-  });
+  const SelectHabitTimeBody({super.key, required this.listViewHeight});
 
   final double listViewHeight;
-  final int selectedCategoryId;
 
   @override
   State<SelectHabitTimeBody> createState() => _SelectHabitTimeBodyState();
@@ -107,52 +75,6 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   // Event state
   double? startHour;
   double? duration;
-
-  // Hours range
-  late double minHour;
-  late double maxHour;
-  late List<double> hours;
-
-  double getMinHour() {
-    switch (widget.selectedCategoryId) {
-      case 2: // Morning
-        return 4; // 12
-      case 3: // Afternoon
-        return 12; // 19
-      case 4: // Evening
-        return 19;
-      default:
-        return 0;
-    }
-  }
-
-  double getMaxHour() {
-    switch (widget.selectedCategoryId) {
-      case 2: // Morning
-        return 12;
-      case 3: // Afternoon
-        return 19;
-      case 4: // Evening
-        return 28;
-      default:
-        return 24;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    minHour = getMinHour();
-    maxHour = getMaxHour();
-    // difference between min and max
-    // just add the difference to min
-    // and if it exceeds 24, subtract 24
-
-    hours = List.generate(
-      (maxHour - minHour).toInt() + 1,
-      (index) => minHour + index,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,20 +95,20 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
               scrollDirection: Axis.vertical,
               children: [
                 SizedBox(
-                  height: hours.length * hourHeight, // full day
+                  height: 24 * hourHeight, // full day
                   child: Stack(
                     children: [
                       // Background hours
-                      for (double hour in hours)
+                      for (int i = 0; i < 24; i++)
                         Positioned(
-                          top: hours.indexOf(hour) * hourHeight,
+                          top: i * hourHeight,
                           left: 0,
                           right: 0,
                           height: hourHeight,
                           child: Row(
                             children: [
                               Text(
-                                "${(hour >= 24 ? hour - 24 : hour).toInt().toString().padLeft(2, '0')}:00",
+                                "${i.toString().padLeft(2, '0')}:00",
                                 style: TextStyle(color: cp.mutedTextColor),
                               ),
                               SizedBox(width: 8),
@@ -200,7 +122,6 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                           ),
                         ),
 
-                      // Draggable + resizable event box
                       if (startHour != null && duration != null)
                         Positioned(
                           top: startHour! * hourHeight,
