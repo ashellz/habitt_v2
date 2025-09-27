@@ -20,12 +20,14 @@ class SelectHabitTimePage extends StatelessWidget {
     final colorProvider = context.watch<ColorProvider>();
     final stateProvider = context.watch<StateProvider>();
 
-    final selectedCategory = stateProvider.habitCategoryId;
+    final selectedCategoryId = stateProvider.habitCategoryId;
 
     Category getCategoryById(int id) {
       final categoryProvider = context.read<CategoryProvider>();
       return categoryProvider.categories.firstWhere((c) => c.id == id);
     }
+
+    final selectedCategory = getCategoryById(selectedCategoryId);
 
     final listViewHeight = MediaQuery.of(context).size.height - 293;
 
@@ -61,7 +63,7 @@ class SelectHabitTimePage extends StatelessWidget {
                   ),
                   Text(
                     getLocalizedCategoryName(
-                      getCategoryById(selectedCategory),
+                      selectedCategory,
                       AppLocalizations.of(context)!,
                     ),
                     style: TextStyle(
@@ -71,7 +73,10 @@ class SelectHabitTimePage extends StatelessWidget {
                       color: colorProvider.textColor,
                     ),
                   ),
-                  TimelinePage(listViewHeight: listViewHeight),
+                  SelectHabitTimeBody(
+                    listViewHeight: listViewHeight,
+                    selectedCategoryId: selectedCategoryId,
+                  ),
                 ],
               ),
             ),
@@ -82,21 +87,72 @@ class SelectHabitTimePage extends StatelessWidget {
   }
 }
 
-class TimelinePage extends StatefulWidget {
-  const TimelinePage({super.key, required this.listViewHeight});
+class SelectHabitTimeBody extends StatefulWidget {
+  const SelectHabitTimeBody({
+    super.key,
+    required this.listViewHeight,
+    required this.selectedCategoryId,
+  });
 
   final double listViewHeight;
+  final int selectedCategoryId;
 
   @override
-  State<TimelinePage> createState() => _TimelinePageState();
+  State<SelectHabitTimeBody> createState() => _SelectHabitTimeBodyState();
 }
 
-class _TimelinePageState extends State<TimelinePage> {
+class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   final double hourHeight = 100;
 
   // Event state
-  double startHour = 7.5; // 7:30
-  double duration = 1.25; // 1h 15m
+  double? startHour;
+  double? duration;
+
+  // Hours range
+  late double minHour;
+  late double maxHour;
+  late List<double> hours;
+
+  double getMinHour() {
+    switch (widget.selectedCategoryId) {
+      case 2: // Morning
+        return 4; // 12
+      case 3: // Afternoon
+        return 12; // 19
+      case 4: // Evening
+        return 19;
+      default:
+        return 0;
+    }
+  }
+
+  double getMaxHour() {
+    switch (widget.selectedCategoryId) {
+      case 2: // Morning
+        return 12;
+      case 3: // Afternoon
+        return 19;
+      case 4: // Evening
+        return 28;
+      default:
+        return 24;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    minHour = getMinHour();
+    maxHour = getMaxHour();
+    // difference between min and max
+    // just add the difference to min
+    // and if it exceeds 24, subtract 24
+
+    hours = List.generate(
+      (maxHour - minHour).toInt() + 1,
+      (index) => minHour + index,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,20 +172,20 @@ class _TimelinePageState extends State<TimelinePage> {
               scrollDirection: Axis.vertical,
               children: [
                 SizedBox(
-                  height: 24 * hourHeight, // full day
+                  height: hours.length * hourHeight, // full day
                   child: Stack(
                     children: [
                       // Background hours
-                      for (int i = 0; i < 24; i++)
+                      for (double hour in hours)
                         Positioned(
-                          top: i * hourHeight,
+                          top: hours.indexOf(hour) * hourHeight,
                           left: 0,
                           right: 0,
                           height: hourHeight,
                           child: Row(
                             children: [
                               Text(
-                                "${i.toString().padLeft(2, '0')}:00",
+                                "${(hour >= 24 ? hour - 24 : hour).toInt().toString().padLeft(2, '0')}:00",
                                 style: TextStyle(color: cp.mutedTextColor),
                               ),
                               SizedBox(width: 8),
@@ -144,128 +200,141 @@ class _TimelinePageState extends State<TimelinePage> {
                         ),
 
                       // Draggable + resizable event box
-                      Positioned(
-                        top: startHour * hourHeight,
-                        left: 60,
-                        right: 20,
-                        height: duration * hourHeight,
-                        child: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: cp.colorScheme.darkerStandardColor
-                                .withOpacity(0.7),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 4,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: cp.colorScheme.vividColor,
-                                  borderRadius: BorderRadius.circular(4),
+                      if (startHour != null && duration != null)
+                        Positioned(
+                          top: startHour! * hourHeight,
+                          left: 60,
+                          right: 20,
+                          height: duration! * hourHeight,
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: cp.colorScheme.darkerStandardColor
+                                  .withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 4,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: cp.colorScheme.vividColor,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                habitName,
-                                style: TextStyle(
-                                  color: cp.colorScheme.vividColor,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1,
-                                  fontSize: 16,
+                                SizedBox(width: 5),
+                                Text(
+                                  habitName,
+                                  style: TextStyle(
+                                    color: cp.colorScheme.vividColor,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Drag indicator
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16, top: 16),
-                        height: 4,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: cp.mutedTextColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 32,
-                          height: 32,
-                          child: SvgPicture.asset(
-                            "assets/images/svg/clock.svg",
-                            colorFilter: ColorFilter.mode(
-                              cp.textColor,
-                              BlendMode.srcIn,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Text(
-                            "Select time interval",
-                            style: TextStyle(
-                              color: cp.textColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextField(
-                            title: "From",
 
-                            controller: TextEditingController(),
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: CustomTextField(
-                            title: "To",
-                            controller: TextEditingController(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            HabitTimeBottomOptions(cp: cp),
           ],
         ),
       ],
+    );
+  }
+}
+
+class HabitTimeBottomOptions extends StatelessWidget {
+  const HabitTimeBottomOptions({super.key, required this.cp});
+
+  final ColorProvider cp;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 300,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Drag indicator
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 16, top: 16),
+                height: 4,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: cp.mutedTextColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: SvgPicture.asset(
+                    "assets/images/svg/clock.svg",
+                    colorFilter: ColorFilter.mode(
+                      cp.textColor,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    "Select time interval",
+                    style: TextStyle(
+                      color: cp.textColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    title: "From",
+
+                    controller: TextEditingController(),
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: CustomTextField(
+                    title: "To",
+                    controller: TextEditingController(),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
