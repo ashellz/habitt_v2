@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/calendar_day.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -31,6 +32,14 @@ class Calendar extends StatelessWidget {
           selectedDayPredicate: (day) => isSameDay(day, focusedDay),
           // calendarFormat: CalendarFormat.month,
           startingDayOfWeek: StartingDayOfWeek.monday,
+          calendarBuilders: CalendarBuilders(
+            defaultBuilder: (context, date, events) => CalendarDay(date: date),
+            selectedBuilder:
+                (context, date, events) =>
+                    CalendarDay(date: date, selected: true),
+            todayBuilder:
+                (context, date, events) => CalendarDay(date: date, today: true),
+          ),
           headerStyle: HeaderStyle(
             titleTextStyle: TextStyle(
               color: colorProvider.textColor,
@@ -72,7 +81,6 @@ class Calendar extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             outsideDaysVisible: false,
-
             defaultTextStyle: TextStyle(color: colorProvider.textColor),
             weekendTextStyle: TextStyle(color: colorProvider.textColor),
           ),
