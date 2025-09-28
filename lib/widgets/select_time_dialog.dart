@@ -1,28 +1,52 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/blur_circle_button.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:provider/provider.dart';
 
 class SelectTimeDialog extends StatefulWidget {
-  const SelectTimeDialog({super.key});
+  const SelectTimeDialog({
+    super.key,
+    required this.isStartTime,
+    required this.stateProvider,
+  });
+
+  final bool isStartTime;
+  final StateProvider stateProvider;
 
   @override
   State<SelectTimeDialog> createState() => _SelectTimeDialogState();
 }
 
 class _SelectTimeDialogState extends State<SelectTimeDialog> {
+  FixedExtentScrollController hoursController = FixedExtentScrollController();
+  FixedExtentScrollController minutesController = FixedExtentScrollController();
+
   @override
   void initState() {
     super.initState();
-  }
 
-  final hoursController = FixedExtentScrollController();
-  final minutesController = FixedExtentScrollController();
+    setState(() {
+      hoursController = FixedExtentScrollController(
+        initialItem:
+            widget.isStartTime
+                ? widget.stateProvider.timeIntervalStart ~/ 60
+                : widget.stateProvider.timeIntervalEnd ~/ 60,
+      );
+      minutesController = FixedExtentScrollController(
+        initialItem:
+            widget.isStartTime
+                ? widget.stateProvider.timeIntervalStart % 60
+                : widget.stateProvider.timeIntervalEnd % 60,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final sp = context.watch<StateProvider>();
     final colorProvider = context.watch<ColorProvider>();
     final width = MediaQuery.of(context).size.width - 200;
 
@@ -40,7 +64,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                 child: Column(
                   children: [
                     Text(
-                      "Start time",
+                      widget.isStartTime ? "Start time" : "End time",
                       style: TextStyle(
                         color: colorProvider.textColor,
                         fontSize: 18,
@@ -68,6 +92,16 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                     icon: Icon(Icons.check, color: Colors.white),
                     color: colorProvider.colorScheme.darkerStandardColor,
                     onPressed: () {
+                      final hours = hoursController.selectedItem % 24;
+                      final minutes = minutesController.selectedItem % 60;
+                      final time = hours * 60 + minutes;
+
+                      if (widget.isStartTime) {
+                        sp.timeIntervalStart = time;
+                      } else if (!widget.isStartTime) {
+                        sp.timeIntervalEnd = time;
+                      }
+
                       Navigator.pop(context);
                     },
                   ),

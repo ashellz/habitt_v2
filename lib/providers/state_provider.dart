@@ -28,11 +28,25 @@ class StateProvider extends ChangeNotifier {
   }
 
   bool _timeIntervalEnabled = false;
+  int _timeIntervalStart = 420;
+  int _timeIntervalEnd = 450;
 
   bool get timeIntervalEnabled => _timeIntervalEnabled;
+  int get timeIntervalStart => _timeIntervalStart;
+  int get timeIntervalEnd => _timeIntervalEnd;
 
   set timeIntervalEnabled(bool value) {
     _timeIntervalEnabled = value;
+    notifyListeners();
+  }
+
+  set timeIntervalStart(int value) {
+    _timeIntervalStart = value;
+    notifyListeners();
+  }
+
+  set timeIntervalEnd(int value) {
+    _timeIntervalEnd = value;
     notifyListeners();
   }
 
@@ -90,6 +104,11 @@ class StateProvider extends ChangeNotifier {
     descController.clear();
     _iconPath = Assets.images.icons.book.path;
     _isAdditional = false;
+
+    _timeIntervalEnabled = false;
+    _timeIntervalStart = 420;
+    _timeIntervalEnd = 450;
+
     notifyListeners();
   }
 

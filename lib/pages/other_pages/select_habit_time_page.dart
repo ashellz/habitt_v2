@@ -71,17 +71,35 @@ class SelectHabitTimeBody extends StatefulWidget {
 }
 
 class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
-  final double hourHeight = 100;
-
-  // Event state
-  double? startHour;
-  double? duration;
+  double hourHeight = 100;
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
     final habitName = sp.nameController.text;
+
+    double? startHour =
+        sp.timeIntervalEnabled ? sp.timeIntervalStart / 60 : null;
+    double? duration =
+        sp.timeIntervalEnabled
+            ? sp.timeIntervalEnd / 60 - sp.timeIntervalStart / 60
+            : null;
+
+    debugPrint("Start hour: $startHour");
+    debugPrint("Duration: $duration");
+
+    final durationMinutes = context.select<StateProvider, int>(
+      (s) => s.timeIntervalEnd - s.timeIntervalStart,
+    );
+
+    hourHeight =
+        durationMinutes <= 10
+            ? 300
+            : durationMinutes <= 30
+            ? 200
+            : 100;
 
     return FadedListView(
       scrollDirection: Axis.vertical,
@@ -91,80 +109,87 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
           scrollDirection: Axis.vertical,
           height: widget.listViewHeight,
           children: [
-            FadedListView(
+            SizedBox(
               height: widget.listViewHeight - 100,
-              scrollDirection: Axis.vertical,
-              children: [
-                SizedBox(
-                  height: 24 * hourHeight, // full day
-                  child: Stack(
-                    children: [
-                      // Background hours
-                      for (int i = 0; i < 24; i++)
-                        Positioned(
-                          top: i * hourHeight,
-                          left: 0,
-                          right: 0,
-                          height: hourHeight,
-                          child: Row(
-                            children: [
-                              Text(
-                                "${i.toString().padLeft(2, '0')}:00",
-                                style: TextStyle(color: cp.mutedTextColor),
-                              ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Divider(
-                                  thickness: 1,
-                                  color: cp.mutedTextColor.withOpacity(0.7),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                      if (startHour != null && duration != null)
-                        Positioned(
-                          top: startHour! * hourHeight,
-                          left: 60,
-                          right: 20,
-                          height: duration! * hourHeight,
-                          child: Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: cp.colorScheme.darkerStandardColor
-                                  .withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+              child: ListView(
+                controller: _scrollController,
+                scrollDirection: Axis.vertical,
+                children: [
+                  SizedBox(
+                    height: 24 * hourHeight, // full day
+                    child: Stack(
+                      children: [
+                        // Background hours
+                        for (int i = 0; i < 24; i++)
+                          AnimatedPositioned(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.fastOutSlowIn,
+                            top: i * hourHeight,
+                            left: 0,
+                            right: 0,
+                            height: hourHeight,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 4,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: cp.colorScheme.vividColor,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                                SizedBox(width: 5),
                                 Text(
-                                  habitName,
-                                  style: TextStyle(
-                                    color: cp.colorScheme.vividColor,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 1,
-                                    fontSize: 16,
+                                  "${i.toString().padLeft(2, '0')}:00",
+                                  style: TextStyle(color: cp.mutedTextColor),
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 1,
+                                    color: cp.mutedTextColor.withOpacity(0.7),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                    ],
+
+                        if (startHour != null && duration != null)
+                          AnimatedPositioned(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.fastOutSlowIn,
+                            top: startHour * hourHeight + 100,
+                            left: 60,
+                            right: 20,
+                            height: duration * hourHeight,
+                            child: Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: cp.colorScheme.darkerStandardColor
+                                    .withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 4,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: cp.colorScheme.vividColor,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    habitName,
+                                    style: TextStyle(
+                                      color: cp.colorScheme.vividColor,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             HabitTimeBottomOptions(cp: cp, sp: sp),
@@ -226,11 +251,19 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final sp = context.watch<StateProvider>();
     bool timeIntervalEnabled = sp.timeIntervalEnabled;
+    int timeIntervalStart = sp.timeIntervalStart;
+    int timeIntervalEnd = sp.timeIntervalEnd;
 
     return Column(
       children: [
         titleAndSwitch(timeIntervalEnabled, sp),
-        timeIntervalButtons(context, timeIntervalEnabled),
+        timeIntervalButtons(
+          context,
+          timeIntervalEnabled,
+          timeIntervalStart,
+          timeIntervalEnd,
+          sp,
+        ),
       ],
     );
   }
@@ -275,7 +308,13 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
     );
   }
 
-  Row timeIntervalButtons(BuildContext context, bool timeIntervalEnabled) {
+  Row timeIntervalButtons(
+    BuildContext context,
+    bool timeIntervalEnabled,
+    int timeIntervalStart,
+    int timeIntervalEnd,
+    StateProvider sp,
+  ) {
     return Row(
       children: [
         _selectIntervalButton(
@@ -283,18 +322,29 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => SelectTimeDialog(),
+              builder:
+                  (context) =>
+                      SelectTimeDialog(isStartTime: true, stateProvider: sp),
             );
           },
           enabled: timeIntervalEnabled,
-          value: "9:00",
+          value:
+              "${(timeIntervalStart ~/ 60).toString().padLeft(2, "0")}:${(timeIntervalStart % 60).toString().padLeft(2, "0")}",
         ),
 
         SizedBox(width: 12),
         _selectIntervalButton(
           label: "To",
-          onPressed: () {},
-          value: "9:30",
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder:
+                  (context) =>
+                      SelectTimeDialog(isStartTime: false, stateProvider: sp),
+            );
+          },
+          value:
+              "${(timeIntervalEnd ~/ 60).toString().padLeft(2, "0")}:${(timeIntervalEnd % 60).toString().padLeft(2, "0")}",
           enabled: timeIntervalEnabled,
         ),
       ],
