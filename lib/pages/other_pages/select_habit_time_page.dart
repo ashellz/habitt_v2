@@ -16,6 +16,10 @@ class SelectHabitTimePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
+    final stateProvider = context.watch<StateProvider>();
+
+    final timeIntervalStart = stateProvider.timeIntervalStart;
+    final timeIntervalEnd = stateProvider.timeIntervalEnd;
 
     final listViewHeight = MediaQuery.of(context).size.height - 293;
 
@@ -50,7 +54,11 @@ class SelectHabitTimePage extends StatelessWidget {
                       color: colorProvider.colorScheme.vividColor,
                     ),
                   ),
-                  SelectHabitTimeBody(listViewHeight: listViewHeight),
+                  SelectHabitTimeBody(
+                    listViewHeight: listViewHeight,
+                    timeIntervalStart: timeIntervalStart,
+                    timeIntervalEnd: timeIntervalEnd,
+                  ),
                 ],
               ),
             ),
@@ -62,9 +70,16 @@ class SelectHabitTimePage extends StatelessWidget {
 }
 
 class SelectHabitTimeBody extends StatefulWidget {
-  const SelectHabitTimeBody({super.key, required this.listViewHeight});
+  const SelectHabitTimeBody({
+    super.key,
+    required this.listViewHeight,
+    required this.timeIntervalStart,
+    required this.timeIntervalEnd,
+  });
 
   final double listViewHeight;
+  final int timeIntervalStart;
+  final int timeIntervalEnd;
 
   @override
   State<SelectHabitTimeBody> createState() => _SelectHabitTimeBodyState();
@@ -75,24 +90,16 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   final _scrollController = ScrollController();
 
   @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-    final sp = context.watch<StateProvider>();
-    final habitName = sp.nameController.text;
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
-    double? startHour =
-        sp.timeIntervalEnabled ? sp.timeIntervalStart / 60 : null;
-    double? duration =
-        sp.timeIntervalEnabled
-            ? sp.timeIntervalEnd / 60 - sp.timeIntervalStart / 60
-            : null;
+  @override
+  void didUpdateWidget(covariant oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    debugPrint("Start hour: $startHour");
-    debugPrint("Duration: $duration");
-
-    final durationMinutes = context.select<StateProvider, int>(
-      (s) => s.timeIntervalEnd - s.timeIntervalStart,
-    );
+    final durationMinutes = widget.timeIntervalEnd - widget.timeIntervalStart;
 
     hourHeight =
         durationMinutes <= 10
@@ -100,6 +107,39 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
             : durationMinutes <= 30
             ? 200
             : 100;
+
+    if (oldWidget.timeIntervalStart != widget.timeIntervalStart) {
+      _scrollController.animateTo(
+        (widget.timeIntervalStart / 60 * hourHeight) - 150,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      print("asdafsaf: ${widget.timeIntervalStart / 60 * hourHeight}");
+      print("time changed: ${widget.timeIntervalStart}");
+    }
+
+    if (oldWidget.timeIntervalEnd != widget.timeIntervalEnd) {
+      _scrollController.animateTo(
+        (widget.timeIntervalStart / 60 * hourHeight) - 150,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      print("time changed: ${widget.timeIntervalEnd}");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final sp = context.watch<StateProvider>();
+    final habitName = sp.nameController.text;
+
+    double? startHour =
+        sp.timeIntervalEnabled ? widget.timeIntervalStart / 60 : null;
+    double? duration =
+        sp.timeIntervalEnabled
+            ? sp.timeIntervalEnd / 60 - widget.timeIntervalStart / 60
+            : null;
 
     return FadedListView(
       scrollDirection: Axis.vertical,
@@ -122,7 +162,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                         // Background hours
                         for (int i = 0; i < 24; i++)
                           AnimatedPositioned(
-                            duration: const Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
                             top: i * hourHeight,
                             left: 0,
@@ -147,7 +187,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
 
                         if (startHour != null && duration != null)
                           AnimatedPositioned(
-                            duration: const Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
                             top: startHour * hourHeight + 100,
                             left: 60,
@@ -172,13 +212,45 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     ),
                                   ),
                                   SizedBox(width: 5),
-                                  Text(
-                                    habitName,
-                                    style: TextStyle(
-                                      color: cp.colorScheme.vividColor,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1,
-                                      fontSize: 16,
+                                  AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 500),
+                                    switchInCurve: Curves.easeOut,
+                                    switchOutCurve: Curves.easeIn,
+                                    transitionBuilder: (child, animation) {
+                                      final offsetAnimation = Tween<Offset>(
+                                        begin: const Offset(0.0, 0.2),
+                                        end: Offset.zero,
+                                      ).animate(animation);
+
+                                      return SlideTransition(
+                                        position: offsetAnimation,
+                                        child: FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        ),
+                                      );
+                                    },
+                                    child: KeyedSubtree(
+                                      key: ValueKey<bool>(
+                                        widget.timeIntervalEnd -
+                                                widget.timeIntervalStart >
+                                            5,
+                                      ),
+                                      child:
+                                          widget.timeIntervalEnd -
+                                                      widget.timeIntervalStart >
+                                                  5
+                                              ? Text(
+                                                habitName,
+                                                style: TextStyle(
+                                                  color:
+                                                      cp.colorScheme.vividColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  letterSpacing: 1,
+                                                  fontSize: 16,
+                                                ),
+                                              )
+                                              : Container(),
                                     ),
                                   ),
                                 ],
