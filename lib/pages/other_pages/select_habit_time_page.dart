@@ -224,10 +224,18 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [titleAndSwitch(), timeIntervalButtons(context)]);
+    final sp = context.watch<StateProvider>();
+    bool timeIntervalEnabled = sp.timeIntervalEnabled;
+
+    return Column(
+      children: [
+        titleAndSwitch(timeIntervalEnabled, sp),
+        timeIntervalButtons(context, timeIntervalEnabled),
+      ],
+    );
   }
 
-  Row titleAndSwitch() {
+  Row titleAndSwitch(bool timeIntervalEnabled, StateProvider sp) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -258,14 +266,16 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
           activeColor: Colors.white,
           inactiveThumbColor: cp.textColor,
           inactiveTrackColor: cp.standardColor,
-          value: false,
-          onChanged: (value) {},
+          value: timeIntervalEnabled,
+          onChanged: (value) {
+            sp.timeIntervalEnabled = value;
+          },
         ),
       ],
     );
   }
 
-  Row timeIntervalButtons(BuildContext context) {
+  Row timeIntervalButtons(BuildContext context, bool timeIntervalEnabled) {
     return Row(
       children: [
         _selectIntervalButton(
@@ -276,10 +286,17 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
               builder: (context) => SelectTimeDialog(),
             );
           },
+          enabled: timeIntervalEnabled,
           value: "9:00",
         ),
+
         SizedBox(width: 12),
-        _selectIntervalButton(label: "To", onPressed: () {}, value: "9:30"),
+        _selectIntervalButton(
+          label: "To",
+          onPressed: () {},
+          value: "9:30",
+          enabled: timeIntervalEnabled,
+        ),
       ],
     );
   }
@@ -288,23 +305,30 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
     required String label,
     required VoidCallback onPressed,
     required String value,
+    required bool enabled,
   }) {
     return Expanded(
       child: Stack(
         alignment: Alignment.center,
         children: [
           DefaultButton(
+            enabled: enabled,
             label: label,
             offsetLabel: true,
             color: cp.standardColor,
             borderColor: cp.colorScheme.strokeColor,
             onPressed: onPressed,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Text(
-              value,
-              style: TextStyle(color: cp.textColor, fontSize: 16),
+          IgnorePointer(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Text(
+                value,
+                style: TextStyle(
+                  color: enabled ? cp.textColor : cp.mutedTextColor,
+                  fontSize: 16,
+                ),
+              ),
             ),
           ),
         ],

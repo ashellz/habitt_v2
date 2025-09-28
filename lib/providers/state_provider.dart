@@ -27,6 +27,15 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _timeIntervalEnabled = false;
+
+  bool get timeIntervalEnabled => _timeIntervalEnabled;
+
+  set timeIntervalEnabled(bool value) {
+    _timeIntervalEnabled = value;
+    notifyListeners();
+  }
+
   bool _canEditCalendar = false;
 
   bool get canEditCalendar => _canEditCalendar;
