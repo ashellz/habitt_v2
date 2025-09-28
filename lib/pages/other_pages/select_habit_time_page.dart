@@ -7,6 +7,7 @@ import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/nav_back_button.dart';
+import 'package:habitt/widgets/select_time_dialog.dart';
 import 'package:provider/provider.dart';
 
 class SelectHabitTimePage extends StatelessWidget {
@@ -272,8 +273,7 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder:
-                  (context) => TimePickerDialog(initialTime: TimeOfDay.now()),
+              builder: (context) => SelectTimeDialog(),
             );
           },
           value: "9:00",
