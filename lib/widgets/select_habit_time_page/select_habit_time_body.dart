@@ -38,7 +38,9 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     final durationMinutes = widget.timeIntervalEnd - widget.timeIntervalStart;
 
     hourHeight =
-        durationMinutes <= 10
+        durationMinutes < 0
+            ? 50
+            : durationMinutes <= 10
             ? 300
             : durationMinutes <= 30
             ? 200
@@ -70,12 +72,22 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     final sp = context.watch<StateProvider>();
     final habitName = sp.nameController.text;
 
+    bool isOverADay = widget.timeIntervalStart > widget.timeIntervalEnd;
+    debugPrint("isOverADay: $isOverADay");
+
     double? startHour =
         sp.timeIntervalEnabled ? widget.timeIntervalStart / 60 : null;
     double? duration =
-        sp.timeIntervalEnabled
+        isOverADay
+            ? sp.timeIntervalEnd / 60
+            : sp.timeIntervalEnabled
             ? sp.timeIntervalEnd / 60 - widget.timeIntervalStart / 60
             : null;
+
+    // if start hour is bigger than the end hour
+    // then extend the container until the end of day
+    // and show another container from beggining of the day
+    // until the end time
 
     return FadedListView(
       scrollDirection: Axis.vertical,
@@ -125,10 +137,15 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                           AnimatedPositioned(
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
-                            top: startHour * hourHeight + 100,
+                            top: startHour * hourHeight + hourHeight / 2,
                             left: 60,
                             right: 20,
-                            height: duration * hourHeight,
+                            height:
+                                isOverADay
+                                    ? (24 * hourHeight) -
+                                        (startHour * hourHeight +
+                                            hourHeight / 2)
+                                    : duration * hourHeight,
                             child: Container(
                               padding: EdgeInsets.all(4),
                               decoration: BoxDecoration(
@@ -169,13 +186,16 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     child: KeyedSubtree(
                                       key: ValueKey<bool>(
                                         widget.timeIntervalEnd -
-                                                widget.timeIntervalStart >
-                                            5,
+                                                    widget.timeIntervalStart >
+                                                5 ||
+                                            isOverADay,
                                       ),
                                       child:
                                           widget.timeIntervalEnd -
-                                                      widget.timeIntervalStart >
-                                                  5
+                                                          widget
+                                                              .timeIntervalStart >
+                                                      5 ||
+                                                  isOverADay
                                               ? Text(
                                                 habitName,
                                                 style: TextStyle(
@@ -190,6 +210,35 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                          ),
+
+                        if (isOverADay && sp.timeIntervalEnabled)
+                          AnimatedPositioned(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.fastOutSlowIn,
+                            top: 0,
+                            left: 60,
+                            right: 20,
+                            height: widget.timeIntervalEnd / 60 * hourHeight,
+                            child: Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: cp.colorScheme.darkerStandardColor
+                                    .withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  width: 4,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: cp.colorScheme.vividColor,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
