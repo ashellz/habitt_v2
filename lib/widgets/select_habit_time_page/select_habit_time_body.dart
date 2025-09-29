@@ -5,6 +5,8 @@ import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:provider/provider.dart';
 
+enum TimeType { regular, midnight, overday }
+
 class SelectHabitTimeBody extends StatefulWidget {
   const SelectHabitTimeBody({
     super.key,
@@ -72,17 +74,26 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     final sp = context.watch<StateProvider>();
     final habitName = sp.nameController.text;
 
-    bool isOverADay = widget.timeIntervalStart > widget.timeIntervalEnd;
-    debugPrint("isOverADay: $isOverADay");
+    TimeType timeType =
+        widget.timeIntervalEnd == 0
+            ? TimeType.midnight
+            : widget.timeIntervalStart > widget.timeIntervalEnd
+            ? TimeType.overday
+            : TimeType.regular;
+
+    debugPrint("Time type: $timeType");
 
     double? startHour =
         sp.timeIntervalEnabled ? widget.timeIntervalStart / 60 : null;
-    double? duration =
-        isOverADay
-            ? sp.timeIntervalEnd / 60
-            : sp.timeIntervalEnabled
-            ? sp.timeIntervalEnd / 60 - widget.timeIntervalStart / 60
-            : null;
+
+    double? duration() {
+      if (!sp.timeIntervalEnabled) return null;
+      if (timeType == TimeType.regular) {
+        return sp.timeIntervalEnd / 60 - widget.timeIntervalStart / 60;
+      } else {
+        return sp.timeIntervalEnd / 60;
+      }
+    }
 
     // if start hour is bigger than the end hour
     // then extend the container until the end of day
@@ -104,28 +115,33 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                 scrollDirection: Axis.vertical,
                 children: [
                   SizedBox(
-                    height: 24 * hourHeight, // full day
+                    height: 24 * hourHeight + hourHeight, // full day
                     child: Stack(
                       children: [
                         // Background hours
-                        for (int i = 0; i < 24; i++)
+                        for (int i = 0; i < 25; i++)
                           AnimatedPositioned(
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
-                            top: i * hourHeight,
+                            top: i * hourHeight + hourHeight / 2,
                             left: 0,
                             right: 0,
                             height: hourHeight,
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "${i.toString().padLeft(2, '0')}:00",
-                                  style: TextStyle(color: cp.mutedTextColor),
+                                Transform.translate(
+                                  offset: Offset(0, -10),
+                                  child: Text(
+                                    "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
+                                    style: TextStyle(color: cp.mutedTextColor),
+                                  ),
                                 ),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Divider(
                                     thickness: 1,
+                                    height: 0,
                                     color: cp.mutedTextColor.withOpacity(0.7),
                                   ),
                                 ),
@@ -133,7 +149,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             ),
                           ),
 
-                        if (startHour != null && duration != null)
+                        if (startHour != null && duration() != null)
                           AnimatedPositioned(
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
@@ -141,11 +157,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             left: 60,
                             right: 20,
                             height:
-                                isOverADay
+                                timeType != TimeType.regular
                                     ? (24 * hourHeight) -
-                                        (startHour * hourHeight +
-                                            hourHeight / 2)
-                                    : duration * hourHeight,
+                                        (startHour * hourHeight)
+                                    : duration()! * hourHeight,
                             child: Container(
                               padding: EdgeInsets.all(4),
                               decoration: BoxDecoration(
@@ -188,14 +203,14 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                         widget.timeIntervalEnd -
                                                     widget.timeIntervalStart >
                                                 5 ||
-                                            isOverADay,
+                                            timeType != TimeType.regular,
                                       ),
                                       child:
                                           widget.timeIntervalEnd -
                                                           widget
                                                               .timeIntervalStart >
                                                       5 ||
-                                                  isOverADay
+                                                  timeType != TimeType.regular
                                               ? Text(
                                                 habitName,
                                                 style: TextStyle(
@@ -214,11 +229,12 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             ),
                           ),
 
-                        if (isOverADay && sp.timeIntervalEnabled)
+                        if (timeType == TimeType.overday &&
+                            sp.timeIntervalEnabled)
                           AnimatedPositioned(
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn,
-                            top: 0,
+                            top: hourHeight / 2,
                             left: 60,
                             right: 20,
                             height: widget.timeIntervalEnd / 60 * hourHeight,
