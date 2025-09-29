@@ -61,6 +61,11 @@ class EditHabitButton extends StatelessWidget {
               widget.habit.iconPath = stateProvider.iconPath;
               widget.habit.additional = stateProvider.isAdditional;
 
+              widget.habit.timeIntervalEnabled =
+                  stateProvider.timeIntervalEnabled;
+              widget.habit.timeIntervalStart = stateProvider.timeIntervalStart;
+              widget.habit.timeIntervalEnd = stateProvider.timeIntervalEnd;
+
               habitProvider.updateHabit(widget.habit);
 
               Navigator.of(context).pop();

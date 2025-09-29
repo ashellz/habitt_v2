@@ -203,16 +203,14 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       child: KeyedSubtree(
                                         key: ValueKey<bool>(
                                           widget.timeIntervalEnd -
-                                                      widget.timeIntervalStart >
-                                                  5 ||
-                                              timeType != TimeType.regular,
+                                                  widget.timeIntervalStart >
+                                              5,
                                         ),
                                         child:
                                             widget.timeIntervalEnd -
-                                                            widget
-                                                                .timeIntervalStart >
-                                                        5 ||
-                                                    timeType != TimeType.regular
+                                                        widget
+                                                            .timeIntervalStart >
+                                                    5
                                                 ? Text(
                                                   habitName,
                                                   style: TextStyle(

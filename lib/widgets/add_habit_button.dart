@@ -71,6 +71,9 @@ class AddHabitButton extends StatelessWidget {
                   streak: 0,
                   longestStreak: 0,
                   additional: stateProvider.isAdditional,
+                  timeIntervalEnabled: stateProvider.timeIntervalEnabled,
+                  timeIntervalStart: stateProvider.timeIntervalStart,
+                  timeIntervalEnd: stateProvider.timeIntervalEnd,
                 ),
               );
               Navigator.of(context).pop();
