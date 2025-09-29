@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habitt/pages/main_pages/daily_plan_page.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -175,29 +176,55 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () => _togglePopup(),
-                              child: const Greeting(),
-                            ),
-                            FloatingActionButton(
-                              mini: true,
-                              elevation: 0,
-                              backgroundColor:
-                                  colorProvider.colorScheme.darkerStandardColor,
-                              onPressed:
-                                  () => Navigator.of(context)
-                                      .push(
-                                        MaterialPageRoute(
-                                          builder: (context) => AddHabitPage(),
-                                        ),
-                                      )
-                                      .whenComplete(() {
-                                        if (!context.mounted) return;
-                                        final stateProvider =
-                                            context.read<StateProvider>();
-                                        stateProvider.reset();
-                                      }),
-                              child: const Icon(Icons.add, color: Colors.white),
+                            const Greeting(),
+
+                            Row(
+                              children: [
+                                FloatingActionButton(
+                                  mini: true,
+                                  elevation: 0,
+                                  backgroundColor:
+                                      colorProvider.colorScheme.strokeColor,
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => const DailyPlanPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.date_range,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                FloatingActionButton(
+                                  mini: true,
+                                  elevation: 0,
+                                  backgroundColor:
+                                      colorProvider
+                                          .colorScheme
+                                          .darkerStandardColor,
+                                  onPressed:
+                                      () => Navigator.of(context)
+                                          .push(
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) => AddHabitPage(),
+                                            ),
+                                          )
+                                          .whenComplete(() {
+                                            if (!context.mounted) return;
+                                            final stateProvider =
+                                                context.read<StateProvider>();
+                                            stateProvider.reset();
+                                          }),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
