@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:provider/provider.dart';
 
@@ -100,78 +99,159 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     // and show another container from beggining of the day
     // until the end time
 
-    return FadedListView(
-      scrollDirection: Axis.vertical,
-      height: widget.listViewHeight,
-      children: [
-        FadedListView(
+    return CustomShaderMask(
+      child: SizedBox(
+        height: widget.listViewHeight,
+        child: ListView(
           scrollDirection: Axis.vertical,
-          height: widget.listViewHeight,
           children: [
-            SizedBox(
-              height: widget.listViewHeight - 100,
-              child: ListView(
-                controller: _scrollController,
-                scrollDirection: Axis.vertical,
-                children: [
-                  SizedBox(
-                    height: 24 * hourHeight + hourHeight, // full day
-                    child: Stack(
-                      children: [
-                        // Background hours
-                        for (int i = 0; i < 25; i++)
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn,
-                            top: i * hourHeight + hourHeight / 2,
-                            left: 0,
-                            right: 0,
-                            height: hourHeight,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Transform.translate(
-                                  offset: Offset(0, -10),
-                                  child: Text(
-                                    "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
-                                    style: TextStyle(color: cp.mutedTextColor),
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 1,
-                                    height: 0,
-                                    color: cp.mutedTextColor.withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                        if (startHour != null && duration() != null)
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn,
-                            top: startHour * hourHeight + hourHeight / 2,
-                            left: 60,
-                            right: 20,
-                            height:
-                                timeType != TimeType.regular
-                                    ? (24 * hourHeight) -
-                                        (startHour * hourHeight)
-                                    : duration()! * hourHeight,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: cp.colorScheme.darkerStandardColor
-                                    .withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+            CustomShaderMask(
+              child: SizedBox(
+                height: widget.listViewHeight - 100,
+                child: ListView(
+                  controller: _scrollController,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    SizedBox(
+                      height: 24 * hourHeight + hourHeight, // full day
+                      child: Stack(
+                        children: [
+                          // Background hours
+                          for (int i = 0; i < 25; i++)
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn,
+                              top: i * hourHeight + hourHeight / 2,
+                              left: 0,
+                              right: 0,
+                              height: hourHeight,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
+                                  Transform.translate(
+                                    offset: Offset(0, -10),
+                                    child: Text(
+                                      "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
+                                      style: TextStyle(
+                                        color: cp.mutedTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Divider(
+                                      thickness: 1,
+                                      height: 0,
+                                      color: cp.mutedTextColor.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          if (startHour != null && duration() != null)
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn,
+                              top: startHour * hourHeight + hourHeight / 2,
+                              left: 60,
+                              right: 20,
+                              height:
+                                  timeType != TimeType.regular
+                                      ? (24 * hourHeight) -
+                                          (startHour * hourHeight)
+                                      : duration()! * hourHeight,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: cp.colorScheme.darkerStandardColor
+                                      .withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 4,
+                                      height: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: cp.colorScheme.vividColor,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    SizedBox(width: 5),
+                                    AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
+                                      switchInCurve: Curves.easeOut,
+                                      switchOutCurve: Curves.easeIn,
+                                      transitionBuilder: (child, animation) {
+                                        final offsetAnimation = Tween<Offset>(
+                                          begin: const Offset(0.0, 0.2),
+                                          end: Offset.zero,
+                                        ).animate(animation);
+
+                                        return SlideTransition(
+                                          position: offsetAnimation,
+                                          child: FadeTransition(
+                                            opacity: animation,
+                                            child: child,
+                                          ),
+                                        );
+                                      },
+                                      child: KeyedSubtree(
+                                        key: ValueKey<bool>(
+                                          widget.timeIntervalEnd -
+                                                      widget.timeIntervalStart >
+                                                  5 ||
+                                              timeType != TimeType.regular,
+                                        ),
+                                        child:
+                                            widget.timeIntervalEnd -
+                                                            widget
+                                                                .timeIntervalStart >
+                                                        5 ||
+                                                    timeType != TimeType.regular
+                                                ? Text(
+                                                  habitName,
+                                                  style: TextStyle(
+                                                    color:
+                                                        cp
+                                                            .colorScheme
+                                                            .vividColor,
+                                                    fontWeight: FontWeight.w500,
+                                                    letterSpacing: 1,
+                                                    fontSize: 16,
+                                                  ),
+                                                )
+                                                : Container(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                          if (timeType == TimeType.overday &&
+                              sp.timeIntervalEnabled)
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn,
+                              top: hourHeight / 2,
+                              left: 60,
+                              right: 20,
+                              height: widget.timeIntervalEnd / 60 * hourHeight,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: cp.colorScheme.darkerStandardColor
+                                      .withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
                                     width: 4,
                                     height: double.infinity,
                                     decoration: BoxDecoration(
@@ -179,96 +259,48 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
-                                  SizedBox(width: 5),
-                                  AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 500),
-                                    switchInCurve: Curves.easeOut,
-                                    switchOutCurve: Curves.easeIn,
-                                    transitionBuilder: (child, animation) {
-                                      final offsetAnimation = Tween<Offset>(
-                                        begin: const Offset(0.0, 0.2),
-                                        end: Offset.zero,
-                                      ).animate(animation);
-
-                                      return SlideTransition(
-                                        position: offsetAnimation,
-                                        child: FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        ),
-                                      );
-                                    },
-                                    child: KeyedSubtree(
-                                      key: ValueKey<bool>(
-                                        widget.timeIntervalEnd -
-                                                    widget.timeIntervalStart >
-                                                5 ||
-                                            timeType != TimeType.regular,
-                                      ),
-                                      child:
-                                          widget.timeIntervalEnd -
-                                                          widget
-                                                              .timeIntervalStart >
-                                                      5 ||
-                                                  timeType != TimeType.regular
-                                              ? Text(
-                                                habitName,
-                                                style: TextStyle(
-                                                  color:
-                                                      cp.colorScheme.vividColor,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: 1,
-                                                  fontSize: 16,
-                                                ),
-                                              )
-                                              : Container(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                        if (timeType == TimeType.overday &&
-                            sp.timeIntervalEnabled)
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn,
-                            top: hourHeight / 2,
-                            left: 60,
-                            right: 20,
-                            height: widget.timeIntervalEnd / 60 * hourHeight,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: cp.colorScheme.darkerStandardColor
-                                    .withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  width: 4,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: cp.colorScheme.vividColor,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
             HabitTimeBottomOptions(cp: cp, sp: sp),
           ],
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class CustomShaderMask extends StatelessWidget {
+  const CustomShaderMask({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            Colors.white,
+            Colors.white,
+            Colors.transparent,
+          ],
+          stops: [0.0, 0.05, 0.95, 1.0],
+        ).createShader(bounds);
+      },
+      blendMode: BlendMode.dstIn,
+      child: child,
     );
   }
 }
