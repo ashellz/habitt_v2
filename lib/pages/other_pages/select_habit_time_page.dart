@@ -17,6 +17,7 @@ class SelectHabitTimePage extends StatelessWidget {
 
     final timeIntervalStart = stateProvider.timeIntervalStart;
     final timeIntervalEnd = stateProvider.timeIntervalEnd;
+    final timeIntervalEnabled = stateProvider.timeIntervalEnabled;
 
     final listViewHeight = MediaQuery.of(context).size.height - 293;
 
@@ -55,6 +56,7 @@ class SelectHabitTimePage extends StatelessWidget {
                     listViewHeight: listViewHeight,
                     timeIntervalStart: timeIntervalStart,
                     timeIntervalEnd: timeIntervalEnd,
+                    timeIntervalEnabled: timeIntervalEnabled,
                   ),
                 ],
               ),

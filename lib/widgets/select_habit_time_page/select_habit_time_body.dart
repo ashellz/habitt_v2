@@ -10,10 +10,12 @@ class SelectHabitTimeBody extends StatefulWidget {
   const SelectHabitTimeBody({
     super.key,
     required this.listViewHeight,
+    required this.timeIntervalEnabled,
     required this.timeIntervalStart,
     required this.timeIntervalEnd,
   });
 
+  final bool timeIntervalEnabled;
   final double listViewHeight;
   final int timeIntervalStart;
   final int timeIntervalEnd;
@@ -47,24 +49,20 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
             ? 200
             : 100;
 
-    if (oldWidget.timeIntervalStart != widget.timeIntervalStart) {
+    if (oldWidget.timeIntervalStart != widget.timeIntervalStart ||
+        oldWidget.timeIntervalEnd != widget.timeIntervalEnd ||
+        oldWidget.timeIntervalEnabled != widget.timeIntervalEnabled) {
       _scrollController.animateTo(
         (widget.timeIntervalStart / 60 * hourHeight) - 150,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
-      print("asdafsaf: ${widget.timeIntervalStart / 60 * hourHeight}");
-      print("time changed: ${widget.timeIntervalStart}");
     }
+  }
 
-    if (oldWidget.timeIntervalEnd != widget.timeIntervalEnd) {
-      _scrollController.animateTo(
-        (widget.timeIntervalStart / 60 * hourHeight) - 150,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-      print("time changed: ${widget.timeIntervalEnd}");
-    }
+  bool shouldShowHabitName(TimeType timeType) {
+    return !(widget.timeIntervalEnd - widget.timeIntervalStart > 5 &&
+        timeType == TimeType.regular);
   }
 
   @override
@@ -202,15 +200,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       },
                                       child: KeyedSubtree(
                                         key: ValueKey<bool>(
-                                          widget.timeIntervalEnd -
-                                                  widget.timeIntervalStart >
-                                              5,
+                                          shouldShowHabitName(timeType),
                                         ),
                                         child:
-                                            widget.timeIntervalEnd -
-                                                        widget
-                                                            .timeIntervalStart >
-                                                    5
+                                            shouldShowHabitName(timeType)
                                                 ? Text(
                                                   habitName,
                                                   style: TextStyle(
