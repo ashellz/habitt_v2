@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:provider/provider.dart';
 
 class GlassBlurContainer extends StatelessWidget {
   final double height;
@@ -41,6 +43,10 @@ class GlassBlurContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final prefsProvider = context.watch<PreferencesProvider>();
+
+    final isGlassFeel = prefsProvider.glassFeel;
+
     return Padding(
       padding: margin ?? const EdgeInsets.all(0),
       child: ClipRRect(
@@ -55,14 +61,14 @@ class GlassBlurContainer extends StatelessWidget {
                 width: width,
                 decoration: BoxDecoration(
                   color: color,
-                  border: border ?? Border.all(color: borderColor),
+
                   borderRadius: BorderRadius.circular(borderRadius),
                 ),
                 child: child,
               ),
 
             // Blur effect
-            if (!kDebugMode && !fakeBlur)
+            if (!kDebugMode && !fakeBlur && isGlassFeel)
               SizedBox(
                 height: height,
                 width: width,
@@ -79,7 +85,7 @@ class GlassBlurContainer extends StatelessWidget {
               width: width,
               padding: padding,
               decoration: BoxDecoration(
-                gradient: gradient,
+                gradient: !isGlassFeel ? null : gradient,
                 border: border ?? Border.all(color: borderColor),
                 borderRadius: BorderRadius.circular(borderRadius),
               ),

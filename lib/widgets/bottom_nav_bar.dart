@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/glass_blur_container.dart';
 import 'package:provider/provider.dart';
@@ -55,11 +56,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
     }
   }
 
-  Widget _buildNavItem(int index) {
+  Widget _buildNavItem(int index, bool isGlassFeel) {
     final colorProvider = context.watch<ColorProvider>();
 
     final item = _navItems[index];
     final isSelected = _selectedIndex == index;
+
+    Color _getItemColor() {
+      if (!isGlassFeel) {
+        return colorProvider.textColor.withOpacity(0.9);
+      }
+      if (isSelected) {
+        return colorProvider.colorScheme.vividColor;
+      }
+      return colorProvider.textColor.withOpacity(0.9);
+    }
 
     return GestureDetector(
       onTap: () {
@@ -92,9 +103,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 width: 20,
                 height: 20,
                 colorFilter: ColorFilter.mode(
-                  isSelected
-                      ? colorProvider.colorScheme.vividColor
-                      : colorProvider.textColor.withOpacity(0.9),
+                  _getItemColor()!,
                   BlendMode.srcIn,
                 ),
               ),
@@ -114,10 +123,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               child: DefaultTextStyle(
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color:
-                      isSelected
-                          ? colorProvider.colorScheme.vividColor
-                          : colorProvider.textColor.withOpacity(0.9),
+                  color: _getItemColor(),
                   fontSize: 12,
                 ),
                 child: Padding(
@@ -141,13 +147,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final canEdit = context.watch<StateProvider>().canEditCalendar;
 
     final colorProvider = context.watch<ColorProvider>();
+    final glassFeel = context.watch<PreferencesProvider>().glassFeel;
 
     return GlassBlurContainer(
       padding: const EdgeInsets.all(2),
       height: 64,
       borderRadius: 100,
-
-      borderColor: colorProvider.isDarkMode ? Colors.white24 : Colors.black26,
+      color: !glassFeel ? colorProvider.colorScheme.standardColor : null,
+      borderColor:
+          !glassFeel
+              ? colorProvider.colorScheme.strokeColor
+              : colorProvider.isDarkMode
+              ? Colors.white24
+              : Colors.black26,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -160,8 +172,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
               duration: const Duration(milliseconds: 150),
               opacity: canEdit ? 0 : 1,
               child: GlassBlurContainer(
+                color:
+                    !glassFeel
+                        ? colorProvider.colorScheme.darkerStandardColor
+                        : null,
                 borderColor:
-                    colorProvider.isDarkMode ? Colors.white24 : Colors.black12,
+                    !glassFeel
+                        ? colorProvider.colorScheme.standardColor
+                        : colorProvider.isDarkMode
+                        ? Colors.white24
+                        : Colors.black12,
                 borderRadius: 100,
                 width: 92,
                 height: 58,
@@ -217,7 +237,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: List.generate(_navItems.length, (index) {
-                            Widget navItemWidget = _buildNavItem(index);
+                            Widget navItemWidget = _buildNavItem(
+                              index,
+                              glassFeel,
+                            );
 
                             return navItemWidget;
                           }),
