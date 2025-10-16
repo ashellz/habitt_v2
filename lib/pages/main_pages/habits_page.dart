@@ -174,59 +174,50 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Greeting(),
-
-                            Row(
-                              children: [
-                                FloatingActionButton(
-                                  mini: true,
-                                  elevation: 0,
-                                  backgroundColor:
-                                      colorProvider.colorScheme.strokeColor,
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => const DailyPlanPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Icon(
-                                    Icons.date_range,
-                                    color: Colors.white,
+                            FloatingActionButton(
+                              mini: true,
+                              elevation: 0,
+                              backgroundColor:
+                                  colorProvider.colorScheme.strokeColor,
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const DailyPlanPage(),
                                   ),
-                                ),
-                                FloatingActionButton(
-                                  mini: true,
-                                  elevation: 0,
-                                  backgroundColor:
-                                      colorProvider
-                                          .colorScheme
-                                          .darkerStandardColor,
-                                  onPressed:
-                                      () => Navigator.of(context)
-                                          .push(
-                                            MaterialPageRoute(
-                                              builder:
-                                                  (context) => AddHabitPage(),
-                                            ),
-                                          )
-                                          .whenComplete(() {
-                                            if (!context.mounted) return;
-                                            final stateProvider =
-                                                context.read<StateProvider>();
-                                            stateProvider.reset();
-                                          }),
-                                  child: const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
+                                );
+                              },
+                              child: const Icon(
+                                Icons.date_range,
+                                color: Colors.white,
+                              ),
+                            ),
+                            FloatingActionButton(
+                              mini: true,
+                              elevation: 0,
+                              backgroundColor:
+                                  colorProvider.colorScheme.darkerStandardColor,
+                              onPressed:
+                                  () => Navigator.of(context)
+                                      .push(
+                                        MaterialPageRoute(
+                                          builder: (context) => AddHabitPage(),
+                                        ),
+                                      )
+                                      .whenComplete(() {
+                                        if (!context.mounted) return;
+                                        final stateProvider =
+                                            context.read<StateProvider>();
+                                        stateProvider.reset();
+                                      }),
+                              child: const Icon(Icons.add, color: Colors.white),
                             ),
                           ],
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: const Greeting(),
                         ),
                         const CategoriesList(),
                         const HabitsCompletedWidget(),
