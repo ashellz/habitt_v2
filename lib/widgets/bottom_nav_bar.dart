@@ -58,13 +58,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
     final colorProvider = context.watch<ColorProvider>();
+    final isDarkMode = colorProvider.isDarkMode;
 
     final item = _navItems[index];
     final isSelected = _selectedIndex == index;
 
-    Color _getItemColor() {
+    Color getItemColor() {
       if (!isGlassFeel) {
-        return colorProvider.textColor.withOpacity(0.9);
+        if (!isDarkMode && isSelected) return colorProvider.backgroundColor;
+        return colorProvider.textColor;
       }
       if (isSelected) {
         return colorProvider.colorScheme.vividColor;
@@ -95,19 +97,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 28,
-              height: 28,
-              child: SvgPicture.asset(
-                item.svgPath,
-                width: 20,
-                height: 20,
-                colorFilter: ColorFilter.mode(
-                  _getItemColor()!,
-                  BlendMode.srcIn,
-                ),
-              ),
+            _ColorMorphingIcon(
+              svgPath: item.svgPath,
+              targetColor: getItemColor(),
             ),
+
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               transitionBuilder: (Widget child, Animation<double> animation) {
@@ -120,10 +114,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   ),
                 );
               },
-              child: DefaultTextStyle(
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: _getItemColor(),
+                  color: getItemColor(),
                   fontSize: 12,
                 ),
                 child: Padding(
@@ -250,6 +245,54 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ColorMorphingIcon extends StatefulWidget {
+  final String svgPath;
+  final Color targetColor;
+
+  const _ColorMorphingIcon({required this.svgPath, required this.targetColor});
+
+  @override
+  State<_ColorMorphingIcon> createState() => _ColorMorphingIconState();
+}
+
+class _ColorMorphingIconState extends State<_ColorMorphingIcon> {
+  Color? _oldColor;
+
+  @override
+  void didUpdateWidget(covariant _ColorMorphingIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.targetColor != widget.targetColor) {
+      _oldColor = oldWidget.targetColor;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<Color?>(
+      tween: ColorTween(
+        begin: _oldColor ?? widget.targetColor,
+        end: widget.targetColor,
+      ),
+      duration: const Duration(milliseconds: 200),
+      builder: (context, color, _) {
+        return SizedBox(
+          width: 28,
+          height: 28,
+          child: SvgPicture.asset(
+            widget.svgPath,
+            width: 20,
+            height: 20,
+            colorFilter: ColorFilter.mode(
+              color ?? widget.targetColor,
+              BlendMode.srcIn,
+            ),
+          ),
+        );
+      },
     );
   }
 }
