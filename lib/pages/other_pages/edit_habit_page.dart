@@ -86,7 +86,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
         stateProvider.habitAmountLabelController.text !=
             widget.habit.amountLabel ||
         stateProvider.iconPath != widget.habit.iconPath ||
-        stateProvider.isAdditional != widget.habit.additional;
+        stateProvider.isAdditional != widget.habit.additional ||
+        stateProvider.timeIntervalStart != widget.habit.timeIntervalStart ||
+        stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd ||
+        stateProvider.timeIntervalEnabled != widget.habit.timeIntervalEnabled;
   }
 
   @override
