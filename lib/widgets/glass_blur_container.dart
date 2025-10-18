@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -32,7 +31,10 @@ class GlassBlurContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.gradient = const LinearGradient(
-      colors: [Colors.white24, Colors.white10],
+      colors: [
+        Color.fromARGB(33, 255, 255, 255),
+        Color.fromARGB(12, 255, 255, 255),
+      ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
