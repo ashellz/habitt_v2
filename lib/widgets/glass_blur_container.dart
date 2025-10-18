@@ -77,7 +77,6 @@ class GlassBlurContainer extends StatelessWidget {
                 child: BackdropFilter(
                   enabled: true,
                   filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-                  child: Container(),
                 ),
               ),
 

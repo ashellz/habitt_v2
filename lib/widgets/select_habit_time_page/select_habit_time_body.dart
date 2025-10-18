@@ -61,7 +61,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   }
 
   bool shouldShowHabitName(TimeType timeType) {
-    return !(widget.timeIntervalEnd - widget.timeIntervalStart > 5 &&
+    return !(widget.timeIntervalEnd - widget.timeIntervalStart <= 5 &&
         timeType == TimeType.regular);
   }
 
