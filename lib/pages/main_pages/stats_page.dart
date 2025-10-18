@@ -48,6 +48,7 @@ class _StatsPageState extends State<StatsPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: ListView(
                   children: [
+                    const SizedBox(height: 48),
                     Text(
                       "Stats",
                       style: TextStyle(

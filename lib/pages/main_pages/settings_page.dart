@@ -37,6 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView(
               children: [
+                const SizedBox(height: 48),
                 Text(
                   "Settings",
                   style: TextStyle(
