@@ -10,6 +10,7 @@ class StateProvider extends ChangeNotifier {
   TextEditingController descController = TextEditingController();
   String _iconPath = "";
   bool _isAdditional = false;
+  Color? _habitColor;
 
   String _alertText = "";
   bool _showAlert = false;
@@ -93,6 +94,11 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set habitColor(Color? color) {
+    _habitColor = color;
+    notifyListeners();
+  }
+
   void reset() {
     _habitAmount = 0;
 
@@ -109,6 +115,8 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalStart = 420;
     _timeIntervalEnd = 450;
 
+    _habitColor = null;
+
     notifyListeners();
   }
 
@@ -121,4 +129,6 @@ class StateProvider extends ChangeNotifier {
   String get iconPath => _iconPath;
 
   bool get isAdditional => _isAdditional;
+
+  Color? get habitColor => _habitColor;
 }

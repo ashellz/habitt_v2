@@ -3,6 +3,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 enum TimeType { regular, midnight, overday }
 
@@ -63,6 +64,20 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   bool shouldShowHabitName(TimeType timeType) {
     return !(widget.timeIntervalEnd - widget.timeIntervalStart <= 5 &&
         timeType == TimeType.regular);
+  }
+
+  Color getContainerColor(ColorProvider cp, StateProvider sp) {
+    if (cp.isDarkMode) {
+      return sp.habitColor?.darken(50).withOpacity(0.7) ??
+          cp.colorScheme.vividColor
+              .lighten(cp.isDarkMode ? 50 : 30)
+              .withOpacity(0.7);
+    } else {
+      return sp.habitColor?.lighten(30).withOpacity(0.7) ??
+          cp.colorScheme.vividColor
+              .lighten(cp.isDarkMode ? 50 : 30)
+              .withOpacity(0.7);
+    }
   }
 
   @override
@@ -162,8 +177,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               child: Container(
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: cp.colorScheme.darkerStandardColor
-                                      .withOpacity(0.7),
+                                  color: getContainerColor(cp, sp),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
@@ -173,7 +187,9 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       width: 4,
                                       height: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: cp.colorScheme.vividColor,
+                                        color:
+                                            sp.habitColor ??
+                                            cp.colorScheme.vividColor,
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -208,6 +224,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                                   habitName,
                                                   style: TextStyle(
                                                     color:
+                                                        sp.habitColor ??
                                                         cp
                                                             .colorScheme
                                                             .vividColor,
@@ -236,8 +253,9 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               child: Container(
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: cp.colorScheme.darkerStandardColor
-                                      .withOpacity(0.7),
+                                  color:
+                                      sp.habitColor ??
+                                      cp.colorScheme.vividColor,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Align(
@@ -246,7 +264,9 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     width: 4,
                                     height: double.infinity,
                                     decoration: BoxDecoration(
-                                      color: cp.colorScheme.vividColor,
+                                      color:
+                                          sp.habitColor ??
+                                          cp.colorScheme.vividColor,
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),

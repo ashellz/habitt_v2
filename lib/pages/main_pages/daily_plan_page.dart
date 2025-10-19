@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -226,14 +227,30 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                             getHabitTimeType(habit),
                                             habit,
                                           )
-                                          ? Text(
-                                            habit.name,
-                                            style: TextStyle(
-                                              color: cp.colorScheme.vividColor,
-                                              fontWeight: FontWeight.w500,
-                                              letterSpacing: 1,
-                                              fontSize: 16,
-                                            ),
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            spacing: 4,
+                                            children: [
+                                              Image.asset(
+                                                habit.iconPath,
+                                                width: 24,
+                                                height: 24,
+                                              ),
+                                              Text(
+                                                habit.name,
+                                                style: TextStyle(
+                                                  color:
+                                                      cp.colorScheme.vividColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  letterSpacing: 1,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
                                           )
                                           : Container(),
                                 ),

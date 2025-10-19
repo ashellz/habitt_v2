@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ColorProvider extends ChangeNotifier {
   bool isDarkMode = false;
   late String colorSchemeString;
+  List<Color> vividColors = [];
 
   Color darkStandardColor = Color(0xFF212529);
 
@@ -24,6 +25,53 @@ class ColorProvider extends ChangeNotifier {
   late CustomColorScheme cherryColorScheme;
 
   List<CustomColorScheme> colorSchemes = [];
+  final List<Color> lightVividColors = [
+    // Oranges
+    Color(0xFFFF6A00), // bright carrot
+    // Yellows
+    Color(0xFFFFD400), // lemon
+    // Pinks
+    Color(0xFFFF2DB8), // neon pink
+    // Purples / Violets
+    Color(0xFF7A00FF), // electric violet
+    // Cyan / Aqua
+    Color(0xFF00E5FF), // bright cyan
+    // Teal (extra)
+    Color(0xFF00BFA5), // punchy teal
+    // Olive / Mustard
+    Color(0xFFB58E00), // bold mustard
+    // Brown / Amber
+    Color(0xFFB45A00), // amber-brown vivid
+    // Slate / Indigo
+    Color(0xFF0033CC), // deep indigo vivid
+    // Neutral Bright
+    Color(0xFF4D4D4D), // strong neutral for emphasis
+  ];
+
+  final List<Color> darkVividColors = [
+    // Oranges
+    Color(0xFFFF8A42), // warm highlight for dark mode
+    // Yellows
+    Color(0xFFFFE86B), // luminous for dark backgrounds
+    // Pinks
+    Color(0xFFFF7ACF), // bright on dark
+    // Purples / Violets
+    Color(0xFFB66CFF), // luminous purple for dark
+    // Cyan / Aqua
+    Color(0xFF6FF3FF), // teal-cyan highlight
+    // Teal (extra)
+    Color(0xFF4FF0D9), // vivid teal for dark
+    // Lime / Chartreuse
+    Color(0xFFD9FF66), // soft bright on dark
+    // Olive / Mustard
+    Color(0xFFFFD87A), // warm highlight for dark
+    // Brown / Amber
+    Color(0xFFFFA84A), // warm accent on dark
+    // Slate / Indigo
+    Color(0xFF3366FF), // bright indigo for dark
+    // Neutral Bright
+    Color(0xFFBFBFBF), // light neutral on dark
+  ];
 
   Color red = Color.fromARGB(255, 215, 46, 46);
 
@@ -42,6 +90,19 @@ class ColorProvider extends ChangeNotifier {
       magentaColorScheme,
       cherryColorScheme,
     ];
+
+    vividColors = [
+      blueColorScheme.vividColor,
+      tealColorScheme.vividColor,
+      greenColorScheme.vividColor,
+      magentaColorScheme.vividColor,
+      cherryColorScheme.vividColor,
+    ];
+    if (isDarkMode) {
+      vividColors.addAll(darkVividColors);
+    } else {
+      vividColors.addAll(lightVividColors);
+    }
 
     changeColorScheme(colorSchemeString);
   }
@@ -70,6 +131,15 @@ class ColorProvider extends ChangeNotifier {
       disabledColor = Color.fromARGB(255, 28, 31, 35);
       mutedTextColor = Color.fromARGB(255, 150, 161, 171);
       redAccent = Color.fromARGB(255, 43, 28, 28);
+
+      vividColors = [
+        blueColorScheme.vividColor,
+        tealColorScheme.vividColor,
+        greenColorScheme.vividColor,
+        magentaColorScheme.vividColor,
+        cherryColorScheme.vividColor,
+      ];
+      vividColors.addAll(darkVividColors);
     } else {
       blueColorScheme = _blue;
       tealColorScheme = _teal;
@@ -85,6 +155,15 @@ class ColorProvider extends ChangeNotifier {
       disabledColor = Color(0xFFF8F9FA);
       mutedTextColor = Color(0xFF6C757D);
       redAccent = Color.fromARGB(255, 240, 210, 210);
+
+      vividColors = [
+        blueColorScheme.vividColor,
+        tealColorScheme.vividColor,
+        greenColorScheme.vividColor,
+        magentaColorScheme.vividColor,
+        cherryColorScheme.vividColor,
+      ];
+      vividColors.addAll(lightVividColors);
     }
 
     colorSchemes = [

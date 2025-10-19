@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_time_interval_switch.dart';
 
 class HabitTimeBottomOptions extends StatelessWidget {
@@ -38,6 +39,46 @@ class HabitTimeBottomOptions extends StatelessWidget {
               ),
             ),
             SelectTimeIntervalSwitch(cp: cp),
+            SizedBox(height: 16),
+
+            Row(
+              children: [
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: Icon(Icons.color_lens, color: cp.textColor, size: 32),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    "Select habit color",
+                    style: TextStyle(
+                      color: cp.textColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder:
+                          (context) => SelectHabitColorSheet(colorProvider: cp),
+                    );
+                  },
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: sp.habitColor ?? cp.colorScheme.vividColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
