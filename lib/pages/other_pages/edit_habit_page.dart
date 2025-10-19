@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
@@ -48,6 +49,11 @@ class _EditHabitPageState extends State<EditHabitPage> {
     stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
     stateProvider.iconPath = widget.habit.iconPath;
     stateProvider.isAdditional = widget.habit.additional;
+    stateProvider.timeIntervalEnabled = widget.habit.timeIntervalEnabled;
+    stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
+    stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
+    stateProvider.habitColor =
+        widget.habit.color == null ? null : hexToColor(widget.habit.color!);
   }
 
   @override
@@ -69,6 +75,11 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
       stateProvider.iconPath = widget.habit.iconPath;
       stateProvider.isAdditional = widget.habit.additional;
+      stateProvider.timeIntervalEnabled = widget.habit.timeIntervalEnabled;
+      stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
+      stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
+      stateProvider.habitColor =
+          widget.habit.color == null ? null : hexToColor(widget.habit.color!);
     });
   }
 
@@ -77,6 +88,16 @@ class _EditHabitPageState extends State<EditHabitPage> {
     TextEditingController nameController,
     TextEditingController descController,
   ) {
+    if (widget.habit.color == null) {
+      if (stateProvider.habitColor != null) {
+        return true;
+      }
+    } else {
+      if (stateProvider.habitColor != hexToColor(widget.habit.color!)) {
+        return true;
+      }
+    }
+
     return stateProvider.habitCategoryId != widget.habit.categoryId ||
         nameController.text != widget.habit.name ||
         descController.text != widget.habit.description ||

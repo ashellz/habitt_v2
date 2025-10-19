@@ -20,6 +20,7 @@ class Habit extends HiveObject {
   bool timeIntervalEnabled;
   int timeIntervalStart; // In minutes
   int timeIntervalEnd; // In minutes
+  String? color;
 
   Habit({
     required this.id,
@@ -41,6 +42,7 @@ class Habit extends HiveObject {
     this.timeIntervalEnabled = false,
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
+    this.color,
   });
 
   Habit copy() {
@@ -64,6 +66,7 @@ class Habit extends HiveObject {
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
+      color: color,
     );
   }
 
@@ -88,6 +91,7 @@ class Habit extends HiveObject {
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
+      color: color,
     );
   }
 
@@ -109,6 +113,7 @@ class Habit extends HiveObject {
     timeIntervalEnabled = habit.timeIntervalEnabled;
     timeIntervalStart = habit.timeIntervalStart;
     timeIntervalEnd = habit.timeIntervalEnd;
+    color = habit.color;
   }
 
   Future<void> completeHabit() async {

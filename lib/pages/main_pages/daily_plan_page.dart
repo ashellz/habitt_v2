@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/nav_back_button.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class DailyPlanPage extends StatelessWidget {
   const DailyPlanPage({super.key});
@@ -103,6 +104,23 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     return habit.timeIntervalStart / 60;
   }
 
+  Color getContainerColor(ColorProvider cp, Habit habit) {
+    if (habit.color == null) {
+      if (cp.isDarkMode) {
+        return cp.colorScheme.vividColor.darken(50).withOpacity(0.7);
+      }
+      return cp.colorScheme.vividColor.lighten(30).withOpacity(0.7);
+    }
+
+    final habitColor = hexToColor(habit.color!);
+
+    if (cp.isDarkMode) {
+      return habitColor.darken(50).withOpacity(0.7);
+    } else {
+      return habitColor.lighten(30).withOpacity(0.7);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
@@ -181,8 +199,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                         child: Container(
                           padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: cp.colorScheme.darkerStandardColor
-                                .withOpacity(0.7),
+                            color: getContainerColor(cp, habit),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -192,7 +209,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 width: 4,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: cp.colorScheme.vividColor,
+                                  color:
+                                      habit.color != null
+                                          ? hexToColor(habit.color!)
+                                          : cp.colorScheme.vividColor,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -244,7 +264,13 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                                 habit.name,
                                                 style: TextStyle(
                                                   color:
-                                                      cp.colorScheme.vividColor,
+                                                      habit.color != null
+                                                          ? hexToColor(
+                                                            habit.color!,
+                                                          )
+                                                          : cp
+                                                              .colorScheme
+                                                              .vividColor,
                                                   fontWeight: FontWeight.w500,
                                                   letterSpacing: 1,
                                                   fontSize: 16,

@@ -69,14 +69,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   Color getContainerColor(ColorProvider cp, StateProvider sp) {
     if (cp.isDarkMode) {
       return sp.habitColor?.darken(50).withOpacity(0.7) ??
-          cp.colorScheme.vividColor
-              .lighten(cp.isDarkMode ? 50 : 30)
-              .withOpacity(0.7);
+          cp.colorScheme.vividColor.darken(50).withOpacity(0.7);
     } else {
       return sp.habitColor?.lighten(30).withOpacity(0.7) ??
-          cp.colorScheme.vividColor
-              .lighten(cp.isDarkMode ? 50 : 30)
-              .withOpacity(0.7);
+          cp.colorScheme.vividColor.lighten(30).withOpacity(0.7);
     }
   }
 
@@ -220,18 +216,35 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                         ),
                                         child:
                                             shouldShowHabitName(timeType)
-                                                ? Text(
-                                                  habitName,
-                                                  style: TextStyle(
-                                                    color:
-                                                        sp.habitColor ??
-                                                        cp
-                                                            .colorScheme
-                                                            .vividColor,
-                                                    fontWeight: FontWeight.w500,
-                                                    letterSpacing: 1,
-                                                    fontSize: 16,
-                                                  ),
+                                                ? Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  spacing: 4,
+                                                  children: [
+                                                    Image.asset(
+                                                      sp.iconPath,
+                                                      width: 24,
+                                                      height: 24,
+                                                    ),
+                                                    Text(
+                                                      habitName,
+                                                      style: TextStyle(
+                                                        color:
+                                                            sp.habitColor ??
+                                                            cp
+                                                                .colorScheme
+                                                                .vividColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        letterSpacing: 1,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 )
                                                 : Container(),
                                       ),
