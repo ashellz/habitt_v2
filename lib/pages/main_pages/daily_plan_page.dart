@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
