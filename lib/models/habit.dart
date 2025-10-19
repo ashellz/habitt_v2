@@ -39,8 +39,8 @@ class Habit extends HiveObject {
     this.longestStreak = 0,
     this.additional = false,
     this.timeIntervalEnabled = false,
-    this.timeIntervalStart = 0,
-    this.timeIntervalEnd = 0,
+    this.timeIntervalStart = 420,
+    this.timeIntervalEnd = 450,
   });
 
   Habit copy() {
