@@ -92,7 +92,9 @@ Future<void> main() async {
           create: (_) => CategoryProvider(null),
 
           // Update the existing instance when HabitProvider changes.
-          update: (_, habit, previous) => previous!..updateDependencies(habit),
+          update:
+              (_, habitProvider, previous) =>
+                  previous!..updateDependencies(habitProvider),
         ),
 
         // 4. StateProvider: No dependencies.

@@ -18,6 +18,7 @@ class CategoryProvider extends ChangeNotifier {
   void updateDependencies(HabitProvider newHabitProvider) {
     if (_habitProvider != newHabitProvider) {
       _habitProvider = newHabitProvider;
+      reorderCategoriesBasedOnTime();
       // Logic to run on dependency update
       notifyListeners();
     }
@@ -31,7 +32,6 @@ class CategoryProvider extends ChangeNotifier {
       Category(id: 4, name: "Evening"),
     ];
     _categoriesOrdered = _categories;
-    reorderCategoriesBasedOnTime();
   }
 
   List<Category> get categories => _categories;
