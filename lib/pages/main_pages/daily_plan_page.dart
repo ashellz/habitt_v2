@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/color_converting.dart';
-import 'package:habitt/widgets/faded_list_view.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +18,6 @@ class DailyPlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorProvider = context.watch<ColorProvider>();
-
     final listViewHeight = MediaQuery.of(context).size.height - 217;
 
     return AnnotatedRegion(
@@ -70,13 +70,45 @@ class SelectHabitTimeBody extends StatefulWidget {
 }
 
 class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
+  DateTime currentTime = DateTime.now();
   double hourHeight = 100;
+  double? topOffsetForIndicator;
   final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _updateTopOffsetIndicator();
+      _scrollController.animateTo(
+        topOffsetForIndicator! - widget.listViewHeight / 2,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    });
+
+    Timer.periodic(Duration(minutes: 1), (timer) async {
+      setState(() {
+        currentTime = DateTime.now();
+      });
+      await _updateTopOffsetIndicator();
+    });
+  }
 
   @override
   void dispose() {
     _scrollController.dispose();
+
     super.dispose();
+  }
+
+  Future<void> _updateTopOffsetIndicator() async {
+    setState(() {
+      topOffsetForIndicator =
+          currentTime.hour * hourHeight +
+          currentTime.minute / 60 * hourHeight +
+          hourHeight / 2;
+    });
   }
 
   bool shouldShowHabitName(TimeType timeType, Habit habit) {
@@ -142,8 +174,8 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     return CustomShaderMask(
       child: SizedBox(
         height: widget.listViewHeight,
-        child: FadedListView(
-          height: widget.listViewHeight,
+        child: ListView(
+          controller: _scrollController,
           scrollDirection: Axis.vertical,
           children: [
             SizedBox(
@@ -316,6 +348,61 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             ),
                           ),
                         ),
+
+                  // line indicating current time
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.fastOutSlowIn,
+                    top: topOffsetForIndicator ?? 0,
+                    left: 0,
+                    right: 0,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 500),
+                      opacity: topOffsetForIndicator != null ? 1 : 0,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Transform.translate(
+                              offset: const Offset(0, -10),
+                              child: Container(
+                                height: 20,
+                                width: 50,
+                                decoration: ShapeDecoration(
+                                  color: cp.colorScheme.vividColor,
+                                  shape: StadiumBorder(),
+                                ),
+
+                                child: Text(
+                                  '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: cp.textColor,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: cp.colorScheme.vividColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
