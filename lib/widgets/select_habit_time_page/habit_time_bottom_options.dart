@@ -39,45 +39,53 @@ class HabitTimeBottomOptions extends StatelessWidget {
               ),
             ),
             SelectTimeIntervalSwitch(cp: cp),
-            SizedBox(height: 16),
 
-            Row(
-              children: [
-                SizedBox(
-                  width: 32,
-                  height: 32,
-                  child: Icon(Icons.color_lens, color: cp.textColor, size: 32),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 12),
-                  child: Text(
-                    "Select habit color",
-                    style: TextStyle(
-                      color: cp.textColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder:
+                      (context) => SelectHabitColorSheet(colorProvider: cp),
+                );
+              },
+              child: Container(
+                color: Colors.transparent,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: Icon(
+                        Icons.color_lens,
+                        color: cp.textColor,
+                        size: 32,
+                      ),
                     ),
-                  ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder:
-                          (context) => SelectHabitColorSheet(colorProvider: cp),
-                    );
-                  },
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: sp.habitColor ?? cp.colorScheme.vividColor,
-                      shape: BoxShape.circle,
+                    Padding(
+                      padding: EdgeInsets.only(left: 12),
+                      child: Text(
+                        "Select habit color",
+                        style: TextStyle(
+                          color: cp.textColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                    Spacer(),
+
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: sp.habitColor ?? cp.colorScheme.vividColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),
