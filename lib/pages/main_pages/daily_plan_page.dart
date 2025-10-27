@@ -83,7 +83,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
       await _updateTopOffsetIndicator();
       _scrollController.animateTo(
         topOffsetForIndicator! - widget.listViewHeight / 2,
-        duration: Duration(milliseconds: 200),
+        duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     });
