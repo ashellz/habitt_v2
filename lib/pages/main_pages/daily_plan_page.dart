@@ -5,6 +5,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/color_converting.dart';
+import 'package:habitt/widgets/custom_shader_mask.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -409,33 +410,6 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class CustomShaderMask extends StatelessWidget {
-  const CustomShaderMask({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (Rect bounds) {
-        return const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.white,
-            Colors.white,
-            Colors.transparent,
-          ],
-          stops: [0.0, 0.05, 0.95, 1.0],
-        ).createShader(bounds);
-      },
-      blendMode: BlendMode.dstIn,
-      child: child,
     );
   }
 }
