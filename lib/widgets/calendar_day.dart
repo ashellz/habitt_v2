@@ -36,21 +36,31 @@ class CalendarDay extends StatelessWidget {
     if (habits.isEmpty ||
         date.isBefore(dateJoined) ||
         date.isAfter(DateTime.now())) {
-      habitsCount = 1;
+      habitsCount = 0;
     }
-
-    final completed = completedHabitsCount == habitsCount && habitsCount > 0;
 
     final cp = context.watch<ColorProvider>();
 
-    Color getProgressBarColor() {
-      final bool isDarkMode = cp.isDarkMode;
-      if (isDarkMode) {
-        return cp.textColor;
-      } else {
-        return selected ? cp.colorScheme.strokeColor : cp.textColor;
-      }
+    final completedColor = cp.colorScheme.darkerStandardColor;
+    final uncompletedColor = cp.standardColor;
+
+    Color progressColor({
+      required Color start, // e.g., incomplete (dark grey)
+      required Color end, // e.g., complete (green)
+      required int completed,
+      required int total,
+    }) {
+      if (total <= 0) return start;
+      final t = (completed / total).clamp(0.0, 1.0);
+      return Color.lerp(start, end, t)!;
     }
+
+    final color = progressColor(
+      start: uncompletedColor,
+      end: completedColor,
+      completed: completedHabitsCount,
+      total: habitsCount,
+    );
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -60,13 +70,8 @@ class CalendarDay extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color:
-                    selected
-                        ? cp.colorScheme.darkerStandardColor
-                        : today
-                        ? cp.colorScheme.strokeColor
-                        : Colors.transparent,
-                borderRadius: BorderRadius.circular(100),
+                color: color,
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
                 child: Text(
@@ -82,42 +87,9 @@ class CalendarDay extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned.fill(
-              child: RotatedBox(
-                quarterTurns: -1,
-                child: TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 1000),
-                  curve: Curves.easeInOut,
-                  tween: Tween<double>(
-                    begin: 0,
-                    end: completedHabitsCount / habitsCount,
-                  ),
-                  builder: (context, value, _) {
-                    return CircularProgressIndicator(
-                      strokeCap: StrokeCap.round,
-                      strokeWidth:
-                          cp.isDarkMode
-                              ? 2
-                              : selected
-                              ? 3
-                              : 2,
-                      value: value,
-                      color: getProgressBarColor(),
-                      backgroundColor: Colors.transparent,
-                    );
-                  },
-                ),
-              ),
-            ),
-            if (completed)
-              Transform.translate(
-                offset: const Offset(5, 5),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: SvgPicture.asset("assets/images/svg/check.svg"),
-                ),
-              ),
-            if (DateTime(date.year, date.month, date.day) == dateJoined)
+
+            if (DateTime(date.year, date.month, date.day) ==
+                dateJoined.subtract(const Duration(days: 1)))
               Transform.translate(
                 offset: const Offset(7, 0),
                 child: Align(
