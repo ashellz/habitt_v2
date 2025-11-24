@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/blur_circle_button.dart';
@@ -36,7 +36,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final habitProvider = context.read<HabitProvider>();
 
     return Dialog(
@@ -60,9 +60,9 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
               Column(
                 children: [
                   CircleButton(
-                    colorProvider: colorProvider,
+                    tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
-                    color: colorProvider.colorScheme.darkerStandardColor,
+                    color: tp.primaryColor,
                     onPressed: () {
                       if (widget.habit.amountCompleted ==
                           stateProvider.habitAmount) {
@@ -82,9 +82,9 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
-                    colorProvider: colorProvider,
-                    icon: Icon(Icons.close, color: colorProvider.textColor),
-                    color: colorProvider.colorScheme.standardColor,
+                    tp: tp,
+                    icon: Icon(Icons.close, color: tp.primaryTextColor),
+                    color: tp.secondaryButtonBackground,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],

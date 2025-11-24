@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class DefaultCupertinoButton extends StatelessWidget {
@@ -20,20 +20,20 @@ class DefaultCupertinoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 150),
       opacity: enabled ? 1 : 0.5,
       child: CupertinoButton(
-        color: color ?? colorProvider.colorScheme.darkerStandardColor,
+        color: color ?? tp.primaryColor,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         borderRadius: BorderRadius.circular(24),
         onPressed: onPressed,
         child: Text(
           text,
           style: TextStyle(
-            color: textColor ?? colorProvider.textColor,
+            color: textColor ?? tp.primaryTextColor,
             fontSize: 16,
           ),
         ),

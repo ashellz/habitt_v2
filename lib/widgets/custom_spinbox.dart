@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomSpinBox extends StatelessWidget {
@@ -21,40 +21,35 @@ class CustomSpinBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return SpinBox(
       textInputAction: TextInputAction.done,
-      cursorColor: colorProvider.textColor,
+      cursorColor: tp.primaryTextColor,
       enableInteractiveSelection: true,
-      keyboardAppearance:
-          colorProvider.isDarkMode ? Brightness.dark : Brightness.light,
-      iconColor: WidgetStateProperty.all<Color>(colorProvider.textColor),
-      textStyle: TextStyle(color: colorProvider.textColor),
+      keyboardAppearance: tp.isDark ? Brightness.dark : Brightness.light,
+      iconColor: WidgetStateProperty.all<Color>(tp.primaryTextColor),
+      textStyle: TextStyle(color: tp.primaryTextColor),
       decoration: InputDecoration(
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
         ),
         filled: true,
-        fillColor: colorProvider.standardColor,
+        fillColor: tp.surfaceColor,
         labelStyle: TextStyle(
           fontSize: 16.0,
           fontWeight: FontWeight.bold,
-          color: colorProvider.textColor,
+          color: tp.primaryTextColor,
         ),
         labelText: labelText,
 
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
-          borderSide: BorderSide(
-            color: colorProvider.colorScheme.darkerStandardColor,
-          ),
+          borderSide: BorderSide(color: tp.primaryButtonBackground),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          borderSide: BorderSide(
-            color: colorProvider.colorScheme.darkerStandardColor,
-          ),
+          borderSide: BorderSide(color: tp.primaryButtonBackground),
         ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 20,

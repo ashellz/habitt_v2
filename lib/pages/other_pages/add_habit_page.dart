@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/add_habit_button.dart';
@@ -37,7 +37,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final habitProvider = context.watch<HabitProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
     final localizations = AppLocalizations.of(context)!;
@@ -47,16 +47,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor: tp.backgroundColor,
+        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
+            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
       ),
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: GradientBackground(
           child: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -64,13 +61,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ListView(
                 children: [
-                  NavBackButton(colorProvider: colorProvider),
+                  NavBackButton(tp: tp),
                   Text(
                     localizations.newHabit,
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
-                      color: colorProvider.colorScheme.vividColor,
+                      color: tp.primaryColor,
                     ),
                   ),
                   SelectedHabitDisplay(
@@ -98,11 +95,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                   MoreOptionsText(localizations: localizations),
                   SelectHabitTypeOptions(),
-                  SchedulingAndAlerts(colorProvider: colorProvider),
-                  AdditionalTaskSwitch(
-                    colorProvider: colorProvider,
-                    stateProvider: stateProvider,
-                  ),
+                  SchedulingAndAlerts(tp: tp),
+                  AdditionalTaskSwitch(tp: tp, stateProvider: stateProvider),
                   AddHabitButton(
                     nameController: nameController,
                     habitProvider: habitProvider,

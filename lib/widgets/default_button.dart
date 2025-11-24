@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class DefaultButton extends StatelessWidget {
@@ -27,12 +27,10 @@ class DefaultButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     Color buttonColor =
-        danger
-            ? colorProvider.red
-            : color ?? colorProvider.colorScheme.darkerStandardColor;
+        danger ? tp.dangerColor : color ?? tp.primaryButtonBackground;
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -61,7 +59,7 @@ class DefaultButton extends StatelessWidget {
                         ),
                         child: Text(
                           label,
-                          style: TextStyle(color: colorProvider.textColor),
+                          style: TextStyle(color: tp.primaryTextColor),
                         ),
                       )
                       : Stack(
@@ -100,7 +98,7 @@ class DefaultButton extends StatelessWidget {
                                 child: Text(
                                   label,
                                   style: TextStyle(
-                                    color: colorProvider.textColor,
+                                    color: tp.primaryTextColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),

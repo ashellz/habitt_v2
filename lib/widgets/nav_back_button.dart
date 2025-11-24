@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 
 class NavBackButton extends StatelessWidget {
-  const NavBackButton({super.key, required this.colorProvider});
+  const NavBackButton({super.key, required this.tp});
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +18,7 @@ class NavBackButton extends StatelessWidget {
           child: SvgPicture.asset(
             "assets/images/svg/arrow-back.svg",
             height: 40,
-            colorFilter: ColorFilter.mode(
-              colorProvider.textColor,
-              BlendMode.srcIn,
-            ),
+            colorFilter: ColorFilter.mode(tp.primaryTextColor, BlendMode.srcIn),
           ),
         ),
       ),

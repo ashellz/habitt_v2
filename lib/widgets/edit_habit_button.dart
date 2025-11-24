@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
-import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +70,7 @@ class EditHabitButton extends StatelessWidget {
 
               widget.habit.color = colorToHex(
                 stateProvider.habitColor ??
-                    context.watch<ColorProvider>().colorScheme.vividColor,
+                    context.watch<ThemeProvider>().primaryColor,
               );
 
               habitProvider.updateHabit(widget.habit);

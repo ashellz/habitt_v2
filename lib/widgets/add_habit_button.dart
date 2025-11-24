@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/color_converting.dart';
@@ -79,7 +79,7 @@ class AddHabitButton extends StatelessWidget {
                   timeIntervalEnd: stateProvider.timeIntervalEnd,
                   color: colorToHex(
                     stateProvider.habitColor ??
-                        context.watch<ColorProvider>().colorScheme.vividColor,
+                        context.read<ThemeProvider>().primaryColor,
                   ),
                 ),
               );

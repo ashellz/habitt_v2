@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class ValueText extends StatelessWidget {
@@ -10,7 +10,7 @@ class ValueText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return Text.rich(
       TextSpan(
@@ -19,7 +19,7 @@ class ValueText extends StatelessWidget {
             text: text,
             style: TextStyle(
               fontSize: 22,
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -27,7 +27,7 @@ class ValueText extends StatelessWidget {
             text: value.toString(),
             style: TextStyle(
               fontSize: 22,
-              color: colorProvider.colorScheme.vividColor,
+              color: tp.primaryColor,
               fontWeight: FontWeight.bold,
             ),
           ),

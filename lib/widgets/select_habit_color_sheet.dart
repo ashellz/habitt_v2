@@ -1,22 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 class SelectHabitColorSheet extends StatelessWidget {
-  const SelectHabitColorSheet({super.key, required this.colorProvider});
+  const SelectHabitColorSheet({super.key, required this.tp});
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
 
+    // bunch of different colors to choose frm (shades of green, blue, etc.)
+    // make on spot with hex or rgba
+    final List<Color> colors = [
+      Colors.green.shade300,
+      Colors.green.shade400,
+      Colors.green.shade500,
+      Colors.green.shade600,
+      Colors.green.shade700,
+      Colors.green.shade800,
+      Colors.green.shade900,
+      Colors.blue.shade300,
+      Colors.blue.shade400,
+      Colors.blue.shade500,
+      Colors.blue.shade600,
+      Colors.blue.shade700,
+      Colors.blue.shade800,
+      Colors.blue.shade900,
+      Colors.purple.shade300,
+      Colors.purple.shade400,
+      Colors.purple.shade500,
+      Colors.purple.shade600,
+      Colors.purple.shade700,
+      Colors.purple.shade800,
+      Colors.purple.shade900,
+      Colors.red.shade300,
+      Colors.red.shade400,
+      Colors.red.shade500,
+      Colors.red.shade600,
+      Colors.red.shade700,
+      Colors.red.shade800,
+      Colors.red.shade900,
+      Colors.yellow.shade300,
+      Colors.yellow.shade400,
+      Colors.yellow.shade500,
+      Colors.yellow.shade600,
+      Colors.yellow.shade700,
+      Colors.yellow.shade800,
+      Colors.yellow.shade900,
+    ];
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: colorProvider.backgroundColor,
+        color: tp.backgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -29,12 +69,12 @@ class SelectHabitColorSheet extends StatelessWidget {
           Text(
             "Select habit color",
             style: TextStyle(
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
               fontSize: 26,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Divider(thickness: 2, color: colorProvider.colorScheme.strokeColor),
+          Divider(thickness: 2, color: tp.mutedTextColor),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -44,7 +84,7 @@ class SelectHabitColorSheet extends StatelessWidget {
                   spacing: 16,
                   runSpacing: 16,
                   children: [
-                    for (Color vividColor in colorProvider.vividColors)
+                    for (Color vividColor in colors)
                       GestureDetector(
                         onTap: () {
                           stateProvider.habitColor = vividColor;
@@ -63,7 +103,7 @@ class SelectHabitColorSheet extends StatelessWidget {
                                 stateProvider.habitColor == vividColor
                                     ? Border.all(
                                       color: vividColor.darken(
-                                        colorProvider.isDarkMode ? 30 : 15,
+                                        tp.isDark ? 30 : 15,
                                       ),
                                       width: 3,
                                     )

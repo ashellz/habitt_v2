@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/custom_spinbox.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
@@ -31,10 +31,10 @@ class SelectAmountDurationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final stateProvider = context.watch<StateProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return Dialog(
-      backgroundColor: colorProvider.backgroundColor,
+      backgroundColor: tp.backgroundColor,
       child: ValueListenableBuilder<TextEditingValue>(
         valueListenable: stateProvider.habitAmountLabelController,
         builder: (context, value, child) {

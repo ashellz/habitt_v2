@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/blur_circle_button.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
@@ -47,7 +47,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
   @override
   Widget build(BuildContext context) {
     final sp = context.watch<StateProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final width = MediaQuery.of(context).size.width - 200;
 
     return Dialog(
@@ -66,14 +66,14 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                     Text(
                       widget.isStartTime ? "Start time" : "End time",
                       style: TextStyle(
-                        color: colorProvider.textColor,
+                        color: tp.primaryTextColor,
                         fontSize: 18,
                       ),
                     ),
                     SizedBox(height: 8),
                     Stack(
                       children: [
-                        TimeGradient(color: colorProvider.backgroundColor),
+                        TimeGradient(color: tp.backgroundColor),
                         NumberPicker(
                           hoursController: hoursController,
                           minutesController: minutesController,
@@ -88,9 +88,9 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
               Column(
                 children: [
                   CircleButton(
-                    colorProvider: colorProvider,
+                    tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
-                    color: colorProvider.colorScheme.darkerStandardColor,
+                    color: tp.primaryColor,
                     onPressed: () {
                       final hours = hoursController.selectedItem % 24;
                       final minutes = minutesController.selectedItem % 60;
@@ -107,9 +107,9 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
-                    colorProvider: colorProvider,
-                    icon: Icon(Icons.close, color: colorProvider.textColor),
-                    color: colorProvider.colorScheme.standardColor,
+                    tp: tp,
+                    icon: Icon(Icons.close, color: tp.primaryTextColor),
+                    color: tp.primaryColor,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -136,7 +136,7 @@ class NumberPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -160,7 +160,7 @@ class NumberPicker extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   index.toString().padLeft(2, '0'),
-                  style: TextStyle(fontSize: 44.0, color: cp.textColor),
+                  style: TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
                 ),
               ),
             ),
@@ -170,7 +170,7 @@ class NumberPicker extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 16.0),
           child: Text(
             ":",
-            style: TextStyle(fontSize: 44.0, color: cp.textColor),
+            style: TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
           ),
         ),
         SizedBox(
@@ -195,7 +195,7 @@ class NumberPicker extends StatelessWidget {
                   index.toString().padLeft(2, '0'),
                   style: TextStyle(
                     fontSize: 44.0,
-                    color: cp.textColor,
+                    color: tp.primaryTextColor,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -215,7 +215,7 @@ class TimeGradient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -226,7 +226,7 @@ class TimeGradient extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [color, cp.backgroundColor.withValues(alpha: 0), color],
+            colors: [color, tp.backgroundColor.withValues(alpha: 0), color],
           ),
         ),
       ),

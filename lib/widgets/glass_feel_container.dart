@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:inner_glow/inner_glow.dart';
 import 'package:provider/provider.dart';
@@ -55,9 +55,8 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final prefsProvider = context.watch<PreferencesProvider>();
-    final colorScheme = colorProvider.colorScheme;
 
     if (!prefsProvider.glassFeel ||
         widget.isHabit && !prefsProvider.glassHabits) {
@@ -69,14 +68,8 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
           width: widget.width ?? double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            color: colorProvider.habitColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
+            border: Border.all(color: tp.borderColor, width: 2),
+            color: tp.elevatedSurfaceColor,
           ),
 
           child: widget.child,
@@ -87,8 +80,8 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
         margin: widget.margin,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          color: colorScheme.standardColor,
-          border: Border.all(color: colorScheme.strokeColor, width: 2),
+          color: tp.surfaceColor,
+          border: Border.all(color: tp.borderColor, width: 2),
         ),
         width: widget.width ?? double.infinity,
         child: widget.child,
@@ -106,9 +99,9 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(colorProvider.isDarkMode ? 0.4 : 1),
-                Colors.white.withOpacity(colorProvider.isDarkMode ? 0.05 : 0.2),
-                Colors.white.withOpacity(colorProvider.isDarkMode ? 0.2 : 0.7),
+                Colors.white.withOpacity(tp.isDark ? 0.4 : 1),
+                Colors.white.withOpacity(tp.isDark ? 0.05 : 0.2),
+                Colors.white.withOpacity(tp.isDark ? 0.2 : 0.7),
               ],
             ),
 
@@ -129,10 +122,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
               gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors: [
-                  colorProvider.colorScheme.standardColor,
-                  colorProvider.habitColor,
-                ],
+                colors: [tp.surfaceColor, tp.elevatedSurfaceColor],
               ),
               borderRadius: BorderRadius.circular(22.5),
             ),
@@ -146,7 +136,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
             child: InnerGlow(
               width: widget.width ?? double.infinity,
               height: _height,
-              thickness: colorProvider.isDarkMode ? 1 : 10,
+              thickness: tp.isDark ? 1 : 10,
               glowBlur: 15,
               glowRadius: 25,
               baseDecoration: BoxDecoration(

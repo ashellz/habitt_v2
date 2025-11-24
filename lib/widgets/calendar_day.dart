@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -39,10 +38,10 @@ class CalendarDay extends StatelessWidget {
       habitsCount = 0;
     }
 
-    final cp = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
-    final completedColor = cp.colorScheme.darkerStandardColor;
-    final uncompletedColor = cp.standardColor;
+    final completedColor = tp.primaryColor;
+    final uncompletedColor = tp.surfaceColor;
 
     Color progressColor({
       required Color start, // e.g., incomplete (dark grey)
@@ -76,14 +75,7 @@ class CalendarDay extends StatelessWidget {
               child: Center(
                 child: Text(
                   date.day.toString(),
-                  style: TextStyle(
-                    color:
-                        cp.isDarkMode
-                            ? cp.textColor
-                            : selected
-                            ? cp.backgroundColor
-                            : cp.textColor,
-                  ),
+                  style: TextStyle(color: tp.primaryTextColor),
                 ),
               ),
             ),
@@ -97,7 +89,7 @@ class CalendarDay extends StatelessWidget {
                   child: Container(
                     height: double.infinity,
                     width: 1,
-                    color: cp.colorScheme.strokeColor,
+                    color: tp.borderColor,
                   ),
                 ),
               ),

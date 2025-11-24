@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 
 class AdditionalTaskSwitch extends StatelessWidget {
   const AdditionalTaskSwitch({
     super.key,
-    required this.colorProvider,
+    required this.tp,
     required this.stateProvider,
   });
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
   final StateProvider stateProvider;
 
   @override
@@ -23,17 +23,17 @@ class AdditionalTaskSwitch extends StatelessWidget {
               child: Text(
                 "Additional task",
                 style: TextStyle(
-                  color: colorProvider.textColor,
+                  color: tp.primaryTextColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             Switch(
-              activeTrackColor: colorProvider.colorScheme.darkerStandardColor,
+              activeTrackColor: tp.primaryColor,
               activeColor: Colors.white,
-              inactiveThumbColor: colorProvider.textColor,
-              inactiveTrackColor: colorProvider.standardColor,
+              inactiveThumbColor: tp.primaryTextColor,
+              inactiveTrackColor: tp.secondaryButtonBackground,
               value: stateProvider.isAdditional,
               onChanged: (value) => stateProvider.toggleAditional(),
             ),
@@ -45,7 +45,7 @@ class AdditionalTaskSwitch extends StatelessWidget {
             padding: const EdgeInsets.only(right: 55),
             child: Text(
               "If checked, habit won't count for 'All habits completed streak'.",
-              style: TextStyle(color: colorProvider.textColor),
+              style: TextStyle(color: tp.primaryTextColor),
             ),
           ),
         ),

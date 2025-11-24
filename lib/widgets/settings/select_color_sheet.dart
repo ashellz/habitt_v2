@@ -1,17 +1,18 @@
+/*
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 
 class SelectColorSheet extends StatelessWidget {
-  const SelectColorSheet({super.key, required this.colorProvider});
+  const SelectColorSheet({super.key, required this.tp});
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: colorProvider.backgroundColor,
+        color: tp.backgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -24,12 +25,12 @@ class SelectColorSheet extends StatelessWidget {
           Text(
             "Select color",
             style: TextStyle(
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
               fontSize: 26,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Divider(thickness: 2, color: colorProvider.colorScheme.strokeColor),
+          Divider(thickness: 2, color: tp.colorScheme.strokeColor),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -39,10 +40,10 @@ class SelectColorSheet extends StatelessWidget {
                   spacing: 16,
                   runSpacing: 16,
                   children: [
-                    for (final colorScheme in colorProvider.colorSchemes)
+                    for (final colorScheme in tp.colorSchemes)
                       GestureDetector(
                         onTap: () {
-                          colorProvider.changeColorScheme(colorScheme.name);
+                          tp.changeColorScheme(colorScheme.name);
                           Navigator.of(context).pop();
                         },
                         child: AnimatedContainer(
@@ -53,9 +54,9 @@ class SelectColorSheet extends StatelessWidget {
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: colorScheme.vividColor,
+                            color: tp.,
                             border:
-                                colorProvider.colorScheme == colorScheme
+                                tp.colorScheme == colorScheme
                                     ? Border.all(
                                       color: colorScheme.darkerStandardColor,
                                       width: 3,
@@ -75,3 +76,4 @@ class SelectColorSheet extends StatelessWidget {
     );
   }
 }
+*/

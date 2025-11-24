@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class SettingTile extends StatefulWidget {
@@ -29,7 +29,7 @@ class _SettingTileState extends State<SettingTile> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
@@ -69,25 +69,21 @@ class _SettingTileState extends State<SettingTile> {
                         });
                       });
                     },
-                    child: mainWidget(colorProvider),
+                    child: mainWidget(tp),
                   )
-                  : mainWidget(colorProvider),
+                  : mainWidget(tp),
         ),
       ),
     );
   }
 
-  Container mainWidget(ColorProvider colorProvider) {
+  Container mainWidget(ThemeProvider tp) {
     return Container(
       width: double.infinity,
       color: Colors.transparent,
       child: Row(
         children: [
-          Icon(
-            widget.iconData,
-            color: colorProvider.colorScheme.vividColor,
-            size: 32,
-          ),
+          Icon(widget.iconData, color: tp.primaryColor, size: 32),
           const SizedBox(width: 16), // spacing between icon and text
           Expanded(
             child: Row(
@@ -100,14 +96,14 @@ class _SettingTileState extends State<SettingTile> {
                       Text(
                         widget.title,
                         style: TextStyle(
-                          color: colorProvider.textColor,
+                          color: tp.primaryTextColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
                       Text(
                         widget.desc,
-                        style: TextStyle(color: colorProvider.textColor),
+                        style: TextStyle(color: tp.primaryTextColor),
                       ),
                     ],
                   ),
@@ -116,11 +112,10 @@ class _SettingTileState extends State<SettingTile> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
                     child: Switch(
-                      activeTrackColor:
-                          colorProvider.colorScheme.darkerStandardColor,
+                      activeTrackColor: tp.primaryVariant,
                       activeColor: Colors.white,
-                      inactiveThumbColor: colorProvider.textColor,
-                      inactiveTrackColor: colorProvider.standardColor,
+                      inactiveThumbColor: tp.primaryTextColor,
+                      inactiveTrackColor: tp.surfaceColor,
                       value: widget.switchValue,
                       onChanged: (value) {
                         widget.onTap();

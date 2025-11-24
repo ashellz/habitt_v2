@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/calendar_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/calendar.dart';
+import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/default_cupertino_button.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
@@ -113,28 +114,19 @@ class _CalendarPageState extends State<CalendarPage> {
       (_) => _updateListViewportGeom(),
     );
 
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final calendarProvider = context.watch<CalendarProvider>();
     final stateProvider = context.watch<StateProvider>();
 
     final canEdit = stateProvider.canEditCalendar;
     final focusedDay = calendarProvider.focusedDay;
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: GradientBackground(
           child: _calendarPage(
-            colorProvider,
+            tp,
             calendarProvider,
             focusedDay,
             canEdit,
@@ -146,7 +138,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   ListView _calendarPage(
-    ColorProvider colorProvider,
+    ThemeProvider tp,
     CalendarProvider calendarProvider,
     DateTime focusedDay,
     bool canEdit,
@@ -191,8 +183,8 @@ class _CalendarPageState extends State<CalendarPage> {
                               key: const ValueKey('cancel'),
                               padding: const EdgeInsets.only(right: 8),
                               child: DefaultCupertinoButton(
-                                textColor: colorProvider.backgroundColor,
-                                color: colorProvider.textColor,
+                                textColor: tp.backgroundColor,
+                                color: tp.primaryTextColor,
                                 onPressed:
                                     () => stateProvider.canEditCalendar = false,
                                 text: "Cancel",
@@ -224,7 +216,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           "Calendar",
                           style: TextStyle(
                             fontSize: 38,
-                            color: colorProvider.textColor,
+                            color: tp.primaryTextColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -234,7 +226,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 ],
               ),
               Calendar(
-                colorProvider: colorProvider,
+                tp: tp,
                 calendarProvider: calendarProvider,
                 focusedDay: focusedDay,
               ),

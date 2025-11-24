@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/select_time_dialog.dart';
 import 'package:provider/provider.dart';
 
 class SelectTimeIntervalSwitch extends StatelessWidget {
-  const SelectTimeIntervalSwitch({super.key, required this.cp});
+  const SelectTimeIntervalSwitch({super.key, required this.tp});
 
-  final ColorProvider cp;
+  final ThemeProvider tp;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
           height: 32,
           child: SvgPicture.asset(
             "assets/images/svg/clock.svg",
-            colorFilter: ColorFilter.mode(cp.textColor, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(tp.primaryTextColor, BlendMode.srcIn),
           ),
         ),
         Padding(
@@ -51,7 +51,7 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
           child: Text(
             "Select time interval",
             style: TextStyle(
-              color: cp.textColor,
+              color: tp.primaryTextColor,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -59,10 +59,10 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
         ),
         Spacer(),
         Switch(
-          activeTrackColor: cp.colorScheme.darkerStandardColor,
+          activeTrackColor: tp.primaryButtonBackground,
           activeColor: Colors.white,
-          inactiveThumbColor: cp.textColor,
-          inactiveTrackColor: cp.standardColor,
+          inactiveThumbColor: tp.primaryTextColor,
+          inactiveTrackColor: tp.surfaceColor,
           value: timeIntervalEnabled,
           onChanged: (value) {
             sp.timeIntervalEnabled = value;
@@ -129,8 +129,8 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
             enabled: enabled,
             label: label,
             offsetLabel: true,
-            color: cp.standardColor,
-            borderColor: cp.colorScheme.strokeColor,
+            color: tp.surfaceColor,
+            borderColor: tp.borderColor,
             onPressed: onPressed,
           ),
           IgnorePointer(
@@ -139,7 +139,7 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
               child: Text(
                 value,
                 style: TextStyle(
-                  color: enabled ? cp.textColor : cp.mutedTextColor,
+                  color: enabled ? tp.primaryTextColor : tp.mutedTextColor,
                   fontSize: 16,
                 ),
               ),

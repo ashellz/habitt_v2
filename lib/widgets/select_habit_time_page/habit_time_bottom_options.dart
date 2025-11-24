@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_time_interval_switch.dart';
 
 class HabitTimeBottomOptions extends StatelessWidget {
-  const HabitTimeBottomOptions({super.key, required this.cp, required this.sp});
+  const HabitTimeBottomOptions({super.key, required this.tp, required this.sp});
 
-  final ColorProvider cp;
+  final ThemeProvider tp;
   final StateProvider sp;
 
   @override
@@ -33,19 +33,18 @@ class HabitTimeBottomOptions extends StatelessWidget {
                 height: 4,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: cp.mutedTextColor,
+                  color: tp.mutedTextColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ),
-            SelectTimeIntervalSwitch(cp: cp),
+            SelectTimeIntervalSwitch(tp: tp),
 
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
                   context: context,
-                  builder:
-                      (context) => SelectHabitColorSheet(colorProvider: cp),
+                  builder: (context) => SelectHabitColorSheet(tp: tp),
                 );
               },
               child: Container(
@@ -58,7 +57,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                       height: 32,
                       child: Icon(
                         Icons.color_lens,
-                        color: cp.textColor,
+                        color: tp.primaryTextColor,
                         size: 32,
                       ),
                     ),
@@ -67,7 +66,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                       child: Text(
                         "Select habit color",
                         style: TextStyle(
-                          color: cp.textColor,
+                          color: tp.primaryTextColor,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -79,7 +78,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: sp.habitColor ?? cp.colorScheme.vividColor,
+                        color: sp.habitColor ?? tp.primaryColor,
                         shape: BoxShape.circle,
                       ),
                     ),

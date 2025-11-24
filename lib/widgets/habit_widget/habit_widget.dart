@@ -5,7 +5,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
@@ -87,7 +87,7 @@ class _HabitWidgetState extends State<HabitWidget>
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final focusedDay = context.watch<CalendarProvider>().focusedDay;
     final int alpha = 100;
 
@@ -190,10 +190,8 @@ class _HabitWidgetState extends State<HabitWidget>
                             stops: [0, 0.7],
                             colors: [
                               _swipeOffset >= 100
-                                  ? colorProvider.colorScheme.vividColor
-                                      .withAlpha(alpha)
-                                  : colorProvider.colorScheme.strokeColor
-                                      .withAlpha(alpha),
+                                  ? tp.primaryColor.withAlpha(alpha)
+                                  : tp.borderColor.withAlpha(alpha),
                               Colors.transparent,
                             ],
                           ),
@@ -255,7 +253,7 @@ class _HabitWidgetState extends State<HabitWidget>
                               // Icon circle container
                               HabitIcon(
                                 editable: widget.editable,
-                                colorProvider: colorProvider,
+                                tp: tp,
                                 alpha: alpha,
                                 habit: widget.habit,
                                 value: value,
@@ -263,7 +261,7 @@ class _HabitWidgetState extends State<HabitWidget>
                               // Text
                               HabitText(
                                 habit: widget.habit,
-                                colorProvider: colorProvider,
+                                tp: tp,
                                 alpha: alpha,
                                 value: value,
                               ),
@@ -278,13 +276,13 @@ class _HabitWidgetState extends State<HabitWidget>
                                   StreakDisplay(
                                     streak: widget.habit.streak,
                                     completed: widget.habit.completed,
-                                    colorProvider: colorProvider,
+                                    tp: tp,
                                   ),
 
                               // Completion
                               CompletionDisplay(
                                 editable: widget.editable,
-                                colorProvider: colorProvider,
+                                tp: tp,
                                 habit: widget.habit,
                                 isToday: widget.isToday,
                               ),
@@ -314,11 +312,9 @@ class _HabitWidgetState extends State<HabitWidget>
                       decoration: BoxDecoration(
                         color:
                             widget.habit.completed
-                                ? colorProvider.colorScheme.vividColor
+                                ? tp.primaryColor
                                 : widget.habit.skipped
-                                ? colorProvider.colorScheme.strokeColor.darken(
-                                  colorProvider.isDarkMode ? 20 : 50,
-                                )
+                                ? tp.borderColor.darken(tp.isDark ? 20 : 45)
                                 : Colors.transparent,
                       ),
                     ),

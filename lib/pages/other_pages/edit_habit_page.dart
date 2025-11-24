@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/additional_task_switch.dart';
@@ -115,7 +115,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final localizations = AppLocalizations.of(context)!;
 
     final stateProvider = context.watch<StateProvider>();
@@ -130,16 +130,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor: tp.backgroundColor,
+        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
+            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
       ),
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: GradientBackground(
           child: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -150,7 +147,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      NavBackButton(colorProvider: colorProvider),
+                      NavBackButton(tp: tp),
 
                       Padding(
                         padding: const EdgeInsets.only(bottom: 30),
@@ -162,10 +159,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     (context) =>
                                         DeleteHabitDialog(widget: widget),
                               ),
-                          child: Icon(
-                            Icons.delete,
-                            color: colorProvider.textColor,
-                          ),
+                          child: Icon(Icons.delete, color: tp.primaryTextColor),
                         ),
                       ),
                     ],
@@ -175,7 +169,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
-                      color: colorProvider.colorScheme.vividColor,
+                      color: tp.primaryColor,
                     ),
                   ),
                   SelectedHabitDisplay(
@@ -203,11 +197,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                   MoreOptionsText(localizations: localizations),
                   SelectHabitTypeOptions(),
-                  SchedulingAndAlerts(colorProvider: colorProvider),
-                  AdditionalTaskSwitch(
-                    colorProvider: colorProvider,
-                    stateProvider: stateProvider,
-                  ),
+                  SchedulingAndAlerts(tp: tp),
+                  AdditionalTaskSwitch(tp: tp, stateProvider: stateProvider),
                   CustomSwitcherWrapper(
                     value: showButtons,
                     widget: Row(

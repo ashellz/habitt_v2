@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class HabitsStatus extends StatelessWidget {
   const HabitsStatus({super.key, required this.isCompleted});
@@ -13,11 +14,10 @@ class HabitsStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
     final int selectedCategoryId = categoryProvider.selectedCategoryId;
-    final textColor = colorProvider.textColor;
-    final colorScheme = colorProvider.colorScheme;
+    final textColor = tp.primaryTextColor;
     final localizations = AppLocalizations.of(context)!;
 
     int numberOfHabits = 0;
@@ -60,10 +60,7 @@ class HabitsStatus extends StatelessWidget {
               height: 13,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color:
-                    isCompleted
-                        ? colorScheme.vividColor
-                        : colorScheme.strokeColor,
+                color: isCompleted ? tp.primaryColor : tp.mutedBgColor,
               ),
             ),
             Padding(

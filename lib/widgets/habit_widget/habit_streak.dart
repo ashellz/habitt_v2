@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 
 class StreakDisplay extends StatelessWidget {
   const StreakDisplay({
     super.key,
     required this.streak,
     required this.completed,
-    required this.colorProvider,
+    required this.tp,
   });
 
   final int streak;
   final bool completed;
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   Widget build(BuildContext context) {

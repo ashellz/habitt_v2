@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class AllHabitsCompletedStreak extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final statsProvider = context.watch<StatsProvider>();
 
     return Stack(
@@ -28,31 +28,21 @@ class AllHabitsCompletedStreak extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
-                  color: colorProvider.textColor,
+                  color: tp.primaryTextColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  Image.asset(
-                    "assets/images/icons/streak.png",
-                    scale: 0.75,
-                    color:
-                        statsProvider.allHabitsCompletedStreak == 0
-                            ? colorProvider.disabledColor.lighten()
-                            : null,
-                  ),
+                  Image.asset("assets/images/icons/streak.png", scale: 0.75),
                   Transform.translate(
                     offset: Offset(0, 5),
                     child: Text(
                       statsProvider.allHabitsCompletedStreak.toString(),
                       style: TextStyle(
                         fontSize: 32,
-                        color:
-                            statsProvider.allHabitsCompletedStreak == 0
-                                ? colorProvider.colorScheme.vividColor
-                                : Color(0xFF212529),
+                        color: Color(0xFF212529),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -67,21 +57,26 @@ class AllHabitsCompletedStreak extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12, right: 12),
           child: GestureDetector(
             onTap: () async {
+              if (tooltipController.isVisible) {
+                await tooltipController.hideTooltip();
+                return;
+              }
               await tooltipController.showTooltip();
             },
             child: SuperTooltip(
+              hasShadow: false,
               controller: tooltipController,
-              backgroundColor: colorProvider.standardColor,
+              backgroundColor: tp.surfaceColor,
               content: Text(
                 "Number of days in a row you have completed all your habits.",
-                style: TextStyle(color: colorProvider.textColor),
+                style: TextStyle(color: tp.primaryTextColor),
               ),
               showBarrier: false,
 
               child: Icon(
                 Icons.info_outline,
                 size: 24,
-                color: colorProvider.mutedTextColor,
+                color: tp.secondaryTextColor,
               ),
             ),
           ),

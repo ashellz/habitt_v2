@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -27,7 +27,7 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     TextInputFormatter? getFilteringTextInputFormatter(
       bool textOnly,
@@ -47,14 +47,13 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         onTap: () => onTap?.call(),
-        keyboardAppearance:
-            colorProvider.isDarkMode ? Brightness.dark : Brightness.light,
+        keyboardAppearance: tp.isDark ? Brightness.dark : Brightness.light,
         inputFormatters: [
           LengthLimitingTextInputFormatter(maxTextLength),
           getFilteringTextInputFormatter(textOnly, digitsOnly) ??
               FilteringTextInputFormatter.deny(""),
         ],
-        cursorColor: colorProvider.textColor,
+        cursorColor: tp.primaryTextColor,
         cursorWidth: 1.0,
         cursorHeight: 20.0,
         cursorRadius: const Radius.circular(12.0),
@@ -63,7 +62,7 @@ class CustomTextField extends StatelessWidget {
         maxLines: maxLines,
 
         // Main input text style
-        style: TextStyle(color: colorProvider.textColor, fontSize: 14),
+        style: TextStyle(color: tp.primaryTextColor, fontSize: 14),
 
         // Decoration
         decoration: InputDecoration(
@@ -72,26 +71,20 @@ class CustomTextField extends StatelessWidget {
           // Borders
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(24.0)),
-            borderSide: BorderSide(
-              color: colorProvider.colorScheme.strokeColor,
-            ),
+            borderSide: BorderSide(color: tp.borderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(24.0),
-            borderSide: BorderSide(
-              color: colorProvider.colorScheme.strokeColor,
-            ),
+            borderSide: BorderSide(color: tp.borderColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(24.0)),
-            borderSide: BorderSide(
-              color: colorProvider.colorScheme.strokeColor,
-            ),
+            borderSide: BorderSide(color: tp.borderColor),
           ),
 
           // Fill color
           filled: true,
-          fillColor: colorProvider.standardColor,
+          fillColor: tp.secondaryButtonBackground,
 
           // Content padding
           contentPadding: const EdgeInsets.symmetric(
@@ -103,7 +96,7 @@ class CustomTextField extends StatelessWidget {
           labelStyle: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            color: colorProvider.textColor,
+            color: tp.primaryTextColor,
           ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: title,

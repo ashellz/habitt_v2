@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/glass_blur_container.dart';
 
 class CircleButton extends StatefulWidget {
   const CircleButton({
     super.key,
-    required this.colorProvider,
+    required this.tp,
     required this.icon,
     required this.color,
     this.onPressed,
   });
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
   final Widget icon;
   final Color color;
   final VoidCallback? onPressed;

@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 
 import 'package:habitt/widgets/glass_feel_container.dart';
@@ -38,7 +38,7 @@ class CompletedHabits extends StatelessWidget {
     }
 
     final statsProvider = context.watch<StatsProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     final habitsCompleted = statsProvider.habitsCompleted;
     final highestAmountOfHabitsLastWeek =
@@ -63,7 +63,7 @@ class CompletedHabits extends StatelessWidget {
                     getTooltipItem:
                         (group, groupIndex, rod, rodIndex) => BarTooltipItem(
                           rod.toY.toString(),
-                          TextStyle(color: colorProvider.textColor),
+                          TextStyle(color: tp.primaryTextColor),
                         ),
                   ),
                 ),
@@ -74,7 +74,7 @@ class CompletedHabits extends StatelessWidget {
                     barRods: [
                       BarChartRodData(
                         toY: habitsCompletedLastWeek[index].toDouble(),
-                        color: colorProvider.colorScheme.vividColor,
+                        color: tp.primaryColor,
                         width: 5,
                       ),
                     ],
@@ -90,7 +90,7 @@ class CompletedHabits extends StatelessWidget {
                       getTitlesWidget:
                           (value, meta) => Text(
                             value.toInt().toString(),
-                            style: TextStyle(color: colorProvider.textColor),
+                            style: TextStyle(color: tp.primaryTextColor),
                           ),
                     ),
                   ),
@@ -100,7 +100,7 @@ class CompletedHabits extends StatelessWidget {
                       getTitlesWidget:
                           (value, meta) => Text(
                             getDay(value.toInt()),
-                            style: TextStyle(color: colorProvider.textColor),
+                            style: TextStyle(color: tp.primaryTextColor),
                           ),
                     ),
                   ),

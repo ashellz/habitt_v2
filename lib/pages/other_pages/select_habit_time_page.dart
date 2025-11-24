@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/nav_back_button.dart';
@@ -12,7 +12,7 @@ class SelectHabitTimePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final stateProvider = context.watch<StateProvider>();
 
     final timeIntervalStart = stateProvider.timeIntervalStart;
@@ -23,16 +23,13 @@ class SelectHabitTimePage extends StatelessWidget {
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor: tp.backgroundColor,
+        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
+            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
       ),
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: GradientBackground(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -41,7 +38,7 @@ class SelectHabitTimePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  NavBackButton(colorProvider: colorProvider),
+                  NavBackButton(tp: tp),
                   Text(
                     "SELECT HABIT TIME:",
                     style: TextStyle(
@@ -49,7 +46,7 @@ class SelectHabitTimePage extends StatelessWidget {
                       fontSize: 48,
                       fontWeight: FontWeight.w200,
                       height: 1.2,
-                      color: colorProvider.colorScheme.vividColor,
+                      color: tp.primaryColor,
                     ),
                   ),
                   SelectHabitTimeBody(

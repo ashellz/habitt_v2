@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
-import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +24,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
-    final colorScheme = colorProvider.colorScheme;
+    final tp = context.watch<ThemeProvider>();
     final bool isSelected = type == selectedType;
     final double screenWidth = MediaQuery.of(context).size.width - 40;
 
@@ -52,16 +51,10 @@ class SelectHabitTypeWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           curve: Curves.decelerate,
           decoration: BoxDecoration(
-            color:
-                isSelected
-                    ? colorProvider.standardColor
-                    : colorProvider.disabledColor,
+            color: isSelected ? tp.primaryColor : tp.surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color:
-                  isSelected
-                      ? colorScheme.strokeColor
-                      : colorScheme.disabledColor,
+              color: isSelected ? tp.primaryVariant : tp.borderColor,
               width: 2,
             ),
           ),
@@ -89,7 +82,10 @@ class SelectHabitTypeWidget extends StatelessWidget {
                                 ? localizations.amount
                                 : localizations.duration,
                             style: TextStyle(
-                              color: colorProvider.textColor,
+                              color:
+                                  isSelected
+                                      ? Colors.white
+                                      : tp.primaryTextColor,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               height: 1,
@@ -107,7 +103,10 @@ class SelectHabitTypeWidget extends StatelessWidget {
                                 "${localizations.selected}: ${type == HabitType.amount ? habitAmount : habitDuration}",
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: colorProvider.mutedTextColor,
+                                  color:
+                                      isSelected
+                                          ? Colors.white
+                                          : tp.primaryTextColor,
                                 ),
                               )
                               : const SizedBox.shrink(),

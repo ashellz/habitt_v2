@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/calendar_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/calendar_day.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:intl/intl.dart';
@@ -9,12 +9,12 @@ import 'package:table_calendar/table_calendar.dart';
 class Calendar extends StatelessWidget {
   const Calendar({
     super.key,
-    required this.colorProvider,
+    required this.tp,
     required this.calendarProvider,
     required this.focusedDay,
   });
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
   final CalendarProvider calendarProvider;
   final DateTime focusedDay;
 
@@ -42,18 +42,18 @@ class Calendar extends StatelessWidget {
           ),
           headerStyle: HeaderStyle(
             titleTextStyle: TextStyle(
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
             formatButtonVisible: false,
             leftChevronIcon: Icon(
               Icons.chevron_left,
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
             ),
             rightChevronIcon: Icon(
               Icons.chevron_right,
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
             ),
           ),
           daysOfWeekStyle: DaysOfWeekStyle(
@@ -61,28 +61,28 @@ class Calendar extends StatelessWidget {
               return DateFormat.E(locale).format(date).toUpperCase();
             },
             weekendStyle: TextStyle(
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
               fontWeight: FontWeight.w500,
               fontSize: 12,
             ),
             weekdayStyle: TextStyle(
-              color: colorProvider.textColor,
+              color: tp.primaryTextColor,
               fontWeight: FontWeight.w500,
               fontSize: 12,
             ),
           ),
           calendarStyle: CalendarStyle(
             todayDecoration: BoxDecoration(
-              color: colorProvider.colorScheme.strokeColor,
+              color: tp.borderColor,
               shape: BoxShape.circle,
             ),
             selectedDecoration: BoxDecoration(
-              color: colorProvider.colorScheme.darkerStandardColor,
+              color: tp.primaryColor,
               shape: BoxShape.circle,
             ),
             outsideDaysVisible: false,
-            defaultTextStyle: TextStyle(color: colorProvider.textColor),
-            weekendTextStyle: TextStyle(color: colorProvider.textColor),
+            defaultTextStyle: TextStyle(color: tp.primaryTextColor),
+            weekendTextStyle: TextStyle(color: tp.primaryTextColor),
           ),
         ),
       ),

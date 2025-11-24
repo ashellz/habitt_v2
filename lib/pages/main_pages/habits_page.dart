@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/pages/main_pages/daily_plan_page.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/glass_blur_container.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
@@ -132,7 +133,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final stateProvider = context.watch<StateProvider>();
 
     if (stateProvider.showAlert) {
@@ -148,18 +149,9 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
       (_) => _updateListViewportGeom(),
     );
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         extendBody: true,
         body: Stack(
           children: [
@@ -180,8 +172,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                               heroTag: 'dailyPlanner',
                               mini: true,
                               elevation: 0,
-                              backgroundColor:
-                                  colorProvider.colorScheme.strokeColor,
+                              backgroundColor: tp.secondaryColor,
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -198,8 +189,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                               heroTag: 'addHabit',
                               mini: true,
                               elevation: 0,
-                              backgroundColor:
-                                  colorProvider.colorScheme.darkerStandardColor,
+                              backgroundColor: tp.primaryColor,
                               onPressed:
                                   () => Navigator.of(context)
                                       .push(
@@ -263,7 +253,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: colorProvider.textColor,
+                      color: tp.primaryTextColor,
                     ),
                   ),
                   textDirection: TextDirection.ltr,
@@ -313,10 +303,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                                             Icon(
                                               Icons.info_outline,
                                               size: 24,
-                                              color:
-                                                  colorProvider
-                                                      .colorScheme
-                                                      .vividColor,
+                                              color: tp.primaryColor,
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
@@ -324,7 +311,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w600,
-                                                color: colorProvider.textColor,
+                                                color: tp.primaryTextColor,
                                               ),
                                             ),
                                           ],
@@ -345,30 +332,6 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class XButton extends StatelessWidget {
-  const XButton({super.key, this.onPressed});
-
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return GestureDetector(
-      onTap: () {
-        if (onPressed != null) {
-          onPressed!();
-        }
-      },
-      child: Container(
-        height: 20,
-        color: Colors.red,
-        child: Icon(Icons.close, color: cp.textColor),
       ),
     );
   }

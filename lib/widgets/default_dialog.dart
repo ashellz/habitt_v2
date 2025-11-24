@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:provider/provider.dart';
 
@@ -31,11 +31,8 @@ class DefaultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorProvider colorProvider = context.watch<ColorProvider>();
-    Color dialogColor =
-        danger
-            ? colorProvider.redAccent
-            : colorProvider.colorScheme.standardColor;
+    final tp = context.watch<ThemeProvider>();
+    Color dialogColor = danger ? tp.dangerColor : tp.surfaceColor;
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 40),
@@ -60,7 +57,7 @@ class DefaultDialog extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: colorProvider.textColor,
+                            color: tp.primaryTextColor,
                           ),
                         ),
                       ),
@@ -70,7 +67,7 @@ class DefaultDialog extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
-                          color: colorProvider.textColor,
+                          color: tp.primaryTextColor,
                         ),
                       ),
                       const SizedBox(height: 20),

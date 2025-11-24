@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class GradientBackground extends StatelessWidget {
@@ -9,25 +9,26 @@ class GradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return SizedBox.expand(
       child: Stack(
         children: [
+          /*
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                  colorProvider.colorScheme.standardColor,
-                  colorProvider.backgroundColor,
-                  colorProvider.backgroundColor,
-                  colorProvider.colorScheme.standardColor,
+                  tp.primaryColor.withAlpha(25),
+                  tp.backgroundColor,
+                  tp.backgroundColor,
+                  tp.primaryColor.withAlpha(25),
                 ],
               ),
             ),
-          ),
+          ),*/
           child,
         ],
       ),

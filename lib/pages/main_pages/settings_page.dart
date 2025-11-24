@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/gradient_background.dart';
-import 'package:habitt/widgets/settings/select_color_sheet.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -17,21 +16,12 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
     final prefsProvider = context.watch<PreferencesProvider>();
+    final tp = context.watch<ThemeProvider>();
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: GradientBackground(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -42,32 +32,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   "Settings",
                   style: TextStyle(
                     fontSize: 38,
-                    color: colorProvider.textColor,
+                    color: tp.primaryTextColor,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-
-                SettingTile(
-                  title: "Accent Color",
-                  desc: "Select a color pallete for your interface",
-                  iconData: Icons.color_lens,
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder:
-                          (context) =>
-                              SelectColorSheet(colorProvider: colorProvider),
-                    );
-                  },
                 ),
                 SettingTile(
                   title: "Dark Mode",
                   desc: "Change a color theme for your interface",
                   iconData: Icons.dark_mode,
                   hasSwitch: true,
-                  switchValue: colorProvider.isDarkMode,
+                  switchValue: tp.isDark,
                   onTap: () {
-                    colorProvider.changeMode();
+                    tp.setMode(tp.isDark ? ThemeMode.light : ThemeMode.dark);
                   },
                 ),
 

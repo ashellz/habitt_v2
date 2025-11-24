@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 
 class PulseAnimation extends CustomPainter {
-  PulseAnimation(this.animationValue, this.colorProvider);
+  PulseAnimation(this.animationValue, this.tp);
 
   final double animationValue;
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -17,8 +17,8 @@ class PulseAnimation extends CustomPainter {
 
     final gradient = RadialGradient(
       colors: [
-        colorProvider.colorScheme.vividColor.withOpacity(0.25),
-        colorProvider.colorScheme.vividColor.withOpacity(0.06),
+        tp.primaryColor.withOpacity(0.25),
+        tp.primaryColor.withOpacity(0.06),
         Colors.transparent,
       ],
       stops: const [0.0, 0.5, 1.0],

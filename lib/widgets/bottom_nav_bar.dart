@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/glass_blur_container.dart';
@@ -57,21 +57,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
-    final colorProvider = context.watch<ColorProvider>();
-    final isDarkMode = colorProvider.isDarkMode;
+    final tp = context.watch<ThemeProvider>();
+    final isDarkMode = tp.isDark;
 
     final item = _navItems[index];
     final isSelected = _selectedIndex == index;
 
     Color getItemColor() {
       if (!isGlassFeel) {
-        if (!isDarkMode && isSelected) return colorProvider.backgroundColor;
-        return colorProvider.textColor;
+        if (!isDarkMode && isSelected) return tp.backgroundColor;
+        return tp.primaryTextColor;
       }
       if (isSelected) {
-        return colorProvider.colorScheme.vividColor;
+        return tp.primaryColor;
       }
-      return colorProvider.textColor.withOpacity(0.9);
+      return tp.primaryTextColor.withOpacity(0.9);
     }
 
     return GestureDetector(
@@ -141,18 +141,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     final canEdit = context.watch<StateProvider>().canEditCalendar;
 
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
 
     return GlassBlurContainer(
       padding: const EdgeInsets.all(2),
       height: 64,
       borderRadius: 100,
-      color: !glassFeel ? colorProvider.colorScheme.standardColor : null,
+      color: !glassFeel ? tp.surfaceColor : null,
       borderColor:
           !glassFeel
-              ? colorProvider.colorScheme.strokeColor
-              : colorProvider.isDarkMode
+              ? tp.borderColor
+              : tp.isDark
               ? Colors.white24
               : Colors.black26,
       child: Stack(
@@ -167,14 +167,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
               duration: const Duration(milliseconds: 150),
               opacity: canEdit ? 0 : 1,
               child: GlassBlurContainer(
-                color:
-                    !glassFeel
-                        ? colorProvider.colorScheme.darkerStandardColor
-                        : null,
+                color: !glassFeel ? tp.primaryButtonBackground : null,
                 borderColor:
                     !glassFeel
-                        ? colorProvider.colorScheme.standardColor
-                        : colorProvider.isDarkMode
+                        ? tp.surfaceColor
+                        : tp.isDark
                         ? Colors.white24
                         : Colors.black12,
                 borderRadius: 100,
@@ -208,7 +205,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           Text(
                             "Editing",
                             style: TextStyle(
-                              color: colorProvider.textColor,
+                              color: tp.primaryTextColor,
                               decoration: TextDecoration.none,
                               fontSize: 24,
                               fontWeight: FontWeight.w400,
