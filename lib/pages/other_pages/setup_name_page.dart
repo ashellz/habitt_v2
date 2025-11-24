@@ -105,7 +105,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "What should we call you?",
+                        "Welcome to Habitt.",
                         style: TextStyle(
                           color: colorProvider.textColor,
                           fontSize: 24,
@@ -113,13 +113,23 @@ class _SetupNamePageState extends State<SetupNamePage>
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 24),
+                      Text(
+                        "What should we call you?",
+                        style: TextStyle(color: colorProvider.textColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _nameController,
-                        style: TextStyle(color: colorProvider.textColor),
+                        style: TextStyle(
+                          color: colorProvider.textColor,
+                          fontSize: 14,
+                        ),
+                        cursorColor: colorProvider.textColor,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: colorProvider.mutedTextColor.withAlpha(50),
+
                           hintText: "Your name",
                           hintStyle: TextStyle(
                             color: colorProvider.mutedTextColor,
