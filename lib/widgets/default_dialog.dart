@@ -32,7 +32,7 @@ class DefaultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    Color dialogColor = danger ? tp.dangerColor : tp.surfaceColor;
+    Color dialogColor = tp.surfaceColor;
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 40),
@@ -70,7 +70,6 @@ class DefaultDialog extends StatelessWidget {
                           color: tp.primaryTextColor,
                         ),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),

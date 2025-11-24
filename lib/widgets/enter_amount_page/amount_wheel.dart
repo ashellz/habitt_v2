@@ -105,7 +105,9 @@ class InteractiveWheelState extends State<InteractiveWheel>
             style: ButtonStyle(
               shadowColor: WidgetStatePropertyAll(tp.surfaceColor),
               elevation: WidgetStatePropertyAll(5),
-
+              side: WidgetStatePropertyAll(
+                BorderSide(color: tp.borderColor, width: 2),
+              ),
               fixedSize: WidgetStatePropertyAll(size / 5),
               backgroundColor: WidgetStatePropertyAll(tp.surfaceColor),
             ),
