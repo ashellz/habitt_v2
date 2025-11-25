@@ -154,58 +154,6 @@ class _CalendarPageState extends State<CalendarPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    switchInCurve: Curves.easeOut,
-                    switchOutCurve: Curves.easeIn,
-                    transitionBuilder: (
-                      Widget child,
-                      Animation<double> animation,
-                    ) {
-                      final offsetAnimation = Tween<Offset>(
-                        begin: const Offset(0.3, 0), // from right to left
-                        end: Offset.zero,
-                      ).animate(animation);
-
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        ),
-                      );
-                    },
-                    child:
-                        canEdit
-                            ? Padding(
-                              key: const ValueKey('cancel'),
-                              padding: const EdgeInsets.only(right: 8),
-                              child: DefaultCupertinoButton(
-                                textColor: tp.backgroundColor,
-                                color: tp.primaryTextColor,
-                                onPressed:
-                                    () => stateProvider.canEditCalendar = false,
-                                text: "Cancel",
-                              ),
-                            )
-                            : const SizedBox.shrink(key: ValueKey('empty')),
-                  ),
-                  DefaultCupertinoButton(
-                    textColor: Colors.white,
-                    onPressed: () {
-                      stateProvider.canEditCalendar = !canEdit;
-
-                      if (canEdit) {
-                        context.read<HabitProvider>().assignStreaks();
-                      }
-                    },
-                    text: canEdit ? "Save" : "Edit",
-                  ),
-                ],
-              ),
-              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
@@ -222,6 +170,60 @@ class _CalendarPageState extends State<CalendarPage> {
                         ),
                       ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        switchInCurve: Curves.easeOut,
+                        switchOutCurve: Curves.easeIn,
+                        transitionBuilder: (
+                          Widget child,
+                          Animation<double> animation,
+                        ) {
+                          final offsetAnimation = Tween<Offset>(
+                            begin: const Offset(0.3, 0), // from right to left
+                            end: Offset.zero,
+                          ).animate(animation);
+
+                          return FadeTransition(
+                            opacity: animation,
+                            child: SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            ),
+                          );
+                        },
+                        child:
+                            canEdit
+                                ? Padding(
+                                  key: const ValueKey('cancel'),
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: DefaultCupertinoButton(
+                                    textColor: tp.backgroundColor,
+                                    color: tp.primaryTextColor,
+                                    onPressed:
+                                        () =>
+                                            stateProvider.canEditCalendar =
+                                                false,
+                                    text: "Cancel",
+                                  ),
+                                )
+                                : const SizedBox.shrink(key: ValueKey('empty')),
+                      ),
+                      DefaultCupertinoButton(
+                        textColor: Colors.white,
+                        onPressed: () {
+                          stateProvider.canEditCalendar = !canEdit;
+
+                          if (canEdit) {
+                            context.read<HabitProvider>().assignStreaks();
+                          }
+                        },
+                        text: canEdit ? "Save" : "Edit",
+                      ),
+                    ],
                   ),
                 ],
               ),
