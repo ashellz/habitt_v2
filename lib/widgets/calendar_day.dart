@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/color_contrast.dart';
@@ -41,8 +42,12 @@ class CalendarDay extends StatelessWidget {
     }
 
     final tp = context.watch<ThemeProvider>();
+    final prefsProvider = context.watch<PreferencesProvider>();
 
-    final completedColor = tp.successColor;
+    final completedColor =
+        prefsProvider.colorfulness == Colorfulness.tinted
+            ? tp.primaryColor
+            : tp.successColor;
     final uncompletedColor = tp.surfaceColor;
 
     Color progressColor({

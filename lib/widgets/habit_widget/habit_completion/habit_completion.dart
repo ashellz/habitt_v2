@@ -69,16 +69,19 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   Color getCompletionColor() {
     final habit = widget.habit;
     final tp = widget.tp;
-    final isColorFull = context.watch<PreferencesProvider>().isColorFull;
+    final colorfulness = context.watch<PreferencesProvider>().colorfulness;
 
     if (habit.skipped) {
       return tp.borderColor.darken(tp.isDark ? 0 : 45);
     }
 
-    if (!isColorFull) {
-      return tp.successColor;
-    } else {
-      return habit.getColor ?? tp.successColor;
+    switch (colorfulness) {
+      case Colorfulness.tinted:
+        return tp.primaryColor;
+      case Colorfulness.standard:
+        return tp.successColor;
+      case Colorfulness.colorful:
+        return habit.getColor ?? tp.successColor;
     }
   }
 

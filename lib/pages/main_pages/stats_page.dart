@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/stats_page/all_habits_completed_streak.dart';
 import 'package:habitt/widgets/stats_page/completed_habits.dart';
@@ -23,13 +24,7 @@ class _StatsPageState extends State<StatsPage> {
     final tp = context.watch<ThemeProvider>();
     final statsProvider = context.watch<StatsProvider>();
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: tp.backgroundColor,
-        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: GestureDetector(
         onTapDown: (context) => _tooltipController.hideTooltip(),
         child: Scaffold(
