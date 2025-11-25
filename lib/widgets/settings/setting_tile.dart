@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,9 @@ class _SettingTileState extends State<SettingTile> {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
+    final isTinted =
+        context.watch<PreferencesProvider>().colorfulness ==
+        Colorfulness.tinted;
 
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
@@ -69,15 +73,15 @@ class _SettingTileState extends State<SettingTile> {
                         });
                       });
                     },
-                    child: mainWidget(tp),
+                    child: mainWidget(tp, isTinted),
                   )
-                  : mainWidget(tp),
+                  : mainWidget(tp, isTinted),
         ),
       ),
     );
   }
 
-  Container mainWidget(ThemeProvider tp) {
+  Container mainWidget(ThemeProvider tp, bool isTinted) {
     return Container(
       width: double.infinity,
       color: Colors.transparent,
@@ -112,7 +116,8 @@ class _SettingTileState extends State<SettingTile> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
                     child: Switch(
-                      activeTrackColor: tp.successColor,
+                      activeTrackColor:
+                          isTinted ? tp.primaryColor : tp.successColor,
                       activeThumbColor: Colors.white,
                       inactiveThumbColor: tp.primaryTextColor,
                       inactiveTrackColor: tp.surfaceColor,

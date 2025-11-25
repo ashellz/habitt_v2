@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,19 @@ class SegmentedControl extends StatelessWidget {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
 
+    Color getColor(bool selected) {
+      if (selected) {
+        final prefsProvider = context.read<PreferencesProvider>();
+        final colorfulness = prefsProvider.colorfulness;
+        if (colorfulness == Colorfulness.tinted) {
+          return tp.primaryColor;
+        }
+        return tp.successColor;
+      } else {
+        return Colors.transparent;
+      }
+    }
+
     return GlassFeelContainer(
       padding: const EdgeInsets.all(4),
 
@@ -36,7 +50,7 @@ class SegmentedControl extends StatelessWidget {
                 height: height,
                 alignment: Alignment.center,
                 decoration: ShapeDecoration(
-                  color: selected ? tp.primaryColor : Colors.transparent,
+                  color: getColor(selected),
                   shape: StadiumBorder(),
                 ),
                 child: AnimatedDefaultTextStyle(
