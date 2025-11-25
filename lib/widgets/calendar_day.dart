@@ -54,6 +54,13 @@ class CalendarDay extends StatelessWidget {
       return Color.lerp(start, end, t)!;
     }
 
+    bool isBeforeDateJoined() {
+      if (DateTime(date.year, date.month, date.day).isBefore(dateJoined)) {
+        return true;
+      }
+      return false;
+    }
+
     final color = progressColor(
       start: uncompletedColor,
       end: completedColor,
@@ -67,32 +74,30 @@ class CalendarDay extends StatelessWidget {
         aspectRatio: 1,
         child: Stack(
           children: [
-            Container(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeInOut,
               decoration: BoxDecoration(
                 color: color,
+                border: Border.all(
+                  color:
+                      selected ? tp.secondaryButtonBorder : Colors.transparent,
+                  width: selected ? 1 : 0,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
                 child: Text(
                   date.day.toString(),
-                  style: TextStyle(color: tp.primaryTextColor),
-                ),
-              ),
-            ),
-
-            if (DateTime(date.year, date.month, date.day) ==
-                dateJoined.subtract(const Duration(days: 1)))
-              Transform.translate(
-                offset: const Offset(7, 0),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    height: double.infinity,
-                    width: 1,
-                    color: tp.borderColor,
+                  style: TextStyle(
+                    color:
+                        isBeforeDateJoined()
+                            ? tp.mutedTextColor
+                            : tp.primaryTextColor,
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),
