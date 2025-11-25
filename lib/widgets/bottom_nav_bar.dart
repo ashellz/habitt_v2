@@ -141,30 +141,40 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final canEdit = context.watch<StateProvider>().canEditCalendar;
+    final isEditing = context.watch<StateProvider>().canEditCalendar;
 
     final tp = context.watch<ThemeProvider>();
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     if (glassFeel && isIOS) {
       return Expanded(
-        child: CNTabBar(
-          height: 85,
-          items: const [
-            CNTabBarItem(label: 'Habits', icon: CNSymbol('house.fill')),
-            CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
-            CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
-            CNTabBarItem(label: 'Settings', icon: CNSymbol('gearshape.fill')),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            if (_selectedIndex != index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            }
-            widget.onItemTapped?.call(index);
-          },
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 150),
+          opacity: isEditing ? 0 : 1,
+          child: IgnorePointer(
+            ignoring: isEditing,
+            child: CNTabBar(
+              height: 85,
+              items: const [
+                CNTabBarItem(label: 'Habits', icon: CNSymbol('house.fill')),
+                CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
+                CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
+                CNTabBarItem(
+                  label: 'Settings',
+                  icon: CNSymbol('gearshape.fill'),
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: (index) {
+                if (_selectedIndex != index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                }
+                widget.onItemTapped?.call(index);
+              },
+            ),
+          ),
         ),
       );
     }
@@ -190,7 +200,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             left: _selectedIndex * 70 + (_selectedIndex == 0 ? 2 : 0),
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 150),
-              opacity: canEdit ? 0 : 1,
+              opacity: isEditing ? 0 : 1,
               child: GlassBlurContainer(
                 color: !glassFeel ? tp.primaryButtonBackground : null,
                 borderColor:
@@ -221,10 +231,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
               );
             },
             child: Padding(
-              key: ValueKey<bool>(canEdit),
+              key: ValueKey<bool>(isEditing),
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child:
-                  canEdit
+                  isEditing
                       ? Row(
                         children: [
                           Text(
