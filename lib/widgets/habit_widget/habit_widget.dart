@@ -9,6 +9,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/glass_feel_container.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
+import 'package:habitt/widgets/habit_widget/habit_completion_line_indicator.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/habit_streak.dart';
 import 'package:habitt/widgets/habit_widget/habit_text.dart';
@@ -292,31 +293,7 @@ class _HabitWidgetState extends State<HabitWidget>
                   ),
 
                   // Line indicator
-                  Positioned(
-                    top: 28,
-                    left: widget.isFirstCategory ? 0 : 16,
-                    bottom: 20,
-
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      width: 2,
-                      margin: EdgeInsets.symmetric(
-                        vertical:
-                            widget.habit.completed || widget.habit.skipped
-                                ? 0
-                                : (40), // Initial size from the middle
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            widget.habit.completed
-                                ? tp.primaryColor
-                                : widget.habit.skipped
-                                ? tp.borderColor.darken(tp.isDark ? 20 : 45)
-                                : Colors.transparent,
-                      ),
-                    ),
-                  ),
+                  HabitCompletionLineIndicator(widget: widget, tp: tp),
                 ],
               ),
             );

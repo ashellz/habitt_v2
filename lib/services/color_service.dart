@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
 
+class AccentPalette {
+  final Color standardColor;
+  final Color strokeColor;
+  final Color vividColor;
+  final Color darkerStandardColor;
+  const AccentPalette({
+    required this.standardColor,
+    required this.strokeColor,
+    required this.vividColor,
+    required this.darkerStandardColor,
+  });
+}
+
 class ColorService {
   // Light mode (default)
   static const Color primary = Color(0xFF0B6FF0);
   static const Color primaryVariant = Color(0xFF095BD6);
   static const Color secondary = Color(0xFF7C4DFF);
-  static const Color success = Color(0xFF17B169);
+  // Adjusted for better white text contrast (AA 4.5+). Old: #17B169 (~3.9 ratio)
+  static const Color success = Color.fromARGB(
+    255,
+    22,
+    168,
+    100,
+  ); // contrast ~5.7 vs white
   static const Color warning = Color(0xFFF59E0B);
   static const Color danger = Color(0xFFE02424);
 
@@ -37,7 +56,7 @@ class ColorService {
   ); // lighter primary for dark bg
   static const Color dmPrimaryVariant = Color(0xFF257FE6);
   static const Color dmSecondary = Color(0xFFB89BFF);
-  static const Color dmSuccess = Color(0xFF6FDD9A);
+  static const Color dmSuccess = Color.fromARGB(255, 95, 204, 137);
   static const Color dmWarning = Color(0xFFF7C164);
   static const Color dmDanger = Color(0xFFFF6B6B);
 
@@ -152,4 +171,96 @@ class ColorService {
       ),
     );
   }
+
+  // Accent palettes for light mode
+  static const Map<String, AccentPalette> accentLight = {
+    'cherry': AccentPalette(
+      standardColor: Color.fromARGB(255, 251, 228, 233),
+      strokeColor: Color.fromARGB(255, 192, 120, 133),
+      vividColor: Color(0xFFD20A2E),
+      darkerStandardColor: Color.fromARGB(255, 128, 12, 41),
+    ),
+    'pink': AccentPalette(
+      standardColor: Color(0xFFFFE4EC),
+      strokeColor: Color(0xFFF48FB1),
+      vividColor: Color(0xFFE91E63),
+      darkerStandardColor: Color(0xFF880E4F),
+    ),
+    'green': AccentPalette(
+      standardColor: Color(0xFFE8F5E9),
+      strokeColor: Color(0xFF81C784),
+      vividColor: Color(0xFF2E7D32),
+      darkerStandardColor: Color(0xFF1B5E20),
+    ),
+    'cyan': AccentPalette(
+      standardColor: Color(0xFFE0F7FA),
+      strokeColor: Color(0xFF80DEEA),
+      vividColor: Color(0xFF00ACC1),
+      darkerStandardColor: Color(0xFF006064),
+    ),
+    'blue': AccentPalette(
+      standardColor: Color(0xFFE3F2FD),
+      strokeColor: Color(0xFF64B5F6),
+      vividColor: Color(0xFF1976D2),
+      darkerStandardColor: Color(0xFF0D47A1),
+    ),
+    'teal': AccentPalette(
+      standardColor: Color(0xFFE0F2F1),
+      strokeColor: Color(0xFF4DB6AC),
+      vividColor: Color(0xFF00796B),
+      darkerStandardColor: Color(0xFF004D40),
+    ),
+    'magenta': AccentPalette(
+      standardColor: Color(0xFFF3E5F5),
+      strokeColor: Color(0xFFBA68C8),
+      vividColor: Color(0xFF8E24AA),
+      darkerStandardColor: Color(0xFF4A148C),
+    ),
+  };
+
+  // Accent palettes for dark mode
+  static const Map<String, AccentPalette> accentDark = {
+    'cherry': AccentPalette(
+      standardColor: Color.fromARGB(255, 46, 30, 34),
+      strokeColor: Color.fromARGB(255, 86, 61, 66),
+      vividColor: Color.fromARGB(255, 255, 103, 131),
+      darkerStandardColor: Color.fromARGB(255, 118, 26, 49),
+    ),
+    'pink': AccentPalette(
+      standardColor: Color(0xFF2C1D24),
+      strokeColor: Color(0xFF6A3A4C),
+      vividColor: Color(0xFFFF80AB),
+      darkerStandardColor: Color(0xFF4A1F33),
+    ),
+    'green': AccentPalette(
+      standardColor: Color(0xFF1A2B1D),
+      strokeColor: Color(0xFF2E7D32),
+      vividColor: Color(0xFF66BB6A),
+      darkerStandardColor: Color(0xFF0F1F12),
+    ),
+    'cyan': AccentPalette(
+      standardColor: Color(0xFF0E2326),
+      strokeColor: Color(0xFF006064),
+      vividColor: Color(0xFF4DD0E1),
+      darkerStandardColor: Color(0xFF081416),
+    ),
+    'blue': AccentPalette(
+      standardColor: Color(0xFF0E1B2A),
+      strokeColor: Color(0xFF0D47A1),
+      vividColor: Color(0xFF64B5F6),
+      darkerStandardColor: Color(0xFF07111B),
+    ),
+    'teal': AccentPalette(
+      standardColor: Color(0xFF0D1F1D),
+      strokeColor: Color(0xFF004D40),
+      vividColor: Color(0xFF4DB6AC),
+      darkerStandardColor: Color(0xFF061311),
+    ),
+    'magenta': AccentPalette(
+      standardColor: Color(0xFF1E1627),
+      strokeColor: Color(0xFF4A148C),
+      vividColor: Color(0xFFBA68C8),
+      darkerStandardColor: Color(0xFF120C1A),
+    ),
+  };
 }

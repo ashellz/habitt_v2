@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
 String colorToHex(Color color, {bool leadingHashSign = true}) {
   final hex = color.value.toRadixString(16).padLeft(8, '0').toUpperCase();

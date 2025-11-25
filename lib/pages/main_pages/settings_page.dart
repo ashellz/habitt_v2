@@ -3,6 +3,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/settings/select_color_sheet.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +47,30 @@ class _SettingsPageState extends State<SettingsPage> {
                     tp.setMode(tp.isDark ? ThemeMode.light : ThemeMode.dark);
                   },
                 ),
-
+                SettingTile(
+                  title: "Accent Color",
+                  desc: "Select a color pallete for your interface",
+                  iconData: Icons.color_lens,
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      enableDrag: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => SelectColorSheet(tp: tp),
+                    );
+                  },
+                ),
+                SettingTile(
+                  title: "Colorful Interface",
+                  desc: "Makes the overall interface more colorful",
+                  iconData: Icons.colorize,
+                  hasSwitch: true,
+                  switchValue: prefsProvider.isColorFull,
+                  onTap: () {
+                    prefsProvider.toggleIsColorFull();
+                  },
+                ),
                 SettingTile(
                   title: "Glass Feel",
                   desc: "Makes widgets look more glassy",

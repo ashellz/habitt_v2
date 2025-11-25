@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
   static const _kThemePrefKey = 'theme_mode'; // 'light' | 'dark' | 'system'
+  static const _kAccentPrefKey = 'accent_name'; // 'blue' | 'cherry' | ...
 
   ThemeMode mode;
-  ThemeProvider(this.mode);
+  String accentName;
+  ThemeProvider(this.mode, [this.accentName = 'blue']);
 
   // init from prefs
   static Future<ThemeProvider> initFromPrefs(SharedPreferences prefs) async {
@@ -17,7 +19,8 @@ class ThemeProvider extends ChangeNotifier {
             : s == 'dark'
             ? ThemeMode.dark
             : ThemeMode.system;
-    return ThemeProvider(mode);
+    final a = prefs.getString(_kAccentPrefKey) ?? 'blue';
+    return ThemeProvider(mode, a);
   }
 
   Future<void> setMode(ThemeMode newMode) async {
@@ -35,6 +38,14 @@ class ThemeProvider extends ChangeNotifier {
     );
   }
 
+  Future<void> setAccent(String newAccent) async {
+    if (newAccent == accentName) return;
+    accentName = newAccent;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kAccentPrefKey, accentName);
+  }
+
   // Resolved against current platform brightness only when mode == system.
   bool get isDark {
     if (mode == ThemeMode.light) return false;
@@ -43,11 +54,19 @@ class ThemeProvider extends ChangeNotifier {
         Brightness.dark;
   }
 
-  // Core colors
+  // Accent palette resolved for current brightness
+  AccentPalette? get _accentPalette =>
+      isDark
+          ? ColorService.accentDark[accentName]
+          : ColorService.accentLight[accentName];
+
+  // Core colors (primary derived from accent selection)
   Color get primaryColor =>
-      isDark ? ColorService.dmPrimary : ColorService.primary;
+      (_accentPalette?.vividColor) ??
+      (isDark ? ColorService.dmPrimary : ColorService.primary);
   Color get primaryVariant =>
-      isDark ? ColorService.dmPrimaryVariant : ColorService.primaryVariant;
+      (_accentPalette?.darkerStandardColor) ??
+      (isDark ? ColorService.dmPrimaryVariant : ColorService.primaryVariant);
   Color get secondaryColor =>
       isDark ? ColorService.dmSecondary : ColorService.secondary;
   Color get successColor =>

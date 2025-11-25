@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PreferencesProvider extends ChangeNotifier {
   bool _glassFeel = true;
   bool _glassHabits = false;
+  bool _isColorFull = true;
 
   bool get glassFeel => _glassFeel;
   bool get glassHabits => _glassHabits;
+  bool get isColorFull => _isColorFull;
 
   SharedPreferences? _prefs;
 
@@ -30,6 +32,12 @@ class PreferencesProvider extends ChangeNotifier {
   void toggleGlassHabits() {
     _glassHabits = !_glassHabits;
     _prefs?.setBool('glassHabits', _glassHabits);
+    notifyListeners();
+  }
+
+  void toggleIsColorFull() {
+    _isColorFull = !_isColorFull;
+    _prefs?.setBool('isColorFull', _isColorFull);
     notifyListeners();
   }
 }

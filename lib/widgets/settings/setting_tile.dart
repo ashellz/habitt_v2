@@ -112,8 +112,8 @@ class _SettingTileState extends State<SettingTile> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
                     child: Switch(
-                      activeTrackColor: tp.primaryVariant,
-                      activeColor: Colors.white,
+                      activeTrackColor: tp.successColor,
+                      activeThumbColor: Colors.white,
                       inactiveThumbColor: tp.primaryTextColor,
                       inactiveTrackColor: tp.surfaceColor,
                       value: widget.switchValue,

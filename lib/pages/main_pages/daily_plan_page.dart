@@ -139,7 +139,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
       return tp.primaryColor.lighten(30).withOpacity(0.7);
     }
 
-    final habitColor = hexToColor(habit.color!);
+    final Color habitColor = habit.getColor ?? tp.primaryColor;
 
     if (tp.isDark) {
       return habitColor.darken(50).withOpacity(0.7);
@@ -236,10 +236,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 width: 4,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color:
-                                      habit.color != null
-                                          ? hexToColor(habit.color!)
-                                          : tp.primaryColor,
+                                  color: habit.getColor ?? tp.primaryColor,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -291,11 +288,8 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                                 habit.name,
                                                 style: TextStyle(
                                                   color:
-                                                      habit.color != null
-                                                          ? hexToColor(
-                                                            habit.color!,
-                                                          )
-                                                          : tp.primaryColor,
+                                                      habit.getColor ??
+                                                      tp.primaryColor,
                                                   fontWeight: FontWeight.w500,
                                                   letterSpacing: 1,
                                                   fontSize: 16,

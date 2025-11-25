@@ -154,6 +154,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           child: IgnorePointer(
             ignoring: isEditing,
             child: CNTabBar(
+              tint: tp.primaryColor,
               height: 85,
               items: const [
                 CNTabBarItem(label: 'Habits', icon: CNSymbol('house.fill')),

@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:habitt/util/color_converting.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 class Habit extends HiveObject {
@@ -44,6 +47,17 @@ class Habit extends HiveObject {
     this.timeIntervalEnd = 450,
     this.color,
   });
+
+  // convert to getter
+  Color? get getColor {
+    if (color == null) return null;
+    return hexToColor(color!);
+  }
+
+  // setter for color
+  set setColor(Color newColor) {
+    color = colorToHex(newColor);
+  }
 
   Habit copy() {
     return Habit(

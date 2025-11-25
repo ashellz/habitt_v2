@@ -53,7 +53,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
       stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
       stateProvider.habitColor =
-          widget.habit.color == null ? null : hexToColor(widget.habit.color!);
+          widget.habit.color == null ? null : widget.habit.getColor;
     });
 
     initialDuration = Duration(minutes: widget.habit.duration);
@@ -83,7 +83,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
         stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
     final changedHabitColor =
         stateProvider.habitColor !=
-        (widget.habit.color == null ? null : hexToColor(widget.habit.color!));
+        (widget.habit.color == null ? null : widget.habit.getColor);
 
     final newValue =
         changedName ||

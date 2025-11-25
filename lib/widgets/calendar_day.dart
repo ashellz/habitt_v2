@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/color_contrast.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class CalendarDay extends StatelessWidget {
   const CalendarDay({
@@ -40,7 +42,7 @@ class CalendarDay extends StatelessWidget {
 
     final tp = context.watch<ThemeProvider>();
 
-    final completedColor = tp.primaryColor;
+    final completedColor = tp.successColor;
     final uncompletedColor = tp.surfaceColor;
 
     Color progressColor({
@@ -59,6 +61,20 @@ class CalendarDay extends StatelessWidget {
         return true;
       }
       return false;
+    }
+
+    Color getBorderColor(Color color) {
+      // color: selected ? color.darken() : Colors.transparent,
+      if (selected) {
+        switch (tp.isDark) {
+          case true:
+            return color.lighten(20);
+          case false:
+            return color.darken(20);
+        }
+      } else {
+        return Colors.transparent;
+      }
     }
 
     final color = progressColor(
@@ -80,8 +96,7 @@ class CalendarDay extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color,
                 border: Border.all(
-                  color:
-                      selected ? tp.secondaryButtonBorder : Colors.transparent,
+                  color: getBorderColor(color),
                   width: selected ? 1 : 0,
                 ),
                 borderRadius: BorderRadius.circular(12),
@@ -93,7 +108,11 @@ class CalendarDay extends StatelessWidget {
                     color:
                         isBeforeDateJoined()
                             ? tp.mutedTextColor
-                            : tp.primaryTextColor,
+                            : bestContrastingOn(
+                              color,
+                              light: Colors.white,
+                              dark: tp.primaryTextColor,
+                            ),
                   ),
                 ),
               ),

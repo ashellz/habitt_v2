@@ -57,6 +57,31 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     return 0.0;
   }
 
+  /*
+  widget.habit.skipped
+                                ? widget.tp.borderColor.darken(
+                                  widget.tp.isDark ? 0 : 45,
+                                )
+                                : widget.habit.getColor ??
+                                    widget.tp.successColor,
+   */
+
+  Color getCompletionColor() {
+    final habit = widget.habit;
+    final tp = widget.tp;
+    final isColorFull = context.watch<PreferencesProvider>().isColorFull;
+
+    if (habit.skipped) {
+      return tp.borderColor.darken(tp.isDark ? 0 : 45);
+    }
+
+    if (!isColorFull) {
+      return tp.successColor;
+    } else {
+      return habit.getColor ?? tp.successColor;
+    }
+  }
+
   double _scale = 1.0;
 
   @override
@@ -158,12 +183,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                     builder: (context, value, _) {
                       return LinearProgressIndicator(
                         value: value,
-                        color:
-                            widget.habit.skipped
-                                ? widget.tp.borderColor.darken(
-                                  widget.tp.isDark ? 0 : 45,
-                                )
-                                : widget.tp.primaryButtonBackground,
+                        color: getCompletionColor(),
                         backgroundColor: widget.tp.mutedBgColor,
                       );
                     },
