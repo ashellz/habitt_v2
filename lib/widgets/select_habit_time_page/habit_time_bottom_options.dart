@@ -44,6 +44,9 @@ class HabitTimeBottomOptions extends StatelessWidget {
               onTap: () {
                 showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
+                  enableDrag: true,
+                  backgroundColor: Colors.transparent,
                   builder: (context) => SelectHabitColorSheet(tp: tp),
                 );
               },

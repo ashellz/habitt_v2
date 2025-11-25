@@ -81,7 +81,8 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final sp = context.watch<StateProvider>();
-    final habitName = sp.nameController.text;
+    final habitName =
+        sp.nameController.text.isEmpty ? "Habit name" : sp.nameController.text;
 
     TimeType timeType =
         widget.timeIntervalEnd == 0

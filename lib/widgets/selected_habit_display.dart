@@ -43,7 +43,7 @@ class SelectedHabitDisplay extends StatelessWidget {
                     habit: Habit(
                       id: 0,
                       categoryId: categoryProvider.selectedCategoryId,
-                      name: value.text == "" ? "Habit Name" : value.text,
+                      name: value.text == "" ? "Habit name" : value.text,
                       description: descController.text,
                       iconPath:
                           iconPath == ""

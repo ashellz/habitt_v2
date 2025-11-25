@@ -19,7 +19,10 @@ class DailyPlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final listViewHeight = MediaQuery.of(context).size.height - 217;
+
+    // bottom and top safe area
+    final double safeArea = kToolbarHeight + kBottomNavigationBarHeight;
+    final listViewHeight = MediaQuery.of(context).size.height - safeArea - 108;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -190,7 +193,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             offset: Offset(0, -10),
                             child: Text(
                               "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
-                              style: TextStyle(color: tp.mutedTextColor),
+                              style: TextStyle(color: tp.secondaryTextColor),
                             ),
                           ),
                           SizedBox(width: 8),
@@ -198,7 +201,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             child: Divider(
                               thickness: 1,
                               height: 0,
-                              color: tp.mutedTextColor.withOpacity(0.7),
+                              color: tp.secondaryTextColor.withOpacity(0.7),
                             ),
                           ),
                         ],
@@ -369,7 +372,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                   '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: tp.primaryTextColor,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1,
                                     fontSize: 12,
