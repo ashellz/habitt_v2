@@ -60,7 +60,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
     final tp = context.watch<ThemeProvider>();
-    final isDarkMode = tp.isDark;
 
     final item = _navItems[index];
     final isSelected = _selectedIndex == index;

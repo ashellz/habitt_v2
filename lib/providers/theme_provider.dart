@@ -65,10 +65,11 @@ class ThemeProvider extends ChangeNotifier {
       (_accentPalette?.vividColor) ??
       (isDark ? ColorService.dmPrimary : ColorService.primary);
   Color get primaryVariant =>
-      (_accentPalette?.darkerStandardColor) ??
+      (_accentPalette?.secondaryColor) ??
       (isDark ? ColorService.dmPrimaryVariant : ColorService.primaryVariant);
   Color get secondaryColor =>
-      isDark ? ColorService.dmSecondary : ColorService.secondary;
+      (_accentPalette?.secondaryColor) ??
+      (isDark ? ColorService.dmSecondary : ColorService.secondary);
   Color get successColor =>
       isDark ? ColorService.dmSuccess : ColorService.success;
   Color get warningColor =>

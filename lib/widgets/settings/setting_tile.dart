@@ -9,7 +9,7 @@ class SettingTile extends StatefulWidget {
     super.key,
     required this.title,
     required this.desc,
-    required this.iconData,
+    required this.icon,
     required this.onTap,
     this.hasSwitch = false,
     this.switchValue = false,
@@ -17,7 +17,7 @@ class SettingTile extends StatefulWidget {
 
   final String title;
   final String desc;
-  final IconData iconData;
+  final Widget icon;
   final void Function() onTap;
   final bool hasSwitch;
   final bool switchValue;
@@ -88,7 +88,7 @@ class _SettingTileState extends State<SettingTile> {
       color: Colors.transparent,
       child: Row(
         children: [
-          Icon(widget.iconData, color: tp.primaryColor, size: 32),
+          SizedBox(width: 32, height: 32, child: widget.icon),
           const SizedBox(width: 16), // spacing between icon and text
           Expanded(
             child: Row(

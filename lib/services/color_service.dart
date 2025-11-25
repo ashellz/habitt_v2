@@ -4,12 +4,12 @@ class AccentPalette {
   final Color standardColor;
   final Color strokeColor;
   final Color vividColor;
-  final Color darkerStandardColor;
+  final Color secondaryColor;
   const AccentPalette({
     required this.standardColor,
     required this.strokeColor,
     required this.vividColor,
-    required this.darkerStandardColor,
+    required this.secondaryColor,
   });
 }
 
@@ -177,44 +177,44 @@ class ColorService {
     'cherry': AccentPalette(
       standardColor: Color.fromARGB(255, 251, 228, 233),
       strokeColor: Color.fromARGB(255, 192, 120, 133),
-      vividColor: Color(0xFFD20A2E),
-      darkerStandardColor: Color.fromARGB(255, 128, 12, 41),
+      vividColor: Color(0xFFD20A2E), // rich cherry red
+      secondaryColor: Color(0xFFFF6F00), // warm orange complement
     ),
     'pink': AccentPalette(
       standardColor: Color(0xFFFFE4EC),
       strokeColor: Color(0xFFF48FB1),
-      vividColor: Color(0xFFE91E63),
-      darkerStandardColor: Color(0xFF880E4F),
+      vividColor: Color(0xFFE91E63), // vibrant pink
+      secondaryColor: Color(0xFF00BFA5), // teal complement
     ),
     'green': AccentPalette(
       standardColor: Color(0xFFE8F5E9),
       strokeColor: Color(0xFF81C784),
-      vividColor: Color(0xFF2E7D32),
-      darkerStandardColor: Color(0xFF1B5E20),
+      vividColor: Color(0xFF2E7D32), // forest green
+      secondaryColor: Color(0xFF8E24AA), // purple complement
     ),
     'cyan': AccentPalette(
       standardColor: Color(0xFFE0F7FA),
       strokeColor: Color(0xFF80DEEA),
-      vividColor: Color(0xFF00ACC1),
-      darkerStandardColor: Color(0xFF006064),
+      vividColor: Color(0xFF00ACC1), // bright cyan
+      secondaryColor: Color(0xFFFF6D00), // deep orange complement
     ),
     'blue': AccentPalette(
       standardColor: Color(0xFFE3F2FD),
       strokeColor: Color(0xFF64B5F6),
-      vividColor: Color(0xFF1976D2),
-      darkerStandardColor: Color(0xFF0D47A1),
+      vividColor: Color(0xFF1976D2), // classic blue
+      secondaryColor: Color(0xFF7C4DFF), // purple complement
     ),
     'teal': AccentPalette(
       standardColor: Color(0xFFE0F2F1),
       strokeColor: Color(0xFF4DB6AC),
-      vividColor: Color(0xFF00796B),
-      darkerStandardColor: Color(0xFF004D40),
+      vividColor: Color(0xFF00796B), // deep teal
+      secondaryColor: Color(0xFFD81B60), // pink complement
     ),
     'magenta': AccentPalette(
       standardColor: Color(0xFFF3E5F5),
       strokeColor: Color(0xFFBA68C8),
-      vividColor: Color(0xFF8E24AA),
-      darkerStandardColor: Color(0xFF4A148C),
+      vividColor: Color(0xFF8E24AA), // rich magenta
+      secondaryColor: Color(0xFF43A047), // green complement
     ),
   };
 
@@ -223,44 +223,44 @@ class ColorService {
     'cherry': AccentPalette(
       standardColor: Color.fromARGB(255, 46, 30, 34),
       strokeColor: Color.fromARGB(255, 86, 61, 66),
-      vividColor: Color.fromARGB(255, 255, 103, 131),
-      darkerStandardColor: Color.fromARGB(255, 118, 26, 49),
+      vividColor: Color.fromARGB(255, 255, 103, 131), // bright cherry
+      secondaryColor: Color(0xFFFFAB40), // warm amber complement
     ),
     'pink': AccentPalette(
       standardColor: Color(0xFF2C1D24),
       strokeColor: Color(0xFF6A3A4C),
-      vividColor: Color(0xFFFF80AB),
-      darkerStandardColor: Color(0xFF4A1F33),
+      vividColor: Color(0xFFFF80AB), // light pink
+      secondaryColor: Color(0xFF64FFDA), // aqua complement
     ),
     'green': AccentPalette(
       standardColor: Color(0xFF1A2B1D),
       strokeColor: Color(0xFF2E7D32),
-      vividColor: Color(0xFF66BB6A),
-      darkerStandardColor: Color(0xFF0F1F12),
+      vividColor: Color(0xFF66BB6A), // lime green
+      secondaryColor: Color(0xFFB388FF), // light purple complement
     ),
     'cyan': AccentPalette(
       standardColor: Color(0xFF0E2326),
       strokeColor: Color(0xFF006064),
-      vividColor: Color(0xFF4DD0E1),
-      darkerStandardColor: Color(0xFF081416),
+      vividColor: Color(0xFF4DD0E1), // bright cyan
+      secondaryColor: Color(0xFFFF9E40), // orange complement
     ),
     'blue': AccentPalette(
       standardColor: Color(0xFF0E1B2A),
       strokeColor: Color(0xFF0D47A1),
-      vividColor: Color(0xFF64B5F6),
-      darkerStandardColor: Color(0xFF07111B),
+      vividColor: Color(0xFF64B5F6), // sky blue
+      secondaryColor: Color(0xFFB388FF), // purple complement
     ),
     'teal': AccentPalette(
       standardColor: Color(0xFF0D1F1D),
       strokeColor: Color(0xFF004D40),
-      vividColor: Color(0xFF4DB6AC),
-      darkerStandardColor: Color(0xFF061311),
+      vividColor: Color(0xFF4DB6AC), // aqua teal
+      secondaryColor: Color(0xFFFF4081), // pink accent complement
     ),
     'magenta': AccentPalette(
       standardColor: Color(0xFF1E1627),
       strokeColor: Color(0xFF4A148C),
-      vividColor: Color(0xFFBA68C8),
-      darkerStandardColor: Color(0xFF120C1A),
+      vividColor: Color(0xFFBA68C8), // light magenta
+      secondaryColor: Color(0xFF69F0AE), // mint green complement
     ),
   };
 }

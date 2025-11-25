@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -21,6 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final prefsProvider = context.watch<PreferencesProvider>();
     final tp = context.watch<ThemeProvider>();
+    bool isTinted = prefsProvider.colorfulness == Colorfulness.tinted;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -42,7 +42,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingTile(
                   title: "Dark Mode",
                   desc: "Change a color theme for your interface",
-                  iconData: Icons.dark_mode,
+                  icon: Icon(
+                    Icons.dark_mode,
+                    color: isTinted ? tp.primaryColor : tp.primaryTextColor,
+                    size: 32,
+                  ),
                   hasSwitch: true,
                   switchValue: tp.isDark,
                   onTap: () {
@@ -52,7 +56,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingTile(
                   title: "Accent Color",
                   desc: "Select a color pallete for your interface",
-                  iconData: Icons.color_lens,
+                  icon:
+                      isTinted
+                          ? Icon(
+                            Icons.color_lens,
+                            color: tp.primaryColor,
+                            size: 32,
+                          )
+                          : Image.asset("assets/images/icons/color-wheel.png"),
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -68,7 +79,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.colorize, color: tp.primaryColor, size: 32),
+                      isTinted
+                          ? Icon(
+                            Icons.colorize,
+                            color: tp.primaryColor,
+                            size: 32,
+                          )
+                          : Image.asset(
+                            "assets/images/icons/colorful.png",
+                            width: 32,
+                            height: 32,
+                          ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -108,7 +129,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingTile(
                   title: "Glass Feel",
                   desc: "Makes widgets look more glassy",
-                  iconData: Icons.blur_on,
+                  icon:
+                      isTinted
+                          ? Icon(
+                            Icons.blur_on,
+                            color: tp.primaryColor,
+                            size: 32,
+                          )
+                          : Image.asset(
+                            "assets/images/icons/blur.png",
+                            width: 32,
+                            height: 32,
+                          ),
                   hasSwitch: true,
                   switchValue: prefsProvider.glassFeel,
                   onTap: () {
@@ -133,8 +165,19 @@ class _SettingsPageState extends State<SettingsPage> {
                           ? SettingTile(
                             key: const ValueKey("glass_habits_tile"),
                             title: "Glass Habits",
+                            icon:
+                                isTinted
+                                    ? Icon(
+                                      Icons.blur_on,
+                                      color: tp.primaryColor,
+                                      size: 32,
+                                    )
+                                    : Image.asset(
+                                      "assets/images/icons/blur.png",
+                                      width: 32,
+                                      height: 32,
+                                    ),
                             desc: "Adds glassy feel to habits too",
-                            iconData: Icons.blur_on,
                             hasSwitch: true,
                             switchValue: prefsProvider.glassHabits,
                             onTap: () {
