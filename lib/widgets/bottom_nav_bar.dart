@@ -67,8 +67,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     Color getItemColor() {
       if (!isGlassFeel) {
-        if (!isDarkMode && isSelected) return tp.backgroundColor;
-        return tp.primaryTextColor;
+        if (isSelected) return tp.backgroundColor;
       }
       if (isSelected) {
         return tp.primaryColor;

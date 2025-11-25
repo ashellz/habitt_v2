@@ -1,3 +1,4 @@
+import 'package:cupertino_native/components/segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -21,10 +22,10 @@ class SegmentedControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-
+    final prefsProvider = context.watch<PreferencesProvider>();
+    bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     Color getColor(bool selected) {
       if (selected) {
-        final prefsProvider = context.read<PreferencesProvider>();
         final colorfulness = prefsProvider.colorfulness;
         if (colorfulness == Colorfulness.tinted) {
           return tp.primaryColor;
@@ -33,6 +34,15 @@ class SegmentedControl extends StatelessWidget {
       } else {
         return Colors.transparent;
       }
+    }
+
+    if (prefsProvider.glassFeel && isIOS) {
+      return CNSegmentedControl(
+        labels: segments,
+        selectedIndex: selectedIndex,
+        onValueChanged: (i) => onChanged(i),
+        height: height,
+      );
     }
 
     return GlassFeelContainer(
