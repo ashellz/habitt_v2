@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -7,6 +6,7 @@ import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/additional_task_switch.dart';
 import 'package:habitt/widgets/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/custom_text_field.dart';
+import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/default_button.dart';
 import 'package:habitt/widgets/default_dialog.dart';
 import 'package:habitt/widgets/delete_habit_dialog.dart';
@@ -31,42 +31,16 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
+  late final TextEditingController _nameController;
+  late final TextEditingController _descController;
+
   Duration initialDuration = Duration.zero;
   int initialAmount = 1;
   bool showButtons = false;
 
   void setInitialValues() {
-    final stateProvider = context.read<StateProvider>();
-
-    initialDuration = Duration(minutes: widget.habit.duration);
-    initialAmount = widget.habit.amount;
-
-    stateProvider.habitCategoryId = widget.habit.categoryId;
-    stateProvider.nameController.text = widget.habit.name;
-    stateProvider.descController.text = widget.habit.description;
-    stateProvider.habitAmount = widget.habit.amount;
-    stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
-    stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
-    stateProvider.iconPath = widget.habit.iconPath;
-    stateProvider.isAdditional = widget.habit.additional;
-    stateProvider.timeIntervalEnabled = widget.habit.timeIntervalEnabled;
-    stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
-    stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
-    stateProvider.habitColor =
-        widget.habit.color == null ? null : hexToColor(widget.habit.color!);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final stateProvider = context.read<StateProvider>();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Sets initial habit amount and duration
-      initialDuration = Duration(minutes: widget.habit.duration);
-      initialAmount = widget.habit.amount;
-
-      // Loads habit values
+      final stateProvider = context.read<StateProvider>();
       stateProvider.habitCategoryId = widget.habit.categoryId;
       stateProvider.nameController.text = widget.habit.name;
       stateProvider.descController.text = widget.habit.description;
@@ -81,36 +55,78 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.habitColor =
           widget.habit.color == null ? null : hexToColor(widget.habit.color!);
     });
+
+    initialDuration = Duration(minutes: widget.habit.duration);
+    initialAmount = widget.habit.amount;
+
+    _nameController.text = widget.habit.name;
+    _descController.text = widget.habit.description;
   }
 
-  bool getShowButtonsValue(
-    StateProvider stateProvider,
-    TextEditingController nameController,
-    TextEditingController descController,
-  ) {
-    if (widget.habit.color == null) {
-      if (stateProvider.habitColor != null) {
-        return true;
-      }
-    } else {
-      if (stateProvider.habitColor != hexToColor(widget.habit.color!)) {
-        return true;
-      }
-    }
-
-    return stateProvider.habitCategoryId != widget.habit.categoryId ||
-        nameController.text != widget.habit.name ||
-        descController.text != widget.habit.description ||
-        stateProvider.habitAmount != widget.habit.amount ||
-        stateProvider.habitDuration !=
-            Duration(minutes: widget.habit.duration) ||
-        stateProvider.habitAmountLabelController.text !=
-            widget.habit.amountLabel ||
-        stateProvider.iconPath != widget.habit.iconPath ||
-        stateProvider.isAdditional != widget.habit.additional ||
-        stateProvider.timeIntervalStart != widget.habit.timeIntervalStart ||
-        stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd ||
+  void _recomputeShowButtons() {
+    final stateProvider = context.read<StateProvider>();
+    final changedName = _nameController.text.trim() != widget.habit.name;
+    final changedDesc = _descController.text.trim() != widget.habit.description;
+    final changedCategory =
+        stateProvider.habitCategoryId != widget.habit.categoryId;
+    final changedDuration =
+        stateProvider.habitDuration.inMinutes != initialDuration.inMinutes;
+    final changedAmount = stateProvider.habitAmount != initialAmount;
+    final changedAdditionalTask =
+        stateProvider.isAdditional != widget.habit.additional;
+    final changedIcon = stateProvider.iconPath != widget.habit.iconPath;
+    final changedTimeIntervalEnabled =
         stateProvider.timeIntervalEnabled != widget.habit.timeIntervalEnabled;
+    final changedTimeIntervalStart =
+        stateProvider.timeIntervalStart != widget.habit.timeIntervalStart;
+    final changedTimeIntervalEnd =
+        stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
+    final changedHabitColor =
+        stateProvider.habitColor !=
+        (widget.habit.color == null ? null : hexToColor(widget.habit.color!));
+
+    final newValue =
+        changedName ||
+        changedDesc ||
+        changedCategory ||
+        changedDuration ||
+        changedAmount ||
+        changedAdditionalTask ||
+        changedIcon ||
+        changedTimeIntervalEnabled ||
+        changedTimeIntervalStart ||
+        changedTimeIntervalEnd ||
+        changedHabitColor;
+
+    if (newValue != showButtons) {
+      setState(() {
+        showButtons = newValue;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _descController = TextEditingController();
+    setInitialValues();
+
+    _nameController.addListener(_recomputeShowButtons);
+    _descController.addListener(_recomputeShowButtons);
+  }
+
+  @override
+  void dispose() {
+    _nameController.removeListener(_recomputeShowButtons);
+    _descController.removeListener(_recomputeShowButtons);
+    _nameController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
+
+  bool getShowButtonsValue(TextEditingController descController) {
+    return showButtons;
   }
 
   @override
@@ -119,22 +135,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final localizations = AppLocalizations.of(context)!;
 
     final stateProvider = context.watch<StateProvider>();
-    final nameController = stateProvider.nameController;
-    final descController = stateProvider.descController;
 
-    showButtons = getShowButtonsValue(
-      stateProvider,
-      nameController,
-      descController,
-    );
+    // Call recompute if provider-driven fields changed
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _recomputeShowButtons();
+    });
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: tp.backgroundColor,
-        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
         body: GradientBackground(
@@ -147,7 +154,49 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      NavBackButton(tp: tp),
+                      NavBackButton(
+                        tp: tp,
+                        onPressed: () {
+                          // check if there are unsaved changes
+                          if (showButtons) {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (context) => DefaultDialog(
+                                    title: "Discard changes?",
+                                    desc:
+                                        "You have unsaved changes. Are you sure you want to go back and discard them?",
+                                    content: Row(
+                                      children: [
+                                        Expanded(
+                                          child: DefaultButton(
+                                            label: "Cancel",
+                                            outlined: true,
+                                            onPressed:
+                                                () => Navigator.pop(context),
+                                          ),
+                                        ),
+                                        SizedBox(width: 16),
+                                        Expanded(
+                                          child: DefaultButton(
+                                            label: "Discard",
+                                            onPressed: () {
+                                              Navigator.pop(
+                                                context,
+                                              ); // close dialog
+                                              Navigator.pop(context); // go back
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            );
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
 
                       Padding(
                         padding: const EdgeInsets.only(bottom: 30),
@@ -187,12 +236,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                   CustomTextField(
                     title: localizations.habitName,
-                    controller: nameController,
+                    controller: _nameController,
                   ),
                   CustomTextField(
                     topPadding: 16,
                     title: localizations.notes,
-                    controller: descController,
+                    controller: _descController,
                     maxLines: 5,
                   ),
                   MoreOptionsText(localizations: localizations),
@@ -246,12 +295,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         SizedBox(width: 16),
                         Expanded(
                           child: EditHabitButton(
-                            nameController: nameController,
+                            nameController: _nameController,
                             stateProvider: stateProvider,
                             initialAmount: initialAmount,
                             widget: widget,
                             initialDuration: initialDuration,
-                            descController: descController,
+                            descController: _descController,
                             localizations: localizations,
                           ),
                         ),

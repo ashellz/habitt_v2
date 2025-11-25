@@ -132,13 +132,10 @@ class _MyAppState extends State<MyApp> {
       }
     }
 
-    // Optionally, if you want to keep seed-based dynamic color, you can derive ThemeData
-    // from ColorService then override primary with seed if needed. Here we use ColorService directly.
     return MaterialApp(
       title: 'habitt',
       debugShowCheckedModeBanner: false,
       theme: ColorService.lightThemeData().copyWith(
-        // keep your text theme + font
         textTheme: ThemeData.light().textTheme.apply(
           fontFamily: 'Poppins',
           bodyColor: const Color(0xFF212529),
