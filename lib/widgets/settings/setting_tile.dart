@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/widgets/default_switch.dart';
 import 'package:provider/provider.dart';
 
 class SettingTile extends StatefulWidget {
@@ -115,14 +116,9 @@ class _SettingTileState extends State<SettingTile> {
                 if (widget.hasSwitch)
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
-                    child: Switch(
-                      activeTrackColor:
-                          isTinted ? tp.primaryColor : tp.successColor,
-                      activeThumbColor: Colors.white,
-                      inactiveThumbColor: tp.primaryTextColor,
-                      inactiveTrackColor: tp.surfaceColor,
-                      value: widget.switchValue,
-                      onChanged: (value) {
+                    child: DefaultSwitch(
+                      switchValue: widget.switchValue,
+                      onTap: () {
                         widget.onTap();
                       },
                     ),

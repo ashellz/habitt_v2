@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default_button.dart';
+import 'package:habitt/widgets/default_switch.dart';
 import 'package:habitt/widgets/select_time_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -58,14 +59,10 @@ class SelectTimeIntervalSwitch extends StatelessWidget {
           ),
         ),
         Spacer(),
-        Switch(
-          activeTrackColor: tp.primaryButtonBackground,
-          activeColor: Colors.white,
-          inactiveThumbColor: tp.primaryTextColor,
-          inactiveTrackColor: tp.surfaceColor,
-          value: timeIntervalEnabled,
-          onChanged: (value) {
-            sp.timeIntervalEnabled = value;
+        DefaultSwitch(
+          switchValue: timeIntervalEnabled,
+          onTap: () {
+            sp.timeIntervalEnabled = !timeIntervalEnabled;
           },
         ),
       ],

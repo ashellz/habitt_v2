@@ -60,7 +60,7 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  toggleAditional() {
+  toggleAdditional() {
     _isAdditional = !_isAdditional;
     notifyListeners();
   }

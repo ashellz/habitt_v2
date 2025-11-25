@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:habitt/widgets/default_switch.dart';
 
 class AdditionalTaskSwitch extends StatelessWidget {
   const AdditionalTaskSwitch({
@@ -16,10 +15,6 @@ class AdditionalTaskSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTinted =
-        context.watch<PreferencesProvider>().colorfulness ==
-        Colorfulness.tinted;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,13 +30,9 @@ class AdditionalTaskSwitch extends StatelessWidget {
                 ),
               ),
             ),
-            Switch(
-              activeTrackColor: isTinted ? tp.primaryColor : tp.successColor,
-              activeThumbColor: Colors.white,
-              inactiveThumbColor: tp.primaryTextColor,
-              inactiveTrackColor: tp.secondaryButtonBackground,
-              value: stateProvider.isAdditional,
-              onChanged: (value) => stateProvider.toggleAditional(),
+            DefaultSwitch(
+              onTap: () => stateProvider.toggleAdditional(),
+              switchValue: stateProvider.isAdditional,
             ),
           ],
         ),
