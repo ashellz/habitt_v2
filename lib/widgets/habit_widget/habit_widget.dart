@@ -270,14 +270,12 @@ class _HabitWidgetState extends State<HabitWidget>
                           // Completion and streak
                           Row(
                             children: [
-                              if (widget.isToday)
-                                if (widget.habit.streak > 0 ||
-                                    widget.habit.completed)
-                                  StreakDisplay(
-                                    streak: widget.habit.streak,
-                                    completed: widget.habit.completed,
-                                    tp: tp,
-                                  ),
+                              StreakDisplay(
+                                isToday: widget.isToday,
+                                streak: widget.habit.streak,
+                                completed: widget.habit.completed,
+                                tp: tp,
+                              ),
 
                               // Completion
                               CompletionDisplay(
