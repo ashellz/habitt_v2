@@ -121,11 +121,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             bottom: 0,
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 16.0,
-                  left: 16.0,
-                  right: 16.0,
-                ),
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

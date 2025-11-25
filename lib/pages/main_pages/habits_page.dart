@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:habitt/pages/main_pages/daily_plan_page.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -211,6 +210,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                           alignment: Alignment.centerLeft,
                           child: const Greeting(),
                         ),
+
                         const CategoriesList(),
                         const HabitsCompletedWidget(),
                       ],

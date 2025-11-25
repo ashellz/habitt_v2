@@ -1,3 +1,5 @@
+import 'package:cupertino_native/components/tab_bar.dart';
+import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
@@ -143,6 +145,27 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     final tp = context.watch<ThemeProvider>();
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
+
+    return Expanded(
+      child: CNTabBar(
+        height: 85,
+        items: const [
+          CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill')),
+          CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
+          CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
+          CNTabBarItem(label: 'Settings', icon: CNSymbol('gearshape.fill')),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          if (_selectedIndex != index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+          widget.onItemTapped?.call(index);
+        },
+      ),
+    );
 
     return GlassBlurContainer(
       padding: const EdgeInsets.all(2),
