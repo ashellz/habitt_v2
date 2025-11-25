@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -83,33 +84,91 @@ class _CategoriesListState extends State<CategoriesList> {
   }
 
   void _scrollToSelectedCategory() {
+    if (!_scrollController.hasClients) return;
+
     final categoryProvider = context.read<CategoryProvider>();
+    final habitProvider = context.read<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
+    final localizations = AppLocalizations.of(context)!;
+
+    final viewportWidth = _scrollController.position.viewportDimension;
+    if (viewportWidth == 0) return;
+
+    // Build the actually visible items (respecting showAll + hasHabits filter)
+    final categories = categoryProvider.categories;
+    final habits = habitProvider.habits;
+
+    final List<int> ids = [];
+    final List<String> labels = [];
+
+    if (widget.showAll) {
+      ids.add(0);
+      labels.add(localizations.all);
+    }
+
+    for (int i = 0; i < categories.length; i++) {
+      final c = categories[i];
+      if (widget.showAll) {
+        final count = habits.where((h) => h.categoryId == c.id).length;
+        if (count == 0) continue; // matches the UI filter
+      }
+      ids.add(c.id);
+      labels.add(c.name);
+    }
+
+    if (ids.isEmpty) return;
+
+    // Resolve selected id/index within the visible items
     final selectedId =
         widget.useHabitCategory
             ? stateProvider.habitCategoryId
             : categoryProvider.selectedCategoryId;
-    List<Category> categories = categoryProvider.categories;
+    int selectedIndex = ids.indexOf(selectedId);
+    if (selectedIndex == -1) selectedIndex = 0;
 
-    if (_scrollController.hasClients && categories.isNotEmpty) {
-      int selectedIndex = categories.indexWhere((c) => c.id == selectedId) + 1;
-      if (selectedIndex != -1) {
-        // Estimate position by multiplying index by item width (assumed 120px)
-        double itemWidth = 110.0; // Adjust based on actual category width
-        double screenWidth = MediaQuery.of(context).size.width;
-        double scrollOffset =
-            (selectedIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+    // Measure text widths like in the commented example
+    final textStyle =
+        Theme.of(context).textTheme.bodyMedium ?? const TextStyle();
+    final textPainters =
+        labels.map((text) {
+          final tp = TextPainter(
+            text: TextSpan(text: text, style: textStyle),
+            textDirection: TextDirection.ltr,
+          );
+          tp.layout();
+          return tp;
+        }).toList();
 
-        _scrollController.animateTo(
-          scrollOffset.clamp(
-            0.0,
-            _scrollController.position.maxScrollExtent,
-          ), // Keep within bounds
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    }
+    final textsSpace = textPainters.fold<double>(
+      0.0,
+      (sum, tp) => sum + tp.width,
+    );
+
+    // Distribute remaining space as horizontal padding per item
+    final sidePadding = math.max(
+      12.0,
+      (viewportWidth - textsSpace) / ids.length / 2,
+    );
+
+    // Item widths = text width + horizontal padding on both sides
+    final itemWidths = List<double>.generate(
+      ids.length,
+      (i) => textPainters[i].width + (sidePadding * 2),
+    );
+
+    // Center the selected item
+    final leading = itemWidths
+        .take(selectedIndex)
+        .fold<double>(0.0, (a, b) => a + b);
+    final selectedWidth = itemWidths[selectedIndex];
+    final itemCenterOffset = leading + (selectedWidth / 2);
+    final targetScroll = itemCenterOffset - (viewportWidth / 2);
+
+    _scrollController.animateTo(
+      targetScroll.clamp(0.0, _scrollController.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -225,3 +284,143 @@ class _CategoriesListState extends State<CategoriesList> {
     );
   }
 }
+
+/*
+import 'dart:math';
+
+import 'package:eyelan/functions/is_tablet.dart';
+import 'package:eyelan/services/color_service.dart';
+import 'package:eyelan/widgets/faded_list_view.dart';
+import 'package:flutter/material.dart';
+
+class AnimatedTabBar extends StatefulWidget {
+  const AnimatedTabBar({
+    super.key,
+    required this.tabs,
+    required this.onTabSelected,
+    required this.index,
+  });
+
+  final List<String> tabs;
+  final ValueChanged<int>? onTabSelected;
+  final int index;
+
+  @override
+  State<AnimatedTabBar> createState() => _AnimatedTabBarState();
+}
+
+class _AnimatedTabBarState extends State<AnimatedTabBar> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _animateToTab(int index, List<double> itemWidths, double viewportWidth) {
+    // sum widths of items before 'index'
+
+    final leading = itemWidths.take(index).fold(0.0, (sum, w) => sum + w);
+    final selectedWidth = itemWidths[index];
+    final itemCenterOffset = leading + (selectedWidth / 2);
+    final targetScroll = itemCenterOffset - (viewportWidth / 2);
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final clamped = targetScroll.clamp(0.0, maxScroll);
+    _scrollController.animateTo(
+      clamped,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final tabsSpace =
+        screenWidth -
+        (isTablet(context) ? 64 : 32) -
+        (isTablet(context) ? 48 : 24); // outer and inner padding
+
+    final textPainters = widget.tabs.map((text) {
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: const TextStyle(letterSpacing: -0.28),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      return textPainter;
+    }).toList();
+
+    final textsSpace = textPainters
+        .map((textPainter) => textPainter.width)
+        .fold(0.0, (a, b) => a + b);
+    final double sidePadding = max(
+      12,
+      (tabsSpace - textsSpace) / widget.tabs.length / 2,
+    );
+
+    final itemWidths = List<double>.generate(
+      widget.tabs.length,
+      (i) => textPainters[i].width + (sidePadding * 2),
+    );
+
+    return SizedBox(
+      height: 44, // fixed height for tabs
+      width: tabsSpace,
+      child: FadedListView(
+        height: 44,
+        scrollDirection: Axis.horizontal,
+        scrollController: _scrollController,
+        children: List.generate(widget.tabs.length, (index) {
+          final bool isSelected = index == widget.index;
+
+          return GestureDetector(
+            onTap: () {
+              widget.onTabSelected!(index);
+              _animateToTab(index, itemWidths, tabsSpace);
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, 8),
+              height: 44,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: isSelected
+                        ? ColorService.blue200
+                        : ColorService.white25,
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+              ),
+              child: Center(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  style: TextStyle(
+                    color: isSelected
+                        ? ColorService.blue200
+                        : Colors.grey.shade600,
+                    letterSpacing: -0.28,
+                  ),
+                  child: Text(widget.tabs[index], textAlign: TextAlign.center),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+ */
