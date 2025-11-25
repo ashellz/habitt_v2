@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 
@@ -44,6 +45,8 @@ class CompletedHabits extends StatelessWidget {
     final highestAmountOfHabitsLastWeek =
         statsProvider.highestAmountOfHabitsLastWeek;
     final habitsCompletedLastWeek = statsProvider.habitsCompletedLastWeek;
+    final prefsProvider = context.watch<PreferencesProvider>();
+    final colorfulness = prefsProvider.colorfulness;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +77,10 @@ class CompletedHabits extends StatelessWidget {
                     barRods: [
                       BarChartRodData(
                         toY: habitsCompletedLastWeek[index].toDouble(),
-                        color: tp.primaryColor,
+                        color:
+                            colorfulness == Colorfulness.tinted
+                                ? tp.primaryColor
+                                : tp.successColor,
                         width: 5,
                       ),
                     ],

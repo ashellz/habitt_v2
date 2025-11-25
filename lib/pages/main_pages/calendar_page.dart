@@ -148,6 +148,7 @@ class _CalendarPageState extends State<CalendarPage> {
       key: _listViewKey,
       controller: _scrollController,
       children: [
+        const SizedBox(height: 48),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(

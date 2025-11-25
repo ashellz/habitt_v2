@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/color_service.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 /// Bottom sheet for selecting accent / interface color palette.
 /// Layout matches SelectHabitColorSheet: scrollable up to 90% height,
@@ -65,7 +66,10 @@ class SelectColorSheet extends StatelessWidget {
                         border:
                             tp.accentName == entry.key
                                 ? Border.all(
-                                  color: entry.value.darkerStandardColor,
+                                  color:
+                                      tp.isDark
+                                          ? entry.value.vividColor.lighten(20)
+                                          : entry.value.vividColor.darken(20),
                                   width: 3,
                                 )
                                 : null,
