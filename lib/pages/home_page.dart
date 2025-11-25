@@ -5,6 +5,7 @@ import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/bottom_nav_bar.dart';
@@ -98,6 +99,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final isGlassFeel = context.watch<PreferencesProvider>().glassFeel;
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+
     return SizedBox(
       child: Stack(
         children: <Widget>[
@@ -118,7 +122,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: isIOS && isGlassFeel ? -20 : 0,
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16.0),

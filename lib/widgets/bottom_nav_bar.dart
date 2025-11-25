@@ -145,27 +145,29 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     final tp = context.watch<ThemeProvider>();
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
-
-    return Expanded(
-      child: CNTabBar(
-        height: 85,
-        items: const [
-          CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill')),
-          CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
-          CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
-          CNTabBarItem(label: 'Settings', icon: CNSymbol('gearshape.fill')),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          if (_selectedIndex != index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          }
-          widget.onItemTapped?.call(index);
-        },
-      ),
-    );
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    if (glassFeel && isIOS) {
+      return Expanded(
+        child: CNTabBar(
+          height: 85,
+          items: const [
+            CNTabBarItem(label: 'Habits', icon: CNSymbol('house.fill')),
+            CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
+            CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
+            CNTabBarItem(label: 'Settings', icon: CNSymbol('gearshape.fill')),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            if (_selectedIndex != index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            }
+            widget.onItemTapped?.call(index);
+          },
+        ),
+      );
+    }
 
     return GlassBlurContainer(
       padding: const EdgeInsets.all(2),
