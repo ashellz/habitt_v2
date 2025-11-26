@@ -1,14 +1,51 @@
 import 'package:flutter/material.dart';
 
-class CustomSwitcherWrapper extends StatelessWidget {
+class CustomSwitcherWrapper extends StatefulWidget {
   const CustomSwitcherWrapper({
     super.key,
     required this.value,
     required this.widget,
+    this.secondaryWidget,
+    this.delay = const Duration(milliseconds: 0),
   });
 
   final bool value;
   final Widget widget;
+  final Widget? secondaryWidget;
+  final Duration delay;
+
+  @override
+  State<CustomSwitcherWrapper> createState() => _CustomSwitcherWrapperState();
+}
+
+class _CustomSwitcherWrapperState extends State<CustomSwitcherWrapper> {
+  bool _displayedValue = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayedValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(CustomSwitcherWrapper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      if (widget.delay.inMilliseconds > 0) {
+        Future.delayed(widget.delay, () {
+          if (mounted) {
+            setState(() {
+              _displayedValue = widget.value;
+            });
+          }
+        });
+      } else {
+        setState(() {
+          _displayedValue = widget.value;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +64,10 @@ class CustomSwitcherWrapper extends StatelessWidget {
           child: FadeTransition(opacity: animation, child: child),
         );
       },
-      child: value ? widget : const SizedBox.shrink(),
+      child:
+          _displayedValue
+              ? widget.widget
+              : (widget.secondaryWidget ?? const SizedBox.shrink()),
     );
   }
 }

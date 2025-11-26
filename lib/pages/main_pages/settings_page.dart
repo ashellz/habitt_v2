@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/widgets/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default_annotated_region.dart';
 import 'package:habitt/widgets/gradient_background.dart';
 import 'package:habitt/widgets/settings/select_color_sheet.dart';
@@ -42,10 +43,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingTile(
                   title: "Dark Mode",
                   desc: "Change a color theme for your interface",
-                  icon: Icon(
-                    Icons.dark_mode,
-                    color: isTinted ? tp.primaryColor : tp.primaryTextColor,
-                    size: 32,
+                  icon: CustomSwitcherWrapper(
+                    value: isTinted,
+                    widget: Icon(
+                      Icons.dark_mode,
+                      color: tp.primaryColor,
+                      size: 32,
+                    ),
+                    secondaryWidget: Image.asset(
+                      "assets/images/icons/moon.png",
+                    ),
                   ),
                   hasSwitch: true,
                   switchValue: tp.isDark,
@@ -56,14 +63,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingTile(
                   title: "Accent Color",
                   desc: "Select a color pallete for your interface",
-                  icon:
-                      isTinted
-                          ? Icon(
-                            Icons.color_lens,
-                            color: tp.primaryColor,
-                            size: 32,
-                          )
-                          : Image.asset("assets/images/icons/color-wheel.png"),
+                  icon: CustomSwitcherWrapper(
+                    delay: Duration(milliseconds: 100),
+                    value: isTinted,
+                    widget: Icon(
+                      Icons.color_lens,
+                      color: tp.primaryColor,
+                      size: 32,
+                    ),
+                    secondaryWidget: Image.asset(
+                      "assets/images/icons/color-wheel.png",
+                    ),
+                  ),
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -79,17 +90,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      isTinted
-                          ? Icon(
-                            Icons.colorize,
-                            color: tp.primaryColor,
-                            size: 32,
-                          )
-                          : Image.asset(
-                            "assets/images/icons/colorful.png",
-                            width: 32,
-                            height: 32,
-                          ),
+                      CustomSwitcherWrapper(
+                        delay: Duration(milliseconds: 200),
+                        value: isTinted,
+                        widget: Icon(
+                          Icons.colorize,
+                          color: tp.primaryColor,
+                          size: 32,
+                        ),
+                        secondaryWidget: Image.asset(
+                          "assets/images/icons/colorful.png",
+                          width: 32,
+                          height: 32,
+                        ),
+                      ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -129,18 +143,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingTile(
                   title: "Glass Feel",
                   desc: "Makes widgets look more glassy",
-                  icon:
-                      isTinted
-                          ? Icon(
-                            Icons.blur_on,
-                            color: tp.primaryColor,
-                            size: 32,
-                          )
-                          : Image.asset(
-                            "assets/images/icons/blur.png",
-                            width: 32,
-                            height: 32,
-                          ),
+                  icon: CustomSwitcherWrapper(
+                    delay: Duration(milliseconds: 300),
+                    value: isTinted,
+                    widget: Icon(
+                      Icons.blur_on,
+                      color: tp.primaryColor,
+                      size: 32,
+                    ),
+                    secondaryWidget: Image.asset(
+                      "assets/images/icons/blur.png",
+                      width: 32,
+                      height: 32,
+                    ),
+                  ),
                   hasSwitch: true,
                   switchValue: prefsProvider.glassFeel,
                   onTap: () {
@@ -165,18 +181,20 @@ class _SettingsPageState extends State<SettingsPage> {
                           ? SettingTile(
                             key: const ValueKey("glass_habits_tile"),
                             title: "Glass Habits",
-                            icon:
-                                isTinted
-                                    ? Icon(
-                                      Icons.blur_on,
-                                      color: tp.primaryColor,
-                                      size: 32,
-                                    )
-                                    : Image.asset(
-                                      "assets/images/icons/blur.png",
-                                      width: 32,
-                                      height: 32,
-                                    ),
+                            icon: CustomSwitcherWrapper(
+                              delay: Duration(milliseconds: 400),
+                              value: isTinted,
+                              widget: Icon(
+                                Icons.blur_on,
+                                color: tp.primaryColor,
+                                size: 32,
+                              ),
+                              secondaryWidget: Image.asset(
+                                "assets/images/icons/blur.png",
+                                width: 32,
+                                height: 32,
+                              ),
+                            ),
                             desc: "Adds glassy feel to habits too",
                             hasSwitch: true,
                             switchValue: prefsProvider.glassHabits,
