@@ -131,20 +131,25 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
     return habit.timeIntervalStart / 60;
   }
 
-  Color getContainerColor(ThemeProvider tp, Habit habit) {
-    if (habit.color == null) {
-      if (tp.isDark) {
-        return tp.primaryColor.darken(50).withOpacity(0.7);
-      }
-      return tp.primaryColor.lighten(30).withOpacity(0.7);
-    }
-
-    final Color habitColor = habit.getColor ?? tp.primaryColor;
-
+  Color getContainerColor(Habit habit, ThemeProvider tp) {
     if (tp.isDark) {
-      return habitColor.darken(50).withOpacity(0.7);
+      return habit.getColor?.withOpacity(0.7) ??
+          tp.primaryColor.darken(30).withOpacity(0.7);
     } else {
-      return habitColor.lighten(30).withOpacity(0.7);
+      return habit.getColor?.withOpacity(0.7) ??
+          tp.primaryColor.lighten(30).withOpacity(0.7);
+    }
+  }
+
+  Color getHabitNameColor(Habit habit, ThemeProvider tp) {
+    if (tp.isDark) {
+      return habit.getColor != null
+          ? habit.getColor!.lighten(30)
+          : tp.primaryColor.lighten(30);
+    } else {
+      return habit.getColor != null
+          ? habit.getColor!.darken(40)
+          : tp.primaryColor.darken(40);
     }
   }
 
@@ -226,7 +231,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                         child: Container(
                           padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: getContainerColor(tp, habit),
+                            color: getContainerColor(habit, tp),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -236,7 +241,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 width: 4,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: habit.getColor ?? tp.primaryColor,
+                                  color: getHabitNameColor(habit, tp),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -287,9 +292,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                               Text(
                                                 habit.name,
                                                 style: TextStyle(
-                                                  color:
-                                                      habit.getColor ??
-                                                      tp.primaryColor,
+                                                  color: getHabitNameColor(
+                                                    habit,
+                                                    tp,
+                                                  ),
                                                   fontWeight: FontWeight.w500,
                                                   letterSpacing: 1,
                                                   fontSize: 16,
@@ -318,7 +324,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                           child: Container(
                             padding: EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: tp.primaryColor.withOpacity(0.7),
+                              color: getContainerColor(habit, tp),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Align(
@@ -327,7 +333,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 width: 4,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: tp.primaryColor,
+                                  color: getHabitNameColor(habit, tp),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),

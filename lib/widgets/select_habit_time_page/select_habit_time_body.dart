@@ -69,11 +69,24 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
 
   Color getContainerColor(ThemeProvider tp, StateProvider sp) {
     if (tp.isDark) {
-      return sp.habitColor?.darken(50).withOpacity(0.7) ??
-          tp.primaryColor.darken(50).withOpacity(0.7);
+      return sp.habitColor?.withOpacity(0.7) ??
+          tp.primaryColor.darken(30).withOpacity(0.7);
     } else {
-      return sp.habitColor?.lighten(30).withOpacity(0.7) ??
+      return sp.habitColor?.withOpacity(0.7) ??
           tp.primaryColor.lighten(30).withOpacity(0.7);
+    }
+  }
+
+  Color getHabitNameColor(ThemeProvider tp, StateProvider sp) {
+    // if dark theme, return lighten color
+    if (tp.isDark) {
+      return sp.habitColor != null
+          ? sp.habitColor!.lighten(30)
+          : tp.primaryColor.lighten(30);
+    } else {
+      return sp.habitColor != null
+          ? sp.habitColor!.darken(40)
+          : tp.primaryColor.darken(40);
     }
   }
 
@@ -185,7 +198,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       width: 4,
                                       height: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: sp.habitColor ?? tp.primaryColor,
+                                        color: getHabitNameColor(tp, sp),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -234,8 +247,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                                       habitName,
                                                       style: TextStyle(
                                                         color:
-                                                            sp.habitColor ??
-                                                            tp.primaryColor,
+                                                            getHabitNameColor(
+                                                              tp,
+                                                              sp,
+                                                            ),
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         letterSpacing: 1,
@@ -264,7 +279,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               child: Container(
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: sp.habitColor ?? tp.primaryColor,
+                                  color: getContainerColor(tp, sp),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Align(
@@ -273,7 +288,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     width: 4,
                                     height: double.infinity,
                                     decoration: BoxDecoration(
-                                      color: sp.habitColor ?? tp.primaryColor,
+                                      color: getHabitNameColor(tp, sp),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
