@@ -149,120 +149,25 @@ class _EditHabitPageState extends State<EditHabitPage> {
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView(
+              child: Stack(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ListView(
                     children: [
-                      NavBackButton(
-                        tp: tp,
-                        onPressed: () {
-                          // check if there are unsaved changes
-                          if (showButtons) {
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (context) => DefaultDialog(
-                                    title: "Discard changes?",
-                                    desc:
-                                        "You have unsaved changes. Are you sure you want to go back and discard them?",
-                                    content: Row(
-                                      children: [
-                                        Expanded(
-                                          child: DefaultButton(
-                                            label: "Cancel",
-                                            outlined: true,
-                                            onPressed:
-                                                () => Navigator.pop(context),
-                                          ),
-                                        ),
-                                        SizedBox(width: 16),
-                                        Expanded(
-                                          child: DefaultButton(
-                                            label: "Discard",
-                                            onPressed: () {
-                                              Navigator.pop(
-                                                context,
-                                              ); // close dialog
-                                              Navigator.pop(context); // go back
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                            );
-                          } else {
-                            Navigator.pop(context);
-                          }
-                        },
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 30),
-                        child: GestureDetector(
-                          onTap:
-                              () => showDialog(
-                                context: context,
-                                builder:
-                                    (context) =>
-                                        DeleteHabitDialog(widget: widget),
-                              ),
-                          child: Icon(Icons.delete, color: tp.primaryTextColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    localizations.editHabit,
-                    style: TextStyle(
-                      fontSize: 38,
-                      fontWeight: FontWeight.bold,
-                      color: tp.primaryColor,
-                    ),
-                  ),
-                  SelectedHabitDisplay(
-                    completed: widget.habit.completed,
-                    amountCompleted: widget.habit.amountCompleted,
-                    durationCompleted: widget.habit.durationCompleted,
-                    streak: widget.habit.streak,
-                  ),
-                  CategoriesList(
-                    useHabitCategory: true,
-                    topPadding: 16,
-                    showAll: false,
-                    standardColor: true,
-                    habitsCount: false,
-                  ),
-                  CustomTextField(
-                    title: localizations.habitName,
-                    controller: _nameController,
-                  ),
-                  CustomTextField(
-                    topPadding: 16,
-                    title: localizations.notes,
-                    controller: _descController,
-                    maxLines: 5,
-                  ),
-                  MoreOptionsText(localizations: localizations),
-                  SelectHabitTypeOptions(),
-                  SchedulingAndAlerts(tp: tp),
-                  AdditionalTaskSwitch(tp: tp, stateProvider: stateProvider),
-                  CustomSwitcherWrapper(
-                    value: showButtons,
-                    widget: Row(
-                      key: const ValueKey("value"),
-                      children: [
-                        Expanded(
-                          child: DefaultButton(
-                            onPressed:
-                                () => showDialog(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          NavBackButton(
+                            tp: tp,
+                            onPressed: () {
+                              // check if there are unsaved changes
+                              if (showButtons) {
+                                showDialog(
                                   context: context,
                                   builder:
                                       (context) => DefaultDialog(
-                                        title: "Reset changes?",
+                                        title: "Discard changes?",
                                         desc:
-                                            "All changes you've made now will be reset.",
+                                            "You have unsaved changes. Are you sure you want to go back and discard them?",
                                         content: Row(
                                           children: [
                                             Expanded(
@@ -277,34 +182,152 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                             SizedBox(width: 16),
                                             Expanded(
                                               child: DefaultButton(
-                                                label: "Reset",
+                                                label: "Discard",
                                                 onPressed: () {
-                                                  setInitialValues();
-                                                  Navigator.pop(context);
+                                                  Navigator.pop(
+                                                    context,
+                                                  ); // close dialog
+                                                  Navigator.pop(
+                                                    context,
+                                                  ); // go back
                                                 },
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                ),
-                            label: "Reset",
-                            outlined: true,
+                                );
+                              } else {
+                                Navigator.pop(context);
+                              }
+                            },
                           ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: EditHabitButton(
-                            nameController: _nameController,
-                            stateProvider: stateProvider,
-                            initialAmount: initialAmount,
-                            widget: widget,
-                            initialDuration: initialDuration,
-                            descController: _descController,
-                            localizations: localizations,
+
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: GestureDetector(
+                              onTap:
+                                  () => showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) =>
+                                            DeleteHabitDialog(widget: widget),
+                                  ),
+                              child: Icon(
+                                Icons.delete,
+                                color: tp.primaryTextColor,
+                              ),
+                            ),
                           ),
+                        ],
+                      ),
+                      Text(
+                        localizations.editHabit,
+                        style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: tp.primaryColor,
                         ),
-                      ],
+                      ),
+                      SelectedHabitDisplay(
+                        completed: widget.habit.completed,
+                        amountCompleted: widget.habit.amountCompleted,
+                        durationCompleted: widget.habit.durationCompleted,
+                        streak: widget.habit.streak,
+                      ),
+                      CategoriesList(
+                        useHabitCategory: true,
+                        topPadding: 16,
+                        showAll: false,
+                        standardColor: true,
+                        habitsCount: false,
+                      ),
+                      CustomTextField(
+                        title: localizations.habitName,
+                        controller: _nameController,
+                      ),
+                      CustomTextField(
+                        topPadding: 16,
+                        title: localizations.notes,
+                        controller: _descController,
+                        maxLines: 5,
+                      ),
+                      MoreOptionsText(localizations: localizations),
+                      SelectHabitTypeOptions(),
+                      SchedulingAndAlerts(tp: tp),
+                      AdditionalTaskSwitch(
+                        tp: tp,
+                        stateProvider: stateProvider,
+                      ),
+                      SizedBox(height: 56),
+                    ],
+                  ),
+                  Positioned(
+                    bottom:
+                        MediaQuery.of(
+                          context,
+                        ).padding.bottom, // bottom safe area
+                    left: 0,
+                    right: 0,
+                    child: CustomSwitcherWrapper(
+                      value: showButtons,
+                      widget: Row(
+                        key: const ValueKey("value"),
+                        children: [
+                          Expanded(
+                            child: DefaultButton(
+                              onPressed:
+                                  () => showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) => DefaultDialog(
+                                          title: "Reset changes?",
+                                          desc:
+                                              "All changes you've made now will be reset.",
+                                          content: Row(
+                                            children: [
+                                              Expanded(
+                                                child: DefaultButton(
+                                                  label: "Cancel",
+                                                  outlined: true,
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                      ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 16),
+                                              Expanded(
+                                                child: DefaultButton(
+                                                  label: "Reset",
+                                                  onPressed: () {
+                                                    setInitialValues();
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                  ),
+                              label: "Reset",
+                              outlined: true,
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: EditHabitButton(
+                              nameController: _nameController,
+                              stateProvider: stateProvider,
+                              initialAmount: initialAmount,
+                              widget: widget,
+                              initialDuration: initialDuration,
+                              descController: _descController,
+                              localizations: localizations,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
