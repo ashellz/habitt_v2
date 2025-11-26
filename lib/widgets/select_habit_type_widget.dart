@@ -51,10 +51,10 @@ class SelectHabitTypeWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           curve: Curves.decelerate,
           decoration: BoxDecoration(
-            color: isSelected ? tp.primaryColor : tp.surfaceColor,
+            color: tp.surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: isSelected ? tp.primaryVariant : tp.borderColor,
+              color: isSelected ? tp.secondaryButtonBorder : tp.borderColor,
               width: 2,
             ),
           ),
@@ -82,10 +82,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                                 ? localizations.amount
                                 : localizations.duration,
                             style: TextStyle(
-                              color:
-                                  isSelected
-                                      ? Colors.white
-                                      : tp.primaryTextColor,
+                              color: tp.primaryTextColor,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               height: 1,
