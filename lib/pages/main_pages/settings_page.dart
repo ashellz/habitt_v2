@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
-import 'package:habitt/widgets/custom_switcher_wrapper.dart';
-import 'package:habitt/widgets/default_annotated_region.dart';
-import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/settings/select_color_sheet.dart';
-import 'package:habitt/widgets/segmented_control.dart';
+import 'package:habitt/widgets/settings/segmented_control.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
 import 'package:provider/provider.dart';
 

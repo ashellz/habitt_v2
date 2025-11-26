@@ -5,7 +5,6 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class HabitsStatus extends StatelessWidget {
   const HabitsStatus({super.key, required this.isCompleted});

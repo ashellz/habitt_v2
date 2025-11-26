@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 class GradientBackground extends StatelessWidget {
   const GradientBackground({super.key, required this.child});
@@ -9,7 +7,7 @@ class GradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
+    // final tp = context.watch<ThemeProvider>();
 
     return SizedBox.expand(
       child: Stack(

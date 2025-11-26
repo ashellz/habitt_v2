@@ -2,7 +2,7 @@ import 'package:cupertino_native/components/segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:provider/provider.dart';
 
 class SegmentedControl extends StatelessWidget {

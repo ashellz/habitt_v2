@@ -8,7 +8,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
-import 'package:habitt/widgets/bottom_nav_bar.dart';
+import 'package:habitt/widgets/default/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/stats_page/value_text.dart';
 import 'package:provider/provider.dart';
 

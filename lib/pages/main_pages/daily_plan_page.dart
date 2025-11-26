@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/util/color_converting.dart';
-import 'package:habitt/widgets/custom_shader_mask.dart';
-import 'package:habitt/widgets/default_annotated_region.dart';
+import 'package:habitt/widgets/default/custom_shader_mask.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/widgets/gradient_background.dart';
-import 'package:habitt/widgets/nav_back_button.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
+import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 class DailyPlanPage extends StatelessWidget {

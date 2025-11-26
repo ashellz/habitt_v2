@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/pulse_animation.dart';
+import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

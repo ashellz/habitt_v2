@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/widgets/default_button.dart';
-import 'package:habitt/widgets/default_dialog.dart';
+import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/default_dialog.dart';
 
 class DiscardChangesDialog extends StatelessWidget {
   const DiscardChangesDialog({super.key});

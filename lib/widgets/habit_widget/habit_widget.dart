@@ -7,7 +7,7 @@ import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion_line_indicator.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';

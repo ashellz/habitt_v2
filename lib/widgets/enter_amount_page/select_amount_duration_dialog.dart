@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/custom_spinbox.dart';
-import 'package:habitt/widgets/custom_text_field.dart';
-import 'package:habitt/widgets/select_habit_type_widget.dart';
+import 'package:habitt/widgets/default/default_spinbox.dart';
+import 'package:habitt/widgets/default/default_text_field.dart';
+import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 

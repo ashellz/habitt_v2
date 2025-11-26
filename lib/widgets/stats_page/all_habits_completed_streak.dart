@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class AllHabitsCompletedStreak extends StatelessWidget {
   const AllHabitsCompletedStreak({super.key, required this.tooltipController});

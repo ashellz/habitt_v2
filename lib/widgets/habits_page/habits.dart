@@ -5,10 +5,10 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/habit_category.dart';
-import 'package:habitt/widgets/pulse_animation.dart';
+import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
 
 class Habits extends StatefulWidget {

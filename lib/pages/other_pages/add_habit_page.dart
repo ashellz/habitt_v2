@@ -5,16 +5,15 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/add_habit_button.dart';
-import 'package:habitt/widgets/additional_task_switch.dart';
-import 'package:habitt/widgets/custom_text_field.dart';
-import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/habit_details/add_habit_button.dart';
+import 'package:habitt/widgets/habit_details/additional_task_switch.dart';
+import 'package:habitt/widgets/default/default_text_field.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
+import 'package:habitt/widgets/habit_details/selected_habit_display.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
-import 'package:habitt/widgets/more_options_text.dart';
-import 'package:habitt/widgets/nav_back_button.dart';
-import 'package:habitt/widgets/scheduling_and_alerts.dart';
-import 'package:habitt/widgets/select_habit_type_options.dart';
-import 'package:habitt/widgets/selected_habit_display.dart';
+import 'package:habitt/widgets/habit_details/more_options_text.dart';
+import 'package:habitt/widgets/default/nav_back_button.dart';
+import 'package:habitt/widgets/habit_details/select_habit_type_options.dart';
 import 'package:provider/provider.dart';
 
 class AddHabitPage extends StatefulWidget {

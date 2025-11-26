@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/blur_circle_button.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/blur_circle_button.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:provider/provider.dart';
 
 class SelectTimeDialog extends StatefulWidget {

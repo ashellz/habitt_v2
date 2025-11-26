@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/glass_blur_container.dart';
+import 'package:habitt/widgets/default/glass_blur_container.dart';
 
 class CircleButton extends StatefulWidget {
   const CircleButton({

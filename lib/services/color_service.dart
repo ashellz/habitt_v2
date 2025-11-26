@@ -117,11 +117,9 @@ class ColorService {
       colorScheme: ColorScheme.light(
         primary: primary,
         secondary: secondary,
-        background: bgDefault,
         surface: bgSurface,
         error: danger,
         onPrimary: textOnPrimary,
-        onBackground: textPrimary,
         onSurface: textPrimary,
         onError: textOnPrimary,
       ),
@@ -161,11 +159,9 @@ class ColorService {
       colorScheme: ColorScheme.dark(
         primary: dmPrimary,
         secondary: dmSecondary,
-        background: dmBgDefault,
         surface: dmBgSurface,
         error: dmDanger,
         onPrimary: dmTextOnPrimary,
-        onBackground: dmTextPrimary,
         onSurface: dmTextPrimary,
         onError: dmTextOnPrimary,
       ),

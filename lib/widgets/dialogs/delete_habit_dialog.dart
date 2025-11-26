@@ -3,7 +3,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default_dialog.dart';
+import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:provider/provider.dart';
 
 class DeleteHabitDialog extends StatelessWidget {

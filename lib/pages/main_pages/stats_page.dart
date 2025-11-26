@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/widgets/default_annotated_region.dart';
-import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/stats_page/all_habits_completed_streak.dart';
 import 'package:habitt/widgets/stats_page/completed_habits.dart';
 import 'package:provider/provider.dart';

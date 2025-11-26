@@ -7,8 +7,8 @@ import 'package:habitt/widgets/enter_amount_page/enter_amount_text.dart';
 import 'package:habitt/widgets/enter_amount_page/select_amount_duration_dialog.dart';
 import 'package:habitt/widgets/enter_amount_page/switch_values_arrow.dart';
 import 'package:habitt/widgets/enter_amount_page/tip_text.dart';
-import 'package:habitt/widgets/gradient_background.dart';
-import 'package:habitt/widgets/select_habit_type_widget.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
+import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 

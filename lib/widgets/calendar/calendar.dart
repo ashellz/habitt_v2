@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/calendar_day.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/calendar/calendar_day.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/calendar.dart';
-import 'package:habitt/widgets/default_annotated_region.dart';
-import 'package:habitt/widgets/default_cupertino_button.dart';
-import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/calendar/calendar.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
+import 'package:habitt/widgets/default/default_cupertino_button.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
 import 'package:provider/provider.dart';
 
