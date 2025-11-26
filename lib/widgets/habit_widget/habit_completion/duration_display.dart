@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
-import 'package:provider/provider.dart';
 
 class DurationDisplay extends StatefulWidget {
   const DurationDisplay({super.key, required this.habit});
@@ -82,8 +80,6 @@ class DurationDisplayState extends State<DurationDisplay> {
       widget.habit.durationCompleted,
     );
     final durationString = getDurationString(widget.habit.duration);
-
-    final tp = context.watch<ThemeProvider>();
 
     final TextStyle textStyle = TextStyle(
       shadows: [
