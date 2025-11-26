@@ -9,6 +9,7 @@ import 'package:habitt/widgets/habit_details/add_habit_button.dart';
 import 'package:habitt/widgets/habit_details/additional_task_switch.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
+import 'package:habitt/widgets/habit_details/scheduling_and_alerts.dart';
 import 'package:habitt/widgets/habit_details/selected_habit_display.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habit_details/more_options_text.dart';
