@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -81,7 +81,7 @@ class InteractiveWheelState extends State<InteractiveWheel>
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final double width = MediaQuery.of(context).size.width;
     final Size size = Size(width, width);
 
@@ -92,32 +92,27 @@ class InteractiveWheelState extends State<InteractiveWheel>
         alignment: Alignment.center,
         children: [
           // Static Gradient (no rotation)
-          CustomPaint(size: size, painter: GradientPainter(colorProvider)),
+          CustomPaint(size: size, painter: GradientPainter(tp)),
 
           // Rotating Ticks
           Transform.rotate(
             angle: _rotationAngle,
-            child: CustomPaint(
-              size: size,
-              painter: TicksPainter(colorProvider),
-            ),
+            child: CustomPaint(size: size, painter: TicksPainter(tp)),
           ),
 
           // Button
           IconButton(
             style: ButtonStyle(
-              shadowColor: WidgetStatePropertyAll(
-                colorProvider.colorScheme.standardColor,
-              ),
+              shadowColor: WidgetStatePropertyAll(tp.surfaceColor),
               elevation: WidgetStatePropertyAll(5),
-
-              fixedSize: WidgetStatePropertyAll(size / 5),
-              backgroundColor: WidgetStatePropertyAll(
-                colorProvider.colorScheme.standardColor,
+              side: WidgetStatePropertyAll(
+                BorderSide(color: tp.borderColor, width: 2),
               ),
+              fixedSize: WidgetStatePropertyAll(size / 5),
+              backgroundColor: WidgetStatePropertyAll(tp.surfaceColor),
             ),
             onPressed: () => widget.onDone(),
-            icon: Icon(Icons.arrow_forward, color: colorProvider.textColor),
+            icon: Icon(Icons.arrow_forward, color: tp.primaryTextColor),
           ),
         ],
       ),
@@ -126,16 +121,16 @@ class InteractiveWheelState extends State<InteractiveWheel>
 }
 
 class GradientPainter extends CustomPainter {
-  GradientPainter(this.colorProvider);
+  GradientPainter(this.tp);
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   void paint(Canvas canvas, Size size) {
     final double radius = size.width / 1.5;
     final Offset center = Offset(size.width / 2, size.height / 2);
 
-    final Color darkColor = colorProvider.colorScheme.darkerStandardColor;
+    final Color darkColor = tp.primaryColor;
 
     final LinearGradient saturatedGradient = LinearGradient(
       colors: [darkColor, darkColor.lighten(10)],
@@ -164,12 +159,12 @@ class GradientPainter extends CustomPainter {
 
     final Paint whiteCirclePaint =
         Paint()
-          ..color = colorProvider.backgroundColor
+          ..color = tp.backgroundColor
           ..style = PaintingStyle.fill;
 
     final Paint outlinePaint =
         Paint()
-          ..color = colorProvider.mutedTextColor
+          ..color = tp.mutedTextColor
           ..strokeWidth = 1.0
           ..style = PaintingStyle.stroke;
 
@@ -184,9 +179,9 @@ class GradientPainter extends CustomPainter {
 }
 
 class TicksPainter extends CustomPainter {
-  TicksPainter(this.colorProvider);
+  TicksPainter(this.tp);
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   void paint(Canvas canvas, Size size) {

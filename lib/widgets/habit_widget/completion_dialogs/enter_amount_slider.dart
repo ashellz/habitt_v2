@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class EnterAmountSlider extends StatefulWidget {
-  final int totalSegments;
-  final int filledSegments;
-  final void Function(int) onChanged;
-
   const EnterAmountSlider({
     required this.totalSegments,
     required this.filledSegments,
     required this.onChanged,
+    required this.habitColor,
     super.key,
   });
 
+  final int totalSegments;
+  final int filledSegments;
+  final void Function(int) onChanged;
+  final Color? habitColor;
   @override
   State<EnterAmountSlider> createState() => _EnterAmountSliderState();
 }
@@ -46,9 +49,35 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final isSimpleSlider = widget.totalSegments > 50;
     currentFilled = widget.filledSegments;
+    final prefs = context.watch<PreferencesProvider>();
+
+    Color getColor(bool isFilled, [bool forText = false]) {
+      if (forText) {
+        switch (prefs.colorfulness) {
+          case Colorfulness.tinted:
+            return tp.primaryColor.lighten(20).withOpacity(0.7);
+          case Colorfulness.standard:
+            return tp.successColor.lighten(20).withOpacity(0.7);
+          case Colorfulness.colorful:
+            return widget.habitColor?.lighten(20).withOpacity(0.7) ??
+                tp.successColor;
+        }
+      }
+      if (isFilled) {
+        switch (prefs.colorfulness) {
+          case Colorfulness.tinted:
+            return tp.primaryColor;
+          case Colorfulness.standard:
+            return tp.successColor;
+          case Colorfulness.colorful:
+            return widget.habitColor ?? tp.successColor;
+        }
+      }
+      return tp.borderColor.withOpacity(0.5);
+    }
 
     return Center(
       child: Stack(
@@ -65,8 +94,8 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
               height: MediaQuery.of(context).size.height / 2.75,
               child:
                   isSimpleSlider
-                      ? _buildSmoothSlider(colorProvider)
-                      : _buildSegmentedSlider(colorProvider),
+                      ? _buildSmoothSlider(tp, getColor)
+                      : _buildSegmentedSlider(tp, getColor),
             ),
           ),
 
@@ -86,9 +115,7 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
                         blurRadius: 5,
                       ),
                     ],
-                    color: colorProvider.colorScheme.strokeColor.withOpacity(
-                      0.75,
-                    ),
+                    color: getColor(true, true),
                     fontWeight: FontWeight.bold,
                     fontSize: getFontSize(),
                   ),
@@ -101,7 +128,10 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
     );
   }
 
-  Widget _buildSegmentedSlider(ColorProvider colorProvider) {
+  Widget _buildSegmentedSlider(
+    ThemeProvider tp,
+    Color Function(bool) getColor,
+  ) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Column(
@@ -111,14 +141,7 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
           return Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 0.5),
-              decoration: BoxDecoration(
-                color:
-                    isFilled
-                        ? colorProvider.colorScheme.vividColor
-                        : colorProvider.colorScheme.strokeColor.withOpacity(
-                          0.5,
-                        ),
-              ),
+              decoration: BoxDecoration(color: getColor(isFilled)),
             ),
           );
         }),
@@ -126,7 +149,7 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
     );
   }
 
-  Widget _buildSmoothSlider(ColorProvider colorProvider) {
+  Widget _buildSmoothSlider(ThemeProvider tp, Color Function(bool) getColor) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
@@ -139,14 +162,11 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: colorProvider.colorScheme.strokeColor.withOpacity(0.5),
+                  color: tp.borderColor.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              Container(
-                height: fillHeight,
-                color: colorProvider.colorScheme.vividColor,
-              ),
+              Container(height: fillHeight, color: getColor(true)),
             ],
           ),
         );

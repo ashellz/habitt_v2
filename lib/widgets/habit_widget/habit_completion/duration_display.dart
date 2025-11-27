@@ -81,16 +81,25 @@ class DurationDisplayState extends State<DurationDisplay> {
     );
     final durationString = getDurationString(widget.habit.duration);
 
+    final TextStyle textStyle = TextStyle(
+      shadows: [
+        Shadow(
+          color: Colors.black.withAlpha(100),
+          offset: const Offset(0, 1),
+          blurRadius: 5,
+        ),
+      ],
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: _fontSize,
+    );
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           durationCompletedString,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFF8F9FA),
-            fontSize: _fontSize,
-          ),
+          style: textStyle,
           maxLines: 1,
           softWrap: false,
         ),
@@ -98,16 +107,7 @@ class DurationDisplayState extends State<DurationDisplay> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Divider(height: 2, thickness: 2, color: Color(0xFFF8F9FA)),
         ),
-        Text(
-          durationString,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFF8F9FA),
-            fontSize: _fontSize,
-          ),
-          maxLines: 1,
-          softWrap: false,
-        ),
+        Text(durationString, style: textStyle, maxLines: 1, softWrap: false),
       ],
     );
   }

@@ -11,3 +11,10 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(HabitAdapter());
   }
 }
+
+extension IsolatedHiveRegistrar on IsolatedHiveInterface {
+  void registerAdapters() {
+    registerAdapter(DayAdapter());
+    registerAdapter(HabitAdapter());
+  }
+}

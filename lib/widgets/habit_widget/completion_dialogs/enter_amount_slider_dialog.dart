@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/glass_blur_container.dart';
+import 'package:habitt/widgets/default/blur_circle_button.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +36,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final habitProvider = context.read<HabitProvider>();
 
     return Dialog(
@@ -51,6 +51,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
               EnterAmountSlider(
                 totalSegments: widget.habit.amount,
                 filledSegments: stateProvider.habitAmount,
+                habitColor: widget.habit.getColor,
                 onChanged: (newValue) {
                   stateProvider.habitAmount = newValue;
                   HapticFeedback.selectionClick();
@@ -60,9 +61,9 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
               Column(
                 children: [
                   CircleButton(
-                    colorProvider: colorProvider,
+                    tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
-                    color: colorProvider.colorScheme.darkerStandardColor,
+                    color: tp.primaryColor,
                     onPressed: () {
                       if (widget.habit.amountCompleted ==
                           stateProvider.habitAmount) {
@@ -82,86 +83,15 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
-                    colorProvider: colorProvider,
-                    icon: Icon(Icons.close, color: colorProvider.textColor),
-                    color: colorProvider.colorScheme.standardColor,
+                    tp: tp,
+                    icon: Icon(Icons.close, color: tp.primaryTextColor),
+                    color: tp.secondaryButtonBackground,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CircleButton extends StatefulWidget {
-  const CircleButton({
-    super.key,
-    required this.colorProvider,
-    required this.icon,
-    required this.color,
-    this.onPressed,
-  });
-
-  final ColorProvider colorProvider;
-  final Widget icon;
-  final Color color;
-  final VoidCallback? onPressed;
-
-  @override
-  State<CircleButton> createState() => _CircleButtonState();
-}
-
-class _CircleButtonState extends State<CircleButton> {
-  double scale = 1.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          scale = 0.9;
-        });
-        Future.delayed(const Duration(milliseconds: 150), () {
-          setState(() {
-            scale = 1.0;
-          });
-        });
-
-        if (widget.onPressed != null) {
-          widget.onPressed!();
-        }
-      },
-      onTapDown: (context) {
-        setState(() {
-          scale = 0.9;
-        });
-      },
-
-      onTapCancel: () {
-        setState(() {
-          scale = 1.0;
-        });
-      },
-      onTapUp: (context) {
-        setState(() {
-          scale = 1.0;
-        });
-      },
-      child: AnimatedScale(
-        duration: const Duration(milliseconds: 150),
-        scale: scale,
-        child: GlassBlurContainer(
-          height: 50,
-          width: 50,
-          color: widget.color,
-          borderRadius: 100,
-          padding: const EdgeInsets.all(8),
-
-          child: Center(child: widget.icon),
         ),
       ),
     );

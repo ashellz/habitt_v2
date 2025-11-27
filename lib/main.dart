@@ -12,17 +12,21 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final tp = await ThemeProvider.initFromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Hive.initFlutter();
   Hive.registerAdapters();
@@ -57,8 +61,6 @@ Future<void> main() async {
     ),
   );
 
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
   runApp(
     MultiProvider(
       providers: [
@@ -66,7 +68,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => StatsProvider(), lazy: false),
 
         // Independent provider
-        ChangeNotifierProvider(create: (_) => ColorProvider(prefs: prefs)),
+        ChangeNotifierProvider<ThemeProvider>.value(value: tp),
 
         // 2. HabitProvider: Depends on StatsProvider.
         ChangeNotifierProxyProvider<StatsProvider, HabitProvider>(
@@ -91,13 +93,16 @@ Future<void> main() async {
           create: (_) => CategoryProvider(null),
 
           // Update the existing instance when HabitProvider changes.
-          update: (_, habit, previous) => previous!..updateDependencies(habit),
+          update:
+              (_, habitProvider, previous) =>
+                  previous!..updateDependencies(habitProvider),
         ),
 
         // 4. StateProvider: No dependencies.
         ChangeNotifierProvider(create: (_) => StateProvider()),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
+        ChangeNotifierProvider(create: (_) => NotificationsProvider()),
       ],
       child: MyApp(prefs: prefs),
     ),
@@ -116,12 +121,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
-    final Color seedColor = colorProvider.colorScheme.vividColor;
+    final tp = context.watch<ThemeProvider>();
 
     Widget getHomePage() {
       final name = widget.prefs.getString('name');
-
       if (name == null) {
         return SetupNamePage(prefs: widget.prefs, stateSetter: setState);
       } else {
@@ -132,10 +135,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'habitt',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
-        useMaterial3: true,
-        fontFamily: 'Poppins',
+      theme: ColorService.lightThemeData().copyWith(
         textTheme: ThemeData.light().textTheme.apply(
           fontFamily: 'Poppins',
           bodyColor: const Color(0xFF212529),
@@ -143,7 +143,14 @@ class _MyAppState extends State<MyApp> {
           decorationColor: const Color(0xFF212529),
         ),
       ),
-      themeMode: ThemeMode.dark,
+      darkTheme: ColorService.darkThemeData().copyWith(
+        textTheme: ThemeData.dark().textTheme.apply(
+          fontFamily: 'Poppins',
+          bodyColor: ColorService.dmTextPrimary,
+          displayColor: ColorService.dmTextPrimary,
+        ),
+      ),
+      themeMode: tp.mode,
       supportedLocales: L10n.all,
       localizationsDelegates: const [
         AppLocalizations.delegate,

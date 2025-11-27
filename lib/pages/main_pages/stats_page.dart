@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/widgets/gradient_background.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/stats_page/all_habits_completed_streak.dart';
 import 'package:habitt/widgets/stats_page/completed_habits.dart';
 import 'package:provider/provider.dart';
@@ -20,23 +20,14 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final statsProvider = context.watch<StatsProvider>();
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: GestureDetector(
         onTapDown: (context) => _tooltipController.hideTooltip(),
         child: Scaffold(
-          backgroundColor: colorProvider.backgroundColor,
+          backgroundColor: tp.backgroundColor,
           body: GradientBackground(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -48,11 +39,12 @@ class _StatsPageState extends State<StatsPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: ListView(
                   children: [
+                    const SizedBox(height: 48),
                     Text(
                       "Stats",
                       style: TextStyle(
                         fontSize: 38,
-                        color: colorProvider.textColor,
+                        color: tp.primaryTextColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -5,15 +5,15 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/habit_completion.dart';
+import 'package:habitt/widgets/habit_widget/habit_completion_line_indicator.dart';
 import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/habit_streak.dart';
 import 'package:habitt/widgets/habit_widget/habit_text.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class HabitWidget extends StatefulWidget {
   const HabitWidget({
@@ -87,7 +87,7 @@ class _HabitWidgetState extends State<HabitWidget>
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final focusedDay = context.watch<CalendarProvider>().focusedDay;
     final int alpha = 100;
 
@@ -190,10 +190,8 @@ class _HabitWidgetState extends State<HabitWidget>
                             stops: [0, 0.7],
                             colors: [
                               _swipeOffset >= 100
-                                  ? colorProvider.colorScheme.vividColor
-                                      .withAlpha(alpha)
-                                  : colorProvider.colorScheme.strokeColor
-                                      .withAlpha(alpha),
+                                  ? tp.primaryColor.withAlpha(alpha)
+                                  : tp.borderColor.withAlpha(alpha),
                               Colors.transparent,
                             ],
                           ),
@@ -255,7 +253,7 @@ class _HabitWidgetState extends State<HabitWidget>
                               // Icon circle container
                               HabitIcon(
                                 editable: widget.editable,
-                                colorProvider: colorProvider,
+                                tp: tp,
                                 alpha: alpha,
                                 habit: widget.habit,
                                 value: value,
@@ -263,7 +261,7 @@ class _HabitWidgetState extends State<HabitWidget>
                               // Text
                               HabitText(
                                 habit: widget.habit,
-                                colorProvider: colorProvider,
+                                tp: tp,
                                 alpha: alpha,
                                 value: value,
                               ),
@@ -272,19 +270,17 @@ class _HabitWidgetState extends State<HabitWidget>
                           // Completion and streak
                           Row(
                             children: [
-                              if (widget.isToday)
-                                if (widget.habit.streak > 0 ||
-                                    widget.habit.completed)
-                                  StreakDisplay(
-                                    streak: widget.habit.streak,
-                                    completed: widget.habit.completed,
-                                    colorProvider: colorProvider,
-                                  ),
+                              StreakDisplay(
+                                isToday: widget.isToday,
+                                streak: widget.habit.streak,
+                                completed: widget.habit.completed,
+                                tp: tp,
+                              ),
 
                               // Completion
                               CompletionDisplay(
                                 editable: widget.editable,
-                                colorProvider: colorProvider,
+                                tp: tp,
                                 habit: widget.habit,
                                 isToday: widget.isToday,
                               ),
@@ -296,33 +292,7 @@ class _HabitWidgetState extends State<HabitWidget>
                   ),
 
                   // Line indicator
-                  Positioned(
-                    top: 28,
-                    left: widget.isFirstCategory ? 0 : 16,
-                    bottom: 20,
-
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      width: 2,
-                      margin: EdgeInsets.symmetric(
-                        vertical:
-                            widget.habit.completed || widget.habit.skipped
-                                ? 0
-                                : (40), // Initial size from the middle
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            widget.habit.completed
-                                ? colorProvider.colorScheme.vividColor
-                                : widget.habit.skipped
-                                ? colorProvider.colorScheme.strokeColor.darken(
-                                  colorProvider.isDarkMode ? 20 : 50,
-                                )
-                                : Colors.transparent,
-                      ),
-                    ),
-                  ),
+                  HabitCompletionLineIndicator(widget: widget, tp: tp),
                 ],
               ),
             );

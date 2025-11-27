@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:habitt/l10n/app_localizations.dart';
-import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/select_habit_type_widget.dart';
+import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 
 class EnterAmountDurationText extends StatelessWidget {
   const EnterAmountDurationText({
     super.key,
-    required this.colorProvider,
+    required this.tp,
     required this.type,
   });
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
   final HabitType type;
 
   @override
@@ -33,7 +33,7 @@ class EnterAmountDurationText extends StatelessWidget {
                   fontSize: 48,
                   fontWeight: FontWeight.w200,
                   height: 1.2,
-                  color: colorProvider.colorScheme.vividColor,
+                  color: tp.primaryColor,
                 ),
               );
             }).toList(),

@@ -29,6 +29,12 @@ class CategoriesList extends StatefulWidget {
 
 class _CategoriesListState extends State<CategoriesList> {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey _listKey = GlobalKey();
+
+  // Track keys for each visible item to measure its size/position.
+  final Map<int, GlobalKey> _itemKeys = {};
+
+  GlobalKey _keyFor(int id) => _itemKeys.putIfAbsent(id, () => GlobalKey());
 
   // --- NEW: State variables to control the fade visibility ---
   bool _showLeftFade = false;
@@ -83,33 +89,51 @@ class _CategoriesListState extends State<CategoriesList> {
   }
 
   void _scrollToSelectedCategory() {
+    if (!_scrollController.hasClients) return;
+
     final categoryProvider = context.read<CategoryProvider>();
     final stateProvider = context.read<StateProvider>();
+
+    // Determine the selected ID within the currently visible items.
     final selectedId =
         widget.useHabitCategory
             ? stateProvider.habitCategoryId
             : categoryProvider.selectedCategoryId;
-    List<Category> categories = categoryProvider.categories;
 
-    if (_scrollController.hasClients && categories.isNotEmpty) {
-      int selectedIndex = categories.indexWhere((c) => c.id == selectedId) + 1;
-      if (selectedIndex != -1) {
-        // Estimate position by multiplying index by item width (assumed 120px)
-        double itemWidth = 110.0; // Adjust based on actual category width
-        double screenWidth = MediaQuery.of(context).size.width;
-        double scrollOffset =
-            (selectedIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+    // Defer measurement to next frame to ensure layout is up-to-date.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
 
-        _scrollController.animateTo(
-          scrollOffset.clamp(
-            0.0,
-            _scrollController.position.maxScrollExtent,
-          ), // Keep within bounds
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    }
+      final listContext = _listKey.currentContext;
+      final itemKey = _itemKeys[selectedId] ?? _itemKeys[0];
+      final itemContext = itemKey?.currentContext;
+
+      if (listContext == null || itemContext == null) return;
+
+      final listBox = listContext.findRenderObject() as RenderBox?;
+      final itemBox = itemContext.findRenderObject() as RenderBox?;
+      if (listBox == null || itemBox == null) return;
+
+      final viewportWidth = _scrollController.position.viewportDimension;
+      if (viewportWidth == 0) return;
+
+      // Position of the item relative to the ListView's coordinate space.
+      final itemOffset = itemBox.localToGlobal(Offset.zero, ancestor: listBox);
+      final itemCenterX = itemOffset.dx + (itemBox.size.width / 2);
+
+      final currentScroll = _scrollController.offset;
+      final targetScroll = (currentScroll + itemCenterX) - (viewportWidth / 2);
+      final clamped = targetScroll.clamp(
+        _scrollController.position.minScrollExtent,
+        _scrollController.position.maxScrollExtent,
+      );
+
+      _scrollController.animateTo(
+        clamped,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   @override
@@ -170,19 +194,23 @@ class _CategoriesListState extends State<CategoriesList> {
                 child: SizedBox(
                   height: 56,
                   child: ListView(
+                    key: _listKey,
                     controller: _scrollController,
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     children: [
                       if (widget.showAll)
-                        SelectCategoryWidget(
-                          standardColor: widget.standardColor,
-                          habitsCount: widget.habitsCount,
-                          category: Category(id: 0, name: localizations.all),
-                          onTap: () {
-                            categoryProvider.selectCategory(0);
-                            _scrollToSelectedCategory();
-                          },
+                        KeyedSubtree(
+                          key: _keyFor(0),
+                          child: SelectCategoryWidget(
+                            standardColor: widget.standardColor,
+                            habitsCount: widget.habitsCount,
+                            category: Category(id: 0, name: localizations.all),
+                            onTap: () {
+                              categoryProvider.selectCategory(0);
+                              _scrollToSelectedCategory();
+                            },
+                          ),
                         ),
                       Row(
                         children: List.generate(
@@ -196,20 +224,23 @@ class _CategoriesListState extends State<CategoriesList> {
                               }
                             }
 
-                            return SelectCategoryWidget(
-                              useHabitCategory: widget.useHabitCategory,
-                              standardColor: widget.standardColor,
-                              habitsCount: widget.habitsCount,
-                              category: category,
-                              onTap: () {
-                                if (widget.useHabitCategory) {
-                                  stateProvider.habitCategoryId = category.id;
+                            return KeyedSubtree(
+                              key: _keyFor(category.id),
+                              child: SelectCategoryWidget(
+                                useHabitCategory: widget.useHabitCategory,
+                                standardColor: widget.standardColor,
+                                habitsCount: widget.habitsCount,
+                                category: category,
+                                onTap: () {
+                                  if (widget.useHabitCategory) {
+                                    stateProvider.habitCategoryId = category.id;
+                                    _scrollToSelectedCategory();
+                                    return;
+                                  }
+                                  categoryProvider.selectCategory(category.id);
                                   _scrollToSelectedCategory();
-                                  return;
-                                }
-                                categoryProvider.selectCategory(category.id);
-                                _scrollToSelectedCategory();
-                              },
+                                },
+                              ),
                             );
                           },
                         ),

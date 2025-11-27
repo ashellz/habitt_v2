@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:habitt/util/color_converting.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 class Habit extends HiveObject {
@@ -17,6 +20,10 @@ class Habit extends HiveObject {
   int streak;
   int longestStreak;
   bool additional;
+  bool timeIntervalEnabled;
+  int timeIntervalStart; // In minutes
+  int timeIntervalEnd; // In minutes
+  String? color;
 
   Habit({
     required this.id,
@@ -35,7 +42,22 @@ class Habit extends HiveObject {
     this.streak = 0,
     this.longestStreak = 0,
     this.additional = false,
+    this.timeIntervalEnabled = false,
+    this.timeIntervalStart = 420,
+    this.timeIntervalEnd = 450,
+    this.color,
   });
+
+  // convert to getter
+  Color? get getColor {
+    if (color == null) return null;
+    return hexToColor(color!);
+  }
+
+  // setter for color
+  set setColor(Color newColor) {
+    color = colorToHex(newColor);
+  }
 
   Habit copy() {
     return Habit(
@@ -55,6 +77,10 @@ class Habit extends HiveObject {
       longestStreak: longestStreak,
       skipped: skipped,
       additional: additional,
+      timeIntervalEnabled: timeIntervalEnabled,
+      timeIntervalStart: timeIntervalStart,
+      timeIntervalEnd: timeIntervalEnd,
+      color: color,
     );
   }
 
@@ -76,6 +102,10 @@ class Habit extends HiveObject {
       longestStreak: longestStreak,
       skipped: false,
       additional: additional,
+      timeIntervalEnabled: timeIntervalEnabled,
+      timeIntervalStart: timeIntervalStart,
+      timeIntervalEnd: timeIntervalEnd,
+      color: color,
     );
   }
 
@@ -94,6 +124,10 @@ class Habit extends HiveObject {
     streak = habit.streak;
     longestStreak = habit.longestStreak;
     additional = habit.additional;
+    timeIntervalEnabled = habit.timeIntervalEnabled;
+    timeIntervalStart = habit.timeIntervalStart;
+    timeIntervalEnd = habit.timeIntervalEnd;
+    color = habit.color;
   }
 
   Future<void> completeHabit() async {

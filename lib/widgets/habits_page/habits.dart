@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/habit_category.dart';
-import 'package:habitt/widgets/pulse_animation.dart';
+import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
 
 class Habits extends StatefulWidget {
@@ -70,14 +70,14 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
     final categoryProvider = context.watch<CategoryProvider>();
 
     final habits = _getHabits();
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     if (habits.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
         child: Text(
           "No habits yet.",
-          style: TextStyle(color: colorProvider.mutedTextColor),
+          style: TextStyle(color: tp.mutedTextColor),
         ),
       );
     }
@@ -126,10 +126,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                     animation: _animation,
                     builder: (context, child) {
                       return CustomPaint(
-                        painter: PulseAnimation(
-                          _animation.value,
-                          colorProvider,
-                        ),
+                        painter: PulseAnimation(_animation.value, tp),
                         child: HabitCategory(
                           isToday: widget.daySelected == null,
                           showAdditionalTasks: false,
