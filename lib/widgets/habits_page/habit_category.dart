@@ -3,7 +3,7 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
 import 'package:habitt/widgets/habits_page/scroll_transformed_habit_category_title.dart';
-import 'package:habitt/widgets/scroll_transformed_habit_widget.dart';
+import 'package:habitt/widgets/default/scroll_transformed_habit_widget.dart';
 
 class HabitCategory extends StatefulWidget {
   const HabitCategory({

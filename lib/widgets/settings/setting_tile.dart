@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:provider/provider.dart';
 
 class SettingTile extends StatefulWidget {
@@ -7,7 +9,7 @@ class SettingTile extends StatefulWidget {
     super.key,
     required this.title,
     required this.desc,
-    required this.iconData,
+    required this.icon,
     required this.onTap,
     this.hasSwitch = false,
     this.switchValue = false,
@@ -15,7 +17,7 @@ class SettingTile extends StatefulWidget {
 
   final String title;
   final String desc;
-  final IconData iconData;
+  final Widget icon;
   final void Function() onTap;
   final bool hasSwitch;
   final bool switchValue;
@@ -29,7 +31,10 @@ class _SettingTileState extends State<SettingTile> {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
+    final isTinted =
+        context.watch<PreferencesProvider>().colorfulness ==
+        Colorfulness.tinted;
 
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
@@ -69,25 +74,21 @@ class _SettingTileState extends State<SettingTile> {
                         });
                       });
                     },
-                    child: mainWidget(colorProvider),
+                    child: mainWidget(tp, isTinted),
                   )
-                  : mainWidget(colorProvider),
+                  : mainWidget(tp, isTinted),
         ),
       ),
     );
   }
 
-  Container mainWidget(ColorProvider colorProvider) {
+  Container mainWidget(ThemeProvider tp, bool isTinted) {
     return Container(
       width: double.infinity,
       color: Colors.transparent,
       child: Row(
         children: [
-          Icon(
-            widget.iconData,
-            color: colorProvider.colorScheme.vividColor,
-            size: 32,
-          ),
+          SizedBox(width: 32, height: 32, child: widget.icon),
           const SizedBox(width: 16), // spacing between icon and text
           Expanded(
             child: Row(
@@ -100,14 +101,14 @@ class _SettingTileState extends State<SettingTile> {
                       Text(
                         widget.title,
                         style: TextStyle(
-                          color: colorProvider.textColor,
+                          color: tp.primaryTextColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
                       Text(
                         widget.desc,
-                        style: TextStyle(color: colorProvider.textColor),
+                        style: TextStyle(color: tp.primaryTextColor),
                       ),
                     ],
                   ),
@@ -115,14 +116,9 @@ class _SettingTileState extends State<SettingTile> {
                 if (widget.hasSwitch)
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
-                    child: Switch(
-                      activeTrackColor:
-                          colorProvider.colorScheme.darkerStandardColor,
-                      activeColor: Colors.white,
-                      inactiveThumbColor: colorProvider.textColor,
-                      inactiveTrackColor: colorProvider.standardColor,
-                      value: widget.switchValue,
-                      onChanged: (value) {
+                    child: DefaultSwitch(
+                      switchValue: widget.switchValue,
+                      onTap: () {
                         widget.onTap();
                       },
                     ),

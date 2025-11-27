@@ -5,9 +5,10 @@ import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
-import 'package:habitt/widgets/bottom_nav_bar.dart';
+import 'package:habitt/widgets/default/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -98,6 +99,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final isGlassFeel = context.watch<PreferencesProvider>().glassFeel;
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+
     return SizedBox(
       child: Stack(
         children: <Widget>[
@@ -118,14 +122,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: isIOS && isGlassFeel ? -20 : 0,
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 16.0,
-                  left: 16.0,
-                  right: 16.0,
-                ),
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -152,40 +152,3 @@ class NavItemData {
   final String svgPath;
   final String defaultLabel;
 }
-
-/*
-ClipRRect(
-      borderRadius: BorderRadius.circular(100),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          height: 62,
-          padding: const EdgeInsets.all(8),
-          decoration: ShapeDecoration(
-            color: colorProvider.colorScheme.standardColor.withOpacity(0.35),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
-          child: 
-        ),
-      ),
-    );
-
-
-Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(_navItems.length, (index) {
-              Widget navItemWidget = _buildNavItem(index);
-              if (index > 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: navItemWidget,
-                );
-              }
-              return navItemWidget;
-            }),
-          ),
-
- */

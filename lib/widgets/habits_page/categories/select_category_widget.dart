@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/util/get_localized_category_name.dart';
@@ -27,11 +27,10 @@ class SelectCategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final StateProvider stateProvider = context.watch<StateProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
 
-    final colorScheme = colorProvider.colorScheme;
     final int selectedId =
         useHabitCategory
             ? stateProvider.habitCategoryId
@@ -50,19 +49,19 @@ class SelectCategoryWidget extends StatelessWidget {
             color:
                 isSelected
                     ? standardColor
-                        ? colorProvider.standardColor
-                        : colorScheme.standardColor
+                        ? tp.surfaceColor
+                        : tp.elevatedSurfaceColor
                     : standardColor
-                    ? colorProvider.disabledColor
-                    : colorScheme.disabledColor,
+                    ? tp.surfaceColor
+                    : tp.surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color:
                   isSelected
                       ? standardColor
-                          ? colorScheme.strokeColor
-                          : colorScheme.vividColor
-                      : colorScheme.standardColor,
+                          ? tp.primaryColor
+                          : tp.primaryColor
+                      : tp.surfaceColor,
               width: 2,
             ),
           ),
@@ -82,7 +81,7 @@ class SelectCategoryWidget extends StatelessWidget {
                   child: Text(
                     getLocalizedCategoryName(category, localizations),
                     style: TextStyle(
-                      color: colorProvider.textColor,
+                      color: tp.primaryTextColor,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       height: 1,
@@ -101,7 +100,7 @@ class SelectCategoryWidget extends StatelessWidget {
                               : localizations.selected,
                           style: TextStyle(
                             fontSize: 10,
-                            color: colorProvider.mutedTextColor,
+                            color: tp.secondaryTextColor,
                           ),
                         )
                         : const SizedBox.shrink(),

@@ -1,16 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 
 class HabitDescDisplay extends StatelessWidget {
-  const HabitDescDisplay({
-    super.key,
-    required this.habit,
-    required this.colorProvider,
-  });
+  const HabitDescDisplay({super.key, required this.habit, required this.tp});
 
   final Habit habit;
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +18,7 @@ class HabitDescDisplay extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         maxLines: 1,
-        style: TextStyle(fontSize: 14, color: colorProvider.mutedTextColor),
+        style: TextStyle(fontSize: 14, color: tp.mutedTextColor),
       ),
     );
   }

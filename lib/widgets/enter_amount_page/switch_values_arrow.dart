@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class SwitchValuesArrow extends StatelessWidget {
@@ -15,13 +15,14 @@ class SwitchValuesArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: colorProvider.colorScheme.standardColor,
+        color: tp.surfaceColor,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: tp.borderColor, width: 2),
       ),
       child: AnimatedRotation(
         turns: editingHours ? 0.5 : 1,
@@ -33,10 +34,7 @@ class SwitchValuesArrow extends StatelessWidget {
             width: 30,
             height: 30,
             "assets/images/svg/arrow-back.svg",
-            colorFilter: ColorFilter.mode(
-              colorProvider.textColor,
-              BlendMode.srcIn,
-            ),
+            colorFilter: ColorFilter.mode(tp.primaryTextColor, BlendMode.srcIn),
           ),
         ),
       ),

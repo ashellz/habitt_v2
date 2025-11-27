@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/enter_amount_page/amount_wheel.dart';
 import 'package:habitt/widgets/enter_amount_page/enter_amount_text.dart';
 import 'package:habitt/widgets/enter_amount_page/select_amount_duration_dialog.dart';
 import 'package:habitt/widgets/enter_amount_page/switch_values_arrow.dart';
 import 'package:habitt/widgets/enter_amount_page/tip_text.dart';
-import 'package:habitt/widgets/gradient_background.dart';
-import 'package:habitt/widgets/select_habit_type_widget.dart';
+import 'package:habitt/widgets/default/gradient_background.dart';
+import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
@@ -108,7 +108,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorProvider colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final localizations = AppLocalizations.of(context)!;
     final double width = MediaQuery.of(context).size.width;
     final double offset = width / 4;
@@ -118,16 +118,13 @@ class EnterAmountPageState extends State<EnterAmountPage> {
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor: tp.backgroundColor,
+        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
+            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
       ),
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: GradientBackground(
           child: Stack(
             children: [
@@ -137,10 +134,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      EnterAmountDurationText(
-                        colorProvider: colorProvider,
-                        type: widget.type,
-                      ),
+                      EnterAmountDurationText(tp: tp, type: widget.type),
                       // Amount/Duration value
                       GestureDetector(
                         onTap:
@@ -209,7 +203,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                                             fontSize: 56,
                                             height: 0,
                                             fontWeight: FontWeight.bold,
-                                            color: colorProvider.textColor,
+                                            color: tp.primaryTextColor,
                                           ),
                                         ),
                                         TextSpan(
@@ -217,7 +211,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                                           style: TextStyle(
                                             fontSize: 42,
                                             height: 0,
-                                            color: colorProvider.textColor,
+                                            color: tp.primaryTextColor,
                                           ),
                                         ),
                                       ],
@@ -240,7 +234,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                                                 fontSize: 56,
                                                 height: 0,
                                                 fontWeight: FontWeight.bold,
-                                                color: colorProvider.textColor,
+                                                color: tp.primaryTextColor,
                                               ),
                                             ),
                                             TextSpan(
@@ -249,7 +243,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                                                 fontSize: 56,
                                                 height: 0,
                                                 fontWeight: FontWeight.w200,
-                                                color: colorProvider.textColor,
+                                                color: tp.primaryTextColor,
                                               ),
                                             ),
                                           ],
@@ -270,7 +264,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                                                 fontSize: 56,
                                                 height: 0,
                                                 fontWeight: FontWeight.bold,
-                                                color: colorProvider.textColor,
+                                                color: tp.primaryTextColor,
                                               ),
                                             ),
                                             TextSpan(
@@ -279,7 +273,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                                                 fontSize: 56,
                                                 height: 0,
                                                 fontWeight: FontWeight.w200,
-                                                color: colorProvider.textColor,
+                                                color: tp.primaryTextColor,
                                               ),
                                             ),
                                           ],
@@ -297,7 +291,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                       TipText(
                         width: width,
                         localizations: localizations,
-                        colorProvider: colorProvider,
+                        tp: tp,
                         type: widget.type,
                       ),
                     ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/widgets/glass_feel_container.dart';
+import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habits_page/habits_completed/habit_status_text.dart';
 
 class HabitsCompletedWidget extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/pulse_animation.dart';
+import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +43,7 @@ class _SetupNamePageState extends State<SetupNamePage>
     super.dispose();
   }
 
-  Widget getSuffixIcon(ColorProvider colorProvider) {
+  Widget getSuffixIcon(ThemeProvider tp) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 150),
       switchInCurve: Curves.decelerate,
@@ -69,7 +69,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                   },
                   child: Icon(
                     Icons.arrow_forward_ios_rounded,
-                    color: colorProvider.textColor,
+                    color: tp.primaryTextColor,
                     size: 16,
                   ),
                 ),
@@ -79,25 +79,22 @@ class _SetupNamePageState extends State<SetupNamePage>
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: colorProvider.backgroundColor,
-        statusBarIconBrightness:
-            colorProvider.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor: tp.backgroundColor,
+        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness:
-            colorProvider.isDarkMode
-                ? Brightness.dark
-                : Brightness.light, // for iOS
+            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
       ),
       child: Scaffold(
-        backgroundColor: colorProvider.backgroundColor,
+        backgroundColor: tp.backgroundColor,
         body: AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
             return CustomPaint(
-              painter: PulseAnimation(_animation.value, colorProvider),
+              painter: PulseAnimation(_animation.value, tp),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -105,30 +102,38 @@ class _SetupNamePageState extends State<SetupNamePage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "What should we call you?",
+                        "Welcome to Habitt.",
                         style: TextStyle(
-                          color: colorProvider.textColor,
+                          color: tp.primaryTextColor,
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 24),
+                      Text(
+                        "What should we call you?",
+                        style: TextStyle(color: tp.primaryTextColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _nameController,
-                        style: TextStyle(color: colorProvider.textColor),
+                        style: TextStyle(
+                          color: tp.primaryTextColor,
+                          fontSize: 14,
+                        ),
+                        cursorColor: tp.primaryTextColor,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: colorProvider.mutedTextColor.withAlpha(50),
+                          fillColor: tp.mutedTextColor.withAlpha(50),
+
                           hintText: "Your name",
-                          hintStyle: TextStyle(
-                            color: colorProvider.mutedTextColor,
-                          ),
+                          hintStyle: TextStyle(color: tp.mutedTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
                             borderSide: BorderSide.none,
                           ),
-                          suffix: getSuffixIcon(colorProvider),
+                          suffix: getSuffixIcon(tp),
                         ),
                         textAlign: TextAlign.center,
                       ),

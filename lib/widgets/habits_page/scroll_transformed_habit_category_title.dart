@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_category_length.dart'; // Assuming this is still used
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -19,7 +19,7 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final localizations = AppLocalizations.of(context)!;
     final int categoryHabits = getCategoryLength(
       category,
@@ -41,19 +41,13 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
           Text(
             category.name,
             style: TextStyle(
-              color:
-                  isFirst
-                      ? colorProvider.textColor
-                      : colorProvider.mutedTextColor,
+              color: isFirst ? tp.primaryTextColor : tp.secondaryTextColor,
             ),
           ),
           Text(
             "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
             style: TextStyle(
-              color:
-                  isFirst
-                      ? colorProvider.textColor
-                      : colorProvider.mutedTextColor,
+              color: isFirst ? tp.primaryTextColor : tp.secondaryTextColor,
             ),
           ),
         ],

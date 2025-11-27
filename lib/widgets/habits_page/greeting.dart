@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +27,7 @@ class _GreetingState extends State<Greeting> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +37,7 @@ class _GreetingState extends State<Greeting> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: colorProvider.textColor,
+            color: tp.primaryTextColor,
           ),
         ),
         Text(
@@ -45,7 +45,7 @@ class _GreetingState extends State<Greeting> {
           style: TextStyle(
             fontSize: 38,
             height: 1,
-            color: colorProvider.colorScheme.vividColor,
+            color: tp.primaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -10,6 +10,7 @@ class StateProvider extends ChangeNotifier {
   TextEditingController descController = TextEditingController();
   String _iconPath = "";
   bool _isAdditional = false;
+  Color? _habitColor;
 
   String _alertText = "";
   bool _showAlert = false;
@@ -27,6 +28,29 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _timeIntervalEnabled = false;
+  int _timeIntervalStart = 420;
+  int _timeIntervalEnd = 450;
+
+  bool get timeIntervalEnabled => _timeIntervalEnabled;
+  int get timeIntervalStart => _timeIntervalStart;
+  int get timeIntervalEnd => _timeIntervalEnd;
+
+  set timeIntervalEnabled(bool value) {
+    _timeIntervalEnabled = value;
+    notifyListeners();
+  }
+
+  set timeIntervalStart(int value) {
+    _timeIntervalStart = value;
+    notifyListeners();
+  }
+
+  set timeIntervalEnd(int value) {
+    _timeIntervalEnd = value;
+    notifyListeners();
+  }
+
   bool _canEditCalendar = false;
 
   bool get canEditCalendar => _canEditCalendar;
@@ -36,7 +60,7 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  toggleAditional() {
+  toggleAdditional() {
     _isAdditional = !_isAdditional;
     notifyListeners();
   }
@@ -70,6 +94,11 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set habitColor(Color? color) {
+    _habitColor = color;
+    notifyListeners();
+  }
+
   void reset() {
     _habitAmount = 0;
 
@@ -81,6 +110,13 @@ class StateProvider extends ChangeNotifier {
     descController.clear();
     _iconPath = Assets.images.icons.book.path;
     _isAdditional = false;
+
+    _timeIntervalEnabled = false;
+    _timeIntervalStart = 420;
+    _timeIntervalEnd = 450;
+
+    _habitColor = null;
+
     notifyListeners();
   }
 
@@ -93,4 +129,6 @@ class StateProvider extends ChangeNotifier {
   String get iconPath => _iconPath;
 
   bool get isAdditional => _isAdditional;
+
+  Color? get habitColor => _habitColor;
 }

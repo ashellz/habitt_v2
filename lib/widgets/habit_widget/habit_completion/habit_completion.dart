@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/calendar_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
-import 'package:habitt/widgets/glass_blur_container.dart';
+import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider_dialog.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
@@ -19,13 +19,13 @@ import 'package:tinycolor2/tinycolor2.dart';
 class CompletionDisplay extends StatefulWidget {
   const CompletionDisplay({
     super.key,
-    required this.colorProvider,
+    required this.tp,
     required this.editable,
     required this.habit,
     required this.isToday,
   });
 
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
   final bool editable;
   final Habit habit;
   final bool isToday;
@@ -55,6 +55,34 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     }
 
     return 0.0;
+  }
+
+  /*
+  widget.habit.skipped
+                                ? widget.tp.borderColor.darken(
+                                  widget.tp.isDark ? 0 : 45,
+                                )
+                                : widget.habit.getColor ??
+                                    widget.tp.successColor,
+   */
+
+  Color getCompletionColor() {
+    final habit = widget.habit;
+    final tp = widget.tp;
+    final colorfulness = context.watch<PreferencesProvider>().colorfulness;
+
+    if (habit.skipped) {
+      return tp.borderColor.darken(tp.isDark ? 0 : 45);
+    }
+
+    switch (colorfulness) {
+      case Colorfulness.tinted:
+        return tp.primaryColor;
+      case Colorfulness.standard:
+        return tp.successColor;
+      case Colorfulness.colorful:
+        return habit.getColor ?? tp.successColor;
+    }
   }
 
   double _scale = 1.0;
@@ -158,18 +186,8 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                     builder: (context, value, _) {
                       return LinearProgressIndicator(
                         value: value,
-                        color:
-                            widget.habit.skipped
-                                ? widget.colorProvider.colorScheme.strokeColor
-                                    .darken(
-                                      widget.colorProvider.isDarkMode ? 20 : 45,
-                                    )
-                                : widget
-                                    .colorProvider
-                                    .colorScheme
-                                    .darkerStandardColor,
-                        backgroundColor:
-                            widget.colorProvider.colorScheme.strokeColor,
+                        color: getCompletionColor(),
+                        backgroundColor: widget.tp.mutedBgColor,
                       );
                     },
                   ),
@@ -210,10 +228,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     if (widget.habit.amount > 0 &&
         !widget.habit.completed &&
         !widget.habit.skipped) {
-      return AmountDisplay(
-        habit: widget.habit,
-        colorProvider: widget.colorProvider,
-      );
+      return AmountDisplay(habit: widget.habit, tp: widget.tp);
     } else if (widget.habit.duration > 0 &&
         !widget.habit.completed &&
         !widget.habit.skipped) {

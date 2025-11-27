@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/icons_page.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 
 class HabitIcon extends StatelessWidget {
   const HabitIcon({
     super.key,
     required this.editable,
-    required this.colorProvider,
+    required this.tp,
     required this.alpha,
     required this.habit,
     required this.value,
   });
 
   final bool editable;
-  final ColorProvider colorProvider;
+  final ThemeProvider tp;
   final int alpha;
   final Habit habit;
   // If habit is completed, opacity value from animation builder
@@ -40,8 +40,8 @@ class HabitIcon extends StatelessWidget {
           shape: BoxShape.circle,
           color:
               Color.lerp(
-                colorProvider.iconBackgroundColor.withAlpha(alpha),
-                colorProvider.iconBackgroundColor,
+                tp.surfaceColor.withAlpha(alpha),
+                tp.surfaceColor,
                 value,
               )!,
         ),

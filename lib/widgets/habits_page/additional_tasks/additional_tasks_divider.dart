@@ -1,6 +1,6 @@
 // This is the new transforming wrapper widget
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class ScrollTransformedHabitCategoryDivider extends StatefulWidget {
@@ -97,7 +97,7 @@ class _OriginalDividerContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
     final bool isTitle = hasHabits != null && !hasHabits!;
 
     return Padding(
@@ -113,20 +113,16 @@ class _OriginalDividerContent extends StatelessWidget {
       child: Row(
         children: [
           if (!isTitle)
-            Expanded(
-              child: Divider(thickness: 1, color: colorProvider.mutedTextColor),
-            ),
+            Expanded(child: Divider(thickness: 1, color: tp.mutedTextColor)),
           Padding(
             padding: EdgeInsets.only(left: isTitle ? 0 : 8.0, right: 8.0),
             child: Text(
               "Additional tasks",
-              style: TextStyle(color: colorProvider.mutedTextColor),
+              style: TextStyle(color: tp.mutedTextColor),
             ),
           ),
 
-          Expanded(
-            child: Divider(thickness: 1, color: colorProvider.mutedTextColor),
-          ),
+          Expanded(child: Divider(thickness: 1, color: tp.mutedTextColor)),
         ],
       ),
     );
