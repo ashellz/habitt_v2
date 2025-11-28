@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AccentPalette {
-  final Color standardColor;
-  final Color strokeColor;
-  final Color vividColor;
-  final Color secondaryColor;
+  // Core accent colors
+  final Color primary;
+  final Color primaryVariant;
+  final Color secondary;
+
+  // Accent-influenced backgrounds
+  final Color bgElevated;
+  final Color focus;
+  final Color shadowTint;
+  final Color infoBg;
+
   const AccentPalette({
-    required this.standardColor,
-    required this.strokeColor,
-    required this.vividColor,
-    required this.secondaryColor,
+    required this.primary,
+    required this.primaryVariant,
+    required this.secondary,
+    required this.bgElevated,
+    required this.focus,
+    required this.shadowTint,
+    required this.infoBg,
   });
 }
 
@@ -171,92 +181,134 @@ class ColorService {
   // Accent palettes for light mode
   static const Map<String, AccentPalette> accentLight = {
     'cherry': AccentPalette(
-      standardColor: Color.fromARGB(255, 251, 228, 233),
-      strokeColor: Color.fromARGB(255, 192, 120, 133),
-      vividColor: Color(0xFFD20A2E), // rich cherry red
-      secondaryColor: Color(0xFFFF6F00), // warm orange complement
+      primary: Color(0xFFD20A2E), // rich cherry red
+      primaryVariant: Color(0xFFB00826),
+      secondary: Color(0xFFFF6F00), // warm orange complement
+      bgElevated: Color(0xFFFFF2F4), // cherry-tinted elevated bg
+      focus: Color(0xFFFFD6DC), // cherry focus ring
+      shadowTint: Color.fromRGBO(210, 10, 46, 0.06),
+      infoBg: Color(0xFFFFE4E9), // cherry info bg
     ),
     'pink': AccentPalette(
-      standardColor: Color(0xFFFFE4EC),
-      strokeColor: Color(0xFFF48FB1),
-      vividColor: Color(0xFFE91E63), // vibrant pink
-      secondaryColor: Color(0xFF00BFA5), // teal complement
+      primary: Color(0xFFE91E63), // vibrant pink
+      primaryVariant: Color(0xFFC2185B),
+      secondary: Color(0xFF00BFA5), // teal complement
+      bgElevated: Color(0xFFFFF5F8),
+      focus: Color(0xFFFFCDD2),
+      shadowTint: Color.fromRGBO(233, 30, 99, 0.06),
+      infoBg: Color(0xFFFFE4EC),
     ),
     'green': AccentPalette(
-      standardColor: Color(0xFFE8F5E9),
-      strokeColor: Color(0xFF81C784),
-      vividColor: Color(0xFF2E7D32), // forest green
-      secondaryColor: Color(0xFF8E24AA), // purple complement
+      primary: Color(0xFF2E7D32), // forest green
+      primaryVariant: Color(0xFF1B5E20),
+      secondary: Color(0xFF8E24AA), // purple complement
+      bgElevated: Color(0xFFF1F8F2),
+      focus: Color(0xFFC8E6C9),
+      shadowTint: Color.fromRGBO(46, 125, 50, 0.06),
+      infoBg: Color(0xFFE8F5E9),
     ),
     'cyan': AccentPalette(
-      standardColor: Color(0xFFE0F7FA),
-      strokeColor: Color(0xFF80DEEA),
-      vividColor: Color(0xFF00ACC1), // bright cyan
-      secondaryColor: Color(0xFFFF6D00), // deep orange complement
+      primary: Color(0xFF00ACC1), // bright cyan
+      primaryVariant: Color(0xFF00838F),
+      secondary: Color(0xFFFF6D00), // deep orange complement
+      bgElevated: Color(0xFFF0FAFB),
+      focus: Color(0xFFB2EBF2),
+      shadowTint: Color.fromRGBO(0, 172, 193, 0.06),
+      infoBg: Color(0xFFE0F7FA),
     ),
     'blue': AccentPalette(
-      standardColor: Color(0xFFE3F2FD),
-      strokeColor: Color(0xFF64B5F6),
-      vividColor: Color(0xFF1976D2), // classic blue
-      secondaryColor: Color(0xFF7C4DFF), // purple complement
+      primary: Color(0xFF1976D2), // classic blue
+      primaryVariant: Color(0xFF0D47A1),
+      secondary: Color(0xFF7C4DFF), // purple complement
+      bgElevated: Color(0xFFF2F5FF),
+      focus: Color(0xFFC7E0FF),
+      shadowTint: Color.fromRGBO(25, 118, 210, 0.06),
+      infoBg: Color(0xFFE3F2FD),
     ),
     'teal': AccentPalette(
-      standardColor: Color(0xFFE0F2F1),
-      strokeColor: Color(0xFF4DB6AC),
-      vividColor: Color(0xFF00796B), // deep teal
-      secondaryColor: Color(0xFFD81B60), // pink complement
+      primary: Color(0xFF00796B), // deep teal
+      primaryVariant: Color(0xFF004D40),
+      secondary: Color(0xFFD81B60), // pink complement
+      bgElevated: Color(0xFFF0F8F7),
+      focus: Color(0xFFB2DFDB),
+      shadowTint: Color.fromRGBO(0, 121, 107, 0.06),
+      infoBg: Color(0xFFE0F2F1),
     ),
     'magenta': AccentPalette(
-      standardColor: Color(0xFFF3E5F5),
-      strokeColor: Color(0xFFBA68C8),
-      vividColor: Color(0xFF8E24AA), // rich magenta
-      secondaryColor: Color(0xFF43A047), // green complement
+      primary: Color(0xFF8E24AA), // rich magenta
+      primaryVariant: Color(0xFF6A1B9A),
+      secondary: Color(0xFF43A047), // green complement
+      bgElevated: Color(0xFFF9F5FB),
+      focus: Color(0xFFE1BEE7),
+      shadowTint: Color.fromRGBO(142, 36, 170, 0.06),
+      infoBg: Color(0xFFF3E5F5),
     ),
   };
 
   // Accent palettes for dark mode
   static const Map<String, AccentPalette> accentDark = {
     'cherry': AccentPalette(
-      standardColor: Color.fromARGB(255, 46, 30, 34),
-      strokeColor: Color.fromARGB(255, 86, 61, 66),
-      vividColor: Color.fromARGB(255, 255, 103, 131), // bright cherry
-      secondaryColor: Color(0xFFFFAB40), // warm amber complement
+      primary: Color(0xFFFF6783), // bright cherry
+      primaryVariant: Color(0xFFFF4068),
+      secondary: Color(0xFFFFAB40), // warm amber complement
+      bgElevated: Color(0xFF1A1215), // cherry-tinted dark elevated
+      focus: Color(0xFF4D1F2A), // cherry focus
+      shadowTint: Color.fromRGBO(255, 103, 131, 0.12),
+      infoBg: Color(0xFF2E1B22), // cherry dark info
     ),
     'pink': AccentPalette(
-      standardColor: Color(0xFF2C1D24),
-      strokeColor: Color(0xFF6A3A4C),
-      vividColor: Color(0xFFFF80AB), // light pink
-      secondaryColor: Color(0xFF64FFDA), // aqua complement
+      primary: Color(0xFFFF80AB), // light pink
+      primaryVariant: Color(0xFFFF4081),
+      secondary: Color(0xFF64FFDA), // aqua complement
+      bgElevated: Color(0xFF181316),
+      focus: Color(0xFF4D1F33),
+      shadowTint: Color.fromRGBO(255, 128, 171, 0.12),
+      infoBg: Color(0xFF2C1D24),
     ),
     'green': AccentPalette(
-      standardColor: Color(0xFF1A2B1D),
-      strokeColor: Color(0xFF2E7D32),
-      vividColor: Color(0xFF66BB6A), // lime green
-      secondaryColor: Color(0xFFB388FF), // light purple complement
+      primary: Color(0xFF66BB6A), // lime green
+      primaryVariant: Color(0xFF4CAF50),
+      secondary: Color(0xFFB388FF), // light purple complement
+      bgElevated: Color(0xFF111814),
+      focus: Color(0xFF1F3D21),
+      shadowTint: Color.fromRGBO(102, 187, 106, 0.12),
+      infoBg: Color(0xFF1A2B1D),
     ),
     'cyan': AccentPalette(
-      standardColor: Color(0xFF0E2326),
-      strokeColor: Color(0xFF006064),
-      vividColor: Color(0xFF4DD0E1), // bright cyan
-      secondaryColor: Color(0xFFFF9E40), // orange complement
+      primary: Color(0xFF4DD0E1), // bright cyan
+      primaryVariant: Color(0xFF26C6DA),
+      secondary: Color(0xFFFF9E40), // orange complement
+      bgElevated: Color(0xFF0F181A),
+      focus: Color(0xFF1A3F45),
+      shadowTint: Color.fromRGBO(77, 208, 225, 0.12),
+      infoBg: Color(0xFF0E2326),
     ),
     'blue': AccentPalette(
-      standardColor: Color(0xFF0E1B2A),
-      strokeColor: Color(0xFF0D47A1),
-      vividColor: Color(0xFF64B5F6), // sky blue
-      secondaryColor: Color(0xFFB388FF), // purple complement
+      primary: Color(0xFF64B5F6), // sky blue
+      primaryVariant: Color(0xFF42A5F5),
+      secondary: Color(0xFFB388FF), // purple complement
+      bgElevated: Color(0xFF0E1419),
+      focus: Color(0xFF1A3A5C),
+      shadowTint: Color.fromRGBO(100, 181, 246, 0.12),
+      infoBg: Color(0xFF0E1B2A),
     ),
     'teal': AccentPalette(
-      standardColor: Color(0xFF0D1F1D),
-      strokeColor: Color(0xFF004D40),
-      vividColor: Color(0xFF4DB6AC), // aqua teal
-      secondaryColor: Color(0xFFFF4081), // pink accent complement
+      primary: Color(0xFF4DB6AC), // aqua teal
+      primaryVariant: Color(0xFF26A69A),
+      secondary: Color(0xFFFF4081), // pink accent complement
+      bgElevated: Color(0xFF0F1716),
+      focus: Color(0xFF1A3F3B),
+      shadowTint: Color.fromRGBO(77, 182, 172, 0.12),
+      infoBg: Color(0xFF0D1F1D),
     ),
     'magenta': AccentPalette(
-      standardColor: Color(0xFF1E1627),
-      strokeColor: Color(0xFF4A148C),
-      vividColor: Color(0xFFBA68C8), // light magenta
-      secondaryColor: Color(0xFF69F0AE), // mint green complement
+      primary: Color(0xFFBA68C8), // light magenta
+      primaryVariant: Color(0xFFAB47BC),
+      secondary: Color(0xFF69F0AE), // mint green complement
+      bgElevated: Color(0xFF141318),
+      focus: Color(0xFF3D1F4D),
+      shadowTint: Color.fromRGBO(186, 104, 200, 0.12),
+      infoBg: Color(0xFF1E1627),
     ),
   };
 }
