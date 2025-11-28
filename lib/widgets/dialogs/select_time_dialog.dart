@@ -109,7 +109,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                   CircleButton(
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
-                    color: tp.primaryColor,
+                    color: tp.surfaceColor,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
