@@ -62,14 +62,14 @@ class SelectColorSheet extends StatelessWidget {
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        color: entry.value.vividColor,
+                        color: entry.value.primary,
                         border:
                             tp.accentName == entry.key
                                 ? Border.all(
                                   color:
                                       tp.isDark
-                                          ? entry.value.vividColor.lighten(20)
-                                          : entry.value.vividColor.darken(20),
+                                          ? entry.value.primary.lighten(20)
+                                          : entry.value.primary.darken(20),
                                   width: 3,
                                 )
                                 : null,

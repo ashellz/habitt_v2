@@ -62,13 +62,13 @@ class ThemeProvider extends ChangeNotifier {
 
   // Core colors (primary derived from accent selection)
   Color get primaryColor =>
-      (_accentPalette?.vividColor) ??
+      (_accentPalette?.primary) ??
       (isDark ? ColorService.dmPrimary : ColorService.primary);
   Color get primaryVariant =>
-      (_accentPalette?.secondaryColor) ??
+      (_accentPalette?.primaryVariant) ??
       (isDark ? ColorService.dmPrimaryVariant : ColorService.primaryVariant);
   Color get secondaryColor =>
-      (_accentPalette?.secondaryColor) ??
+      (_accentPalette?.secondary) ??
       (isDark ? ColorService.dmSecondary : ColorService.secondary);
   Color get successColor =>
       isDark ? ColorService.dmSuccess : ColorService.success;
@@ -82,13 +82,16 @@ class ThemeProvider extends ChangeNotifier {
   Color get surfaceColor =>
       isDark ? ColorService.dmBgSurface : ColorService.bgSurface;
   Color get elevatedSurfaceColor =>
-      isDark ? ColorService.dmBgElevated : ColorService.bgElevated;
+      (_accentPalette?.bgElevated) ??
+      (isDark ? ColorService.dmBgElevated : ColorService.bgElevated);
   Color get mutedBgColor =>
       isDark ? ColorService.dmBgMuted : ColorService.bgMuted;
 
   // Borders & focus
   Color get borderColor => isDark ? ColorService.dmBorder : ColorService.border;
-  Color get focusColor => isDark ? ColorService.dmFocus : ColorService.focus;
+  Color get focusColor =>
+      (_accentPalette?.focus) ??
+      (isDark ? ColorService.dmFocus : ColorService.focus);
 
   // Text colors
   Color get primaryTextColor =>
@@ -119,7 +122,8 @@ class ThemeProvider extends ChangeNotifier {
 
   // Semantic subtle backgrounds
   Color get infoBackground =>
-      isDark ? ColorService.dmInfoBg : ColorService.infoBg;
+      (_accentPalette?.infoBg) ??
+      (isDark ? ColorService.dmInfoBg : ColorService.infoBg);
   Color get successBackground =>
       isDark ? ColorService.dmSuccessBg : ColorService.successBg;
   Color get warningBackground =>
@@ -129,7 +133,8 @@ class ThemeProvider extends ChangeNotifier {
 
   // Shadows & overlays
   Color get shadowTint =>
-      isDark ? ColorService.dmShadowTint : ColorService.shadowTint;
+      (_accentPalette?.shadowTint) ??
+      (isDark ? ColorService.dmShadowTint : ColorService.shadowTint);
   Color get modalOverlay =>
       isDark ? ColorService.dmModalOverlay : ColorService.modalOverlay;
 
