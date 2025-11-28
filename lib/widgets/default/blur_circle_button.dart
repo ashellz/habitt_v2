@@ -1,3 +1,4 @@
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
@@ -7,12 +8,14 @@ class CircleButton extends StatefulWidget {
     super.key,
     required this.tp,
     required this.icon,
+    required this.cnIcon,
     required this.color,
     this.onPressed,
   });
 
   final ThemeProvider tp;
   final Widget icon;
+  final CNSymbol cnIcon;
   final Color color;
   final VoidCallback? onPressed;
 
@@ -25,6 +28,20 @@ class _CircleButtonState extends State<CircleButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    if (isIOS) {
+      return SizedBox(
+        height: 50,
+        width: 50,
+        child: CNButton.icon(
+          icon: widget.cnIcon,
+          onPressed: widget.onPressed,
+          tint: widget.color,
+          style: CNButtonStyle.prominentGlass,
+        ),
+      );
+    }
+
     return GestureDetector(
       onTap: () {
         setState(() {

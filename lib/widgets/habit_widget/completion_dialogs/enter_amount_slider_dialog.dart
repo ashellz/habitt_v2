@@ -1,3 +1,4 @@
+import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
@@ -61,6 +62,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
               Column(
                 children: [
                   CircleButton(
+                    cnIcon: CNSymbol('checkmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
                     color: tp.primaryColor,
@@ -83,6 +85,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
+                    cnIcon: CNSymbol('xmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
                     color: tp.secondaryButtonBackground,
