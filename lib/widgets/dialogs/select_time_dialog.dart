@@ -1,3 +1,4 @@
+import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -88,6 +89,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
               Column(
                 children: [
                   CircleButton(
+                    cnIcon: CNSymbol('checkmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
                     color: tp.primaryColor,
@@ -107,6 +109,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
+                    cnIcon: CNSymbol('xmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
                     color: tp.surfaceColor,
