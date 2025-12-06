@@ -62,7 +62,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
               Column(
                 children: [
                   CircleButton(
-                    cnIcon: CNSymbol('checkmark', size: 20),
+                    cnIcon: CNSymbol('checkmark', size: 16),
                     tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
                     color: tp.primaryColor,
@@ -85,7 +85,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
-                    cnIcon: CNSymbol('xmark', size: 20),
+                    cnIcon: CNSymbol('xmark', size: 16),
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
                     color: tp.secondaryButtonBackground,
