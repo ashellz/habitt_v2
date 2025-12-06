@@ -17,6 +17,7 @@ class GlassBlurContainer extends StatelessWidget {
   final Alignment alignment;
   final bool fakeBlur;
   final Border? border;
+  final bool forceBlur;
 
   const GlassBlurContainer({
     super.key,
@@ -40,6 +41,7 @@ class GlassBlurContainer extends StatelessWidget {
     this.color,
     this.fakeBlur = false,
     this.border,
+    this.forceBlur = false,
   });
 
   @override
@@ -69,7 +71,7 @@ class GlassBlurContainer extends StatelessWidget {
               ),
 
             // Blur effect
-            if (!fakeBlur && isGlassFeel)
+            if (!fakeBlur && (isGlassFeel || forceBlur))
               SizedBox(
                 height: height,
                 width: width,

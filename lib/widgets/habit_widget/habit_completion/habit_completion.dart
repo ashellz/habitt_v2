@@ -198,9 +198,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 ),
               ),
 
-              GlassBlurContainer(
-                fakeBlur: !context.watch<PreferencesProvider>().glassFeel,
-              ),
+              GlassBlurContainer(forceBlur: true),
 
               Padding(
                 padding: const EdgeInsets.all(4.0),
