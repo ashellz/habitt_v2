@@ -163,47 +163,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     prefsProvider.toggleGlassFeel();
                   },
                 ),
-
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (
-                    Widget child,
-                    Animation<double> animation,
-                  ) {
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      axisAlignment: -1.0,
-                      child: FadeTransition(opacity: animation, child: child),
-                    );
-                  },
-                  child:
-                      prefsProvider.glassFeel
-                          ? SettingTile(
-                            key: const ValueKey("glass_habits_tile"),
-                            title: "Glass Habits",
-                            icon: CustomSwitcherWrapper(
-                              delay: Duration(milliseconds: 400),
-                              value: isTinted,
-                              widget: Icon(
-                                Icons.blur_on,
-                                color: tp.primaryColor,
-                                size: 32,
-                              ),
-                              secondaryWidget: Image.asset(
-                                "assets/images/icons/blur.png",
-                                width: 32,
-                                height: 32,
-                              ),
-                            ),
-                            desc: "Adds glassy feel to habits too",
-                            hasSwitch: true,
-                            switchValue: prefsProvider.glassHabits,
-                            onTap: () {
-                              prefsProvider.toggleGlassHabits();
-                            },
-                          )
-                          : const SizedBox.shrink(key: ValueKey("empty_tile")),
-                ),
               ],
             ),
           ),
