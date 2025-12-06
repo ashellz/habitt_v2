@@ -244,14 +244,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           tp: tp,
                           stateProvider: stateProvider,
                         ),
-                        SizedBox(height: 56),
+                        SizedBox(height: 68),
                       ],
                     ),
                     Positioned(
                       bottom:
-                          MediaQuery.of(
-                            context,
-                          ).padding.bottom, // bottom safe area
+                          MediaQuery.of(context).padding.bottom +
+                          12, // bottom safe area
                       left: 0,
                       right: 0,
                       child: CustomSwitcherWrapper(
