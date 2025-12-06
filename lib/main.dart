@@ -28,6 +28,16 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final tp = await ThemeProvider.initFromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent, // ← bottom nav bar
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent, // ← top status bar
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
+
   await Hive.initFlutter();
   Hive.registerAdapters();
   await Hive.openBox<Habit>('habits');
