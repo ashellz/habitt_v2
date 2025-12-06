@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/calendar/calendar.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/default_cupertino_button.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
 import 'package:provider/provider.dart';
@@ -117,20 +115,13 @@ class _CalendarPageState extends State<CalendarPage> {
     final calendarProvider = context.watch<CalendarProvider>();
     final stateProvider = context.watch<StateProvider>();
 
-    final canEdit = stateProvider.canEditCalendar;
     final focusedDay = calendarProvider.focusedDay;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
         body: GradientBackground(
-          child: _calendarPage(
-            tp,
-            calendarProvider,
-            focusedDay,
-            canEdit,
-            stateProvider,
-          ),
+          child: _calendarPage(tp, calendarProvider, focusedDay, stateProvider),
         ),
       ),
     );
@@ -140,7 +131,6 @@ class _CalendarPageState extends State<CalendarPage> {
     ThemeProvider tp,
     CalendarProvider calendarProvider,
     DateTime focusedDay,
-    bool canEdit,
     StateProvider stateProvider,
   ) {
     return ListView(
@@ -153,79 +143,16 @@ class _CalendarPageState extends State<CalendarPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: FittedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          "Calendar",
-                          style: TextStyle(
-                            fontSize: 38,
-                            color: tp.primaryTextColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(
+                  "Calendar",
+                  style: TextStyle(
+                    fontSize: 38,
+                    color: tp.primaryTextColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        switchInCurve: Curves.easeOut,
-                        switchOutCurve: Curves.easeIn,
-                        transitionBuilder: (
-                          Widget child,
-                          Animation<double> animation,
-                        ) {
-                          final offsetAnimation = Tween<Offset>(
-                            begin: const Offset(0.3, 0), // from right to left
-                            end: Offset.zero,
-                          ).animate(animation);
-
-                          return FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            ),
-                          );
-                        },
-                        child:
-                            canEdit
-                                ? Padding(
-                                  key: const ValueKey('cancel'),
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: DefaultCupertinoButton(
-                                    textColor: tp.backgroundColor,
-                                    color: tp.primaryTextColor,
-                                    onPressed:
-                                        () =>
-                                            stateProvider.canEditCalendar =
-                                                false,
-                                    text: "Cancel",
-                                  ),
-                                )
-                                : const SizedBox.shrink(key: ValueKey('empty')),
-                      ),
-                      DefaultCupertinoButton(
-                        textColor: Colors.white,
-                        onPressed: () {
-                          stateProvider.canEditCalendar = !canEdit;
-
-                          if (canEdit) {
-                            context.read<HabitProvider>().assignStreaks();
-                          }
-                        },
-                        text: canEdit ? "Save" : "Edit",
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
               Calendar(
                 tp: tp,
@@ -236,17 +163,14 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
         SizedBox(height: 24),
-        IgnorePointer(
-          ignoring: !canEdit,
-          child: Habits(
-            daySelected: focusedDay,
-            hasMainCategory: false,
-            scrollController: _scrollController,
-            bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
-            effectZoneHeight: _effectZoneHeight,
-            minScale: _minScale,
-            stackOffsetFactor: _stackOffsetFactor,
-          ),
+        Habits(
+          daySelected: focusedDay,
+          hasMainCategory: false,
+          scrollController: _scrollController,
+          bottomViewportEdgeGlobalY: _bottomViewportEdgeGlobalY,
+          effectZoneHeight: _effectZoneHeight,
+          minScale: _minScale,
+          stackOffsetFactor: _stackOffsetFactor,
         ),
         const SizedBox(height: 100),
       ],

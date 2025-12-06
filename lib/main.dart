@@ -99,7 +99,7 @@ Future<void> main() async {
         ),
 
         // 4. StateProvider: No dependencies.
-        ChangeNotifierProvider(create: (_) => StateProvider()),
+        ChangeNotifierProvider(create: (_) => StateProvider(prefs)),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:hive_ce/hive.dart';
@@ -195,7 +196,8 @@ class HabitProvider extends ChangeNotifier {
 
   void completeHabit(
     int id,
-    BuildContext context, {
+    BuildContext context,
+    StateProvider stateProvider, {
     required DateTime day,
   }) async {
     late Habit habit;
@@ -209,6 +211,9 @@ class HabitProvider extends ChangeNotifier {
     } else {
       final List<Habit> dayHabits = getHabitsFromDay(day);
       habit = dayHabits.firstWhere((h) => h.id == id);
+      if (!stateProvider.shouldUpdateStreaks) {
+        stateProvider.shouldUpdateStreaks = true;
+      }
     }
 
     debugPrint("Completing habit: $id, day: $day");
@@ -222,7 +227,12 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void skipHabit(int id, BuildContext context, {required DateTime day}) async {
+  void skipHabit(
+    int id,
+    BuildContext context,
+    StateProvider stateProvider, {
+    required DateTime day,
+  }) async {
     debugPrint("Skipping habit: $id");
     late Habit habit;
 
@@ -235,6 +245,9 @@ class HabitProvider extends ChangeNotifier {
     } else {
       final List<Habit> dayHabits = getHabitsFromDay(day);
       habit = dayHabits.firstWhere((h) => h.id == id);
+      if (!stateProvider.shouldUpdateStreaks) {
+        stateProvider.shouldUpdateStreaks = true;
+      }
     }
 
     await habit.skipHabit();

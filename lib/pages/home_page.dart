@@ -6,6 +6,7 @@ import 'package:habitt/pages/main_pages/stats_page.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/bottom_nav_bar.dart';
@@ -38,7 +39,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Update last opened date, reset habit completion
-        await updateLastOpenedDate(context.read<HabitProvider>());
+        await updateLastOpenedDate(
+          context.read<HabitProvider>(),
+          context.read<StateProvider>(),
+        );
         categoryProvider.reorderCategoriesBasedOnTime();
       });
     }
@@ -66,8 +70,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final stateProvider = context.read<StateProvider>();
+
       // Update last opened date, reset habit completion
-      await updateLastOpenedDate(context.read<HabitProvider>());
+      await updateLastOpenedDate(context.read<HabitProvider>(), stateProvider);
+
+      if (stateProvider.shouldUpdateStreaks && mounted) {
+        context.read<HabitProvider>().assignStreaks();
+        stateProvider.shouldUpdateStreaks = false;
+      }
     });
   }
 
@@ -78,21 +89,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void _onPageChangedByNavBar(int index) {
-    if (index == 0 && Navigator.canPop(context)) {
-      Navigator.pop(context);
-    }
-
     if (_currentPageIndex != index) {
+      final stateProvider = context.read<StateProvider>();
+
       setState(() {
         _currentPageIndex = index;
       });
 
       if (index == 2) {
-        // stats page
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final statsProvider = context.read<StatsProvider>();
-          statsProvider.refreshStats();
-        });
+        context.read<StatsProvider>().refreshStats();
+      }
+
+      if (stateProvider.shouldUpdateStreaks) {
+        context.read<HabitProvider>().assignStreaks();
+        stateProvider.shouldUpdateStreaks = false;
       }
     }
   }

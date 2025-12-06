@@ -1,8 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> updateLastOpenedDate(HabitProvider habitProvider) async {
+Future<void> updateLastOpenedDate(
+  HabitProvider habitProvider,
+  StateProvider stateProvider,
+) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   DateTime lastOpenedDate;
 
@@ -22,7 +26,7 @@ Future<void> updateLastOpenedDate(HabitProvider habitProvider) async {
     // Else I set it to old one
     lastOpenedDate = DateTime.parse(temp);
     // I check for new day
-    checkForNewDay(prefs, lastOpenedDate, habitProvider);
+    checkForNewDay(prefs, lastOpenedDate, habitProvider, stateProvider);
   }
 }
 
@@ -30,6 +34,7 @@ void checkForNewDay(
   SharedPreferences prefs,
   DateTime lastOpenedDate,
   HabitProvider habitProvider,
+  StateProvider stateProvider,
 ) async {
   DateTime today = DateTime.now();
 
@@ -39,7 +44,10 @@ void checkForNewDay(
     debugPrint("New day, resetting completion");
     await habitProvider.saveHabitDay(lastOpenedDate);
     habitProvider.resetCompletion();
-    habitProvider.assignStreaks();
+    await habitProvider.assignStreaks();
+    if (stateProvider.shouldUpdateStreaks) {
+      stateProvider.shouldUpdateStreaks = false;
+    }
 
     prefs.setString("lastOpenedDate", today.toString());
   }

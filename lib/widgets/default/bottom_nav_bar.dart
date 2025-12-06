@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:provider/provider.dart';
 
@@ -139,41 +138,29 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = context.watch<StateProvider>().canEditCalendar;
-
     final tp = context.watch<ThemeProvider>();
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     if (glassFeel && isIOS) {
       return Expanded(
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 150),
-          opacity: isEditing ? 0 : 1,
-          child: IgnorePointer(
-            ignoring: isEditing,
-            child: CNTabBar(
-              tint: tp.primaryColor,
-              height: 85,
-              items: const [
-                CNTabBarItem(label: 'Habits', icon: CNSymbol('house.fill')),
-                CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
-                CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
-                CNTabBarItem(
-                  label: 'Settings',
-                  icon: CNSymbol('gearshape.fill'),
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              onTap: (index) {
-                if (_selectedIndex != index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                }
-                widget.onItemTapped?.call(index);
-              },
-            ),
-          ),
+        child: CNTabBar(
+          tint: tp.primaryColor,
+          height: 85,
+          items: const [
+            CNTabBarItem(label: 'Habits', icon: CNSymbol('house.fill')),
+            CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
+            CNTabBarItem(label: 'Stats', icon: CNSymbol('chart.bar.fill')),
+            CNTabBarItem(label: 'Settings', icon: CNSymbol('gearshape.fill')),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            if (_selectedIndex != index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            }
+            widget.onItemTapped?.call(index);
+          },
         ),
       );
     }
@@ -197,81 +184,31 @@ class _BottomNavBarState extends State<BottomNavBar> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             left: _selectedIndex * 70 + (_selectedIndex == 0 ? 2 : 0),
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 150),
-              opacity: isEditing ? 0 : 1,
-              child: GlassBlurContainer(
-                color: !glassFeel ? tp.primaryButtonBackground : null,
-                borderColor:
-                    !glassFeel
-                        ? tp.surfaceColor
-                        : tp.isDark
-                        ? Colors.white24
-                        : Colors.black12,
-                borderRadius: 100,
-                width: 92,
-                height: 58,
-              ),
+            child: GlassBlurContainer(
+              color: !glassFeel ? tp.primaryButtonBackground : null,
+              borderColor:
+                  !glassFeel
+                      ? tp.surfaceColor
+                      : tp.isDark
+                      ? Colors.white24
+                      : Colors.black12,
+              borderRadius: 100,
+              width: 92,
+              height: 58,
             ),
           ),
 
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 150),
+          SizedBox(
+            width: 280,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
 
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return SizeTransition(
-                sizeFactor: animation,
-                axis: Axis.horizontal,
-                axisAlignment: 0.0,
-                child: FadeTransition(
-                  opacity: animation,
-                  child: Center(child: child),
-                ),
-              );
-            },
-            child: Padding(
-              key: ValueKey<bool>(isEditing),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child:
-                  isEditing
-                      ? Row(
-                        children: [
-                          Text(
-                            "Editing",
-                            style: TextStyle(
-                              color: tp.primaryTextColor,
-                              decoration: TextDecoration.none,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "Poppins",
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: Image.asset(
-                              "assets/images/icons/pencil.png",
-                            ),
-                          ),
-                        ],
-                      )
-                      : SizedBox(
-                        width: 280,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(_navItems.length, (index) {
+                Widget navItemWidget = _buildNavItem(index, glassFeel);
 
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: List.generate(_navItems.length, (index) {
-                            Widget navItemWidget = _buildNavItem(
-                              index,
-                              glassFeel,
-                            );
-
-                            return navItemWidget;
-                          }),
-                        ),
-                      ),
+                return navItemWidget;
+              }),
             ),
           ),
         ],

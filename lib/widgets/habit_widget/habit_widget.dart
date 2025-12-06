@@ -5,6 +5,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
@@ -87,6 +88,7 @@ class _HabitWidgetState extends State<HabitWidget>
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
+    final stateProvider = context.read<StateProvider>();
     final tp = context.watch<ThemeProvider>();
     final focusedDay = context.watch<CalendarProvider>().focusedDay;
     final int alpha = 100;
@@ -136,6 +138,7 @@ class _HabitWidgetState extends State<HabitWidget>
                   habitProvider.skipHabit(
                     widget.habit.id,
                     context,
+                    stateProvider,
                     day: widget.isToday ? DateTime.now() : focusedDay,
                   );
 
