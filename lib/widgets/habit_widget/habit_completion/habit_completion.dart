@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/calendar_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -91,6 +92,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
   Widget build(BuildContext context) {
     final habitProvider = context.read<HabitProvider>();
     final focusedDay = context.watch<CalendarProvider>().focusedDay;
+    final stateProvider = context.read<StateProvider>();
 
     // Main widget
     return GestureDetector(
@@ -114,6 +116,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                   habitProvider.completeHabit(
                     widget.habit.id,
                     context,
+                    stateProvider,
                     day: widget.isToday ? DateTime.now() : focusedDay,
                   );
                 } else {
@@ -163,6 +166,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
         habitProvider.completeHabit(
           widget.habit.id,
           context,
+          stateProvider,
           day: widget.isToday ? DateTime.now() : focusedDay,
         );
       },

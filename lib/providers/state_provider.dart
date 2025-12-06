@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/generated/assets.gen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StateProvider extends ChangeNotifier {
+  SharedPreferences? _prefs;
+  bool _shouldUpdateStreaks = false;
+
+  StateProvider(SharedPreferences prefs) {
+    _prefs = prefs;
+    init();
+  }
+
+  void init() {
+    _shouldUpdateStreaks = _prefs?.getBool('shouldUpdateStreaks') ?? false;
+    notifyListeners();
+  }
+
   int _habitCategoryId = 1;
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
@@ -51,12 +65,11 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _canEditCalendar = false;
+  bool get shouldUpdateStreaks => _shouldUpdateStreaks;
 
-  bool get canEditCalendar => _canEditCalendar;
-
-  set canEditCalendar(bool value) {
-    _canEditCalendar = value;
+  set shouldUpdateStreaks(bool value) {
+    _shouldUpdateStreaks = value;
+    _prefs?.setBool('shouldUpdateStreaks', value);
     notifyListeners();
   }
 
