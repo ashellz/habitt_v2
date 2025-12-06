@@ -54,51 +54,64 @@ class _AddHabitPageState extends State<AddHabitPage> {
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView(
+              child: Stack(
                 children: [
-                  NavBackButton(tp: tp),
-                  Text(
-                    localizations.newHabit,
-                    style: TextStyle(
-                      fontSize: 38,
-                      fontWeight: FontWeight.bold,
-                      color: tp.primaryColor,
+                  ListView(
+                    children: [
+                      NavBackButton(tp: tp),
+                      Text(
+                        localizations.newHabit,
+                        style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: tp.primaryColor,
+                        ),
+                      ),
+                      SelectedHabitDisplay(
+                        streak: 0,
+                        amountCompleted: 0,
+                        durationCompleted: 0,
+                        completed: false,
+                      ),
+                      CategoriesList(
+                        useHabitCategory: true,
+                        topPadding: 16,
+                        showAll: false,
+                        standardColor: true,
+                        habitsCount: false,
+                      ),
+                      CustomTextField(
+                        title: localizations.habitName,
+                        controller: nameController,
+                      ),
+                      CustomTextField(
+                        topPadding: 16,
+                        title: localizations.notes,
+                        controller: descController,
+                        maxLines: 5,
+                      ),
+                      MoreOptionsText(localizations: localizations),
+                      SelectHabitTypeOptions(),
+                      SchedulingAndAlerts(tp: tp),
+                      AdditionalTaskSwitch(
+                        tp: tp,
+                        stateProvider: stateProvider,
+                      ),
+                      SizedBox(height: 68),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: MediaQuery.of(context).padding.bottom + 12,
+                    left: 0,
+                    right: 0,
+                    child: AddHabitButton(
+                      nameController: nameController,
+                      habitProvider: habitProvider,
+                      descController: descController,
+                      stateProvider: stateProvider,
+                      categoryProvider: categoryProvider,
+                      localizations: localizations,
                     ),
-                  ),
-                  SelectedHabitDisplay(
-                    streak: 0,
-                    amountCompleted: 0,
-                    durationCompleted: 0,
-                    completed: false,
-                  ),
-                  CategoriesList(
-                    useHabitCategory: true,
-                    topPadding: 16,
-                    showAll: false,
-                    standardColor: true,
-                    habitsCount: false,
-                  ),
-                  CustomTextField(
-                    title: localizations.habitName,
-                    controller: nameController,
-                  ),
-                  CustomTextField(
-                    topPadding: 16,
-                    title: localizations.notes,
-                    controller: descController,
-                    maxLines: 5,
-                  ),
-                  MoreOptionsText(localizations: localizations),
-                  SelectHabitTypeOptions(),
-                  SchedulingAndAlerts(tp: tp),
-                  AdditionalTaskSwitch(tp: tp, stateProvider: stateProvider),
-                  AddHabitButton(
-                    nameController: nameController,
-                    habitProvider: habitProvider,
-                    descController: descController,
-                    stateProvider: stateProvider,
-                    categoryProvider: categoryProvider,
-                    localizations: localizations,
                   ),
                 ],
               ),

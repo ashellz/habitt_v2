@@ -8,6 +8,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/color_converting.dart';
+import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:provider/provider.dart';
 
@@ -50,9 +51,14 @@ class AddHabitButton extends StatelessWidget {
 
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: nameController,
-      builder:
-          (context, value, child) => DefaultButton(
-            enabled: canAddHabit(),
+      builder: (context, value, child) {
+        final enabled = canAddHabit();
+
+        return CustomSwitcherWrapper(
+          value: enabled,
+          widget: DefaultButton(
+            key: const ValueKey("add_habit_button"),
+            enabled: enabled,
             onPressed: () {
               if (!canAddHabit()) return;
 
@@ -90,6 +96,8 @@ class AddHabitButton extends StatelessWidget {
             },
             label: localizations.addHabit,
           ),
+        );
+      },
     );
   }
 }
