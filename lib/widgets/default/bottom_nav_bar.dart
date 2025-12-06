@@ -19,6 +19,8 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
+  late double _dragOffset;
+  bool _isDragging = false;
 
   late final List<NavItemData> _navItems;
 
@@ -55,6 +57,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
     if (_selectedIndex == -1) {
       _selectedIndex = 0;
     }
+
+    _dragOffset = 0;
   }
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
@@ -78,6 +82,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         if (_selectedIndex != index) {
           setState(() {
             _selectedIndex = index;
+            _dragOffset = 0;
+            _isDragging = false;
           });
         }
         widget.onItemTapped?.call(index);
@@ -165,58 +171,102 @@ class _BottomNavBarState extends State<BottomNavBar> {
       );
     }
 
-    return GlassBlurContainer(
-      padding: const EdgeInsets.all(2),
-      height: 64,
-      borderRadius: 100,
-      color: !glassFeel ? tp.surfaceColor : null,
-      borderColor:
-          !glassFeel
-              ? tp.borderColor
-              : tp.isDark
-              ? Colors.white24
-              : Colors.black26,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Animated pill that goes around the nav bar depending on the selected index
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            left: _selectedIndex * 70 + (_selectedIndex == 0 ? 2 : 0),
-            child: GlassBlurContainer(
-              color: !glassFeel ? tp.primaryButtonBackground : null,
-              borderColor:
-                  !glassFeel
-                      ? tp.surfaceColor
-                      : tp.isDark
-                      ? Colors.white24
-                      : Colors.black12,
-              borderRadius: 100,
-              width: 92,
-              height: 58,
+    // Calculate pill position based on selected index and drag offset
+    final itemSpacing = 70.0;
+    final basePillPosition =
+        _selectedIndex * itemSpacing + (_selectedIndex == 0 ? 2 : 0);
+    final pillPosition = basePillPosition + _dragOffset;
+
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        setState(() {
+          _isDragging = true;
+          _dragOffset += details.delta.dx;
+
+          // Clamp drag offset symmetrically: allow dragging from first to last item
+          final maxOffset = (_navItems.length - 1) * itemSpacing;
+          final minClamp = -basePillPosition;
+          final maxClamp = maxOffset - basePillPosition;
+          _dragOffset = _dragOffset.clamp(minClamp, maxClamp);
+        });
+      },
+      onHorizontalDragEnd: (details) {
+        // Find the closest item index
+        final currentPosition = basePillPosition + _dragOffset;
+        int closestIndex = 0;
+        double closestDistance = double.infinity;
+
+        for (int i = 0; i < _navItems.length; i++) {
+          final itemPosition = i * itemSpacing + (i == 0 ? 2 : 0);
+          final distance = (currentPosition - itemPosition).abs();
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = i;
+          }
+        }
+
+        // Animate to closest index
+        setState(() {
+          _selectedIndex = closestIndex;
+          _dragOffset = 0;
+          _isDragging = false;
+        });
+
+        widget.onItemTapped?.call(closestIndex);
+      },
+      child: GlassBlurContainer(
+        padding: const EdgeInsets.all(2),
+        height: 64,
+        borderRadius: 100,
+        color: !glassFeel ? tp.surfaceColor : null,
+        borderColor:
+            !glassFeel
+                ? tp.borderColor
+                : tp.isDark
+                ? Colors.white24
+                : Colors.black26,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Animated pill that goes around the nav bar depending on the selected index
+            AnimatedPositioned(
+              duration: Duration(milliseconds: _isDragging ? 50 : 300),
+              curve: _isDragging ? Curves.easeOut : Curves.easeInOut,
+              left: pillPosition,
+              child: GlassBlurContainer(
+                color: !glassFeel ? tp.primaryButtonBackground : null,
+                borderColor:
+                    !glassFeel
+                        ? tp.surfaceColor
+                        : tp.isDark
+                        ? Colors.white24
+                        : Colors.black12,
+                borderRadius: 100,
+                width: 92,
+                height: 58,
+              ),
             ),
-          ),
 
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: SizedBox(
-                width: 280,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: SizedBox(
+                  width: 280,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
 
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(_navItems.length, (index) {
-                    Widget navItemWidget = _buildNavItem(index, glassFeel);
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(_navItems.length, (index) {
+                      Widget navItemWidget = _buildNavItem(index, glassFeel);
 
-                    return navItemWidget;
-                  }),
+                      return navItemWidget;
+                    }),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
