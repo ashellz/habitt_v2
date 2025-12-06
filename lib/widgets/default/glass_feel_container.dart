@@ -58,8 +58,7 @@ class _GlassFeelContainerState extends State<GlassFeelContainer> {
     final tp = context.watch<ThemeProvider>();
     final prefsProvider = context.watch<PreferencesProvider>();
 
-    if (!prefsProvider.glassFeel ||
-        widget.isHabit && !prefsProvider.glassHabits) {
+    if (!prefsProvider.glassFeel) {
       if (widget.isHabit) {
         return Container(
           padding: widget.padding,
