@@ -136,6 +136,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final tp = context.watch<ThemeProvider>();
     final localizations = AppLocalizations.of(context)!;
 
+    final platform = Theme.of(context).platform;
+    final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
+
     final stateProvider = context.watch<StateProvider>();
 
     // Call recompute if provider-driven fields changed
@@ -244,13 +247,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           tp: tp,
                           stateProvider: stateProvider,
                         ),
-                        SizedBox(height: 68),
+                        SizedBox(height: 56 + extraPadding),
                       ],
                     ),
                     Positioned(
                       bottom:
                           MediaQuery.of(context).padding.bottom +
-                          12, // bottom safe area
+                          extraPadding, // bottom safe area
                       left: 0,
                       right: 0,
                       child: CustomSwitcherWrapper(

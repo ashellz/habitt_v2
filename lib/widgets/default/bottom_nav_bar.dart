@@ -146,7 +146,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
-    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+
+    final platform = Theme.of(context).platform;
+    final isIOS = platform == TargetPlatform.iOS;
+    final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
+
     if (glassFeel && isIOS) {
       return Expanded(
         child: CNTabBar(
@@ -216,6 +220,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
       },
       child: GlassBlurContainer(
         padding: const EdgeInsets.all(2),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom + extraPadding,
+        ),
         height: 64,
         borderRadius: 100,
         color: !glassFeel ? tp.surfaceColor : null,

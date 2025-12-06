@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -45,6 +44,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
     final stateProvider = context.watch<StateProvider>();
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
+    final platform = Theme.of(context).platform;
+    final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -97,11 +98,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         tp: tp,
                         stateProvider: stateProvider,
                       ),
-                      SizedBox(height: 68),
+                      SizedBox(height: 56 + extraPadding),
                     ],
                   ),
                   Positioned(
-                    bottom: MediaQuery.of(context).padding.bottom + 12,
+                    bottom:
+                        MediaQuery.of(context).padding.bottom + extraPadding,
                     left: 0,
                     right: 0,
                     child: AddHabitButton(
