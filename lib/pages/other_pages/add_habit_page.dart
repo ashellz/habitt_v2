@@ -5,6 +5,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/habit_details/add_habit_button.dart';
 import 'package:habitt/widgets/habit_details/additional_task_switch.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
@@ -45,13 +46,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
     final nameController = stateProvider.nameController;
     final descController = stateProvider.descController;
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: tp.backgroundColor,
-        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
         body: GradientBackground(

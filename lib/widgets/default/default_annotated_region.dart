@@ -11,15 +11,16 @@ class DefaultAnnotatedRegion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final isDark = tp.isDark;
-    final bg = isDark ? Colors.black : Colors.white;
-    final statusBarIcons = isDark ? Brightness.light : Brightness.dark;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: bg,
-        statusBarIconBrightness: statusBarIcons,
-        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness:
+            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness:
+            tp.isDark ? Brightness.light : Brightness.dark,
       ),
       child: child,
     );
