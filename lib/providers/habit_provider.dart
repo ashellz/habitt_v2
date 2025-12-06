@@ -214,7 +214,7 @@ class HabitProvider extends ChangeNotifier {
     debugPrint("Completing habit: $id, day: $day");
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
-    if (context.mounted && day == DateTime.now()) {
+    if (context.mounted && daySimple == todaySimple) {
       checkReorderCategories(context, habit);
     }
 
@@ -238,10 +238,10 @@ class HabitProvider extends ChangeNotifier {
     }
 
     await habit.skipHabit();
-    if (context.mounted && day == DateTime.now()) {
+    if (context.mounted && daySimple == todaySimple) {
       checkReorderCategories(context, habit);
     }
-    updateHabitInDB(habit);
+    updateHabitInDB(habit, day: day);
     notifyListeners();
   }
 
