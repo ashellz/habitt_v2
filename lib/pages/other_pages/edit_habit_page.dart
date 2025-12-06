@@ -188,7 +188,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 30),
                               child: CircleButton(
-                                cnIcon: CNSymbol('trash.fill', size: 20),
+                                cnIcon: CNSymbol('trash.fill', size: 16),
                                 color: tp.surfaceColor,
                                 tp: tp,
                                 onPressed:
