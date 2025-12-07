@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/habit_details/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_time_interval_switch.dart';
 
@@ -98,46 +99,34 @@ class HabitTimeBottomOptions extends StatelessWidget {
               ),
             ),
 
-            GestureDetector(
-              onTap: () {
-                onToggleShowAll?.call(!showAllHabits);
-              },
-              child: Container(
-                color: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 32,
-                      height: 32,
-                      child: Icon(
-                        Icons.group,
-                        color: tp.primaryTextColor,
-                        size: 32,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 12),
-                      child: Text(
-                        "Show all habits",
-                        style: TextStyle(
-                          color: tp.primaryTextColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-                    Switch(
-                      value: showAllHabits,
-                      activeColor: tp.primaryColor,
-                      onChanged: (value) {
-                        onToggleShowAll?.call(value);
-                      },
-                    ),
-                  ],
+            Row(
+              children: [
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: Icon(
+                    Icons.group,
+                    color: tp.primaryTextColor,
+                    size: 32,
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    "Show all habits",
+                    style: TextStyle(
+                      color: tp.primaryTextColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                DefaultSwitch(
+                  switchValue: showAllHabits,
+                  onTap: () => onToggleShowAll?.call(!showAllHabits),
+                ),
+              ],
             ),
           ],
         ),
