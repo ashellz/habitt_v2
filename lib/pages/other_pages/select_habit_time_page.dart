@@ -4,7 +4,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
-import 'package:habitt/widgets/select_habit_time_page/select_habit_time_body.dart';
+import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
 
 class SelectHabitTimePage extends StatelessWidget {
