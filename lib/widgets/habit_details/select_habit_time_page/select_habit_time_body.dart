@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/custom_shader_mask.dart';
+import 'package:habitt/widgets/habit_details/select_habit_time_page/all_habits_on_time_line_stack.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -29,6 +30,7 @@ class SelectHabitTimeBody extends StatefulWidget {
 class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   double hourHeight = 100;
   final _scrollController = ScrollController();
+  bool showAllHabits = false;
 
   @override
   void dispose() {
@@ -59,34 +61,6 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
-    }
-  }
-
-  bool shouldShowHabitName(TimeType timeType) {
-    return !(widget.timeIntervalEnd - widget.timeIntervalStart <= 5 &&
-        timeType == TimeType.regular);
-  }
-
-  Color getContainerColor(ThemeProvider tp, StateProvider sp) {
-    if (tp.isDark) {
-      return sp.habitColor?.withOpacity(0.7) ??
-          tp.primaryColor.darken(30).withOpacity(0.7);
-    } else {
-      return sp.habitColor?.withOpacity(0.7) ??
-          tp.primaryColor.lighten(30).withOpacity(0.7);
-    }
-  }
-
-  Color getHabitNameColor(ThemeProvider tp, StateProvider sp) {
-    // if dark theme, return lighten color
-    if (tp.isDark) {
-      return sp.habitColor != null
-          ? sp.habitColor!.lighten(30)
-          : tp.primaryColor.lighten(30);
-    } else {
-      return sp.habitColor != null
-          ? sp.habitColor!.darken(40)
-          : tp.primaryColor.darken(40);
     }
   }
 
@@ -173,6 +147,14 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               ),
                             ),
 
+                          AnimatedOpacity(
+                            opacity: showAllHabits ? 0.5 : 0,
+                            duration: const Duration(milliseconds: 150),
+                            child: AllHabitsOnTimelineStack(
+                              hourHeight: hourHeight,
+                            ),
+                          ),
+
                           if (startHour != null && duration() != null)
                             AnimatedPositioned(
                               duration: const Duration(milliseconds: 500),
@@ -188,7 +170,12 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               child: Container(
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: getContainerColor(tp, sp),
+                                  color:
+                                      sp.habitColor != null
+                                          ? sp.habitColor!.withOpacity(0.7)
+                                          : tp.primaryColor
+                                              .darken(30)
+                                              .withOpacity(0.7),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
@@ -198,7 +185,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       width: 4,
                                       height: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: getHabitNameColor(tp, sp),
+                                        color:
+                                            sp.habitColor != null
+                                                ? sp.habitColor!.lighten(30)
+                                                : tp.primaryColor.lighten(30),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -225,10 +215,19 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       },
                                       child: KeyedSubtree(
                                         key: ValueKey<bool>(
-                                          shouldShowHabitName(timeType),
+                                          !(widget.timeIntervalEnd -
+                                                      widget
+                                                          .timeIntervalStart <=
+                                                  5 &&
+                                              timeType == TimeType.regular),
                                         ),
                                         child:
-                                            shouldShowHabitName(timeType)
+                                            !(widget.timeIntervalEnd -
+                                                            widget
+                                                                .timeIntervalStart <=
+                                                        5 &&
+                                                    timeType ==
+                                                        TimeType.regular)
                                                 ? Row(
                                                   mainAxisSize:
                                                       MainAxisSize.min,
@@ -247,10 +246,14 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                                       habitName,
                                                       style: TextStyle(
                                                         color:
-                                                            getHabitNameColor(
-                                                              tp,
-                                                              sp,
-                                                            ),
+                                                            sp.habitColor !=
+                                                                    null
+                                                                ? sp.habitColor!
+                                                                    .lighten(30)
+                                                                : tp.primaryColor
+                                                                    .lighten(
+                                                                      30,
+                                                                    ),
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         letterSpacing: 1,
@@ -279,7 +282,12 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               child: Container(
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: getContainerColor(tp, sp),
+                                  color:
+                                      sp.habitColor != null
+                                          ? sp.habitColor!.withOpacity(0.7)
+                                          : tp.primaryColor
+                                              .darken(30)
+                                              .withOpacity(0.7),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Align(
@@ -288,7 +296,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     width: 4,
                                     height: double.infinity,
                                     decoration: BoxDecoration(
-                                      color: getHabitNameColor(tp, sp),
+                                      color:
+                                          sp.habitColor != null
+                                              ? sp.habitColor!.lighten(30)
+                                              : tp.primaryColor.lighten(30),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
@@ -303,7 +314,16 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
               ),
             ),
 
-            HabitTimeBottomOptions(tp: tp, sp: sp),
+            HabitTimeBottomOptions(
+              tp: tp,
+              sp: sp,
+              showAllHabits: showAllHabits,
+              onToggleShowAll: (value) {
+                setState(() {
+                  showAllHabits = value;
+                });
+              },
+            ),
           ],
         ),
       ),
