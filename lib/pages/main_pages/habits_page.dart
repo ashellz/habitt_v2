@@ -168,7 +168,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
-                              heroTag: 'dailyPlanner',
+                              heroTag: 'habits-date-fab',
                               mini: true,
                               elevation: 0,
                               backgroundColor: tp.secondaryColor,
@@ -185,7 +185,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                               ),
                             ),
                             FloatingActionButton(
-                              heroTag: 'addHabit',
+                              heroTag: 'habits-add-fab',
                               mini: true,
                               elevation: 0,
                               backgroundColor: tp.primaryColor,
