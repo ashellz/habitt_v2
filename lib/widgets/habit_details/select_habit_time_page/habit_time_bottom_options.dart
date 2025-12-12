@@ -3,7 +3,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/habit_details/select_habit_color_sheet.dart';
-import 'package:habitt/widgets/habit_details/select_habit_time_page/select_time_interval_switch.dart';
+import 'package:habitt/widgets/habit_details/select_habit_time_page/select_time_interval.dart';
 
 class HabitTimeBottomOptions extends StatelessWidget {
   const HabitTimeBottomOptions({
@@ -47,7 +47,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                 ),
               ),
             ),
-            SelectTimeIntervalSwitch(tp: tp),
+            SelectTimeInterval(tp: tp),
 
             GestureDetector(
               onTap: () {

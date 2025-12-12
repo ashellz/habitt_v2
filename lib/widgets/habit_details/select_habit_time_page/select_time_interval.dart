@@ -7,8 +7,8 @@ import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/dialogs/select_time_dialog.dart';
 import 'package:provider/provider.dart';
 
-class SelectTimeIntervalSwitch extends StatelessWidget {
-  const SelectTimeIntervalSwitch({super.key, required this.tp});
+class SelectTimeInterval extends StatelessWidget {
+  const SelectTimeInterval({super.key, required this.tp});
 
   final ThemeProvider tp;
 
