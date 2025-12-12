@@ -5,9 +5,14 @@ import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit
 import 'package:provider/provider.dart';
 
 class AllHabitsOnTimelineStack extends StatelessWidget {
-  const AllHabitsOnTimelineStack({super.key, required this.hourHeight});
+  const AllHabitsOnTimelineStack({
+    super.key,
+    required this.hourHeight,
+    this.ignoreId,
+  });
 
   final double hourHeight;
+  final int? ignoreId;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
     return Stack(
       children: [
         for (var habit in habits)
-          if (habit.timeIntervalEnabled)
+          if (habit.timeIntervalEnabled && habit.id != ignoreId)
             AnimatedPositioned(
               duration: const Duration(milliseconds: 500),
               curve: Curves.fastOutSlowIn,

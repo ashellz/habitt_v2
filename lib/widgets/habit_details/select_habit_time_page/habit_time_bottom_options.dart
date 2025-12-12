@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/habit_details/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_time_interval.dart';
 
 class HabitTimeBottomOptions extends StatelessWidget {
-  const HabitTimeBottomOptions({
-    super.key,
-    required this.tp,
-    required this.sp,
-    this.showAllHabits = false,
-    this.onToggleShowAll,
-  });
+  const HabitTimeBottomOptions({super.key, required this.tp, required this.sp});
 
   final ThemeProvider tp;
   final StateProvider sp;
-  final bool showAllHabits;
-  final Function(bool)? onToggleShowAll;
 
   @override
   Widget build(BuildContext context) {
@@ -109,22 +100,6 @@ class HabitTimeBottomOptions extends StatelessWidget {
                     color: tp.primaryTextColor,
                     size: 32,
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 12),
-                  child: Text(
-                    "Show all habits",
-                    style: TextStyle(
-                      color: tp.primaryTextColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Spacer(),
-                DefaultSwitch(
-                  switchValue: showAllHabits,
-                  onTap: () => onToggleShowAll?.call(!showAllHabits),
                 ),
               ],
             ),

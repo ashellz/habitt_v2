@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
+import 'package:habitt/widgets/habit_details/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +32,23 @@ class SelectHabitTimePage extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
+        floatingActionButton: FloatingActionButton(
+          elevation: 0,
+          backgroundColor: tp.primaryColor,
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder:
+                  (context) =>
+                      HabitTimeBottomOptions(tp: tp, sp: stateProvider),
+            );
+          },
+          child: AnimatedRotation(
+            duration: const Duration(milliseconds: 250),
+            turns: stateProvider.showAllHabits ? 0.25 : -0.25,
+            child: Icon(Icons.chevron_right, color: tp.primaryTextColor),
+          ),
+        ),
         body: GradientBackground(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -38,7 +57,28 @@ class SelectHabitTimePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  NavBackButton(tp: tp),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NavBackButton(tp: tp),
+                      Spacer(),
+                      FloatingActionButton(
+                        mini: true,
+                        elevation: 0,
+                        backgroundColor: tp.secondaryColor,
+                        onPressed: () => stateProvider.toggleShowAllHabits(),
+                        child: SvgPicture.asset(
+                          stateProvider.showAllHabits
+                              ? "assets/images/svg/show.svg"
+                              : "assets/images/svg/dont-show.svg",
+                          colorFilter: ColorFilter.mode(
+                            tp.primaryTextColor,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
                     "SELECT HABIT TIME:",
                     style: TextStyle(
