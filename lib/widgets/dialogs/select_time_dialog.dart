@@ -25,9 +25,17 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
   FixedExtentScrollController hoursController = FixedExtentScrollController();
   FixedExtentScrollController minutesController = FixedExtentScrollController();
 
+  // Track if this is the first time setting each value
+  bool isFirstStartTimeChange = true;
+  bool isFirstEndTimeChange = true;
+
   @override
   void initState() {
     super.initState();
+
+    // Check if values have been changed from defaults (420 = 7:00, 450 = 7:30)
+    isFirstStartTimeChange = widget.stateProvider.timeIntervalStart == 420;
+    isFirstEndTimeChange = widget.stateProvider.timeIntervalEnd == 450;
 
     setState(() {
       hoursController = FixedExtentScrollController(
@@ -100,8 +108,20 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
 
                       if (widget.isStartTime) {
                         sp.timeIntervalStart = time;
+                        // Only set end time if this is the first start time change and end time hasn't been changed
+                        if (isFirstStartTimeChange && isFirstEndTimeChange) {
+                          isFirstStartTimeChange = false;
+
+                          sp.timeIntervalEnd = (time + 30) % (24 * 60);
+                        }
                       } else if (!widget.isStartTime) {
                         sp.timeIntervalEnd = time;
+                        // Only set start time if this is the first end time change and start time hasn't been changed
+                        if (isFirstEndTimeChange && isFirstStartTimeChange) {
+                          isFirstEndTimeChange = false;
+                          sp.timeIntervalStart =
+                              (time - 30 + (24 * 60)) % (24 * 60);
+                        }
                       }
 
                       Navigator.pop(context);
