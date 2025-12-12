@@ -32,6 +32,35 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   final _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToStartTime();
+    });
+  }
+
+  void _scrollToStartTime() {
+    final durationMinutes = widget.timeIntervalEnd - widget.timeIntervalStart;
+
+    setState(() {
+      hourHeight =
+          durationMinutes < 0
+              ? 50
+              : durationMinutes <= 10
+              ? 300
+              : durationMinutes <= 30
+              ? 200
+              : 100;
+    });
+
+    _scrollController.animateTo(
+      (widget.timeIntervalStart / 60 * hourHeight) - 150,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -43,20 +72,22 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
 
     final durationMinutes = widget.timeIntervalEnd - widget.timeIntervalStart;
 
-    hourHeight =
-        durationMinutes < 0
-            ? 50
-            : durationMinutes <= 10
-            ? 300
-            : durationMinutes <= 30
-            ? 200
-            : 100;
+    setState(() {
+      hourHeight =
+          durationMinutes < 0
+              ? 50
+              : durationMinutes <= 10
+              ? 300
+              : durationMinutes <= 30
+              ? 200
+              : 100;
+    });
 
     if (oldWidget.timeIntervalStart != widget.timeIntervalStart ||
         oldWidget.timeIntervalEnd != widget.timeIntervalEnd ||
         oldWidget.timeIntervalEnabled != widget.timeIntervalEnabled) {
       _scrollController.animateTo(
-        (widget.timeIntervalStart / 60 * hourHeight) - 150,
+        (widget.timeIntervalStart / 60 * hourHeight),
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
