@@ -104,7 +104,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
           children: [
             CustomShaderMask(
               child: SizedBox(
-                height: widget.listViewHeight - 100,
+                height: widget.listViewHeight,
                 child: ListView(
                   controller: _scrollController,
                   scrollDirection: Axis.vertical,
@@ -313,8 +313,6 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                 ),
               ),
             ),
-
-            HabitTimeBottomOptions(tp: tp, sp: sp),
           ],
         ),
       ),

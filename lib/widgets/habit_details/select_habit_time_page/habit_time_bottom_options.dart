@@ -12,10 +12,10 @@ class HabitTimeBottomOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
       child: Container(
-        height: 300,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -24,9 +24,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Drag indicator
             Center(
               child: Container(
                 margin: const EdgeInsets.only(bottom: 16, top: 16),
@@ -39,7 +37,6 @@ class HabitTimeBottomOptions extends StatelessWidget {
               ),
             ),
             SelectTimeInterval(tp: tp),
-
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
@@ -76,7 +73,6 @@ class HabitTimeBottomOptions extends StatelessWidget {
                       ),
                     ),
                     Spacer(),
-
                     Container(
                       width: 32,
                       height: 32,
@@ -89,20 +85,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                 ),
               ),
             ),
-
-            Row(
-              children: [
-                SizedBox(
-                  width: 32,
-                  height: 32,
-                  child: Icon(
-                    Icons.group,
-                    color: tp.primaryTextColor,
-                    size: 32,
-                  ),
-                ),
-              ],
-            ),
+            SizedBox(height: 120),
           ],
         ),
       ),

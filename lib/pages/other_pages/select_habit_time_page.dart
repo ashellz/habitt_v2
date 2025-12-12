@@ -3,14 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
 
-class SelectHabitTimePage extends StatelessWidget {
+class SelectHabitTimePage extends StatefulWidget {
   const SelectHabitTimePage({super.key});
+
+  @override
+  State<SelectHabitTimePage> createState() => _SelectHabitTimePageState();
+}
+
+class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
+  bool sheetExpanded = false; // tracks if the bottom sheet is open
 
   @override
   Widget build(BuildContext context) {
@@ -23,29 +31,30 @@ class SelectHabitTimePage extends StatelessWidget {
 
     final listViewHeight = MediaQuery.of(context).size.height - 293;
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: tp.backgroundColor,
-        statusBarIconBrightness: tp.isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            tp.isDark ? Brightness.dark : Brightness.light, // for iOS
-      ),
+    return DefaultAnnotatedRegion(
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
         floatingActionButton: FloatingActionButton(
+          heroTag: 'select-time-main-fab',
           elevation: 0,
           backgroundColor: tp.primaryColor,
-          onPressed: () {
-            showModalBottomSheet(
+          onPressed: () async {
+            setState(() => sheetExpanded = true);
+            await showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
+              backgroundColor: tp.backgroundColor,
               builder:
                   (context) =>
                       HabitTimeBottomOptions(tp: tp, sp: stateProvider),
             );
+            if (mounted) {
+              setState(() => sheetExpanded = false);
+            }
           },
           child: AnimatedRotation(
             duration: const Duration(milliseconds: 250),
-            turns: stateProvider.showAllHabits ? 0.25 : -0.25,
+            turns: sheetExpanded ? 0.25 : 0.75,
             child: Icon(Icons.chevron_right, color: tp.primaryTextColor),
           ),
         ),
@@ -63,6 +72,7 @@ class SelectHabitTimePage extends StatelessWidget {
                       NavBackButton(tp: tp),
                       Spacer(),
                       FloatingActionButton(
+                        heroTag: 'select-time-toggle-fab',
                         mini: true,
                         elevation: 0,
                         backgroundColor: tp.secondaryColor,
