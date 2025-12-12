@@ -30,7 +30,6 @@ class SelectHabitTimeBody extends StatefulWidget {
 class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
   double hourHeight = 100;
   final _scrollController = ScrollController();
-  bool showAllHabits = false;
 
   @override
   void dispose() {
@@ -148,9 +147,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             ),
 
                           AnimatedOpacity(
-                            opacity: showAllHabits ? 0.5 : 0,
+                            opacity: sp.showAllHabits ? 0.5 : 0,
                             duration: const Duration(milliseconds: 150),
                             child: AllHabitsOnTimelineStack(
+                              ignoreId: sp.selectedHabitId,
                               hourHeight: hourHeight,
                             ),
                           ),
@@ -314,16 +314,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
               ),
             ),
 
-            HabitTimeBottomOptions(
-              tp: tp,
-              sp: sp,
-              showAllHabits: showAllHabits,
-              onToggleShowAll: (value) {
-                setState(() {
-                  showAllHabits = value;
-                });
-              },
-            ),
+            HabitTimeBottomOptions(tp: tp, sp: sp),
           ],
         ),
       ),

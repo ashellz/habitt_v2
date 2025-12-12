@@ -16,6 +16,17 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _showAllHabits = true;
+
+  bool get showAllHabits => _showAllHabits;
+
+  void toggleShowAllHabits() {
+    _showAllHabits = !_showAllHabits;
+    notifyListeners();
+  }
+
+  int _selectedHabitId = -1;
+
   int _habitCategoryId = 1;
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
@@ -92,6 +103,11 @@ class StateProvider extends ChangeNotifier {
     }
   }
 
+  set selectedHabitId(int id) {
+    _selectedHabitId = id;
+    notifyListeners();
+  }
+
   set habitCategoryId(int id) {
     _habitCategoryId = id;
     notifyListeners();
@@ -113,7 +129,9 @@ class StateProvider extends ChangeNotifier {
   }
 
   void reset() {
+    _selectedHabitId = -1;
     _habitAmount = 0;
+    _showAllHabits = true;
 
     _habitDuration = Duration.zero;
 
@@ -132,6 +150,8 @@ class StateProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  int get selectedHabitId => _selectedHabitId;
 
   int get habitCategoryId => _habitCategoryId;
 

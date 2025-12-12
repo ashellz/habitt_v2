@@ -43,6 +43,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
   void setInitialValues() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final stateProvider = context.read<StateProvider>();
+      stateProvider.selectedHabitId = widget.habit.id;
       stateProvider.habitCategoryId = widget.habit.categoryId;
       stateProvider.nameController.text = widget.habit.name;
       stateProvider.descController.text = widget.habit.description;
