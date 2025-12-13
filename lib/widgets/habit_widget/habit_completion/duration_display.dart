@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:habitt/util/get_duration_string.dart';
 
 class DurationDisplay extends StatefulWidget {
@@ -89,7 +90,7 @@ class DurationDisplayState extends State<DurationDisplay> {
           blurRadius: 5,
         ),
       ],
-      color: Colors.white,
+      color: widget.habit.skipped ? ColorService.textMuted : Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: _fontSize,
     );
@@ -105,7 +106,11 @@ class DurationDisplayState extends State<DurationDisplay> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Divider(height: 2, thickness: 2, color: Color(0xFFF8F9FA)),
+          child: Divider(
+            height: 2,
+            thickness: 2,
+            color: widget.habit.skipped ? ColorService.textMuted : Colors.white,
+          ),
         ),
         Text(durationString, style: textStyle, maxLines: 1, softWrap: false),
       ],

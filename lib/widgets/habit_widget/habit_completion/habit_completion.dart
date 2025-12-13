@@ -204,13 +204,13 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   // Middle child inside of the container (checkmark or amount/duration)
   Widget getCompletionWidget() {
-    if (widget.habit.amount > 0 &&
-        !widget.habit.completed &&
-        !widget.habit.skipped) {
-      return AmountDisplay(habit: widget.habit, tp: widget.tp);
-    } else if (widget.habit.duration > 0 &&
-        !widget.habit.completed &&
-        !widget.habit.skipped) {
+    if (widget.habit.amount > 0 && !widget.habit.completed) {
+      return AmountDisplay(
+        habit: widget.habit,
+        tp: widget.tp,
+        skipped: widget.habit.skipped,
+      );
+    } else if (widget.habit.duration > 0 && !widget.habit.completed) {
       return DurationDisplay(habit: widget.habit);
     } else {
       return centerIcon();

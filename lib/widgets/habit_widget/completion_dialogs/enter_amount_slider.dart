@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -50,7 +51,7 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final isSimpleSlider = widget.totalSegments > 50;
+    // final isSimpleSlider = widget.totalSegments > 50;
     currentFilled = widget.filledSegments;
     final prefs = context.watch<PreferencesProvider>();
 
@@ -58,11 +59,11 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
       if (forText) {
         switch (prefs.colorfulness) {
           case Colorfulness.tinted:
-            return tp.primaryColor.lighten(20).withOpacity(0.7);
+            return tp.primaryColor.darken(20).withOpacity(0.7);
           case Colorfulness.standard:
-            return tp.successColor.lighten(20).withOpacity(0.7);
+            return tp.successColor.darken(20).withOpacity(0.7);
           case Colorfulness.colorful:
-            return widget.habitColor?.lighten(20).withOpacity(0.7) ??
+            return widget.habitColor?.darken(20).withOpacity(0.7) ??
                 tp.successColor;
         }
       }
@@ -89,13 +90,14 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
               final localPos = box.globalToLocal(details.globalPosition);
               _updateFill(localPos, box.size.height);
             },
-            child: SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                color: tp.borderColor.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(30),
+              ),
               width: MediaQuery.of(context).size.width / 2.75,
               height: MediaQuery.of(context).size.height / 2.75,
-              child:
-                  isSimpleSlider
-                      ? _buildSmoothSlider(tp, getColor)
-                      : _buildSegmentedSlider(tp, getColor),
+              child: _buildSmoothSlider(tp, getColor),
             ),
           ),
 
@@ -127,7 +129,7 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
       ),
     );
   }
-
+  /*
   Widget _buildSegmentedSlider(
     ThemeProvider tp,
     Color Function(bool) getColor,
@@ -147,27 +149,49 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
         }),
       ),
     );
-  }
+  }*/
 
   Widget _buildSmoothSlider(ThemeProvider tp, Color Function(bool) getColor) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
-        final fillHeight = (currentFilled / widget.totalSegments) * height;
 
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: tp.borderColor.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(30),
+        return Positioned.fill(
+          child: TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.easeInOut,
+            tween: Tween<double>(
+              begin: 0,
+              end: currentFilled / widget.totalSegments,
+            ),
+            builder: (context, value, _) {
+              final endColor = getColor(true);
+
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Stack(
+                  children: [
+                    // Vertical fill from bottom up
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: FractionallySizedBox(
+                        heightFactor: value,
+                        widthFactor: 1,
+                        child: Container(color: endColor),
+                      ),
+                    ),
+
+                    GlassBlurContainer(
+                      height: height,
+                      forceBlur: true,
+                      color: Colors.transparent,
+                      borderColor: Colors.transparent,
+                      hasGradient: false,
+                    ),
+                  ],
                 ),
-              ),
-              Container(height: fillHeight, color: getColor(true)),
-            ],
+              );
+            },
           ),
         );
       },
