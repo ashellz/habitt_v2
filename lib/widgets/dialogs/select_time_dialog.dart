@@ -1,10 +1,10 @@
 import 'package:cupertino_native/style/sf_symbol.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/blur_circle_button.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
+import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
 
 class SelectTimeDialog extends StatefulWidget {
@@ -82,7 +82,6 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                     SizedBox(height: 8),
                     Stack(
                       children: [
-                        TimeGradient(color: tp.backgroundColor),
                         NumberPicker(
                           hoursController: hoursController,
                           minutesController: minutesController,
@@ -138,118 +137,6 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                 ],
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class NumberPicker extends StatelessWidget {
-  const NumberPicker({
-    super.key,
-    required this.hoursController,
-    required this.minutesController,
-    required this.width,
-  });
-
-  final FixedExtentScrollController hoursController;
-  final FixedExtentScrollController minutesController;
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SizedBox(
-          width: width / 3,
-          height: 150,
-          child: CupertinoPicker(
-            looping: true,
-            scrollController: hoursController,
-            itemExtent: 75.0,
-            magnification: 1,
-            useMagnifier: false,
-            selectionOverlay: Container(),
-            onSelectedItemChanged: (int index) {
-              print("Selected index: $index");
-            },
-            children: List<Widget>.generate(
-              24,
-              (index) => Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  index.toString().padLeft(2, '0'),
-                  style: TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 16.0),
-          child: Text(
-            ":",
-            style: TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
-          ),
-        ),
-        SizedBox(
-          width: width / 3,
-          height: 150,
-
-          child: CupertinoPicker(
-            looping: true,
-            scrollController: minutesController,
-            itemExtent: 75.0,
-            magnification: 1.0,
-            useMagnifier: false,
-            selectionOverlay: Container(),
-            onSelectedItemChanged: (int index) {
-              print("Selected index: $index");
-            },
-            children: List<Widget>.generate(
-              60,
-              (index) => Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  index.toString().padLeft(2, '0'),
-                  style: TextStyle(
-                    fontSize: 44.0,
-                    color: tp.primaryTextColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class TimeGradient extends StatelessWidget {
-  const TimeGradient({super.key, required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
-
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [color, tp.backgroundColor.withValues(alpha: 0), color],
           ),
         ),
       ),
