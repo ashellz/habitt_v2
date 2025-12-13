@@ -273,6 +273,29 @@ class _CustomPickerState extends State<CustomPicker>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant CustomPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // When the number of items changes (e.g., max minutes lowers), clamp the
+    // scroll position and snap to the nearest valid item so the UI reflects
+    // the new bounds without user interaction.
+    if (oldWidget.children.length != widget.children.length) {
+      final newMaxIndex =
+          widget.children.isNotEmpty ? widget.children.length - 1 : 0;
+      final clampedIndex = currentSnap.clamp(0, newMaxIndex);
+      currentScrollX = _positionForIndex(clampedIndex);
+      oldAnimScrollX = currentScrollX;
+      animDistance = 0;
+      currentSnap = clampedIndex;
+      _buildPositions();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _lookForSnappoint();
+      });
+    }
+  }
+
   void _initController() {
     controller =
         AnimationController(
