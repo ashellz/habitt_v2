@@ -193,6 +193,15 @@ class NumberPicker extends StatelessWidget {
             ),
           ],
           minutesPickerCustom(pickerHeight: height, pickerWidth: width),
+          if (maxHours == null || maxHours! < 1)
+            Text(
+              "minutes",
+              style: TextStyle(
+                shadows: textStyle?.shadows,
+                color: textStyle?.color ?? tp.primaryTextColor,
+                fontSize: 16,
+              ),
+            ),
         ],
       );
     }
