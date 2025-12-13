@@ -238,6 +238,9 @@ class $AssetsImagesIconsGen {
   AssetGenImage get macbook =>
       const AssetGenImage('assets/images/icons/macbook.png');
 
+  /// File path: assets/images/icons/moon.png
+  AssetGenImage get moon => const AssetGenImage('assets/images/icons/moon.png');
+
   /// File path: assets/images/icons/mosque.png
   AssetGenImage get mosque =>
       const AssetGenImage('assets/images/icons/mosque.png');
@@ -429,6 +432,7 @@ class $AssetsImagesIconsGen {
     juice2,
     laptop,
     macbook,
+    moon,
     mosque,
     note,
     notebook,
@@ -484,11 +488,17 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/clock.svg
   String get clock => 'assets/images/svg/clock.svg';
 
+  /// File path: assets/images/svg/dont-show.svg
+  String get dontShow => 'assets/images/svg/dont-show.svg';
+
   /// File path: assets/images/svg/habits.svg
   String get habits => 'assets/images/svg/habits.svg';
 
   /// File path: assets/images/svg/settings.svg
   String get settings => 'assets/images/svg/settings.svg';
+
+  /// File path: assets/images/svg/show.svg
+  String get show => 'assets/images/svg/show.svg';
 
   /// File path: assets/images/svg/skip.svg
   String get skip => 'assets/images/svg/skip.svg';
@@ -505,8 +515,10 @@ class $AssetsImagesSvgGen {
     calendar,
     check,
     clock,
+    dontShow,
     habits,
     settings,
+    show,
     skip,
     slider,
     stats,

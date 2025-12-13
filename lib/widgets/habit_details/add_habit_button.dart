@@ -62,6 +62,8 @@ class AddHabitButton extends StatelessWidget {
             onPressed: () {
               if (!canAddHabit()) return;
 
+              final tp = context.read<ThemeProvider>();
+
               habitProvider.addHabit(
                 Habit(
                   id: getUniqueId(),
@@ -84,10 +86,6 @@ class AddHabitButton extends StatelessWidget {
                   timeIntervalStart: stateProvider.timeIntervalStart,
                   timeIntervalEnd: stateProvider.timeIntervalEnd,
                   colorName: stateProvider.habitColorName,
-                  color: colorToHex(
-                    stateProvider.habitColor ??
-                        context.read<ThemeProvider>().primaryColor,
-                  ),
                 ),
               );
               Navigator.of(context).pop();

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/generated/assets.gen.dart';
+import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class StateProvider extends ChangeNotifier {
   SharedPreferences? _prefs;
@@ -129,6 +132,8 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Color? get habitColor => _habitColor;
+
   set habitColorName(String? value) {
     _habitColorName = value;
     notifyListeners();
@@ -170,7 +175,29 @@ class StateProvider extends ChangeNotifier {
 
   bool get isAdditional => _isAdditional;
 
-  Color? get habitColor => _habitColor;
+  Color? getHabitColor(ThemeProvider tp) {
+    if (_habitColorName != null) {
+      final spec = ColorService.habitColorSpecs[_habitColorName!];
+      if (spec != null) {
+        return tp.isDark ? spec.dark : spec.light;
+      }
+    }
+    return null;
+  }
+
+  Color? getHabitTextColor(ThemeProvider tp) {
+    if (_habitColorName != null) {
+      final spec = ColorService.habitColorSpecs[_habitColorName!];
+      if (spec != null) {
+        return tp.isDark ? spec.darkText : spec.lightText;
+      }
+    }
+    if (_habitColor != null) {
+      // provide minimal contrast by flipping toward darker tone for text
+      return tp.isDark ? _habitColor!.lighten(35) : _habitColor!.darken(35);
+    }
+    return null;
+  }
 
   String? get habitColorName => _habitColorName;
 }

@@ -201,8 +201,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   color:
-                                      sp.habitColor != null
-                                          ? sp.habitColor!.withOpacity(0.7)
+                                      sp.getHabitColor(tp) != null
+                                          ? sp
+                                              .getHabitColor(tp)!
+                                              .withOpacity(0.7)
                                           : tp.primaryColor
                                               .darken(30)
                                               .withOpacity(0.7),
@@ -216,8 +218,8 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                       height: double.infinity,
                                       decoration: BoxDecoration(
                                         color:
-                                            sp.habitColor != null
-                                                ? sp.habitColor!.lighten(30)
+                                            sp.getHabitColor(tp) != null
+                                                ? sp.getHabitTextColor(tp)
                                                 : tp.primaryColor.lighten(30),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
@@ -276,14 +278,9 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                                       habitName,
                                                       style: TextStyle(
                                                         color:
-                                                            sp.habitColor !=
-                                                                    null
-                                                                ? sp.habitColor!
-                                                                    .lighten(30)
-                                                                : tp.primaryColor
-                                                                    .lighten(
-                                                                      30,
-                                                                    ),
+                                                            sp.getHabitTextColor(
+                                                              tp,
+                                                            )!,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         letterSpacing: 1,
@@ -313,8 +310,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   color:
-                                      sp.habitColor != null
-                                          ? sp.habitColor!.withOpacity(0.7)
+                                      sp.getHabitColor(tp) != null
+                                          ? sp
+                                              .getHabitColor(tp)!
+                                              .withOpacity(0.7)
                                           : tp.primaryColor
                                               .darken(30)
                                               .withOpacity(0.7),
@@ -327,8 +326,10 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     height: double.infinity,
                                     decoration: BoxDecoration(
                                       color:
-                                          sp.habitColor != null
-                                              ? sp.habitColor!.lighten(30)
+                                          sp.getHabitColor(tp) != null
+                                              ? sp
+                                                  .getHabitColor(tp)!
+                                                  .lighten(30)
                                               : tp.primaryColor.lighten(30),
                                       borderRadius: BorderRadius.circular(4),
                                     ),

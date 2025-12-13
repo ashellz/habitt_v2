@@ -77,7 +77,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: sp.habitColor ?? tp.primaryColor,
+                        color: sp.getHabitColor(tp) ?? tp.primaryColor,
                         shape: BoxShape.circle,
                       ),
                     ),

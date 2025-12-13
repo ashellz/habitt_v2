@@ -72,7 +72,7 @@ class SelectHabitColorSheet extends StatelessWidget {
                                 border:
                                     (stateProvider.habitColorName ==
                                                 option.name ||
-                                            stateProvider.habitColor ==
+                                            stateProvider.getHabitColor ==
                                                 option.color)
                                         ? Border.all(
                                           color: option.color.darken(
