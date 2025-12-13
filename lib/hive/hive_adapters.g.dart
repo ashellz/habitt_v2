@@ -8,7 +8,7 @@ part of 'hive_adapters.dart';
 
 class HabitAdapter extends TypeAdapter<Habit> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   Habit read(BinaryReader reader) {
@@ -36,9 +36,8 @@ class HabitAdapter extends TypeAdapter<Habit> {
       timeIntervalEnabled: fields[17] == null ? false : fields[17] as bool,
       timeIntervalStart: fields[18] == null ? 420 : (fields[18] as num).toInt(),
       timeIntervalEnd: fields[19] == null ? 450 : (fields[19] as num).toInt(),
-      colorName: fields[21] as String?,
-      color: fields[20] as String?,
-    );
+      colorName: fields[22] as String?,
+    )..color = fields[20] as String?;
   }
 
   @override
@@ -85,7 +84,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..write(obj.timeIntervalEnd)
       ..writeByte(20)
       ..write(obj.color)
-      ..writeByte(21)
+      ..writeByte(22)
       ..write(obj.colorName);
   }
 
@@ -102,7 +101,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
 
 class DayAdapter extends TypeAdapter<Day> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   Day read(BinaryReader reader) {

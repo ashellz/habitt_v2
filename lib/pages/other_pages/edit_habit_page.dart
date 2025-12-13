@@ -86,7 +86,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final changedTimeIntervalEnd =
         stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
     final changedHabitColor =
-        stateProvider.habitColor !=
+        stateProvider.getHabitColor !=
             widget.habit.resolveColor(context.read<ThemeProvider>()) ||
         stateProvider.habitColorName != widget.habit.colorName;
 

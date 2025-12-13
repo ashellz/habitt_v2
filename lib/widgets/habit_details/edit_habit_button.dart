@@ -68,10 +68,10 @@ class EditHabitButton extends StatelessWidget {
               widget.habit.timeIntervalStart = stateProvider.timeIntervalStart;
               widget.habit.timeIntervalEnd = stateProvider.timeIntervalEnd;
 
+              final tp = context.read<ThemeProvider>();
               widget.habit.colorName = stateProvider.habitColorName;
               widget.habit.color = colorToHex(
-                stateProvider.habitColor ??
-                    context.watch<ThemeProvider>().primaryColor,
+                stateProvider.getHabitColor(tp) ?? tp.primaryColor,
               );
 
               habitProvider.updateHabit(widget.habit);

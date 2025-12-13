@@ -52,7 +52,6 @@ class Habit extends HiveObject {
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
     this.colorName,
-    this.color,
   });
 
   // convert to getter
@@ -100,7 +99,6 @@ class Habit extends HiveObject {
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
       colorName: colorName,
-      color: color,
     );
   }
 
@@ -126,7 +124,6 @@ class Habit extends HiveObject {
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
       colorName: colorName,
-      color: color,
     );
   }
 
