@@ -72,7 +72,7 @@ class NumberPicker extends StatelessWidget {
         height: pickerHeight ?? 150,
         containerWidth: containerWidth,
         containerHeight: containerHeight,
-        gapScaleFactor: 0.15,
+        gapScaleFactor: 0.05,
         initialIndex: safeInitial(initialIndex, itemCount - 1),
         onSnap: (idx) {
           if (onChanged != null) onChanged(idx);
@@ -367,14 +367,20 @@ class _CustomPickerState extends State<CustomPicker>
           currentScrollX +
           widget.containerWidth * i +
           widget.containerWidth * widget.gapScaleFactor * i;
+      final isNeighbor = (i - currentSnap).abs() == 1;
+      final opacity = isNeighbor ? 0.5 : 1.0;
+
       scrollableContainer.add(
         Positioned(
           left: leftPos,
           top: 0,
-          child: SizedBox(
-            height: widget.containerHeight,
-            width: widget.containerWidth,
-            child: widget.children[i],
+          child: Opacity(
+            opacity: opacity,
+            child: SizedBox(
+              height: widget.containerHeight,
+              width: widget.containerWidth,
+              child: widget.children[i],
+            ),
           ),
         ),
       );
@@ -449,32 +455,6 @@ class _CustomPickerState extends State<CustomPicker>
         },
         behavior: HitTestBehavior.translucent,
         child: Stack(children: scrollableContainer),
-      ),
-    );
-  }
-}
-
-class TimeGradient extends StatelessWidget {
-  const TimeGradient({super.key, required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
-
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [color, tp.backgroundColor.withValues(alpha: 0), color],
-          ),
-        ),
       ),
     );
   }

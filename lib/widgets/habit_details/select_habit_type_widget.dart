@@ -100,10 +100,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                                 "${localizations.selected}: ${type == HabitType.amount ? habitAmount : habitDuration}",
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color:
-                                      isSelected
-                                          ? Colors.white
-                                          : tp.primaryTextColor,
+                                  color: tp.primaryTextColor,
                                 ),
                               )
                               : const SizedBox.shrink(),
