@@ -69,6 +69,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
   void _recomputeShowButtons() {
     final stateProvider = context.read<StateProvider>();
+    final themeProvider = context.read<ThemeProvider>();
+
     final changedName = _nameController.text.trim() != widget.habit.name;
     final changedDesc = _descController.text.trim() != widget.habit.description;
     final changedCategory =
@@ -86,8 +88,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final changedTimeIntervalEnd =
         stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
     final changedHabitColor =
-        stateProvider.getHabitColor !=
-            widget.habit.resolveColor(context.read<ThemeProvider>()) ||
+        stateProvider.getHabitColor(themeProvider) !=
+            widget.habit.resolveColor(themeProvider) ||
         stateProvider.habitColorName != widget.habit.colorName;
 
     final newValue =
