@@ -199,7 +199,7 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
                     Center(
                       child: NumberPicker(
                         padZero: false,
-                        height: height / 2,
+                        height: height / 3,
                         textStyle: TextStyle(
                           shadows: [
                             Shadow(

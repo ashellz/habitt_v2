@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -170,6 +171,26 @@ class NumberPicker extends StatelessWidget {
         children: [
           if (maxHours != null && maxHours! > 0) ...[
             hoursPickerCustom(pickerHeight: height, pickerWidth: width),
+            Text(
+              "hours",
+              style: TextStyle(
+                color: textStyle?.color ?? tp.primaryTextColor,
+                fontSize: 16,
+                shadows: textStyle?.shadows,
+              ),
+            ),
+            Divider(
+              color: textStyle?.color ?? tp.primaryTextColor,
+              thickness: 3,
+            ),
+            Text(
+              "minutes",
+              style: TextStyle(
+                shadows: textStyle?.shadows,
+                color: textStyle?.color ?? tp.primaryTextColor,
+                fontSize: 16,
+              ),
+            ),
           ],
           minutesPickerCustom(pickerHeight: height, pickerWidth: width),
         ],
@@ -227,6 +248,10 @@ class _CustomPickerState extends State<CustomPicker>
   double currentScrollX = 0;
   double oldAnimScrollX = 0;
   double animDistance = 0;
+  double lastVelocityX = 0;
+  bool _isFling = false;
+  double _flingStart = 0;
+  double _flingEnd = 0;
   int currentSnap = 0;
   final List<Positioned> scrollableContainer = [];
 
@@ -249,17 +274,33 @@ class _CustomPickerState extends State<CustomPicker>
   }
 
   void _initController() {
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-      lowerBound: 0,
-      upperBound: 1,
-    )..addListener(() {
-      setState(() {
-        currentScrollX = oldAnimScrollX + controller.value * animDistance;
-        _buildPositions();
-      });
-    });
+    controller =
+        AnimationController(
+            vsync: this,
+            duration: const Duration(milliseconds: 200),
+            lowerBound: 0,
+            upperBound: 1,
+          )
+          ..addListener(() {
+            setState(() {
+              if (_isFling) {
+                // Decelerate during fling for visible slowdown
+                final t = Curves.decelerate.transform(controller.value);
+                currentScrollX = _flingStart + t * (_flingEnd - _flingStart);
+              } else {
+                // Ease out when snapping to center
+                final t = Curves.easeOutCubic.transform(controller.value);
+                currentScrollX = oldAnimScrollX + t * animDistance;
+              }
+              _buildPositions();
+            });
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed && _isFling) {
+              _isFling = false;
+              _lookForSnappoint();
+            }
+          });
   }
 
   void _jumpToInitial(int index) {
@@ -288,7 +329,6 @@ class _CustomPickerState extends State<CustomPicker>
           currentScrollX +
           widget.containerWidth * i +
           widget.containerWidth * widget.gapScaleFactor * i;
-      final mid = widget.width / 2 - widget.containerWidth / 2;
       scrollableContainer.add(
         Positioned(
           left: leftPos,
@@ -323,6 +363,17 @@ class _CustomPickerState extends State<CustomPicker>
     }
     animDistance = animVal;
     oldAnimScrollX = currentScrollX;
+    // Adjust animation duration based on distance and recent flick velocity
+    final baseMs = 200;
+    final extraMsFromDistance =
+        (animDistance.abs() * 1.2).clamp(0, 800).toInt();
+    final extraMsFromVelocity =
+        (lastVelocityX.abs() * 0.05).clamp(0, 600).toInt();
+    final totalMs = (baseMs + extraMsFromDistance + extraMsFromVelocity).clamp(
+      200,
+      1200,
+    );
+    controller.duration = Duration(milliseconds: totalMs);
     controller.reset();
     controller.forward();
     currentSnap = index;
@@ -337,11 +388,27 @@ class _CustomPickerState extends State<CustomPicker>
       child: GestureDetector(
         onPanUpdate: (DragUpdateDetails dragUpdateDetails) {
           setState(() {
-            currentScrollX -= dragUpdateDetails.delta.dx;
+            // Increase sensitivity slightly to feel more like Cupertino
+            currentScrollX -= dragUpdateDetails.delta.dx * 1.25;
             _buildPositions();
           });
         },
-        onPanEnd: (_) => _lookForSnappoint(),
+        onPanEnd: (details) {
+          lastVelocityX = details.velocity.pixelsPerSecond.dx;
+          // Project a bit farther and slow down via curve
+          final projected = (currentScrollX - lastVelocityX * 0.35).clamp(
+            0,
+            _scrollableLength - widget.containerWidth,
+          );
+          _flingStart = currentScrollX;
+          _flingEnd = projected.toDouble();
+          _isFling = true;
+          // Longer duration to make slowdown clearly visible
+          final flingMs = (lastVelocityX.abs() * 0.35).clamp(400, 1400).toInt();
+          controller.duration = Duration(milliseconds: flingMs);
+          controller.reset();
+          controller.forward();
+        },
         behavior: HitTestBehavior.translucent,
         child: Stack(children: scrollableContainer),
       ),
