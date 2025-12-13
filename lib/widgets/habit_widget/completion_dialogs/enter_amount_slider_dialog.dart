@@ -101,7 +101,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
               EnterAmountSlider(
                 totalSegments: widget.habit.amount,
                 filledSegments: stateProvider.habitAmount,
-                habitColor: widget.habit.getColor,
+                habitColor: widget.habit.resolveColor(tp),
                 onChanged: (newValue) {
                   stateProvider.habitAmount = newValue;
                   HapticFeedback.selectionClick();

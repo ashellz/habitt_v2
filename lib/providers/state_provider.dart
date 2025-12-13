@@ -36,6 +36,7 @@ class StateProvider extends ChangeNotifier {
   String _iconPath = "";
   bool _isAdditional = false;
   Color? _habitColor;
+  String? _habitColorName;
 
   String _alertText = "";
   bool _showAlert = false;
@@ -128,6 +129,11 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set habitColorName(String? value) {
+    _habitColorName = value;
+    notifyListeners();
+  }
+
   void reset() {
     _selectedHabitId = -1;
     _habitAmount = 0;
@@ -147,6 +153,7 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalEnd = 450;
 
     _habitColor = null;
+    _habitColorName = null;
 
     notifyListeners();
   }
@@ -164,4 +171,6 @@ class StateProvider extends ChangeNotifier {
   bool get isAdditional => _isAdditional;
 
   Color? get habitColor => _habitColor;
+
+  String? get habitColorName => _habitColorName;
 }

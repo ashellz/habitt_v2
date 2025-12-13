@@ -36,6 +36,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       timeIntervalEnabled: fields[17] == null ? false : fields[17] as bool,
       timeIntervalStart: fields[18] == null ? 420 : (fields[18] as num).toInt(),
       timeIntervalEnd: fields[19] == null ? 450 : (fields[19] as num).toInt(),
+      colorName: fields[21] as String?,
       color: fields[20] as String?,
     );
   }
@@ -43,7 +44,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(20)
+      ..writeByte(21)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -83,7 +84,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(19)
       ..write(obj.timeIntervalEnd)
       ..writeByte(20)
-      ..write(obj.color);
+      ..write(obj.color)
+      ..writeByte(21)
+      ..write(obj.colorName);
   }
 
   @override

@@ -114,7 +114,7 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
       case Colorfulness.standard:
         return tp.successColor.darken(20).withOpacity(0.7);
       case Colorfulness.colorful:
-        return widget.habit.getColor?.darken(20).withOpacity(0.7) ??
+        return widget.habit.resolveColor(tp)?.darken(20).withOpacity(0.7) ??
             tp.successColor;
     }
   }

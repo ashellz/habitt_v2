@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -27,6 +28,7 @@ class Habit extends HiveObject {
   bool timeIntervalEnabled;
   int timeIntervalStart; // In minutes
   int timeIntervalEnd; // In minutes
+  String? colorName; // Maps to theme-aware palette
   String? color;
 
   Habit({
@@ -49,18 +51,31 @@ class Habit extends HiveObject {
     this.timeIntervalEnabled = false,
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
+    this.colorName,
     this.color,
   });
 
   // convert to getter
-  Color? get getColor {
+  Color? resolveColor(ThemeProvider tp) {
+    if (colorName != null) {
+      final spec = ColorService.habitColorSpecs[colorName!];
+      if (spec != null) {
+        return tp.isDark ? spec.dark : spec.light;
+      }
+    }
     if (color == null) return null;
     return hexToColor(color!);
   }
 
-  // setter for color
-  set setColor(Color newColor) {
-    color = colorToHex(newColor);
+  Color? resolveTextColor(ThemeProvider tp) {
+    if (colorName != null) {
+      final spec = ColorService.habitColorSpecs[colorName!];
+      if (spec != null) {
+        return tp.isDark ? spec.darkText : spec.lightText;
+      }
+    }
+    if (color == null) return null;
+    return hexToColor(color!);
   }
 
   Habit copy() {
@@ -84,6 +99,7 @@ class Habit extends HiveObject {
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
+      colorName: colorName,
       color: color,
     );
   }
@@ -109,6 +125,7 @@ class Habit extends HiveObject {
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
+      colorName: colorName,
       color: color,
     );
   }
@@ -131,6 +148,7 @@ class Habit extends HiveObject {
     timeIntervalEnabled = habit.timeIntervalEnabled;
     timeIntervalStart = habit.timeIntervalStart;
     timeIntervalEnd = habit.timeIntervalEnd;
+    colorName = habit.colorName;
     color = habit.color;
   }
 
@@ -176,25 +194,18 @@ class Habit extends HiveObject {
 
   /// Get the habit name color based on theme mode
   Color getNameColor(ThemeProvider tp) {
-    if (tp.isDark) {
-      return getColor != null
-          ? getColor!.lighten(30)
-          : tp.primaryColor.lighten(30);
-    } else {
-      return getColor != null
-          ? getColor!.darken(40)
-          : tp.primaryColor.darken(40);
-    }
+    return resolveTextColor(tp) ?? tp.primaryTextColor;
   }
 
   /// Get the habit container color with opacity based on theme mode
   Color getContainerColor(ThemeProvider tp, {bool isCurrentHabit = true}) {
     final opacity = isCurrentHabit ? 0.7 : 0.5;
+    final habitColor = resolveColor(tp);
     if (tp.isDark) {
-      return getColor?.withOpacity(opacity) ??
+      return habitColor?.withOpacity(opacity) ??
           tp.primaryColor.darken(30).withOpacity(opacity);
     } else {
-      return getColor?.withOpacity(opacity) ??
+      return habitColor?.withOpacity(opacity) ??
           tp.primaryColor.lighten(30).withOpacity(opacity);
     }
   }
@@ -240,7 +251,7 @@ class Habit extends HiveObject {
       case Colorfulness.standard:
         return tp.successColor;
       case Colorfulness.colorful:
-        return getColor ?? tp.successColor;
+        return resolveColor(tp) ?? tp.successColor;
     }
   }
 }

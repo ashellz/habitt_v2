@@ -73,6 +73,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         amountCompleted: 0,
                         durationCompleted: 0,
                         completed: false,
+                        skipped: false,
                       ),
                       CategoriesList(
                         useHabitCategory: true,

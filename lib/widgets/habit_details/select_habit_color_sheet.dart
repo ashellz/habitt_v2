@@ -12,49 +12,10 @@ class SelectHabitColorSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
+    final colorOptions = tp.habitColorOptions;
 
     final mq = MediaQuery.of(context);
     final maxHeight = mq.size.height * 0.9; // allow up to 90% of screen
-
-    // bunch of different colors to choose frm (shades of green, blue, etc.)
-    // make on spot with hex or rgba
-    final List<Color> colors = [
-      Colors.green.shade300,
-      Colors.green.shade400,
-      Colors.green.shade500,
-      Colors.green.shade600,
-      Colors.green.shade700,
-      Colors.green.shade800,
-      Colors.green.shade900,
-      Colors.blue.shade300,
-      Colors.blue.shade400,
-      Colors.blue.shade500,
-      Colors.blue.shade600,
-      Colors.blue.shade700,
-      Colors.blue.shade800,
-      Colors.blue.shade900,
-      Colors.purple.shade300,
-      Colors.purple.shade400,
-      Colors.purple.shade500,
-      Colors.purple.shade600,
-      Colors.purple.shade700,
-      Colors.purple.shade800,
-      Colors.purple.shade900,
-      Colors.red.shade300,
-      Colors.red.shade400,
-      Colors.red.shade500,
-      Colors.red.shade600,
-      Colors.red.shade700,
-      Colors.red.shade800,
-      Colors.red.shade900,
-      Colors.yellow.shade300,
-      Colors.yellow.shade400,
-      Colors.yellow.shade500,
-      Colors.yellow.shade600,
-      Colors.yellow.shade700,
-      Colors.yellow.shade800,
-      Colors.yellow.shade900,
-    ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -92,30 +53,61 @@ class SelectHabitColorSheet extends StatelessWidget {
                       spacing: 16,
                       runSpacing: 16,
                       children: [
-                        for (Color vividColor in colors)
+                        for (final option in colorOptions)
                           GestureDetector(
                             onTap: () {
-                              stateProvider.habitColor = vividColor;
+                              stateProvider.habitColor = option.color;
+                              stateProvider.habitColorName = option.name;
                               Navigator.of(context).pop();
                             },
                             child: AnimatedContainer(
                               duration: Duration(milliseconds: 150),
                               curve: Curves.easeOut,
-                              width: 60,
-                              height: 60,
-                              padding: const EdgeInsets.all(6),
+                              width: 72,
+                              height: 72,
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: vividColor,
+                                borderRadius: BorderRadius.circular(16),
+                                color: option.color,
                                 border:
-                                    stateProvider.habitColor == vividColor
+                                    (stateProvider.habitColorName ==
+                                                option.name ||
+                                            stateProvider.habitColor ==
+                                                option.color)
                                         ? Border.all(
-                                          color: vividColor.darken(
-                                            tp.isDark ? 30 : 15,
+                                          color: option.color.darken(
+                                            tp.isDark ? 20 : 10,
                                           ),
                                           width: 3,
                                         )
                                         : null,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: option.color.withOpacity(0.28),
+                                    blurRadius: 10,
+                                    spreadRadius: 0,
+                                    offset: Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    size: 16,
+                                    color: option.textColor,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    option.name,
+                                    style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      color: option.textColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

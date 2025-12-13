@@ -31,7 +31,7 @@ class HabitCompletionLineIndicator extends StatelessWidget {
         case Colorfulness.standard:
           return tp.successColor;
         case Colorfulness.colorful:
-          return habit.getColor ?? tp.successColor;
+          return habit.resolveColor(tp) ?? tp.successColor;
       }
     }
 
