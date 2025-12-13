@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
@@ -225,5 +226,21 @@ class Habit extends HiveObject {
   /// Get the start hour (0-24)
   double getStartHour() {
     return timeIntervalStart / 60;
+  }
+
+  /// Get the completion color based on colorfulness preference
+  Color getCompletionColor(ThemeProvider tp, Colorfulness colorfulness) {
+    if (skipped) {
+      return tp.borderColor.darken(tp.isDark ? 0 : 45);
+    }
+
+    switch (colorfulness) {
+      case Colorfulness.tinted:
+        return tp.primaryColor;
+      case Colorfulness.standard:
+        return tp.successColor;
+      case Colorfulness.colorful:
+        return getColor ?? tp.successColor;
+    }
   }
 }

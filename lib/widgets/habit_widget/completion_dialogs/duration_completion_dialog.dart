@@ -3,9 +3,11 @@ import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/blur_circle_button.dart';
+import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -106,13 +108,21 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final sp = context.watch<StateProvider>();
+    final colorfulness = context.read<PreferencesProvider>().colorfulness;
     final screenWidth = MediaQuery.of(context).size.width;
     final width = screenWidth / 2.25;
 
     int minutes = widget.habit.duration % 60;
     int hours = widget.habit.duration ~/ 60;
 
+    double getProgressValue() {
+      if (widget.habit.duration == 0) return 0.0; // Avoid divide by zero
+      final progress = sp.habitDuration.inMinutes / widget.habit.duration;
+      return progress.clamp(0.0, 1.0);
+    }
+
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor:
           Colors.transparent, // Important for the blur to show through
       insetPadding: EdgeInsets.zero,
@@ -127,39 +137,81 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 width: width,
-                child: Column(
+                child: Stack(
                   children: [
-                    NumberPicker(
-                      looping: false,
-                      maxHours: hours,
-                      maxMinutes:
-                          sp.habitDuration.inHours < hours ? 59 : minutes,
-                      hoursController: hoursController,
-                      minutesController: minutesController,
-                      width: width,
-                      onChangedHours: (int selectedHours) {
-                        final currentDuration = sp.habitDuration;
-                        sp.habitDuration = Duration(
-                          hours: selectedHours,
-                          minutes: currentDuration.inMinutes % 60,
-                        );
-                        // putting minutes to max if hours are maxed out
-                        if (selectedHours == hours) {
-                          if (sp.habitDuration.inMinutes % 60 > minutes) {
+                    Positioned.fill(
+                      child: TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                        tween: Tween<double>(begin: 0, end: getProgressValue()),
+                        builder: (context, value, _) {
+                          final endColor = widget.habit.getCompletionColor(
+                            tp,
+                            colorfulness,
+                          );
+
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Stack(
+                              children: [
+                                // Vertical fill from bottom up
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: FractionallySizedBox(
+                                    heightFactor: value,
+                                    widthFactor: 1,
+                                    child: Container(color: endColor),
+                                  ),
+                                ),
+
+                                GlassBlurContainer(
+                                  forceBlur: true,
+                                  color: Colors.transparent,
+                                  borderColor: Colors.transparent,
+                                  hasGradient: false,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    Column(
+                      children: [
+                        NumberPicker(
+                          looping: false,
+                          maxHours: hours,
+                          maxMinutes:
+                              sp.habitDuration.inHours < hours ? 59 : minutes,
+                          hoursController: hoursController,
+                          minutesController: minutesController,
+                          width: width,
+                          onChangedHours: (int selectedHours) {
+                            final currentDuration = sp.habitDuration;
                             sp.habitDuration = Duration(
                               hours: selectedHours,
-                              minutes: minutes,
+                              minutes: currentDuration.inMinutes % 60,
                             );
-                          }
-                        }
-                      },
-                      onChangedMinutes: (int selectedMinutes) {
-                        final currentDuration = sp.habitDuration;
-                        sp.habitDuration = Duration(
-                          hours: currentDuration.inHours,
-                          minutes: selectedMinutes,
-                        );
-                      },
+                            // putting minutes to max if hours are maxed out
+                            if (selectedHours == hours) {
+                              if (sp.habitDuration.inMinutes % 60 > minutes) {
+                                sp.habitDuration = Duration(
+                                  hours: selectedHours,
+                                  minutes: minutes,
+                                );
+                              }
+                            }
+                          },
+                          onChangedMinutes: (int selectedMinutes) {
+                            final currentDuration = sp.habitDuration;
+                            sp.habitDuration = Duration(
+                              hours: currentDuration.inHours,
+                              minutes: selectedMinutes,
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
