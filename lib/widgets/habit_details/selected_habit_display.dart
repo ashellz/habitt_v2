@@ -13,12 +13,14 @@ class SelectedHabitDisplay extends StatelessWidget {
     required this.amountCompleted,
     required this.durationCompleted,
     required this.completed,
+    required this.skipped,
   });
 
   final int streak;
   final int amountCompleted;
   final int durationCompleted;
   final bool completed;
+  final bool skipped;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class SelectedHabitDisplay extends StatelessWidget {
                       amountCompleted: amountCompleted,
                       durationCompleted: durationCompleted,
                       completed: completed,
+                      skipped: skipped,
                     ),
                     editable: true,
                   ),

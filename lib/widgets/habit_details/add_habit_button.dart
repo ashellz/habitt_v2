@@ -83,6 +83,7 @@ class AddHabitButton extends StatelessWidget {
                   timeIntervalEnabled: stateProvider.timeIntervalEnabled,
                   timeIntervalStart: stateProvider.timeIntervalStart,
                   timeIntervalEnd: stateProvider.timeIntervalEnd,
+                  colorName: stateProvider.habitColorName,
                   color: colorToHex(
                     stateProvider.habitColor ??
                         context.read<ThemeProvider>().primaryColor,

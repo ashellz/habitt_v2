@@ -43,6 +43,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
   void setInitialValues() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final stateProvider = context.read<StateProvider>();
+      final tp = context.read<ThemeProvider>();
       stateProvider.selectedHabitId = widget.habit.id;
       stateProvider.habitCategoryId = widget.habit.categoryId;
       stateProvider.nameController.text = widget.habit.name;
@@ -55,8 +56,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.timeIntervalEnabled = widget.habit.timeIntervalEnabled;
       stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
       stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
-      stateProvider.habitColor =
-          widget.habit.color == null ? null : widget.habit.getColor;
+      stateProvider.habitColorName = widget.habit.colorName;
+      stateProvider.habitColor = widget.habit.resolveColor(tp);
     });
 
     initialDuration = Duration(minutes: widget.habit.duration);
@@ -86,7 +87,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
         stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
     final changedHabitColor =
         stateProvider.habitColor !=
-        (widget.habit.color == null ? null : widget.habit.getColor);
+            widget.habit.resolveColor(context.read<ThemeProvider>()) ||
+        stateProvider.habitColorName != widget.habit.colorName;
 
     final newValue =
         changedName ||
@@ -223,6 +225,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           amountCompleted: widget.habit.amountCompleted,
                           durationCompleted: widget.habit.durationCompleted,
                           streak: widget.habit.streak,
+                          skipped: widget.habit.skipped,
                         ),
                         CategoriesList(
                           useHabitCategory: true,
