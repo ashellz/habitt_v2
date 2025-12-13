@@ -110,11 +110,11 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
     final prefs = context.read<PreferencesProvider>();
     switch (prefs.colorfulness) {
       case Colorfulness.tinted:
-        return tp.primaryColor.lighten(20).withOpacity(0.7);
+        return tp.primaryColor.darken(20).withOpacity(0.7);
       case Colorfulness.standard:
-        return tp.successColor.lighten(20).withOpacity(0.7);
+        return tp.successColor.darken(20).withOpacity(0.7);
       case Colorfulness.colorful:
-        return widget.habit.getColor?.lighten(20).withOpacity(0.7) ??
+        return widget.habit.getColor?.darken(20).withOpacity(0.7) ??
             tp.successColor;
     }
   }
