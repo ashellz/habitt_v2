@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/services/color_service.dart';
 
 class AmountDisplay extends StatelessWidget {
-  const AmountDisplay({super.key, required this.habit, required this.tp});
+  const AmountDisplay({
+    super.key,
+    required this.habit,
+    required this.tp,
+    required this.skipped,
+  });
 
   final Habit habit;
   final ThemeProvider tp;
+  final bool skipped;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,7 @@ class AmountDisplay extends StatelessWidget {
           blurRadius: 5,
         ),
       ],
-      color: Colors.white,
+      color: skipped ? ColorService.textMuted : Colors.white,
       fontWeight: FontWeight.bold,
     );
 
@@ -28,7 +35,11 @@ class AmountDisplay extends StatelessWidget {
         Text(habit.amountCompleted.toString(), style: textStyle),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Divider(height: 2, thickness: 2, color: Color(0xFFF8F9FA)),
+          child: Divider(
+            height: 2,
+            thickness: 2,
+            color: skipped ? ColorService.textMuted : Colors.white,
+          ),
         ),
         Text(habit.amount.toString(), style: textStyle),
       ],
