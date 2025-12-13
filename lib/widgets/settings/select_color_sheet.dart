@@ -57,22 +57,49 @@ class SelectColorSheet extends StatelessWidget {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),
                       curve: Curves.easeOut,
-                      width: 60,
-                      height: 60,
-                      padding: const EdgeInsets.all(6),
+                      width: 72,
+                      height: 72,
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(16),
                         color: entry.value.primary,
                         border:
                             tp.accentName == entry.key
                                 ? Border.all(
-                                  color:
-                                      tp.isDark
-                                          ? entry.value.primary.lighten(20)
-                                          : entry.value.primary.darken(20),
+                                  color: entry.value.primary.darken(
+                                    tp.isDark ? 20 : 10,
+                                  ),
                                   width: 3,
                                 )
                                 : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: entry.value.primary.withOpacity(0.28),
+                            blurRadius: 10,
+                            spreadRadius: 0,
+                            offset: Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 16,
+                            color: entry.value.primary.lighten(35),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            entry.key,
+                            style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              color: entry.value.primary.lighten(35),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

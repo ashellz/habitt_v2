@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
@@ -52,7 +53,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
           child: AnimatedRotation(
             duration: const Duration(milliseconds: 250),
             turns: sheetExpanded ? 0.25 : 0.75,
-            child: Icon(Icons.chevron_right, color: tp.primaryTextColor),
+            child: Icon(Icons.chevron_right, color: ColorService.bgSurface),
           ),
         ),
         body: GradientBackground(
@@ -79,7 +80,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
                               ? "assets/images/svg/show.svg"
                               : "assets/images/svg/dont-show.svg",
                           colorFilter: ColorFilter.mode(
-                            tp.primaryTextColor,
+                            ColorService.bgSurface,
                             BlendMode.srcIn,
                           ),
                         ),
