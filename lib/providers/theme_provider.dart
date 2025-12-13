@@ -138,6 +138,19 @@ class ThemeProvider extends ChangeNotifier {
   Color get modalOverlay =>
       isDark ? ColorService.dmModalOverlay : ColorService.modalOverlay;
 
+  // Habit color presets resolved for current theme
+  List<HabitColorChoice> get habitColorOptions {
+    final dark = isDark;
+    return ColorService.habitColorSpecs.entries.map((entry) {
+      final spec = entry.value;
+      return HabitColorChoice(
+        name: entry.key,
+        color: dark ? spec.dark : spec.light,
+        textColor: dark ? spec.darkText : spec.lightText,
+      );
+    }).toList();
+  }
+
   // Helpers
   Brightness get brightness => isDark ? Brightness.dark : Brightness.light;
 }
