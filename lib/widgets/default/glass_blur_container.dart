@@ -18,6 +18,7 @@ class GlassBlurContainer extends StatelessWidget {
   final bool fakeBlur;
   final Border? border;
   final bool forceBlur;
+  final bool hasGradient;
 
   const GlassBlurContainer({
     super.key,
@@ -42,6 +43,7 @@ class GlassBlurContainer extends StatelessWidget {
     this.fakeBlur = false,
     this.border,
     this.forceBlur = false,
+    this.hasGradient = true,
   });
 
   @override
@@ -88,7 +90,7 @@ class GlassBlurContainer extends StatelessWidget {
               width: width,
               padding: padding,
               decoration: BoxDecoration(
-                gradient: !isGlassFeel ? null : gradient,
+                gradient: !isGlassFeel || !hasGradient ? null : gradient,
                 border: border ?? Border.all(color: borderColor),
                 borderRadius: BorderRadius.circular(borderRadius),
               ),

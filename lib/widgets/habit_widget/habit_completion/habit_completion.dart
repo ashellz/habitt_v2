@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/calendar_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider_dialog.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/duration_display.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class CompletionDisplay extends StatefulWidget {
   const CompletionDisplay({
@@ -64,30 +63,12 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                                     widget.tp.successColor,
    */
 
-  Color getCompletionColor() {
-    final habit = widget.habit;
-    final tp = widget.tp;
-    final colorfulness = context.watch<PreferencesProvider>().colorfulness;
-
-    if (habit.skipped) {
-      return tp.borderColor.darken(tp.isDark ? 0 : 45);
-    }
-
-    switch (colorfulness) {
-      case Colorfulness.tinted:
-        return tp.primaryColor;
-      case Colorfulness.standard:
-        return tp.successColor;
-      case Colorfulness.colorful:
-        return habit.getColor ?? tp.successColor;
-    }
-  }
-
   double _scale = 1.0;
 
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.read<HabitProvider>();
+    final tp = context.read<ThemeProvider>();
     final focusedDay = context.watch<CalendarProvider>().focusedDay;
     final stateProvider = context.read<StateProvider>();
 
@@ -183,7 +164,10 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                     builder: (context, value, _) {
                       return LinearProgressIndicator(
                         value: value,
-                        color: getCompletionColor(),
+                        color: widget.habit.getCompletionColor(
+                          tp,
+                          context.read<PreferencesProvider>().colorfulness,
+                        ),
                         backgroundColor: widget.tp.mutedBgColor,
                       );
                     },
