@@ -3,7 +3,6 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/custom_shader_mask.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/all_habits_on_time_line_stack.dart';
-import 'package:habitt/widgets/habit_details/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
