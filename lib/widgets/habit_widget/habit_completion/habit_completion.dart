@@ -1,7 +1,3 @@
-import 'dart:ui';
-
-import 'package:cupertino_native/style/sf_symbol.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
@@ -10,11 +6,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
-import 'package:habitt/widgets/default/blur_circle_button.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
-import 'package:habitt/widgets/default/glass_feel_container.dart';
-import 'package:habitt/widgets/default/number_picker.dart';
-import 'package:habitt/widgets/dialogs/select_time_dialog.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider_dialog.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
@@ -134,13 +126,10 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                       widget.isToday ? DateTime.now() : focusedDay,
                     );
                   } else {
-                    showDialog(
-                      context: context,
-                      builder:
-                          (context) => DurationCompletionDialog(
-                            habit: widget.habit,
-                            day: widget.isToday ? DateTime.now() : focusedDay,
-                          ),
+                    showDurationCompletionDialog(
+                      context,
+                      widget.habit,
+                      widget.isToday ? DateTime.now() : focusedDay,
                     );
                   }
                 }
@@ -242,149 +231,5 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     } else {
       return centerIcon();
     }
-  }
-}
-
-class DurationCompletionDialog extends StatefulWidget {
-  const DurationCompletionDialog({
-    super.key,
-    required this.habit,
-    required this.day,
-  });
-
-  final Habit habit;
-  final DateTime day;
-
-  @override
-  State<DurationCompletionDialog> createState() =>
-      _DurationCompletionDialogState();
-}
-
-class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
-  FixedExtentScrollController hoursController = FixedExtentScrollController();
-  FixedExtentScrollController minutesController = FixedExtentScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Sets the initial amount or duration
-      final stateProvider = context.read<StateProvider>();
-      stateProvider.habitDuration = Duration(
-        hours: widget.habit.durationCompleted ~/ 60,
-        minutes: widget.habit.durationCompleted % 60,
-      );
-    });
-
-    setState(() {
-      hoursController = FixedExtentScrollController(
-        initialItem: widget.habit.durationCompleted ~/ 60,
-      );
-      minutesController = FixedExtentScrollController(
-        initialItem: widget.habit.durationCompleted % 60,
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
-    final sp = context.watch<StateProvider>();
-    final width = MediaQuery.of(context).size.width - 200;
-
-    int minutes = widget.habit.duration % 60;
-    int hours = widget.habit.duration ~/ 60;
-
-    return Dialog(
-      backgroundColor:
-          Colors.transparent, // Important for the blur to show through
-      insetPadding: EdgeInsets.zero,
-      child: IntrinsicWidth(
-        child: IntrinsicHeight(
-          child: Row(
-            children: [
-              SizedBox(width: 8 + 50),
-              GlassFeelContainer(
-                width: width,
-                child: Column(
-                  children: [
-                    NumberPicker(
-                      looping: false,
-                      maxHours: hours,
-                      maxMinutes:
-                          sp.habitDuration.inHours < hours ? 59 : minutes,
-                      hoursController: hoursController,
-                      minutesController: minutesController,
-                      width: width,
-                      onChangedHours: (int selectedHours) {
-                        final currentDuration = sp.habitDuration;
-                        sp.habitDuration = Duration(
-                          hours: selectedHours,
-                          minutes: currentDuration.inMinutes % 60,
-                        );
-                        // putting minutes to max if hours are maxed out
-                        if (selectedHours == hours) {
-                          if (sp.habitDuration.inMinutes % 60 > minutes) {
-                            sp.habitDuration = Duration(
-                              hours: selectedHours,
-                              minutes: minutes,
-                            );
-                          }
-                        }
-                      },
-                      onChangedMinutes: (int selectedMinutes) {
-                        final currentDuration = sp.habitDuration;
-                        sp.habitDuration = Duration(
-                          hours: currentDuration.inHours,
-                          minutes: selectedMinutes,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 8),
-              Column(
-                children: [
-                  CircleButton(
-                    cnIcon: CNSymbol('checkmark', size: 20),
-                    tp: tp,
-                    icon: Icon(Icons.check, color: Colors.white),
-                    color: tp.primaryColor,
-                    onPressed: () {
-                      // If nothing changed then don't update unnecessarily
-                      if (widget.habit.durationCompleted ==
-                          sp.habitDuration.inMinutes) {
-                        Navigator.pop(context);
-                        return;
-                      }
-
-                      final habitProvider = context.read<HabitProvider>();
-                      habitProvider.updateHabitDurationCompleted(
-                        widget.habit.id,
-                        sp.habitDuration.inMinutes,
-                        context,
-                        day: widget.day,
-                      );
-
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(height: 4),
-                  CircleButton(
-                    cnIcon: CNSymbol('xmark', size: 20),
-                    tp: tp,
-                    icon: Icon(Icons.close, color: tp.primaryTextColor),
-                    color: tp.surfaceColor,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
