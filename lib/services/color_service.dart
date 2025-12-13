@@ -23,6 +23,32 @@ class AccentPalette {
   });
 }
 
+class HabitColorSpec {
+  final Color light;
+  final Color lightText;
+  final Color dark;
+  final Color darkText;
+
+  const HabitColorSpec({
+    required this.light,
+    required this.lightText,
+    required this.dark,
+    required this.darkText,
+  });
+}
+
+class HabitColorChoice {
+  final String name;
+  final Color color;
+  final Color textColor;
+
+  const HabitColorChoice({
+    required this.name,
+    required this.color,
+    required this.textColor,
+  });
+}
+
 class ColorService {
   // Light mode (default)
   static const Color primary = Color(0xFF0B6FF0);
@@ -309,6 +335,82 @@ class ColorService {
       focus: Color(0xFF3D1F4D),
       shadowTint: Color.fromRGBO(186, 104, 200, 0.12),
       infoBg: Color(0xFF1E1627),
+    ),
+  };
+
+  // Habit color presets with light/dark + text contrast variants
+  static const Map<String, HabitColorSpec> habitColorSpecs = {
+    'green': HabitColorSpec(
+      light: Color(0xFF4CAF50),
+      lightText: Color(0xFF1B5E20),
+      dark: Color(0xFF66BB6A),
+      darkText: Color(0xFFE8F5E9),
+    ),
+    'cyan': HabitColorSpec(
+      light: Color(0xFF00ACC1),
+      lightText: Color(0xFF004D57),
+      dark: Color(0xFF26C6DA),
+      darkText: Color(0xFFE0F7FA),
+    ),
+    'blue': HabitColorSpec(
+      light: Color(0xFF1976D2),
+      lightText: Color(0xFF0B2E73),
+      dark: Color(0xFF64B5F6),
+      darkText: Color(0xFFE3F2FD),
+    ),
+    'lightBlue': HabitColorSpec(
+      light: Color(0xFF29B6F6),
+      lightText: Color(0xFF0A4A6F),
+      dark: Color(0xFF81D4FA),
+      darkText: Color(0xFFEBF7FF),
+    ),
+    'yellow': HabitColorSpec(
+      light: Color(0xFFFFCA28),
+      lightText: Color(0xFF6B4C00),
+      dark: Color(0xFFFFD54F),
+      darkText: Color(0xFF2C1F00),
+    ),
+    'pink': HabitColorSpec(
+      light: Color(0xFFE91E63),
+      lightText: Color(0xFF6A0D2A),
+      dark: Color(0xFFFF80AB),
+      darkText: Color(0xFFFFC1D8),
+    ),
+    'red': HabitColorSpec(
+      light: Color(0xFFE53935),
+      lightText: Color(0xFF7F0B0B),
+      dark: Color(0xFFFF6B6B),
+      darkText: Color(0xFFFFE0E0),
+    ),
+    'cherry': HabitColorSpec(
+      light: Color(0xFFD20A2E),
+      lightText: Color(0xFF5C0717),
+      dark: Color(0xFFFF6783),
+      darkText: Color(0xFFFFD9E1),
+    ),
+    'brown': HabitColorSpec(
+      light: Color(0xFF8D6E63),
+      lightText: Color(0xFF3E2723),
+      dark: Color(0xFFBCAAA4),
+      darkText: Color(0xFF1F120F),
+    ),
+    'teal': HabitColorSpec(
+      light: Color(0xFF00897B),
+      lightText: Color(0xFF004139),
+      dark: Color(0xFF4DB6AC),
+      darkText: Color(0xFFE0F2F1),
+    ),
+    'orange': HabitColorSpec(
+      light: Color(0xFFFB8C00),
+      lightText: Color(0xFF5C2C00),
+      dark: Color(0xFFFFB74D),
+      darkText: Color(0xFF2D1900),
+    ),
+    'purple': HabitColorSpec(
+      light: Color(0xFF7E57C2),
+      lightText: Color(0xFF2F1B69),
+      dark: Color(0xFFB39DDB),
+      darkText: Color(0xFF1A0E3D),
     ),
   };
 }
