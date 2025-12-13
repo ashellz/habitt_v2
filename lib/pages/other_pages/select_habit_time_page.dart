@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -44,9 +43,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
               context: context,
               isScrollControlled: true,
               backgroundColor: tp.backgroundColor,
-              builder:
-                  (context) =>
-                      HabitTimeBottomOptions(tp: tp, sp: stateProvider),
+              builder: (context) => HabitTimeBottomOptions(tp: tp),
             );
             if (mounted) {
               setState(() => sheetExpanded = false);

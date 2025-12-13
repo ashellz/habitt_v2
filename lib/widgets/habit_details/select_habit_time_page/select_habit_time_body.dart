@@ -325,12 +325,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     width: 4,
                                     height: double.infinity,
                                     decoration: BoxDecoration(
-                                      color:
-                                          sp.getHabitColor(tp) != null
-                                              ? sp
-                                                  .getHabitColor(tp)!
-                                                  .lighten(30)
-                                              : tp.primaryColor.lighten(30),
+                                      color: sp.getHabitTextColor(tp),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),

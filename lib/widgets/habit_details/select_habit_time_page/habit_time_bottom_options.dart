@@ -3,15 +3,17 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_time_interval.dart';
+import 'package:provider/provider.dart';
 
 class HabitTimeBottomOptions extends StatelessWidget {
-  const HabitTimeBottomOptions({super.key, required this.tp, required this.sp});
+  const HabitTimeBottomOptions({super.key, required this.tp});
 
   final ThemeProvider tp;
-  final StateProvider sp;
 
   @override
   Widget build(BuildContext context) {
+    final sp = context.watch<StateProvider>();
+
     return AnimatedSize(
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
