@@ -253,6 +253,7 @@ class _CustomPickerState extends State<CustomPicker>
   double _flingStart = 0;
   double _flingEnd = 0;
   int currentSnap = 0;
+  bool _didInitialSnap = false;
   final List<Positioned> scrollableContainer = [];
 
   double get _scrollableLength =>
@@ -265,6 +266,11 @@ class _CustomPickerState extends State<CustomPicker>
     super.initState();
     _initController();
     _jumpToInitial(widget.initialIndex);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _didInitialSnap) return;
+      _didInitialSnap = true;
+      _snapToIndex(widget.initialIndex);
+    });
   }
 
   @override
@@ -294,6 +300,15 @@ class _CustomPickerState extends State<CustomPicker>
         _lookForSnappoint();
       });
     }
+  }
+
+  void _snapToIndex(int index) {
+    currentScrollX = _positionForIndex(index);
+    oldAnimScrollX = currentScrollX;
+    animDistance = 0;
+    currentSnap = index;
+    _buildPositions();
+    _lookForSnappoint();
   }
 
   void _initController() {
