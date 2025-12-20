@@ -215,16 +215,15 @@ class NumberPicker extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (maxHours != null && maxHours! > 0) ...[
-          hoursPickerCupertino(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              ":",
-              style: TextStyle(fontSize: 36.0, color: tp.primaryTextColor),
-            ),
+        hoursPickerCupertino(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            ":",
+            style: TextStyle(fontSize: 36.0, color: tp.primaryTextColor),
           ),
-        ],
+        ),
+
         minutesPickerCupertino(),
       ],
     );
