@@ -104,7 +104,7 @@ class NumberPicker extends StatelessWidget {
     Widget hoursPickerCupertino() {
       return SizedBox(
         width: width / 3,
-        height: 150,
+        height: height,
         child: CupertinoPicker(
           looping: looping,
           scrollController: hoursController,
@@ -119,11 +119,14 @@ class NumberPicker extends StatelessWidget {
             maxHours != null ? maxHours! + 1 : 24,
             (index) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                padZero ? index.toString().padLeft(2, '0') : index.toString(),
-                style:
-                    textStyle ??
-                    TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  padZero ? index.toString().padLeft(2, '0') : index.toString(),
+                  style:
+                      textStyle ??
+                      TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
+                ),
               ),
             ),
           ),
@@ -134,7 +137,7 @@ class NumberPicker extends StatelessWidget {
     Widget minutesPickerCupertino() {
       return SizedBox(
         width: width / 3,
-        height: 150,
+        height: height,
         child: CupertinoPicker(
           looping: looping,
           scrollController: minutesController,
@@ -149,15 +152,18 @@ class NumberPicker extends StatelessWidget {
             maxMinutes != null ? maxMinutes! + 1 : 60,
             (index) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                padZero ? index.toString().padLeft(2, '0') : index.toString(),
-                style:
-                    textStyle ??
-                    TextStyle(
-                      fontSize: 44.0,
-                      color: tp.primaryTextColor,
-                      fontWeight: FontWeight.w400,
-                    ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  padZero ? index.toString().padLeft(2, '0') : index.toString(),
+                  style:
+                      textStyle ??
+                      TextStyle(
+                        fontSize: 44.0,
+                        color: tp.primaryTextColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                ),
               ),
             ),
           ),
@@ -170,7 +176,7 @@ class NumberPicker extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (maxHours != null && maxHours! > 0) ...[
-            hoursPickerCustom(pickerHeight: height, pickerWidth: width),
+            hoursPickerCupertino(),
             Text(
               "hours",
               style: TextStyle(
@@ -192,7 +198,7 @@ class NumberPicker extends StatelessWidget {
               ),
             ),
           ],
-          minutesPickerCustom(pickerHeight: height, pickerWidth: width),
+          minutesPickerCupertino(),
           if (maxHours == null || maxHours! < 1)
             Text(
               "minutes",
