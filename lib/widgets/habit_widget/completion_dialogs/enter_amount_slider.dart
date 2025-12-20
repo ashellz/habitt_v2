@@ -156,43 +156,41 @@ class _EnterAmountSliderState extends State<EnterAmountSlider> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
 
-        return Positioned.fill(
-          child: TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.easeInOut,
-            tween: Tween<double>(
-              begin: 0,
-              end: currentFilled / widget.totalSegments,
-            ),
-            builder: (context, value, _) {
-              final endColor = getColor(true);
-
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Stack(
-                  children: [
-                    // Vertical fill from bottom up
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: FractionallySizedBox(
-                        heightFactor: value,
-                        widthFactor: 1,
-                        child: Container(color: endColor),
-                      ),
-                    ),
-
-                    GlassBlurContainer(
-                      height: height,
-                      forceBlur: true,
-                      color: Colors.transparent,
-                      borderColor: Colors.transparent,
-                      hasGradient: false,
-                    ),
-                  ],
-                ),
-              );
-            },
+        return TweenAnimationBuilder<double>(
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
+          tween: Tween<double>(
+            begin: 0,
+            end: currentFilled / widget.totalSegments,
           ),
+          builder: (context, value, _) {
+            final endColor = getColor(true);
+
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Stack(
+                children: [
+                  // Vertical fill from bottom up
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: FractionallySizedBox(
+                      heightFactor: value,
+                      widthFactor: 1,
+                      child: Container(color: endColor),
+                    ),
+                  ),
+
+                  GlassBlurContainer(
+                    height: height,
+                    forceBlur: true,
+                    color: Colors.transparent,
+                    borderColor: Colors.transparent,
+                    hasGradient: false,
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
