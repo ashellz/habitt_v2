@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cupertino_native/components/tab_bar.dart';
 import 'package:cupertino_native/style/sf_symbol.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
@@ -21,12 +24,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   late double _dragOffset;
   bool _isDragging = false;
+  bool _supportsLiquidGlass = false;
 
   late final List<NavItemData> _navItems;
 
   @override
   void initState() {
     super.initState();
+    _checkIOSVersion();
+
     _navItems = [
       NavItemData(
         id: 'habits',
@@ -59,6 +65,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
     }
 
     _dragOffset = 0;
+  }
+
+  Future<void> _checkIOSVersion() async {
+    if (Platform.isIOS) {
+      debugPrint(
+        "Checking iOS version for Liquid Glass support... Is iOS: true",
+      );
+      final deviceInfo = DeviceInfoPlugin();
+      final iosInfo = await deviceInfo.iosInfo;
+      final version = iosInfo.systemVersion;
+      final majorVersion = int.tryParse(version.split('.').first) ?? 0;
+      debugPrint("iOS Major Version: $majorVersion");
+      setState(() {
+        _supportsLiquidGlass = majorVersion >= 26;
+      });
+    }
   }
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
@@ -148,10 +170,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final glassFeel = context.watch<PreferencesProvider>().glassFeel;
 
     final platform = Theme.of(context).platform;
-    final isIOS = platform == TargetPlatform.iOS;
+
     final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
 
-    if (glassFeel && isIOS) {
+    if (glassFeel && _supportsLiquidGlass) {
       return Expanded(
         child: CNTabBar(
           tint: tp.primaryColor,
