@@ -70,6 +70,10 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
     final categoryProvider = context.watch<CategoryProvider>();
 
     final habits = _getHabits();
+    debugPrint("Habits count: ${habits.length}");
+    final additionalTasksCount =
+        habits.where((habit) => habit.additional).length;
+    debugPrint("Additional tasks count: $additionalTasksCount");
     final tp = context.watch<ThemeProvider>();
 
     if (habits.isEmpty) {
@@ -160,14 +164,20 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                   stackOffsetFactor: widget.stackOffsetFactor,
                 ),
               ),
-        AdditionalTasks(
-          isToday: widget.daySelected == null,
-          habits: habits,
-          scrollController: widget.scrollController,
-          bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
-          effectZoneHeight: widget.effectZoneHeight,
-          minScale: widget.minScale,
-          stackOffsetFactor: widget.stackOffsetFactor,
+        Padding(
+          padding: EdgeInsets.only(
+            top: additionalTasksCount == habits.length ? 12 : 0,
+          ),
+          child: AdditionalTasks(
+            isToday: widget.daySelected == null,
+            habits: habits,
+            hasHabits: additionalTasksCount != habits.length,
+            scrollController: widget.scrollController,
+            bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
+            effectZoneHeight: widget.effectZoneHeight,
+            minScale: widget.minScale,
+            stackOffsetFactor: widget.stackOffsetFactor,
+          ),
         ),
       ],
     );
