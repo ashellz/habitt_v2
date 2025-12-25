@@ -35,12 +35,14 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
     this.ignoreId,
     this.primary,
     this.dimOthers = false,
+    this.maxWidth,
   });
 
   final double hourHeight;
   final int? ignoreId;
   final PrimaryHabitConfig? primary;
   final bool dimOthers;
+  final double? maxWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +142,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
         clusters.isEmpty
             ? 0
             : clusters.map((c) => c.length).reduce((a, b) => a > b ? a : b);
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = maxWidth ?? MediaQuery.of(context).size.width;
     final extraWidth =
         maxClusterSize > 2 ? (maxClusterSize - 2) * (screenWidth * 0.5) : 0.0;
     final contentWidth = screenWidth + extraWidth;
@@ -159,8 +161,8 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.fastOutSlowIn,
                   top: cluster[0]['startY'] as double,
-                  left: 60,
-                  right: 20,
+                  left: 0,
+                  right: 16,
                   height: cluster[0]['height'] as double,
                   child: _clusterChild(cluster[0], tp, dimOthers),
                 )
@@ -210,8 +212,8 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.fastOutSlowIn,
                       top: groupTop,
-                      left: 60,
-                      right: 20,
+                      left: 0,
+                      right: 16,
                       height: groupHeight,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,8 +229,8 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.fastOutSlowIn,
                   top: hourHeight / 2,
-                  left: 60,
-                  right: 20,
+                  left: 0,
+                  right: 36,
                   height: habit.timeIntervalEnd / 60 * hourHeight,
                   child: Container(
                     padding: EdgeInsets.all(4),
@@ -258,8 +260,8 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.fastOutSlowIn,
                 top: hourHeight / 2,
-                left: 60,
-                right: 20,
+                left: 0,
+                right: 36,
                 height: (primary!.endHour ?? 0) * hourHeight,
                 child: Container(
                   padding: const EdgeInsets.all(4),
