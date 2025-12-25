@@ -6,6 +6,8 @@ PODS:
     - Flutter
   - cupertino_native (0.0.1):
     - Flutter
+  - device_info_plus (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_native_splash (2.4.3):
     - Flutter
@@ -21,6 +23,7 @@ DEPENDENCIES:
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - awesome_notifications_core (from `.symlinks/plugins/awesome_notifications_core/ios`)
   - cupertino_native (from `.symlinks/plugins/cupertino_native/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -37,6 +40,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/awesome_notifications_core/ios"
   cupertino_native:
     :path: ".symlinks/plugins/cupertino_native/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
   flutter_native_splash:
@@ -50,6 +55,7 @@ SPEC CHECKSUMS:
   awesome_notifications: 0f432b28098d193920b11a44cfa9d2d9313a3888
   awesome_notifications_core: 429c28df8746780a474de177e5acde33af87da63
   cupertino_native: 1db0611c94f9a9ea28433ed16a344dcb996370b5
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   IosAwnCore: 653786a911089012092ce831f2945cd339855a89
