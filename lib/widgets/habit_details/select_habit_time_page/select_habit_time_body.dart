@@ -176,162 +176,37 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                               ),
                             ),
 
-                          AnimatedOpacity(
-                            opacity: sp.showAllHabits ? 0.5 : 0,
-                            duration: const Duration(milliseconds: 150),
-                            child: AllHabitsOnTimelineStack(
-                              ignoreId: sp.selectedHabitId,
-                              hourHeight: hourHeight,
-                            ),
+                          AllHabitsOnTimelineStack(
+                            ignoreId: sp.selectedHabitId,
+                            hourHeight: hourHeight,
+                            dimOthers: sp.showAllHabits,
+                            primary:
+                                (startHour != null && sp.timeIntervalEnabled)
+                                    ? PrimaryHabitConfig(
+                                      enabled: true,
+                                      timeType: timeType,
+                                      startHour: startHour!,
+                                      durationHours:
+                                          timeType == TimeType.regular
+                                              ? duration()
+                                              : null,
+                                      endHour:
+                                          timeType != TimeType.regular
+                                              ? sp.timeIntervalEnd / 60
+                                              : null,
+                                      iconPath: sp.iconPath,
+                                      name: habitName,
+                                      containerColor: (sp.getHabitColor(tp) !=
+                                                  null
+                                              ? sp.getHabitColor(tp)!
+                                              : tp.primaryColor.darken(30))
+                                          .withOpacity(0.7),
+                                      lineColor:
+                                          sp.getHabitTextColor(tp) ??
+                                          tp.primaryColor.lighten(30),
+                                    )
+                                    : null,
                           ),
-
-                          if (startHour != null && duration() != null)
-                            AnimatedPositioned(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.fastOutSlowIn,
-                              top: startHour * hourHeight + hourHeight / 2,
-                              left: 60,
-                              right: 20,
-                              height:
-                                  timeType != TimeType.regular
-                                      ? (24 * hourHeight) -
-                                          (startHour * hourHeight)
-                                      : duration()! * hourHeight,
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color:
-                                      sp.getHabitColor(tp) != null
-                                          ? sp
-                                              .getHabitColor(tp)!
-                                              .withOpacity(0.7)
-                                          : tp.primaryColor
-                                              .darken(30)
-                                              .withOpacity(0.7),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 4,
-                                      height: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            sp.getHabitColor(tp) != null
-                                                ? sp.getHabitTextColor(tp)
-                                                : tp.primaryColor.lighten(30),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                    SizedBox(width: 5),
-                                    AnimatedSwitcher(
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                      switchInCurve: Curves.easeOut,
-                                      switchOutCurve: Curves.easeIn,
-                                      transitionBuilder: (child, animation) {
-                                        final offsetAnimation = Tween<Offset>(
-                                          begin: const Offset(0.0, 0.2),
-                                          end: Offset.zero,
-                                        ).animate(animation);
-
-                                        return SlideTransition(
-                                          position: offsetAnimation,
-                                          child: FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                      child: KeyedSubtree(
-                                        key: ValueKey<bool>(
-                                          !(widget.timeIntervalEnd -
-                                                      widget
-                                                          .timeIntervalStart <=
-                                                  5 &&
-                                              timeType == TimeType.regular),
-                                        ),
-                                        child:
-                                            !(widget.timeIntervalEnd -
-                                                            widget
-                                                                .timeIntervalStart <=
-                                                        5 &&
-                                                    timeType ==
-                                                        TimeType.regular)
-                                                ? Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  spacing: 4,
-                                                  children: [
-                                                    Image.asset(
-                                                      sp.iconPath,
-                                                      width: 24,
-                                                      height: 24,
-                                                    ),
-                                                    Text(
-                                                      habitName,
-                                                      style: TextStyle(
-                                                        color:
-                                                            sp.getHabitTextColor(
-                                                              tp,
-                                                            )!,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        letterSpacing: 1,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                                : Container(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                          if (timeType == TimeType.overday &&
-                              sp.timeIntervalEnabled)
-                            AnimatedPositioned(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.fastOutSlowIn,
-                              top: hourHeight / 2,
-                              left: 60,
-                              right: 20,
-                              height: widget.timeIntervalEnd / 60 * hourHeight,
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color:
-                                      sp.getHabitColor(tp) != null
-                                          ? sp
-                                              .getHabitColor(tp)!
-                                              .withOpacity(0.7)
-                                          : tp.primaryColor
-                                              .darken(30)
-                                              .withOpacity(0.7),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    width: 4,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: sp.getHabitTextColor(tp),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
                         ],
                       ),
                     ),
