@@ -39,11 +39,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
   Duration initialDuration = Duration.zero;
   int initialAmount = 1;
   bool showButtons = false;
+  bool initialized = false;
 
-  void setInitialValues() {
+  Future<void> setInitialValues() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final stateProvider = context.read<StateProvider>();
       final tp = context.read<ThemeProvider>();
+
       stateProvider.selectedHabitId = widget.habit.id;
       stateProvider.habitCategoryId = widget.habit.categoryId;
       stateProvider.nameController.text = widget.habit.name;
@@ -58,13 +60,19 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
       stateProvider.habitColorName = widget.habit.colorName;
       stateProvider.habitColor = widget.habit.resolveColor(tp);
+
+      initialDuration = Duration(minutes: widget.habit.duration);
+      initialAmount = widget.habit.amount;
+
+      _nameController.text = widget.habit.name;
+      _descController.text = widget.habit.description;
+
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        setState(() {
+          initialized = true;
+        });
+      });
     });
-
-    initialDuration = Duration(minutes: widget.habit.duration);
-    initialAmount = widget.habit.amount;
-
-    _nameController.text = widget.habit.name;
-    _descController.text = widget.habit.description;
   }
 
   void _recomputeShowButtons() {
@@ -117,8 +125,11 @@ class _EditHabitPageState extends State<EditHabitPage> {
     super.initState();
     _nameController = TextEditingController();
     _descController = TextEditingController();
-    setInitialValues();
+    initListeners();
+  }
 
+  void initListeners() async {
+    await setInitialValues();
     _nameController.addListener(_recomputeShowButtons);
     _descController.addListener(_recomputeShowButtons);
   }
@@ -132,8 +143,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
     super.dispose();
   }
 
-  bool getShowButtonsValue(TextEditingController descController) {
-    return showButtons;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (initialized) _recomputeShowButtons();
   }
 
   @override
@@ -145,11 +158,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
 
     final stateProvider = context.watch<StateProvider>();
-
-    // Call recompute if provider-driven fields changed
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _recomputeShowButtons();
-    });
 
     return PopScope(
       canPop: !showButtons,
