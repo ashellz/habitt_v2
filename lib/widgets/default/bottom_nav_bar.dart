@@ -22,7 +22,9 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
-  late double _dragOffset;
+  int? _hoveredIndex;
+  double? _fingerPosition;
+  double? _initialTouchX;
   bool _isDragging = false;
   bool _supportsLiquidGlass = false;
 
@@ -63,8 +65,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
     if (_selectedIndex == -1) {
       _selectedIndex = 0;
     }
-
-    _dragOffset = 0;
   }
 
   Future<void> _checkIOSVersion() async {
@@ -87,13 +87,17 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final tp = context.watch<ThemeProvider>();
 
     final item = _navItems[index];
-    final isSelected = _selectedIndex == index;
+    // Use hovered index during dragging, otherwise use selected index
+    final isHighlighted =
+        _isDragging && _hoveredIndex != null
+            ? _hoveredIndex == index
+            : _selectedIndex == index;
 
     Color getItemColor() {
       if (!isGlassFeel) {
-        if (isSelected) return tp.backgroundColor;
+        if (isHighlighted) return tp.backgroundColor;
       }
-      if (isSelected) {
+      if (isHighlighted) {
         return tp.primaryColor;
       }
       return tp.primaryTextColor.withOpacity(0.9);
@@ -104,7 +108,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         if (_selectedIndex != index) {
           setState(() {
             _selectedIndex = index;
-            _dragOffset = 0;
+            _fingerPosition = null;
             _isDragging = false;
           });
         }
@@ -197,48 +201,113 @@ class _BottomNavBarState extends State<BottomNavBar> {
       );
     }
 
-    // Calculate pill position based on selected index and drag offset
+    // Calculate pill position based on finger position or selected index
     final itemSpacing = 70.0;
     final basePillPosition =
         _selectedIndex * itemSpacing + (_selectedIndex == 0 ? 2 : 0);
-    final pillPosition = basePillPosition + _dragOffset;
+
+    // Use finger position if dragging, otherwise use selected index position
+    final pillPosition = _fingerPosition ?? basePillPosition;
 
     return GestureDetector(
-      onHorizontalDragUpdate: (details) {
+      onPanDown: (details) {
+        // Store initial touch position to detect if it's a tap or drag
         setState(() {
-          _isDragging = true;
-          _dragOffset += details.delta.dx;
-
-          // Clamp drag offset symmetrically: allow dragging from first to last item
-          final maxOffset = (_navItems.length - 1) * itemSpacing;
-          final minClamp = -basePillPosition;
-          final maxClamp = maxOffset - basePillPosition;
-          _dragOffset = _dragOffset.clamp(minClamp, maxClamp);
+          _initialTouchX = details.localPosition.dx;
+          _isDragging = false;
+          _fingerPosition = null;
         });
       },
-      onHorizontalDragEnd: (details) {
-        // Find the closest item index
-        final currentPosition = basePillPosition + _dragOffset;
-        int closestIndex = 0;
-        double closestDistance = double.infinity;
+      onPanUpdate: (details) {
+        // Get the local X position of the drag
+        final localPosition = details.localPosition.dx;
 
-        for (int i = 0; i < _navItems.length; i++) {
-          final itemPosition = i * itemSpacing + (i == 0 ? 2 : 0);
-          final distance = (currentPosition - itemPosition).abs();
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closestIndex = i;
-          }
+        // Check if user has moved significantly (more than 10 pixels)
+        if (_initialTouchX != null &&
+            (localPosition - _initialTouchX!).abs() > 10) {
+          // This is a drag, not a tap
+          final navBarStartX = 12.0;
+          final adjustedPosition =
+              localPosition -
+              navBarStartX -
+              46; // 46 is half the pill width (92/2)
+
+          setState(() {
+            _isDragging = true;
+            // Clamp to valid range
+            final maxOffset = (_navItems.length - 1) * itemSpacing;
+            _fingerPosition = adjustedPosition.clamp(0.0, maxOffset);
+
+            // Calculate which item is being hovered
+            int hoveredIndex = 0;
+            double closestDistance = double.infinity;
+            for (int i = 0; i < _navItems.length; i++) {
+              final itemPosition = i * itemSpacing + (i == 0 ? 2 : 0);
+              final distance = (_fingerPosition! - itemPosition).abs();
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                hoveredIndex = i;
+              }
+            }
+            _hoveredIndex = hoveredIndex;
+          });
         }
+      },
+      onPanEnd: (details) {
+        if (_isDragging) {
+          // This was a drag - find the closest item index
+          final currentPosition = _fingerPosition ?? basePillPosition;
+          int closestIndex = 0;
+          double closestDistance = double.infinity;
 
-        // Animate to closest index
-        setState(() {
-          _selectedIndex = closestIndex;
-          _dragOffset = 0;
-          _isDragging = false;
-        });
+          for (int i = 0; i < _navItems.length; i++) {
+            final itemPosition = i * itemSpacing + (i == 0 ? 2 : 0);
+            final distance = (currentPosition - itemPosition).abs();
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = i;
+            }
+          }
 
-        widget.onItemTapped?.call(closestIndex);
+          // Animate to closest index
+          setState(() {
+            _selectedIndex = closestIndex;
+            _fingerPosition = null;
+            _isDragging = false;
+            _initialTouchX = null;
+            _hoveredIndex = null;
+          });
+
+          widget.onItemTapped?.call(closestIndex);
+        } else if (_initialTouchX != null) {
+          // This was a tap - find which item was tapped
+          final navBarStartX = 12.0;
+          final tapPosition = _initialTouchX! - navBarStartX;
+
+          int tappedIndex = 0;
+          double closestDistance = double.infinity;
+
+          for (int i = 0; i < _navItems.length; i++) {
+            final itemPosition =
+                i * itemSpacing + (i == 0 ? 2 : 0) + 46; // Add half pill width
+            final distance = (tapPosition - itemPosition).abs();
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              tappedIndex = i;
+            }
+          }
+
+          // Animate to tapped index
+          setState(() {
+            _selectedIndex = tappedIndex;
+            _fingerPosition = null;
+            _isDragging = false;
+            _initialTouchX = null;
+            _hoveredIndex = null;
+          });
+
+          widget.onItemTapped?.call(tappedIndex);
+        }
       },
       child: GlassBlurContainer(
         padding: const EdgeInsets.all(2),

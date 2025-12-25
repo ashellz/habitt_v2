@@ -68,6 +68,7 @@ class ColorService {
   static const Color bgSurface = Color(0xFFFFFFFF);
   static const Color bgElevated = Color(0xFFF2F5FF);
   static const Color bgMuted = Color.fromARGB(255, 152, 162, 189);
+  static const Color nestedSurface = Color.fromARGB(255, 209, 212, 221);
 
   static const Color border = Color(0xFFE6E9F2);
   static const Color focus = Color(0xFFC7E0FF);
@@ -100,6 +101,7 @@ class ColorService {
   static const Color dmBgSurface = Color(0xFF0F1318); // cards/panels
   static const Color dmBgElevated = Color(0xFF141821); // elevated surfaces
   static const Color dmBgMuted = Color.fromARGB(255, 77, 90, 109);
+  static const Color dmNestedSurface = Color.fromARGB(255, 36, 42, 57);
 
   static const Color dmBorder = Color(0xFF242A33);
   static const Color dmFocus = Color(0xFF2B6FFF);

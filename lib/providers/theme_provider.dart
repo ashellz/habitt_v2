@@ -86,6 +86,8 @@ class ThemeProvider extends ChangeNotifier {
       (isDark ? ColorService.dmBgElevated : ColorService.bgElevated);
   Color get mutedBgColor =>
       isDark ? ColorService.dmBgMuted : ColorService.bgMuted;
+  Color get nestedSurfaceColor =>
+      isDark ? ColorService.dmNestedSurface : ColorService.nestedSurface;
 
   // Borders & focus
   Color get borderColor => isDark ? ColorService.dmBorder : ColorService.border;
