@@ -130,88 +130,97 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
       child: SizedBox(
         height: widget.listViewHeight,
         child: ListView(
+          controller: _scrollController,
           scrollDirection: Axis.vertical,
           children: [
-            CustomShaderMask(
-              child: SizedBox(
-                height: widget.listViewHeight,
-                child: ListView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    SizedBox(
-                      height: 24 * hourHeight + hourHeight, // full day
-                      child: Stack(
-                        children: [
-                          // Background hours
-                          for (int i = 0; i < 25; i++)
-                            AnimatedPositioned(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.fastOutSlowIn,
-                              top: i * hourHeight + hourHeight / 2,
-                              left: 0,
-                              right: 0,
+            SizedBox(
+              height: 24 * hourHeight + hourHeight, // full day
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Column(
+                      children: [
+                        for (int i = 0; i < 25; i++) ...[
+                          Transform.translate(
+                            offset: const Offset(0, -2),
+                            child: SizedBox(
                               height: hourHeight,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Transform.translate(
-                                    offset: Offset(0, -10),
-                                    child: Text(
-                                      "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
-                                      style: TextStyle(
-                                        color: tp.mutedTextColor,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Divider(
-                                      thickness: 1,
-                                      height: 0,
-                                      color: tp.mutedTextColor.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ],
+                              child: Center(
+                                child: Text(
+                                  "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
+                                  style: TextStyle(color: tp.mutedTextColor),
+                                ),
                               ),
                             ),
-
-                          AllHabitsOnTimelineStack(
-                            ignoreId: sp.selectedHabitId,
-                            hourHeight: hourHeight,
-                            dimOthers: sp.showAllHabits,
-                            primary:
-                                (startHour != null && sp.timeIntervalEnabled)
-                                    ? PrimaryHabitConfig(
-                                      enabled: true,
-                                      timeType: timeType,
-                                      startHour: startHour!,
-                                      durationHours:
-                                          timeType == TimeType.regular
-                                              ? duration()
-                                              : null,
-                                      endHour:
-                                          timeType != TimeType.regular
-                                              ? sp.timeIntervalEnd / 60
-                                              : null,
-                                      iconPath: sp.iconPath,
-                                      name: habitName,
-                                      containerColor: (sp.getHabitColor(tp) !=
-                                                  null
-                                              ? sp.getHabitColor(tp)!
-                                              : tp.primaryColor.darken(30))
-                                          .withOpacity(0.7),
-                                      lineColor:
-                                          sp.getHabitTextColor(tp) ??
-                                          tp.primaryColor.lighten(30),
-                                    )
-                                    : null,
                           ),
                         ],
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        // Background hours
+                        for (int i = 0; i < 25; i++)
+                          AnimatedPositioned(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.fastOutSlowIn,
+                            top: i * hourHeight + hourHeight / 2,
+                            left: 0,
+                            right: 0,
+                            height: hourHeight,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 1,
+                                    height: 0,
+                                    color: tp.mutedTextColor.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        AllHabitsOnTimelineStack(
+                          ignoreId: sp.selectedHabitId,
+                          hourHeight: hourHeight,
+                          dimOthers: sp.showAllHabits,
+                          primary:
+                              (startHour != null && sp.timeIntervalEnabled)
+                                  ? PrimaryHabitConfig(
+                                    enabled: true,
+                                    timeType: timeType,
+                                    startHour: startHour!,
+                                    durationHours:
+                                        timeType == TimeType.regular
+                                            ? duration()
+                                            : null,
+                                    endHour:
+                                        timeType != TimeType.regular
+                                            ? sp.timeIntervalEnd / 60
+                                            : null,
+                                    iconPath: sp.iconPath,
+                                    name: habitName,
+                                    containerColor: (sp.getHabitColor(tp) !=
+                                                null
+                                            ? sp.getHabitColor(tp)!
+                                            : tp.primaryColor.darken(30))
+                                        .withOpacity(0.7),
+                                    lineColor:
+                                        sp.getHabitTextColor(tp) ??
+                                        tp.primaryColor.lighten(30),
+                                  )
+                                  : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

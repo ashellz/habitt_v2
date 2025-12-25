@@ -57,14 +57,14 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
           ),
         ),
         body: GradientBackground(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NavBackButton(tp: tp),
@@ -87,7 +87,10 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
                       ),
                     ],
                   ),
-                  Text(
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
                     "SELECT HABIT TIME:",
                     style: TextStyle(
                       letterSpacing: 2,
@@ -97,14 +100,17 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
                       color: tp.primaryColor,
                     ),
                   ),
-                  SelectHabitTimeBody(
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: SelectHabitTimeBody(
                     listViewHeight: listViewHeight,
                     timeIntervalStart: timeIntervalStart,
                     timeIntervalEnd: timeIntervalEnd,
                     timeIntervalEnabled: timeIntervalEnabled,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

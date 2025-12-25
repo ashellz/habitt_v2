@@ -97,151 +97,192 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
 
     // Group overlapping intervals into clusters
     final List<List<Map<String, dynamic>>> clusters = [];
+
+    /// [
+    ///   [
+    ///     {
+    ///        "interval1": value,
+    ///        "interval1": value2
+    ///     },
+    ///     {"interval2": value},
+    ///   ],
+    ///   [
+    ///     {"interval1": value},
+    ///     {"interval2": value},
+    ///   ],
+    /// ]
+    ///
+
     double? currentClusterEnd;
     for (final iv in intervals) {
       final startY = iv['startY'] as double;
       final endY = iv['endY'] as double;
+
+      // Checking every interval against the current cluster end to see if it overlaps
+      // If startY (current habit start time) is over currentClusterEnd (last habit end time)
+      // then a new cluster needs to be created
+      // otherwise, it belongs to the current cluster because the end time of last habit is in the way
+      // of the current habit start time
       if (clusters.isEmpty ||
-          (currentClusterEnd != null && startY >= currentClusterEnd!)) {
+          (currentClusterEnd != null && startY >= currentClusterEnd)) {
+        // New cluster gets created for non-overlapping interval
         clusters.add([iv]);
         currentClusterEnd = endY;
       } else {
+        // Overlapping interval goes into the last cluster
         clusters.last.add(iv);
         if (endY > currentClusterEnd!) currentClusterEnd = endY;
       }
     }
 
-    return Stack(
-      children: [
-        // Render clusters: overlapping habits side-by-side with 4px spacing
-        for (final cluster in clusters)
-          if (cluster.length == 1)
-            // Non-overlapping: render as before
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.fastOutSlowIn,
-              top: cluster[0]['startY'] as double,
-              left: 60,
-              right: 20,
-              height: cluster[0]['height'] as double,
-              child: _clusterChild(cluster[0], tp, dimOthers),
-            )
-          else
-            // Overlapping: render row container with equal-width columns
-            Builder(
-              builder: (context) {
-                final groupTop = (cluster
-                    .map((e) => e['startY'] as double)
-                    .reduce((a, b) => a < b ? a : b));
-                final groupEnd = (cluster
-                    .map((e) => e['endY'] as double)
-                    .reduce((a, b) => a > b ? a : b));
-                final groupHeight = groupEnd - groupTop;
+    // Determine dynamic width for horizontal scrolling when many columns
+    final maxClusterSize =
+        clusters.isEmpty
+            ? 0
+            : clusters.map((c) => c.length).reduce((a, b) => a > b ? a : b);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final extraWidth =
+        maxClusterSize > 2 ? (maxClusterSize - 2) * (screenWidth * 0.5) : 0.0;
+    final contentWidth = screenWidth + extraWidth;
 
-                // Build children with 4px spacing
-                final List<Widget> rowChildren = [];
-                for (int i = 0; i < cluster.length; i++) {
-                  final iv = cluster[i];
-                  final startY = iv['startY'] as double;
-                  final height = iv['height'] as double;
-                  final relativeTop = startY - groupTop;
-
-                  if (i > 0) rowChildren.add(const SizedBox(width: 4));
-
-                  rowChildren.add(
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.fastOutSlowIn,
-                            top: relativeTop,
-                            left: 0,
-                            right: 0,
-                            height: height,
-                            child: _clusterChild(iv, tp, dimOthers),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-
-                return AnimatedPositioned(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        width: contentWidth,
+        child: Stack(
+          children: [
+            // Render clusters: overlapping habits side-by-side with 4px spacing
+            for (final cluster in clusters)
+              if (cluster.length == 1)
+                // Non-overlapping: render as before
+                AnimatedPositioned(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.fastOutSlowIn,
-                  top: groupTop,
+                  top: cluster[0]['startY'] as double,
                   left: 60,
                   right: 20,
-                  height: groupHeight,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: rowChildren,
-                  ),
-                );
-              },
-            ),
+                  height: cluster[0]['height'] as double,
+                  child: _clusterChild(cluster[0], tp, dimOthers),
+                )
+              else
+                // Overlapping: render row container with equal-width columns
+                Builder(
+                  builder: (context) {
+                    // Calculating group height
+                    final groupTop = (cluster
+                        .map((e) => e['startY'] as double)
+                        .reduce((a, b) => a < b ? a : b));
+                    final groupEnd = (cluster
+                        .map((e) => e['endY'] as double)
+                        .reduce((a, b) => a > b ? a : b));
+                    final groupHeight = groupEnd - groupTop;
 
-        for (var habit in habits)
-          if (habit.getTimeType() == TimeType.overday)
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.fastOutSlowIn,
-              top: hourHeight / 2,
-              left: 60,
-              right: 20,
-              height: habit.timeIntervalEnd / 60 * hourHeight,
-              child: Container(
-                padding: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: habit.getContainerColor(tp),
-                  borderRadius: BorderRadius.circular(8),
+                    // Build children with 4px spacing
+                    final List<Widget> rowChildren = [];
+                    for (int i = 0; i < cluster.length; i++) {
+                      final iv = cluster[i];
+                      final startY = iv['startY'] as double;
+                      final height = iv['height'] as double;
+                      final relativeTop = startY - groupTop;
+
+                      if (i > 0) rowChildren.add(const SizedBox(width: 4));
+
+                      rowChildren.add(
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              AnimatedPositioned(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.fastOutSlowIn,
+                                top: relativeTop,
+                                left: 0,
+                                right: 0,
+                                height: height,
+                                child: _clusterChild(iv, tp, dimOthers),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    return AnimatedPositioned(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn,
+                      top: groupTop,
+                      left: 60,
+                      right: 20,
+                      height: groupHeight,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: rowChildren,
+                      ),
+                    );
+                  },
                 ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
+
+            for (var habit in habits)
+              if (habit.getTimeType() == TimeType.overday)
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.fastOutSlowIn,
+                  top: hourHeight / 2,
+                  left: 60,
+                  right: 20,
+                  height: habit.timeIntervalEnd / 60 * hourHeight,
                   child: Container(
-                    width: 4,
-                    height: double.infinity,
+                    padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: habit.getNameColor(tp),
-                      borderRadius: BorderRadius.circular(4),
+                      color: habit.getContainerColor(tp),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 4,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: habit.getNameColor(tp),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+            // Primary overday overlay segment
+            if (primary != null &&
+                primary!.enabled &&
+                primary!.timeType == TimeType.overday)
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn,
+                top: hourHeight / 2,
+                left: 60,
+                right: 20,
+                height: (primary!.endHour ?? 0) * hourHeight,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: primary!.containerColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: 4,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        color: primary!.lineColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-
-        // Primary overday overlay segment
-        if (primary != null &&
-            primary!.enabled &&
-            primary!.timeType == TimeType.overday)
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.fastOutSlowIn,
-            top: hourHeight / 2,
-            left: 60,
-            right: 20,
-            height: (primary!.endHour ?? 0) * hourHeight,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: primary!.containerColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: 4,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: primary!.lineColor,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
+          ],
+        ),
+      ),
     );
   }
 }
