@@ -130,91 +130,127 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
           children: [
             SizedBox(
               height: 24 * hourHeight + hourHeight, // full day
-              child: Stack(
+              child: Row(
                 children: [
-                  // Background hours
-                  for (int i = 0; i < 25; i++)
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.fastOutSlowIn,
-                      top: i * hourHeight + hourHeight / 2,
-                      left: 0,
-                      right: 0,
-                      height: hourHeight,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: SizedBox(
+                      width: 40,
+                      child: Column(
                         children: [
-                          Transform.translate(
-                            offset: Offset(0, -10),
-                            child: Text(
-                              "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
-                              style: TextStyle(color: tp.secondaryTextColor),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Divider(
-                              thickness: 1,
-                              height: 0,
-                              color: tp.secondaryTextColor.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  AllHabitsOnTimelineStack(hourHeight: hourHeight),
-                  // line indicating current time
-                  AnimatedPositioned(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.fastOutSlowIn,
-                    top: topOffsetForIndicator ?? 0,
-                    left: 0,
-                    right: 0,
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 500),
-                      opacity: topOffsetForIndicator != null ? 1 : 0,
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          for (int i = 0; i < 25; i++) ...[
                             Transform.translate(
-                              offset: const Offset(0, -10),
-                              child: Container(
-                                height: 20,
-                                width: 50,
-                                decoration: ShapeDecoration(
-                                  color: tp.primaryColor,
-                                  shape: StadiumBorder(),
-                                ),
-
-                                child: Text(
-                                  '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                    fontSize: 12,
+                              offset: const Offset(0, -2),
+                              child: SizedBox(
+                                height: hourHeight,
+                                child: Center(
+                                  child: Text(
+                                    "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
+                                    style: TextStyle(color: tp.mutedTextColor),
                                   ),
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                height: 1,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: tp.primaryColor,
-                                  borderRadius: BorderRadius.circular(4),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Stack(
+                          children: [
+                            for (int i = 0; i < 25; i++)
+                              AnimatedPositioned(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.fastOutSlowIn,
+                                top: i * hourHeight + hourHeight / 2,
+                                left: 0,
+                                right: 0,
+                                height: hourHeight,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Divider(
+                                        thickness: 1,
+                                        endIndent: 16,
+                                        height: 0,
+                                        color: tp.mutedTextColor.withOpacity(
+                                          0.7,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            AllHabitsOnTimelineStack(
+                              hourHeight: hourHeight,
+                              maxWidth: constraints.maxWidth,
+                            ),
+                            // line indicating current time
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.fastOutSlowIn,
+                              top: topOffsetForIndicator ?? 0,
+                              left: 0,
+                              right: 0,
+                              child: AnimatedOpacity(
+                                duration: const Duration(milliseconds: 500),
+                                opacity: topOffsetForIndicator != null ? 1 : 0,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Transform.translate(
+                                        offset: const Offset(0, -10),
+                                        child: Container(
+                                          height: 20,
+                                          width: 50,
+                                          decoration: ShapeDecoration(
+                                            color: tp.primaryColor,
+                                            shape: StadiumBorder(),
+                                          ),
+
+                                          child: Text(
+                                            '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 1,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 1,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: tp.primaryColor,
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ],
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                 ],
