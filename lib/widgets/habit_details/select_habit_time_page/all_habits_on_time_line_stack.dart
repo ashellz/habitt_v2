@@ -355,32 +355,75 @@ class _FullTimelineView extends StatelessWidget {
                 ),
 
             // Cluster overday midnight segments into dedicated columns
-            if (habits.any((h) => h.getTimeType() == TimeType.overday))
+            if (habits.any((h) => h.getTimeType() == TimeType.overday) ||
+                (primary != null &&
+                    primary!.enabled &&
+                    primary!.timeType == TimeType.overday &&
+                    showOthers))
               Builder(
                 builder: (context) {
                   final overdayHabits =
                       habits
                           .where((h) => h.getTimeType() == TimeType.overday)
                           .toList();
-                  final double maxOverdayHeight = overdayHabits
-                      .map((h) => h.timeIntervalEnd / 60 * hourHeight)
+
+                  final bool includePrimaryOverday =
+                      primary != null &&
+                      primary!.enabled &&
+                      primary!.timeType == TimeType.overday &&
+                      showOthers;
+
+                  final List<_OverdayColumnItem> columnItems = [
+                    ...overdayHabits.map(
+                      (h) => _OverdayColumnItem(
+                        startTime: TimeOfDay(
+                          hour: h.timeIntervalStart ~/ 60,
+                          minute: h.timeIntervalStart % 60,
+                        ),
+                        height: h.timeIntervalEnd / 60 * hourHeight,
+                        containerColor: h.getContainerColor(tp),
+                        lineColor: h.getNameColor(tp),
+                      ),
+                    ),
+                    if (includePrimaryOverday)
+                      _OverdayColumnItem(
+                        startTime: TimeOfDay(
+                          hour: primary!.startHour.toInt(),
+                          minute: 0,
+                        ),
+                        height: (primary!.endHour ?? 0) * hourHeight,
+                        containerColor: primary!.containerColor,
+                        lineColor: primary!.lineColor,
+                      ),
+                  ];
+
+                  // Sort by start time
+                  columnItems.sort((a, b) {
+                    final aMinutes = a.startTime.hour * 60 + a.startTime.minute;
+                    final bMinutes = b.startTime.hour * 60 + b.startTime.minute;
+                    return aMinutes.compareTo(bMinutes);
+                  });
+
+                  if (columnItems.isEmpty) return const SizedBox.shrink();
+
+                  final double maxOverdayHeight = columnItems
+                      .map((c) => c.height)
                       .reduce((a, b) => a > b ? a : b);
 
                   final List<Widget> columns = [];
-                  for (int i = 0; i < overdayHabits.length; i++) {
+                  for (int i = 0; i < columnItems.length; i++) {
                     if (i > 0) columns.add(const SizedBox(width: 4));
-                    final habit = overdayHabits[i];
-                    final double h = habit.timeIntervalEnd / 60 * hourHeight;
+                    final item = columnItems[i];
                     columns.add(
                       Expanded(
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: SizedBox(
-                            height: h,
+                            height: item.height,
                             child: Container(
                               padding: EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: habit.getContainerColor(tp),
+                                color: item.containerColor,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Align(
@@ -389,7 +432,7 @@ class _FullTimelineView extends StatelessWidget {
                                   width: 4,
                                   height: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: habit.getNameColor(tp),
+                                    color: item.lineColor,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                 ),
@@ -419,7 +462,8 @@ class _FullTimelineView extends StatelessWidget {
             // Primary overday overlay segment
             if (primary != null &&
                 primary!.enabled &&
-                primary!.timeType == TimeType.overday)
+                primary!.timeType == TimeType.overday &&
+                !showOthers)
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.fastOutSlowIn,
@@ -451,6 +495,20 @@ class _FullTimelineView extends StatelessWidget {
       ),
     );
   }
+}
+
+class _OverdayColumnItem {
+  const _OverdayColumnItem({
+    required this.height,
+    required this.containerColor,
+    required this.lineColor,
+    required this.startTime,
+  });
+
+  final double height;
+  final Color containerColor;
+  final Color lineColor;
+  final TimeOfDay startTime;
 }
 
 Widget _clusterChild(
