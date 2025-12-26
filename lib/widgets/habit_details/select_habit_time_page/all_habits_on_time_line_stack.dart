@@ -354,34 +354,67 @@ class _FullTimelineView extends StatelessWidget {
                   },
                 ),
 
-            for (var habit in habits)
-              if (habit.getTimeType() == TimeType.overday)
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.fastOutSlowIn,
-                  top: hourHeight / 2,
-                  left: 0,
-                  right: 36,
-                  height: habit.timeIntervalEnd / 60 * hourHeight,
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: habit.getContainerColor(tp),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: 4,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color: habit.getNameColor(tp),
-                          borderRadius: BorderRadius.circular(4),
+            // Cluster overday midnight segments into dedicated columns
+            if (habits.any((h) => h.getTimeType() == TimeType.overday))
+              Builder(
+                builder: (context) {
+                  final overdayHabits =
+                      habits
+                          .where((h) => h.getTimeType() == TimeType.overday)
+                          .toList();
+                  final double maxOverdayHeight = overdayHabits
+                      .map((h) => h.timeIntervalEnd / 60 * hourHeight)
+                      .reduce((a, b) => a > b ? a : b);
+
+                  final List<Widget> columns = [];
+                  for (int i = 0; i < overdayHabits.length; i++) {
+                    if (i > 0) columns.add(const SizedBox(width: 4));
+                    final habit = overdayHabits[i];
+                    final double h = habit.timeIntervalEnd / 60 * hourHeight;
+                    columns.add(
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: SizedBox(
+                            height: h,
+                            child: Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: habit.getContainerColor(tp),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  width: 4,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: habit.getNameColor(tp),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
+                    );
+                  }
+
+                  return AnimatedPositioned(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.fastOutSlowIn,
+                    top: hourHeight / 2,
+                    left: 0,
+                    right: 36,
+                    height: maxOverdayHeight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: columns,
                     ),
-                  ),
-                ),
+                  );
+                },
+              ),
 
             // Primary overday overlay segment
             if (primary != null &&
