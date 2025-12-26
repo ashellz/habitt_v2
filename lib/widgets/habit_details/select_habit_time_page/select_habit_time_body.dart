@@ -197,14 +197,15 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             AllHabitsOnTimelineStack(
                               ignoreId: sp.selectedHabitId,
                               hourHeight: hourHeight,
-                              dimOthers: sp.showAllHabits,
+                              dimOthers: true,
+                              showOthers: sp.showAllHabits,
                               maxWidth: constraints.maxWidth,
                               primary:
                                   (startHour != null && sp.timeIntervalEnabled)
                                       ? PrimaryHabitConfig(
                                         enabled: true,
                                         timeType: timeType,
-                                        startHour: startHour!,
+                                        startHour: startHour,
                                         durationHours:
                                             timeType == TimeType.regular
                                                 ? duration()
