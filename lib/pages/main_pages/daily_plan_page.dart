@@ -132,28 +132,55 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
               height: 24 * hourHeight + hourHeight, // full day
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: SizedBox(
-                      width: 40,
-                      child: Column(
-                        children: [
-                          for (int i = 0; i < 25; i++) ...[
-                            Transform.translate(
-                              offset: const Offset(0, -2),
-                              child: SizedBox(
-                                height: hourHeight,
-                                child: Center(
-                                  child: Text(
-                                    "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
-                                    style: TextStyle(color: tp.mutedTextColor),
+                  SizedBox(
+                    width: 40,
+                    child: Stack(
+                      children: [
+                        Column(
+                          children: [
+                            for (int i = 0; i < 25; i++) ...[
+                              Transform.translate(
+                                offset: const Offset(0, -2),
+                                child: SizedBox(
+                                  height: hourHeight,
+                                  child: Center(
+                                    child: Text(
+                                      "${(i == 24 ? 0 : i).toString().padLeft(2, '0')}:00",
+                                      style: TextStyle(
+                                        color: tp.mutedTextColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ],
-                        ],
-                      ),
+                        ),
+
+                        AnimatedPositioned(
+                          duration: const Duration(milliseconds: 200),
+                          top: (topOffsetForIndicator ?? 0) - 10,
+                          child: Container(
+                            height: 20,
+                            width: 40,
+                            decoration: ShapeDecoration(
+                              color: tp.primaryColor,
+                              shape: StadiumBorder(),
+                            ),
+
+                            child: Text(
+                              '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Expanded(
@@ -187,9 +214,12 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                 ),
                               ),
 
-                            AllHabitsOnTimelineStack(
-                              hourHeight: hourHeight,
-                              maxWidth: constraints.maxWidth,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: AllHabitsOnTimelineStack(
+                                hourHeight: hourHeight,
+                                maxWidth: constraints.maxWidth - 4,
+                              ),
                             ),
                             // line indicating current time
                             AnimatedPositioned(
@@ -209,28 +239,6 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Transform.translate(
-                                        offset: const Offset(0, -10),
-                                        child: Container(
-                                          height: 20,
-                                          width: 50,
-                                          decoration: ShapeDecoration(
-                                            color: tp.primaryColor,
-                                            shape: StadiumBorder(),
-                                          ),
-
-                                          child: Text(
-                                            '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 1,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
                                       Expanded(
                                         child: Container(
                                           height: 1,
