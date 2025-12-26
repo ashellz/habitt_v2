@@ -1,58 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Interval;
+import 'package:habitt/models/timeline/primary_habit_config.dart';
+import 'package:habitt/models/timeline/interval.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
-
-class PrimaryHabitConfig {
-  const PrimaryHabitConfig({
-    required this.enabled,
-    required this.timeType,
-    required this.startHour,
-    this.durationHours,
-    this.endHour,
-    required this.iconPath,
-    required this.name,
-    required this.containerColor,
-    required this.lineColor,
-  });
-
-  final bool enabled;
-  final TimeType timeType;
-  final double startHour; // in hours
-  final double? durationHours; // used for regular type
-  final double? endHour; // used for overday/midnight extra segment
-  final String iconPath;
-  final String name;
-  final Color containerColor;
-  final Color lineColor;
-}
-
-class Interval {
-  Interval.habit({
-    required this.habit,
-    required this.startY,
-    required this.endY,
-    required this.height,
-  }) : kind = 'habit',
-       primary = null;
-
-  Interval.primary({
-    required this.primary,
-    required this.startY,
-    required this.endY,
-    required this.height,
-  }) : kind = 'primary',
-       habit = null;
-
-  final String kind;
-  final dynamic habit;
-  final PrimaryHabitConfig? primary;
-  final double startY;
-  final double endY;
-  final double height;
-  int? columnIndex;
-}
 
 class AllHabitsOnTimelineStack extends StatelessWidget {
   const AllHabitsOnTimelineStack({
