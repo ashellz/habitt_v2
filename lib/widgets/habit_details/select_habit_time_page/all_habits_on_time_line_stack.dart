@@ -87,6 +87,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
             .toList();
 
     // Build intervals for overlap detection
+    Interval? primaryInterval;
     final List<Interval> intervals =
         habits.map((habit) {
           final startY = habit.getStartHour() * hourHeight + hourHeight / 2;
@@ -111,14 +112,13 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
               ? (24 * hourHeight) - (primary!.startHour * hourHeight)
               : (primary!.durationHours ?? 0) * hourHeight;
       final double endY = startY + height;
-      intervals.add(
-        Interval.primary(
-          primary: primary!,
-          startY: startY,
-          endY: endY,
-          height: height,
-        ),
+      primaryInterval = Interval.primary(
+        primary: primary!,
+        startY: startY,
+        endY: endY,
+        height: height,
       );
+      intervals.add(primaryInterval);
     }
 
     intervals.sort((a, b) => a.startY.compareTo(b.startY));
@@ -129,7 +129,6 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
 
     for (final iv in intervals) {
       final startY = iv.startY;
-      final endY = iv.endY;
 
       if (clusterColumns.isEmpty) {
         // First interval, create first cluster with one column
@@ -193,6 +192,106 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
       clusters.add(clusterData);
     }
 
+    final bool showOnlyPrimary = primaryInterval != null && !showOthers;
+    final double screenWidth = maxWidth ?? MediaQuery.of(context).size.width;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child:
+          showOnlyPrimary
+              ? SizedBox(
+                key: const ValueKey('primary-only'),
+                width: screenWidth,
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn,
+                      top: primaryInterval.startY,
+                      left: 0,
+                      right: 0,
+                      height: primaryInterval.height,
+                      child: _clusterChild(
+                        primaryInterval,
+                        tp,
+                        dimOthers,
+                        showOthers,
+                      ),
+                    ),
+                    if (primary != null &&
+                        primary!.enabled &&
+                        primary!.timeType == TimeType.overday)
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.fastOutSlowIn,
+                        top: hourHeight / 2,
+                        left: 0,
+                        right: 0,
+                        height: (primary!.endHour ?? 0) * hourHeight,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: primary!.containerColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              width: 4,
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: primary!.lineColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              )
+              : _FullTimelineView(
+                key: const ValueKey('full-timeline'),
+                clusters: clusters,
+                habits: habits,
+                hourHeight: hourHeight,
+                tp: tp,
+                dimOthers: dimOthers,
+                showOthers: showOthers,
+                screenWidth: screenWidth,
+                maxWidth: maxWidth,
+                primary: primary,
+              ),
+    );
+  }
+}
+
+class _FullTimelineView extends StatelessWidget {
+  const _FullTimelineView({
+    super.key,
+    required this.clusters,
+    required this.habits,
+    required this.hourHeight,
+    required this.tp,
+    required this.dimOthers,
+    required this.showOthers,
+    required this.screenWidth,
+    required this.maxWidth,
+    required this.primary,
+  });
+
+  final List<List<Interval>> clusters;
+  final List<dynamic> habits;
+  final double hourHeight;
+  final ThemeProvider tp;
+  final bool dimOthers;
+  final bool showOthers;
+  final double screenWidth;
+  final double? maxWidth;
+  final PrimaryHabitConfig? primary;
+
+  @override
+  Widget build(BuildContext context) {
     // Determine dynamic width for horizontal scrolling when many columns
     final maxClusterColumns =
         clusters.isEmpty
@@ -203,7 +302,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
                   return cols.length;
                 })
                 .reduce((a, b) => a > b ? a : b);
-    final screenWidth = maxWidth ?? MediaQuery.of(context).size.width;
+
     final extraWidth =
         maxClusterColumns > 2
             ? (maxClusterColumns - 2) * (screenWidth * 0.5)
@@ -212,6 +311,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
       child: SizedBox(
         width: contentWidth,
         child: Stack(
@@ -256,8 +356,9 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
                     final List<Widget> rowChildren = [];
 
                     for (int colIndex = 0; colIndex < numColumns; colIndex++) {
-                      if (colIndex > 0)
+                      if (colIndex > 0) {
                         rowChildren.add(const SizedBox(width: 4));
+                      }
 
                       final columnIntervals = columnMap[colIndex] ?? [];
 
@@ -389,7 +490,7 @@ Widget _clusterChild(
 
   return AnimatedOpacity(
     opacity: targetOpacity,
-    duration: const Duration(milliseconds: 250),
+    duration: const Duration(milliseconds: 150),
     child: widget,
   );
 }
