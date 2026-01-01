@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -68,6 +69,11 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final categoryProvider = context.watch<CategoryProvider>();
+    final calendarProvider = context.watch<CalendarProvider>();
+    final selectedCategoryId =
+        widget.daySelected == null
+            ? categoryProvider.selectedCategoryId
+            : calendarProvider.selectedCategoryId;
 
     final habits = _getHabits();
     final additionalTasksCount =
@@ -84,7 +90,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
       );
     }
 
-    if (categoryProvider.selectedCategoryId != 0) {
+    if (selectedCategoryId != 0) {
       return Column(
         children: [
           Padding(
@@ -94,7 +100,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
               habits: habits,
               showAdditionalTasks: true,
               category: categoryProvider.categories.firstWhere(
-                (c) => c.id == categoryProvider.selectedCategoryId,
+                (c) => c.id == selectedCategoryId,
               ),
               // Pass parameters
               scrollController: widget.scrollController,
@@ -116,7 +122,8 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
     return Column(
       children: [
         for (final category in categories)
-          if (getCategoryLength(category, context, false) > 0)
+          if (getCategoryLength(category, context, false, widget.daySelected) >
+              0)
             // Check if category is first
             if (category == categories.first && widget.hasMainCategory)
               // Put it in a glass box with animated gradient

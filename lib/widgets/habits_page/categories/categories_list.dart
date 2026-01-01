@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -15,6 +16,7 @@ class CategoriesList extends StatefulWidget {
     this.showAll = true,
     this.habitsCount = true,
     this.useHabitCategory = false,
+    this.selectedDay,
   });
 
   final double topPadding;
@@ -22,6 +24,7 @@ class CategoriesList extends StatefulWidget {
   final bool showAll;
   final bool habitsCount;
   final bool useHabitCategory;
+  final DateTime? selectedDay;
 
   @override
   State<CategoriesList> createState() => _CategoriesListState();
@@ -30,30 +33,25 @@ class CategoriesList extends StatefulWidget {
 class _CategoriesListState extends State<CategoriesList> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _listKey = GlobalKey();
-
-  // Track keys for each visible item to measure its size/position.
   final Map<int, GlobalKey> _itemKeys = {};
 
   GlobalKey _keyFor(int id) => _itemKeys.putIfAbsent(id, () => GlobalKey());
 
-  // --- NEW: State variables to control the fade visibility ---
   bool _showLeftFade = false;
   bool _showRightFade = false;
 
   @override
   void initState() {
     super.initState();
-    // --- NEW: Add a listener to the scroll controller ---
     _scrollController.addListener(_updateFadeVisibility);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // --- NEW: Check initial scroll state after first layout ---
+      // Check initial scroll state after first layout
       _updateFadeVisibility();
       _scrollToSelectedCategory();
     });
   }
 
-  // --- NEW: Clean up the controller and listener ---
   @override
   void dispose() {
     _scrollController.removeListener(_updateFadeVisibility);
@@ -93,12 +91,15 @@ class _CategoriesListState extends State<CategoriesList> {
 
     final categoryProvider = context.read<CategoryProvider>();
     final stateProvider = context.read<StateProvider>();
+    final calendarProvider = context.read<CalendarProvider>();
 
     // Determine the selected ID within the currently visible items.
     final selectedId =
         widget.useHabitCategory
             ? stateProvider.habitCategoryId
-            : categoryProvider.selectedCategoryId;
+            : widget.selectedDay == null
+            ? categoryProvider.selectedCategoryId
+            : calendarProvider.selectedCategoryId;
 
     // Defer measurement to next frame to ensure layout is up-to-date.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -142,7 +143,11 @@ class _CategoriesListState extends State<CategoriesList> {
     final categoryProvider = context.watch<CategoryProvider>();
     final habitProvider = context.watch<HabitProvider>();
     final stateProvider = context.watch<StateProvider>();
-    final habitsList = habitProvider.habits;
+    final calendarProvider = context.watch<CalendarProvider>();
+    final habitsList =
+        widget.selectedDay == null
+            ? habitProvider.habits
+            : habitProvider.getHabitsFromDay(widget.selectedDay!);
     final List<bool> hasHabits = [];
 
     for (Category category in categoryProvider.categories) {
@@ -203,11 +208,16 @@ class _CategoriesListState extends State<CategoriesList> {
                         KeyedSubtree(
                           key: _keyFor(0),
                           child: SelectCategoryWidget(
+                            selectedDay: widget.selectedDay,
                             standardColor: widget.standardColor,
                             habitsCount: widget.habitsCount,
                             category: Category(id: 0, name: localizations.all),
                             onTap: () {
-                              categoryProvider.selectCategory(0);
+                              if (widget.selectedDay != null) {
+                                calendarProvider.selectCategory(0);
+                              } else {
+                                categoryProvider.selectCategory(0);
+                              }
                               _scrollToSelectedCategory();
                             },
                           ),
@@ -227,6 +237,7 @@ class _CategoriesListState extends State<CategoriesList> {
                             return KeyedSubtree(
                               key: _keyFor(category.id),
                               child: SelectCategoryWidget(
+                                selectedDay: widget.selectedDay,
                                 useHabitCategory: widget.useHabitCategory,
                                 standardColor: widget.standardColor,
                                 habitsCount: widget.habitsCount,
@@ -236,8 +247,15 @@ class _CategoriesListState extends State<CategoriesList> {
                                     stateProvider.habitCategoryId = category.id;
                                     _scrollToSelectedCategory();
                                     return;
+                                  } else if (widget.selectedDay != null) {
+                                    calendarProvider.selectCategory(
+                                      category.id,
+                                    );
+                                  } else {
+                                    categoryProvider.selectCategory(
+                                      category.id,
+                                    );
                                   }
-                                  categoryProvider.selectCategory(category.id);
                                   _scrollToSelectedCategory();
                                 },
                               ),
