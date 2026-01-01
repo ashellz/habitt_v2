@@ -7,6 +7,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
+import 'package:habitt/widgets/habit_details/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider_dialog.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
@@ -76,7 +77,16 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     return GestureDetector(
       onTap:
           widget.editable
-              ? null
+              ? () => showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) {
+                  return SelectHabitColorSheet(
+                    tp: tp,
+                    fromCompletionWidget: true,
+                  );
+                },
+              )
               : () {
                 setState(() {
                   _scale = 0.9;

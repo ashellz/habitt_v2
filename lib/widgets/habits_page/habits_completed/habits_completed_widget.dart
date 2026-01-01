@@ -63,6 +63,7 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
       padding: EdgeInsets.only(top: 8),
       child: Stack(
         children: [
+          // Main content
           GlassFeelContainer(
             child: Column(
               children: [
@@ -72,6 +73,7 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
               ],
             ),
           ),
+          // Animated "Complete" overlay if all habits are completed
           AnimatedBuilder(
             animation: _curvedAnimation,
             builder: (context, child) {

@@ -70,10 +70,8 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
     final categoryProvider = context.watch<CategoryProvider>();
 
     final habits = _getHabits();
-    debugPrint("Habits count: ${habits.length}");
     final additionalTasksCount =
         habits.where((habit) => habit.additional).length;
-    debugPrint("Additional tasks count: $additionalTasksCount");
     final tp = context.watch<ThemeProvider>();
 
     if (habits.isEmpty) {
