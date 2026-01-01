@@ -53,20 +53,22 @@ class CalendarDay extends StatelessWidget {
     }
 
     Color getBorderColor() {
-      final Colorfulness colorfulness =
-          context.read<PreferencesProvider>().colorfulness;
-      if (selected) {
-        switch (colorfulness) {
-          case Colorfulness.tinted:
-            return tp.primaryColor;
-          case Colorfulness.standard:
-            return tp.successColor;
-          case Colorfulness.colorful:
-            return tp.successColor;
-        }
-      } else {
-        return Colors.transparent;
+      double completionRatio = completedHabitsCount / habitsCount;
+      Color? color;
+
+      if (completionRatio == 0) {
+        color = tp.dangerColor;
+      } else if (completionRatio > 0 && completionRatio < 1) {
+        color = tp.warningColor;
+      } else if (completionRatio == 1) {
+        color = tp.successColor;
       }
+
+      if (selected && color == null) {
+        return tp.primaryColor;
+      }
+
+      return color ?? Colors.transparent;
     }
 
     return Padding(
