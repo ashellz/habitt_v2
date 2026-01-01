@@ -32,6 +32,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   final double popupHeight = 70;
   late final ConfettiController _confettiController;
   bool _wasAllCompleted = false;
+  bool _initializedCompletionState = false;
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     );
 
     _confettiController = ConfettiController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 1),
     );
   }
 
@@ -147,12 +148,17 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
 
     final bool allCompleted =
         habits.isNotEmpty && habits.every((habit) => habit.completed);
-    if (allCompleted && !_wasAllCompleted) {
-      _confettiController.play();
-    } else if (!allCompleted && _wasAllCompleted) {
-      _confettiController.stop();
+    if (!_initializedCompletionState) {
+      _wasAllCompleted = allCompleted;
+      _initializedCompletionState = true;
+    } else {
+      if (allCompleted && !_wasAllCompleted) {
+        _confettiController.play();
+      } else if (!allCompleted && _wasAllCompleted) {
+        _confettiController.stop();
+      }
+      _wasAllCompleted = allCompleted;
     }
-    _wasAllCompleted = allCompleted;
 
     if (stateProvider.showAlert) {
       _togglePopup(true);
