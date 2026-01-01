@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/daily_plan_page/animated_completion_checkmark.dart';
+import 'package:habitt/widgets/default/animated_completion_checkmark.dart';
 import 'package:habitt/widgets/daily_plan_page/daily_plan_body.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:provider/provider.dart';
