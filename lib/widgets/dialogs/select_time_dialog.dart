@@ -2,7 +2,7 @@ import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default/blur_circle_button.dart';
+import 'package:habitt/widgets/default/circle_button.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';

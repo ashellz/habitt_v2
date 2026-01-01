@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/default/animated_completion_checkmark.dart';

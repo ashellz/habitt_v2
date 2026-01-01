@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cupertino_native/cupertino_native.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
+import 'package:provider/provider.dart';
 
 class CircleButton extends StatefulWidget {
   const CircleButton({
@@ -24,12 +29,36 @@ class CircleButton extends StatefulWidget {
 }
 
 class _CircleButtonState extends State<CircleButton> {
+  bool _supportsLiquidGlass = false;
   double scale = 1.0;
+
+  Future<void> _checkIOSVersion() async {
+    if (Platform.isIOS) {
+      debugPrint(
+        "Checking iOS version for Liquid Glass support... Is iOS: true",
+      );
+      final deviceInfo = DeviceInfoPlugin();
+      final iosInfo = await deviceInfo.iosInfo;
+      final version = iosInfo.systemVersion;
+      final majorVersion = int.tryParse(version.split('.').first) ?? 0;
+      debugPrint("iOS Major Version: $majorVersion");
+      setState(() {
+        _supportsLiquidGlass = majorVersion >= 26;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIOSVersion();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-    if (isIOS) {
+    final preferencesProvider = context.watch<PreferencesProvider>();
+    final glassFeel = preferencesProvider.glassFeel;
+    if (_supportsLiquidGlass && glassFeel) {
       return SizedBox(
         height: 50,
         width: 50,

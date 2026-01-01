@@ -8,7 +8,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default/blur_circle_button.dart';
+import 'package:habitt/widgets/default/circle_button.dart';
 import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider.dart';
 import 'package:provider/provider.dart';
 
