@@ -58,6 +58,7 @@ class SelectedHabitDisplay extends StatelessWidget {
                       durationCompleted: durationCompleted,
                       completed: completed,
                       skipped: skipped,
+                      colorName: stateProvider.habitColorName,
                     ),
                     editable: true,
                   ),
