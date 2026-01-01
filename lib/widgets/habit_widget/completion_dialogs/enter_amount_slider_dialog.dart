@@ -4,6 +4,7 @@ import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -87,6 +88,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
   Widget build(BuildContext context) {
     final stateProvider = context.watch<StateProvider>();
     final tp = context.watch<ThemeProvider>();
+    final colorfulness = context.read<PreferencesProvider>().colorfulness;
     final habitProvider = context.read<HabitProvider>();
 
     return Dialog(
@@ -114,7 +116,7 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                     cnIcon: CNSymbol('checkmark', size: 16),
                     tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
-                    color: tp.primaryColor,
+                    color: widget.habit.getCompletionColor(tp, colorfulness),
                     onPressed: () {
                       if (widget.habit.amountCompleted ==
                           stateProvider.habitAmount) {

@@ -256,7 +256,7 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
                     cnIcon: CNSymbol('checkmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
-                    color: tp.primaryColor,
+                    color: widget.habit.getCompletionColor(tp, colorfulness),
                     onPressed: () {
                       // If nothing changed then don't update unnecessarily
                       if (widget.habit.durationCompleted ==
