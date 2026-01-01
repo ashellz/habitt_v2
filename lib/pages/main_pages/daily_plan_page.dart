@@ -217,6 +217,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
                             Padding(
                               padding: const EdgeInsets.only(left: 4),
                               child: AllHabitsOnTimelineStack(
+                                markCompleted: true,
                                 hourHeight: hourHeight,
                                 maxWidth: constraints.maxWidth - 4,
                               ),
