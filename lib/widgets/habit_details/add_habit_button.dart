@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_button.dart';
-import 'package:provider/provider.dart';
 
 class AddHabitButton extends StatelessWidget {
   const AddHabitButton({
@@ -61,8 +58,6 @@ class AddHabitButton extends StatelessWidget {
             enabled: enabled,
             onPressed: () {
               if (!canAddHabit()) return;
-
-              final tp = context.read<ThemeProvider>();
 
               habitProvider.addHabit(
                 Habit(
