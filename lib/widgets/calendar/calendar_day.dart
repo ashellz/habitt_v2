@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/util/color_contrast.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class CalendarDay extends StatelessWidget {
   const CalendarDay({
@@ -25,6 +25,9 @@ class CalendarDay extends StatelessWidget {
       date,
     );
 
+    final Colorfulness colorfulness =
+        context.read<PreferencesProvider>().colorfulness;
+
     int habitsCount = habits.length;
     int completedHabitsCount = habits.where((h) => h.completed).length;
 
@@ -42,24 +45,6 @@ class CalendarDay extends StatelessWidget {
     }
 
     final tp = context.watch<ThemeProvider>();
-    final prefsProvider = context.watch<PreferencesProvider>();
-
-    final completedColor =
-        prefsProvider.colorfulness == Colorfulness.tinted
-            ? tp.primaryColor
-            : tp.successColor;
-    final uncompletedColor = tp.surfaceColor;
-
-    Color progressColor({
-      required Color start, // e.g., incomplete (dark grey)
-      required Color end, // e.g., complete (green)
-      required int completed,
-      required int total,
-    }) {
-      if (total <= 0) return start;
-      final t = (completed / total).clamp(0.0, 1.0);
-      return Color.lerp(start, end, t)!;
-    }
 
     bool isBeforeDateJoined() {
       if (DateTime(date.year, date.month, date.day).isBefore(dateJoined)) {
@@ -68,40 +53,36 @@ class CalendarDay extends StatelessWidget {
       return false;
     }
 
-    Color getBorderColor(Color color) {
-      // color: selected ? color.darken() : Colors.transparent,
+    Color getBorderColor() {
+      final Colorfulness colorfulness =
+          context.read<PreferencesProvider>().colorfulness;
       if (selected) {
-        switch (tp.isDark) {
-          case true:
-            return color.lighten(20);
-          case false:
-            return color.darken(20);
+        switch (colorfulness) {
+          case Colorfulness.tinted:
+            return tp.primaryColor;
+          case Colorfulness.standard:
+            return tp.successColor;
+          case Colorfulness.colorful:
+            return tp.successColor;
         }
       } else {
         return Colors.transparent;
       }
     }
 
-    final color = progressColor(
-      start: uncompletedColor,
-      end: completedColor,
-      completed: completedHabitsCount,
-      total: habitsCount,
-    );
-
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
         aspectRatio: 1,
         child: Stack(
+          alignment: Alignment.topRight,
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               curve: Curves.easeInOut,
               decoration: BoxDecoration(
-                color: color,
                 border: Border.all(
-                  color: getBorderColor(color),
+                  color: getBorderColor(),
                   width: selected ? 1 : 0,
                 ),
                 borderRadius: BorderRadius.circular(12),
@@ -113,16 +94,71 @@ class CalendarDay extends StatelessWidget {
                     color:
                         isBeforeDateJoined()
                             ? tp.mutedTextColor
-                            : bestContrastingOn(
-                              color,
-                              light: Colors.white,
-                              dark: tp.primaryTextColor,
-                            ),
+                            : tp.primaryTextColor,
                   ),
                 ),
               ),
             ),
+            _getCompletionIcon(
+              habitsCount,
+              completedHabitsCount,
+              colorfulness,
+              tp,
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  _getCompletionIcon(
+    int habitsCount,
+    int completedHabitsCount,
+    Colorfulness colorfulness,
+    ThemeProvider tp,
+  ) {
+    String? assetPath;
+    Color? svgColor;
+
+    resolveAssetPath() {
+      if (habitsCount == 0) {
+        return null;
+      }
+
+      double completionRatio = completedHabitsCount / habitsCount;
+
+      if (completionRatio == 0) {
+        svgColor = tp.dangerColor;
+        return 'assets/images/svg/incomplete.svg';
+      } else if (completionRatio > 0 && completionRatio < 1) {
+        return 'assets/images/svg/incomplete.svg';
+      } else if (completionRatio == 1) {
+        return 'assets/images/svg/check.svg';
+      }
+
+      return '';
+    }
+
+    assetPath = resolveAssetPath();
+
+    if (assetPath == null) return const SizedBox.shrink();
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeIn,
+      transitionBuilder: (child, animation) {
+        return ScaleTransition(scale: animation, child: child);
+      },
+      child: Transform.translate(
+        key: ValueKey<String>('$assetPath-$svgColor'),
+        offset: Offset(4, -4),
+        child: SvgPicture.asset(
+          assetPath,
+          colorFilter:
+              svgColor == null
+                  ? null
+                  : ColorFilter.mode(svgColor!, BlendMode.modulate),
         ),
       ),
     );
