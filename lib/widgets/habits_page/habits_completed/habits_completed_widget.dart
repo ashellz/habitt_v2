@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/category.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/default/animated_completion_checkmark.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habits_page/habits_completed/habit_status_text.dart';
@@ -38,9 +41,22 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final habits = context.watch<HabitProvider>().habits;
-    final allCompleted =
-        habits.isNotEmpty && habits.every((habit) => habit.completed);
+    final categoryProvider = context.watch<CategoryProvider>();
+    final selectedCategoryId = categoryProvider.selectedCategoryId;
+
+    final Category category =
+        selectedCategoryId == 0
+            ? Category(id: 0, name: "All")
+            : categoryProvider.categories.firstWhere(
+              (cat) => cat.id == selectedCategoryId,
+              orElse: () => Category(id: 0, name: "All"),
+            );
+
+    final completedCount = getCompletedHabits(category, context);
+    final notCompletedCount = getNotCompletedHabits(category, context);
+    final totalCount = completedCount + notCompletedCount;
+
+    final allCompleted = totalCount > 0 && notCompletedCount == 0;
 
     if (!_initialized) {
       // Set initial state without animating on first build
@@ -70,6 +86,19 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final bg = tp.backgroundColor;
+    final categoryProvider = context.watch<CategoryProvider>();
+    final selectedCategoryId = categoryProvider.selectedCategoryId;
+
+    final Category category =
+        selectedCategoryId == 0
+            ? Category(id: 0, name: "All")
+            : categoryProvider.categories.firstWhere(
+              (cat) => cat.id == selectedCategoryId,
+              orElse: () => Category(id: 0, name: "All"),
+            );
+
+    final completedCount = getCompletedHabits(category, context);
+    final notCompletedCount = getNotCompletedHabits(category, context);
 
     return Padding(
       padding: EdgeInsets.only(top: 8),
@@ -79,9 +108,12 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
           GlassFeelContainer(
             child: Column(
               children: [
-                HabitsStatus(isCompleted: true),
+                HabitsStatus(isCompleted: true, numberOfHabits: completedCount),
                 const SizedBox(height: 8),
-                HabitsStatus(isCompleted: false),
+                HabitsStatus(
+                  isCompleted: false,
+                  numberOfHabits: notCompletedCount,
+                ),
               ],
             ),
           ),
