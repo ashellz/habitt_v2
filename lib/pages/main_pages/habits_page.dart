@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:confetti/confetti.dart';
 import 'package:habitt/pages/main_pages/daily_plan_page.dart';
 import 'package:habitt/pages/other_pages/add_habit_page.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
@@ -28,6 +30,8 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   late final AnimationController _popupController;
   late final Animation<double> _popupAnimation;
   final double popupHeight = 70;
+  late final ConfettiController _confettiController;
+  bool _wasAllCompleted = false;
 
   @override
   void initState() {
@@ -46,6 +50,10 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     // Get initial geometry after the first frame
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _updateListViewportGeom(),
+    );
+
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
     );
   }
 
@@ -127,6 +135,7 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _popupController.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -134,6 +143,16 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final stateProvider = context.watch<StateProvider>();
+    final habits = context.watch<HabitProvider>().habits;
+
+    final bool allCompleted =
+        habits.isNotEmpty && habits.every((habit) => habit.completed);
+    if (allCompleted && !_wasAllCompleted) {
+      _confettiController.play();
+    } else if (!allCompleted && _wasAllCompleted) {
+      _confettiController.stop();
+    }
+    _wasAllCompleted = allCompleted;
 
     if (stateProvider.showAlert) {
       _togglePopup(true);
@@ -228,6 +247,28 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
 
                   const SizedBox(height: 100),
                 ],
+              ),
+            ),
+
+            // Confetti celebration when all habits are completed
+            Align(
+              alignment: Alignment.topCenter,
+              child: IgnorePointer(
+                child: ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  emissionFrequency: 0.08,
+                  numberOfParticles: 24,
+                  maxBlastForce: 20,
+                  minBlastForce: 5,
+                  gravity: 0.6,
+                  colors: [
+                    tp.primaryColor,
+                    tp.secondaryColor,
+                    tp.successColor,
+                    tp.dangerColor,
+                  ],
+                ),
               ),
             ),
 
