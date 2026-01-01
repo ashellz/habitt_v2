@@ -7,8 +7,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/blur_circle_button.dart';
-import 'package:habitt/widgets/default/glass_blur_container.dart';
-import 'package:habitt/widgets/default/number_picker.dart';
+import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog_slider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -148,106 +147,19 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
           child: Row(
             children: [
               SizedBox(width: 8 + 50),
-              Container(
-                decoration: BoxDecoration(
-                  color: tp.borderColor.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(30),
-                ),
+              DurationCompletionDialogSlider(
                 width: width,
                 height: height,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: TweenAnimationBuilder<double>(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                        tween: Tween<double>(begin: 0, end: getProgressValue()),
-                        builder: (context, value, _) {
-                          final endColor = widget.habit.getCompletionColor(
-                            tp,
-                            colorfulness,
-                          );
-
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: Stack(
-                              children: [
-                                // Vertical fill from bottom up
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: FractionallySizedBox(
-                                    heightFactor: value,
-                                    widthFactor: 1,
-                                    child: Container(color: endColor),
-                                  ),
-                                ),
-
-                                GlassBlurContainer(
-                                  height: height,
-                                  forceBlur: true,
-                                  color: Colors.transparent,
-                                  borderColor: Colors.transparent,
-                                  hasGradient: false,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-
-                    Center(
-                      child: NumberPicker(
-                        padZero: false,
-                        height: height / 3,
-                        textStyle: TextStyle(
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withAlpha(100),
-                              offset: const Offset(0, 1),
-                              blurRadius: 5,
-                            ),
-                          ],
-                          color: getColor(),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 38,
-                          letterSpacing: 0,
-                        ),
-                        vertical: true,
-                        looping: false,
-                        maxHours: hours,
-                        maxMinutes:
-                            sp.habitDuration.inHours < hours ? 59 : minutes,
-                        hoursController: hoursController,
-                        minutesController: minutesController,
-                        width: width,
-                        onChangedHours: (int selectedHours) {
-                          final currentDuration = sp.habitDuration;
-                          sp.habitDuration = Duration(
-                            hours: selectedHours,
-                            minutes: currentDuration.inMinutes % 60,
-                          );
-                          // putting minutes to max if hours are maxed out
-                          if (selectedHours == hours) {
-                            if (sp.habitDuration.inMinutes % 60 > minutes) {
-                              sp.habitDuration = Duration(
-                                hours: selectedHours,
-                                minutes: minutes,
-                              );
-                            }
-                          }
-                        },
-                        onChangedMinutes: (int selectedMinutes) {
-                          final currentDuration = sp.habitDuration;
-                          sp.habitDuration = Duration(
-                            hours: currentDuration.inHours,
-                            minutes: selectedMinutes,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                tp: tp,
+                colorfulness: colorfulness,
+                habit: widget.habit,
+                progressValue: getProgressValue(),
+                numberColor: getColor(),
+                hours: hours,
+                minutes: minutes,
+                sp: sp,
+                hoursController: hoursController,
+                minutesController: minutesController,
               ),
               SizedBox(width: 8),
               Column(
