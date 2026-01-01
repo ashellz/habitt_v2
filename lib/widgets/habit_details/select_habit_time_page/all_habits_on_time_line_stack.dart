@@ -15,6 +15,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
     this.dimOthers = false,
     this.showOthers = true,
     this.maxWidth,
+    this.markCompleted = false,
   });
 
   final double hourHeight;
@@ -23,6 +24,7 @@ class AllHabitsOnTimelineStack extends StatelessWidget {
   final bool dimOthers;
   final double? maxWidth;
   final bool showOthers;
+  final bool markCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -527,7 +529,7 @@ Widget _clusterChild(
   final double targetOpacity =
       !showOthers
           ? 0
-          : dimOthers
+          : dimOthers || (iv.habit?.completed ?? false)
           ? 0.5
           : 1.0;
 

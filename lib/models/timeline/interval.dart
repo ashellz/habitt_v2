@@ -1,3 +1,4 @@
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/timeline/primary_habit_config.dart';
 
 class Interval {
@@ -18,7 +19,7 @@ class Interval {
        habit = null;
 
   final String kind;
-  final dynamic habit;
+  final Habit? habit;
   final PrimaryHabitConfig? primary;
   final double startY;
   final double endY;
