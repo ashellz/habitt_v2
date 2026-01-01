@@ -33,6 +33,9 @@ class CompletionDisplay extends StatefulWidget {
 }
 
 class _CompletionDisplayState extends State<CompletionDisplay> {
+  bool _hasAnimatedProgress = false;
+  double _lastProgress = 0.0;
+
   double getProgressValue() {
     final habit = widget.habit;
 
@@ -173,10 +176,24 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 child: RotatedBox(
                   quarterTurns: -1,
                   child: TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 500),
+                    duration:
+                        (_hasAnimatedProgress &&
+                                getProgressValue() != _lastProgress)
+                            ? const Duration(milliseconds: 500)
+                            : Duration.zero,
                     curve: Curves.easeInOut,
-                    tween: Tween<double>(begin: 0, end: getProgressValue()),
+                    tween: Tween<double>(
+                      begin: _lastProgress,
+                      end: getProgressValue(),
+                    ),
                     builder: (context, value, _) {
+                      // Cache the last progress after the frame so future builds animate from it
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) {
+                          _lastProgress = getProgressValue();
+                          _hasAnimatedProgress = true;
+                        }
+                      });
                       return LinearProgressIndicator(
                         value: value,
                         color: widget.habit.getCompletionColor(
