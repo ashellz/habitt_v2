@@ -17,6 +17,7 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _curvedAnimation;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -40,6 +41,17 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
     final habits = context.watch<HabitProvider>().habits;
     final allCompleted =
         habits.isNotEmpty && habits.every((habit) => habit.completed);
+
+    if (!_initialized) {
+      // Set initial state without animating on first build
+      if (allCompleted) {
+        _animationController.value = 1.0;
+      } else {
+        _animationController.value = 0.0;
+      }
+      _initialized = true;
+      return;
+    }
 
     if (allCompleted && _animationController.isDismissed) {
       _animationController.forward();
