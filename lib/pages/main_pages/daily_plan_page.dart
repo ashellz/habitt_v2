@@ -41,7 +41,7 @@ class DailyPlanPage extends StatelessWidget {
                     spacing: 4,
                     children: [
                       Text(
-                        "Daily Plan",
+                        "Daily plan",
                         style: TextStyle(
                           fontSize: 38,
                           color: tp.primaryTextColor,
