@@ -5,6 +5,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/calendar/calendar.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
+import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
 import 'package:provider/provider.dart';
 
@@ -162,7 +163,10 @@ class _CalendarPageState extends State<CalendarPage> {
             ],
           ),
         ),
-        SizedBox(height: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: CategoriesList(selectedDay: focusedDay),
+        ),
         Habits(
           daySelected: focusedDay,
           hasMainCategory: false,

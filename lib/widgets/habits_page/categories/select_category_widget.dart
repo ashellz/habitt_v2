@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -16,6 +17,7 @@ class SelectCategoryWidget extends StatelessWidget {
     required this.habitsCount,
     required this.standardColor,
     this.useHabitCategory = false,
+    this.selectedDay,
   });
 
   final Category category;
@@ -23,6 +25,7 @@ class SelectCategoryWidget extends StatelessWidget {
   final bool habitsCount;
   final bool standardColor;
   final bool useHabitCategory;
+  final DateTime? selectedDay;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +33,21 @@ class SelectCategoryWidget extends StatelessWidget {
     final tp = context.watch<ThemeProvider>();
     final StateProvider stateProvider = context.watch<StateProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
+    final calendarProvider = context.watch<CalendarProvider>();
 
     final int selectedId =
         useHabitCategory
             ? stateProvider.habitCategoryId
-            : categoryProvider.selectedCategoryId;
+            : selectedDay == null
+            ? categoryProvider.selectedCategoryId
+            : calendarProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
-    final int categoryHabits = getCategoryLength(category, context, true);
+    final int categoryHabits = getCategoryLength(
+      category,
+      context,
+      true,
+      selectedDay,
+    );
 
     return GestureDetector(
       onTap: onTap,

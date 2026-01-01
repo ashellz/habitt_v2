@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 int getCategoryLength(
   Category category,
   BuildContext context,
-  bool countAdditionalTasks,
-) {
+  bool countAdditionalTasks, [
+  DateTime? selectedDay,
+]) {
   final habitProvider = context.watch<HabitProvider>();
   if (habitProvider.habits.isEmpty) return 0;
   if (category.id == 0) {
     return habitProvider.habits.length;
+  }
+
+  if (selectedDay != null) {
+    final List<Habit> dayHabits = habitProvider.getHabitsFromDay(selectedDay);
+    return dayHabits
+        .where(
+          (h) =>
+              h.categoryId == category.id &&
+              (countAdditionalTasks ? true : !h.additional),
+        )
+        .length;
   }
 
   final int categoryHabits =
