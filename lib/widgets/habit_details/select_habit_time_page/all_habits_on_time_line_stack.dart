@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart' hide Interval;
+import 'package:flutter/rendering.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/timeline/primary_habit_config.dart';
 import 'package:habitt/models/timeline/interval.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
+import 'package:habitt/widgets/habit_widget/habit_name.dart';
 import 'package:provider/provider.dart';
 
 class AllHabitsOnTimelineStack extends StatelessWidget {
@@ -385,6 +388,7 @@ class _FullTimelineView extends StatelessWidget {
                         height: h.timeIntervalEnd / 60 * hourHeight,
                         containerColor: h.getContainerColor(tp),
                         lineColor: h.getNameColor(tp),
+                        completed: h.completed,
                       ),
                     ),
                     if (includePrimaryOverday)
@@ -396,6 +400,7 @@ class _FullTimelineView extends StatelessWidget {
                         height: (primary!.endHour ?? 0) * hourHeight,
                         containerColor: primary!.containerColor,
                         lineColor: primary!.lineColor,
+                        completed: false,
                       ),
                   ];
 
@@ -422,20 +427,23 @@ class _FullTimelineView extends StatelessWidget {
                           alignment: Alignment.topCenter,
                           child: SizedBox(
                             height: item.height,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: item.containerColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  width: 4,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: item.lineColor,
-                                    borderRadius: BorderRadius.circular(4),
+                            child: Opacity(
+                              opacity: dimOthers || item.completed ? 0.5 : 1.0,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: item.containerColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    width: 4,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: item.lineColor,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -505,12 +513,14 @@ class _OverdayColumnItem {
     required this.containerColor,
     required this.lineColor,
     required this.startTime,
+    required this.completed,
   });
 
   final double height;
   final Color containerColor;
   final Color lineColor;
   final TimeOfDay startTime;
+  final bool completed;
 }
 
 Widget _clusterChild(
@@ -525,7 +535,7 @@ Widget _clusterChild(
     return _PrimaryHabitTile(config: cfg);
   }
 
-  final widget = _HabitTile(habit: iv.habit, tp: tp);
+  final widget = _HabitTile(habit: iv.habit!, tp: tp);
   final double targetOpacity =
       !showOthers
           ? 0
@@ -543,7 +553,7 @@ Widget _clusterChild(
 class _HabitTile extends StatelessWidget {
   const _HabitTile({required this.habit, required this.tp});
 
-  final dynamic habit; // Using dynamic to avoid explicit imports here
+  final Habit habit; // Using dynamic to avoid explicit imports here
   final ThemeProvider tp;
 
   @override
@@ -566,44 +576,64 @@ class _HabitTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 5),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, animation) {
-              final offsetAnimation = Tween<Offset>(
-                begin: const Offset(0.0, 0.2),
-                end: Offset.zero,
-              ).animate(animation);
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                transitionBuilder: (child, animation) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(0.0, 0.2),
+                    end: Offset.zero,
+                  ).animate(animation);
 
-              return SlideTransition(
-                position: offsetAnimation,
-                child: FadeTransition(opacity: animation, child: child),
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: FadeTransition(opacity: animation, child: child),
+                  );
+                },
+                child: KeyedSubtree(
+                  key: ValueKey<bool>(
+                    habit.shouldShowName(habit.getTimeType()),
+                  ),
+                  child:
+                      habit.shouldShowName(habit.getTimeType())
+                          ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                habit.iconPath,
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 4),
+                              // Always cap width; fall back to a safe width when unbounded to avoid infinite constraints.
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      constraints.hasBoundedWidth
+                                          ? (constraints.maxWidth - 32).clamp(
+                                            0,
+                                            double.infinity,
+                                          )
+                                          : 220,
+                                ),
+                                child: HabitNameDisplay(
+                                  text: habit.name,
+                                  completed: habit.completed,
+                                  textColor: habit.getNameColor(tp),
+                                  skipped: habit.skipped,
+                                ),
+                              ),
+                            ],
+                          )
+                          : Container(),
+                ),
               );
             },
-            child: KeyedSubtree(
-              key: ValueKey<bool>(habit.shouldShowName(habit.getTimeType())),
-              child:
-                  habit.shouldShowName(habit.getTimeType())
-                      ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(habit.iconPath, width: 24, height: 24),
-                          Text(
-                            habit.name,
-                            style: TextStyle(
-                              color: habit.getNameColor(tp),
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      )
-                      : Container(),
-            ),
           ),
         ],
       ),
