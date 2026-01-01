@@ -80,12 +80,11 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
               ? () => showModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.transparent,
-                builder: (context) {
-                  return SelectHabitColorSheet(
-                    tp: tp,
-                    fromCompletionWidget: true,
-                  );
-                },
+                builder:
+                    (context) => SelectHabitColorSheet(
+                      tp: tp,
+                      fromCompletionWidget: true,
+                    ),
               )
               : () {
                 setState(() {
@@ -126,27 +125,33 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 }
               },
       onTapDown: (context) {
-        if (widget.editable) return;
         HapticFeedback.selectionClick();
         setState(() {
           _scale = 0.9;
         });
       },
       onTapCancel: () {
-        if (widget.editable) return;
         setState(() {
           _scale = 1.0;
         });
       },
       onTapUp: (context) {
-        if (widget.editable) return;
         HapticFeedback.selectionClick();
         setState(() {
           _scale = 1.0;
         });
       },
       onLongPress: () {
-        if (widget.editable) return;
+        if (widget.editable) {
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder:
+                (context) =>
+                    SelectHabitColorSheet(tp: tp, fromCompletionWidget: true),
+          );
+          return;
+        }
         habitProvider.completeHabit(
           widget.habit.id,
           context,
