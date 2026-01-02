@@ -348,15 +348,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: SizedBox(
+                  width: 280,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
 
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(_navItems.length, (index) {
-                    Widget navItemWidget = _buildNavItem(index, glassFeel);
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(_navItems.length, (index) {
+                      Widget navItemWidget = _buildNavItem(index, glassFeel);
 
-                    return navItemWidget;
-                  }),
+                      return navItemWidget;
+                    }),
+                  ),
                 ),
               ),
             ),
