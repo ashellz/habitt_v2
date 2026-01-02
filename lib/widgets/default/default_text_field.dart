@@ -16,6 +16,7 @@ class DefaultTextField extends StatefulWidget {
     this.textOnly = false,
     this.obscureText = false,
     this.onTap,
+    this.suffix,
   });
 
   final String title;
@@ -27,6 +28,7 @@ class DefaultTextField extends StatefulWidget {
   final bool digitsOnly;
   final bool textOnly;
   final bool obscureText;
+  final Widget? suffix;
 
   @override
   State<DefaultTextField> createState() => _DefaultTextFieldState();
@@ -89,6 +91,16 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
 
         // Decoration
         decoration: InputDecoration(
+          suffixIcon:
+              widget.suffix != null
+                  ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                    child: widget.suffix,
+                  )
+                  : getSuffixIcon(tp, widget.suffix),
           alignLabelWithHint: true,
 
           // Borders
@@ -143,7 +155,9 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                   ScaleTransition(scale: animation, child: child),
           child: SvgPicture.asset(
             key: ValueKey<bool>(textObscured),
-            !textObscured ? "assets/svg/eye.svg" : "assets/svg/eye-shut.svg",
+            !textObscured
+                ? "assets/images/svg/eye.svg"
+                : "assets/images/svg/eye-shut.svg",
             excludeFromSemantics: true,
             semanticsLabel: '',
             colorFilter: ColorFilter.mode(
