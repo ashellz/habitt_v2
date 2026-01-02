@@ -45,33 +45,26 @@ class DefaultDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (title != null && desc != null)
+              if (title != null)
                 Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Text(
-                          title!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: tp.primaryTextColor,
-                          ),
-                        ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      title!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: tp.primaryTextColor,
                       ),
-                      SizedBox(height: 2),
-                      Text(
-                        desc!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: tp.primaryTextColor,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
+                ),
+              if (desc != null)
+                Text(
+                  desc!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: tp.secondaryTextColor, fontSize: 12),
                 ),
               if (content != null) content!,
               if (leftButtonText != null && rightButtonText != null)

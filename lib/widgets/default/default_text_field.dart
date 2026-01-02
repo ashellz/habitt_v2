@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+class DefaultTextField extends StatefulWidget {
+  const DefaultTextField({
     super.key,
     required this.title,
     required this.controller,
@@ -13,6 +14,7 @@ class CustomTextField extends StatelessWidget {
     this.topPadding = 24,
     this.digitsOnly = false,
     this.textOnly = false,
+    this.obscureText = false,
     this.onTap,
   });
 
@@ -24,6 +26,26 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final bool digitsOnly;
   final bool textOnly;
+  final bool obscureText;
+
+  @override
+  State<DefaultTextField> createState() => _DefaultTextFieldState();
+}
+
+class _DefaultTextFieldState extends State<DefaultTextField> {
+  bool textObscured = false;
+
+  @override
+  void initState() {
+    super.initState();
+    textObscured = widget.obscureText;
+  }
+
+  _toggleObscureText() {
+    setState(() {
+      textObscured = !textObscured;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +65,14 @@ class CustomTextField extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(top: topPadding),
+      padding: EdgeInsets.only(top: widget.topPadding),
       child: TextFormField(
-        controller: controller,
-        onTap: () => onTap?.call(),
+        controller: widget.controller,
+        onTap: () => widget.onTap?.call(),
         keyboardAppearance: tp.isDark ? Brightness.dark : Brightness.light,
         inputFormatters: [
-          LengthLimitingTextInputFormatter(maxTextLength),
-          getFilteringTextInputFormatter(textOnly, digitsOnly) ??
+          LengthLimitingTextInputFormatter(widget.maxTextLength),
+          getFilteringTextInputFormatter(widget.textOnly, widget.digitsOnly) ??
               FilteringTextInputFormatter.deny(""),
         ],
         cursorColor: tp.primaryTextColor,
@@ -59,7 +81,8 @@ class CustomTextField extends StatelessWidget {
         cursorRadius: const Radius.circular(12.0),
         cursorOpacityAnimates: true,
         enableInteractiveSelection: true,
-        maxLines: maxLines,
+        maxLines: widget.maxLines,
+        obscureText: textObscured,
 
         // Main input text style
         style: TextStyle(color: tp.primaryTextColor, fontSize: 14),
@@ -99,7 +122,37 @@ class CustomTextField extends StatelessWidget {
             color: tp.primaryTextColor,
           ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          labelText: title,
+          labelText: widget.title,
+        ),
+      ),
+    );
+  }
+
+  Widget? getSuffixIcon(ThemeProvider tp, Widget? suffix) {
+    if (!widget.obscureText) {
+      return null;
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: GestureDetector(
+        onTap: () => _toggleObscureText(),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 150),
+          transitionBuilder:
+              (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+          child: SvgPicture.asset(
+            key: ValueKey<bool>(textObscured),
+            !textObscured ? "assets/svg/eye.svg" : "assets/svg/eye-shut.svg",
+            excludeFromSemantics: true,
+            semanticsLabel: '',
+            colorFilter: ColorFilter.mode(
+              tp.secondaryTextColor,
+              BlendMode.srcIn,
+            ),
+            width: 20,
+            height: 20,
+          ),
         ),
       ),
     );

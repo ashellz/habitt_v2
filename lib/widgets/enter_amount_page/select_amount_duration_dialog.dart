@@ -52,7 +52,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                           value: wheelValue.toDouble(),
                           onChanged: onChangedAmount,
                         ),
-                        CustomTextField(
+                        DefaultTextField(
                           maxTextLength: 15,
                           topPadding: 12,
                           title: localizations.label,

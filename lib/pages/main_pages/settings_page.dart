@@ -4,6 +4,8 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
+import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/settings/select_color_sheet.dart';
 import 'package:habitt/widgets/settings/segmented_control.dart';
@@ -52,26 +54,22 @@ class _SettingsPageState extends State<SettingsPage> {
     final controller = TextEditingController();
     return showDialog<String>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: TextField(
-            controller: controller,
-            obscureText: true,
-            decoration: const InputDecoration(hintText: 'Passphrase'),
+      builder:
+          (context) => DefaultDialog(
+            title: title,
+            desc:
+                "You will use this passphrase to decrypt your data when importing it.",
+            content: DefaultTextField(
+              controller: controller,
+              title: "Passphrase",
+
+              obscureText: true,
+            ),
+            leftButtonText: "Cancel",
+            rightButtonText: "Export",
+            rightButtonCallback:
+                () => Navigator.of(context).pop(controller.text),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(null),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(controller.text),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
     );
   }
 
