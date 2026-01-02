@@ -24,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final pass = await _promptPassphrase(
       context,
       title: 'Set export passphrase',
+      buttonText: 'Export',
     );
     if (pass == null || pass.isEmpty) return;
 
@@ -36,7 +37,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _handleImport(BuildContext context) async {
-    final pass = await _promptPassphrase(context, title: 'Enter passphrase');
+    final pass = await _promptPassphrase(
+      context,
+      title: 'Enter passphrase',
+      buttonText: 'Import',
+    );
     if (pass == null || pass.isEmpty) return;
 
     _showSnack(context, 'Importing...');
@@ -50,26 +55,33 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<String?> _promptPassphrase(
     BuildContext context, {
     required String title,
+    required String buttonText,
   }) {
     final controller = TextEditingController();
     return showDialog<String>(
       context: context,
-      builder:
-          (context) => DefaultDialog(
-            title: title,
-            desc:
-                "You will use this passphrase to decrypt your data when importing it.",
-            content: DefaultTextField(
-              controller: controller,
-              title: "Passphrase",
-
-              obscureText: true,
-            ),
-            leftButtonText: "Cancel",
-            rightButtonText: "Export",
-            rightButtonCallback:
-                () => Navigator.of(context).pop(controller.text),
-          ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            controller.addListener(() => setState(() {}));
+            return DefaultDialog(
+              title: title,
+              desc:
+                  "You will use this passphrase to decrypt your data when importing it.",
+              content: DefaultTextField(
+                controller: controller,
+                title: "Passphrase",
+                obscureText: true,
+              ),
+              leftButtonText: "Cancel",
+              rightButtonText: buttonText,
+              rightButtonEnabled: controller.text.isNotEmpty,
+              rightButtonCallback:
+                  () => Navigator.of(context).pop(controller.text),
+            );
+          },
+        );
+      },
     );
   }
 
