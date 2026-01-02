@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
@@ -17,6 +18,74 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  Future<void> _handleExport(BuildContext context) async {
+    final pass = await _promptPassphrase(
+      context,
+      title: 'Set export passphrase',
+    );
+    if (pass == null || pass.isEmpty) return;
+
+    _showSnack(context, 'Exporting...');
+    final ok = await BackupService.exportData(
+      context: context,
+      passphrase: pass,
+    );
+    _showSnack(context, ok ? 'Exported backup.' : 'Export failed.');
+  }
+
+  Future<void> _handleImport(BuildContext context) async {
+    final pass = await _promptPassphrase(context, title: 'Enter passphrase');
+    if (pass == null || pass.isEmpty) return;
+
+    _showSnack(context, 'Importing...');
+    final ok = await BackupService.importData(
+      context: context,
+      passphrase: pass,
+    );
+    _showSnack(context, ok ? 'Import complete.' : 'Import failed.');
+  }
+
+  Future<String?> _promptPassphrase(
+    BuildContext context, {
+    required String title,
+  }) {
+    final controller = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: TextField(
+            controller: controller,
+            obscureText: true,
+            decoration: const InputDecoration(hintText: 'Passphrase'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(null),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(controller.text),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSnack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Padding(
+          padding: const EdgeInsets.only(bottom: 100.0),
+          child: Text(message),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final prefsProvider = context.watch<PreferencesProvider>();
@@ -162,6 +231,28 @@ class _SettingsPageState extends State<SettingsPage> {
                   onTap: () {
                     prefsProvider.toggleGlassFeel();
                   },
+                ),
+
+                const SizedBox(height: 16),
+                SettingTile(
+                  title: 'Export Data',
+                  desc: 'Backup all habits and days to encrypted file',
+                  icon: Icon(
+                    Icons.file_upload,
+                    color: tp.primaryColor,
+                    size: 28,
+                  ),
+                  onTap: () => _handleExport(context),
+                ),
+                SettingTile(
+                  title: 'Import Data',
+                  desc: 'Restore from encrypted backup file',
+                  icon: Icon(
+                    Icons.file_download,
+                    color: tp.primaryColor,
+                    size: 28,
+                  ),
+                  onTap: () => _handleImport(context),
                 ),
               ],
             ),
