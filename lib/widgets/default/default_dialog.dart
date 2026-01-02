@@ -17,6 +17,7 @@ class DefaultDialog extends StatelessWidget {
     this.leftButtonOutlined = true,
     this.rightButtonOutlined = false,
     this.rightButtonEnabled = true,
+    this.rightButtonLoading = false,
   });
 
   final String? title;
@@ -30,6 +31,7 @@ class DefaultDialog extends StatelessWidget {
   final bool leftButtonOutlined;
   final bool rightButtonOutlined;
   final bool rightButtonEnabled;
+  final bool rightButtonLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +95,7 @@ class DefaultDialog extends StatelessWidget {
                     if (rightButtonText != null)
                       Expanded(
                         child: DefaultButton(
+                          isLoading: rightButtonLoading,
                           enabled: rightButtonEnabled,
                           danger: danger,
                           outlined: rightButtonOutlined,

@@ -62,25 +62,22 @@ class DefaultButton extends StatelessWidget {
                         ),
                         child:
                             offsetLabel
-                                ? isLoading
-                                    ? const SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                              Colors.white,
-                                            ),
-                                      ),
-                                    )
-                                    : Text(
-                                      label,
-                                      style: TextStyle(
-                                        color: tp.primaryTextColor,
-                                      ),
-                                    )
-                                : null,
+                                ? null
+                                : isLoading
+                                ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                                : Text(
+                                  label,
+                                  style: TextStyle(color: tp.primaryTextColor),
+                                ),
                       )
                       : Stack(
                         children: [

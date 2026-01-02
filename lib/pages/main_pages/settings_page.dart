@@ -21,49 +21,55 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   Future<void> _handleExport(BuildContext context) async {
-    final pass = await _promptPassphrase(
+    final ok = await _showOperationDialog(
       context,
       title: 'Set export passphrase',
       buttonText: 'Export',
-    );
-    if (pass == null || pass.isEmpty) return;
-
-    _showSnack(context, 'Exporting...');
-    final ok = await BackupService.exportData(
-      context: context,
-      passphrase: pass,
+      operation:
+          (passphrase) => BackupService.exportData(
+            context: context,
+            passphrase: passphrase,
+          ),
     );
     _showSnack(context, ok ? 'Exported backup.' : 'Export failed.');
   }
 
   Future<void> _handleImport(BuildContext context) async {
-    final pass = await _promptPassphrase(
+    final ok = await _showOperationDialog(
       context,
       title: 'Enter passphrase',
       buttonText: 'Import',
-    );
-    if (pass == null || pass.isEmpty) return;
-
-    _showSnack(context, 'Importing...');
-    final ok = await BackupService.importData(
-      context: context,
-      passphrase: pass,
+      operation:
+          (passphrase) => BackupService.importData(
+            context: context,
+            passphrase: passphrase,
+          ),
     );
     _showSnack(context, ok ? 'Import complete.' : 'Import failed.');
   }
 
-  Future<String?> _promptPassphrase(
+  Future<bool> _showOperationDialog(
     BuildContext context, {
     required String title,
     required String buttonText,
-  }) {
+    required Future<bool> Function(String passphrase) operation,
+  }) async {
     final controller = TextEditingController();
-    return showDialog<String>(
+
+    final result = await showDialog<bool>(
       context: context,
-      builder: (context) {
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        bool isLoading = false;
+
         return StatefulBuilder(
           builder: (context, setState) {
-            controller.addListener(() => setState(() {}));
+            if (!controller.hasListeners) {
+              controller.addListener(() {
+                if (!isLoading) setState(() {});
+              });
+            }
+
             return DefaultDialog(
               title: title,
               desc:
@@ -75,14 +81,24 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               leftButtonText: "Cancel",
               rightButtonText: buttonText,
-              rightButtonEnabled: controller.text.isNotEmpty,
-              rightButtonCallback:
-                  () => Navigator.of(context).pop(controller.text),
+              rightButtonEnabled: controller.text.isNotEmpty && !isLoading,
+              rightButtonLoading: isLoading,
+              rightButtonCallback: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                final result = await operation(controller.text);
+                if (context.mounted) {
+                  Navigator.of(context).pop(result);
+                }
+              },
             );
           },
         );
       },
     );
+
+    return result ?? false;
   }
 
   void _showSnack(BuildContext context, String message) {
