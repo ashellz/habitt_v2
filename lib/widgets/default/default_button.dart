@@ -14,6 +14,7 @@ class DefaultButton extends StatelessWidget {
     this.offsetLabel = false,
     this.color,
     this.borderColor,
+    this.isLoading = false,
   });
 
   final Function onPressed;
@@ -24,6 +25,7 @@ class DefaultButton extends StatelessWidget {
   final bool offsetLabel;
   final Color? color;
   final Color? borderColor;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,8 @@ class DefaultButton extends StatelessWidget {
               child:
                   outlined
                       ? OutlinedButton(
-                        onPressed: () => enabled ? onPressed() : null,
+                        onPressed:
+                            () => enabled && !isLoading ? onPressed() : null,
                         style: OutlinedButton.styleFrom(
                           enableFeedback: false,
                           side: BorderSide(color: buttonColor),
@@ -57,10 +60,27 @@ class DefaultButton extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(24)),
                           ),
                         ),
-                        child: Text(
-                          label,
-                          style: TextStyle(color: tp.primaryTextColor),
-                        ),
+                        child:
+                            offsetLabel
+                                ? isLoading
+                                    ? const SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                      ),
+                                    )
+                                    : Text(
+                                      label,
+                                      style: TextStyle(
+                                        color: tp.primaryTextColor,
+                                      ),
+                                    )
+                                : null,
                       )
                       : Stack(
                         children: [
@@ -68,7 +88,11 @@ class DefaultButton extends StatelessWidget {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () => enabled ? onPressed() : null,
+                              onPressed:
+                                  () =>
+                                      enabled && !isLoading
+                                          ? onPressed()
+                                          : null,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: buttonColor,
                                 shape: RoundedRectangleBorder(
@@ -84,6 +108,18 @@ class DefaultButton extends StatelessWidget {
                               child:
                                   offsetLabel
                                       ? null
+                                      : isLoading
+                                      ? const SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                        ),
+                                      )
                                       : Text(
                                         label,
                                         style: TextStyle(color: Colors.white),
