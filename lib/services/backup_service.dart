@@ -80,6 +80,8 @@ class BackupService {
       final path = await _pickImportPath();
       if (path == null) return false;
 
+      debugPrint('Importing from $path');
+
       final file = File(path);
       if (!await file.exists()) return false;
 
@@ -234,7 +236,11 @@ class BackupService {
 
   static Future<String?> _pickImportPath() async {
     return FilePicker.platform
-        .pickFiles(dialogTitle: 'Import backup', type: FileType.any)
+        .pickFiles(
+          dialogTitle: 'Import backup',
+          type: FileType.custom,
+          allowedExtensions: ['habitt'],
+        )
         .then((result) => result?.files.single.path);
   }
 }

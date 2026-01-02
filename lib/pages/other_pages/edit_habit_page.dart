@@ -244,11 +244,11 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           standardColor: true,
                           habitsCount: false,
                         ),
-                        CustomTextField(
+                        DefaultTextField(
                           title: localizations.habitName,
                           controller: _nameController,
                         ),
-                        CustomTextField(
+                        DefaultTextField(
                           topPadding: 16,
                           title: localizations.notes,
                           controller: _descController,

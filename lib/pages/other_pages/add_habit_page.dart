@@ -82,11 +82,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         standardColor: true,
                         habitsCount: false,
                       ),
-                      CustomTextField(
+                      DefaultTextField(
                         title: localizations.habitName,
                         controller: nameController,
                       ),
-                      CustomTextField(
+                      DefaultTextField(
                         topPadding: 16,
                         title: localizations.notes,
                         controller: descController,

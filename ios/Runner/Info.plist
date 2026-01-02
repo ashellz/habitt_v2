@@ -49,5 +49,23 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>UTExportedTypeDeclarations</key>
+		<array>
+			<dict>
+				<key>UTTypeIdentifier</key>
+				<string>com.shellz.habitt.backup</string>
+				<key>UTTypeTagSpecification</key>
+				<dict>
+					<key>public.filename-extension</key>
+					<array>
+						<string>habitt</string>
+					</array>
+				</dict>
+				<key>UTTypeConformsTo</key>
+				<array>
+					<string>public.data</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>
