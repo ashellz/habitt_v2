@@ -231,24 +231,41 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
 
-                const SizedBox(height: 16),
                 SettingTile(
                   title: 'Export Data',
                   desc: 'Backup all habits and days to encrypted file',
-                  icon: Icon(
-                    Icons.file_upload,
-                    color: tp.primaryColor,
-                    size: 28,
+                  icon: CustomSwitcherWrapper(
+                    delay: Duration(milliseconds: 400),
+                    value: isTinted,
+                    widget: Icon(
+                      Icons.file_upload,
+                      color: tp.primaryColor,
+                      size: 32,
+                    ),
+                    secondaryWidget: Image.asset(
+                      "assets/images/icons/export.png",
+                      width: 32,
+                      height: 32,
+                    ),
                   ),
                   onTap: () => _handleExport(context),
                 ),
                 SettingTile(
                   title: 'Import Data',
                   desc: 'Restore from encrypted backup file',
-                  icon: Icon(
-                    Icons.file_download,
-                    color: tp.primaryColor,
-                    size: 28,
+                  icon: CustomSwitcherWrapper(
+                    delay: Duration(milliseconds: 500),
+                    value: isTinted,
+                    widget: Icon(
+                      Icons.file_download,
+                      color: tp.primaryColor,
+                      size: 32,
+                    ),
+                    secondaryWidget: Image.asset(
+                      "assets/images/icons/import.png",
+                      width: 32,
+                      height: 32,
+                    ),
                   ),
                   onTap: () => _handleImport(context),
                 ),
