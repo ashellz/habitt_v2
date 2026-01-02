@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:file_picker/file_picker.dart';
@@ -52,12 +53,16 @@ class BackupService {
         'ciphertext': base64Encode(secretBox.cipherText),
         'tag': base64Encode(secretBox.mac.bytes),
       });
+      final exportBytes = Uint8List.fromList(utf8.encode(exportJson));
 
-      final savePath = await _pickSavePath();
+      final savePath = await _pickSavePath(exportBytes);
       if (savePath == null) return false;
 
       final file = File(savePath);
-      await file.writeAsString(exportJson);
+      if (!await file.exists()) {
+        await file.create(recursive: true);
+      }
+      await file.writeAsBytes(exportBytes, flush: true);
       return true;
     } catch (e, st) {
       debugPrint('Export failed: $e\n$st');
@@ -211,23 +216,25 @@ class BackupService {
     return Day(date: DateTime.parse(m['date'] as String), habits: habits);
   }
 
-  static Future<String?> _pickSavePath() async {
+  static Future<String?> _pickSavePath(Uint8List bytes) async {
     final suggestedName =
         'habitt-backup-${DateTime.now().toIso8601String().split('T').first}.habitt';
+    final path = await FilePicker.platform.saveFile(
+      bytes: bytes,
+      dialogTitle: 'Export backup',
+      fileName: suggestedName,
+    );
 
-    // On mobile, FilePicker.saveFile requires bytes. We instead default to a
-    // writable app documents path to avoid the bytes requirement, keeping it simple.
+    if (path != null) return path;
+
+    // Fallback: save to documents directory
     final docs = await getApplicationDocumentsDirectory();
     return '${docs.path}/$suggestedName';
   }
 
   static Future<String?> _pickImportPath() async {
     return FilePicker.platform
-        .pickFiles(
-          dialogTitle: 'Import backup',
-          type: FileType.custom,
-          allowedExtensions: ['habitt', 'json'],
-        )
+        .pickFiles(dialogTitle: 'Import backup', type: FileType.any)
         .then((result) => result?.files.single.path);
   }
 }
