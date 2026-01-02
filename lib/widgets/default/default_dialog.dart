@@ -14,8 +14,9 @@ class DefaultDialog extends StatelessWidget {
     this.leftButtonCallback,
     this.rightButtonText,
     this.rightButtonCallback,
-    this.leftButtonOutlined = false,
+    this.leftButtonOutlined = true,
     this.rightButtonOutlined = false,
+    this.rightButtonEnabled = true,
   });
 
   final String? title;
@@ -28,6 +29,7 @@ class DefaultDialog extends StatelessWidget {
   final VoidCallback? rightButtonCallback;
   final bool leftButtonOutlined;
   final bool rightButtonOutlined;
+  final bool rightButtonEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +69,16 @@ class DefaultDialog extends StatelessWidget {
                   style: TextStyle(color: tp.secondaryTextColor, fontSize: 12),
                 ),
               if (content != null) content!,
-              if (leftButtonText != null && rightButtonText != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    children: [
+
+              Padding(
+                padding:
+                    rightButtonText != null || leftButtonText == null
+                        ? const EdgeInsets.only(top: 8.0)
+                        : EdgeInsets.zero,
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    if (leftButtonText != null)
                       Expanded(
                         child: DefaultButton(
                           danger: danger,
@@ -82,9 +89,11 @@ class DefaultDialog extends StatelessWidget {
                           label: leftButtonText!,
                         ),
                       ),
-                      SizedBox(width: 8),
+
+                    if (rightButtonText != null)
                       Expanded(
                         child: DefaultButton(
+                          enabled: rightButtonEnabled,
                           danger: danger,
                           outlined: rightButtonOutlined,
                           onPressed:
@@ -93,9 +102,9 @@ class DefaultDialog extends StatelessWidget {
                           label: rightButtonText!,
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
