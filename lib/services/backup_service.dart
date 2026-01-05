@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:path_provider/path_provider.dart';
+
+enum BackupOperationResult { success, cancelled, failed }
 
 class BackupService {
   BackupService._();
@@ -18,8 +19,8 @@ class BackupService {
   static final _aes = AesGcm.with256bits();
 
   /// Export all Hive data (habits + days) as a single encrypted JSON file.
-  /// Returns true on success.
-  static Future<bool> exportData({
+  /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
+  static Future<BackupOperationResult> exportData({
     required BuildContext context,
     required String passphrase,
   }) async {
@@ -56,34 +57,36 @@ class BackupService {
       final exportBytes = Uint8List.fromList(utf8.encode(exportJson));
 
       final savePath = await _pickSavePath(exportBytes);
-      if (savePath == null) return false;
+      if (savePath == null) {
+        return BackupOperationResult.cancelled; // User canceled
+      }
 
       final file = File(savePath);
       if (!await file.exists()) {
         await file.create(recursive: true);
       }
       await file.writeAsBytes(exportBytes, flush: true);
-      return true;
+      return BackupOperationResult.success;
     } catch (e, st) {
       debugPrint('Export failed: $e\n$st');
-      return false;
+      return BackupOperationResult.failed; // Export failed
     }
   }
 
   /// Import data from an encrypted file. Replaces existing box contents.
-  /// Returns true on success.
-  static Future<bool> importData({
+  /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
+  static Future<BackupOperationResult> importData({
     required BuildContext context,
     required String passphrase,
   }) async {
     try {
       final path = await _pickImportPath();
-      if (path == null) return false;
+      if (path == null) return BackupOperationResult.cancelled;
 
       debugPrint('Importing from $path');
 
       final file = File(path);
-      if (!await file.exists()) return false;
+      if (!await file.exists()) return BackupOperationResult.failed;
 
       final content = await file.readAsString();
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
@@ -127,10 +130,10 @@ class BackupService {
         await daysBox.add(d);
       }
 
-      return true;
+      return BackupOperationResult.success;
     } catch (e, st) {
       debugPrint('Import failed: $e\n$st');
-      return false;
+      return BackupOperationResult.failed;
     }
   }
 
@@ -230,8 +233,7 @@ class BackupService {
     if (path != null) return path;
 
     // Fallback: save to documents directory
-    final docs = await getApplicationDocumentsDirectory();
-    return '${docs.path}/$suggestedName';
+    return null;
   }
 
   static Future<String?> _pickImportPath() async {
