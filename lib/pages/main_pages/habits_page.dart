@@ -5,8 +5,8 @@ import 'package:habitt/pages/other_pages/add_habit_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/default/alert_popup.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
@@ -25,11 +25,6 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _listViewKey = GlobalKey();
 
-  // Popup control
-  bool showPopup = false;
-  late final AnimationController _popupController;
-  late final Animation<double> _popupAnimation;
-  final double popupHeight = 70;
   late final ConfettiController _confettiController;
   bool _wasAllCompleted = false;
   bool _initializedCompletionState = false;
@@ -37,16 +32,6 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _popupController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    _popupAnimation = CurvedAnimation(
-      parent: _popupController,
-      curve: Curves.easeOutBack, // curve for appearing
-      reverseCurve: Curves.easeIn, // curve for disappearing
-    );
-
     _scrollController.addListener(_onScroll);
     // Get initial geometry after the first frame
     WidgetsBinding.instance.addPostFrameCallback(
@@ -56,16 +41,6 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 1),
     );
-  }
-
-  void _togglePopup([bool? value]) {
-    final newVal = value ?? !showPopup;
-    setState(() => showPopup = newVal);
-    if (newVal) {
-      _popupController.forward();
-    } else {
-      _popupController.reverse();
-    }
   }
 
   // ====================================
@@ -135,7 +110,6 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
-    _popupController.dispose();
     _confettiController.dispose();
     super.dispose();
   }
@@ -161,10 +135,10 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
     }
 
     if (stateProvider.showAlert) {
-      _togglePopup(true);
       Future.delayed(const Duration(seconds: 3), () {
-        stateProvider.toggleAlert(show: false);
-        _togglePopup(false);
+        if (mounted) {
+          stateProvider.toggleAlert(show: false);
+        }
       });
     }
 
@@ -277,105 +251,10 @@ class _HabitsPageState extends State<HabitsPage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
             // Popup overlay
-            // Uses SlideTransition (via a Transform.translate) driven by _popupAnimation.
-            // When showPopup is false the popup is translated up off-screen.
-            AnimatedBuilder(
-              animation: _popupAnimation,
-              builder: (context, child) {
-                // progress goes 0..1
-                final progress = _popupAnimation.value;
-                // translateY from -popupHeight to 0
-                final offsetY =
-                    -popupHeight * 2 * (1 - progress) + 25 * (1 + progress);
-                // background scrim opacity
-
-                final alertText = stateProvider.alertText;
-                late double alertTextWidth;
-
-                final textPainter = TextPainter(
-                  text: TextSpan(
-                    text: alertText,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: tp.primaryTextColor,
-                    ),
-                  ),
-                  textDirection: TextDirection.ltr,
-                );
-                textPainter.layout();
-                alertTextWidth = textPainter.width;
-
-                final width = alertTextWidth + 64;
-
-                return IgnorePointer(
-                  ignoring: progress == 0,
-                  child: GestureDetector(
-                    onVerticalDragEnd: (details) {
-                      _togglePopup(false);
-                      stateProvider.toggleAlert(show: false);
-                    },
-                    child: Stack(
-                      children: [
-                        // Positioned popup container
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          top: 0,
-                          child: Transform.translate(
-                            offset: Offset(0, offsetY),
-                            child: Center(
-                              child: GlassBlurContainer(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                width: width,
-                                height: popupHeight,
-                                margin: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                ),
-                                borderRadius: 24,
-
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                  ),
-                                  child: Center(
-                                    child: SizedBox(
-                                      width: width,
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.info_outline,
-                                              size: 24,
-                                              color: tp.primaryColor,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              alertText,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                                color: tp.primaryTextColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+            AlertPopup(
+              message: stateProvider.alertText,
+              show: stateProvider.showAlert,
             ),
           ],
         ),
