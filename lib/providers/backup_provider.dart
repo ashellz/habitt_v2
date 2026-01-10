@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v2.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Metadata about a backup stored in the cloud.
 class BackupMetadata {
@@ -42,14 +43,22 @@ class BackupProvider extends ChangeNotifier {
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
   late final GoogleSignIn _googleSignIn;
+  late final FlutterSecureStorage _secureStorage;
 
-  // Backup metadata
-  BackupMetadata? _localMetadata;
+  // Encryption state
+  /// Passphrase stored securely in device keystore/keychain
+  String? _passphrase;
+  static const String _kSecurePassphraseKey = 'habitt_backup_passphrase';
+
+  // Current session passphrase (in-memory only)
   BackupMetadata? _cloudMetadata;
 
   // Sync state
   SyncState _syncState = SyncState.idle;
   String? _lastError;
+
+  BackupMetadata? _localMetadata;
+  String? _currentSessionPassphrase;
 
   // Getters
   GoogleSignInAccount? get currentUser => _currentUser;
@@ -68,7 +77,12 @@ class BackupProvider extends ChangeNotifier {
     return _localMetadata!.deviceId != _cloudMetadata!.deviceId;
   }
 
-  /// Initialize provider: restore persisted sign-in state and load metadata.
+  // Whether user has set up a passphrase
+  bool get hasPassphraseSet => _passphrase != null;
+
+  bool get isPassphraseLoaded => _currentSessionPassphrase != null;
+
+  /// Initialize provider: restore persisted sign-in state and passphrase.
   Future<void> initialize() async {
     _googleSignIn = GoogleSignIn(
       scopes: [drive_api.DriveApi.driveFileScope],
@@ -77,17 +91,33 @@ class BackupProvider extends ChangeNotifier {
           '752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com',
     );
 
-    // Try to restore previous sign-in
+    // Initializing secure storage
+    _secureStorage = const FlutterSecureStorage(
+      aOptions: AndroidOptions(
+        keyCipherAlgorithm:
+            KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
+        storageCipherAlgorithm: StorageCipherAlgorithm.AES_GCM_NoPadding,
+      ),
+    );
+
+    // Restoring previous sign-in and passphrase
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedEmail = prefs.getString(_kBackupUserEmailKey);
 
       if (savedEmail != null) {
-        // Silent sign-in attempt for previously signed-in user
+        // Signing in the user in the background
         final user = await _googleSignIn.signInSilently();
         if (user != null) {
           _currentUser = user;
           _firebaseUser = FirebaseAuth.instance.currentUser;
+
+          // Loading passphrase from secure storage (but don't load into session yet)
+          try {
+            _passphrase = await _secureStorage.read(key: _kSecurePassphraseKey);
+          } catch (e) {
+            debugPrint('Failed to load passphrase: $e');
+          }
 
           // TODO: Load local metadata from storage
           notifyListeners();
@@ -98,9 +128,6 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Sign in with Google and initialize backup sync.
-  ///
-  /// Persists sign-in state so user stays logged in across app restarts.
   Future<void> signIn() async {
     try {
       final user = await _googleSignIn.signIn();
@@ -133,26 +160,7 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Called when user signs in via Google (from UI).
-  /// Updates Firebase auth and enables sync.
-  Future<void> onSignInSuccess(GoogleSignInAccount user) async {
-    try {
-      _currentUser = user;
-      _firebaseUser = FirebaseAuth.instance.currentUser;
-
-      // TODO: Initialize Drive API client with authenticated user
-      // TODO: Fetch cloud backup metadata
-
-      notifyListeners();
-    } catch (e) {
-      _lastError = 'Failed to complete sign-in: $e';
-      debugPrint(_lastError);
-      notifyListeners();
-    }
-  }
-
-  /// Called when user signs out.
-  /// Clears persisted sign-in state and provider data.
+  /// Clears persisted sign-in state, passphrase, and provider data.
   Future<void> signOut() async {
     try {
       await GoogleSignIn().signOut();
@@ -162,11 +170,16 @@ class BackupProvider extends ChangeNotifier {
       _firebaseUser = null;
       _cloudMetadata = null;
       _syncState = SyncState.idle;
+      _passphrase = null;
+      _currentSessionPassphrase = null;
 
       // Clear persisted sign-in state
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_kBackupUserEmailKey);
       await prefs.remove(_kBackupUserIdKey);
+
+      // Clear passphrase from secure storage
+      await _secureStorage.delete(key: _kSecurePassphraseKey);
 
       notifyListeners();
     } catch (e) {
@@ -176,6 +189,63 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
+  /// Set or update user's backup passphrase.
+  ///
+  /// Passphrase is stored securely in device keystore (Android) or keychain (iOS).
+  /// Automatically loaded into session for immediate use.
+  Future<void> setPassphrase(String passphrase) async {
+    if (passphrase.isEmpty) {
+      _lastError = 'Passphrase cannot be empty';
+      notifyListeners();
+      return;
+    }
+
+    try {
+      // Store in secure storage
+      await _secureStorage.write(key: _kSecurePassphraseKey, value: passphrase);
+
+      _passphrase = passphrase;
+      _currentSessionPassphrase = passphrase;
+      _lastError = null;
+
+      notifyListeners();
+    } catch (e) {
+      _lastError = 'Failed to set passphrase: $e';
+      debugPrint(_lastError);
+      notifyListeners();
+    }
+  }
+
+  /// Load passphrase into current session for encryption/decryption.
+  ///
+  /// Call this if passphrase is set but not currently loaded in session.
+  /// Returns true if successful.
+  Future<bool> loadPassphraseToSession() async {
+    try {
+      if (_passphrase == null) {
+        _lastError = 'No passphrase stored';
+        notifyListeners();
+        return false;
+      }
+
+      _currentSessionPassphrase = _passphrase;
+      _lastError = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _lastError = 'Failed to load passphrase: $e';
+      debugPrint(_lastError);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Clear in-memory passphrase without signing out.
+  void clearSessionPassphrase() {
+    _currentSessionPassphrase = null;
+    notifyListeners();
+  }
+
   /// Sync workflow: orchestrates upload/download based on device/cloud state.
   ///
   /// Logic:
@@ -183,9 +253,17 @@ class BackupProvider extends ChangeNotifier {
   /// 2. If cloud backup from different device: decide strategy (merge, ask user, etc.)
   /// 3. Download cloud backup if available and newer
   /// 4. Upload local backup to cloud
+  ///
+  /// Requires passphrase to be loaded in current session.
   Future<void> performSync() async {
     if (!isLoggedIn) {
       _lastError = 'Not signed in. Cannot sync.';
+      notifyListeners();
+      return;
+    }
+
+    if (hasPassphraseSet && !isPassphraseLoaded) {
+      _lastError = 'Passphrase required to sync. Please unlock backup.';
       notifyListeners();
       return;
     }
@@ -198,20 +276,15 @@ class BackupProvider extends ChangeNotifier {
       // TODO: Fetch cloud metadata
       await _fetchCloudMetadata();
 
-      // TODO: Detect conflicts
-      if (isCloudBackupFromDifferentDevice) {
-        _syncState = SyncState.conflict;
-        _lastError =
-            'Backup detected from different device. Manual resolution needed.';
-        notifyListeners();
+      if (!isCloudBackupFromDifferentDevice) {
+        // Not from different device, no need to download anything
         return;
       }
 
-      // TODO: Download cloud backup if newer
+      // TODO: Download cloud backup
       await _downloadBackupFromCloud();
 
-      // TODO: Upload local backup to cloud
-      await _uploadBackupToCloud();
+      // Since the backup is now same, only upload local metadata
 
       _syncState = SyncState.success;
       notifyListeners();
@@ -285,11 +358,5 @@ class BackupProvider extends ChangeNotifier {
       debugPrint(_lastError);
       notifyListeners();
     }
-  }
-
-  /// Resolve conflict by choosing local or cloud version.
-  Future<void> resolveConflict({required bool preferCloud}) async {
-    // TODO: If preferCloud=true, download and replace local
-    // TODO: If preferCloud=false, upload local and overwrite cloud
   }
 }
