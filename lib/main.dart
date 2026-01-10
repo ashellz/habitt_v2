@@ -14,11 +14,12 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/color_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -117,6 +118,9 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+
+        // 5. BackupProvider: Manages Google Drive sync and backup state.
+        ChangeNotifierProvider(create: (_) => BackupProvider(), lazy: false),
       ],
       child: MyApp(prefs: prefs),
     ),
