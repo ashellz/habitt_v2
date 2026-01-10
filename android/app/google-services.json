@@ -30,14 +30,6 @@
           }
         },
         {
-          "client_id": "752709751941-sh2ngj8q1nd0sp0csihgv8ber9udcl22.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.shellz.habitt",
-            "certificate_hash": "d5671d9d34d718f961f303b694aec2dae3608b7d"
-          }
-        },
-        {
           "client_id": "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
           "client_type": 3
         }

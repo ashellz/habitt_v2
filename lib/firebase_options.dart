@@ -64,8 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
-    androidClientId: '752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com',
-    iosClientId: '752709751941-dc5huio9hurcah7ipb2hrmmf72h93rht.apps.googleusercontent.com',
+    androidClientId:
+        '752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com',
+    iosClientId:
+        '752709751941-dc5huio9hurcah7ipb2hrmmf72h93rht.apps.googleusercontent.com',
     iosBundleId: 'com.shellz.habitt',
   );
 
@@ -75,8 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
-    androidClientId: '752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com',
-    iosClientId: '752709751941-dc5huio9hurcah7ipb2hrmmf72h93rht.apps.googleusercontent.com',
+    androidClientId:
+        '752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com',
+    iosClientId:
+        '752709751941-dc5huio9hurcah7ipb2hrmmf72h93rht.apps.googleusercontent.com',
     iosBundleId: 'com.shellz.habitt',
   );
 
