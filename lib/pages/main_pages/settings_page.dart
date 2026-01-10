@@ -347,7 +347,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => _handleImport(context),
                     ),
                     SettingTile(
-                      title: "Backup data",
+                      title: "Backup Data",
                       desc:
                           "Use your google drive to backup encrypted app data.",
                       icon: CustomSwitcherWrapper(
