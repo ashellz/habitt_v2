@@ -60,6 +60,8 @@ class _SettingsPageState extends State<SettingsPage> {
       _displayAlert('Import complete.');
     } else if (result == BackupOperationResult.failed) {
       _displayAlert('Import failed.');
+    } else if (result == BackupOperationResult.wrongPassphrase) {
+      _displayAlert('Wrong passphrase.');
     }
     // If cancelled, show no popup
   }

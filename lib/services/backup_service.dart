@@ -12,7 +12,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:provider/provider.dart';
 
-enum BackupOperationResult { success, cancelled, failed }
+enum BackupOperationResult { success, cancelled, failed, wrongPassphrase }
 
 class BackupService {
   BackupService._();
@@ -99,38 +99,44 @@ class BackupService {
       final tag = base64Decode(wrapper['tag'] as String);
 
       final secretKey = await _deriveKey(passphrase, salt);
-      final clear = await _aes.decrypt(
-        SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
-        secretKey: secretKey,
-      );
+      try {
+        final clear = await _aes.decrypt(
+          SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+          secretKey: secretKey,
+        );
 
-      final payload = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
-      if ((payload['version'] as int? ?? 0) != 1) {
-        throw Exception('Unsupported backup version');
+        final payload = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+        if ((payload['version'] as int? ?? 0) != 1) {
+          throw Exception('Unsupported backup version');
+        }
+
+        final habitsBox = Hive.box<Habit>('habits');
+        final daysBox = Hive.box<Day>('days');
+
+        // Clear current data
+        await habitsBox.clear();
+        await daysBox.clear();
+
+        final habitsList =
+            (payload['habits'] as List<dynamic>? ?? [])
+                .map((e) => _habitFromMap(Map<String, dynamic>.from(e)))
+                .toList();
+        for (final h in habitsList) {
+          await habitsBox.add(h);
+        }
+
+        final daysList =
+            (payload['days'] as List<dynamic>? ?? [])
+                .map((e) => _dayFromMap(Map<String, dynamic>.from(e)))
+                .toList();
+        for (final d in daysList) {
+          await daysBox.add(d);
+        }
+      } on SecretBoxAuthenticationError {
+        debugPrint('Decryption failed: invalid passphrase or corrupted file');
+        return BackupOperationResult.wrongPassphrase;
       }
 
-      final habitsBox = Hive.box<Habit>('habits');
-      final daysBox = Hive.box<Day>('days');
-
-      // Clear current data
-      await habitsBox.clear();
-      await daysBox.clear();
-
-      final habitsList =
-          (payload['habits'] as List<dynamic>? ?? [])
-              .map((e) => _habitFromMap(Map<String, dynamic>.from(e)))
-              .toList();
-      for (final h in habitsList) {
-        await habitsBox.add(h);
-      }
-
-      final daysList =
-          (payload['days'] as List<dynamic>? ?? [])
-              .map((e) => _dayFromMap(Map<String, dynamic>.from(e)))
-              .toList();
-      for (final d in daysList) {
-        await daysBox.add(d);
-      }
       if (!context.mounted) {
         debugPrint('Mount check failed');
         return BackupOperationResult.success;
