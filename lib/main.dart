@@ -1,7 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habitt/firebase_options.dart';
 import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/l10n/l10n.dart';
 import 'package:habitt/models/day.dart';
@@ -70,6 +72,8 @@ Future<void> main() async {
       statusBarBrightness: Brightness.dark, // For iOS: dark icons
     ),
   );
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     MultiProvider(
