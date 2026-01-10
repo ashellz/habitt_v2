@@ -39,7 +39,7 @@ class DefaultDialog extends StatelessWidget {
     Color dialogColor = tp.surfaceColor;
 
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 40),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 28),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       backgroundColor: dialogColor,
       child: IntrinsicHeight(
@@ -49,27 +49,29 @@ class DefaultDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (title != null)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4,
+                children: [
+                  if (title != null)
+                    Text(
                       title!,
-                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: tp.primaryTextColor,
                       ),
                     ),
+
+                  Text(
+                    desc!,
+                    style: TextStyle(
+                      color: tp.secondaryTextColor,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              if (desc != null)
-                Text(
-                  desc!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: tp.secondaryTextColor, fontSize: 12),
-                ),
+                ],
+              ),
               if (content != null) content!,
 
               Padding(
