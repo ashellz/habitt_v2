@@ -75,6 +75,10 @@ Future<void> main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // Initialize BackupProvider to restore persisted sign-in state
+  final backupProvider = BackupProvider();
+  await backupProvider.initialize();
+
   runApp(
     MultiProvider(
       providers: [
@@ -119,7 +123,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
 
         // 5. BackupProvider: Manages Google Drive sync and backup state.
-        ChangeNotifierProvider(create: (_) => BackupProvider(), lazy: false),
+        ChangeNotifierProvider.value(value: backupProvider),
       ],
       child: MyApp(prefs: prefs),
     ),
