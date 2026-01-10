@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v2.dart';
 import 'package:habitt/firebase_options.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:provider/provider.dart';
 
 class BackupDataPage extends StatelessWidget {
@@ -22,7 +24,8 @@ class BackupDataPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ListView(
             children: [
-              const SizedBox(height: 48),
+              NavBackButton(tp: tp),
+
               Text(
                 "Backup Data",
                 style: TextStyle(
@@ -45,7 +48,6 @@ class BackupDataPage extends StatelessWidget {
                   try {
                     final googleSignIn = GoogleSignIn(
                       scopes: [DriveApi.driveFileScope],
-                      // Needed on iOS so GIDSignIn has a client ID.
                       clientId: DefaultFirebaseOptions.ios.iosClientId,
                       serverClientId:
                           "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
@@ -63,6 +65,14 @@ class BackupDataPage extends StatelessWidget {
                     await FirebaseAuth.instance.signInWithCredential(
                       credential,
                     );
+
+                    // Wire to BackupProvider and initialize sync
+                    if (context.mounted) {
+                      final backupProvider = context.read<BackupProvider>();
+                      await backupProvider.onSignInSuccess(user);
+                      // Optionally trigger initial sync
+                      await backupProvider.performSync();
+                    }
                   } catch (e, st) {
                     debugPrint('Google sign-in failed: $e\n$st');
                     if (context.mounted) {
