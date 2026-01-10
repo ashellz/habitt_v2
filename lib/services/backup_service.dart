@@ -8,7 +8,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:provider/provider.dart';
 
 enum BackupOperationResult { success, cancelled, failed }
 
@@ -129,6 +131,11 @@ class BackupService {
       for (final d in daysList) {
         await daysBox.add(d);
       }
+      if (!context.mounted) {
+        debugPrint('Mount check failed');
+        return BackupOperationResult.success;
+      }
+      context.read<HabitProvider>().init();
 
       return BackupOperationResult.success;
     } catch (e, st) {
