@@ -13,6 +13,8 @@ class SettingTile extends StatefulWidget {
     required this.onTap,
     this.hasSwitch = false,
     this.switchValue = false,
+    this.hasArrow = false,
+    this.trailing,
   });
 
   final String title;
@@ -21,6 +23,8 @@ class SettingTile extends StatefulWidget {
   final void Function() onTap;
   final bool hasSwitch;
   final bool switchValue;
+  final bool hasArrow;
+  final Widget? trailing;
 
   @override
   State<SettingTile> createState() => _SettingTileState();
@@ -82,6 +86,41 @@ class _SettingTileState extends State<SettingTile> {
     );
   }
 
+  Widget getTrailingWidget(ThemeProvider tp) {
+    Widget trailingWidget;
+
+    if (widget.trailing != null) {
+      trailingWidget = widget.trailing!;
+    } else if (widget.hasArrow) {
+      trailingWidget = Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: tp.surfaceColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: tp.borderColor, width: 2),
+        ),
+        child: Icon(
+          Icons.chevron_right_rounded,
+          color: tp.primaryTextColor,
+          size: 24,
+        ),
+      );
+    } else if (widget.hasSwitch) {
+      trailingWidget = DefaultSwitch(
+        switchValue: widget.switchValue,
+        onTap: () {
+          widget.onTap();
+        },
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0),
+      child: trailingWidget,
+    );
+  }
+
   Container mainWidget(ThemeProvider tp, bool isTinted) {
     return Container(
       width: double.infinity,
@@ -113,16 +152,7 @@ class _SettingTileState extends State<SettingTile> {
                     ],
                   ),
                 ),
-                if (widget.hasSwitch)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: DefaultSwitch(
-                      switchValue: widget.switchValue,
-                      onTap: () {
-                        widget.onTap();
-                      },
-                    ),
-                  ),
+                getTrailingWidget(tp),
               ],
             ),
           ),

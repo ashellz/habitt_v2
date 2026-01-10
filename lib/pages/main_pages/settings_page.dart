@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/pages/other_pages/backup_data_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/services/backup_service.dart';
@@ -321,6 +322,32 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                       onTap: () => _handleImport(context),
+                    ),
+                    SettingTile(
+                      title: "Backup data",
+                      desc:
+                          "Use your google drive to backup encrypted app data.",
+                      icon: CustomSwitcherWrapper(
+                        delay: Duration(milliseconds: 600),
+                        value: isTinted,
+                        widget: Icon(
+                          Icons.sync,
+                          color: tp.primaryColor,
+                          size: 32,
+                        ),
+                        secondaryWidget: Image.asset(
+                          "assets/images/icons/google-drive.png",
+                        ),
+                      ),
+                      hasArrow: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BackupDataPage(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
