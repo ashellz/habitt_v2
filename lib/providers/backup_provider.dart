@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v2.dart' as drive_api;
+import 'package:habitt/firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Metadata about a backup stored in the cloud.
 class BackupMetadata {
@@ -26,16 +28,20 @@ enum SyncState { idle, syncing, success, conflict, error }
 /// Provider managing backup/sync operations with Google Drive.
 ///
 /// Responsibilities:
-/// - Track Google Sign-In authentication state
+/// - Track Google Sign-In authentication state (persists across sessions)
 /// - Manage backup metadata (device ID, last sync info)
 /// - Coordinate sync operations (upload/download)
 /// - Detect device conflicts (backup from different device)
 class BackupProvider extends ChangeNotifier {
   BackupProvider();
 
+  static const String _kBackupUserEmailKey = 'backup_user_email';
+  static const String _kBackupUserIdKey = 'backup_user_id';
+
   // Google Sign-In state
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
+  late final GoogleSignIn _googleSignIn;
 
   // Backup metadata
   BackupMetadata? _localMetadata;
@@ -62,11 +68,69 @@ class BackupProvider extends ChangeNotifier {
     return _localMetadata!.deviceId != _cloudMetadata!.deviceId;
   }
 
-  /// Initialize provider: load local backup metadata and check cloud state.
+  /// Initialize provider: restore persisted sign-in state and load metadata.
   Future<void> initialize() async {
-    // TODO: Load local backup metadata from persistent storage (Hive/SharedPreferences)
-    // Example:
-    // _localMetadata = await _loadLocalMetadata();
+    _googleSignIn = GoogleSignIn(
+      scopes: [drive_api.DriveApi.driveFileScope],
+      clientId: DefaultFirebaseOptions.ios.iosClientId,
+      serverClientId:
+          '752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com',
+    );
+
+    // Try to restore previous sign-in
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedEmail = prefs.getString(_kBackupUserEmailKey);
+
+      if (savedEmail != null) {
+        // Silent sign-in attempt for previously signed-in user
+        final user = await _googleSignIn.signInSilently();
+        if (user != null) {
+          _currentUser = user;
+          _firebaseUser = FirebaseAuth.instance.currentUser;
+
+          // TODO: Load local metadata from storage
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to restore sign-in state: $e');
+    }
+  }
+
+  /// Sign in with Google and initialize backup sync.
+  ///
+  /// Persists sign-in state so user stays logged in across app restarts.
+  Future<void> signIn() async {
+    try {
+      final user = await _googleSignIn.signIn();
+      if (user == null) return; // user cancelled
+
+      final auth = await user.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      _currentUser = user;
+      _firebaseUser = FirebaseAuth.instance.currentUser;
+
+      // Persist sign-in state
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_kBackupUserEmailKey, user.email);
+      await prefs.setString(_kBackupUserIdKey, user.id);
+
+      notifyListeners();
+
+      // TODO: Initialize Drive API client with authenticated user
+      // TODO: Fetch cloud backup metadata
+    } catch (e) {
+      _lastError = 'Failed to sign in: $e';
+      debugPrint(_lastError);
+      notifyListeners();
+    }
   }
 
   /// Called when user signs in via Google (from UI).
@@ -88,6 +152,7 @@ class BackupProvider extends ChangeNotifier {
   }
 
   /// Called when user signs out.
+  /// Clears persisted sign-in state and provider data.
   Future<void> signOut() async {
     try {
       await GoogleSignIn().signOut();
@@ -97,6 +162,11 @@ class BackupProvider extends ChangeNotifier {
       _firebaseUser = null;
       _cloudMetadata = null;
       _syncState = SyncState.idle;
+
+      // Clear persisted sign-in state
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kBackupUserEmailKey);
+      await prefs.remove(_kBackupUserIdKey);
 
       notifyListeners();
     } catch (e) {

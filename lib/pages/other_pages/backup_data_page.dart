@@ -1,8 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis/drive/v2.dart';
-import 'package:habitt/firebase_options.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_contrast.dart';
@@ -51,35 +47,11 @@ class BackupDataPage extends StatelessWidget {
                 DefaultButton(
                   onPressed: () async {
                     try {
-                      final googleSignIn = GoogleSignIn(
-                        scopes: [DriveApi.driveFileScope],
-                        clientId: DefaultFirebaseOptions.ios.iosClientId,
-                        serverClientId:
-                            "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
-                      );
-
-                      final user = await googleSignIn.signIn();
-                      if (user == null) return; // user cancelled
-
-                      final auth = await user.authentication;
-                      final credential = GoogleAuthProvider.credential(
-                        accessToken: auth.accessToken,
-                        idToken: auth.idToken,
-                      );
-
-                      await FirebaseAuth.instance.signInWithCredential(
-                        credential,
-                      );
-
-                      // Wire to BackupProvider and initialize sync
+                      await backupProvider.signIn();
                       if (context.mounted) {
-                        final backupProvider = context.read<BackupProvider>();
-                        await backupProvider.onSignInSuccess(user);
-                        // Optionally trigger initial sync
                         await backupProvider.performSync();
                       }
-                    } catch (e, st) {
-                      debugPrint('Google sign-in failed: $e\n$st');
+                    } catch (e) {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -126,6 +98,8 @@ class BackupDataPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: DefaultButton(
+                        isLoading:
+                            backupProvider.syncState == SyncState.syncing,
                         prefix: Icon(
                           Icons.sync,
                           color: bestContrastingOn(tp.primaryButtonBackground),
