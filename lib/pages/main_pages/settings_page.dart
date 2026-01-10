@@ -13,6 +13,7 @@ import 'package:habitt/widgets/settings/select_color_sheet.dart';
 import 'package:habitt/widgets/settings/segmented_control.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -138,6 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefsProvider = context.watch<PreferencesProvider>();
     final tp = context.watch<ThemeProvider>();
     bool isTinted = prefsProvider.colorfulness == Colorfulness.tinted;
+    final Color primary = tp.primaryColor;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -183,6 +185,27 @@ class _SettingsPageState extends State<SettingsPage> {
                     SettingTile(
                       title: "Accent Color",
                       desc: "Select a color pallete for your interface",
+                      trailing: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: primary,
+                          border: Border.all(
+                            color: primary.darken(tp.isDark ? 20 : 10),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: primary.withOpacity(0.28),
+                              blurRadius: 10,
+                              spreadRadius: 0,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        height: 36,
+                        width: 36,
+                      ),
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 100),
                         value: isTinted,
