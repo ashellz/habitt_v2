@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/util/color_contrast.dart';
 import 'package:provider/provider.dart';
 
 class DefaultButton extends StatelessWidget {
@@ -15,6 +16,7 @@ class DefaultButton extends StatelessWidget {
     this.color,
     this.borderColor,
     this.isLoading = false,
+    this.prefix,
   });
 
   final Function onPressed;
@@ -26,6 +28,7 @@ class DefaultButton extends StatelessWidget {
   final Color? color;
   final Color? borderColor;
   final bool isLoading;
+  final Widget? prefix;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,9 @@ class DefaultButton extends StatelessWidget {
 
     Color buttonColor =
         danger ? tp.dangerColor : color ?? tp.primaryButtonBackground;
+
+    // Determine best text color based on button background contrast
+    Color textColor = outlined ? buttonColor : bestContrastingOn(buttonColor);
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -74,9 +80,19 @@ class DefaultButton extends StatelessWidget {
                                     ),
                                   ),
                                 )
-                                : Text(
-                                  label,
-                                  style: TextStyle(color: tp.primaryTextColor),
+                                : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (prefix != null) ...[
+                                      prefix!,
+                                      const SizedBox(width: 8),
+                                    ],
+                                    Text(
+                                      label,
+                                      style: TextStyle(color: textColor),
+                                    ),
+                                  ],
                                 ),
                       )
                       : Stack(
@@ -117,9 +133,20 @@ class DefaultButton extends StatelessWidget {
                                               ),
                                         ),
                                       )
-                                      : Text(
-                                        label,
-                                        style: TextStyle(color: Colors.white),
+                                      : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (prefix != null) ...[
+                                            prefix!,
+                                            const SizedBox(width: 8),
+                                          ],
+                                          Text(
+                                            label,
+                                            style: TextStyle(color: textColor),
+                                          ),
+                                        ],
                                       ),
                             ),
                           ),
