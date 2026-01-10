@@ -52,10 +52,7 @@ class BackupDataPage extends StatelessWidget {
                   DefaultButton(
                     onPressed: () async {
                       try {
-                        await backupProvider.signIn();
-                        if (context.mounted) {
-                          await backupProvider.performSync();
-                        }
+                        await backupProvider.signIn(context);
                       } catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(

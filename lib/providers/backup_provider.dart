@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v2.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
+import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/default_text_field.dart';
+import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -128,7 +132,7 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> signIn() async {
+  Future<void> signIn(BuildContext context) async {
     try {
       final user = await _googleSignIn.signIn();
       if (user == null) return; // user cancelled
@@ -151,8 +155,35 @@ class BackupProvider extends ChangeNotifier {
 
       notifyListeners();
 
+      // Checking if user has existing passphrase
+      if (await _secureStorage.containsKey(key: _kSecurePassphraseKey)) {
+        await loadPassphraseToSession();
+      } else {
+        // New user, prompt to set passphrase
+        _passphrase = null;
+        _currentSessionPassphrase = null;
+
+        if (!context.mounted) return;
+
+        final String? passphrase = await showDialog(
+          context: context,
+          builder: (context) {
+            final TextEditingController controller = TextEditingController();
+            return PassphraseDialog(controller: controller);
+          },
+        );
+
+        if (passphrase != null && passphrase.isNotEmpty) {
+          await setPassphrase(passphrase);
+        }
+
+        notifyListeners();
+      }
+
       // TODO: Initialize Drive API client with authenticated user
       // TODO: Fetch cloud backup metadata
+
+      await performSync();
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
       debugPrint(_lastError);
@@ -250,9 +281,9 @@ class BackupProvider extends ChangeNotifier {
   ///
   /// Logic:
   /// 1. Check if cloud backup exists
-  /// 2. If cloud backup from different device: decide strategy (merge, ask user, etc.)
-  /// 3. Download cloud backup if available and newer
-  /// 4. Upload local backup to cloud
+  /// 2. If its from same device dont download anything
+  /// 3. Download cloud backup if from different device
+  /// 4. Upload local metadata
   ///
   /// Requires passphrase to be loaded in current session.
   Future<void> performSync() async {
