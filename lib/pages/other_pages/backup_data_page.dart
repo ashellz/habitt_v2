@@ -5,8 +5,10 @@ import 'package:googleapis/drive/v2.dart';
 import 'package:habitt/firebase_options.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/util/color_contrast.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +18,8 @@ class BackupDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
+    final backupProvider = context.watch<BackupProvider>();
+    final bool isLoggedIn = backupProvider.isLoggedIn;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -39,55 +43,103 @@ class BackupDataPage extends StatelessWidget {
                 style: TextStyle(fontSize: 16, color: tp.secondaryTextColor),
               ),
               const SizedBox(height: 32),
-              Text(
-                "You are currently not connected to your Google account.",
-                style: TextStyle(fontSize: 16, color: tp.secondaryTextColor),
-              ),
-              DefaultButton(
-                onPressed: () async {
-                  try {
-                    final googleSignIn = GoogleSignIn(
-                      scopes: [DriveApi.driveFileScope],
-                      clientId: DefaultFirebaseOptions.ios.iosClientId,
-                      serverClientId:
-                          "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
-                    );
-
-                    final user = await googleSignIn.signIn();
-                    if (user == null) return; // user cancelled
-
-                    final auth = await user.authentication;
-                    final credential = GoogleAuthProvider.credential(
-                      accessToken: auth.accessToken,
-                      idToken: auth.idToken,
-                    );
-
-                    await FirebaseAuth.instance.signInWithCredential(
-                      credential,
-                    );
-
-                    // Wire to BackupProvider and initialize sync
-                    if (context.mounted) {
-                      final backupProvider = context.read<BackupProvider>();
-                      await backupProvider.onSignInSuccess(user);
-                      // Optionally trigger initial sync
-                      await backupProvider.performSync();
-                    }
-                  } catch (e, st) {
-                    debugPrint('Google sign-in failed: $e\n$st');
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Google sign-in failed. Please try again.',
-                          ),
-                        ),
+              if (!isLoggedIn) ...[
+                Text(
+                  "You are currently not connected to your Google account.",
+                  style: TextStyle(fontSize: 16, color: tp.secondaryTextColor),
+                ),
+                DefaultButton(
+                  onPressed: () async {
+                    try {
+                      final googleSignIn = GoogleSignIn(
+                        scopes: [DriveApi.driveFileScope],
+                        clientId: DefaultFirebaseOptions.ios.iosClientId,
+                        serverClientId:
+                            "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
                       );
+
+                      final user = await googleSignIn.signIn();
+                      if (user == null) return; // user cancelled
+
+                      final auth = await user.authentication;
+                      final credential = GoogleAuthProvider.credential(
+                        accessToken: auth.accessToken,
+                        idToken: auth.idToken,
+                      );
+
+                      await FirebaseAuth.instance.signInWithCredential(
+                        credential,
+                      );
+
+                      // Wire to BackupProvider and initialize sync
+                      if (context.mounted) {
+                        final backupProvider = context.read<BackupProvider>();
+                        await backupProvider.onSignInSuccess(user);
+                        // Optionally trigger initial sync
+                        await backupProvider.performSync();
+                      }
+                    } catch (e, st) {
+                      debugPrint('Google sign-in failed: $e\n$st');
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Google sign-in failed. Please try again.',
+                            ),
+                          ),
+                        );
+                      }
                     }
-                  }
-                },
-                label: "Connect to Google",
-              ),
+                  },
+                  label: "Connect to Google",
+                ),
+              ] else ...[
+                Text(
+                  "Connected as ${backupProvider.currentUser?.email}",
+                  style: TextStyle(fontSize: 16, color: tp.secondaryTextColor),
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: DefaultButton(
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder:
+                                (context) => DefaultDialog(
+                                  title: "Opt out of Backup",
+                                  desc:
+                                      "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
+                                  rightButtonCallback: () async {
+                                    await backupProvider.signOut();
+                                    await FirebaseAuth.instance.signOut();
+                                  },
+                                  rightButtonText: "Opt out",
+                                  danger: true,
+                                  leftButtonText: "Cancel",
+                                ),
+                          );
+                        },
+                        label: "Opt out",
+                        color: tp.backgroundColor,
+                      ),
+                    ),
+                    Expanded(
+                      child: DefaultButton(
+                        prefix: Icon(
+                          Icons.sync,
+                          color: bestContrastingOn(tp.primaryButtonBackground),
+                        ),
+                        onPressed: () async {
+                          await backupProvider.performSync();
+                        },
+                        label: "Sync Now",
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
