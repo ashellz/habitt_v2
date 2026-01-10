@@ -27,9 +27,9 @@ class InteractiveWheel extends StatefulWidget {
 class InteractiveWheelState extends State<InteractiveWheel>
     with SingleTickerProviderStateMixin {
   double _rotationAngle = 0.0;
-  double _startAngle = 0.0;
   double _cumulativeRotation = 0.0;
   double _angularVelocity = 0.0; // radians per second
+  double _lastPanAngle = 0.0;
   DateTime? _lastUpdateTime;
 
   late final AnimationController _controller;
@@ -53,6 +53,15 @@ class InteractiveWheelState extends State<InteractiveWheel>
 
   // Normalize delta to range [-pi, pi] to avoid jumps when crossing the boundary.
   double _normalizeDelta(double delta) => (delta + pi) % (2 * pi) - pi;
+
+  double _angleForGlobalPosition(Offset globalPosition) {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final Offset center = renderBox.size.center(Offset.zero);
+    final Offset local = renderBox.globalToLocal(globalPosition);
+    final double deltaX = local.dx - center.dx;
+    final double deltaY = local.dy - center.dy;
+    return atan2(deltaY, deltaX);
+  }
 
   void _applyDelta(double delta) {
     if (delta == 0) return;
@@ -81,24 +90,16 @@ class InteractiveWheelState extends State<InteractiveWheel>
 
   void _onPanStart(DragStartDetails details) {
     _controller.stop();
-    _startAngle = _rotationAngle;
     _lastUpdateTime = null;
     _angularVelocity = 0.0;
+    _lastPanAngle = _angleForGlobalPosition(details.globalPosition);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final Offset center = renderBox.size.center(Offset.zero);
-    final Offset touchPosition = renderBox.globalToLocal(
-      details.globalPosition,
-    );
-
-    final double deltaX = touchPosition.dx - center.dx;
-    final double deltaY = touchPosition.dy - center.dy;
-    final double angle = _startAngle + atan2(deltaY, deltaX);
+    final double angle = _angleForGlobalPosition(details.globalPosition);
 
     final DateTime now = DateTime.now();
-    final double delta = _normalizeDelta(angle - _rotationAngle);
+    final double delta = _normalizeDelta(angle - _lastPanAngle);
     final double? dtSeconds =
         _lastUpdateTime == null
             ? null
@@ -106,6 +107,8 @@ class InteractiveWheelState extends State<InteractiveWheel>
 
     _applyDelta(delta);
     setState(() {});
+
+    _lastPanAngle = angle;
 
     if (dtSeconds != null && dtSeconds > 0) {
       _angularVelocity = delta / dtSeconds;
