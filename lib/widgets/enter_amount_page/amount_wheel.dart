@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/physics.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -15,9 +16,9 @@ class InteractiveWheel extends StatefulWidget {
   });
 
   final int wheelValue;
-  final Function increaseWheelValue;
-  final Function decreaseWheelValue;
-  final Function onDone;
+  final VoidCallback increaseWheelValue;
+  final VoidCallback decreaseWheelValue;
+  final VoidCallback onDone;
 
   @override
   InteractiveWheelState createState() => InteractiveWheelState();
@@ -27,12 +28,62 @@ class InteractiveWheelState extends State<InteractiveWheel>
     with SingleTickerProviderStateMixin {
   double _rotationAngle = 0.0;
   double _startAngle = 0.0;
-  double _previousAngle = 0.0;
   double _cumulativeRotation = 0.0;
+  double _angularVelocity = 0.0; // radians per second
+  DateTime? _lastUpdateTime;
+
+  late final AnimationController _controller;
+
+  static const double _stepSize = 0.2; // radians needed for one tick change
+  static const double _minFlingVelocity =
+      1.2; // radians/sec threshold to start fling
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController.unbounded(vsync: this)
+      ..addListener(_handleAnimationTick);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // Normalize delta to range [-pi, pi] to avoid jumps when crossing the boundary.
+  double _normalizeDelta(double delta) => (delta + pi) % (2 * pi) - pi;
+
+  void _applyDelta(double delta) {
+    if (delta == 0) return;
+
+    _rotationAngle += delta;
+    _cumulativeRotation += delta;
+
+    // Consume as many full steps as the user rotated, preserving remainder.
+    while (_cumulativeRotation.abs() >= _stepSize) {
+      if (_cumulativeRotation > 0) {
+        widget.increaseWheelValue();
+      } else {
+        widget.decreaseWheelValue();
+      }
+      HapticFeedback.selectionClick();
+      _cumulativeRotation += _cumulativeRotation > 0 ? -_stepSize : _stepSize;
+    }
+  }
+
+  void _handleAnimationTick() {
+    final double newAngle = _controller.value;
+    final double delta = _normalizeDelta(newAngle - _rotationAngle);
+    _applyDelta(delta);
+    setState(() {});
+  }
 
   void _onPanStart(DragStartDetails details) {
+    _controller.stop();
     _startAngle = _rotationAngle;
-    _previousAngle = _rotationAngle; // Initialize previous angle
+    _lastUpdateTime = null;
+    _angularVelocity = 0.0;
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
@@ -46,37 +97,39 @@ class InteractiveWheelState extends State<InteractiveWheel>
     final double deltaY = touchPosition.dy - center.dy;
     final double angle = _startAngle + atan2(deltaY, deltaX);
 
-    final double deltaAngle = angle - _previousAngle;
+    final DateTime now = DateTime.now();
+    final double delta = _normalizeDelta(angle - _rotationAngle);
+    final double? dtSeconds =
+        _lastUpdateTime == null
+            ? null
+            : now.difference(_lastUpdateTime!).inMicroseconds / 1e6;
 
-    final double normalizedDelta = (deltaAngle + pi) % (2 * pi) - pi;
+    _applyDelta(delta);
+    setState(() {});
 
-    // Step size (in radians) required to increment/decrement the wheel value by 1
-    const double stepSize = 0.2; // Adjust this value to control sensitivity
-
-    // Update cumulative rotation
-    _cumulativeRotation += normalizedDelta;
-
-    // Check if cumulative rotation exceeds the step size
-    if (_cumulativeRotation.abs() >= stepSize) {
-      if (_cumulativeRotation > 0) {
-        // Clockwise rotation (up)
-        widget.increaseWheelValue();
-      } else {
-        // Counterclockwise rotation (down)
-        widget.decreaseWheelValue();
-      }
-      HapticFeedback.selectionClick();
-      // Reset cumulative rotation
-      _cumulativeRotation = 0.0;
+    if (dtSeconds != null && dtSeconds > 0) {
+      _angularVelocity = delta / dtSeconds;
     }
+    _lastUpdateTime = now;
+  }
 
-    // Update the previous angle for the next frame
-    _previousAngle = angle;
+  void _onPanEnd(DragEndDetails details) {
+    // If the user flicked with noticeable speed, start a friction-based fling.
+    if (_angularVelocity.abs() >= _minFlingVelocity) {
+      _startFling(_angularVelocity);
+    }
+  }
 
-    // Update the rotation angle for the UI
-    setState(() {
-      _rotationAngle = angle;
-    });
+  void _startFling(double initialVelocity) {
+    // Use angle as the simulated "position" so the painter keeps rotating.
+    _controller.stop();
+    _controller.value = _rotationAngle;
+    final simulation = FrictionSimulation(
+      0.15,
+      _rotationAngle,
+      initialVelocity,
+    );
+    _controller.animateWith(simulation);
   }
 
   @override
@@ -88,6 +141,7 @@ class InteractiveWheelState extends State<InteractiveWheel>
     return GestureDetector(
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
+      onPanEnd: _onPanEnd,
       child: Stack(
         alignment: Alignment.center,
         children: [
