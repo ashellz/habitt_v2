@@ -21,7 +21,6 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/services/color_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -141,6 +140,52 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
 
+    // Choose base ColorScheme based on theme provider state
+    final baseScheme =
+        tp.isDark
+            ? ColorScheme.dark(
+              primary: tp.primaryColor,
+              secondary: tp.secondaryColor,
+              surface: tp.surfaceColor,
+              error: tp.dangerColor,
+              onPrimary: tp.onPrimaryTextColor,
+              onSecondary: tp.primaryTextColor,
+              onSurface: tp.primaryTextColor,
+              onError: tp.onPrimaryTextColor,
+              background: tp.backgroundColor,
+            )
+            : ColorScheme.light(
+              primary: tp.primaryColor,
+              secondary: tp.secondaryColor,
+              surface: tp.surfaceColor,
+              error: tp.dangerColor,
+              onPrimary: tp.onPrimaryTextColor,
+              onSecondary: tp.primaryTextColor,
+              onSurface: tp.primaryTextColor,
+              onError: tp.onPrimaryTextColor,
+              background: tp.backgroundColor,
+            );
+
+    final theme = ThemeData(
+      useMaterial3: true,
+      fontFamily: 'Poppins',
+      colorScheme: baseScheme,
+      scaffoldBackgroundColor: tp.backgroundColor,
+      textTheme: ThemeData(brightness: tp.brightness).textTheme.apply(
+        fontFamily: 'Poppins',
+        bodyColor: tp.primaryTextColor,
+        displayColor: tp.primaryTextColor,
+      ),
+      dialogTheme: DialogThemeData(backgroundColor: tp.elevatedSurfaceColor),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: tp.primaryColor,
+          foregroundColor: tp.onPrimaryTextColor,
+          shape: const StadiumBorder(),
+        ),
+      ),
+    );
+
     Widget getHomePage() {
       final name = widget.prefs.getString('name');
       if (name == null) {
@@ -153,21 +198,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'habitt',
       debugShowCheckedModeBanner: false,
-      theme: ColorService.lightThemeData().copyWith(
-        textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Poppins',
-          bodyColor: const Color(0xFF212529),
-          displayColor: const Color(0xFF212529),
-          decorationColor: const Color(0xFF212529),
-        ),
-      ),
-      darkTheme: ColorService.darkThemeData().copyWith(
-        textTheme: ThemeData.dark().textTheme.apply(
-          fontFamily: 'Poppins',
-          bodyColor: ColorService.dmTextPrimary,
-          displayColor: ColorService.dmTextPrimary,
-        ),
-      ),
+      theme: theme,
+      darkTheme: theme,
       themeMode: tp.mode,
       supportedLocales: L10n.all,
       localizationsDelegates: const [

@@ -60,6 +60,7 @@ class DefaultButton extends StatelessWidget {
                             () => enabled && !isLoading ? onPressed() : null,
                         style: OutlinedButton.styleFrom(
                           enableFeedback: false,
+                          overlayColor: buttonColor,
                           side: BorderSide(color: buttonColor),
 
                           shape: const RoundedRectangleBorder(

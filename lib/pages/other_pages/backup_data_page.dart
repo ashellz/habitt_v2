@@ -108,12 +108,11 @@ class BackupDataPage extends StatelessWidget {
                             context: context,
                             builder:
                                 (context) => DefaultDialog(
-                                  title: "Opt out of Backup",
+                                  title: "Opt out of Backup?",
                                   desc:
                                       "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
                                   rightButtonCallback: () async {
-                                    await backupProvider.signOut();
-                                    await FirebaseAuth.instance.signOut();
+                                    backupProvider.signOut();
                                   },
                                   rightButtonText: "Opt out",
                                   danger: true,
