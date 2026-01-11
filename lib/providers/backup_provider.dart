@@ -1,14 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis/drive/v2.dart' as drive_api;
+import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
-import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+
+class _GoogleAuthClient extends http.BaseClient {
+  final Map<String, String> _headers;
+  final http.Client _client = http.Client();
+  _GoogleAuthClient(this._headers);
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers.addAll(_headers);
+    return _client.send(request);
+  }
+}
 
 /// Metadata about a backup stored in the cloud.
 class BackupMetadata {
@@ -327,6 +337,52 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
+  Future<drive_api.DriveApi?> _getDriveService() async {
+    final user = _currentUser;
+    if (user == null) return null;
+    final headers = await user.authHeaders;
+    final client = _GoogleAuthClient(headers);
+    return drive_api.DriveApi(client);
+  }
+
+  Future<String?> _getFolderId(drive_api.DriveApi driveApi) async {
+    final mimeType = "application/vnd.google-apps.folder";
+    String folderName = "habitt_backups";
+
+    try {
+      final found = await driveApi.files.list(
+        q: "mimeType = '$mimeType' and name = '$folderName' and trashed = false and 'root' in parents",
+        $fields: "files(id,name)",
+        spaces: 'drive',
+      );
+
+      final files = found.files;
+      if (files == null) {
+        debugPrint("Drive API returned null files list");
+        return null;
+      }
+
+      // The folder already exists
+      if (files.isNotEmpty) {
+        return files.first.id;
+      }
+
+      // Create the folder in the root
+      final folder =
+          drive_api.File()
+            ..name = folderName
+            ..mimeType = mimeType
+            ..parents = ['root'];
+      final folderCreation = await driveApi.files.create(folder, $fields: 'id');
+      debugPrint("Folder ID: ${folderCreation.id}");
+
+      return folderCreation.id;
+    } catch (e) {
+      debugPrint('Failed to get/create folder: $e');
+      return null;
+    }
+  }
+
   /// Fetch metadata about the backup stored in Google Drive.
   ///
   /// Returns info like: file ID, last modified time, device info, checksum.
@@ -367,9 +423,30 @@ class BackupProvider extends ChangeNotifier {
     // TODO: Get all local data (habits, days, etc.)
     // TODO: Serialize to bytes/JSON
     // TODO: Encrypt
-    // TODO: Upload to Google Drive
+    // TODO: Create authenticated Drive client
+    // TODO: Upload to Google Drive (create/update in backup folder)
     // TODO: Save file ID and metadata locally
     // TODO: Update _localMetadata with new sync time
+
+    final drive = await _getDriveService();
+    if (drive == null) {
+      debugPrint("Sign-in first Error");
+      return;
+    }
+
+    final folderId = await _getFolderId(drive);
+    if (folderId == null) {
+      debugPrint("Could not get or create backup folder");
+      return;
+    }
+
+    // TODO: Build media and file metadata, then create or update the backup.
+    // Example:
+    // final media = drive_api.Media(stream, length);
+    // final metadata = drive_api.File()
+    //   ..name = 'habitt_backup.enc'
+    //   ..parents = [folderId];
+    // final res = await drive.files.create(metadata, uploadMedia: media);
   }
 
   /// Delete backup from Google Drive.
