@@ -3,6 +3,7 @@ import 'package:habitt/pages/main_pages/calendar_page.dart';
 import 'package:habitt/pages/main_pages/habits_page.dart';
 import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/main_pages/stats_page.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -38,12 +39,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final backupProvider = context.read<BackupProvider>();
         // Update last opened date, reset habit completion
         await updateLastOpenedDate(
           context.read<HabitProvider>(),
           context.read<StateProvider>(),
         );
         categoryProvider.reorderCategoriesBasedOnTime();
+
+        await backupProvider.performSync();
       });
     }
   }
@@ -71,9 +75,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final stateProvider = context.read<StateProvider>();
+      final backupProvider = context.read<BackupProvider>();
 
       // Update last opened date, reset habit completion
       await updateLastOpenedDate(context.read<HabitProvider>(), stateProvider);
+      await backupProvider.performSync();
 
       if (stateProvider.shouldUpdateStreaks && mounted) {
         context.read<HabitProvider>().assignStreaks();
@@ -111,21 +117,34 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final isGlassFeel = context.watch<PreferencesProvider>().glassFeel;
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    final backupProvider = context.watch<BackupProvider>();
+    final loading = backupProvider.syncState == SyncState.syncing;
 
     return SizedBox(
       child: Stack(
         children: <Widget>[
           //Page
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 150),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            child: IndexedStack(
-              key: ValueKey<int>(_currentPageIndex),
-              index: _currentPageIndex,
-              children: _pages,
-            ),
+          Stack(
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 150),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: IndexedStack(
+                  key: ValueKey<int>(_currentPageIndex),
+                  index: _currentPageIndex,
+                  children: _pages,
+                ),
+              ),
+              if (loading)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+            ],
           ),
 
           // Floating nav bar
