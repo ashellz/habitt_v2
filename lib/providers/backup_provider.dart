@@ -319,12 +319,15 @@ class BackupProvider extends ChangeNotifier {
     try {
       final metadata = await _fetchCloudMetadata();
 
-      if (!force &&
-          _localMetadata?.deviceId == metadata?.deviceId &&
-          metadata != null) {
-        // Not from different device, no need to download anything
-        debugPrint('No device conflict detected, skipping download.');
-        _syncState = SyncState.success;
+      if (_localMetadata?.deviceId == metadata?.deviceId && metadata != null) {
+        if (force) {
+          await _uploadBackupToCloud();
+        } else {
+          // Not from different device, no need to download anything
+          debugPrint('No device conflict detected, skipping download.');
+          _syncState = SyncState.success;
+        }
+
         notifyListeners();
         return;
       }
@@ -335,6 +338,12 @@ class BackupProvider extends ChangeNotifier {
         if (backupData != null) {
           debugPrint('Merging downloaded backup data with local data...');
           await _mergeBackupData(backupData);
+          if (force) {
+            await _uploadBackupToCloud();
+          } else {
+            // Upload only metadata to reflect latest sync time
+            await _uploadMetadataToCloud(backupData.metadata);
+          }
         }
       } else {
         debugPrint('No cloud metadata found, uploading local backup.');

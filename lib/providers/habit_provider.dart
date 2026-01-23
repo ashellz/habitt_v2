@@ -417,9 +417,7 @@ class HabitProvider extends ChangeNotifier {
         }
       }
 
-      habit.streak = streak;
-      habit.longestStreak = longestStreak;
-
+      habit.updateStreak(streak: streak, longestStreak: longestStreak);
       debugPrint("Streak: $streak, Longest Streak: $longestStreak");
 
       habit.save();

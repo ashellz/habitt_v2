@@ -136,31 +136,93 @@ class Habit extends HiveObject {
   }
 
   void updateHabit(Habit habit) {
-    name = habit.name;
-    description = habit.description;
-    iconPath = habit.iconPath;
-    categoryId = habit.categoryId;
-    tag = habit.tag;
-    completed = habit.completed;
-    skipped = habit.skipped;
-    amount = habit.amount;
-    amountCompleted = habit.amountCompleted;
-    duration = habit.duration;
-    durationCompleted = habit.durationCompleted;
-    streak = habit.streak;
-    longestStreak = habit.longestStreak;
-    additional = habit.additional;
-    timeIntervalEnabled = habit.timeIntervalEnabled;
-    timeIntervalStart = habit.timeIntervalStart;
-    timeIntervalEnd = habit.timeIntervalEnd;
-    colorName = habit.colorName;
-    color = habit.color;
-    isDeleted = habit.isDeleted;
-    timestamps = Map<String, DateTime>.from(habit.timestamps);
+    final now = DateTime.now().toUtc();
+
+    if (name != habit.name) {
+      name = habit.name;
+      timestamps['name'] = now;
+    }
+    if (description != habit.description) {
+      description = habit.description;
+      timestamps['description'] = now;
+    }
+    if (iconPath != habit.iconPath) {
+      iconPath = habit.iconPath;
+      timestamps['iconPath'] = now;
+    }
+    if (categoryId != habit.categoryId) {
+      categoryId = habit.categoryId;
+      timestamps['categoryId'] = now;
+    }
+    if (tag != habit.tag) {
+      tag = habit.tag;
+      timestamps['tag'] = now;
+    }
+    if (completed != habit.completed) {
+      completed = habit.completed;
+      timestamps['completed'] = now;
+    }
+    if (skipped != habit.skipped) {
+      skipped = habit.skipped;
+      timestamps['skipped'] = now;
+    }
+    if (amount != habit.amount) {
+      amount = habit.amount;
+      timestamps['amount'] = now;
+    }
+    if (amountCompleted != habit.amountCompleted) {
+      amountCompleted = habit.amountCompleted;
+      timestamps['amountCompleted'] = now;
+    }
+    if (duration != habit.duration) {
+      duration = habit.duration;
+      timestamps['duration'] = now;
+    }
+    if (durationCompleted != habit.durationCompleted) {
+      durationCompleted = habit.durationCompleted;
+      timestamps['durationCompleted'] = now;
+    }
+    if (streak != habit.streak) {
+      streak = habit.streak;
+      timestamps['streak'] = now;
+    }
+    if (longestStreak != habit.longestStreak) {
+      longestStreak = habit.longestStreak;
+      timestamps['longestStreak'] = now;
+    }
+    if (additional != habit.additional) {
+      additional = habit.additional;
+      timestamps['additional'] = now;
+    }
+    if (timeIntervalEnabled != habit.timeIntervalEnabled) {
+      timeIntervalEnabled = habit.timeIntervalEnabled;
+      timestamps['timeIntervalEnabled'] = now;
+    }
+    if (timeIntervalStart != habit.timeIntervalStart) {
+      timeIntervalStart = habit.timeIntervalStart;
+      timestamps['timeIntervalStart'] = now;
+    }
+    if (timeIntervalEnd != habit.timeIntervalEnd) {
+      timeIntervalEnd = habit.timeIntervalEnd;
+      timestamps['timeIntervalEnd'] = now;
+    }
+    if (colorName != habit.colorName) {
+      colorName = habit.colorName;
+      timestamps['colorName'] = now;
+    }
+    if (color != habit.color) {
+      color = habit.color;
+      timestamps['color'] = now;
+    }
+    if (isDeleted != habit.isDeleted) {
+      isDeleted = habit.isDeleted;
+      timestamps['isDeleted'] = now;
+    }
   }
 
   Future<void> deleteHabit() async {
     isDeleted = true;
+    timestamps['isDeleted'] = DateTime.now().toUtc();
   }
 
   Future<void> completeHabit() async {
@@ -176,10 +238,15 @@ class Habit extends HiveObject {
     skipped = false;
     amountCompleted = completed ? amount : 0;
     durationCompleted = completed ? duration : 0;
+    timestamps['completed'] = DateTime.now().toUtc();
+    timestamps['skipped'] = DateTime.now().toUtc();
+    timestamps['amountCompleted'] = DateTime.now().toUtc();
+    timestamps['durationCompleted'] = DateTime.now().toUtc();
   }
 
   Future<void> skipHabit() async {
     skipped = !skipped;
+    timestamps['skipped'] = DateTime.now().toUtc();
   }
 
   void updateHabitAmountCompleted(int amountCompleted) {
@@ -187,6 +254,7 @@ class Habit extends HiveObject {
       completed = true;
     }
     this.amountCompleted = amountCompleted;
+    timestamps['amountCompleted'] = DateTime.now().toUtc();
   }
 
   void updateHabitDurationCompleted(int durationCompleted) {
@@ -194,6 +262,7 @@ class Habit extends HiveObject {
       completed = true;
     }
     this.durationCompleted = durationCompleted;
+    timestamps['durationCompleted'] = DateTime.now().toUtc();
   }
 
   Future<void> resetCompletion() async {
@@ -201,6 +270,19 @@ class Habit extends HiveObject {
     skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
+    timestamps['completed'] = DateTime.now().toUtc();
+    timestamps['skipped'] = DateTime.now().toUtc();
+    timestamps['amountCompleted'] = DateTime.now().toUtc();
+    timestamps['durationCompleted'] = DateTime.now().toUtc();
+  }
+
+  void updateStreak({required int streak, required int longestStreak}) {
+    this.streak = streak;
+    if (streak > longestStreak) {
+      this.longestStreak = streak;
+      timestamps['longestStreak'] = DateTime.now().toUtc();
+    }
+    timestamps['streak'] = DateTime.now().toUtc();
   }
 
   /// Get the habit name color based on theme mode
