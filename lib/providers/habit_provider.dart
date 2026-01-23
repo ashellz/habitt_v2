@@ -144,20 +144,20 @@ class HabitProvider extends ChangeNotifier {
   }
 
   // Function used to get list of habits from a specific day from database
-  getHabitsFromDay(DateTime day) {
+  List<Habit> getHabitsFromDay(DateTime day, {bool hydrateMissing = false}) {
     final dayKey = day.toIso8601String().split('T').first;
     Day? dayEntry = daysBox.get(dayKey);
     List<Habit> dayHabits = dayEntry?.habits ?? [];
 
-    // If day is empty and is before tomorrow, add current habits to it
-    if (dayHabits.isEmpty &&
+    // Optionally hydrate missing days (only when explicitly requested)
+    if (hydrateMissing &&
+        dayHabits.isEmpty &&
         day.isBefore(DateTime.now()) &&
-        day.isAfter(_dateJoined!)) {
+        (_dateJoined == null || day.isAfter(_dateJoined!))) {
       saveHabitDay(day, resetCompletion: true);
+      dayEntry = daysBox.get(dayKey);
+      dayHabits = dayEntry?.habits ?? [];
     }
-
-    dayEntry = daysBox.get(dayKey);
-    dayHabits = dayEntry?.habits ?? [];
 
     return dayHabits;
   }
@@ -202,7 +202,7 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day);
+      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
       habit = dayHabits.firstWhere((h) => h.id == id);
       if (!stateProvider.shouldUpdateStreaks) {
         stateProvider.shouldUpdateStreaks = true;
@@ -236,7 +236,7 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day);
+      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
       habit = dayHabits.firstWhere((h) => h.id == id);
       if (!stateProvider.shouldUpdateStreaks) {
         stateProvider.shouldUpdateStreaks = true;
@@ -281,7 +281,7 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day);
+      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 
@@ -307,7 +307,7 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day);
+      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 

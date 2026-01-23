@@ -9,6 +9,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -141,7 +142,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Positioned.fill(
                   child: Container(
                     color: Colors.black.withOpacity(0.3),
-                    child: const Center(child: CircularProgressIndicator()),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Syncing...",
+                            style: TextStyle(
+                              color:
+                                  context
+                                      .watch<ThemeProvider>()
+                                      .primaryTextColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          CircularProgressIndicator(),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
             ],

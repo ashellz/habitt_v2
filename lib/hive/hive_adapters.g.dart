@@ -37,6 +37,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       timeIntervalStart: fields[18] == null ? 420 : (fields[18] as num).toInt(),
       timeIntervalEnd: fields[19] == null ? 450 : (fields[19] as num).toInt(),
       colorName: fields[22] as String?,
+      isDeleted: fields[24] as bool?,
       timestamps: (fields[23] as Map?)?.cast<String, DateTime>(),
     )..color = fields[20] as String?;
   }
@@ -44,7 +45,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(22)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -88,7 +89,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(22)
       ..write(obj.colorName)
       ..writeByte(23)
-      ..write(obj.timestamps);
+      ..write(obj.timestamps)
+      ..writeByte(24)
+      ..write(obj.isDeleted);
   }
 
   @override
