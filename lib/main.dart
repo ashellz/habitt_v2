@@ -126,7 +126,8 @@ Future<void> main() async {
         ChangeNotifierProxyProvider<HabitProvider, BackupProvider>(
           create: (_) => backupProvider,
           update: (_, habitProvider, previous) {
-            return previous!..attachHabitProvider(habitProvider);
+            habitProvider.attachBackupProvider(previous!);
+            return previous..attachHabitProvider(habitProvider);
           },
         ),
       ],
@@ -221,8 +222,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-// AFTER CHANGING A HABIT OR A DAY, START THE 15 SECONDS TIMER
-// WHEN THE TIMER ENDS DOWNLOAD METADATA:
-// 1. IF ITS THE SAME DEVICE JUST UPLOAD THE NEW DATA
-// 2. if ITS A DIFFERENT DEVICE, DOWNLOAD THE BACKUP DATA FIRST, MERGE, THEN UPLOAD AGAIN

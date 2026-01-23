@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive_api;
@@ -65,6 +66,9 @@ class BackupProvider extends ChangeNotifier {
   BackupMetadata? _localMetadata;
   String? _currentSessionPassphrase;
 
+  // Auto-sync debounce timer
+  Timer? _autoSyncTimer;
+
   // Getters
   GoogleSignInAccount? get currentUser => _currentUser;
   User? get firebaseUser => _firebaseUser;
@@ -82,6 +86,27 @@ class BackupProvider extends ChangeNotifier {
 
   void attachHabitProvider(HabitProvider provider) {
     _habitProvider = provider;
+  }
+
+  /// Schedule an auto-sync after 15 seconds of inactivity.
+  /// Each call resets the timer. When timer completes, performs force sync.
+  void scheduleAutoSync() {
+    if (!isLoggedIn || !hasPassphraseSet) {
+      return; // Can't sync without authentication
+    }
+
+    // Cancel existing timer
+    _autoSyncTimer?.cancel();
+
+    // Start new 15-second timer
+    _autoSyncTimer = Timer(const Duration(seconds: 15), () {
+      debugPrint('Auto-sync timer triggered - performing force sync');
+      performSync(true).catchError((e) {
+        debugPrint('Auto-sync failed: $e');
+      });
+    });
+
+    debugPrint('Auto-sync scheduled in 15 seconds');
   }
 
   /// Initialize provider: restore persisted sign-in state and passphrase.
@@ -231,6 +256,10 @@ class BackupProvider extends ChangeNotifier {
 
       // Clear passphrase from secure storage
       await _secureStorage.delete(key: _kSecurePassphraseKey);
+
+      // Cancel any pending auto-sync
+      _autoSyncTimer?.cancel();
+      _autoSyncTimer = null;
 
       notifyListeners();
     } catch (e) {

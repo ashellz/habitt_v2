@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
@@ -16,6 +17,7 @@ class HabitProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
 
   StatsProvider? statsProvider;
+  BackupProvider? backupProvider;
 
   HabitProvider({this.statsProvider}) {
     init();
@@ -31,6 +33,10 @@ class HabitProvider extends ChangeNotifier {
       // Then, notify listeners that this provider's data has changed.
       notifyListeners();
     }
+  }
+
+  void attachBackupProvider(BackupProvider provider) {
+    backupProvider = provider;
   }
 
   Future<void> init() async {
@@ -114,6 +120,9 @@ class HabitProvider extends ChangeNotifier {
     } else {
       debugPrint("Habit is not in a box, skipping save()");
     }
+
+    // Schedule auto-sync after habit modification
+    backupProvider?.scheduleAutoSync();
 
     final dayKey = usedDay.toIso8601String().split('T').first;
     final dayEntry = daysBox.get(dayKey);
@@ -422,5 +431,9 @@ class HabitProvider extends ChangeNotifier {
 
       habit.save();
     }
+
+    // Trigger auto-sync after updating all streaks
+    backupProvider?.scheduleAutoSync();
+    notifyListeners();
   }
 }
