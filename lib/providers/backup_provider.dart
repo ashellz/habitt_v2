@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
+import 'package:habitt/models/backup_metadata.dart';
+import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -18,23 +20,6 @@ class _GoogleAuthClient extends http.BaseClient {
     request.headers.addAll(_headers);
     return _client.send(request);
   }
-}
-
-/// Metadata about a backup stored in the cloud.
-class BackupMetadata {
-  final String deviceId;
-  final DateTime lastSyncTime;
-  final String? cloudFileId; // Google Drive file ID
-  final String? cloudChecksum; // For detecting changes
-
-  BackupMetadata({
-    required this.deviceId,
-    required this.lastSyncTime,
-    this.cloudFileId,
-    this.cloudChecksum,
-  });
-
-  // TODO: Add toJson/fromJson for serialization
 }
 
 /// Enum to track sync state.
@@ -315,7 +300,7 @@ class BackupProvider extends ChangeNotifier {
 
     try {
       // TODO: Fetch cloud metadata
-      await _fetchCloudMetadata();
+      final metadata = await _fetchCloudMetadata();
 
       if (!isCloudBackupFromDifferentDevice) {
         // Not from different device, no need to download anything
@@ -384,8 +369,7 @@ class BackupProvider extends ChangeNotifier {
   }
 
   /// Fetch metadata about the backup stored in Google Drive.
-  ///
-  /// Returns info like: file ID, last modified time, device info, checksum.
+  /// Returns BackupMetadata if found
   Future<void> _fetchCloudMetadata() async {
     // TODO: Query Google Drive API for backup file metadata
     // TODO: Parse metadata from file properties or custom app properties
@@ -412,6 +396,24 @@ class BackupProvider extends ChangeNotifier {
     // TODO: Merge with local storage (or replace based on strategy)
   }
 
+  Future<void> _deleteAllFilesInFolder(String folderId) async {
+    final client = _GoogleAuthClient(await _currentUser!.authHeaders);
+    final driveApi = drive_api.DriveApi(client);
+
+    final found = await driveApi.files.list(
+      q: "'$folderId' in parents and trashed = false",
+      $fields: 'files(id)',
+    );
+
+    if (found.files != null) {
+      for (final file in found.files!) {
+        await driveApi.files.delete(file.id!);
+      }
+    }
+
+    debugPrint("Deleted all files in folder ID: $folderId");
+  }
+
   /// Upload encrypted backup file to Google Drive.
   ///
   /// Steps:
@@ -420,13 +422,26 @@ class BackupProvider extends ChangeNotifier {
   /// 3. Upload to Google Drive (create or update)
   /// 4. Store file ID and metadata locally
   Future<void> _uploadBackupToCloud() async {
-    // TODO: Get all local data (habits, days, etc.)
-    // TODO: Serialize to bytes/JSON
-    // TODO: Encrypt
-    // TODO: Create authenticated Drive client
-    // TODO: Upload to Google Drive (create/update in backup folder)
-    // TODO: Save file ID and metadata locally
-    // TODO: Update _localMetadata with new sync time
+    if (_passphrase == null) {
+      _lastError = 'Passphrase not set. Cannot upload backup.';
+      notifyListeners();
+      return;
+    }
+    final database = await BackupService.exportDataForGoogleDrive(
+      passphrase: _passphrase!,
+    );
+
+    if (database == null) {
+      _lastError = 'Failed to export database. Cannot upload backup.';
+      notifyListeners();
+      return;
+    }
+
+    final meta = await BackupService.buildMetadata();
+    final metadata = await BackupService.exportEncryptedMetadata(
+      passphrase: _passphrase!,
+      metadata: meta,
+    );
 
     final drive = await _getDriveService();
     if (drive == null) {
@@ -440,13 +455,74 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
-    // TODO: Build media and file metadata, then create or update the backup.
-    // Example:
-    // final media = drive_api.Media(stream, length);
-    // final metadata = drive_api.File()
-    //   ..name = 'habitt_backup.enc'
-    //   ..parents = [folderId];
-    // final res = await drive.files.create(metadata, uploadMedia: media);
+    // Delete all existing files in backup folder
+    await _deleteAllFilesInFolder(folderId);
+
+    // Generate timestamped filename
+    final now = DateTime.now();
+    final day = now.day.toString().padLeft(2, '0');
+    final month = now.month.toString().padLeft(2, '0');
+    final year = now.year.toString().substring(2);
+    final backupFileName = '$day-$month-$year-habitt-backup.habitt';
+    final metadataFileName = 'metadata.meta';
+
+    // Upload database backup file if available
+
+    final databaseMedia = drive_api.Media(
+      Stream.value(database.toList()),
+      database.length,
+    );
+
+    final databaseFile =
+        drive_api.File()
+          ..name = backupFileName
+          ..parents = [folderId];
+
+    final databaseCreation = await drive.files.create(
+      databaseFile,
+      uploadMedia: databaseMedia,
+    );
+
+    if (databaseCreation.id != null) {
+      debugPrint('Uploaded database backup: ${databaseCreation.id}');
+    } else {
+      _lastError = 'Failed to upload database backup';
+      notifyListeners();
+      return;
+    }
+
+    // Upload metadata file if available
+    if (metadata != null) {
+      final metadataMedia = drive_api.Media(
+        Stream.value(metadata.toList()),
+        metadata.length,
+      );
+
+      final metadataFile =
+          drive_api.File()
+            ..name = metadataFileName
+            ..parents = [folderId];
+
+      final metadataCreation = await drive.files.create(
+        metadataFile,
+        uploadMedia: metadataMedia,
+      );
+
+      if (metadataCreation.id != null) {
+        debugPrint('Uploaded metadata: ${metadataCreation.id}');
+      } else {
+        _lastError = 'Failed to upload metadata';
+        notifyListeners();
+        return;
+      }
+    }
+
+    debugPrint('Successfully uploaded backup files to Google Drive');
+
+    if (metadata != null) {
+      _localMetadata = meta;
+    }
+    notifyListeners();
   }
 
   /// Delete backup from Google Drive.

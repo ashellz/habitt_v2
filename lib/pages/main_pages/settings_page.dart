@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
       title: 'Set export passphrase',
       buttonText: 'Export',
       operation:
-          (passphrase) => BackupService.exportData(
+          (passphrase) => BackupService.exportDataLocally(
             context: context,
             passphrase: passphrase,
           ),
@@ -52,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
       title: 'Enter passphrase',
       buttonText: 'Import',
       operation:
-          (passphrase) => BackupService.importData(
+          (passphrase) => BackupService.importLocalData(
             context: context,
             passphrase: passphrase,
           ),

@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -22,41 +23,26 @@ class BackupService {
 
   /// Export all Hive data (habits + days) as a single encrypted JSON file.
   /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
-  static Future<BackupOperationResult> exportData({
+  static Future<BackupOperationResult> exportDataLocally({
     required BuildContext context,
     required String passphrase,
   }) async {
     try {
       final habitsBox = Hive.box<Habit>('habits');
       final daysBox = Hive.box<Day>('days');
+      final metadata = await buildMetadata();
 
       final payload = <String, dynamic>{
         'version': 1,
-        'exportedAt': DateTime.now().toUtc().toIso8601String(),
-        'habits': habitsBox.values.map(_habitToMap).toList(),
-        'days': daysBox.values.map(_dayToMap).toList(),
+        'metadata': metadata.toMap(),
+        'habits': habitsBox.values.map((h) => h.toMap()).toList(),
+        'days': daysBox.values.map((d) => d.toMap()).toList(),
       };
 
-      final plainBytes = utf8.encode(jsonEncode(payload));
-
-      final salt = _randomBytes(16);
-      final nonce = _randomBytes(12);
-      final secretKey = await _deriveKey(passphrase, salt);
-
-      final secretBox = await _aes.encrypt(
-        plainBytes,
-        secretKey: secretKey,
-        nonce: nonce,
+      final backupWrapper = await _encryptPayload(payload, passphrase);
+      final exportBytes = Uint8List.fromList(
+        utf8.encode(jsonEncode(backupWrapper)),
       );
-
-      final exportJson = jsonEncode({
-        'version': 1,
-        'salt': base64Encode(salt),
-        'nonce': base64Encode(nonce),
-        'ciphertext': base64Encode(secretBox.cipherText),
-        'tag': base64Encode(secretBox.mac.bytes),
-      });
-      final exportBytes = Uint8List.fromList(utf8.encode(exportJson));
 
       final savePath = await _pickSavePath(exportBytes);
       if (savePath == null) {
@@ -77,7 +63,7 @@ class BackupService {
 
   /// Import data from an encrypted file. Replaces existing box contents.
   /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
-  static Future<BackupOperationResult> importData({
+  static Future<BackupOperationResult> importLocalData({
     required BuildContext context,
     required String passphrase,
   }) async {
@@ -90,25 +76,17 @@ class BackupService {
       final file = File(path);
       if (!await file.exists()) return BackupOperationResult.failed;
 
-      final content = await file.readAsString();
-      final wrapper = jsonDecode(content) as Map<String, dynamic>;
-
-      final salt = base64Decode(wrapper['salt'] as String);
-      final nonce = base64Decode(wrapper['nonce'] as String);
-      final cipher = base64Decode(wrapper['ciphertext'] as String);
-      final tag = base64Decode(wrapper['tag'] as String);
-
-      final secretKey = await _deriveKey(passphrase, salt);
       try {
-        final clear = await _aes.decrypt(
-          SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
-          secretKey: secretKey,
+        final payload = await _decryptPayload(
+          jsonDecode(await file.readAsString()) as Map<String, dynamic>,
+          passphrase,
         );
-
-        final payload = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
         if ((payload['version'] as int? ?? 0) != 1) {
           throw Exception('Unsupported backup version');
         }
+
+        final metadata = _parseInlineMetadata(payload['metadata']);
+        _logMetadata(metadata);
 
         final habitsBox = Hive.box<Habit>('habits');
         final daysBox = Hive.box<Day>('days');
@@ -119,7 +97,7 @@ class BackupService {
 
         final habitsList =
             (payload['habits'] as List<dynamic>? ?? [])
-                .map((e) => _habitFromMap(Map<String, dynamic>.from(e)))
+                .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
                 .toList();
         for (final h in habitsList) {
           await habitsBox.add(h);
@@ -127,7 +105,7 @@ class BackupService {
 
         final daysList =
             (payload['days'] as List<dynamic>? ?? [])
-                .map((e) => _dayFromMap(Map<String, dynamic>.from(e)))
+                .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
                 .toList();
         for (final d in daysList) {
           await daysBox.add(d);
@@ -156,6 +134,48 @@ class BackupService {
     return List<int>.generate(length, (_) => _rng.nextInt(256));
   }
 
+  static Future<Map<String, dynamic>> _encryptPayload(
+    Map<String, dynamic> payload,
+    String passphrase,
+  ) async {
+    final plainBytes = utf8.encode(jsonEncode(payload));
+    final salt = _randomBytes(16);
+    final nonce = _randomBytes(12);
+    final secretKey = await _deriveKey(passphrase, salt);
+
+    final secretBox = await _aes.encrypt(
+      plainBytes,
+      secretKey: secretKey,
+      nonce: nonce,
+    );
+
+    return {
+      'version': 1,
+      'salt': base64Encode(salt),
+      'nonce': base64Encode(nonce),
+      'ciphertext': base64Encode(secretBox.cipherText),
+      'tag': base64Encode(secretBox.mac.bytes),
+    };
+  }
+
+  static Future<Map<String, dynamic>> _decryptPayload(
+    Map<String, dynamic> wrapper,
+    String passphrase,
+  ) async {
+    final salt = base64Decode(wrapper['salt'] as String);
+    final nonce = base64Decode(wrapper['nonce'] as String);
+    final cipher = base64Decode(wrapper['ciphertext'] as String);
+    final tag = base64Decode(wrapper['tag'] as String);
+
+    final secretKey = await _deriveKey(passphrase, salt);
+    final clear = await _aes.decrypt(
+      SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+      secretKey: secretKey,
+    );
+
+    return jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+  }
+
   static Future<SecretKey> _deriveKey(String pass, List<int> salt) async {
     final pbkdf2 = Pbkdf2(
       macAlgorithm: Hmac.sha256(),
@@ -168,75 +188,13 @@ class BackupService {
     );
   }
 
-  static Map<String, dynamic> _habitToMap(Habit h) {
-    return {
-      'id': h.id,
-      'name': h.name,
-      'description': h.description,
-      'iconPath': h.iconPath,
-      'categoryId': h.categoryId,
-      'tag': h.tag,
-      'completed': h.completed,
-      'skipped': h.skipped,
-      'amountLabel': h.amountLabel,
-      'amount': h.amount,
-      'amountCompleted': h.amountCompleted,
-      'duration': h.duration,
-      'durationCompleted': h.durationCompleted,
-      'streak': h.streak,
-      'longestStreak': h.longestStreak,
-      'additional': h.additional,
-      'timeIntervalEnabled': h.timeIntervalEnabled,
-      'timeIntervalStart': h.timeIntervalStart,
-      'timeIntervalEnd': h.timeIntervalEnd,
-      'colorName': h.colorName,
-      'color': h.color,
-    };
-  }
-
-  static Habit _habitFromMap(Map<String, dynamic> m) {
-    return Habit(
-      id: m['id'] as int,
-      name: m['name'] as String,
-      description: (m['description'] as String?) ?? '',
-      iconPath: m['iconPath'] as String,
-      categoryId: m['categoryId'] as int,
-      amountLabel: (m['amountLabel'] as String?) ?? 'times',
-      tag: (m['tag'] as String?) ?? 'No tag',
-      completed: (m['completed'] as bool?) ?? false,
-      skipped: (m['skipped'] as bool?) ?? false,
-      amount: (m['amount'] as int?) ?? 0,
-      amountCompleted: (m['amountCompleted'] as int?) ?? 0,
-      duration: (m['duration'] as int?) ?? 0,
-      durationCompleted: (m['durationCompleted'] as int?) ?? 0,
-      streak: (m['streak'] as int?) ?? 0,
-      longestStreak: (m['longestStreak'] as int?) ?? 0,
-      additional: (m['additional'] as bool?) ?? false,
-      timeIntervalEnabled: (m['timeIntervalEnabled'] as bool?) ?? false,
-      timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
-      timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
-      colorName: m['colorName'] as String?,
-    )..color = m['color'] as String?;
-  }
-
-  static Map<String, dynamic> _dayToMap(Day d) {
-    return {
-      'date': d.date.toIso8601String(),
-      'habits': d.habits.map(_habitToMap).toList(),
-    };
-  }
-
-  static Day _dayFromMap(Map<String, dynamic> m) {
-    final habits =
-        (m['habits'] as List<dynamic>? ?? [])
-            .map((e) => _habitFromMap(Map<String, dynamic>.from(e)))
-            .toList();
-    return Day(date: DateTime.parse(m['date'] as String), habits: habits);
-  }
-
   static Future<String?> _pickSavePath(Uint8List bytes) async {
-    final suggestedName =
-        'habitt-backup-${DateTime.now().toIso8601String().split('T').first}.habitt';
+    final now = DateTime.now();
+    final day = now.day.toString().padLeft(2, '0');
+    final month = now.month.toString().padLeft(2, '0');
+    final year = now.year.toString().substring(2);
+    final suggestedName = '$day-$month-$year-habitt-backup.habitt';
+
     final path = await FilePicker.platform.saveFile(
       bytes: bytes,
       dialogTitle: 'Export backup',
@@ -257,5 +215,176 @@ class BackupService {
           allowedExtensions: ['habitt'],
         )
         .then((result) => result?.files.single.path);
+  }
+
+  static BackupMetadata? _parseInlineMetadata(dynamic rawMeta) {
+    if (rawMeta is Map<String, dynamic>) {
+      return BackupMetadata.fromMap(rawMeta);
+    }
+    if (rawMeta is Map) {
+      return BackupMetadata.fromMap(Map<String, dynamic>.from(rawMeta));
+    }
+    return null;
+  }
+
+  static void _logMetadata(BackupMetadata? metadata) {
+    if (metadata == null) return;
+    debugPrint(
+      'Importing backup from device ${metadata.model} (${metadata.os}) created at ${metadata.createdAt.toIso8601String()}',
+    );
+  }
+
+  static Future<BackupMetadata> buildMetadata() async {
+    final deviceId = await DeviceIdentity.getOrCreateId();
+    final info = await DeviceIdentity.deviceInfo();
+    return BackupMetadata(
+      deviceId: deviceId,
+      model: info['model'] ?? 'unknown',
+      os: info['os'] ?? 'unknown',
+      createdAt: DateTime.now().toUtc(),
+    );
+  }
+
+  // --- Google Drive Backup Functions -----------------------------------
+
+  /// Export all Hive data as encrypted bytes for uploading to Google Drive.
+  /// Returns encrypted bytes on success, or null on failure.
+  static Future<Uint8List?> exportDataForGoogleDrive({
+    required String passphrase,
+  }) async {
+    try {
+      final habitsBox = Hive.box<Habit>('habits');
+      final daysBox = Hive.box<Day>('days');
+      final metadata = await buildMetadata();
+
+      final payload = <String, dynamic>{
+        'version': 1,
+        'metadata': metadata.toMap(),
+        'habits': habitsBox.values.map((h) => h.toMap()).toList(),
+        'days': daysBox.values.map((d) => d.toMap()).toList(),
+      };
+
+      final backupWrapper = await _encryptPayload(payload, passphrase);
+      return Uint8List.fromList(utf8.encode(jsonEncode(backupWrapper)));
+    } catch (e, st) {
+      debugPrint('Google Drive export failed: $e\n$st');
+      return null;
+    }
+  }
+
+  /// Import encrypted backup data from Google Drive.
+  /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.wrongPassphrase] if passphrase is incorrect,
+  /// or [BackupOperationResult.failed] on other errors.
+  static Future<BackupOperationResult> importDataFromGoogleDrive({
+    required BuildContext context,
+    required Uint8List encryptedBytes,
+    required String passphrase,
+  }) async {
+    try {
+      final content = utf8.decode(encryptedBytes);
+      final wrapper = jsonDecode(content) as Map<String, dynamic>;
+
+      try {
+        final payload = await _decryptPayload(wrapper, passphrase);
+        if ((payload['version'] as int? ?? 0) != 1) {
+          throw Exception('Unsupported backup version');
+        }
+
+        final metadata = _parseInlineMetadata(payload['metadata']);
+        _logMetadata(metadata);
+
+        final habitsBox = Hive.box<Habit>('habits');
+        final daysBox = Hive.box<Day>('days');
+
+        // Clear current data
+        await habitsBox.clear();
+        await daysBox.clear();
+
+        final habitsList =
+            (payload['habits'] as List<dynamic>? ?? [])
+                .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
+                .toList();
+        for (final h in habitsList) {
+          await habitsBox.add(h);
+        }
+
+        final daysList =
+            (payload['days'] as List<dynamic>? ?? [])
+                .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
+                .toList();
+        for (final d in daysList) {
+          await daysBox.add(d);
+        }
+      } on SecretBoxAuthenticationError {
+        debugPrint('Decryption failed: invalid passphrase or corrupted file');
+        return BackupOperationResult.wrongPassphrase;
+      }
+
+      if (!context.mounted) {
+        debugPrint('Mount check failed');
+        return BackupOperationResult.success;
+      }
+      context.read<HabitProvider>().init();
+
+      return BackupOperationResult.success;
+    } catch (e, st) {
+      debugPrint('Google Drive import failed: $e\n$st');
+      return BackupOperationResult.failed;
+    }
+  }
+
+  // --- Google Drive Metadata Functions ---------------------------------
+
+  /// Export metadata as encrypted bytes for uploading to Google Drive.
+  /// Returns encrypted metadata bytes on success, or null on failure.
+  static Future<Uint8List?> exportEncryptedMetadata({
+    required String passphrase,
+    BackupMetadata? metadata,
+  }) async {
+    try {
+      metadata ??= await buildMetadata();
+
+      final payload = <String, dynamic>{
+        'version': 1,
+        'metadata': metadata.toMap(),
+      };
+
+      final metadataWrapper = await _encryptPayload(payload, passphrase);
+      return Uint8List.fromList(utf8.encode(jsonEncode(metadataWrapper)));
+    } catch (e, st) {
+      debugPrint('Google Drive metadata export failed: $e\n$st');
+      return null;
+    }
+  }
+
+  /// Import encrypted metadata from Google Drive.
+  /// Returns [BackupMetadata] on success, or null on failure or wrong passphrase.
+  static Future<BackupMetadata?> importMetadata({
+    required Uint8List encryptedBytes,
+    required String passphrase,
+  }) async {
+    try {
+      final content = utf8.decode(encryptedBytes);
+      final wrapper = jsonDecode(content) as Map<String, dynamic>;
+
+      try {
+        final payload = await _decryptPayload(wrapper, passphrase);
+        if ((payload['version'] as int? ?? 0) != 1) {
+          throw Exception('Unsupported backup version');
+        }
+
+        final metadata = _parseInlineMetadata(payload['metadata']);
+        _logMetadata(metadata);
+        return metadata;
+      } on SecretBoxAuthenticationError {
+        debugPrint(
+          'Metadata decryption failed: invalid passphrase or corrupted file',
+        );
+        return null;
+      }
+    } catch (e, st) {
+      debugPrint('Google Drive metadata import failed: $e\n$st');
+      return null;
+    }
   }
 }
