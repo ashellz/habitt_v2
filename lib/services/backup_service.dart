@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
@@ -13,7 +14,14 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:provider/provider.dart';
 
-enum BackupOperationResult { success, cancelled, failed, wrongPassphrase }
+enum BackupOperationResult {
+  success,
+  cancelled,
+  failed,
+  wrongPassphrase;
+
+  void operator [](String other) {}
+}
 
 class BackupService {
   BackupService._();
@@ -272,11 +280,7 @@ class BackupService {
     }
   }
 
-  /// Import encrypted backup data from Google Drive.
-  /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.wrongPassphrase] if passphrase is incorrect,
-  /// or [BackupOperationResult.failed] on other errors.
-  static Future<BackupOperationResult> importDataFromGoogleDrive({
-    required BuildContext context,
+  static Future<BackupData?> importDataFromGoogleDrive({
     required Uint8List encryptedBytes,
     required String passphrase,
   }) async {
@@ -290,46 +294,14 @@ class BackupService {
           throw Exception('Unsupported backup version');
         }
 
-        final metadata = _parseInlineMetadata(payload['metadata']);
-        _logMetadata(metadata);
-
-        final habitsBox = Hive.box<Habit>('habits');
-        final daysBox = Hive.box<Day>('days');
-
-        // Clear current data
-        await habitsBox.clear();
-        await daysBox.clear();
-
-        final habitsList =
-            (payload['habits'] as List<dynamic>? ?? [])
-                .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
-                .toList();
-        for (final h in habitsList) {
-          await habitsBox.add(h);
-        }
-
-        final daysList =
-            (payload['days'] as List<dynamic>? ?? [])
-                .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
-                .toList();
-        for (final d in daysList) {
-          await daysBox.add(d);
-        }
+        return BackupData.fromMap(payload);
       } on SecretBoxAuthenticationError {
         debugPrint('Decryption failed: invalid passphrase or corrupted file');
-        return BackupOperationResult.wrongPassphrase;
+        return null;
       }
-
-      if (!context.mounted) {
-        debugPrint('Mount check failed');
-        return BackupOperationResult.success;
-      }
-      context.read<HabitProvider>().init();
-
-      return BackupOperationResult.success;
     } catch (e, st) {
       debugPrint('Google Drive import failed: $e\n$st');
-      return BackupOperationResult.failed;
+      return null;
     }
   }
 
