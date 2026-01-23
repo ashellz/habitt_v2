@@ -251,4 +251,55 @@ class Habit extends HiveObject {
         return resolveColor(tp) ?? tp.successColor;
     }
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'iconPath': iconPath,
+      'categoryId': categoryId,
+      'tag': tag,
+      'completed': completed,
+      'skipped': skipped,
+      'amountLabel': amountLabel,
+      'amount': amount,
+      'amountCompleted': amountCompleted,
+      'duration': duration,
+      'durationCompleted': durationCompleted,
+      'streak': streak,
+      'longestStreak': longestStreak,
+      'additional': additional,
+      'timeIntervalEnabled': timeIntervalEnabled,
+      'timeIntervalStart': timeIntervalStart,
+      'timeIntervalEnd': timeIntervalEnd,
+      'colorName': colorName,
+      'color': color,
+    };
+  }
+
+  factory Habit.fromMap(Map<String, dynamic> m) {
+    return Habit(
+      id: m['id'] as int,
+      name: m['name'] as String,
+      description: (m['description'] as String?) ?? '',
+      iconPath: m['iconPath'] as String,
+      categoryId: m['categoryId'] as int,
+      amountLabel: (m['amountLabel'] as String?) ?? 'times',
+      tag: (m['tag'] as String?) ?? 'No tag',
+      completed: (m['completed'] as bool?) ?? false,
+      skipped: (m['skipped'] as bool?) ?? false,
+      amount: (m['amount'] as int?) ?? 0,
+      amountCompleted: (m['amountCompleted'] as int?) ?? 0,
+      duration: (m['duration'] as int?) ?? 0,
+      durationCompleted: (m['durationCompleted'] as int?) ?? 0,
+      streak: (m['streak'] as int?) ?? 0,
+      longestStreak: (m['longestStreak'] as int?) ?? 0,
+      additional: (m['additional'] as bool?) ?? false,
+      timeIntervalEnabled: (m['timeIntervalEnabled'] as bool?) ?? false,
+      timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
+      timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
+      colorName: m['colorName'] as String?,
+    )..color = m['color'] as String?;
+  }
 }
