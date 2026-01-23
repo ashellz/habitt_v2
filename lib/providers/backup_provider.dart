@@ -202,9 +202,6 @@ class BackupProvider extends ChangeNotifier {
         notifyListeners();
       }
 
-      // TODO: Initialize Drive API client with authenticated user
-      // TODO: Fetch cloud backup metadata
-
       await performSync();
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
@@ -770,9 +767,11 @@ class BackupProvider extends ChangeNotifier {
     final daysBox = Hive.box<Day>('days');
 
     // Merge habits using timestamp-aware resolution
+    // For each habit in the backup:
     for (final incoming in backupData.habits) {
       Habit? existing;
       for (final h in habitsBox.values) {
+        // For each habit in the local database, check if IDs match
         if (h.id == incoming.id) {
           existing = h;
           break;
@@ -784,11 +783,13 @@ class BackupProvider extends ChangeNotifier {
         existing.updateHabit(merged);
         await existing.save();
       } else {
+        if (incoming.isDeleted ?? false) continue;
         await habitsBox.add(incoming);
       }
     }
 
     // Build map of final habits for day references
+    // Used so that days reference the correct habit instances and not copies
     final habitById = {for (final h in habitsBox.values) h.id: h};
 
     for (final day in backupData.days) {
@@ -812,6 +813,7 @@ class BackupProvider extends ChangeNotifier {
       final existingById = <int, Habit>{};
       if (existingDay != null) {
         for (final h in existingDay.habits) {
+          if (h.isDeleted ?? false) continue;
           existingById[h.id] = h;
         }
       }
@@ -824,6 +826,7 @@ class BackupProvider extends ChangeNotifier {
           final merged = local.merge(incomingHabit);
           mergedDayHabits.add(merged);
         } else {
+          if (incomingHabit.isDeleted ?? false) continue;
           mergedDayHabits.add(incomingHabit);
         }
       }
