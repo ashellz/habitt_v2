@@ -85,38 +85,96 @@ class BackupService {
       if (!await file.exists()) return BackupOperationResult.failed;
 
       try {
-        final payload = await _decryptPayload(
+        final BackupData payload = await _decryptPayload(
           jsonDecode(await file.readAsString()) as Map<String, dynamic>,
           passphrase,
         );
-        if ((payload['version'] as int? ?? 0) != 1) {
+        if ((payload.version) != 1) {
           throw Exception('Unsupported backup version');
         }
 
-        final metadata = _parseInlineMetadata(payload['metadata']);
+        final metadata = _parseInlineMetadata(payload.metadata);
         _logMetadata(metadata);
 
         final habitsBox = Hive.box<Habit>('habits');
         final daysBox = Hive.box<Day>('days');
 
-        // Clear current data
-        await habitsBox.clear();
-        await daysBox.clear();
+        final importedHabits = payload.habits;
+        // Merge habits using timestamp-aware conflict resolution
+        for (final incoming in importedHabits) {
+          Habit? existing;
+          for (final h in habitsBox.values) {
+            if (h.id == incoming.id) {
+              existing = h;
+              break;
+            }
+          }
 
-        final habitsList =
-            (payload['habits'] as List<dynamic>? ?? [])
-                .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
-                .toList();
-        for (final h in habitsList) {
-          await habitsBox.add(h);
+          if (existing != null) {
+            final merged = existing.merge(incoming);
+            existing.updateHabit(merged);
+            await existing.save();
+          } else {
+            await habitsBox.add(incoming);
+          }
         }
 
-        final daysList =
-            (payload['days'] as List<dynamic>? ?? [])
-                .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
-                .toList();
-        for (final d in daysList) {
-          await daysBox.add(d);
+        // Build a map for consistent references when saving days
+        final habitById = {for (final h in habitsBox.values) h.id: h};
+
+        final importedDays = payload.days;
+
+        for (final day in importedDays) {
+          final dayKey =
+              DateTime(
+                day.date.year,
+                day.date.month,
+                day.date.day,
+              ).toIso8601String().split('T').first;
+
+          final existingDay = daysBox.get(dayKey);
+          if (existingDay != null) {
+            final localTs = existingDay.timestamp;
+            final incomingTs = day.timestamp;
+            if ((localTs == incomingTs) ||
+                (localTs == null && incomingTs == null)) {
+              continue;
+            }
+          }
+
+          final existingById = <int, Habit>{};
+          if (existingDay != null) {
+            for (final h in existingDay.habits) {
+              existingById[h.id] = h;
+            }
+          }
+
+          final mergedDayHabits = <Habit>[];
+
+          for (final incomingHabit in day.habits) {
+            final local = existingById.remove(incomingHabit.id);
+            if (local != null) {
+              final merged = local.merge(incomingHabit);
+              mergedDayHabits.add(merged);
+            } else {
+              mergedDayHabits.add(incomingHabit);
+            }
+          }
+
+          // Preserve any local-only habits for that day
+          mergedDayHabits.addAll(existingById.values);
+
+          final normalizedHabits =
+              mergedDayHabits.map((h) => habitById[h.id] ?? h).toList();
+
+          await daysBox.put(
+            dayKey,
+            Day(
+              date: day.date,
+              habits: normalizedHabits,
+              timestamp: day.timestamp,
+            ),
+          );
         }
       } on SecretBoxAuthenticationError {
         debugPrint('Decryption failed: invalid passphrase or corrupted file');
@@ -127,7 +185,8 @@ class BackupService {
         debugPrint('Mount check failed');
         return BackupOperationResult.success;
       }
-      context.read<HabitProvider>().init();
+
+      await context.read<HabitProvider>().init();
 
       return BackupOperationResult.success;
     } catch (e, st) {
@@ -166,7 +225,7 @@ class BackupService {
     };
   }
 
-  static Future<Map<String, dynamic>> _decryptPayload(
+  static Future<BackupData> _decryptPayload(
     Map<String, dynamic> wrapper,
     String passphrase,
   ) async {
@@ -181,7 +240,7 @@ class BackupService {
       secretKey: secretKey,
     );
 
-    return jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+    return BackupData.fromMap(jsonDecode(utf8.decode(clear)));
   }
 
   static Future<SecretKey> _deriveKey(String pass, List<int> salt) async {
@@ -289,12 +348,12 @@ class BackupService {
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
 
       try {
-        final payload = await _decryptPayload(wrapper, passphrase);
-        if ((payload['version'] as int? ?? 0) != 1) {
+        final BackupData payload = await _decryptPayload(wrapper, passphrase);
+        if ((payload.version) != 1) {
           throw Exception('Unsupported backup version');
         }
 
-        return BackupData.fromMap(payload);
+        return payload;
       } on SecretBoxAuthenticationError {
         debugPrint('Decryption failed: invalid passphrase or corrupted file');
         return null;
@@ -340,12 +399,12 @@ class BackupService {
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
 
       try {
-        final payload = await _decryptPayload(wrapper, passphrase);
-        if ((payload['version'] as int? ?? 0) != 1) {
+        final BackupData payload = await _decryptPayload(wrapper, passphrase);
+        if ((payload.version) != 1) {
           throw Exception('Unsupported backup version');
         }
 
-        final metadata = _parseInlineMetadata(payload['metadata']);
+        final metadata = _parseInlineMetadata(payload.metadata);
         _logMetadata(metadata);
         return metadata;
       } on SecretBoxAuthenticationError {

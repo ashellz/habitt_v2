@@ -8,11 +8,15 @@ import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
 import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
+import 'package:habitt/models/day.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/services/backup_service.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:hive_ce/hive.dart';
 
 class _GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
@@ -47,6 +51,7 @@ class BackupProvider extends ChangeNotifier {
   User? _firebaseUser;
   late final GoogleSignIn _googleSignIn;
   late final FlutterSecureStorage _secureStorage;
+  HabitProvider? _habitProvider;
 
   // Encryption state
   /// Passphrase stored securely in device keystore/keychain
@@ -74,6 +79,10 @@ class BackupProvider extends ChangeNotifier {
   bool get hasPassphraseSet => _passphrase != null;
 
   bool get isPassphraseLoaded => _currentSessionPassphrase != null;
+
+  void attachHabitProvider(HabitProvider provider) {
+    _habitProvider = provider;
+  }
 
   /// Initialize provider: restore persisted sign-in state and passphrase.
   Future<void> initialize() async {
@@ -757,6 +766,83 @@ class BackupProvider extends ChangeNotifier {
   }
 
   Future<void> _mergeBackupData(BackupData backupData) async {
+    final habitsBox = Hive.box<Habit>('habits');
+    final daysBox = Hive.box<Day>('days');
+
+    // Merge habits using timestamp-aware resolution
+    for (final incoming in backupData.habits) {
+      Habit? existing;
+      for (final h in habitsBox.values) {
+        if (h.id == incoming.id) {
+          existing = h;
+          break;
+        }
+      }
+
+      if (existing != null) {
+        final merged = existing.merge(incoming);
+        existing.updateHabit(merged);
+        await existing.save();
+      } else {
+        await habitsBox.add(incoming);
+      }
+    }
+
+    // Build map of final habits for day references
+    final habitById = {for (final h in habitsBox.values) h.id: h};
+
+    for (final day in backupData.days) {
+      final dayKey =
+          DateTime(
+            day.date.year,
+            day.date.month,
+            day.date.day,
+          ).toIso8601String().split('T').first;
+
+      final existingDay = daysBox.get(dayKey);
+      if (existingDay != null) {
+        final localTs = existingDay.timestamp;
+        final incomingTs = day.timestamp;
+        if ((localTs == incomingTs) ||
+            (localTs == null && incomingTs == null)) {
+          continue; // No change
+        }
+      }
+
+      final existingById = <int, Habit>{};
+      if (existingDay != null) {
+        for (final h in existingDay.habits) {
+          existingById[h.id] = h;
+        }
+      }
+
+      final mergedDayHabits = <Habit>[];
+
+      for (final incomingHabit in day.habits) {
+        final local = existingById.remove(incomingHabit.id);
+        if (local != null) {
+          final merged = local.merge(incomingHabit);
+          mergedDayHabits.add(merged);
+        } else {
+          mergedDayHabits.add(incomingHabit);
+        }
+      }
+
+      // Preserve any local-only habits for that day
+      mergedDayHabits.addAll(existingById.values);
+
+      final normalizedHabits =
+          mergedDayHabits.map((h) => habitById[h.id] ?? h).toList();
+
+      await daysBox.put(
+        dayKey,
+        Day(date: day.date, habits: normalizedHabits, timestamp: day.timestamp),
+      );
+    }
+
+    // Refresh dependent providers
+    await _habitProvider?.init();
+
     notifyListeners();
   }
 

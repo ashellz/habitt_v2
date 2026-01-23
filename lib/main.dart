@@ -122,8 +122,13 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
 
-        // 5. BackupProvider: Manages Google Drive sync and backup state.
-        ChangeNotifierProvider.value(value: backupProvider),
+        // 5. BackupProvider: Depends on HabitProvider for post-merge refresh.
+        ChangeNotifierProxyProvider<HabitProvider, BackupProvider>(
+          create: (_) => backupProvider,
+          update: (_, habitProvider, previous) {
+            return previous!..attachHabitProvider(habitProvider);
+          },
+        ),
       ],
       child: MyApp(prefs: prefs),
     ),

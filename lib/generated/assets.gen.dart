@@ -183,6 +183,10 @@ class $AssetsImagesIconsGen {
   AssetGenImage get duration =>
       const AssetGenImage('assets/images/icons/duration.png');
 
+  /// File path: assets/images/icons/export.png
+  AssetGenImage get export =>
+      const AssetGenImage('assets/images/icons/export.png');
+
   /// File path: assets/images/icons/food.png
   AssetGenImage get food => const AssetGenImage('assets/images/icons/food.png');
 
@@ -193,6 +197,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/fries.png
   AssetGenImage get fries =>
       const AssetGenImage('assets/images/icons/fries.png');
+
+  /// File path: assets/images/icons/google-drive.png
+  AssetGenImage get googleDrive =>
+      const AssetGenImage('assets/images/icons/google-drive.png');
 
   /// File path: assets/images/icons/hamburger.png
   AssetGenImage get hamburger =>
@@ -217,6 +225,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/ice_cream2.png
   AssetGenImage get iceCream2 =>
       const AssetGenImage('assets/images/icons/ice_cream2.png');
+
+  /// File path: assets/images/icons/import.png
+  AssetGenImage get import =>
+      const AssetGenImage('assets/images/icons/import.png');
 
   /// File path: assets/images/icons/joystick.png
   AssetGenImage get joystick =>
@@ -418,15 +430,18 @@ class $AssetsImagesIconsGen {
     dogFood,
     doubleBed,
     duration,
+    export,
     food,
     football,
     fries,
+    googleDrive,
     hamburger,
     horse,
     horseMan,
     horseWoman,
     iceCream,
     iceCream2,
+    import,
     joystick,
     juice,
     juice2,
@@ -491,8 +506,17 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/dont-show.svg
   String get dontShow => 'assets/images/svg/dont-show.svg';
 
+  /// File path: assets/images/svg/eye-shut.svg
+  String get eyeShut => 'assets/images/svg/eye-shut.svg';
+
+  /// File path: assets/images/svg/eye.svg
+  String get eye => 'assets/images/svg/eye.svg';
+
   /// File path: assets/images/svg/habits.svg
   String get habits => 'assets/images/svg/habits.svg';
+
+  /// File path: assets/images/svg/incomplete.svg
+  String get incomplete => 'assets/images/svg/incomplete.svg';
 
   /// File path: assets/images/svg/settings.svg
   String get settings => 'assets/images/svg/settings.svg';
@@ -516,7 +540,10 @@ class $AssetsImagesSvgGen {
     check,
     clock,
     dontShow,
+    eyeShut,
+    eye,
     habits,
+    incomplete,
     settings,
     show,
     skip,
