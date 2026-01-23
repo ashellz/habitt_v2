@@ -115,6 +115,7 @@ class BackupService {
             existing.updateHabit(merged);
             await existing.save();
           } else {
+            if (incoming.isDeleted ?? false) continue;
             await habitsBox.add(incoming);
           }
         }
@@ -145,6 +146,7 @@ class BackupService {
           final existingById = <int, Habit>{};
           if (existingDay != null) {
             for (final h in existingDay.habits) {
+              if (h.isDeleted ?? false) continue;
               existingById[h.id] = h;
             }
           }
@@ -157,6 +159,7 @@ class BackupService {
               final merged = local.merge(incomingHabit);
               mergedDayHabits.add(merged);
             } else {
+              if (incomingHabit.isDeleted ?? false) continue;
               mergedDayHabits.add(incomingHabit);
             }
           }

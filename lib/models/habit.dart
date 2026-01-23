@@ -30,6 +30,7 @@ class Habit extends HiveObject {
   int timeIntervalEnd; // In minutes
   String? colorName; // Maps to theme-aware palette
   String? color;
+  bool? isDeleted;
   Map<String, DateTime> timestamps;
 
   Habit({
@@ -53,6 +54,7 @@ class Habit extends HiveObject {
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
     this.colorName,
+    this.isDeleted,
     Map<String, DateTime>? timestamps,
   }) : timestamps = timestamps ?? {};
 
@@ -101,6 +103,7 @@ class Habit extends HiveObject {
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
       colorName: colorName,
+      isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
   }
@@ -127,6 +130,7 @@ class Habit extends HiveObject {
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
       colorName: colorName,
+      isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
   }
@@ -151,7 +155,12 @@ class Habit extends HiveObject {
     timeIntervalEnd = habit.timeIntervalEnd;
     colorName = habit.colorName;
     color = habit.color;
+    isDeleted = habit.isDeleted;
     timestamps = Map<String, DateTime>.from(habit.timestamps);
+  }
+
+  Future<void> deleteHabit() async {
+    isDeleted = true;
   }
 
   Future<void> completeHabit() async {
@@ -280,6 +289,7 @@ class Habit extends HiveObject {
       'timeIntervalEnd': timeIntervalEnd,
       'colorName': colorName,
       'color': color,
+      'isDeleted': isDeleted,
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
       ),
@@ -319,6 +329,7 @@ class Habit extends HiveObject {
       timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
       timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
       colorName: m['colorName'] as String?,
+      isDeleted: m['isDeleted'] as bool?,
       timestamps: ts,
     )..color = m['color'] as String?;
   }
@@ -406,6 +417,7 @@ class Habit extends HiveObject {
         incoming.timeIntervalEnd,
       ),
       colorName: resolve('colorName', colorName, incoming.colorName),
+      isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       timestamps: mergedTimestamps,
     );
 

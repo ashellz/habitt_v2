@@ -23,7 +23,7 @@ class DeleteHabitDialog extends StatelessWidget {
       leftButtonText: localizations.cancel,
       rightButtonText: "Delete",
       rightButtonCallback: () {
-        context.read<HabitProvider>().removeHabit(widget.habit);
+        context.read<HabitProvider>().removeHabit(widget.habit, context);
         while (Navigator.canPop(context)) {
           Navigator.pop(context);
         }

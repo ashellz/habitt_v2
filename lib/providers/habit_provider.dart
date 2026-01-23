@@ -165,34 +165,16 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeHabit(Habit habit) async {
+  void removeHabit(Habit habit, BuildContext context) async {
     if (statsProvider != null) {
       statsProvider!.addShouldRefresh(StatsType.highestAmountOfHabitsLastWeek);
     }
 
     habits.removeWhere((h) => h.id == habit.id);
-    await habitBox.delete(habit.key);
-    // delete from database but only at today
+    await habit.deleteHabit();
+    if (context.mounted) checkReorderCategories(context, habit);
 
-    final today = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-    );
-    final dayKey = today.toIso8601String().split('T').first;
-    final dayEntry = daysBox.get(dayKey);
-
-    if (dayEntry != null) {
-      final index = dayEntry.habits.indexWhere((h) => h.id == habit.id);
-
-      if (index != -1) {
-        dayEntry.habits.removeAt(index);
-        await dayEntry.save();
-      } else {
-        debugPrint("Habit not found in day entry");
-      }
-    }
-
+    updateHabitInDB(habit);
     notifyListeners();
   }
 
