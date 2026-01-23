@@ -1,13 +1,12 @@
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:hive_ce/hive.dart';
 
 class BackupData {
   final int version;
   final BackupMetadata metadata;
-  final Box<Habit> habits;
-  final Box<Day> days;
+  final List<Habit> habits;
+  final List<Day> days;
 
   BackupData({
     required this.version,
@@ -19,16 +18,22 @@ class BackupData {
   Map<String, dynamic> toMap() => {
     'version': version,
     'metadata': metadata.toMap(),
-    'habits': habits.values.map((h) => h.toMap()).toList(),
-    'days': days.values.map((d) => d.toMap()).toList(),
+    'habits': habits.map((h) => h.toMap()).toList(),
+    'days': days.map((d) => d.toMap()).toList(),
   };
 
   factory BackupData.fromMap(Map<String, dynamic> map) {
     return BackupData(
       version: map['version'] as int,
       metadata: BackupMetadata.fromMap(map['metadata']),
-      habits: Hive.box<Habit>('habits'),
-      days: Hive.box<Day>('days'),
+      habits:
+          (map['habits'] as List<dynamic>? ?? [])
+              .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
+              .toList(),
+      days:
+          (map['days'] as List<dynamic>? ?? [])
+              .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
+              .toList(),
     );
   }
 }

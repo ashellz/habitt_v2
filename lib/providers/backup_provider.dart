@@ -328,6 +328,7 @@ class BackupProvider extends ChangeNotifier {
         final backupData = await _downloadBackupFromCloud();
         if (backupData != null) {
           debugPrint('Merging downloaded backup data with local data...');
+          await _mergeBackupData(backupData);
         }
       } else {
         debugPrint('No cloud metadata found, uploading local backup.');
@@ -752,6 +753,10 @@ class BackupProvider extends ChangeNotifier {
     if (encryptedMetadata != null) {
       _localMetadata = metadata;
     }
+    notifyListeners();
+  }
+
+  Future<void> _mergeBackupData(BackupData backupData) async {
     notifyListeners();
   }
 
