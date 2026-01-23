@@ -30,6 +30,7 @@ class Habit extends HiveObject {
   int timeIntervalEnd; // In minutes
   String? colorName; // Maps to theme-aware palette
   String? color;
+  Map<String, DateTime> timestamps;
 
   Habit({
     required this.id,
@@ -52,7 +53,8 @@ class Habit extends HiveObject {
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
     this.colorName,
-  });
+    Map<String, DateTime>? timestamps,
+  }) : timestamps = timestamps ?? {};
 
   // convert to getter
   Color? resolveColor(ThemeProvider tp) {
@@ -99,6 +101,7 @@ class Habit extends HiveObject {
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
       colorName: colorName,
+      timestamps: Map<String, DateTime>.from(timestamps),
     );
   }
 
@@ -124,6 +127,7 @@ class Habit extends HiveObject {
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
       colorName: colorName,
+      timestamps: Map<String, DateTime>.from(timestamps),
     );
   }
 
@@ -147,6 +151,7 @@ class Habit extends HiveObject {
     timeIntervalEnd = habit.timeIntervalEnd;
     colorName = habit.colorName;
     color = habit.color;
+    timestamps = Map<String, DateTime>.from(habit.timestamps);
   }
 
   Future<void> completeHabit() async {
@@ -275,10 +280,24 @@ class Habit extends HiveObject {
       'timeIntervalEnd': timeIntervalEnd,
       'colorName': colorName,
       'color': color,
+      'timestamps': timestamps.map(
+        (key, value) => MapEntry(key, value.toIso8601String()),
+      ),
     };
   }
 
   factory Habit.fromMap(Map<String, dynamic> m) {
+    final rawTimestamps = m['timestamps'];
+    final ts = <String, DateTime>{};
+    if (rawTimestamps is Map) {
+      rawTimestamps.forEach((key, value) {
+        final parsed = DateTime.tryParse(value?.toString() ?? '');
+        if (parsed != null) {
+          ts[key.toString()] = parsed.toUtc();
+        }
+      });
+    }
+
     return Habit(
       id: m['id'] as int,
       name: m['name'] as String,
@@ -300,6 +319,127 @@ class Habit extends HiveObject {
       timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
       timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
       colorName: m['colorName'] as String?,
+      timestamps: ts,
     )..color = m['color'] as String?;
+  }
+
+  Habit merge(Habit incoming, {DateTime? reference}) {
+    final now = (reference ?? DateTime.now()).toUtc();
+    final mergedTimestamps = <String, DateTime>{};
+
+    T resolve<T>(String key, T localValue, T incomingValue) {
+      if (localValue == incomingValue) {
+        return localValue;
+      }
+      final localTs = timestamps[key];
+      final incomingTs = incoming.timestamps[key];
+
+      if (localTs == null && incomingTs == null) {
+        return localValue;
+      }
+
+      if (localTs != null && incomingTs == null) {
+        mergedTimestamps[key] = localTs;
+        return localValue;
+      }
+
+      if (localTs == null && incomingTs != null) {
+        mergedTimestamps[key] = incomingTs;
+        return incomingValue;
+      }
+
+      final localDelta = now.difference(localTs!).abs();
+      final incomingDelta = now.difference(incomingTs!).abs();
+
+      if (localDelta == incomingDelta) {
+        mergedTimestamps[key] = localTs;
+        return localValue; // Prefer on-device when timestamps tie
+      }
+
+      final useLocal = localDelta < incomingDelta;
+      mergedTimestamps[key] = useLocal ? localTs : incomingTs;
+      return useLocal ? localValue : incomingValue;
+    }
+
+    final merged = Habit(
+      id: id,
+      name: resolve('name', name, incoming.name),
+      description: resolve('description', description, incoming.description),
+      iconPath: resolve('iconPath', iconPath, incoming.iconPath),
+      categoryId: resolve('categoryId', categoryId, incoming.categoryId),
+      amountLabel: resolve('amountLabel', amountLabel, incoming.amountLabel),
+      tag: resolve('tag', tag, incoming.tag),
+      completed: resolve('completed', completed, incoming.completed),
+      skipped: resolve('skipped', skipped, incoming.skipped),
+      amount: resolve('amount', amount, incoming.amount),
+      amountCompleted: resolve(
+        'amountCompleted',
+        amountCompleted,
+        incoming.amountCompleted,
+      ),
+      duration: resolve('duration', duration, incoming.duration),
+      durationCompleted: resolve(
+        'durationCompleted',
+        durationCompleted,
+        incoming.durationCompleted,
+      ),
+      streak: resolve('streak', streak, incoming.streak),
+      longestStreak: resolve(
+        'longestStreak',
+        longestStreak,
+        incoming.longestStreak,
+      ),
+      additional: resolve('additional', additional, incoming.additional),
+      timeIntervalEnabled: resolve(
+        'timeIntervalEnabled',
+        timeIntervalEnabled,
+        incoming.timeIntervalEnabled,
+      ),
+      timeIntervalStart: resolve(
+        'timeIntervalStart',
+        timeIntervalStart,
+        incoming.timeIntervalStart,
+      ),
+      timeIntervalEnd: resolve(
+        'timeIntervalEnd',
+        timeIntervalEnd,
+        incoming.timeIntervalEnd,
+      ),
+      colorName: resolve('colorName', colorName, incoming.colorName),
+      timestamps: mergedTimestamps,
+    );
+
+    merged.color = resolve('color', color, incoming.color);
+
+    final allTimestampKeys = {...timestamps.keys, ...incoming.timestamps.keys};
+
+    for (final key in allTimestampKeys) {
+      if (mergedTimestamps.containsKey(key)) continue;
+
+      final localTs = timestamps[key];
+      final incomingTs = incoming.timestamps[key];
+
+      if (localTs == null && incomingTs == null) {
+        continue;
+      }
+
+      if (localTs != null && incomingTs == null) {
+        mergedTimestamps[key] = localTs;
+        continue;
+      }
+
+      if (localTs == null && incomingTs != null) {
+        mergedTimestamps[key] = incomingTs;
+        continue;
+      }
+
+      final localDelta = now.difference(localTs!).abs();
+      final incomingDelta = now.difference(incomingTs!).abs();
+
+      mergedTimestamps[key] =
+          localDelta <= incomingDelta ? localTs : incomingTs;
+    }
+
+    return merged;
   }
 }
