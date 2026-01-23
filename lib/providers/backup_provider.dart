@@ -291,7 +291,7 @@ class BackupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> performSync() async {
+  Future<void> performSync([bool force = false]) async {
     debugPrint('Starting backup sync operation...');
     if (!isLoggedIn) {
       _lastError = 'Not signed in. Cannot sync.';
@@ -307,14 +307,15 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
-    _syncState = SyncState.syncing;
     _lastError = null;
     notifyListeners();
 
     try {
       final metadata = await _fetchCloudMetadata();
 
-      if (_localMetadata?.deviceId == metadata?.deviceId && metadata != null) {
+      if (!force &&
+          _localMetadata?.deviceId == metadata?.deviceId &&
+          metadata != null) {
         // Not from different device, no need to download anything
         debugPrint('No device conflict detected, skipping download.');
         _syncState = SyncState.success;
@@ -323,8 +324,11 @@ class BackupProvider extends ChangeNotifier {
       }
 
       if (metadata != null) {
+        _syncState = SyncState.syncing;
         final backupData = await _downloadBackupFromCloud();
-        if (backupData != null) {}
+        if (backupData != null) {
+          debugPrint('Merging downloaded backup data with local data...');
+        }
       } else {
         debugPrint('No cloud metadata found, uploading local backup.');
         await _uploadBackupToCloud();

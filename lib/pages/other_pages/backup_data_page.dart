@@ -130,7 +130,7 @@ class BackupDataPage extends StatelessWidget {
                                 await backupProvider.setPassphrase(passphrase);
                               }
                             } else {
-                              await backupProvider.performSync();
+                              await backupProvider.performSync(true);
                             }
                           },
                           label:
