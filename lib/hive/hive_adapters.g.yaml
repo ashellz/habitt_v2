@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 24
+    nextIndex: 25
     fields:
       id:
         index: 0
@@ -51,6 +51,8 @@ types:
         index: 22
       timestamps:
         index: 23
+      isDeleted:
+        index: 24
   Day:
     typeId: 1
     nextIndex: 3

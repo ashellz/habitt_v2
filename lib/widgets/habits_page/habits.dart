@@ -51,9 +51,13 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
   }
 
   List<Habit> _getHabits() {
+    debugPrint(
+      "Getting habits for Habits widget ======================================== new DAY SELECTED: ${widget.daySelected} ",
+    );
     final habitProvider = context.watch<HabitProvider>();
-
-    if (widget.daySelected == null) {
+    final today = DateTime.now();
+    final todayShort = DateTime(today.year, today.month, today.day);
+    if (widget.daySelected == null || widget.daySelected == todayShort) {
       return habitProvider.habits;
     }
 

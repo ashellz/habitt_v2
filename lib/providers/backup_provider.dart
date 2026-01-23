@@ -499,9 +499,13 @@ class BackupProvider extends ChangeNotifier {
 
       if (metadata != null) {
         debugPrint('Cloud metadata loaded: ${metadata.deviceId}');
+        _localMetadata = metadata;
         return metadata;
       } else {
         debugPrint('Failed to decrypt metadata');
+        debugPrint(
+          'Passphrase was: ${_passphrase?.length} chars, bytes downloaded: ${bytes.length}',
+        );
         return null;
       }
     } catch (e) {

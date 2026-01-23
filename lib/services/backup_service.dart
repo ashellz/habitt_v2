@@ -391,6 +391,25 @@ class BackupService {
     }
   }
 
+  static Future<BackupMetadata?> _decryptMetadata({
+    required Map<String, dynamic> wrapper,
+    required String passphrase,
+  }) async {
+    final salt = base64Decode(wrapper['salt'] as String);
+    final nonce = base64Decode(wrapper['nonce'] as String);
+    final cipher = base64Decode(wrapper['ciphertext'] as String);
+    final tag = base64Decode(wrapper['tag'] as String);
+
+    final secretKey = await _deriveKey(passphrase, salt);
+    final clear = await _aes.decrypt(
+      SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+      secretKey: secretKey,
+    );
+
+    final map = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+    return BackupMetadata.fromMap(map['metadata']);
+  }
+
   /// Import encrypted metadata from Google Drive.
   /// Returns [BackupMetadata] on success, or null on failure or wrong passphrase.
   static Future<BackupMetadata?> importMetadata({
@@ -398,16 +417,22 @@ class BackupService {
     required String passphrase,
   }) async {
     try {
+      debugPrint('Importing metadata: ${encryptedBytes.length} bytes');
       final content = utf8.decode(encryptedBytes);
+      debugPrint('Decoded metadata content');
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
+      debugPrint('Parsed metadata wrapper: ${wrapper.keys}');
 
       try {
-        final BackupData payload = await _decryptPayload(wrapper, passphrase);
-        if ((payload.version) != 1) {
-          throw Exception('Unsupported backup version');
-        }
+        debugPrint(
+          'Attempting to decrypt metadata with passphrase length: ${passphrase.length}',
+        );
+        final BackupMetadata? metadata = await _decryptMetadata(
+          wrapper: wrapper,
+          passphrase: passphrase,
+        );
+        debugPrint('Metadata decryption successful');
 
-        final metadata = _parseInlineMetadata(payload.metadata);
         _logMetadata(metadata);
         return metadata;
       } on SecretBoxAuthenticationError {
