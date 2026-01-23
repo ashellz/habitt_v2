@@ -58,7 +58,6 @@ class HabitProvider extends ChangeNotifier {
       return category == 1 || category == 2 || category == 3 || category == 4;
     }
 
-    
     // Deletes all habits which category isnt 1,2,3 or 4
     habits.removeWhere((habit) => !checkCategory(habit.categoryId));
 
@@ -87,7 +86,10 @@ class HabitProvider extends ChangeNotifier {
 
     if (todayEntry == null) {
       debugPrint("Creating new day entry");
-      daysBox.put(todayKey, Day(date: today, habits: habits));
+      daysBox.put(
+        todayKey,
+        Day(date: today, habits: habits, timestamp: DateTime.now().toUtc()),
+      );
     }
   }
 
@@ -342,7 +344,14 @@ class HabitProvider extends ChangeNotifier {
       clonedHabits = habits.map((h) => h.copy()).toList();
     }
 
-    daysBox.put(dayKey, Day(date: daySimple, habits: clonedHabits));
+    daysBox.put(
+      dayKey,
+      Day(
+        date: daySimple,
+        habits: clonedHabits,
+        timestamp: DateTime.now().toUtc(),
+      ),
+    );
   }
 
   Future<void> assignStreaks() async {

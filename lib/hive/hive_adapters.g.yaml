@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 23
+    nextIndex: 24
     fields:
       id:
         index: 0
@@ -49,11 +49,15 @@ types:
         index: 20
       colorName:
         index: 22
+      timestamps:
+        index: 23
   Day:
     typeId: 1
-    nextIndex: 2
+    nextIndex: 3
     fields:
       date:
         index: 0
       habits:
         index: 1
+      timestamp:
+        index: 2
