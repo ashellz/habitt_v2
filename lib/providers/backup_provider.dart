@@ -322,8 +322,13 @@ class BackupProvider extends ChangeNotifier {
         return;
       }
 
-      final backupData = await _downloadBackupFromCloud();
-      if (backupData != null) {}
+      if (metadata != null) {
+        final backupData = await _downloadBackupFromCloud();
+        if (backupData != null) {}
+      } else {
+        debugPrint('No cloud metadata found, uploading local backup.');
+        await _uploadBackupToCloud();
+      }
 
       _syncState = SyncState.success;
       notifyListeners();

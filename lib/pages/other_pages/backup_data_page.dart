@@ -6,6 +6,7 @@ import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
+import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BackupDataPage extends StatelessWidget {
@@ -16,6 +17,7 @@ class BackupDataPage extends StatelessWidget {
     final tp = context.watch<ThemeProvider>();
     final backupProvider = context.watch<BackupProvider>();
     final bool isLoggedIn = backupProvider.isLoggedIn;
+    final bool hasPassphraseSet = backupProvider.hasPassphraseSet;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -106,15 +108,33 @@ class BackupDataPage extends StatelessWidget {
                           isLoading:
                               backupProvider.syncState == SyncState.syncing,
                           prefix: Icon(
-                            Icons.sync,
+                            hasPassphraseSet ? Icons.sync : Icons.lock,
                             color: bestContrastingOn(
                               tp.primaryButtonBackground,
                             ),
                           ),
                           onPressed: () async {
-                            await backupProvider.performSync();
+                            if (!hasPassphraseSet) {
+                              final String? passphrase = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  final TextEditingController controller =
+                                      TextEditingController();
+                                  return PassphraseDialog(
+                                    controller: controller,
+                                  );
+                                },
+                              );
+
+                              if (passphrase != null && passphrase.isNotEmpty) {
+                                await backupProvider.setPassphrase(passphrase);
+                              }
+                            } else {
+                              await backupProvider.performSync();
+                            }
                           },
-                          label: "Sync Now",
+                          label:
+                              hasPassphraseSet ? "Sync Now" : "Set Passphrase",
                         ),
                       ),
                     ],
