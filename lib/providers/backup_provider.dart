@@ -132,6 +132,8 @@ class BackupProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final savedEmail = prefs.getString(_kBackupUserEmailKey);
 
+      _localMetadata = await BackupService.buildMetadata();
+
       if (savedEmail != null) {
         // Signing in the user in the background
         final user = await _googleSignIn.signInSilently();
@@ -348,21 +350,26 @@ class BackupProvider extends ChangeNotifier {
     try {
       final metadata = await _fetchCloudMetadata();
 
-      if (_localMetadata?.deviceId == metadata?.deviceId && metadata != null) {
+      if (_localMetadata?.deviceId == metadata?.deviceId &&
+          metadata != null &&
+          _localMetadata != null) {
         if (force) {
           await _uploadBackupToCloud();
+          _syncState = SyncState.success;
+          notifyListeners();
+          return;
         } else {
           // Not from different device, no need to download anything
           debugPrint('No device conflict detected, skipping download.');
           _syncState = SyncState.success;
+          notifyListeners();
+          return;
         }
-
-        notifyListeners();
-        return;
       }
 
       if (metadata != null) {
         _syncState = SyncState.syncing;
+        notifyListeners();
         final backupData = await _downloadBackupFromCloud();
         if (backupData != null) {
           debugPrint('Merging downloaded backup data with local data...');
@@ -499,7 +506,6 @@ class BackupProvider extends ChangeNotifier {
 
       if (metadata != null) {
         debugPrint('Cloud metadata loaded: ${metadata.deviceId}');
-        _localMetadata = metadata;
         return metadata;
       } else {
         debugPrint('Failed to decrypt metadata');
@@ -551,42 +557,41 @@ class BackupProvider extends ChangeNotifier {
       );
 
       if (found.files == null || found.files!.isEmpty) {
-        debugPrint('No metadata file found in cloud');
+        debugPrint('No habit backup file found in cloud');
         return null;
       }
 
-      final metadataFileId = found.files!.first.id;
-      if (metadataFileId == null) {
-        debugPrint('Metadata file ID is null');
+      final backupFileId = found.files!.first.id;
+      if (backupFileId == null) {
+        debugPrint('Backup file ID is null');
         return null;
       }
 
-      // Download metadata file
+      // Download backup file
       final response =
           await drive.files.get(
-                metadataFileId,
+                backupFileId,
                 downloadOptions: drive_api.DownloadOptions.fullMedia,
               )
               as drive_api.Media;
 
-      // Read bytes from stream
       final bytes = <int>[];
       await for (final chunk in response.stream) {
         bytes.addAll(chunk);
       }
 
-      // Decrypt metadata
-      final BackupData? habitBackupData =
+      // Decrypt backup data
+      final BackupData? backupData =
           await BackupService.importDataFromGoogleDrive(
             encryptedBytes: Uint8List.fromList(bytes),
             passphrase: _passphrase!,
           );
 
-      if (habitBackupData != null) {
-        debugPrint('Cloud metadata loaded: $habitBackupData');
-        return habitBackupData;
+      if (backupData != null) {
+        debugPrint('Downloaded and decrypted habit backup from cloud');
+        return backupData;
       } else {
-        debugPrint('Failed to decrypt metadata');
+        debugPrint('Failed to decrypt habit backup data');
         return null;
       }
     } catch (e) {
@@ -664,6 +669,8 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
+    debugPrint("Uploading backup to cloud!");
+
     final folderId = await _getFolderId(drive);
     if (folderId == null) {
       debugPrint("Could not get or create backup folder");
@@ -673,6 +680,7 @@ class BackupProvider extends ChangeNotifier {
     // Deleting all existing files in backup folder
     await _deleteAllFilesInFolder(folderId);
 
+    debugPrint("Preparing backup name...");
     // Generating filename
     final now = DateTime.now();
     final day = now.day.toString().padLeft(2, '0');
