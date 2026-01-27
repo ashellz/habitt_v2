@@ -228,10 +228,15 @@ class HabitProvider extends ChangeNotifier {
   }) async {
     debugPrint("Skipping habit: $id");
     late Habit habit;
+    Habit? habitDayBefore;
 
     final today = DateTime.now();
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(day.year, day.month, day.day);
+    final dayBefore = daySimple.subtract(const Duration(days: 1));
+
+    // IMPLEMENT CHECKING IF THE HABIT BEFORE IS SKIPPED
+    // IF ITS SKIPPED, THEN DONT ALLOW THE USER TO SKIP THIS HABIT
 
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
@@ -241,6 +246,16 @@ class HabitProvider extends ChangeNotifier {
       if (!stateProvider.shouldUpdateStreaks) {
         stateProvider.shouldUpdateStreaks = true;
       }
+    }
+
+    final List<Habit> dayBeforeHabits = getHabitsFromDay(dayBefore);
+    if (dayBeforeHabits.isNotEmpty) {
+      habitDayBefore = dayBeforeHabits.firstWhere((h) => h.id == id);
+    }
+
+    if (habitDayBefore != null && habitDayBefore.skipped) {
+      debugPrint("Skipping habit not allowed, habit day before skipped");
+      return;
     }
 
     await habit.skipHabit();

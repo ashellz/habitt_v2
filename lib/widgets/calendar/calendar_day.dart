@@ -20,12 +20,9 @@ class CalendarDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Habit> habits =
-        selected
-            ? context.select<HabitProvider, List<Habit>>(
-              (provider) => provider.getHabitsFromDay(date),
-            )
-            : [];
+    final List<Habit> habits = context.select<HabitProvider, List<Habit>>(
+      (provider) => provider.getHabitsFromDay(date),
+    );
 
     final Colorfulness colorfulness =
         context.read<PreferencesProvider>().colorfulness;
