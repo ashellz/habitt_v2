@@ -39,9 +39,9 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
   @override
   Widget build(BuildContext context) {
     return DefaultDialog(
-      title: "Set Backup Passphrase",
+      title: "Backup Passphrase",
       desc:
-          "You will use this passphrase for your data encryption. Save it securely, you will use it again when getting your data on other devices.",
+          "You use this passphrase for your data encryption. Save it securely, you will use it again when getting your data on other devices.",
       content: DefaultTextField(
         controller: widget.controller,
         title: "Passphrase",
