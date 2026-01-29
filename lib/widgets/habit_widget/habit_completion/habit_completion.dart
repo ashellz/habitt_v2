@@ -13,6 +13,7 @@ import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slid
 import 'package:habitt/widgets/habit_widget/habit_completion/amount_display.dart';
 import 'package:habitt/widgets/habit_widget/habit_completion/duration_display.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class CompletionDisplay extends StatefulWidget {
   const CompletionDisplay({
@@ -231,7 +232,17 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   // Center icon
   Widget centerIcon() {
-    return Center(child: Icon(Icons.check, color: Color(0xFFF8F9FA)));
+    final tp = context.watch<ThemeProvider>();
+    final colorfullness = context.watch<PreferencesProvider>().colorfulness;
+    return Center(
+      child: Icon(
+        Icons.check,
+        color:
+            widget.habit.completed
+                ? widget.habit.getCompletionColor(tp, colorfullness).darken(30)
+                : Color(0xFFF8F9FA),
+      ),
+    );
   }
 
   // Middle child inside of the container (checkmark or amount/duration)
