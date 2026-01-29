@@ -141,11 +141,18 @@ class DefaultButton extends StatelessWidget {
                                         children: [
                                           if (prefix != null) ...[
                                             prefix!,
-                                            const SizedBox(width: 8),
+                                            const SizedBox(width: 4),
                                           ],
-                                          Text(
-                                            label,
-                                            style: TextStyle(color: textColor),
+                                          Expanded(
+                                            child: Text(
+                                              label,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                color: textColor,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
