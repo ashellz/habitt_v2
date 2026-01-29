@@ -43,6 +43,9 @@ class _BackupDataPageState extends State<BackupDataPage> {
     final bool hasPassphraseSet = backupProvider.hasPassphraseSet;
     final bool dataExists = backupProvider.dataExists;
 
+    final platform = Theme.of(context).platform;
+    final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
+
     return DefaultAnnotatedRegion(
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
@@ -106,69 +109,73 @@ class _BackupDataPageState extends State<BackupDataPage> {
                           color: tp.secondaryTextColor,
                         ),
                       ),
-                      Row(
-                        spacing: 8,
-                        children: [
-                          Expanded(
-                            child: DefaultButton(
-                              onPressed: () async {
-                                showDialog(
-                                  context: context,
-                                  builder:
-                                      (context) => DefaultDialog(
-                                        title: "Opt out of Backup?",
-                                        desc:
-                                            "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
-                                        rightButtonCallback: () async {
-                                          backupProvider.signOut();
-                                        },
-                                        rightButtonText: "Opt out",
-                                        danger: true,
-                                        leftButtonText: "Cancel",
-                                      ),
-                                );
-                              },
-                              label: "Opt out",
-                              color: tp.backgroundColor,
-                            ),
-                          ),
-                          Expanded(
-                            child: DefaultButton(
-                              isLoading:
-                                  backupProvider.syncState == SyncState.syncing,
-                              prefix: Icon(
-                                hasPassphraseSet ? Icons.sync : Icons.lock,
-                                color: bestContrastingOn(
-                                  tp.primaryButtonBackground,
-                                ),
-                              ),
-                              onPressed: () async {
-                                if (!hasPassphraseSet) {
-                                  await showDialog(
+                      Padding(
+                        padding: EdgeInsets.only(bottom: extraPadding),
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            Expanded(
+                              child: DefaultButton(
+                                onPressed: () async {
+                                  showDialog(
                                     context: context,
-                                    builder: (context) {
-                                      final TextEditingController controller =
-                                          TextEditingController();
-                                      return PassphraseDialog(
-                                        controller: controller,
-                                        dataExists: dataExists,
-                                        displayAlert: _displayAlert,
-                                      );
-                                    },
+                                    builder:
+                                        (context) => DefaultDialog(
+                                          title: "Opt out of Backup?",
+                                          desc:
+                                              "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
+                                          rightButtonCallback: () async {
+                                            backupProvider.signOut();
+                                          },
+                                          rightButtonText: "Opt out",
+                                          danger: true,
+                                          leftButtonText: "Cancel",
+                                        ),
                                   );
-                                } else {
-                                  await backupProvider.performSync(true);
-                                }
-                              },
-                              label:
-                                  hasPassphraseSet
-                                      ? "Sync Now"
-                                      : dataExists
-                                      ? "Enter Passphrase"
-                                      : "Set Passphrase",
+                                },
+                                label: "Opt out",
+                                color: tp.backgroundColor,
+                              ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: DefaultButton(
+                                isLoading:
+                                    backupProvider.syncState ==
+                                    SyncState.syncing,
+                                prefix: Icon(
+                                  hasPassphraseSet ? Icons.sync : Icons.lock,
+                                  color: bestContrastingOn(
+                                    tp.primaryButtonBackground,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (!hasPassphraseSet) {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        final TextEditingController controller =
+                                            TextEditingController();
+                                        return PassphraseDialog(
+                                          controller: controller,
+                                          dataExists: dataExists,
+                                          displayAlert: _displayAlert,
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    await backupProvider.performSync(true);
+                                  }
+                                },
+                                label:
+                                    hasPassphraseSet
+                                        ? "Sync Now"
+                                        : dataExists
+                                        ? "Enter Passphrase"
+                                        : "Set Passphrase",
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ],

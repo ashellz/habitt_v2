@@ -17,6 +17,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive_ce/hive.dart';
 
+// Manage already syncing operations (auto then user forces with sync button), so nothing overlaps
+// Show a loading bar for syncing instead of a spinner
+
 class _GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
   final http.Client _client = http.Client();
@@ -395,11 +398,13 @@ class BackupProvider extends ChangeNotifier {
   }
 
   Future<void> performSync([bool force = false]) async {
-    debugPrint('Starting backup sync operation...');
-    if (force) {
-      _syncState = SyncState.syncing;
-      notifyListeners();
+    if (_syncState == SyncState.syncing) {
+      debugPrint('Sync already in progress, skipping new sync request.');
+      return;
     }
+    debugPrint('Starting backup sync operation...');
+    _syncState = SyncState.syncing;
+    notifyListeners();
 
     if (!isLoggedIn) {
       _lastError = 'Not signed in. Cannot sync.';
@@ -427,6 +432,7 @@ class BackupProvider extends ChangeNotifier {
           metadata != null &&
           _localMetadata != null) {
         if (force) {
+          // 1/x
           await _uploadBackupToCloud();
           _syncState = SyncState.success;
           notifyListeners();
@@ -443,16 +449,20 @@ class BackupProvider extends ChangeNotifier {
       if (metadata != null) {
         _syncState = SyncState.syncing;
         notifyListeners();
+
         final backupData = await _downloadBackupFromCloud();
+        // 1/x
         if (backupData != null) {
           debugPrint('Merging downloaded backup data with local data...');
           await _mergeBackupData(backupData);
+          // 2/x
           if (force) {
             await _uploadBackupToCloud();
           } else {
             // Upload only metadata to reflect latest sync time
             await _uploadMetadataToCloud(backupData.metadata);
           }
+          // 3/x
         }
       } else {
         debugPrint('No cloud metadata found, uploading local backup.');
@@ -730,6 +740,7 @@ class BackupProvider extends ChangeNotifier {
     // Preparing encrypted backup data
     final ecnryptedDatabase = await BackupService.exportDataForGoogleDrive(
       passphrase: _passphrase!,
+      habitProvider: _habitProvider!,
     );
 
     if (ecnryptedDatabase == null) {
@@ -975,6 +986,8 @@ class BackupProvider extends ChangeNotifier {
         Day(date: day.date, habits: normalizedHabits, timestamp: day.timestamp),
       );
     }
+
+    _habitProvider?.importDateJoined(backupData.dateJoined);
 
     // Refresh dependent providers
     await _habitProvider?.init();

@@ -38,6 +38,7 @@ class BackupService {
     try {
       final habitsBox = Hive.box<Habit>('habits');
       final daysBox = Hive.box<Day>('days');
+      final dateJoined = context.read<HabitProvider>().dateJoined;
       final metadata = await buildMetadata();
 
       final payload = <String, dynamic>{
@@ -45,6 +46,7 @@ class BackupService {
         'metadata': metadata.toMap(),
         'habits': habitsBox.values.map((h) => h.toMap()).toList(),
         'days': daysBox.values.map((d) => d.toMap()).toList(),
+        'dateJoined': dateJoined.toIso8601String(),
       };
 
       final backupWrapper = await _encryptPayload(payload, passphrase);
@@ -178,6 +180,11 @@ class BackupService {
               timestamp: day.timestamp,
             ),
           );
+
+          final dateJoined = payload.dateJoined;
+          if (context.mounted) {
+            await context.read<HabitProvider>().importDateJoined(dateJoined);
+          }
         }
       } on SecretBoxAuthenticationError {
         debugPrint('Decryption failed: invalid passphrase or corrupted file');
@@ -321,10 +328,12 @@ class BackupService {
   /// Returns encrypted bytes on success, or null on failure.
   static Future<Uint8List?> exportDataForGoogleDrive({
     required String passphrase,
+    required HabitProvider habitProvider,
   }) async {
     try {
       final habitsBox = Hive.box<Habit>('habits');
       final daysBox = Hive.box<Day>('days');
+      final dateJoined = habitProvider.dateJoined;
       final metadata = await buildMetadata();
 
       final payload = <String, dynamic>{
@@ -332,6 +341,7 @@ class BackupService {
         'metadata': metadata.toMap(),
         'habits': habitsBox.values.map((h) => h.toMap()).toList(),
         'days': daysBox.values.map((d) => d.toMap()).toList(),
+        'dateJoined': dateJoined.toIso8601String(),
       };
 
       final backupWrapper = await _encryptPayload(payload, passphrase);
