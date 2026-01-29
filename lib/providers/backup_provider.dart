@@ -79,8 +79,10 @@ class BackupProvider extends ChangeNotifier {
 
   // Whether user has set up a passphrase
   bool get hasPassphraseSet => _passphrase != null;
-
   bool get isPassphraseLoaded => _currentSessionPassphrase != null;
+
+  bool _dataExists = false;
+  bool get dataExists => _dataExists;
 
   void attachHabitProvider(HabitProvider provider) {
     _habitProvider = provider;
@@ -126,6 +128,7 @@ class BackupProvider extends ChangeNotifier {
     );
 
     // Restoring previous sign-in and passphrase
+    debugPrint('Restoring persisted sign-in state...');
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedEmail = prefs.getString(_kBackupUserEmailKey);
@@ -133,20 +136,25 @@ class BackupProvider extends ChangeNotifier {
       _localMetadata = await BackupService.buildMetadata();
 
       if (savedEmail != null) {
-        // Signing in the user in the background
+        debugPrint('Signing in the user in the background...');
         final user = await _googleSignIn.signInSilently();
+
         if (user != null) {
           _currentUser = user;
           _firebaseUser = FirebaseAuth.instance.currentUser;
 
           // Loading passphrase from secure storage (but don't load into session yet)
+          debugPrint('Loading passphrase...');
           try {
             _passphrase = await _secureStorage.read(key: _kSecurePassphraseKey);
           } catch (e) {
             debugPrint('Failed to load passphrase: $e');
+          } finally {
+            _dataExists = await _checkDataExists();
+            debugPrint('Data exists: $_dataExists');
+            debugPrint('Passphrase: $_passphrase');
           }
 
-          // TODO: Load local metadata from storage
           notifyListeners();
         }
       }
@@ -206,6 +214,10 @@ class BackupProvider extends ChangeNotifier {
       if (await _secureStorage.containsKey(key: _kSecurePassphraseKey)) {
         await loadPassphraseToSession();
       } else {
+        _dataExists = await _checkDataExists();
+        debugPrint('Data exists: $_dataExists');
+
+        // Else:
         // New user, prompt to set passphrase
         _passphrase = null;
         _currentSessionPassphrase = null;
@@ -216,7 +228,10 @@ class BackupProvider extends ChangeNotifier {
           context: context,
           builder: (context) {
             final TextEditingController controller = TextEditingController();
-            return PassphraseDialog(controller: controller);
+            return PassphraseDialog(
+              controller: controller,
+              dataExists: _dataExists,
+            );
           },
         );
 
@@ -235,6 +250,59 @@ class BackupProvider extends ChangeNotifier {
     } finally {
       debugPrint('Google sign-in process completed.');
     }
+  }
+
+  Future<bool> checkPassphrase(String passphrase) async {
+    // This function is used to verify if the provided passphrase can decrypt
+    // the current backup file metadata.
+
+    _passphrase = passphrase.trim();
+
+    try {
+      final metadata = await _fetchCloudMetadata();
+      _passphrase = null; // Clear temporary passphrase
+      notifyListeners();
+      return metadata != null;
+    } catch (e) {
+      _passphrase = null; // Clear temporary passphrase
+      notifyListeners();
+      debugPrint('Passphrase check failed: $e');
+      return false;
+    }
+  }
+
+  Future<bool> _checkDataExists() async {
+    // Check if there is the habit_backups folder in Drive
+    final drive = await _getDriveService();
+    if (drive == null) {
+      debugPrint('Drive service not available for checking data');
+      return false;
+    }
+
+    final folderId = await _getFolderId(drive, create: false);
+    if (folderId != null) {
+      // If there is, check if it has any files
+      final found = await drive.files.list(
+        q: "'$folderId' in parents and trashed = false",
+        $fields: 'files(id,name)',
+      );
+
+      if (found.files != null && found.files!.isNotEmpty) {
+        // If any of those files are metadata or habit backup files, then
+        // We need to prompt a user to enter their existing passphrase
+        final metadataName = 'metadata.meta';
+        final backupName = '.habitt';
+        for (final file in found.files!) {
+          final name = file.name;
+          if (name == null) continue;
+          if (name == metadataName || name.endsWith(backupName)) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   /// Clears persisted sign-in state, passphrase, and provider data.
@@ -328,8 +396,14 @@ class BackupProvider extends ChangeNotifier {
 
   Future<void> performSync([bool force = false]) async {
     debugPrint('Starting backup sync operation...');
+    if (force) {
+      _syncState = SyncState.syncing;
+      notifyListeners();
+    }
+
     if (!isLoggedIn) {
       _lastError = 'Not signed in. Cannot sync.';
+      _syncState = SyncState.idle;
       debugPrint(_lastError);
       notifyListeners();
       return;
@@ -338,6 +412,7 @@ class BackupProvider extends ChangeNotifier {
     if (!hasPassphraseSet && !isPassphraseLoaded) {
       _lastError = 'Passphrase required to sync. Please unlock backup.';
       debugPrint(_lastError);
+      _syncState = SyncState.idle;
       notifyListeners();
       return;
     }
@@ -389,6 +464,8 @@ class BackupProvider extends ChangeNotifier {
     } catch (e) {
       _syncState = SyncState.error;
       _lastError = 'Sync failed: $e';
+      _passphrase = null;
+      _currentSessionPassphrase = null;
       debugPrint(_lastError);
       notifyListeners();
     }
@@ -402,7 +479,10 @@ class BackupProvider extends ChangeNotifier {
     return drive_api.DriveApi(client);
   }
 
-  Future<String?> _getFolderId(drive_api.DriveApi driveApi) async {
+  Future<String?> _getFolderId(
+    drive_api.DriveApi driveApi, {
+    bool create = true,
+  }) async {
     final mimeType = "application/vnd.google-apps.folder";
     String folderName = "habitt_backups";
 
@@ -422,6 +502,11 @@ class BackupProvider extends ChangeNotifier {
       // The folder already exists
       if (files.isNotEmpty) {
         return files.first.id;
+      }
+
+      if (!create) {
+        debugPrint("Folder not found and creation not allowed");
+        return null;
       }
 
       // Create the folder in the root
@@ -505,16 +590,16 @@ class BackupProvider extends ChangeNotifier {
       if (metadata != null) {
         debugPrint('Cloud metadata loaded: ${metadata.deviceId}');
         return metadata;
-      } else {
-        debugPrint('Failed to decrypt metadata');
-        debugPrint(
-          'Passphrase was: ${_passphrase?.length} chars, bytes downloaded: ${bytes.length}',
-        );
-        return null;
       }
+
+      debugPrint('Failed to decrypt metadata');
+      debugPrint(
+        'Passphrase was: ${_passphrase?.length} chars, bytes downloaded: ${bytes.length}',
+      );
+      throw Exception('Failed to decrypt metadata');
     } catch (e) {
       debugPrint('Failed to fetch cloud metadata: $e');
-      return null;
+      throw Exception('Failed to fetch or decrypt cloud metadata: $e');
     }
   }
 

@@ -377,8 +377,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            if (_alertMessage != null)
-              AlertPopup(message: _alertMessage!, show: _showAlert),
+            AlertPopup(message: _alertMessage, show: _showAlert),
           ],
         ),
       ),

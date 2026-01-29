@@ -76,9 +76,7 @@ class DefaultButton extends StatelessWidget {
                                   width: 24,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      textColor,
-                                    ),
+                                    color: textColor,
                                   ),
                                 )
                                 : Row(
@@ -123,14 +121,14 @@ class DefaultButton extends StatelessWidget {
                                   offsetLabel
                                       ? null
                                       : isLoading
-                                      ? const SizedBox(
+                                      ? SizedBox(
                                         height: 24,
                                         width: 24,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                                Colors.white,
+                                                textColor,
                                               ),
                                         ),
                                       )

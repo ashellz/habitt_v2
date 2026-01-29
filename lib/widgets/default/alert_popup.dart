@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
+import 'package:provider/provider.dart';
 
 class AlertPopup extends StatefulWidget {
   const AlertPopup({
@@ -11,7 +13,7 @@ class AlertPopup extends StatefulWidget {
     required this.show,
   });
 
-  final String message;
+  final String? message;
   final Duration animationDuration;
   final Curve appearCurve;
   final Curve disappearCurve;
@@ -24,6 +26,8 @@ class AlertPopup extends StatefulWidget {
 class _AlertPopupState extends State<AlertPopup> {
   @override
   Widget build(BuildContext context) {
+    final tp = context.watch<ThemeProvider>();
+
     final textPainter = TextPainter(
       text: TextSpan(
         text: widget.message,
@@ -61,15 +65,15 @@ class _AlertPopupState extends State<AlertPopup> {
                         Icon(
                           Icons.info_outline,
                           size: 24,
-                          color: Theme.of(context).primaryColor,
+                          color: tp.primaryTextColor,
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          widget.message,
+                          widget.message ?? "",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            color: tp.primaryTextColor,
                           ),
                         ),
                       ],

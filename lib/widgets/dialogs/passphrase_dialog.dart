@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
+import 'package:provider/provider.dart';
 
 class PassphraseDialog extends StatefulWidget {
-  const PassphraseDialog({super.key, required this.controller});
+  const PassphraseDialog({
+    super.key,
+    required this.controller,
+    this.dataExists = false,
+    this.displayAlert,
+  });
 
   final TextEditingController controller;
+  final bool dataExists;
+  final void Function(String message)? displayAlert;
 
   @override
   State<PassphraseDialog> createState() => _PassphraseDialogState();
@@ -13,6 +22,7 @@ class PassphraseDialog extends StatefulWidget {
 
 class _PassphraseDialogState extends State<PassphraseDialog> {
   late bool _hasText;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -38,10 +48,16 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final backupProvider = context.watch<BackupProvider>();
+
+    final desc =
+        widget.dataExists
+            ? "Enter your existing backup passphrase to access your data."
+            : "This passphrase is used for your data encryption. Save it securely, you will use it again when getting your data on other devices.";
+
     return DefaultDialog(
       title: "Backup Passphrase",
-      desc:
-          "You use this passphrase for your data encryption. Save it securely, you will use it again when getting your data on other devices.",
+      desc: desc,
       content: DefaultTextField(
         controller: widget.controller,
         title: "Passphrase",
@@ -49,12 +65,30 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
       ),
       leftButtonText: "Cancel",
       rightButtonText: "Done",
+      rightButtonLoading: _loading,
       rightButtonEnabled: _hasText,
       rightButtonCallback: () async {
-        final result = widget.controller.text;
-        if (context.mounted) {
-          Navigator.of(context).pop(result);
+        final passphrase = widget.controller.text;
+
+        setState(() => _loading = true);
+
+        if (widget.dataExists) {
+          final isCorrectPassphrase = await backupProvider.checkPassphrase(
+            passphrase,
+          );
+
+          if (!isCorrectPassphrase && widget.displayAlert != null) {
+            widget.displayAlert!("Incorrect passphrase.");
+          } else {
+            await backupProvider.setPassphrase(passphrase);
+          }
+        } else {
+          await backupProvider.setPassphrase(passphrase);
         }
+
+        setState(() => _loading = false);
+
+        Navigator.pop(context);
       },
     );
   }
