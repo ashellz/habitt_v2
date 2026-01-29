@@ -120,6 +120,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     final backupProvider = context.watch<BackupProvider>();
     final loading = backupProvider.syncState == SyncState.syncing;
+    final tp = context.watch<ThemeProvider>();
 
     return SizedBox(
       child: Stack(
@@ -139,26 +140,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
               ),
               if (loading)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            "Syncing...",
-                            style: TextStyle(
-                              color:
-                                  context
-                                      .watch<ThemeProvider>()
-                                      .primaryTextColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          CircularProgressIndicator(),
-                        ],
-                      ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.grey.withOpacity(0.3),
+                    color: tp.primaryTextColor,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      tp.primaryTextColor,
                     ),
                   ),
                 ),

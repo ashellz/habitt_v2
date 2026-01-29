@@ -81,6 +81,7 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
             widget.displayAlert!("Incorrect passphrase.");
           } else {
             await backupProvider.setPassphrase(passphrase);
+            await backupProvider.performSync(true);
           }
         } else {
           await backupProvider.setPassphrase(passphrase);

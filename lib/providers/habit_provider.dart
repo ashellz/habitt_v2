@@ -57,6 +57,16 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> importDateJoined(DateTime date) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_dateJoined == null || date.isBefore(_dateJoined!)) {
+      _dateJoined = date;
+      prefs.setString("dateJoined", _dateJoined.toString());
+    }
+
+    notifyListeners();
+  }
+
   Future<void> _loadHabits() async {
     habits = habitBox.values.toList();
     /*

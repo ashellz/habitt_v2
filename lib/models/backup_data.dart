@@ -7,12 +7,14 @@ class BackupData {
   final BackupMetadata metadata;
   final List<Habit> habits;
   final List<Day> days;
+  final DateTime dateJoined;
 
   BackupData({
     required this.version,
     required this.metadata,
     required this.habits,
     required this.days,
+    required this.dateJoined,
   });
 
   Map<String, dynamic> toMap() => {
@@ -20,6 +22,7 @@ class BackupData {
     'metadata': metadata.toMap(),
     'habits': habits.map((h) => h.toMap()).toList(),
     'days': days.map((d) => d.toMap()).toList(),
+    'dateJoined': dateJoined.toIso8601String(),
   };
 
   factory BackupData.fromMap(Map<String, dynamic> map) {
@@ -34,6 +37,7 @@ class BackupData {
           (map['days'] as List<dynamic>? ?? [])
               .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
               .toList(),
+      dateJoined: DateTime.parse(map['dateJoined'] as String),
     );
   }
 }
