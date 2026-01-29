@@ -17,7 +17,7 @@ class DailyPlanPage extends StatelessWidget {
 
     // bottom and top safe area
     final double safeArea = kToolbarHeight + kBottomNavigationBarHeight;
-    final listViewHeight = MediaQuery.of(context).size.height - safeArea - 108;
+    final listViewHeight = MediaQuery.of(context).size.height - safeArea - 116;
 
     final habits = context.watch<HabitProvider>().habits;
     final completedHabitsCount =
