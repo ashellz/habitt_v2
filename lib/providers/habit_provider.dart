@@ -110,6 +110,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> updateHabitInDB(Habit habit, {DateTime? day}) async {
+    debugPrint("Updating habit in DB: $habit");
     if (statsProvider != null) {
       statsProvider!.addShouldRefresh(StatsType.habitsCompleted);
     }
@@ -458,7 +459,6 @@ class HabitProvider extends ChangeNotifier {
     }
 
     // Trigger auto-sync after updating all streaks
-    backupProvider?.scheduleAutoSync();
     notifyListeners();
   }
 }
