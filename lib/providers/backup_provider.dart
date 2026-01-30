@@ -155,7 +155,7 @@ class BackupProvider extends ChangeNotifier {
           } finally {
             _dataExists = await _checkDataExists();
             debugPrint('Data exists: $_dataExists');
-            debugPrint('Passphrase: $_passphrase');
+            debugPrint('Passphrase length: ${_passphrase?.length ?? 0} ');
           }
 
           notifyListeners();
@@ -450,19 +450,25 @@ class BackupProvider extends ChangeNotifier {
         _syncState = SyncState.syncing;
         notifyListeners();
 
+        debugPrint('Cloud metadata found: ${metadata.deviceId}');
+        debugPrint(
+          'Device conflict detected (cloud device: ${metadata.deviceId}, local device: ${_localMetadata?.deviceId}). Downloading backup from cloud...',
+        );
+
         final backupData = await _downloadBackupFromCloud();
+
+        debugPrint("Backup data downloaded from cloud.");
         // 1/x
         if (backupData != null) {
           debugPrint('Merging downloaded backup data with local data...');
           await _mergeBackupData(backupData);
           // 2/x
-          if (force) {
-            await _uploadBackupToCloud();
-          } else {
-            // Upload only metadata to reflect latest sync time
-            await _uploadMetadataToCloud(backupData.metadata);
-          }
+          debugPrint("Uploading merged backup to cloud...");
+          await _uploadBackupToCloud();
+
           // 3/x
+        } else {
+          debugPrint("Backup data failed to download from cloud.");
         }
       } else {
         debugPrint('No cloud metadata found, uploading local backup.');
