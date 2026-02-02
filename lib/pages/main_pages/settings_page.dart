@@ -14,6 +14,7 @@ import 'package:habitt/widgets/settings/segmented_control.dart';
 import 'package:habitt/widgets/settings/setting_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -25,6 +26,35 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String? _alertMessage;
   bool _showAlert = false;
+
+  String? appVersion;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+
+    if (!mounted) return;
+
+    // v2+build
+    setState(() {
+      final versionCore = packageInfo.version.split('+').first;
+      appVersion =
+          "v${_stripTrailingZeroSegments(versionCore)}+${packageInfo.buildNumber} (alpha)";
+    });
+  }
+
+  String _stripTrailingZeroSegments(String version) {
+    final parts = version.split('.');
+    while (parts.isNotEmpty && parts.last == '0') {
+      parts.removeLast();
+    }
+    return parts.isEmpty ? '0' : parts.join('.');
+  }
 
   Future<void> _handleExport(BuildContext context) async {
     final result = await _showOperationDialog(
@@ -152,13 +182,26 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: ListView(
                   children: [
                     const SizedBox(height: 48),
-                    Text(
-                      "Settings",
-                      style: TextStyle(
-                        fontSize: 38,
-                        color: tp.primaryTextColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Settings",
+                          style: TextStyle(
+                            fontSize: 38,
+                            color: tp.primaryTextColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (appVersion != null)
+                          Text(
+                            appVersion!,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: tp.secondaryTextColor,
+                            ),
+                          ),
+                      ],
                     ),
                     SettingTile(
                       title: "Dark Mode",
