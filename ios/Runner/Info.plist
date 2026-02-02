@@ -4,6 +4,8 @@
 	<dict>
 		<key>ITSAppUsesNonExemptEncryption</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app requires access to your folders when saving and importing local encrypted data.</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
