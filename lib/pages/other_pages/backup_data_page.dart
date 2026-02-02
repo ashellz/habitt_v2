@@ -35,6 +35,21 @@ class _BackupDataPageState extends State<BackupDataPage> {
     });
   }
 
+  String getLastSyncText(BackupProvider backupProvider) {
+    if (backupProvider.localMetadata == null) {
+      return "Never";
+    } else {
+      final date = backupProvider.localMetadata!.createdAt;
+      // DD.MM.YYYY - HH:MM
+      final day = date.day.toString().padLeft(2, '0');
+      final month = date.month.toString().padLeft(2, '0');
+      final year = date.year.toString();
+      final hour = date.hour.toString().padLeft(2, '0');
+      final minute = date.minute.toString().padLeft(2, '0');
+      return "$day.$month.$year - $hour:$minute";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
@@ -104,6 +119,13 @@ class _BackupDataPageState extends State<BackupDataPage> {
                     ] else ...[
                       Text(
                         "Connected as ${backupProvider.currentUser?.email}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: tp.secondaryTextColor,
+                        ),
+                      ),
+                      Text(
+                        "Last synced: ${getLastSyncText(backupProvider)}",
                         style: TextStyle(
                           fontSize: 16,
                           color: tp.secondaryTextColor,
