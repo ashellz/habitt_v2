@@ -17,9 +17,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive_ce/hive.dart';
 
-// Manage already syncing operations (auto then user forces with sync button), so nothing overlaps
-// Show a loading bar for syncing instead of a spinner
-
 class _GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
   final http.Client _client = http.Client();
@@ -33,7 +30,7 @@ class _GoogleAuthClient extends http.BaseClient {
 }
 
 /// Enum to track sync state.
-enum SyncState { idle, syncing, success, conflict, error }
+enum SyncState { idle, syncing, success, error }
 
 /// Provider managing backup/sync operations with Google Drive.
 ///
@@ -78,7 +75,18 @@ class BackupProvider extends ChangeNotifier {
   BackupMetadata? get localMetadata => _localMetadata;
 
   SyncState get syncState => _syncState;
+
+  set syncState(SyncState state) {
+    _syncState = state;
+    notifyListeners();
+  }
+
   String? get lastError => _lastError;
+
+  set lastError(String? error) {
+    _lastError = error;
+    notifyListeners();
+  }
 
   // Whether user has set up a passphrase
   bool get hasPassphraseSet => _passphrase != null;
@@ -86,6 +94,15 @@ class BackupProvider extends ChangeNotifier {
 
   bool _dataExists = false;
   bool get dataExists => _dataExists;
+
+  String? _progressMessage;
+  String? get progressMessage => _progressMessage;
+
+  set progressMessage(String? message) {
+    _progressMessage = message;
+    debugPrint(_progressMessage);
+    notifyListeners();
+  }
 
   void attachHabitProvider(HabitProvider provider) {
     _habitProvider = provider;
@@ -402,30 +419,29 @@ class BackupProvider extends ChangeNotifier {
       debugPrint('Sync already in progress, skipping new sync request.');
       return;
     }
-    debugPrint('Starting backup sync operation...');
-    _syncState = SyncState.syncing;
-    notifyListeners();
+
+    progressMessage = 'Starting backup sync operation...';
+    syncState = SyncState.syncing;
 
     if (!isLoggedIn) {
-      _lastError = 'Not signed in. Cannot sync.';
-      _syncState = SyncState.idle;
+      lastError = 'Not signed in. Cannot sync.';
+      progressMessage = null;
+      syncState = SyncState.error;
       debugPrint(_lastError);
-      notifyListeners();
       return;
     }
 
     if (!hasPassphraseSet && !isPassphraseLoaded) {
-      _lastError = 'Passphrase required to sync. Please unlock backup.';
+      lastError = 'Passphrase required to sync. Please unlock backup.';
       debugPrint(_lastError);
-      _syncState = SyncState.idle;
-      notifyListeners();
+      syncState = SyncState.error;
       return;
     }
 
-    _lastError = null;
-    notifyListeners();
+    lastError = null;
 
     try {
+      progressMessage = 'Fetching cloud metadata...';
       final metadata = await _fetchCloudMetadata();
 
       if (_localMetadata?.deviceId == metadata?.deviceId &&
@@ -433,37 +449,36 @@ class BackupProvider extends ChangeNotifier {
           _localMetadata != null) {
         if (force) {
           // 1/x
+          progressMessage = 'Uploading local backup to cloud...';
           await _uploadBackupToCloud();
-          _syncState = SyncState.success;
-          notifyListeners();
+          syncState = SyncState.success;
           return;
         } else {
           // Not from different device, no need to download anything
           debugPrint('No device conflict detected, skipping download.');
-          _syncState = SyncState.success;
-          notifyListeners();
+          syncState = SyncState.success;
           return;
         }
       }
 
       if (metadata != null) {
-        _syncState = SyncState.syncing;
-        notifyListeners();
+        syncState = SyncState.syncing;
 
         debugPrint('Cloud metadata found: ${metadata.deviceId}');
         debugPrint(
           'Device conflict detected (cloud device: ${metadata.deviceId}, local device: ${_localMetadata?.deviceId}). Downloading backup from cloud...',
         );
 
+        progressMessage = 'New data detected. Downloading backup from cloud...';
         final backupData = await _downloadBackupFromCloud();
 
         debugPrint("Backup data downloaded from cloud.");
         // 1/x
         if (backupData != null) {
-          debugPrint('Merging downloaded backup data with local data...');
+          progressMessage = 'Merging downloaded backup data with local data...';
           await _mergeBackupData(backupData);
           // 2/x
-          debugPrint("Uploading merged backup to cloud...");
+          progressMessage = 'Uploading merged backup to cloud...';
           await _uploadBackupToCloud();
 
           // 3/x
@@ -471,18 +486,17 @@ class BackupProvider extends ChangeNotifier {
           debugPrint("Backup data failed to download from cloud.");
         }
       } else {
-        debugPrint('No cloud metadata found, uploading local backup.');
+        progressMessage = 'No cloud metadata found. Uploading local backup...';
         await _uploadBackupToCloud();
       }
 
-      _syncState = SyncState.success;
-      notifyListeners();
+      syncState = SyncState.success;
     } catch (e) {
-      _syncState = SyncState.error;
-      _lastError = 'Sync failed: $e';
+      syncState = SyncState.error;
+      lastError = 'Sync failed: $e';
       _passphrase = null;
       _currentSessionPassphrase = null;
-      debugPrint(_lastError);
+      debugPrint(lastError);
       notifyListeners();
     }
   }
@@ -544,29 +558,31 @@ class BackupProvider extends ChangeNotifier {
   /// Fetch metadata about the backup stored in Google Drive.
   /// Returns BackupMetadata if found
   Future<BackupMetadata?> _fetchCloudMetadata() async {
-    // Checking for passphrase
-    if (_passphrase == null) {
-      _lastError = 'Passphrase not set. Cannot upload backup.';
-      debugPrint(_lastError);
-      notifyListeners();
-      return null;
-    }
-
-    // Preparing google drive
-    final drive = await _getDriveService();
-    if (drive == null) {
-      debugPrint("Sign-in first Error");
-      return null;
-    }
-
-    final folderId = await _getFolderId(drive);
-    if (folderId == null) {
-      debugPrint("Could not get or create backup folder");
-      return null;
-    }
-
-    // Looking for metadata.meta file
     try {
+      // Checking for passphrase
+      if (_passphrase == null) {
+        lastError = 'Passphrase not set. Cannot upload backup.';
+        debugPrint(_lastError);
+        notifyListeners();
+        throw Exception('Passphrase not set.');
+      }
+
+      // Preparing google drive
+      final drive = await _getDriveService();
+      if (drive == null) {
+        lastError = 'Unable to access google drive service.';
+
+        throw Exception(lastError);
+      }
+
+      final folderId = await _getFolderId(drive);
+      if (folderId == null) {
+        lastError = 'Could not get or create backup folder';
+        throw Exception(lastError);
+      }
+
+      // Looking for metadata.meta file
+
       final found = await drive.files.list(
         q: "name = 'metadata.meta' and '$folderId' in parents and trashed = false",
         $fields: 'files(id)',
