@@ -125,7 +125,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                         ),
                       ),
                       Text(
-                        "Last synced: ${getLastSyncText(backupProvider)}",
+                        getSyncProgressText(),
                         style: TextStyle(
                           fontSize: 16,
                           color: tp.secondaryTextColor,
@@ -209,5 +209,28 @@ class _BackupDataPageState extends State<BackupDataPage> {
         ),
       ),
     );
+  }
+
+  String getSyncProgressText() {
+    final backupProvider = context.read<BackupProvider>();
+    final syncState = backupProvider.syncState;
+    final lastSyncText = getLastSyncText(backupProvider);
+    final progressMessage = backupProvider.progressMessage;
+    final errorMessage = backupProvider.lastError;
+
+    switch (syncState) {
+      case SyncState.idle:
+        return "Last synced: $lastSyncText";
+      case SyncState.syncing:
+        return progressMessage != null && progressMessage.isNotEmpty
+            ? "Syncing: $progressMessage"
+            : "Syncing...";
+      case SyncState.success:
+        return "Last synced: $lastSyncText";
+      case SyncState.error:
+        return errorMessage != null && errorMessage.isNotEmpty
+            ? "Sync error: $errorMessage"
+            : "Last synced: $lastSyncText";
+    }
   }
 }
