@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/other_pages/backup_data_page.dart';
+import 'package:habitt/pages/other_pages/notifications_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/services/backup_service.dart';
@@ -352,49 +353,36 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
 
                     SettingTile(
-                      title: 'Export Data',
-                      desc: 'Backup all habits and days to encrypted file',
+                      title: "Notifications",
+                      desc: "Manage your notification preferences",
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 400),
                         value: isTinted,
                         widget: Icon(
-                          Icons.file_upload,
+                          Icons.notifications,
                           color: tp.primaryColor,
                           size: 32,
                         ),
                         secondaryWidget: Image.asset(
-                          "assets/images/icons/export.png",
-                          width: 32,
-                          height: 32,
+                          "assets/images/icons/notification.png",
                         ),
                       ),
-                      onTap: () => _handleExport(context),
-                    ),
-                    SettingTile(
-                      title: 'Import Data',
-                      desc: 'Restore from encrypted backup file',
-                      icon: CustomSwitcherWrapper(
-                        delay: Duration(milliseconds: 500),
-                        value: isTinted,
-                        widget: Icon(
-                          Icons.file_download,
-                          color: tp.primaryColor,
-                          size: 32,
-                        ),
-                        secondaryWidget: Image.asset(
-                          "assets/images/icons/import.png",
-                          width: 32,
-                          height: 32,
-                        ),
-                      ),
-                      onTap: () => _handleImport(context),
+                      hasArrow: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationsPage(),
+                          ),
+                        );
+                      },
                     ),
                     SettingTile(
                       title: "Backup Data",
                       desc:
-                          "Use your google drive to backup encrypted app data.",
+                          "Use your google drive to backup encrypted app data",
                       icon: CustomSwitcherWrapper(
-                        delay: Duration(milliseconds: 600),
+                        delay: Duration(milliseconds: 500),
                         value: isTinted,
                         widget: Icon(
                           Icons.sync,
@@ -415,6 +403,46 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       },
                     ),
+
+                    SettingTile(
+                      title: 'Export Data',
+                      desc: 'Backup all habits and days to encrypted file',
+                      icon: CustomSwitcherWrapper(
+                        delay: Duration(milliseconds: 600),
+                        value: isTinted,
+                        widget: Icon(
+                          Icons.file_upload,
+                          color: tp.primaryColor,
+                          size: 32,
+                        ),
+                        secondaryWidget: Image.asset(
+                          "assets/images/icons/export.png",
+                          width: 32,
+                          height: 32,
+                        ),
+                      ),
+                      onTap: () => _handleExport(context),
+                    ),
+                    SettingTile(
+                      title: 'Import Data',
+                      desc: 'Restore from encrypted backup file',
+                      icon: CustomSwitcherWrapper(
+                        delay: Duration(milliseconds: 700),
+                        value: isTinted,
+                        widget: Icon(
+                          Icons.file_download,
+                          color: tp.primaryColor,
+                          size: 32,
+                        ),
+                        secondaryWidget: Image.asset(
+                          "assets/images/icons/import.png",
+                          width: 32,
+                          height: 32,
+                        ),
+                      ),
+                      onTap: () => _handleImport(context),
+                    ),
+
                     SizedBox(height: 80),
                   ],
                 ),
