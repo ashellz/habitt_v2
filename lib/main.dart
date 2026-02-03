@@ -21,6 +21,7 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/notification_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,6 +80,9 @@ Future<void> main() async {
   final backupProvider = BackupProvider();
   await backupProvider.initialize();
 
+  // Initialize NotificationsProvider
+  final notificationsProvider = NotificationsProvider(prefs);
+
   runApp(
     MultiProvider(
       providers: [
@@ -120,7 +124,9 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => StateProvider(prefs)),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
-        ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+        ChangeNotifierProvider<NotificationsProvider>.value(
+          value: notificationsProvider,
+        ),
 
         // 5. BackupProvider: Depends on HabitProvider for post-merge refresh.
         ChangeNotifierProxyProvider<HabitProvider, BackupProvider>(
@@ -146,6 +152,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _scheduleNotifications();
+  }
+
+  Future<void> _scheduleNotifications() async {
+    final notificationsProvider = context.read<NotificationsProvider>();
+    final isAllowed = await NotificationService.areNotificationsAllowed();
+
+    // Only schedule if user has granted permissions
+    if (isAllowed) {
+      await NotificationService.scheduleAllNotifications(notificationsProvider);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
