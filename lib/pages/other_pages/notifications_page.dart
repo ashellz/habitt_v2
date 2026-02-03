@@ -206,49 +206,72 @@ class NotificationDay extends StatelessWidget {
         '${settings.time.hour.toString().padLeft(2, '0')}:${settings.time.minute.toString().padLeft(2, '0')}';
 
     return GlassFeelContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                notificationPeriod.name,
-                style: TextStyle(
-                  color: tp.primaryTextColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              DefaultSwitch(
-                onTap: () => _handleToggle(context),
-                switchValue: settings.enabled,
-              ),
-            ],
-          ),
-          if (settings.enabled) ...[
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: () => _selectTime(context),
-              child: GlassFeelContainer(
-                child: Text(
-                  timeString,
-                  textAlign: TextAlign.center,
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        alignment: Alignment.topCenter,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  notificationPeriod.name,
                   style: TextStyle(
                     color: tp.primaryTextColor,
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
+                const Spacer(),
+                DefaultSwitch(
+                  onTap: () => _handleToggle(context),
+                  switchValue: settings.enabled,
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            WeekdaySelector(
-              notificationPeriod: notificationPeriod,
-              selectedWeekdays: settings.weekdays,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              transitionBuilder:
+                  (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(sizeFactor: animation, child: child),
+                  ),
+              child:
+                  settings.enabled
+                      ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 12),
+                          GestureDetector(
+                            onTap: () => _selectTime(context),
+                            child: GlassFeelContainer(
+                              child: Text(
+                                timeString,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: tp.primaryTextColor,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          WeekdaySelector(
+                            notificationPeriod: notificationPeriod,
+                            selectedWeekdays: settings.weekdays,
+                          ),
+                        ],
+                      )
+                      : const SizedBox.shrink(),
             ),
           ],
-        ],
+        ),
       ),
     );
   }
