@@ -39,6 +39,7 @@ class Habits extends StatefulWidget {
 class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late List<Habit> habits;
 
   @override
   void initState() {
@@ -48,13 +49,15 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
       duration: const Duration(seconds: 5),
     )..repeat(reverse: true);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+
+    habits = _getHabits();
   }
 
   List<Habit> _getHabits() {
     debugPrint(
       "Getting habits for Habits widget ======================================== new DAY SELECTED: ${widget.daySelected} ",
     );
-    final habitProvider = context.watch<HabitProvider>();
+    final habitProvider = context.read<HabitProvider>();
     final today = DateTime.now();
     final todayShort = DateTime(today.year, today.month, today.day);
     if (widget.daySelected == null || widget.daySelected == todayShort) {
@@ -79,7 +82,6 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
             ? categoryProvider.selectedCategoryId
             : calendarProvider.selectedCategoryId;
 
-    final habits = _getHabits();
     final additionalTasksCount =
         habits.where((habit) => habit.additional).length;
     final tp = context.watch<ThemeProvider>();
