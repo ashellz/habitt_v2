@@ -79,28 +79,61 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
+  bool _sameWeekdays(Set<int> a, Set<int> b) {
+    if (a.length != b.length) return false;
+    return a.containsAll(b) && b.containsAll(a);
+  }
+
+  bool _settingsEqual(NotificationSettings a, NotificationSettings b) {
+    // Comparing all fields
+    return a.enabled == b.enabled &&
+        a.time.hour == b.time.hour &&
+        a.time.minute == b.time.minute &&
+        _sameWeekdays(a.weekdays, b.weekdays);
+  }
+
+  void _updateDirtyFlag(NotificationPeriod period) {
+    final provider = context.read<NotificationsProvider>();
+    final live = provider.getSettings(period);
+    final state = _realDataCopy[period]!;
+
+    // Compares live and state settings
+    // If equal, remove from changedPeriods, else add to changedPeriods
+    if (_settingsEqual(live, state)) {
+      _changedPeriods.remove(period);
+    } else {
+      _changedPeriods.add(period);
+    }
+  }
+
   void _updatePeriod(
     NotificationPeriod period,
     NotificationSettings newSettings,
   ) {
     setState(() {
       _realDataCopy[period] = newSettings;
-      _changedPeriods.add(period);
+      _updateDirtyFlag(period);
     });
   }
 
   void _handleToggle(NotificationPeriod period, bool enabled) {
-    final current = _realDataCopy[period]!;
-    _updatePeriod(period, current.copyWith(enabled: enabled));
+    final current =
+        _realDataCopy[period]!; // gets current state period settings
+    _updatePeriod(
+      period,
+      current.copyWith(enabled: enabled),
+    ); // changes state enabled
   }
 
   void _handleTime(NotificationPeriod period, TimeOfDay time) {
-    final current = _realDataCopy[period]!;
-    _updatePeriod(period, current.copyWith(time: time));
+    final current =
+        _realDataCopy[period]!; // gets current state period settings
+    _updatePeriod(period, current.copyWith(time: time)); // changes state time
   }
 
   void _handleWeekday(NotificationPeriod period, int weekday) {
-    final current = _realDataCopy[period]!;
+    final current =
+        _realDataCopy[period]!; // gets current state period settings
     final next = Set<int>.from(current.weekdays);
     if (next.contains(weekday)) {
       next.remove(weekday);
