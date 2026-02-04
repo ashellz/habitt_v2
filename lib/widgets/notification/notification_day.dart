@@ -6,6 +6,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
+import 'package:habitt/widgets/notification/time_picker_sheet.dart';
 import 'package:habitt/widgets/notification/weekday_selector.dart';
 import 'package:provider/provider.dart';
 
@@ -16,27 +17,15 @@ class NotificationDay extends StatelessWidget {
 
   Future<void> _selectTime(BuildContext context) async {
     final provider = context.read<NotificationsProvider>();
-    final tp = context.read<ThemeProvider>();
     final currentTime = provider.getTime(notificationPeriod);
 
-    final TimeOfDay? picked = await showTimePicker(
+    final TimeOfDay? picked = await showModalBottomSheet<TimeOfDay>(
       context: context,
-      initialTime: currentTime,
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme:
-                tp.isDark
-                    ? ColorScheme.dark(
-                      primary: tp.primaryColor,
-                      surface: tp.surfaceColor,
-                    )
-                    : ColorScheme.light(
-                      primary: tp.primaryColor,
-                      surface: tp.surfaceColor,
-                    ),
-          ),
-          child: child!,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return TimePickerSheet(
+          currentTime: currentTime,
+          notificationPeriod: notificationPeriod,
         );
       },
     );

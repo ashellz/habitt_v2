@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-class NumberPicker extends StatelessWidget {
+class NumberPicker extends StatefulWidget {
   const NumberPicker({
     super.key,
     required this.hoursController,
     required this.minutesController,
     required this.width,
     this.height = 150,
+    this.minHours,
     this.maxHours,
     this.maxMinutes,
     this.onChangedHours,
@@ -24,6 +25,7 @@ class NumberPicker extends StatelessWidget {
   final FixedExtentScrollController minutesController;
   final double width;
   final double height;
+  final int? minHours;
   final int? maxHours;
   final int? maxMinutes;
   final ValueChanged<int>? onChangedHours;
@@ -34,14 +36,46 @@ class NumberPicker extends StatelessWidget {
   final bool padZero;
 
   @override
+  State<NumberPicker> createState() => _NumberPickerState();
+}
+
+class _NumberPickerState extends State<NumberPicker> {
+  late int minHour;
+  late int maxHour;
+  late int hourItemCount;
+
+  @override
+  void initState() {
+    super.initState();
+
+    minHour = widget.minHours ?? 0;
+    maxHour = widget.maxHours ?? 23;
+    hourItemCount = (maxHour - minHour + 1).clamp(1, 24);
+
+    _clampHoursController();
+  }
+
+  void _clampHoursController() {
+    final int clampedValue =
+        widget.hoursController.initialItem.clamp(minHour, maxHour).toInt();
+    final relativeIndex = _safeInitial(
+      clampedValue - minHour,
+      hourItemCount - 1,
+    );
+    if (widget.hoursController.hasClients) {
+      widget.hoursController.jumpToItem(relativeIndex);
+    }
+  }
+
+  int _safeInitial(int idx, int max) => idx.clamp(0, max).toInt();
+
+  @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     debugPrint(
-      "Building NumberPicker with maxHours: $maxHours, maxMinutes: $maxMinutes",
+      "Building NumberPicker with maxHours: ${widget.maxHours}, maxMinutes: ${widget.maxMinutes}",
     );
-
-    int safeInitial(int idx, int max) => idx.clamp(0, max);
-
+    /*
     Widget customPicker({
       required int itemCount,
       required int initialIndex,
@@ -55,9 +89,11 @@ class NumberPicker extends StatelessWidget {
         itemCount,
         (index) => Center(
           child: Text(
-            padZero ? index.toString().padLeft(2, '0') : index.toString(),
+            widget.padZero
+                ? index.toString().padLeft(2, '0')
+                : index.toString(),
             style:
-                textStyle ??
+                widget.textStyle ??
                 TextStyle(
                   fontSize: 32.0,
                   color: tp.primaryTextColor,
@@ -68,24 +104,31 @@ class NumberPicker extends StatelessWidget {
       );
 
       return CustomPicker(
-        width: pickerWidth ?? width / 3,
+        width: pickerWidth ?? widget.width / 3,
         height: pickerHeight ?? 150,
         containerWidth: containerWidth,
         containerHeight: containerHeight,
         gapScaleFactor: 0.05,
-        initialIndex: safeInitial(initialIndex, itemCount - 1),
+        initialIndex: _safeInitial(initialIndex, itemCount - 1),
         onSnap: (idx) {
           if (onChanged != null) onChanged(idx);
         },
         children: items,
       );
     }
-
+    
     Widget hoursPickerCustom({double? pickerWidth, double? pickerHeight}) {
+      final initialIndex = widget.hoursController.initialItem - minHour;
       return customPicker(
-        itemCount: (maxHours ?? 23) + 1,
-        initialIndex: hoursController.initialItem,
-        onChanged: onChangedHours,
+        itemCount: hourItemCount,
+        initialIndex: initialIndex,
+        onChanged: (idx) {
+          final value = minHour + idx;
+          if (widget.onChangedHours != null) widget.onChangedHours!(value);
+          if (widget.hoursController.hasClients) {
+            widget.hoursController.jumpToItem(idx);
+          }
+        },
         pickerWidth: pickerWidth,
         pickerHeight: pickerHeight,
       );
@@ -93,38 +136,42 @@ class NumberPicker extends StatelessWidget {
 
     Widget minutesPickerCustom({double? pickerWidth, double? pickerHeight}) {
       return customPicker(
-        itemCount: (maxMinutes ?? 59) + 1,
-        initialIndex: minutesController.initialItem,
-        onChanged: onChangedMinutes,
+        itemCount: (widget.maxMinutes ?? 59) + 1,
+        initialIndex: widget.minutesController.initialItem,
+        onChanged: widget.onChangedMinutes,
         pickerWidth: pickerWidth,
         pickerHeight: pickerHeight,
       );
-    }
+    } */
 
     Widget hoursPickerCupertino() {
       return SizedBox(
-        width: width / 3,
-        height: height,
+        width: widget.width / 3,
+        height: widget.height,
         child: CupertinoPicker(
-          looping: looping,
-          scrollController: hoursController,
+          looping: widget.looping,
+          scrollController: widget.hoursController,
           itemExtent: 75.0,
           magnification: 1,
           useMagnifier: false,
           selectionOverlay: Container(),
           onSelectedItemChanged: (int index) {
-            if (onChangedHours != null) onChangedHours!(index);
+            final value = minHour + index;
+            if (widget.onChangedHours != null) widget.onChangedHours!(value);
+            debugPrint("Selected hour: $value");
           },
           children: List<Widget>.generate(
-            maxHours != null ? maxHours! + 1 : 24,
+            hourItemCount,
             (index) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  padZero ? index.toString().padLeft(2, '0') : index.toString(),
+                  widget.padZero
+                      ? (minHour + index).toString().padLeft(2, '0')
+                      : (minHour + index).toString(),
                   style:
-                      textStyle ??
+                      widget.textStyle ??
                       TextStyle(fontSize: 44.0, color: tp.primaryTextColor),
                 ),
               ),
@@ -136,28 +183,33 @@ class NumberPicker extends StatelessWidget {
 
     Widget minutesPickerCupertino() {
       return SizedBox(
-        width: width / 3,
-        height: height,
+        width: widget.width / 3,
+        height: widget.height,
         child: CupertinoPicker(
-          looping: looping,
-          scrollController: minutesController,
+          looping: widget.looping,
+          scrollController: widget.minutesController,
           itemExtent: 75.0,
           magnification: 1.0,
           useMagnifier: false,
           selectionOverlay: Container(),
           onSelectedItemChanged: (int index) {
-            if (onChangedMinutes != null) onChangedMinutes!(index);
+            if (widget.onChangedMinutes != null) {
+              widget.onChangedMinutes!(index);
+            }
+            debugPrint("Selected minute: $index");
           },
           children: List<Widget>.generate(
-            maxMinutes != null ? maxMinutes! + 1 : 60,
+            widget.maxMinutes != null ? widget.maxMinutes! + 1 : 60,
             (index) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  padZero ? index.toString().padLeft(2, '0') : index.toString(),
+                  widget.padZero
+                      ? index.toString().padLeft(2, '0')
+                      : index.toString(),
                   style:
-                      textStyle ??
+                      widget.textStyle ??
                       TextStyle(
                         fontSize: 44.0,
                         color: tp.primaryTextColor,
@@ -171,40 +223,40 @@ class NumberPicker extends StatelessWidget {
       );
     }
 
-    if (vertical) {
+    if (widget.vertical) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (maxHours != null && maxHours! > 0) ...[
+          if (widget.maxHours != null && widget.maxHours! > 0) ...[
             hoursPickerCupertino(),
             Text(
               "hours",
               style: TextStyle(
-                color: textStyle?.color ?? tp.primaryTextColor,
+                color: widget.textStyle?.color ?? tp.primaryTextColor,
                 fontSize: 16,
-                shadows: textStyle?.shadows,
+                shadows: widget.textStyle?.shadows,
               ),
             ),
             Divider(
-              color: textStyle?.color ?? tp.primaryTextColor,
+              color: widget.textStyle?.color ?? tp.primaryTextColor,
               thickness: 3,
             ),
             Text(
               "minutes",
               style: TextStyle(
-                shadows: textStyle?.shadows,
-                color: textStyle?.color ?? tp.primaryTextColor,
+                shadows: widget.textStyle?.shadows,
+                color: widget.textStyle?.color ?? tp.primaryTextColor,
                 fontSize: 16,
               ),
             ),
           ],
           minutesPickerCupertino(),
-          if (maxHours == null || maxHours! < 1)
+          if (widget.maxHours == null || widget.maxHours! < 1)
             Text(
               "minutes",
               style: TextStyle(
-                shadows: textStyle?.shadows,
-                color: textStyle?.color ?? tp.primaryTextColor,
+                shadows: widget.textStyle?.shadows,
+                color: widget.textStyle?.color ?? tp.primaryTextColor,
                 fontSize: 16,
               ),
             ),
