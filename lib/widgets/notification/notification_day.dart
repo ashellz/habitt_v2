@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/notification.dart';
-import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
@@ -11,20 +10,28 @@ import 'package:habitt/widgets/notification/weekday_selector.dart';
 import 'package:provider/provider.dart';
 
 class NotificationDay extends StatelessWidget {
-  const NotificationDay({super.key, required this.notificationPeriod});
+  const NotificationDay({
+    super.key,
+    required this.notificationPeriod,
+    required this.settings,
+    required this.onToggleEnabled,
+    required this.onTimeChanged,
+    required this.onWeekdayToggled,
+  });
 
   final NotificationPeriod notificationPeriod;
+  final NotificationSettings settings;
+  final ValueChanged<bool> onToggleEnabled;
+  final ValueChanged<TimeOfDay> onTimeChanged;
+  final ValueChanged<int> onWeekdayToggled;
 
   Future<void> _selectTime(BuildContext context) async {
-    final provider = context.read<NotificationsProvider>();
-    final currentTime = provider.getTime(notificationPeriod);
-
     final TimeOfDay? picked = await showModalBottomSheet<TimeOfDay>(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return TimePickerSheet(
-          currentTime: currentTime,
+          currentTime: settings.time,
           notificationPeriod: notificationPeriod,
         );
       },
@@ -37,8 +44,7 @@ class NotificationDay extends StatelessWidget {
         return;
       }
 
-      await provider.setTime(notificationPeriod, picked);
-      await NotificationService.reschedulePeriod(notificationPeriod, provider);
+      onTimeChanged(picked);
     }
   }
 
@@ -62,11 +68,8 @@ class NotificationDay extends StatelessWidget {
   }
 
   Future<void> _handleToggle(BuildContext context) async {
-    final provider = context.read<NotificationsProvider>();
-    final currentlyEnabled = provider.isEnabled(notificationPeriod);
-
     // If trying to enable, check permissions first
-    if (!currentlyEnabled) {
+    if (!settings.enabled) {
       final allowed = await NotificationService.areNotificationsAllowed();
       if (!allowed && context.mounted) {
         final granted = await NotificationService.requestPermissions(context);
@@ -74,20 +77,12 @@ class NotificationDay extends StatelessWidget {
       }
     }
 
-    await provider.toggleEnabled(notificationPeriod);
-
-    if (!context.mounted) return;
-
-    // Reschedule notifications
-    await NotificationService.reschedulePeriod(notificationPeriod, provider);
+    onToggleEnabled(!settings.enabled);
   }
 
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final notificationsProvider = context.watch<NotificationsProvider>();
-    final settings = notificationsProvider.getSettings(notificationPeriod);
-
     final timeString =
         '${settings.time.hour.toString().padLeft(2, '0')}:${settings.time.minute.toString().padLeft(2, '0')}';
 
@@ -151,6 +146,7 @@ class NotificationDay extends StatelessWidget {
                           WeekdaySelector(
                             notificationPeriod: notificationPeriod,
                             selectedWeekdays: settings.weekdays,
+                            onToggleWeekday: onWeekdayToggled,
                           ),
                         ],
                       )

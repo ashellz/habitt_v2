@@ -38,7 +38,10 @@ class DefaultButton extends StatelessWidget {
         danger ? tp.dangerColor : color ?? tp.primaryButtonBackground;
 
     // Determine best text color based on button background contrast
-    Color textColor = outlined ? buttonColor : bestContrastingOn(buttonColor);
+    Color textColor =
+        outlined
+            ? borderColor ?? tp.primaryTextColor
+            : bestContrastingOn(buttonColor);
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -60,9 +63,9 @@ class DefaultButton extends StatelessWidget {
                             () => enabled && !isLoading ? onPressed() : null,
                         style: OutlinedButton.styleFrom(
                           enableFeedback: false,
-                          overlayColor: buttonColor,
-                          side: BorderSide(color: buttonColor),
-
+                          overlayColor: borderColor,
+                          side: BorderSide(color: borderColor ?? buttonColor),
+                          backgroundColor: color,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(24)),
                           ),
