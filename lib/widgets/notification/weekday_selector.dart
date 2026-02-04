@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/notification.dart';
-import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/color_contrast.dart';
 import 'package:provider/provider.dart';
 
@@ -11,17 +9,18 @@ class WeekdaySelector extends StatelessWidget {
     super.key,
     required this.notificationPeriod,
     required this.selectedWeekdays,
+    required this.onToggleWeekday,
   });
 
   final NotificationPeriod notificationPeriod;
   final Set<int> selectedWeekdays;
+  final ValueChanged<int> onToggleWeekday;
 
   static const List<String> _dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final provider = context.read<NotificationsProvider>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -30,13 +29,7 @@ class WeekdaySelector extends StatelessWidget {
         final isSelected = selectedWeekdays.contains(weekday);
 
         return GestureDetector(
-          onTap: () async {
-            await provider.toggleWeekday(notificationPeriod, weekday);
-            await NotificationService.reschedulePeriod(
-              notificationPeriod,
-              provider,
-            );
-          },
+          onTap: () => onToggleWeekday(weekday),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             width: 40,

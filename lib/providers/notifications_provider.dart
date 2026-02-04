@@ -144,4 +144,14 @@ class NotificationsProvider extends ChangeNotifier {
     await _saveSettings(period);
     notifyListeners();
   }
+
+  /// Replace the full settings for a period and persist.
+  Future<void> setSettings(
+    NotificationPeriod period,
+    NotificationSettings settings,
+  ) async {
+    _settings[period] = settings;
+    await _saveSettings(period);
+    notifyListeners();
+  }
 }

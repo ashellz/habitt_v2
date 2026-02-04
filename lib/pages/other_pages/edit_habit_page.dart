@@ -313,6 +313,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     ),
                                 label: "Reset",
                                 outlined: true,
+                                color: tp.backgroundColor,
+                                borderColor: tp.primaryButtonBackground,
                               ),
                             ),
                             SizedBox(width: 16),
