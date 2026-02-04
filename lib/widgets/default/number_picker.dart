@@ -48,6 +48,10 @@ class _NumberPickerState extends State<NumberPicker> {
   void initState() {
     super.initState();
 
+    debugPrint(
+      "Initializing NumberPicker with controller: ${widget.hoursController.initialItem}, ${widget.minutesController.initialItem} ",
+    );
+
     minHour = widget.minHours ?? 0;
     maxHour = widget.maxHours ?? 23;
     hourItemCount = (maxHour - minHour + 1).clamp(1, 24);
@@ -56,15 +60,21 @@ class _NumberPickerState extends State<NumberPicker> {
   }
 
   void _clampHoursController() {
+    // Use the provided initialItem and clamp to the allowed hour window.
     final int clampedValue =
         widget.hoursController.initialItem.clamp(minHour, maxHour).toInt();
-    final relativeIndex = _safeInitial(
+    final int relativeIndex = _safeInitial(
       clampedValue - minHour,
       hourItemCount - 1,
     );
-    if (widget.hoursController.hasClients) {
-      widget.hoursController.jumpToItem(relativeIndex);
-    }
+
+    // Defer until after first layout so the controller has clients, then jump.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (widget.hoursController.hasClients) {
+        widget.hoursController.jumpToItem(relativeIndex);
+      }
+    });
   }
 
   int _safeInitial(int idx, int max) => idx.clamp(0, max).toInt();
