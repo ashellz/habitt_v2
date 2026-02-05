@@ -41,7 +41,7 @@ class AdditionalTaskSwitch extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 55),
             child: Text(
-              "If checked, habit won't count for 'All habits completed streak'.",
+              "If checked, habit won't count for the 'Perfect days streak'.",
               style: TextStyle(color: tp.primaryTextColor),
             ),
           ),
