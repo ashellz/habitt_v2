@@ -5,7 +5,7 @@ import 'package:hive_ce/hive.dart';
 enum StatsType {
   habitsCompleted,
   highestAmountOfHabitsLastWeek,
-  allHabitsCompletedStreak,
+  perfectDaysStreak,
 }
 
 class StatsProvider extends ChangeNotifier {
@@ -14,13 +14,13 @@ class StatsProvider extends ChangeNotifier {
   int _habitsCompleted = -1;
   int _highestAmountOfHabitsLastWeek = -1;
   List<int> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
-  int _allHabitsCompletedStreak = -1;
+  int _perfectDaysStreak = -1;
   List<StatsType> _refreshList = [];
 
   get habitsCompleted => getHabitsCompleted();
   get highestAmountOfHabitsLastWeek => getHighestAmountOfHabitsLastWeek();
   get habitsCompletedLastWeek => getHabitsCompletedLastWeek();
-  get allHabitsCompletedStreak => getAllHabitsCompletedStreak();
+  get perfectDaysStreak => getPerfectStreak();
 
   bool shouldRefresh(StatsType type) => _refreshList.contains(type);
 
@@ -53,11 +53,11 @@ class StatsProvider extends ChangeNotifier {
     return _habitsCompletedLastWeek;
   }
 
-  int getAllHabitsCompletedStreak() {
-    if (_allHabitsCompletedStreak == -1) {
-      _allHabitsCompletedStreak = refreshAllHabitsCompletedStreak();
+  int getPerfectStreak() {
+    if (_perfectDaysStreak == -1) {
+      _perfectDaysStreak = refreshPerfectStreak();
     }
-    return _allHabitsCompletedStreak;
+    return _perfectDaysStreak;
   }
 
   void refreshStats({bool force = false}) {
@@ -69,8 +69,8 @@ class StatsProvider extends ChangeNotifier {
         force) {
       _highestAmountOfHabitsLastWeek = refreshHighestAmountOfHabitsLastWeek();
     }
-    if (_refreshList.contains(StatsType.allHabitsCompletedStreak) || force) {
-      _allHabitsCompletedStreak = refreshAllHabitsCompletedStreak();
+    if (_refreshList.contains(StatsType.perfectDaysStreak) || force) {
+      _perfectDaysStreak = refreshPerfectStreak();
     }
 
     _refreshList = [];
@@ -135,7 +135,7 @@ class StatsProvider extends ChangeNotifier {
     return habitsCompletedLastWeek;
   }
 
-  int refreshAllHabitsCompletedStreak() {
+  int refreshPerfectStreak() {
     int allHabitsCompletedStreak = 0;
 
     // First we order the days by date

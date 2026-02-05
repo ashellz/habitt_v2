@@ -23,7 +23,7 @@ class AllHabitsCompletedStreak extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "All habits completed streak",
+                "Perfect days streak",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -38,7 +38,7 @@ class AllHabitsCompletedStreak extends StatelessWidget {
                   Transform.translate(
                     offset: Offset(0, 5),
                     child: Text(
-                      statsProvider.allHabitsCompletedStreak.toString(),
+                      statsProvider.perfectDaysStreak.toString(),
                       style: TextStyle(
                         fontSize: 32,
                         color: Color(0xFF212529),
