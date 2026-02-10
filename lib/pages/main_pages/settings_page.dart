@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/other_pages/backup_data_page.dart';
 import 'package:habitt/pages/other_pages/notifications_page.dart';
+import 'package:habitt/pages/other_pages/subscriptions_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/services/backup_service.dart';
@@ -377,12 +378,40 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       },
                     ),
+
+                    SettingTile(
+                      title: "Subscriptions",
+                      desc:
+                          "Manage your subscriptions and view premium benefits",
+                      icon: CustomSwitcherWrapper(
+                        delay: Duration(milliseconds: 500),
+                        value: isTinted,
+                        widget: Icon(
+                          Icons.monetization_on,
+                          color: tp.primaryColor,
+                          size: 32,
+                        ),
+                        secondaryWidget: Image.asset(
+                          "assets/images/icons/subscription.png",
+                        ),
+                      ),
+                      hasArrow: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SubscriptionsPage(),
+                          ),
+                        );
+                      },
+                    ),
+
                     SettingTile(
                       title: "Backup Data",
                       desc:
                           "Use your google drive to backup encrypted app data",
                       icon: CustomSwitcherWrapper(
-                        delay: Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 600),
                         value: isTinted,
                         widget: Icon(
                           Icons.sync,
@@ -408,7 +437,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: 'Export Data',
                       desc: 'Backup all habits and days to encrypted file',
                       icon: CustomSwitcherWrapper(
-                        delay: Duration(milliseconds: 600),
+                        delay: Duration(milliseconds: 700),
                         value: isTinted,
                         widget: Icon(
                           Icons.file_upload,
@@ -427,7 +456,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: 'Import Data',
                       desc: 'Restore from encrypted backup file',
                       icon: CustomSwitcherWrapper(
-                        delay: Duration(milliseconds: 700),
+                        delay: Duration(milliseconds: 800),
                         value: isTinted,
                         widget: Icon(
                           Icons.file_download,
