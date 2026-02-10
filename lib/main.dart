@@ -21,6 +21,7 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final tp = await ThemeProvider.initFromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await BillingService.init();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
