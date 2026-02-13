@@ -8,9 +8,9 @@ import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/l10n/l10n.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/pages/new_habits_page.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -22,6 +22,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/billing_service.dart';
+import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -90,6 +91,7 @@ Future<void> main() async {
       providers: [
         // 1. StatsProvider: No dependencies.
         ChangeNotifierProvider(create: (_) => StatsProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => ColorProvider()),
 
         // Independent provider
         ChangeNotifierProvider<ThemeProvider>.value(value: tp),
@@ -172,49 +174,51 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
+    final cp = context.watch<ColorProvider>();
 
     // Choose base ColorScheme based on theme provider state
     final baseScheme =
-        tp.isDark
+        cp.isDark
             ? ColorScheme.dark(
-              primary: tp.primaryColor,
-              secondary: tp.secondaryColor,
-              surface: tp.surfaceColor,
-              error: tp.dangerColor,
-              onPrimary: tp.onPrimaryTextColor,
-              onSecondary: tp.primaryTextColor,
-              onSurface: tp.primaryTextColor,
-              onError: tp.onPrimaryTextColor,
-              background: tp.backgroundColor,
+              primary: cp.main,
+              secondary: cp.secondaryButton,
+              surface: cp.bg,
+              error: cp.fail,
+              onPrimary: cp.bg,
+              onSecondary: cp.text,
+              onSurface: cp.text,
+              onError: cp.bg,
+              background: cp.bg,
             )
             : ColorScheme.light(
-              primary: tp.primaryColor,
-              secondary: tp.secondaryColor,
-              surface: tp.surfaceColor,
-              error: tp.dangerColor,
-              onPrimary: tp.onPrimaryTextColor,
-              onSecondary: tp.primaryTextColor,
-              onSurface: tp.primaryTextColor,
-              onError: tp.onPrimaryTextColor,
-              background: tp.backgroundColor,
+              primary: cp.main,
+              secondary: cp.secondaryButton,
+              surface: cp.bg,
+              error: cp.fail,
+              onPrimary: cp.bg,
+              onSecondary: cp.text,
+              onSurface: cp.text,
+              onError: cp.bg,
+              background: cp.bg,
             );
 
     final theme = ThemeData(
       useMaterial3: true,
       fontFamily: 'Poppins',
       colorScheme: baseScheme,
-      scaffoldBackgroundColor: tp.backgroundColor,
-      textTheme: ThemeData(brightness: tp.brightness).textTheme.apply(
+      scaffoldBackgroundColor: cp.bg,
+      textTheme: ThemeData(
+        brightness: cp.isDark ? Brightness.dark : Brightness.light,
+      ).textTheme.apply(
         fontFamily: 'Poppins',
-        bodyColor: tp.primaryTextColor,
-        displayColor: tp.primaryTextColor,
+        bodyColor: cp.text,
+        displayColor: cp.text,
       ),
-      dialogTheme: DialogThemeData(backgroundColor: tp.elevatedSurfaceColor),
+      dialogTheme: DialogThemeData(backgroundColor: cp.habitBg),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: tp.primaryColor,
-          foregroundColor: tp.onPrimaryTextColor,
+          backgroundColor: cp.main,
+          foregroundColor: cp.bg,
           shape: const StadiumBorder(),
         ),
       ),
@@ -225,7 +229,7 @@ class _MyAppState extends State<MyApp> {
       if (name == null) {
         return SetupNamePage(prefs: widget.prefs, stateSetter: setState);
       } else {
-        return const HomePage();
+        return const NewHabitsPage();
       }
     }
 
@@ -234,7 +238,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: theme,
       darkTheme: theme,
-      themeMode: tp.mode,
+      themeMode: cp.isDark ? ThemeMode.dark : ThemeMode.light,
       supportedLocales: L10n.all,
       localizationsDelegates: const [
         AppLocalizations.delegate,
