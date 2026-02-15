@@ -1,17 +1,18 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/pages/main_pages/main_page.dart';
 import 'package:habitt/pages/main_pages/calendar_page.dart';
 import 'package:habitt/pages/main_pages/habits_page.dart';
-import 'package:habitt/pages/main_pages/settings_page.dart';
-import 'package:habitt/pages/main_pages/stats_page.dart';
+import 'package:habitt/pages/main_pages/profile_page.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/update_last_date.dart';
-import 'package:habitt/widgets/default/bottom_nav_bar.dart';
+import 'package:habitt/widgets/default/new_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,12 +24,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _currentPageIndex = 0;
+  bool _supportsLiquidGlass = false;
 
   final List<Widget> _pages = const [
+    MainPage(),
     HabitsPage(),
     CalendarPage(),
-    StatsPage(),
-    SettingsPage(),
+    ProfilePage(),
   ];
 
   // Check if app state has changed, therefore run _updateLastOpenedDate
@@ -57,15 +59,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _checkIOSVersion();
 
     final List<NavItemData> tempNavItemsForIndex = [
+      NavItemData(id: 'home', svgPath: "...", defaultLabel: "Home"),
       NavItemData(id: 'habits', svgPath: "...", defaultLabel: "Habits"),
       NavItemData(id: 'calendar', svgPath: "...", defaultLabel: "Calendar"),
-      NavItemData(id: 'stats', svgPath: "...", defaultLabel: "Stats"),
-      NavItemData(id: 'settings', svgPath: "...", defaultLabel: "Settings"),
+      NavItemData(id: 'profile', svgPath: "...", defaultLabel: "Profile"),
     ];
     int initialIndex = tempNavItemsForIndex.indexWhere(
-      (item) => item.defaultLabel == "Habits",
+      (item) => item.defaultLabel == "Home",
     );
     if (initialIndex != -1) {
       _currentPageIndex = initialIndex;
@@ -114,9 +117,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
+  Future<void> _checkIOSVersion() async {
+    if (Platform.isIOS) {
+      debugPrint(
+        "Checking iOS version for Liquid Glass support... Is iOS: true",
+      );
+      final deviceInfo = DeviceInfoPlugin();
+      final iosInfo = await deviceInfo.iosInfo;
+      final version = iosInfo.systemVersion;
+      final majorVersion = int.tryParse(version.split('.').first) ?? 0;
+      debugPrint("iOS Major Version: $majorVersion");
+      setState(() {
+        _supportsLiquidGlass = majorVersion >= 26;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isGlassFeel = context.watch<PreferencesProvider>().glassFeel;
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     final backupProvider = context.watch<BackupProvider>();
     final loading = backupProvider.syncState == SyncState.syncing;
@@ -157,18 +175,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
           // Floating nav bar
           Positioned(
-            left: 0,
-            right: 0,
-            bottom: isIOS && isGlassFeel ? -20 : 0,
+            left: _supportsLiquidGlass ? 12 : 0,
+            right: _supportsLiquidGlass ? 12 : 0,
+            bottom:
+                isIOS
+                    ? _supportsLiquidGlass
+                        ? -MediaQuery.of(context).padding.bottom + 5
+                        : -MediaQuery.of(context).padding.bottom
+                    : 0,
             child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    BottomNavBar(onItemTapped: _onPageChangedByNavBar),
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  NewBottomNavBar(
+                    onItemTapped: _onPageChangedByNavBar,
+                    supportsLiquidGlass: _supportsLiquidGlass,
+                  ),
+                ],
               ),
             ),
           ),

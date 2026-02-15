@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:provider/provider.dart';
 
-class NewHabitsPage extends StatelessWidget {
-  const NewHabitsPage({super.key});
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
