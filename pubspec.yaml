@@ -121,6 +121,19 @@ flutter:
           weight: 400
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 500
+
+    - family: Satoshi
+      fonts:
+        - asset: assets/new-fonts/Satoshi-Light.otf
+          weight: 200
+        - asset: assets/new-fonts/Satoshi-Regular.otf
+          weight: 400
+        - asset: assets/new-fonts/Satoshi-Medium.otf
+          weight: 500
+        - asset: assets/new-fonts/Satoshi-Bold.otf
+          weight: 600
+        - asset: assets/new-fonts/Satoshi-Black.otf
+          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
