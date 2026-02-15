@@ -204,13 +204,13 @@ class _MyAppState extends State<MyApp> {
 
     final theme = ThemeData(
       useMaterial3: true,
-      fontFamily: 'Poppins',
+      fontFamily: 'Satoshi',
       colorScheme: baseScheme,
       scaffoldBackgroundColor: cp.bg,
       textTheme: ThemeData(
         brightness: cp.isDark ? Brightness.dark : Brightness.light,
       ).textTheme.apply(
-        fontFamily: 'Poppins',
+        fontFamily: 'Satoshi',
         bodyColor: cp.text,
         displayColor: cp.text,
       ),
