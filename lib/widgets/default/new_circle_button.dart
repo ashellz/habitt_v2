@@ -50,7 +50,7 @@ class _NewCircleButtonState extends State<NewCircleButton> {
         child: CNButton.icon(
           icon: widget.cnIcon,
           onPressed: widget.onPressed,
-          tint: cp.text,
+          tint: cp.bg,
           style: CNButtonStyle.prominentGlass,
         ),
       );
