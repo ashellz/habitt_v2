@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/main_pages/main_page.dart';
 import 'package:habitt/pages/main_pages/calendar_page.dart';
@@ -11,6 +9,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/new_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +58,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _checkIOSVersion();
+
+    _checkLiquidGlassSupport();
 
     final List<NavItemData> tempNavItemsForIndex = [
       NavItemData(id: 'home', svgPath: "...", defaultLabel: "Home"),
@@ -98,6 +98,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  Future<void> _checkLiquidGlassSupport() async {
+    final supports = await supportsLiquidGlass();
+    setState(() {
+      _supportsLiquidGlass = supports;
+    });
+  }
+
   void _onPageChangedByNavBar(int index) {
     if (_currentPageIndex != index) {
       final stateProvider = context.read<StateProvider>();
@@ -114,22 +121,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         context.read<HabitProvider>().assignStreaks();
         stateProvider.shouldUpdateStreaks = false;
       }
-    }
-  }
-
-  Future<void> _checkIOSVersion() async {
-    if (Platform.isIOS) {
-      debugPrint(
-        "Checking iOS version for Liquid Glass support... Is iOS: true",
-      );
-      final deviceInfo = DeviceInfoPlugin();
-      final iosInfo = await deviceInfo.iosInfo;
-      final version = iosInfo.systemVersion;
-      final majorVersion = int.tryParse(version.split('.').first) ?? 0;
-      debugPrint("iOS Major Version: $majorVersion");
-      setState(() {
-        _supportsLiquidGlass = majorVersion >= 26;
-      });
     }
   }
 

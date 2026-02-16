@@ -1,5 +1,7 @@
+import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
@@ -33,6 +35,7 @@ class HabitsPageTopSection extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 spacing: 4,
@@ -55,6 +58,13 @@ class HabitsPageTopSection extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              NewCircleButton(
+                svgPath: "assets/images/new-svg/settings.svg",
+                cnIcon: CNSymbol("gearshape"),
+                onPressed: () {
+                  Navigator.pushNamed(context, "/settings");
+                },
               ),
             ],
           ),

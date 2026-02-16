@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/pages/main_pages/main_page.dart';
+import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -247,6 +248,7 @@ class _MyAppState extends State<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      routes: {'/settings': (context) => const SettingsPage()},
       home: getHomePage(),
     );
   }
