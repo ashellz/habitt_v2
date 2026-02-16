@@ -27,6 +27,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hello => 'Hello';
 
   @override
+  String get whatsUp => 'What\'s up?';
+
+  @override
+  String get goodToSeeYou => 'Good to see you';
+
+  @override
+  String get welcomeBack => 'Welcome back';
+
+  @override
+  String get hi => 'Hi';
+
+  @override
+  String get hiThere => 'Hi there';
+
+  @override
+  String get helloThere => 'Hello there';
+
+  @override
+  String get howAreYou => 'How are you?';
+
+  @override
   String get all => 'All';
 
   @override
@@ -111,4 +132,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get saveChanges => 'Save Changes';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get goodAfternoon => 'Good afternoon';
+
+  @override
+  String get goodEvening => 'Good evening';
 }

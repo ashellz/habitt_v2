@@ -140,6 +140,48 @@ abstract class AppLocalizations {
   /// **'Hello'**
   String get hello;
 
+  /// No description provided for @whatsUp.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s up?'**
+  String get whatsUp;
+
+  /// No description provided for @goodToSeeYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Good to see you'**
+  String get goodToSeeYou;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get welcomeBack;
+
+  /// No description provided for @hi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi'**
+  String get hi;
+
+  /// No description provided for @hiThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi there'**
+  String get hiThere;
+
+  /// No description provided for @helloThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello there'**
+  String get helloThere;
+
+  /// No description provided for @howAreYou.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you?'**
+  String get howAreYou;
+
   /// No description provided for @all.
   ///
   /// In en, this message translates to:
@@ -307,6 +349,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save Changes'**
   String get saveChanges;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get goodEvening;
 }
 
 class _AppLocalizationsDelegate
