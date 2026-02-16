@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       NavItemData(id: 'profile', svgPath: "...", defaultLabel: "Profile"),
     ];
     int initialIndex = tempNavItemsForIndex.indexWhere(
-      (item) => item.defaultLabel == "Home",
+      (item) => item.id == 'home',
     );
     if (initialIndex != -1) {
       _currentPageIndex = initialIndex;

@@ -31,30 +31,28 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
 
     _navItems = [
       NavItemData(
-        id: 'habits',
+        id: 'home',
         svgPath: "assets/images/new-svg/home.svg",
         defaultLabel: "Home",
       ),
       NavItemData(
-        id: 'calendar',
+        id: 'habits',
         svgPath: "assets/images/new-svg/all-habits.svg",
         defaultLabel: "Habits",
       ),
       NavItemData(
-        id: 'stats',
+        id: 'calendar',
         svgPath: "assets/images/new-svg/calendar.svg",
         defaultLabel: "Calendar",
       ),
       NavItemData(
-        id: 'settings',
+        id: 'profile',
         svgPath: "assets/images/new-svg/profile.svg",
         defaultLabel: "Profile",
       ),
     ];
 
-    _selectedIndex = _navItems.indexWhere(
-      (item) => item.defaultLabel == "Habits",
-    );
+    _selectedIndex = _navItems.indexWhere((item) => item.id == "home");
 
     if (_selectedIndex == -1) {
       _selectedIndex = 0;
