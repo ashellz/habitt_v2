@@ -83,66 +83,77 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
     }
 
     return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          if (_selectedIndex != index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          }
-          widget.onItemTapped?.call(index);
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          decoration: ShapeDecoration(
-            shape: StadiumBorder(),
-            color: getPillColor(),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _ColorMorphingIcon(
-                svgPath: item.svgPath,
-                targetColor: getItemColor(),
-              ),
-
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SizeTransition(
-                      sizeFactor: animation,
-                      axis: Axis.horizontal,
-                      child: child,
-                    ),
-                  );
-                },
-                child: AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 200),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: getItemColor(),
-                    fontSize: 12,
-                    fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w400,
-                    height: 1,
-                  ),
-                  child: Padding(
-                    key: ValueKey<String>("text_${item.id}"),
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(item.defaultLabel),
-                    ),
-                  ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          customBorder: const StadiumBorder(),
+          onTap: () {
+            if (_selectedIndex != index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            }
+            widget.onItemTapped?.call(index);
+          },
+          child: TweenAnimationBuilder<Color?>(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            tween: ColorTween(end: getPillColor()),
+            builder: (context, color, _) {
+              return Ink(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                decoration: ShapeDecoration(
+                  shape: const StadiumBorder(),
+                  color: color ?? getPillColor(),
                 ),
-              ),
-            ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _ColorMorphingIcon(
+                      svgPath: item.svgPath,
+                      targetColor: getItemColor(),
+                    ),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      transitionBuilder: (
+                        Widget child,
+                        Animation<double> animation,
+                      ) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SizeTransition(
+                            sizeFactor: animation,
+                            axis: Axis.horizontal,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: getItemColor(),
+                          fontSize: 12,
+                          fontFamily: 'Satoshi',
+                          fontWeight: FontWeight.w400,
+                          height: 1,
+                        ),
+                        child: Padding(
+                          key: ValueKey<String>("text_${item.id}"),
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(item.defaultLabel),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
