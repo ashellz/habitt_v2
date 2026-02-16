@@ -3,7 +3,7 @@ import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
-import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/services/new_color_service.dart';
 import 'package:provider/provider.dart';
 
 class NewBottomNavBar extends StatefulWidget {
@@ -32,23 +32,23 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
     _navItems = [
       NavItemData(
         id: 'habits',
-        svgPath: "assets/images/svg/habits.svg",
-        defaultLabel: "Habits",
+        svgPath: "assets/images/new-svg/home.svg",
+        defaultLabel: "Home",
       ),
       NavItemData(
         id: 'calendar',
-        svgPath: "assets/images/svg/calendar.svg",
-        defaultLabel: "Calendar",
+        svgPath: "assets/images/new-svg/all-habits.svg",
+        defaultLabel: "Habits",
       ),
       NavItemData(
         id: 'stats',
-        svgPath: "assets/images/svg/stats.svg",
-        defaultLabel: "Stats",
+        svgPath: "assets/images/new-svg/calendar.svg",
+        defaultLabel: "Calendar",
       ),
       NavItemData(
         id: 'settings',
-        svgPath: "assets/images/svg/settings.svg",
-        defaultLabel: "Settings",
+        svgPath: "assets/images/new-svg/profile.svg",
+        defaultLabel: "Profile",
       ),
     ];
 
@@ -62,80 +62,88 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
   }
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
-    final tp = context.watch<ThemeProvider>();
+    final cp = context.watch<ColorProvider>();
 
     final item = _navItems[index];
     // Use hovered index during dragging, otherwise use selected index
     final isHighlighted = _selectedIndex == index;
 
     Color getItemColor() {
-      if (!isGlassFeel) {
-        if (isHighlighted) return tp.backgroundColor;
-      }
       if (isHighlighted) {
-        return tp.primaryColor;
+        return cp.main;
       }
-      return tp.primaryTextColor.withOpacity(0.9);
+      return cp.lightGreyText;
     }
 
-    return GestureDetector(
-      onTap: () {
-        if (_selectedIndex != index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        }
-        widget.onItemTapped?.call(index);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: ShapeDecoration(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _ColorMorphingIcon(
-              svgPath: item.svgPath,
-              targetColor: getItemColor(),
-            ),
+    Color getPillColor() {
+      if (isHighlighted) {
+        return cp.main.withOpacity(0.1);
+      }
+      return Colors.transparent;
+    }
 
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: SizeTransition(
-                    sizeFactor: animation,
-                    axis: Axis.horizontal,
-                    child: child,
-                  ),
-                );
-              },
-              child: AnimatedDefaultTextStyle(
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          if (_selectedIndex != index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+          widget.onItemTapped?.call(index);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          decoration: ShapeDecoration(
+            shape: StadiumBorder(),
+            color: getPillColor(),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _ColorMorphingIcon(
+                svgPath: item.svgPath,
+                targetColor: getItemColor(),
+              ),
+
+              AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: getItemColor(),
-                  fontSize: 12,
-                ),
-                child: Padding(
-                  key: ValueKey<String>("text_${item.id}"),
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(item.defaultLabel),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(
+                      sizeFactor: animation,
+                      axis: Axis.horizontal,
+                      child: child,
+                    ),
+                  );
+                },
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: getItemColor(),
+                    fontSize: 12,
+                    fontFamily: 'Satoshi',
+                    fontWeight: FontWeight.w400,
+                    height: 1,
+                  ),
+                  child: Padding(
+                    key: ValueKey<String>("text_${item.id}"),
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(item.defaultLabel),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -143,14 +151,14 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final tp = context.watch<ThemeProvider>();
+    final cp = context.watch<ColorProvider>();
 
     final platform = Theme.of(context).platform;
 
     if (platform == TargetPlatform.iOS) {
       return Expanded(
         child: CNTabBar(
-          tint: tp.primaryColor,
+          tint: cp.main,
           height: widget.supportsLiquidGlass ? 86 : 88,
           items: const [
             CNTabBarItem(label: 'Home', icon: CNSymbol('house')),
@@ -174,7 +182,25 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       );
     }
 
-    return Container();
+    debugPrint("Using custom Android nav bar");
+
+    return Expanded(
+      child: Container(
+        height: 95,
+        width: double.infinity,
+        padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: cp.border, width: 1)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(
+            _navItems.length,
+            (index) => _buildNavItem(index, widget.supportsLiquidGlass),
+          ),
+        ),
+      ),
+    );
   }
 }
 
