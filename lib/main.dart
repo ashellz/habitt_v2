@@ -11,7 +11,6 @@ import 'package:habitt/models/habit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/home_page.dart';
-import 'package:habitt/pages/main_pages/main_page.dart';
 import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/other_pages/setup_name_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
