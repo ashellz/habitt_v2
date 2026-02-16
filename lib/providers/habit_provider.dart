@@ -109,6 +109,47 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  Map<DateTime, double> getThisWeekProgress() {
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+
+    debugPrint(
+      "Calculating this week progress. Start of week: $startOfWeek, Today: $now",
+    );
+
+    List<Day> thisWeekDays = [];
+
+    for (int i = 0; i < 7; i++) {
+      thisWeekDays.add(
+        Day(
+          date: startOfWeek.add(Duration(days: i)),
+          habits: getHabitsFromDay(startOfWeek.add(Duration(days: i))),
+          timestamp: DateTime.now().toUtc(),
+        ),
+      );
+
+      debugPrint(
+        "Day: ${thisWeekDays[i].date}, Habits: ${thisWeekDays[i].habits.length}",
+      );
+    }
+
+    debugPrint("This week days: $thisWeekDays");
+
+    // Calculating progress for each day 0 - 1
+
+    final Map<DateTime, double> daysProgress = {};
+
+    for (final day in thisWeekDays) {
+      final dayProgress =
+          day.habits.where((habit) => habit.completed).length /
+          (day.habits.isEmpty ? 1 : day.habits.length);
+      daysProgress[day.date] = dayProgress;
+    }
+
+    debugPrint("Returning Days progress: $daysProgress");
+    return daysProgress;
+  }
+
   Future<void> updateHabitInDB(Habit habit, {DateTime? day}) async {
     debugPrint("Updating habit in DB: $habit");
     if (statsProvider != null) {

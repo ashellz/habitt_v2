@@ -38,7 +38,6 @@ class _GreetingState extends State<Greeting> {
 
   @override
   Widget build(BuildContext context) {
-    _ensureGreeting();
     final localizations = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
 
