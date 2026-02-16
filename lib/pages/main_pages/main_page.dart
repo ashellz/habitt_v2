@@ -26,6 +26,8 @@ class HabitsPageTopSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
@@ -33,8 +35,26 @@ class HabitsPageTopSection extends StatelessWidget {
           Row(
             children: [
               Column(
+                spacing: 4,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text("Good morning,"), Text("Shellz")],
+                children: [
+                  Text(
+                    "Good morning,",
+                    style: TextStyle(
+                      color: cp.greyText,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    "Shellz",
+                    style: TextStyle(
+                      color: cp.text,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
