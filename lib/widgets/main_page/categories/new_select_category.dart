@@ -15,7 +15,6 @@ class NewSelectCategoryWidget extends StatelessWidget {
     this.onTap,
     required this.habitsCount,
     required this.standardColor,
-    this.useHabitCategory = false,
     this.selectedDay,
   });
 
@@ -23,23 +22,15 @@ class NewSelectCategoryWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final bool habitsCount;
   final bool standardColor;
-  final bool useHabitCategory;
   final DateTime? selectedDay;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
-    final StateProvider stateProvider = context.watch<StateProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
-    final calendarProvider = context.watch<CalendarProvider>();
 
-    final int selectedId =
-        useHabitCategory
-            ? stateProvider.habitCategoryId
-            : selectedDay == null
-            ? categoryProvider.selectedCategoryId
-            : calendarProvider.selectedCategoryId;
+    final int selectedId = categoryProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
 
     return GestureDetector(
