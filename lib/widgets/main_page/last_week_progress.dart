@@ -72,7 +72,8 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(7, (index) {
-          final isSelected = currentDay - 1 == index;
+          final adjustedDay = currentDay - 1;
+          final isSelected = adjustedDay == index;
 
           Color getBgColor() {
             if (isSelected) {
@@ -107,6 +108,8 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
           Color emptyProgressColor() {
             if (isSelected) {
               return cp.progressBarSelected;
+            } else if (adjustedDay < index) {
+              return cp.disabled.withOpacity(0.4);
             }
             return cp.disabled;
           }
