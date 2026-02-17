@@ -14,8 +14,17 @@ class LastWeekProgress extends StatefulWidget {
 
 class _LastWeekProgressState extends State<LastWeekProgress> {
   int currentDay = DateTime.now().weekday;
-  late List<String> _days = [];
-  late final List<double> _progressValues = [];
+  List<String> _days = const ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  final List<double> _progressValues = List<double>.filled(
+    7,
+    0.0,
+    growable: true,
+  );
+  final List<double> _previousProgressValues = List<double>.filled(
+    7,
+    0.0,
+    growable: true,
+  );
   Locale? _lastLocale;
 
   @override
@@ -31,10 +40,18 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
       // Progress is filled with all the valeus all the time
 
       setState(() {
-        for (int i = 0; i < progress.length; i++) {
-          final key = progress.keys.elementAt(i);
-          _progressValues.add(progress[key] ?? 0.0);
+        final values = progress.values.take(7).toList();
+        if (values.length < 7) {
+          values.addAll(List.filled(7 - values.length, 0.0));
         }
+
+        _progressValues
+          ..clear()
+          ..addAll(values);
+
+        _previousProgressValues
+          ..clear()
+          ..addAll(List<double>.filled(7, 0.0));
 
         debugPrint("Progress values updated: $_progressValues");
         debugPrint("Current day: $currentDay");
@@ -75,6 +92,14 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
           final adjustedDay = currentDay - 1;
           final isSelected = adjustedDay == index;
 
+          final dayLabel = index < _days.length ? _days[index] : "";
+          final progressValue =
+              index < _progressValues.length ? _progressValues[index] : 0.0;
+          final previousValue =
+              index < _previousProgressValues.length
+                  ? _previousProgressValues[index]
+                  : 0.0;
+
           Color getBgColor() {
             if (isSelected) {
               return cp.text;
@@ -97,11 +122,9 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
           }
 
           Color progressColor() {
-            double value = _progressValues[index];
-
-            if (value >= 0.5) return cp.main;
-            if (value >= 0.3) return cp.mid;
-            if (value < 0.3) return cp.fail;
+            if (progressValue >= 0.5) return cp.main;
+            if (progressValue >= 0.3) return cp.mid;
+            if (progressValue < 0.3) return cp.fail;
             return cp.disabled;
           }
 
@@ -125,7 +148,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
               child: Column(
                 children: [
                   Text(
-                    _days[index],
+                    dayLabel,
                     style: TextStyle(
                       color: getWeekdayColor(),
                       fontSize: 13,
@@ -144,12 +167,23 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                   SizedBox(height: 15),
                   SizedBox(
                     width: 27,
-                    child: CustomPaint(
-                      painter: PartialArcPainter(
-                        progress: _progressValues[index],
-                        color: progressColor(),
-                        backgroundColor: emptyProgressColor(),
+                    child: TweenAnimationBuilder<double>(
+                      key: ValueKey<int>(index),
+                      duration: const Duration(milliseconds: 1200),
+                      curve: Curves.easeOut,
+                      tween: Tween<double>(
+                        begin: previousValue.clamp(0.0, 1.0),
+                        end: progressValue.clamp(0.0, 1.0),
                       ),
+                      builder: (context, animatedProgress, _) {
+                        return CustomPaint(
+                          painter: PartialArcPainter(
+                            progress: animatedProgress,
+                            color: progressColor(),
+                            backgroundColor: emptyProgressColor(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

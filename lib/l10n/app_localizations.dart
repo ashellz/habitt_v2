@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// No description provided for @whatsUp.
   ///
   /// In en, this message translates to:
-  /// **'What\'s up?'**
+  /// **'What\'s up'**
   String get whatsUp;
 
   /// No description provided for @goodToSeeYou.
@@ -179,7 +179,7 @@ abstract class AppLocalizations {
   /// No description provided for @howAreYou.
   ///
   /// In en, this message translates to:
-  /// **'How are you?'**
+  /// **'How are you'**
   String get howAreYou;
 
   /// No description provided for @all.

@@ -27,7 +27,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hello => 'Hello';
 
   @override
-  String get whatsUp => 'What\'s up?';
+  String get whatsUp => 'What\'s up';
 
   @override
   String get goodToSeeYou => 'Good to see you';
@@ -45,7 +45,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helloThere => 'Hello there';
 
   @override
-  String get howAreYou => 'How are you?';
+  String get howAreYou => 'How are you';
 
   @override
   String get all => 'All';
