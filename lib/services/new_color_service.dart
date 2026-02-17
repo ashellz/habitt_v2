@@ -10,6 +10,7 @@ class _Light {
 
   static const Color bg = Color(0xFFFFFFFF);
   static const Color white5 = Color(0xFFFAFAFA);
+  static const Color white10 = Color(0xFFF1F1F1);
   static const Color habitsBg = Color(0xFFF4F4F4);
 
   static const Color field = Color(0xFFF4F4F4);
@@ -105,6 +106,8 @@ class ColorProvider extends ChangeNotifier {
   late Color mainButtonLeftGradient;
   late Color mainButtonRightGradient;
   late Color field;
+  late Color habitIconBg;
+  late Color habit;
 
   ColorProvider() {
     _updateColors();
@@ -156,6 +159,8 @@ class ColorProvider extends ChangeNotifier {
       mainButtonLeftGradient = _Dark.mainButtonLeftGradient;
       mainButtonRightGradient = _Dark.mainButtonRightGradient;
       field = _Dark.field;
+      habitIconBg = _Dark.border;
+      habit = _Dark.field;
     } else {
       bg = _Light.bg;
       habitBg = _Light.habitsBg;
@@ -179,6 +184,8 @@ class ColorProvider extends ChangeNotifier {
       mainButtonLeftGradient = _Light.mainButtonLeftGradient;
       mainButtonRightGradient = _Light.mainButtonRightGradient;
       field = _Light.field;
+      habitIconBg = _Light.white10;
+      habit = _Light.bg;
     }
   }
 }

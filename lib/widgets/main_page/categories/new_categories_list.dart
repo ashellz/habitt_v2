@@ -15,7 +15,6 @@ class NewCategoriesList extends StatefulWidget {
     this.standardColor = false,
     this.showAll = true,
     this.habitsCount = true,
-    this.useHabitCategory = false,
     this.selectedDay,
   });
 
@@ -23,7 +22,6 @@ class NewCategoriesList extends StatefulWidget {
   final bool standardColor;
   final bool showAll;
   final bool habitsCount;
-  final bool useHabitCategory;
   final DateTime? selectedDay;
 
   @override
@@ -55,17 +53,10 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
   void _scrollToSelectedCategory() {
     if (!_scrollController.hasClients) return;
 
-    final categoryProvider = context.read<CategoryProvider>();
     final stateProvider = context.read<StateProvider>();
-    final calendarProvider = context.read<CalendarProvider>();
 
     // Determine the selected ID within the currently visible items.
-    final selectedId =
-        widget.useHabitCategory
-            ? stateProvider.habitCategoryId
-            : widget.selectedDay == null
-            ? categoryProvider.selectedCategoryId
-            : calendarProvider.selectedCategoryId;
+    final selectedId = stateProvider.habitCategoryId;
 
     // Defer measurement to next frame to ensure layout is up-to-date.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -108,8 +99,6 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
     final habitProvider = context.watch<HabitProvider>();
-    final stateProvider = context.watch<StateProvider>();
-    final calendarProvider = context.watch<CalendarProvider>();
     final habitsList =
         widget.selectedDay == null
             ? habitProvider.habits
@@ -145,11 +134,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
                   habitsCount: widget.habitsCount,
                   category: Category(id: 0, name: localizations.all),
                   onTap: () {
-                    if (widget.selectedDay != null) {
-                      calendarProvider.selectCategory(0);
-                    } else {
-                      categoryProvider.selectCategory(0);
-                    }
+                    categoryProvider.selectCategory(0);
                     _scrollToSelectedCategory();
                   },
                 ),
@@ -169,20 +154,11 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
                   key: _keyFor(category.id),
                   child: NewSelectCategoryWidget(
                     selectedDay: widget.selectedDay,
-                    useHabitCategory: widget.useHabitCategory,
                     standardColor: widget.standardColor,
                     habitsCount: widget.habitsCount,
                     category: category,
                     onTap: () {
-                      if (widget.useHabitCategory) {
-                        stateProvider.habitCategoryId = category.id;
-                        _scrollToSelectedCategory();
-                        return;
-                      } else if (widget.selectedDay != null) {
-                        calendarProvider.selectCategory(category.id);
-                      } else {
-                        categoryProvider.selectCategory(category.id);
-                      }
+                      categoryProvider.selectCategory(category.id);
                       _scrollToSelectedCategory();
                     },
                   ),
