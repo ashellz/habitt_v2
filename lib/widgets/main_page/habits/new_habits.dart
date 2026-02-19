@@ -63,7 +63,7 @@ class _NewHabitsState extends State<NewHabits>
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
 
-    final additionalTasksCount =
+    final optionalHabitsCount =
         habits.where((habit) => habit.additional).length;
     final cp = context.watch<ColorProvider>();
 
@@ -95,7 +95,7 @@ class _NewHabitsState extends State<NewHabits>
             child: NewHabitCategory(
               isToday: widget.daySelected == null,
               habits: habits,
-              showAdditionalTasks: true,
+              showOptionalHabits: true,
               category: categoryProvider.categories.firstWhere(
                 (c) => c.id == selectedCategoryId,
               ),
@@ -119,13 +119,13 @@ class _NewHabitsState extends State<NewHabits>
                 habits: habits,
                 isFirst: category == categories.first,
                 category: category,
-                showAdditionalTasks: false,
+                showOptionalHabits: false,
               ),
             ),
 
         Padding(
           padding: EdgeInsets.only(
-            top: additionalTasksCount == habits.length ? 12 : 0,
+            top: optionalHabitsCount == habits.length ? 12 : 0,
           ),
           // child additional tasks
         ),

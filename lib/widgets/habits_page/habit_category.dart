@@ -9,7 +9,7 @@ class HabitCategory extends StatefulWidget {
   const HabitCategory({
     super.key,
     this.isFirst = false,
-    required this.showAdditionalTasks,
+    required this.showOptionalHabits,
     required this.category,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
@@ -22,7 +22,7 @@ class HabitCategory extends StatefulWidget {
 
   final bool isFirst;
   final Category category;
-  final bool showAdditionalTasks;
+  final bool showOptionalHabits;
   // These parameters are passed down from HabitsPage -> Habits -> HabitCategory
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
@@ -72,7 +72,7 @@ class _HabitCategoryState extends State<HabitCategory> {
             ScrollTransformedHabitCategoryTitle(
               isFirst: widget.isFirst,
               category: widget.category,
-              countAdditionalTasks: false,
+              countOptionalHabits: false,
               scrollController: widget.scrollController,
               bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
               effectZoneHeight: widget.effectZoneHeight,
@@ -91,8 +91,8 @@ class _HabitCategoryState extends State<HabitCategory> {
               minScale: widget.minScale,
               stackOffsetFactor: widget.stackOffsetFactor,
             ),
-          if (widget.showAdditionalTasks)
-            AdditionalTasks(
+          if (widget.showOptionalHabits)
+            OptionalHabits(
               habits: widget.habits,
               isToday: widget.isToday,
               hasHabits: categoryHabits.isNotEmpty,

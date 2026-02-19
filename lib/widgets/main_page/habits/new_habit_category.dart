@@ -8,7 +8,7 @@ class NewHabitCategory extends StatefulWidget {
   const NewHabitCategory({
     super.key,
     this.isFirst = false,
-    required this.showAdditionalTasks,
+    required this.showOptionalHabits,
     required this.category,
     required this.habits,
     required this.isToday,
@@ -16,7 +16,7 @@ class NewHabitCategory extends StatefulWidget {
 
   final bool isFirst;
   final Category category;
-  final bool showAdditionalTasks;
+  final bool showOptionalHabits;
   final List<Habit> habits;
   final bool isToday;
 
@@ -63,7 +63,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
               category: widget.category,
             ),
           for (final habit in categoryHabits) NewHabitWidget(habit: habit),
-          if (widget.showAdditionalTasks) Container(),
+          if (widget.showOptionalHabits) Container(),
           // additional tasks
         ],
       ),

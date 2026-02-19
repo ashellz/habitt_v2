@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 int getCategoryLength(
   Category category,
   BuildContext context,
-  bool countAdditionalTasks, [
+  bool countOptionalHabits, [
   DateTime? selectedDay,
 ]) {
   final habitProvider = context.watch<HabitProvider>();
@@ -22,7 +22,7 @@ int getCategoryLength(
         .where(
           (h) =>
               h.categoryId == category.id &&
-              (countAdditionalTasks ? true : !h.additional),
+              (countOptionalHabits ? true : !h.additional),
         )
         .length;
   }
@@ -32,7 +32,7 @@ int getCategoryLength(
           .where(
             (h) =>
                 h.categoryId == category.id &&
-                (countAdditionalTasks ? true : !h.additional),
+                (countOptionalHabits ? true : !h.additional),
           )
           .length;
   return categoryHabits;

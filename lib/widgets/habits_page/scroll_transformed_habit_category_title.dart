@@ -10,12 +10,12 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
   const _OriginalHabitCategoryTitleContent({
     required this.category,
     required this.isFirst,
-    required this.countAdditionalTasks,
+    required this.countOptionalHabits,
   });
 
   final Category category;
   final bool isFirst;
-  final bool countAdditionalTasks;
+  final bool countOptionalHabits;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +24,12 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
     final int categoryHabits = getCategoryLength(
       category,
       context,
-      countAdditionalTasks,
+      countOptionalHabits,
     );
 
     // If you're looking for the additional tasks divider
     // It's actually separate from here
-    // It's in the AdditionalTasksDivider widget
+    // It's in the OptionalHabitsDivider widget
 
     // I lost around 20 minutes looking for it here...
 
@@ -62,7 +62,7 @@ class ScrollTransformedHabitCategoryTitle extends StatefulWidget {
     super.key,
     required this.isFirst,
     required this.category,
-    required this.countAdditionalTasks,
+    required this.countOptionalHabits,
     required this.scrollController,
     required this.bottomViewportEdgeGlobalY,
     required this.effectZoneHeight,
@@ -72,7 +72,7 @@ class ScrollTransformedHabitCategoryTitle extends StatefulWidget {
 
   final bool isFirst;
   final Category category;
-  final bool countAdditionalTasks;
+  final bool countOptionalHabits;
   // Scroll and transformation parameters (same as for ScrollTransformedHabitWidget)
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
@@ -92,7 +92,7 @@ class _ScrollTransformedHabitCategoryTitleState
     Widget originalContent = _OriginalHabitCategoryTitleContent(
       category: widget.category,
       isFirst: widget.isFirst,
-      countAdditionalTasks: widget.countAdditionalTasks,
+      countOptionalHabits: widget.countOptionalHabits,
     );
 
     double scale = 1.0;
