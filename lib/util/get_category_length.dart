@@ -22,7 +22,7 @@ int getCategoryLength(
         .where(
           (h) =>
               h.categoryId == category.id &&
-              (countOptionalHabits ? true : !h.additional),
+              (countOptionalHabits ? true : !h.optional),
         )
         .length;
   }
@@ -32,7 +32,7 @@ int getCategoryLength(
           .where(
             (h) =>
                 h.categoryId == category.id &&
-                (countOptionalHabits ? true : !h.additional),
+                (countOptionalHabits ? true : !h.optional),
           )
           .length;
   return categoryHabits;

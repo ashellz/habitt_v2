@@ -4,7 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/circle_button.dart';
-import 'package:habitt/widgets/habit_details/additional_task_switch.dart';
+import 'package:habitt/widgets/habit_details/optional_habit_switch.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
@@ -54,7 +54,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
       stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
       stateProvider.iconPath = widget.habit.iconPath;
-      stateProvider.isAdditional = widget.habit.additional;
+      stateProvider.isOptional = widget.habit.optional;
       stateProvider.timeIntervalEnabled = widget.habit.timeIntervalEnabled;
       stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
       stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
@@ -87,7 +87,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
         stateProvider.habitDuration.inMinutes != initialDuration.inMinutes;
     final changedAmount = stateProvider.habitAmount != initialAmount;
     final changedOptionalHabit =
-        stateProvider.isAdditional != widget.habit.additional;
+        stateProvider.isOptional != widget.habit.optional;
     final changedIcon = stateProvider.iconPath != widget.habit.iconPath;
     final changedTimeIntervalEnabled =
         stateProvider.timeIntervalEnabled != widget.habit.timeIntervalEnabled;

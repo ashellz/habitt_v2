@@ -24,7 +24,7 @@ class Habit extends HiveObject {
   int durationCompleted; // How long has been done
   int streak;
   int longestStreak;
-  bool additional;
+  bool optional;
   bool timeIntervalEnabled;
   int timeIntervalStart; // In minutes
   int timeIntervalEnd; // In minutes
@@ -49,7 +49,7 @@ class Habit extends HiveObject {
     this.durationCompleted = 0,
     this.streak = 0,
     this.longestStreak = 0,
-    this.additional = false,
+    this.optional = false,
     this.timeIntervalEnabled = false,
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
@@ -98,7 +98,7 @@ class Habit extends HiveObject {
       durationCompleted: durationCompleted,
       longestStreak: longestStreak,
       skipped: skipped,
-      additional: additional,
+      optional: optional,
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
@@ -125,7 +125,7 @@ class Habit extends HiveObject {
       durationCompleted: 0,
       longestStreak: longestStreak,
       skipped: false,
-      additional: additional,
+      optional: optional,
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
@@ -190,9 +190,9 @@ class Habit extends HiveObject {
       longestStreak = habit.longestStreak;
       timestamps['longestStreak'] = now;
     }
-    if (additional != habit.additional) {
-      additional = habit.additional;
-      timestamps['additional'] = now;
+    if (optional != habit.optional) {
+      optional = habit.optional;
+      timestamps['optional'] = now;
     }
     if (timeIntervalEnabled != habit.timeIntervalEnabled) {
       timeIntervalEnabled = habit.timeIntervalEnabled;
@@ -365,7 +365,7 @@ class Habit extends HiveObject {
       'durationCompleted': durationCompleted,
       'streak': streak,
       'longestStreak': longestStreak,
-      'additional': additional,
+      'optional': optional,
       'timeIntervalEnabled': timeIntervalEnabled,
       'timeIntervalStart': timeIntervalStart,
       'timeIntervalEnd': timeIntervalEnd,
@@ -406,7 +406,7 @@ class Habit extends HiveObject {
       durationCompleted: (m['durationCompleted'] as int?) ?? 0,
       streak: (m['streak'] as int?) ?? 0,
       longestStreak: (m['longestStreak'] as int?) ?? 0,
-      additional: (m['additional'] as bool?) ?? false,
+      optional: (m['optional'] as bool?) ?? false,
       timeIntervalEnabled: (m['timeIntervalEnabled'] as bool?) ?? false,
       timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
       timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
@@ -482,7 +482,7 @@ class Habit extends HiveObject {
         longestStreak,
         incoming.longestStreak,
       ),
-      additional: resolve('additional', additional, incoming.additional),
+      optional: resolve('optional', optional, incoming.optional),
       timeIntervalEnabled: resolve(
         'timeIntervalEnabled',
         timeIntervalEnabled,

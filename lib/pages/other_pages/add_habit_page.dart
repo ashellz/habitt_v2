@@ -6,7 +6,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/habit_details/add_habit_button.dart';
-import 'package:habitt/widgets/habit_details/additional_task_switch.dart';
+import 'package:habitt/widgets/habit_details/optional_habit_switch.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/habit_details/scheduling_and_alerts.dart';

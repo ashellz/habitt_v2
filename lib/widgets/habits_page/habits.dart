@@ -7,7 +7,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
-import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
+import 'package:habitt/widgets/habits_page/additional_tasks/optional_habits.dart';
 import 'package:habitt/widgets/habits_page/habit_category.dart';
 import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
@@ -82,8 +82,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
             ? categoryProvider.selectedCategoryId
             : calendarProvider.selectedCategoryId;
 
-    final optionalHabitsCount =
-        habits.where((habit) => habit.additional).length;
+    final optionalHabitsCount = habits.where((habit) => habit.optional).length;
     final tp = context.watch<ThemeProvider>();
 
     if (habits.isEmpty) {
