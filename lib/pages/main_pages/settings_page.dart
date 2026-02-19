@@ -5,6 +5,7 @@ import 'package:habitt/pages/other_pages/subscriptions_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/services/backup_service.dart';
+import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/alert_popup.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
@@ -170,6 +171,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final prefsProvider = context.watch<PreferencesProvider>();
     final tp = context.watch<ThemeProvider>();
+    final cp = context.watch<ColorProvider>();
     bool isTinted = prefsProvider.colorfulness == Colorfulness.tinted;
     final Color primary = tp.primaryColor;
 
@@ -220,10 +222,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                       hasSwitch: true,
-                      switchValue: tp.isDark,
+                      switchValue: tp.isDark && cp.isDark,
                       onTap: () {
                         tp.setMode(
                           tp.isDark ? ThemeMode.light : ThemeMode.dark,
+                        );
+                        cp.setMode(
+                          cp.isDark ? ColorMode.light : ColorMode.dark,
                         );
                       },
                     ),
