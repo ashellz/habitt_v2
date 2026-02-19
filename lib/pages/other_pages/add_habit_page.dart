@@ -95,10 +95,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       MoreOptionsText(localizations: localizations),
                       SelectHabitTypeOptions(),
                       SchedulingAndAlerts(tp: tp),
-                      AdditionalTaskSwitch(
-                        tp: tp,
-                        stateProvider: stateProvider,
-                      ),
+                      OptionalHabitSwitch(tp: tp, stateProvider: stateProvider),
                       SizedBox(height: 56 + extraPadding),
                     ],
                   ),

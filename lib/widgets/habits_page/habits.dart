@@ -82,7 +82,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
             ? categoryProvider.selectedCategoryId
             : calendarProvider.selectedCategoryId;
 
-    final additionalTasksCount =
+    final optionalHabitsCount =
         habits.where((habit) => habit.additional).length;
     final tp = context.watch<ThemeProvider>();
 
@@ -104,7 +104,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
             child: HabitCategory(
               isToday: widget.daySelected == null,
               habits: habits,
-              showAdditionalTasks: true,
+              showOptionalHabits: true,
               category: categoryProvider.categories.firstWhere(
                 (c) => c.id == selectedCategoryId,
               ),
@@ -144,7 +144,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                         painter: PulseAnimation(_animation.value, tp),
                         child: HabitCategory(
                           isToday: widget.daySelected == null,
-                          showAdditionalTasks: false,
+                          showOptionalHabits: false,
                           isFirst: true,
                           category: category,
                           habits: habits,
@@ -167,7 +167,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
                   isToday: widget.daySelected == null,
                   habits: habits,
                   category: category,
-                  showAdditionalTasks: false,
+                  showOptionalHabits: false,
                   scrollController: widget.scrollController,
                   bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
                   effectZoneHeight: widget.effectZoneHeight,
@@ -177,12 +177,12 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
               ),
         Padding(
           padding: EdgeInsets.only(
-            top: additionalTasksCount == habits.length ? 12 : 0,
+            top: optionalHabitsCount == habits.length ? 12 : 0,
           ),
-          child: AdditionalTasks(
+          child: OptionalHabits(
             isToday: widget.daySelected == null,
             habits: habits,
-            hasHabits: additionalTasksCount != habits.length,
+            hasHabits: optionalHabitsCount != habits.length,
             scrollController: widget.scrollController,
             bottomViewportEdgeGlobalY: widget.bottomViewportEdgeGlobalY,
             effectZoneHeight: widget.effectZoneHeight,

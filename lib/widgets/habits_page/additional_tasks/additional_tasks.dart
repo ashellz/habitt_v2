@@ -3,8 +3,8 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks_divider.dart';
 import 'package:habitt/widgets/default/scroll_transformed_habit_widget.dart';
 
-class AdditionalTasks extends StatefulWidget {
-  const AdditionalTasks({
+class OptionalHabits extends StatefulWidget {
+  const OptionalHabits({
     super.key,
     this.category,
     this.hasHabits,
@@ -20,7 +20,7 @@ class AdditionalTasks extends StatefulWidget {
   final Category? category;
   final bool? hasHabits;
   final List habits;
-  // These parameters are passed down from HabitsPage -> Habits -> AdditionalTasks
+  // These parameters are passed down from HabitsPage -> Habits -> OptionalHabits
   final ScrollController scrollController;
   final double bottomViewportEdgeGlobalY;
   final double effectZoneHeight;
@@ -29,10 +29,10 @@ class AdditionalTasks extends StatefulWidget {
   final bool isToday;
 
   @override
-  State<AdditionalTasks> createState() => _AdditionalTasksState();
+  State<OptionalHabits> createState() => _OptionalHabitsState();
 }
 
-class _AdditionalTasksState extends State<AdditionalTasks> {
+class _OptionalHabitsState extends State<OptionalHabits> {
   double _opacity = 0; // For initial fade-in
 
   @override
@@ -50,7 +50,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
 
   @override
   Widget build(BuildContext context) {
-    final additionalTasks =
+    final optionalHabits =
         widget.habits
             .where(
               (habit) =>
@@ -61,7 +61,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
             )
             .toList(); // It will show only additional habits/tasks
 
-    if (additionalTasks.isEmpty) return Container();
+    if (optionalHabits.isEmpty) return Container();
 
     return AnimatedOpacity(
       opacity: _opacity, // For the initial fade-in of the whole category block
@@ -76,7 +76,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
             minScale: widget.minScale,
             stackOffsetFactor: widget.stackOffsetFactor,
           ),
-          for (final habit in additionalTasks)
+          for (final habit in optionalHabits)
             ScrollTransformedHabitWidget(
               isToday: widget.isToday,
               // Assuming this is the widget from the previous answer

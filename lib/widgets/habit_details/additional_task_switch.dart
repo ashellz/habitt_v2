@@ -3,8 +3,8 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
 
-class AdditionalTaskSwitch extends StatelessWidget {
-  const AdditionalTaskSwitch({
+class OptionalHabitSwitch extends StatelessWidget {
+  const OptionalHabitSwitch({
     super.key,
     required this.tp,
     required this.stateProvider,
@@ -22,7 +22,7 @@ class AdditionalTaskSwitch extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                "Additional task",
+                "Optional habit",
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 16,

@@ -86,7 +86,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final changedDuration =
         stateProvider.habitDuration.inMinutes != initialDuration.inMinutes;
     final changedAmount = stateProvider.habitAmount != initialAmount;
-    final changedAdditionalTask =
+    final changedOptionalHabit =
         stateProvider.isAdditional != widget.habit.additional;
     final changedIcon = stateProvider.iconPath != widget.habit.iconPath;
     final changedTimeIntervalEnabled =
@@ -106,7 +106,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
         changedCategory ||
         changedDuration ||
         changedAmount ||
-        changedAdditionalTask ||
+        changedOptionalHabit ||
         changedIcon ||
         changedTimeIntervalEnabled ||
         changedTimeIntervalStart ||
@@ -257,7 +257,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         MoreOptionsText(localizations: localizations),
                         SelectHabitTypeOptions(),
                         SchedulingAndAlerts(tp: tp),
-                        AdditionalTaskSwitch(
+                        OptionalHabitSwitch(
                           tp: tp,
                           stateProvider: stateProvider,
                         ),
