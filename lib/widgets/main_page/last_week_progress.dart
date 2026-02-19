@@ -83,6 +83,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final darkMode = cp.isDark;
 
     return SizedBox(
       height: 79,
@@ -102,20 +103,22 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
           Color getBgColor() {
             if (isSelected) {
-              return cp.text;
+              return cp.widget;
             }
             return Colors.transparent;
           }
 
           Color getWeekdayColor() {
             if (isSelected) {
-              return cp.bg.withOpacity(0.7);
+              return Colors.white.withOpacity(0.7);
             }
             return cp.greyText;
           }
 
           Color getDayNumberColor() {
             if (isSelected) {
+              if (darkMode) return Colors.white;
+
               return cp.bg;
             }
             return cp.text;
@@ -132,7 +135,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
             if (isSelected) {
               return cp.progressBarSelected;
             } else if (adjustedDay < index) {
-              return cp.disabled.withOpacity(0.4);
+              return cp.border.withOpacity(0.4);
             }
             return cp.disabled;
           }
