@@ -117,7 +117,7 @@ class _OriginalDividerContent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: isTitle ? 0 : 8.0, right: 8.0),
             child: Text(
-              "Additional tasks",
+              "Optional habits",
               style: TextStyle(color: tp.mutedTextColor),
             ),
           ),

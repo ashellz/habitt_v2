@@ -37,7 +37,7 @@ class StateProvider extends ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   TextEditingController descController = TextEditingController();
   String _iconPath = "";
-  bool _isAdditional = false;
+  bool _isOptional = false;
   Color? _habitColor;
   String? _habitColorName;
 
@@ -88,13 +88,13 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  toggleAdditional() {
-    _isAdditional = !_isAdditional;
+  toggleOptional() {
+    _isOptional = !_isOptional;
     notifyListeners();
   }
 
-  set isAdditional(bool value) {
-    _isAdditional = value;
+  set isOptional(bool value) {
+    _isOptional = value;
     notifyListeners();
   }
 
@@ -151,7 +151,7 @@ class StateProvider extends ChangeNotifier {
     nameController.clear();
     descController.clear();
     _iconPath = Assets.images.icons.book.path;
-    _isAdditional = false;
+    _isOptional = false;
 
     _timeIntervalEnabled = false;
     _timeIntervalStart = 420;
@@ -173,7 +173,7 @@ class StateProvider extends ChangeNotifier {
 
   String get iconPath => _iconPath;
 
-  bool get isAdditional => _isAdditional;
+  bool get isOptional => _isOptional;
 
   Color? getHabitColor(ThemeProvider tp) {
     if (_habitColorName != null) {

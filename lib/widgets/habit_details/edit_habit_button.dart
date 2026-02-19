@@ -61,7 +61,7 @@ class EditHabitButton extends StatelessWidget {
               widget.habit.amountLabel =
                   stateProvider.habitAmountLabelController.text;
               widget.habit.iconPath = stateProvider.iconPath;
-              widget.habit.additional = stateProvider.isAdditional;
+              widget.habit.optional = stateProvider.isOptional;
 
               widget.habit.timeIntervalEnabled =
                   stateProvider.timeIntervalEnabled;

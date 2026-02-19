@@ -46,7 +46,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
         widget.habits
             .where(
               (habit) =>
-                  habit.categoryId == widget.category.id && !habit.additional,
+                  habit.categoryId == widget.category.id && !habit.optional,
             )
             .toList(); // It will not show additional habits/tasks
 

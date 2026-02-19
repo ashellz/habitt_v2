@@ -31,8 +31,8 @@ class OptionalHabitSwitch extends StatelessWidget {
               ),
             ),
             DefaultSwitch(
-              onTap: () => stateProvider.toggleAdditional(),
-              switchValue: stateProvider.isAdditional,
+              onTap: () => stateProvider.toggleOptional(),
+              switchValue: stateProvider.isOptional,
             ),
           ],
         ),

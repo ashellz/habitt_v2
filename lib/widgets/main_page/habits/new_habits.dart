@@ -63,8 +63,7 @@ class _NewHabitsState extends State<NewHabits>
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
 
-    final optionalHabitsCount =
-        habits.where((habit) => habit.additional).length;
+    final optionalHabitsCount = habits.where((habit) => habit.optional).length;
     final cp = context.watch<ColorProvider>();
 
     final habitsListHeight = MediaQuery.of(context).size.height / 2;

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/widgets/habits_page/additional_tasks/additional_tasks.dart';
+import 'package:habitt/widgets/habits_page/additional_tasks/optional_habits.dart';
 import 'package:habitt/widgets/habits_page/scroll_transformed_habit_category_title.dart';
 import 'package:habitt/widgets/default/scroll_transformed_habit_widget.dart';
 
@@ -58,7 +58,7 @@ class _HabitCategoryState extends State<HabitCategory> {
         widget.habits
             .where(
               (habit) =>
-                  habit.categoryId == widget.category.id && !habit.additional,
+                  habit.categoryId == widget.category.id && !habit.optional,
             )
             .toList(); // It will not show additional habits/tasks
 

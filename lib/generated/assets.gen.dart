@@ -36,6 +36,9 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/icons
   $AssetsImagesIconsGen get icons => const $AssetsImagesIconsGen();
 
+  /// Directory path: assets/images/new-svg
+  $AssetsImagesNewSvgGen get newSvg => const $AssetsImagesNewSvgGen();
+
   /// Directory path: assets/images/svg
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 
@@ -264,6 +267,10 @@ class $AssetsImagesIconsGen {
   AssetGenImage get notebook =>
       const AssetGenImage('assets/images/icons/notebook.png');
 
+  /// File path: assets/images/icons/notification.png
+  AssetGenImage get notification =>
+      const AssetGenImage('assets/images/icons/notification.png');
+
   /// File path: assets/images/icons/office.png
   AssetGenImage get office =>
       const AssetGenImage('assets/images/icons/office.png');
@@ -335,6 +342,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/streak.png
   AssetGenImage get streak =>
       const AssetGenImage('assets/images/icons/streak.png');
+
+  /// File path: assets/images/icons/subscription.png
+  AssetGenImage get subscription =>
+      const AssetGenImage('assets/images/icons/subscription.png');
 
   /// File path: assets/images/icons/swim.png
   AssetGenImage get swim => const AssetGenImage('assets/images/icons/swim.png');
@@ -451,6 +462,7 @@ class $AssetsImagesIconsGen {
     mosque,
     note,
     notebook,
+    notification,
     office,
     pen,
     pencil,
@@ -470,6 +482,7 @@ class $AssetsImagesIconsGen {
     stadium,
     strawberry,
     streak,
+    subscription,
     swim,
     tie,
     tooth,
@@ -485,6 +498,186 @@ class $AssetsImagesIconsGen {
     workout5,
     wrench,
     write,
+  ];
+}
+
+class $AssetsImagesNewSvgGen {
+  const $AssetsImagesNewSvgGen();
+
+  /// File path: assets/images/new-svg/add.svg
+  String get add => 'assets/images/new-svg/add.svg';
+
+  /// File path: assets/images/new-svg/all-habits.svg
+  String get allHabits => 'assets/images/new-svg/all-habits.svg';
+
+  /// File path: assets/images/new-svg/amount.svg
+  String get amount => 'assets/images/new-svg/amount.svg';
+
+  /// File path: assets/images/new-svg/arrow-left.svg
+  String get arrowLeft => 'assets/images/new-svg/arrow-left.svg';
+
+  /// File path: assets/images/new-svg/back.svg
+  String get back => 'assets/images/new-svg/back.svg';
+
+  /// File path: assets/images/new-svg/calendar.svg
+  String get calendar => 'assets/images/new-svg/calendar.svg';
+
+  /// File path: assets/images/new-svg/close.svg
+  String get close => 'assets/images/new-svg/close.svg';
+
+  /// File path: assets/images/new-svg/completed.svg
+  String get completed => 'assets/images/new-svg/completed.svg';
+
+  /// File path: assets/images/new-svg/completion-rate.svg
+  String get completionRate => 'assets/images/new-svg/completion-rate.svg';
+
+  /// File path: assets/images/new-svg/de.svg
+  String get de => 'assets/images/new-svg/de.svg';
+
+  /// File path: assets/images/new-svg/dropdown.svg
+  String get dropdown => 'assets/images/new-svg/dropdown.svg';
+
+  /// File path: assets/images/new-svg/edit.svg
+  String get edit => 'assets/images/new-svg/edit.svg';
+
+  /// File path: assets/images/new-svg/empty-box.svg
+  String get emptyBox => 'assets/images/new-svg/empty-box.svg';
+
+  /// File path: assets/images/new-svg/en.svg
+  String get en => 'assets/images/new-svg/en.svg';
+
+  /// File path: assets/images/new-svg/es.svg
+  String get es => 'assets/images/new-svg/es.svg';
+
+  /// File path: assets/images/new-svg/eye-shut.svg
+  String get eyeShut => 'assets/images/new-svg/eye-shut.svg';
+
+  /// File path: assets/images/new-svg/eye.svg
+  String get eye => 'assets/images/new-svg/eye.svg';
+
+  /// File path: assets/images/new-svg/heatmap.svg
+  String get heatmap => 'assets/images/new-svg/heatmap.svg';
+
+  /// File path: assets/images/new-svg/home.svg
+  String get home => 'assets/images/new-svg/home.svg';
+
+  /// File path: assets/images/new-svg/it.svg
+  String get it => 'assets/images/new-svg/it.svg';
+
+  /// File path: assets/images/new-svg/log-out.svg
+  String get logOut => 'assets/images/new-svg/log-out.svg';
+
+  /// File path: assets/images/new-svg/longest-streak.svg
+  String get longestStreak => 'assets/images/new-svg/longest-streak.svg';
+
+  /// File path: assets/images/new-svg/mid-day.svg
+  String get midDay => 'assets/images/new-svg/mid-day.svg';
+
+  /// File path: assets/images/new-svg/minus.svg
+  String get minus => 'assets/images/new-svg/minus.svg';
+
+  /// File path: assets/images/new-svg/morning.svg
+  String get morning => 'assets/images/new-svg/morning.svg';
+
+  /// File path: assets/images/new-svg/notifications.svg
+  String get notifications => 'assets/images/new-svg/notifications.svg';
+
+  /// File path: assets/images/new-svg/notify.svg
+  String get notify => 'assets/images/new-svg/notify.svg';
+
+  /// File path: assets/images/new-svg/per-session.svg
+  String get perSession => 'assets/images/new-svg/per-session.svg';
+
+  /// File path: assets/images/new-svg/plus.svg
+  String get plus => 'assets/images/new-svg/plus.svg';
+
+  /// File path: assets/images/new-svg/privacy-policy.svg
+  String get privacyPolicy => 'assets/images/new-svg/privacy-policy.svg';
+
+  /// File path: assets/images/new-svg/profile.svg
+  String get profile => 'assets/images/new-svg/profile.svg';
+
+  /// File path: assets/images/new-svg/rate.svg
+  String get rate => 'assets/images/new-svg/rate.svg';
+
+  /// File path: assets/images/new-svg/reorder.svg
+  String get reorder => 'assets/images/new-svg/reorder.svg';
+
+  /// File path: assets/images/new-svg/search.svg
+  String get search => 'assets/images/new-svg/search.svg';
+
+  /// File path: assets/images/new-svg/settings.svg
+  String get settings => 'assets/images/new-svg/settings.svg';
+
+  /// File path: assets/images/new-svg/skipped.svg
+  String get skipped => 'assets/images/new-svg/skipped.svg';
+
+  /// File path: assets/images/new-svg/stats.svg
+  String get stats => 'assets/images/new-svg/stats.svg';
+
+  /// File path: assets/images/new-svg/streak.svg
+  String get streak => 'assets/images/new-svg/streak.svg';
+
+  /// File path: assets/images/new-svg/terms.svg
+  String get terms => 'assets/images/new-svg/terms.svg';
+
+  /// File path: assets/images/new-svg/time.svg
+  String get time => 'assets/images/new-svg/time.svg';
+
+  /// File path: assets/images/new-svg/total-time.svg
+  String get totalTime => 'assets/images/new-svg/total-time.svg';
+
+  /// File path: assets/images/new-svg/upload-photo.svg
+  String get uploadPhoto => 'assets/images/new-svg/upload-photo.svg';
+
+  /// File path: assets/images/new-svg/wrap-up.svg
+  String get wrapUp => 'assets/images/new-svg/wrap-up.svg';
+
+  /// List of all assets
+  List<String> get values => [
+    add,
+    allHabits,
+    amount,
+    arrowLeft,
+    back,
+    calendar,
+    close,
+    completed,
+    completionRate,
+    de,
+    dropdown,
+    edit,
+    emptyBox,
+    en,
+    es,
+    eyeShut,
+    eye,
+    heatmap,
+    home,
+    it,
+    logOut,
+    longestStreak,
+    midDay,
+    minus,
+    morning,
+    notifications,
+    notify,
+    perSession,
+    plus,
+    privacyPolicy,
+    profile,
+    rate,
+    reorder,
+    search,
+    settings,
+    skipped,
+    stats,
+    streak,
+    terms,
+    time,
+    totalTime,
+    uploadPhoto,
+    wrapUp,
   ];
 }
 

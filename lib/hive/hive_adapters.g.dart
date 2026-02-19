@@ -32,7 +32,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       durationCompleted: fields[11] == null ? 0 : (fields[11] as num).toInt(),
       streak: fields[12] == null ? 0 : (fields[12] as num).toInt(),
       longestStreak: fields[15] == null ? 0 : (fields[15] as num).toInt(),
-      additional: fields[16] == null ? false : fields[16] as bool,
+      optional: fields[25] == null ? false : fields[25] as bool,
       timeIntervalEnabled: fields[17] == null ? false : fields[17] as bool,
       timeIntervalStart: fields[18] == null ? 420 : (fields[18] as num).toInt(),
       timeIntervalEnd: fields[19] == null ? 450 : (fields[19] as num).toInt(),
@@ -76,8 +76,6 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..write(obj.skipped)
       ..writeByte(15)
       ..write(obj.longestStreak)
-      ..writeByte(16)
-      ..write(obj.additional)
       ..writeByte(17)
       ..write(obj.timeIntervalEnabled)
       ..writeByte(18)
@@ -91,7 +89,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(23)
       ..write(obj.timestamps)
       ..writeByte(24)
-      ..write(obj.isDeleted);
+      ..write(obj.isDeleted)
+      ..writeByte(25)
+      ..write(obj.optional);
   }
 
   @override
