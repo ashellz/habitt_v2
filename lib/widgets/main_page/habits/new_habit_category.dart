@@ -59,8 +59,8 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
           // Using the new ScrollTransformedHabitCategoryTitle
           if (categoryHabits.isNotEmpty)
             NewHabitCategoryTitle(
+              isFirst: widget.isFirst,
               category: widget.category,
-              countAdditionalTasks: widget.showAdditionalTasks,
             ),
           for (final habit in categoryHabits) NewHabitWidget(habit: habit),
           if (widget.showAdditionalTasks) Container(),

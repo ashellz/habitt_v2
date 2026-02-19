@@ -105,48 +105,19 @@ class _NewHabitsState extends State<NewHabits>
       );
     }
 
-    final List<Category> categories =
-        widget.hasMainCategory
-            ? categoryProvider.categoriesOrdered
-            : categoryProvider.categories;
+    final List<Category> categories = categoryProvider.categoriesOrdered;
 
     return Column(
       children: [
         for (final category in categories)
           if (getCategoryLength(category, context, false, widget.daySelected) >
               0)
-            /*
-              // Check if category is first
-            if (category == categories.first && widget.hasMainCategory)
-              // Put it in a glass box with animated gradient
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: GlassFeelContainer(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return CustomPaint(
-                        painter: PulseAnimation(_animation.value, tp),
-                        child: NewHabitCategory(
-                          isToday: widget.daySelected == null,
-                          showAdditionalTasks: false,
-                          isFirst: true,
-                          category: category,
-                          habits: habits,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              )
-            else
-             */
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: NewHabitCategory(
                 isToday: widget.daySelected == null,
                 habits: habits,
+                isFirst: category == categories.first,
                 category: category,
                 showAdditionalTasks: false,
               ),

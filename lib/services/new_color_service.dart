@@ -108,6 +108,7 @@ class ColorProvider extends ChangeNotifier {
   late Color field;
   late Color habitIconBg;
   late Color widget;
+  late Color pill;
 
   ColorProvider() {
     _updateColors();
@@ -161,6 +162,7 @@ class ColorProvider extends ChangeNotifier {
       field = _Dark.field;
       habitIconBg = _Dark.border;
       widget = _Dark.field;
+      pill = _Dark.field;
     } else {
       bg = _Light.bg;
       habitBg = _Light.habitsBg;
@@ -186,6 +188,7 @@ class ColorProvider extends ChangeNotifier {
       field = _Light.field;
       habitIconBg = _Light.white10;
       widget = _Light.bg;
+      pill = _Light.black;
     }
   }
 }

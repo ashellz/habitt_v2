@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/category.dart';
-import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -146,7 +145,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
                 Category category = categoryProvider.categories[index];
                 if (widget.showAll) {
                   if (!hasHabits[index]) {
-                    return Container();
+                    return SizedBox.shrink();
                   }
                 }
 

@@ -103,7 +103,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
           Color getBgColor() {
             if (isSelected) {
-              return cp.widget;
+              return cp.pill;
             }
             return Colors.transparent;
           }
