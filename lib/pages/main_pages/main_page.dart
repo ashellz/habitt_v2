@@ -299,7 +299,7 @@ class NewHabitWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(
-        color: cp.habit,
+        color: cp.widget,
         shape: RoundedRectangleBorder(
           side: BorderSide(width: 1, color: cp.border),
           borderRadius: BorderRadius.circular(24),
