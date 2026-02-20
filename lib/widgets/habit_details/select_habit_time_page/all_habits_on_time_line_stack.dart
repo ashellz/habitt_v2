@@ -604,10 +604,9 @@ class _HabitTile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Image.asset(
+                              Text(
                                 habit.iconPath,
-                                width: 24,
-                                height: 24,
+                                style: const TextStyle(fontSize: 20),
                               ),
                               const SizedBox(width: 4),
                               // Always cap width; fall back to a safe width when unbounded to avoid infinite constraints.
@@ -686,7 +685,7 @@ class _PrimaryHabitTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(config.iconPath, width: 24, height: 24),
+                Text(config.iconPath, style: const TextStyle(fontSize: 20)),
                 Text(
                   config.name,
                   style: TextStyle(

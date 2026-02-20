@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/generated/assets.gen.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/emoji_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -150,7 +150,7 @@ class StateProvider extends ChangeNotifier {
     habitAmountLabelController.clear();
     nameController.clear();
     descController.clear();
-    _iconPath = Assets.images.icons.book.path;
+    _iconPath = EmojiService.defaultEmoji;
     _isOptional = false;
 
     _timeIntervalEnabled = false;

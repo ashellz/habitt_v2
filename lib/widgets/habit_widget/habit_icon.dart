@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/other_pages/icons_page.dart';
+import 'package:habitt/pages/other_pages/emoji_picker_page.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class HabitIcon extends StatelessWidget {
   const HabitIcon({
@@ -22,6 +24,7 @@ class HabitIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stateProvider = context.read<StateProvider>();
     return InkWell(
       splashFactory: NoSplash.splashFactory,
       enableFeedback: false,
@@ -29,7 +32,8 @@ class HabitIcon extends StatelessWidget {
         if (editable) {
           Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => IconsPage()));
+          ).push(MaterialPageRoute(builder: (context) => EmojiPickerPage()));
+          //_showEmojiKeyboardDialog(context, stateProvider);
         }
       },
       child: Container(
@@ -57,10 +61,59 @@ class HabitIcon extends StatelessWidget {
             key: ValueKey<String>(habit.iconPath),
             duration: const Duration(milliseconds: 150),
             opacity: habit.completed || habit.skipped ? 0.5 : 1,
-            child: Image.asset(habit.iconPath),
+            child: Center(
+              child: Text(habit.iconPath, style: const TextStyle(fontSize: 28)),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  void _showEmojiKeyboardDialog(
+    BuildContext context,
+    StateProvider stateProvider,
+  ) {
+    final textController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: tp.backgroundColor,
+            title: const Text('Select Emoji'),
+            content: TextField(
+              controller: textController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: 'Type or paste emoji...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  // Save the last character if it's a single emoji
+                  stateProvider.iconPath = value;
+                }
+              },
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (textController.text.isNotEmpty) {
+                    stateProvider.iconPath = textController.text;
+                  }
+                  Navigator.pop(context);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          ),
     );
   }
 }
