@@ -34,6 +34,9 @@ class NewHabitWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
             ),
+            child: Center(
+              child: Text(habit.iconPath, style: const TextStyle(fontSize: 22)),
+            ),
           ),
         ],
       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/generated/assets.gen.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/services/emoji_service.dart';
 import 'package:habitt/widgets/habit_widget/habit_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -48,9 +48,7 @@ class SelectedHabitDisplay extends StatelessWidget {
                       name: value.text == "" ? "Habit name" : value.text,
                       description: descController.text,
                       iconPath:
-                          iconPath == ""
-                              ? Assets.images.icons.book.path
-                              : iconPath,
+                          iconPath == "" ? EmojiService.defaultEmoji : iconPath,
                       streak: streak,
                       amount: amount,
                       duration: duration,
