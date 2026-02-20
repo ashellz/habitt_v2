@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/category.dart';
-import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/get_localized_category_name.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +14,8 @@ class NewSelectCategoryWidget extends StatelessWidget {
     required this.habitsCount,
     required this.standardColor,
     this.selectedDay,
+    this.isFirst = false,
+    this.isLast = false,
   });
 
   final Category category;
@@ -23,6 +23,8 @@ class NewSelectCategoryWidget extends StatelessWidget {
   final bool habitsCount;
   final bool standardColor;
   final DateTime? selectedDay;
+  final bool isFirst;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +39,9 @@ class NewSelectCategoryWidget extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.only(
-          right: category.id == 4 ? 16.0 : 8.0,
-          left: category.id == 0 ? 16.0 : 0,
-        ), // Add left padding for the first item
+          right: isLast ? 16.0 : 8.0,
+          left: isFirst ? 16.0 : 0,
+        ),
         child: Container(
           decoration: ShapeDecoration(
             shape: StadiumBorder(),

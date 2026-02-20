@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/widgets/habits_page/additional_tasks/optional_habits_divider.dart';
 import 'package:habitt/widgets/default/scroll_transformed_habit_widget.dart';
 
@@ -54,7 +55,7 @@ class _OptionalHabitsState extends State<OptionalHabits> {
         widget.habits
             .where(
               (habit) =>
-                  habit.additional &&
+                  habit.optional &&
                   (widget.category != null
                       ? habit.categoryId == widget.category!.id
                       : true),

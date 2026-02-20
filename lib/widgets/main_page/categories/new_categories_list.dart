@@ -3,7 +3,6 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/main_page/categories/new_select_category.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +11,12 @@ class NewCategoriesList extends StatefulWidget {
     super.key,
     this.topPadding = 16,
     this.standardColor = false,
-    this.showAll = true,
     this.habitsCount = true,
     this.selectedDay,
   });
 
   final double topPadding;
   final bool standardColor;
-  final bool showAll;
   final bool habitsCount;
   final DateTime? selectedDay;
 
@@ -49,47 +46,93 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     super.dispose();
   }
 
+  List<int> _visibleCategoryIds(List habitsList) {
+    final categoryProvider = context.read<CategoryProvider>();
+    final visibleIds = <int>[];
+
+    visibleIds.add(0);
+
+    for (final category in categoryProvider.categories) {
+      final hasHabits =
+          habitsList
+              .where((habit) => habit.categoryId == category.id)
+              .isNotEmpty;
+      if (!hasHabits) {
+        continue;
+      }
+
+      visibleIds.add(category.id);
+    }
+
+    return visibleIds;
+  }
+
+  void _animateToTab(int index, List<double> itemWidths, double viewportWidth) {
+    final leading = itemWidths.take(index).fold(0.0, (sum, w) => sum + w);
+    final selectedWidth = itemWidths[index];
+    final itemCenterOffset = leading + (selectedWidth / 2);
+    debugPrint(
+      "Leading: $leading, Selected width: $selectedWidth, Item center offset: $itemCenterOffset",
+    );
+    final targetScroll = itemCenterOffset - ((viewportWidth + 32) / 2);
+    debugPrint("Calculated target scroll: $targetScroll");
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+
+    final clamped = targetScroll.clamp(0.0, maxScroll);
+    debugPrint("Clamped target scroll: $clamped (Max scroll: $maxScroll)");
+    _scrollController.animateTo(
+      clamped,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   void _scrollToSelectedCategory() {
     if (!_scrollController.hasClients) return;
 
-    final stateProvider = context.read<StateProvider>();
+    final categoryProvider = context.read<CategoryProvider>();
+    final habitProvider = context.read<HabitProvider>();
+    final habitsList =
+        widget.selectedDay == null
+            ? habitProvider.habits
+            : habitProvider.getHabitsFromDay(widget.selectedDay!);
 
-    // Determine the selected ID within the currently visible items.
-    final selectedId = stateProvider.habitCategoryId;
+    final selectedId = categoryProvider.selectedCategoryId;
+    final visibleIds = _visibleCategoryIds(habitsList);
+    for (var id in visibleIds) {
+      debugPrint("Visible category ID: $id");
+    }
+    final index = visibleIds.indexOf(selectedId);
+    if (index == -1) return;
 
-    // Defer measurement to next frame to ensure layout is up-to-date.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_scrollController.hasClients) return;
 
       final listContext = _listKey.currentContext;
-      final itemKey = _itemKeys[selectedId] ?? _itemKeys[0];
-      final itemContext = itemKey?.currentContext;
-
-      if (listContext == null || itemContext == null) return;
+      if (listContext == null) return;
 
       final listBox = listContext.findRenderObject() as RenderBox?;
-      final itemBox = itemContext.findRenderObject() as RenderBox?;
-      if (listBox == null || itemBox == null) return;
+      if (listBox == null) return;
 
       final viewportWidth = _scrollController.position.viewportDimension;
+      debugPrint("Viewport width: $viewportWidth");
+      final listWidth = listBox.size.width;
+      debugPrint("List width: $listWidth");
+      final deviceWidth = MediaQuery.of(context).size.width;
+      debugPrint("Device width: $deviceWidth");
       if (viewportWidth == 0) return;
 
-      // Position of the item relative to the ListView's coordinate space.
-      final itemOffset = itemBox.localToGlobal(Offset.zero, ancestor: listBox);
-      final itemCenterX = itemOffset.dx + (itemBox.size.width / 2);
+      final itemWidths = <double>[];
+      for (final id in visibleIds) {
+        final itemContext = _itemKeys[id]?.currentContext;
+        final itemBox = itemContext?.findRenderObject() as RenderBox?;
+        if (itemBox == null) return;
+        itemWidths.add(itemBox.size.width);
+      }
 
-      final currentScroll = _scrollController.offset;
-      final targetScroll = (currentScroll + itemCenterX) - (viewportWidth / 2);
-      final clamped = targetScroll.clamp(
-        _scrollController.position.minScrollExtent,
-        _scrollController.position.maxScrollExtent,
-      );
-
-      _scrollController.animateTo(
-        clamped,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      if (index >= itemWidths.length) return;
+      _animateToTab(index, itemWidths, viewportWidth);
     });
   }
 
@@ -103,6 +146,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
             ? habitProvider.habits
             : habitProvider.getHabitsFromDay(widget.selectedDay!);
     final List<bool> hasHabits = [];
+    final List<Category> visibleCategories = [];
 
     for (Category category in categoryProvider.categories) {
       int categoryHabits =
@@ -111,6 +155,16 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
               .toList()
               .length;
       hasHabits.add(categoryHabits > 0);
+    }
+
+    visibleCategories.add(Category(id: 0, name: localizations.all));
+
+    for (int index = 0; index < categoryProvider.categories.length; index++) {
+      final category = categoryProvider.categories[index];
+      if (!hasHabits[index]) {
+        continue;
+      }
+      visibleCategories.add(category);
     }
 
     return Padding(
@@ -124,30 +178,9 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
           physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           children: [
-            if (widget.showAll)
-              KeyedSubtree(
-                key: _keyFor(0),
-                child: NewSelectCategoryWidget(
-                  selectedDay: widget.selectedDay,
-                  standardColor: widget.standardColor,
-                  habitsCount: widget.habitsCount,
-                  category: Category(id: 0, name: localizations.all),
-                  onTap: () {
-                    categoryProvider.selectCategory(0);
-                    _scrollToSelectedCategory();
-                  },
-                ),
-              ),
             Row(
-              children: List.generate(categoryProvider.categories.length, (
-                index,
-              ) {
-                Category category = categoryProvider.categories[index];
-                if (widget.showAll) {
-                  if (!hasHabits[index]) {
-                    return SizedBox.shrink();
-                  }
-                }
+              children: List.generate(visibleCategories.length, (index) {
+                final category = visibleCategories[index];
 
                 return KeyedSubtree(
                   key: _keyFor(category.id),
@@ -156,7 +189,13 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
                     standardColor: widget.standardColor,
                     habitsCount: widget.habitsCount,
                     category: category,
+                    isFirst: index == 0,
+                    isLast: index == visibleCategories.length - 1,
                     onTap: () {
+                      if (category.id == categoryProvider.selectedCategoryId) {
+                        return;
+                      }
+
                       categoryProvider.selectCategory(category.id);
                       _scrollToSelectedCategory();
                     },

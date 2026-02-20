@@ -16,29 +16,39 @@ class MainPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: cp.bg,
-      body: ListView(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      body: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: MainPageTopSection(),
+          Column(
+            children: [
+              Expanded(flex: 2, child: Container(color: cp.bg)),
+              Expanded(child: Container(color: cp.habitBg)),
+            ],
           ),
-          SizedBox(height: 20),
-          Container(
-            color: cp.habitBg,
-            child: Column(
-              children: [
-                NewCategoriesList(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    bottom: 138,
-                  ),
-                  child: NewHabits(),
+          ListView(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: MainPageTopSection(),
+              ),
+              SizedBox(height: 20),
+              Container(
+                color: cp.habitBg,
+                child: Column(
+                  children: [
+                    NewCategoriesList(),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        bottom: 138,
+                      ),
+                      child: NewHabits(),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
