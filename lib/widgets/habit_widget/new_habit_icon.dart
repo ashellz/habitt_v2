@@ -4,9 +4,14 @@ import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitIcon extends StatelessWidget {
-  const NewHabitIcon({super.key, required this.iconPath});
+  const NewHabitIcon({
+    super.key,
+    required this.iconPath,
+    required this.isCompleted,
+  });
 
   final String iconPath;
+  final bool isCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class NewHabitIcon extends StatelessWidget {
       height: 42,
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: cp.habitIconBg,
+        color: isCompleted ? cp.bg : cp.habitIconBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
       padding: const EdgeInsets.all(9),

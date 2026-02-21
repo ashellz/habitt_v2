@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/services/new_color_service.dart';
-import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 
@@ -20,16 +18,19 @@ class NewHabitWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(
-        color: cp.widget,
+        color: habit.completed ? cp.main.withOpacity(0.1) : cp.widget,
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: cp.border),
+          side: BorderSide(
+            width: 1,
+            color: habit.completed ? cp.main.withOpacity(0.2) : cp.border,
+          ),
           borderRadius: BorderRadius.circular(24),
         ),
       ),
       child: Row(
         spacing: 16,
         children: [
-          NewHabitIcon(iconPath: habit.iconPath),
+          NewHabitIcon(iconPath: habit.iconPath, isCompleted: habit.completed),
           MainHabitInfo(habit: habit, cp: cp),
         ],
       ),
