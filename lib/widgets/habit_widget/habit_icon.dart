@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/other_pages/emoji_picker_page.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,10 +29,8 @@ class HabitIcon extends StatelessWidget {
       enableFeedback: false,
       onTap: () {
         if (editable) {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => EmojiPickerPage()));
-          //_showEmojiKeyboardDialog(context, stateProvider);
+          // Navigator.of(context).push(MaterialPageRoute(builder: (context) => EmojiPickerPage()));
+          _showEmojiKeyboardDialog(context, stateProvider);
         }
       },
       child: Container(
