@@ -4,7 +4,6 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
@@ -23,7 +22,6 @@ class NewHabits extends StatefulWidget {
 class _NewHabitsState extends State<NewHabits>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
   late List<Habit> habits;
 
   @override
@@ -33,7 +31,6 @@ class _NewHabitsState extends State<NewHabits>
       vsync: this,
       duration: const Duration(seconds: 5),
     )..repeat(reverse: true);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
     habits = _getHabits();
   }
