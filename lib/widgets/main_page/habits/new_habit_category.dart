@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/main_pages/main_page.dart';
+import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_category_title.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_widget.dart';
 
 class NewHabitCategory extends StatefulWidget {
