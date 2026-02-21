@@ -26,7 +26,20 @@ class NewHabitIcon extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
       padding: const EdgeInsets.all(9),
-      child: Center(child: TextIcon(iconPath, size: 24)),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 150),
+        transitionBuilder:
+            (child, animation) =>
+                ScaleTransition(scale: animation, child: child),
+        switchInCurve: Curves.decelerate,
+        switchOutCurve: Curves.decelerate,
+        child: AnimatedOpacity(
+          key: ValueKey<String>(iconPath),
+          duration: const Duration(milliseconds: 150),
+          opacity: 1.0,
+          child: Center(child: TextIcon(iconPath, size: 24)),
+        ),
+      ),
     );
   }
 }
