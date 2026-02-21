@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
+import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 
 import 'package:provider/provider.dart';
 
@@ -23,7 +26,13 @@ class NewHabitWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
         ),
       ),
-      child: Row(children: [NewHabitIcon(iconPath: habit.iconPath)]),
+      child: Row(
+        spacing: 16,
+        children: [
+          NewHabitIcon(iconPath: habit.iconPath),
+          MainHabitInfo(habit: habit, cp: cp),
+        ],
+      ),
     );
   }
 }
