@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 
 import 'package:provider/provider.dart';
 
@@ -22,24 +23,7 @@ class NewHabitWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
         ),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            clipBehavior: Clip.antiAlias,
-            decoration: ShapeDecoration(
-              color: cp.habitIconBg,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-            child: Center(
-              child: Text(habit.iconPath, style: const TextStyle(fontSize: 22)),
-            ),
-          ),
-        ],
-      ),
+      child: Row(children: [NewHabitIcon(iconPath: habit.iconPath)]),
     );
   }
 }
