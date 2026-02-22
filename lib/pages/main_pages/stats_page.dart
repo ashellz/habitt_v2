@@ -3,7 +3,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
-import 'package:habitt/widgets/stats_page/all_habits_completed_streak.dart';
+import 'package:habitt/widgets/stats_page/perfect_days_streak.dart';
 import 'package:habitt/widgets/stats_page/completed_habits.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
