@@ -18,7 +18,7 @@ class TextIcon extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.contain,
           child: Text(
-            isOld ? "❌" : text,
+            isOld ? "📘" : text,
             textAlign: TextAlign.center,
             textHeightBehavior: const TextHeightBehavior(
               applyHeightToFirstAscent: false,
