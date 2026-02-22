@@ -49,9 +49,7 @@ class _StatsPageState extends State<StatsPage> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    AllHabitsCompletedStreak(
-                      tooltipController: _tooltipController,
-                    ),
+                    PerfectDaysStreak(tooltipController: _tooltipController),
                     SizedBox(height: 12),
                     CompletedHabits(),
                   ],

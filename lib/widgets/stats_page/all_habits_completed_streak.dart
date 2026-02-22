@@ -5,8 +5,8 @@ import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-class AllHabitsCompletedStreak extends StatelessWidget {
-  const AllHabitsCompletedStreak({super.key, required this.tooltipController});
+class PerfectDaysStreak extends StatelessWidget {
+  const PerfectDaysStreak({super.key, required this.tooltipController});
 
   final SuperTooltipController tooltipController;
 
