@@ -11,18 +11,14 @@ class NewPerfectDaysStreak extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final statsProvider = context.watch<StatsProvider>();
+    if (statsProvider.perfectDaysStreak == 0) {
+      return SizedBox.shrink();
+    }
 
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1,
-            strokeAlign: BorderSide.strokeAlignOutside,
-            color: Colors.white,
-          ),
-          borderRadius: BorderRadius.circular(32),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
       ),
       child: Stack(
         children: [
@@ -72,7 +68,7 @@ class NewPerfectDaysStreak extends StatelessWidget {
                     Text(
                       'You are doing really great!',
                       style: TextStyle(
-                        color: cp.text.withValues(alpha: 0.60),
+                        color: cp.text.withValues(alpha: 0.7),
                         fontSize: 13,
                       ),
                     ),
