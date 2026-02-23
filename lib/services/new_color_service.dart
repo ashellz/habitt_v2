@@ -151,9 +151,9 @@ class ColorProvider extends ChangeNotifier {
       lightGreyText = _Dark.lightGrayText;
       disabled = _Dark.disabled;
       progressBarSelected = _Dark.border;
-      leftOrangeGraident = _Dark.orange;
-      rightOrangeGradient = _Dark.lightOrange;
-      orange = Colors.transparent;
+      leftOrangeGraident = _Dark.lightOrange;
+      rightOrangeGradient = _Dark.orange;
+      orange = Colors.orange.withOpacity(0);
       orange100 = _Dark.orange100;
       orange200 = _Dark.orange200;
       orange300 = _Dark.orange300;
