@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/main_pages/main_page.dart';
 import 'package:habitt/pages/main_pages/calendar_page.dart';
@@ -175,6 +177,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         : -MediaQuery.of(context).padding.bottom
                     : 0,
             child: SafeArea(
+              bottom: Platform.isIOS ? true : false,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -196,10 +196,12 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
     return Expanded(
       child: Container(
         height: 95,
+
         width: double.infinity,
-        padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+        padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 28),
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: cp.border, width: 1)),
+          color: cp.bg,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

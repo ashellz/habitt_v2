@@ -49,10 +49,12 @@ class _MainPageTopSectionState extends State<MainPageTopSection> {
               ),
             ],
           ),
-          LastWeekProgress(),
-          NewPerfectDaysStreak(),
+          LastWeekProgress(), // 79
+          NewPerfectDaysStreak(), // 82
         ],
       ),
     );
   }
 }
+
+// if has bigger streak 60 + 79 + 82 else 40 + 79 + 0
