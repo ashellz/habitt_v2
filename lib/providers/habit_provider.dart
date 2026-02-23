@@ -243,11 +243,12 @@ class HabitProvider extends ChangeNotifier {
     int id,
     BuildContext context,
     StateProvider stateProvider, {
-    required DateTime day,
+    required DateTime? day,
   }) async {
     late Habit habit;
 
     final today = DateTime.now();
+    day ??= today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(day.year, day.month, day.day);
 

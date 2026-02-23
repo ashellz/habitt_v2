@@ -3,6 +3,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
+import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
 
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,7 @@ class NewHabitWidget extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
       decoration: ShapeDecoration(
         color: habit.completed ? cp.main.withOpacity(0.1) : cp.widget,
         shape: RoundedRectangleBorder(
@@ -31,7 +32,8 @@ class NewHabitWidget extends StatelessWidget {
         spacing: 16,
         children: [
           NewHabitIcon(iconPath: habit.iconPath, isCompleted: habit.completed),
-          MainHabitInfo(habit: habit, cp: cp),
+          Expanded(child: MainHabitInfo(habit: habit, cp: cp)),
+          NewHabitProgress(habit: habit),
         ],
       ),
     );
