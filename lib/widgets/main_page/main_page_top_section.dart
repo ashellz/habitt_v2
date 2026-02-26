@@ -57,4 +57,13 @@ class _MainPageTopSectionState extends State<MainPageTopSection> {
   }
 }
 
-// if has bigger streak 60 + 79 + 82 else 40 + 79 + 0
+// MediaQuery.of(context).padding.top - top safe area
+// 20 - top padding
+// 60/40 - spacing
+// 79 - LastWeekProgress
+// 82 - NewPerfectDaysStreak
+// 20 - bottom padding
+// if has bigger streak
+// TOPPADDING + 20 + 60 + 79 + 82 + 20
+// else
+// 20 + 40 + 79 + 20
