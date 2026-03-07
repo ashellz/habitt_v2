@@ -219,7 +219,10 @@ class _NewHabitsState extends State<NewHabits>
           height: 40,
           label: "Add new",
           onPressed: () {},
-          prefix: SvgPicture.asset("assets/images/new-svg/add.svg"),
+          prefix: SvgPicture.asset(
+            "assets/images/new-svg/add.svg",
+            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+          ),
         ),
 
         if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
