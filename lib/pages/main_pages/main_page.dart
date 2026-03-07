@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/main_page/main_page_top_section.dart';
 import 'package:provider/provider.dart';
-
-import 'package:habitt/models/category.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -38,13 +38,21 @@ class MainPage extends StatelessWidget {
                   children: [
                     NewCategoriesList(),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        bottom: 138,
-                      ),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
                       child: NewHabits(),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      child: NewDefaultButton.secondary(
+                        height: 40,
+                        label: "Add new",
+                        onPressed: () {},
+                        prefix: SvgPicture.asset(
+                          "assets/images/new-svg/add.svg",
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 138),
                   ],
                 ),
               ),
