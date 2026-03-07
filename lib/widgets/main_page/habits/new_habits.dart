@@ -4,6 +4,7 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
@@ -35,6 +36,38 @@ class _NewHabitsState extends State<NewHabits>
     habits = _getHabits();
   }
 
+  double _calculateHabitsListHeight(
+    BuildContext context,
+    int perfectDaysStreak,
+  ) {
+    final topPadding = MediaQuery.of(context).padding.top;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    const bottomNavBar = 178;
+
+    final baseHeight =
+        topPadding +
+        20 +
+        40 +
+        79 +
+        20 +
+        (36 + 40) +
+        bottomNavBar +
+        bottomPadding;
+    final baseHeightWithStreak =
+        topPadding +
+        20 +
+        60 +
+        79 +
+        82 +
+        20 +
+        (36 + 40) +
+        bottomNavBar +
+        bottomPadding;
+
+    final height = perfectDaysStreak > 0 ? baseHeightWithStreak : baseHeight;
+    return MediaQuery.of(context).size.height - height;
+  }
+
   List<Habit> _getHabits() {
     debugPrint(
       "Getting habits for Habits widget ======================================== new DAY SELECTED: ${widget.daySelected} ",
@@ -63,7 +96,11 @@ class _NewHabitsState extends State<NewHabits>
     final optionalHabitsCount = habits.where((habit) => habit.optional).length;
     final cp = context.watch<ColorProvider>();
 
-    final habitsListHeight = MediaQuery.of(context).size.height / 2;
+    final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
+    final habitsListHeight = _calculateHabitsListHeight(
+      context,
+      perfectDaysStreak,
+    );
 
     if (habits.isEmpty) {
       return SizedBox(

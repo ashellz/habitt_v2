@@ -13,6 +13,8 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    const bottomNavBar = 86;
 
     return Scaffold(
       backgroundColor: cp.bg,
@@ -52,7 +54,7 @@ class MainPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 138),
+                    SizedBox(height: bottomPadding + bottomNavBar),
                   ],
                 ),
               ),
