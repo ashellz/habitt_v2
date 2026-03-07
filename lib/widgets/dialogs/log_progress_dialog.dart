@@ -46,7 +46,10 @@ class LogProgressDialog extends StatelessWidget {
       spacing: 16,
       children: [
         if (progressType == ProgressType.amount)
-          AmountProgressInput()
+          AmountProgressInput(
+            amount: habit.amount,
+            amountCompleted: habit.amountCompleted,
+          )
         else
           DurationProgressInput(),
         target(cp),
@@ -148,7 +151,14 @@ class LogProgressDialog extends StatelessWidget {
 }
 
 class AmountProgressInput extends StatelessWidget {
-  const AmountProgressInput({super.key});
+  const AmountProgressInput({
+    super.key,
+    required this.amount,
+    required this.amountCompleted,
+  });
+
+  final int amount;
+  final int amountCompleted;
 
   @override
   Widget build(BuildContext context) {
