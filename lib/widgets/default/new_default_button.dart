@@ -73,59 +73,60 @@ class NewDefaultButton extends StatelessWidget {
 
     final Color resolvedTextColor = textColor ?? bestContrastingOn(buttonColor);
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: AnimatedOpacity(
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 150),
+      opacity: enabled ? 1 : 0.5,
+      child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        opacity: enabled ? 1 : 0.5,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          height: height,
-          width: double.infinity,
-          curve: Curves.easeOut,
-          child: IgnorePointer(
-            ignoring: !enabled,
-            child: ElevatedButton(
-              onPressed: () => enabled && !isLoading ? onPressed() : null,
-              style: ElevatedButton.styleFrom(
-                splashFactory: isAndroid ? null : NoSplash.splashFactory,
-                elevation: 0,
-                backgroundColor: buttonColor,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(24)),
-                ),
+        height: height,
+        width: double.infinity,
+        curve: Curves.easeOut,
+        child: IgnorePointer(
+          ignoring: !enabled,
+          child: ElevatedButton(
+            onPressed: () => enabled && !isLoading ? onPressed() : null,
+            style: ElevatedButton.styleFrom(
+              splashFactory: isAndroid ? null : NoSplash.splashFactory,
+              elevation: 0,
+              backgroundColor: buttonColor,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(24)),
               ),
-              child:
-                  isLoading
-                      ? SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            resolvedTextColor,
+            ),
+            child:
+                isLoading
+                    ? SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          resolvedTextColor,
+                        ),
+                      ),
+                    )
+                    : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (prefix != null) ...[
+                          prefix!,
+                          const SizedBox(width: 10),
+                        ],
+                        Text(
+                          label,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: resolvedTextColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      )
-                      : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (prefix != null) ...[
-                            prefix!,
-                            const SizedBox(width: 10),
-                          ],
-                          Text(
-                            label,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            style: TextStyle(color: resolvedTextColor),
-                          ),
-                        ],
-                      ),
-            ),
+                      ],
+                    ),
           ),
         ),
       ),
