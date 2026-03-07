@@ -215,13 +215,16 @@ class _NewHabitsState extends State<NewHabits>
           // child additional tasks
         ),
 
-        NewDefaultButton.secondary(
-          height: 40,
-          label: "Add new",
-          onPressed: () {},
-          prefix: SvgPicture.asset(
-            "assets/images/new-svg/add.svg",
-            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: NewDefaultButton.secondary(
+            height: 40,
+            label: "Add new",
+            onPressed: () {},
+            prefix: SvgPicture.asset(
+              "assets/images/new-svg/add.svg",
+              colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+            ),
           ),
         ),
 

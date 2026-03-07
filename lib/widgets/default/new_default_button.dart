@@ -85,13 +85,26 @@ class NewDefaultButton extends StatelessWidget {
           ignoring: !enabled,
           child: ElevatedButton(
             onPressed: () => enabled && !isLoading ? onPressed() : null,
-            style: ElevatedButton.styleFrom(
+            style: ButtonStyle(
               splashFactory: isAndroid ? null : NoSplash.splashFactory,
-              elevation: 0,
-              backgroundColor: buttonColor,
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(24)),
+              elevation: const WidgetStatePropertyAll(0),
+              overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                if (!states.contains(WidgetState.pressed)) {
+                  return null;
+                }
+
+                if (isAndroid) {
+                  return Colors.white;
+                }
+
+                return Colors.white.withValues(alpha: 0.2);
+              }),
+              backgroundColor: WidgetStatePropertyAll(buttonColor),
+              shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+              shape: const WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(24)),
+                ),
               ),
             ),
             child:
