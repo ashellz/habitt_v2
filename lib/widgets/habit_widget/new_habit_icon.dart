@@ -17,7 +17,9 @@ class NewHabitIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.linear,
       width: 42,
       height: 42,
       clipBehavior: Clip.antiAlias,

@@ -62,7 +62,8 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
               isFirst: widget.isFirst,
               category: widget.category,
             ),
-          for (final habit in categoryHabits) NewHabitWidget(habit: habit),
+          for (final habit in categoryHabits)
+            NewHabitWidget(key: ValueKey(habit.id), habit: habit),
           if (widget.showOptionalHabits) Container(),
           // additional tasks
         ],
