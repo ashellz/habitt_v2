@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/services/new_color_service.dart';
-import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,7 @@ class LogProgressDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 20,
-          children: [titleAndDesc(cp), progress(cp), buttons(cp)],
+          children: [titleAndDesc(cp), progress(cp), buttons(cp, context)],
         ),
       ),
     );
@@ -44,6 +43,7 @@ class LogProgressDialog extends StatelessWidget {
 
   Widget progress(ColorProvider cp) {
     return Column(
+      spacing: 16,
       children: [
         if (progressType == ProgressType.amount)
           AmountProgressInput()
@@ -54,16 +54,26 @@ class LogProgressDialog extends StatelessWidget {
     );
   }
 
-  Row buttons(ColorProvider cp) {
+  Row buttons(ColorProvider cp, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       spacing: 8,
       children: [
         Expanded(
-          child: NewDefaultButton.secondary(onPressed: () {}, label: "Cancel"),
+          child: NewDefaultButton.secondary(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            label: "Cancel",
+          ),
         ),
         Expanded(
-          child: NewDefaultButton.primary(onPressed: () {}, label: "Save"),
+          child: NewDefaultButton.primary(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            label: "Save",
+          ),
         ),
       ],
     );
