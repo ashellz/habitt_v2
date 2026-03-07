@@ -40,7 +40,7 @@ class NewDefaultButton extends StatelessWidget {
     this.prefix,
     this.height = 52,
   }) : color = null,
-       textColor = Colors.black,
+       textColor = null,
        _variant = _ButtonVariant.secondary;
 
   final Function onPressed;
