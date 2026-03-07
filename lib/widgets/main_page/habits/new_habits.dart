@@ -77,8 +77,6 @@ class _NewHabitsState extends State<NewHabits>
     const double habitHeight = 74; // 42 icon + 32 padding
     const double categoryTopPadding = 12;
     const double categorySpacing = 10;
-    const double addButtonHeight = 40;
-    const double addButtonTopSpacing = 20;
 
     double totalHeight = 0;
 
@@ -105,9 +103,6 @@ class _NewHabitsState extends State<NewHabits>
         totalHeight += (categorySpacing * (categoryLength - 1));
       }
     }
-
-    // Add "Add new" button height
-    totalHeight += addButtonTopSpacing + addButtonHeight;
 
     return totalHeight;
   }
@@ -164,6 +159,15 @@ class _NewHabitsState extends State<NewHabits>
       );
     }
 
+    final List<Category> categories = categoryProvider.categoriesOrdered;
+
+    // Calculate remaining height for bottom spacing
+    final contentHeight = _calculateContentHeight(categories, context);
+    final bottomSpacing = (habitsListHeight - contentHeight).clamp(
+      0.0,
+      double.infinity,
+    );
+
     if (selectedCategoryId != 0) {
       return Column(
         children: [
@@ -179,18 +183,10 @@ class _NewHabitsState extends State<NewHabits>
               ),
             ),
           ),
+          if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
         ],
       );
     }
-
-    final List<Category> categories = categoryProvider.categoriesOrdered;
-
-    // Calculate remaining height for bottom spacing
-    final contentHeight = _calculateContentHeight(categories, context);
-    final bottomSpacing = (habitsListHeight - contentHeight).clamp(
-      0.0,
-      double.infinity,
-    );
 
     return Column(
       children: [

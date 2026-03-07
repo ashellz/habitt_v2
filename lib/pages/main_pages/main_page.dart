@@ -15,7 +15,6 @@ class MainPage extends StatelessWidget {
     const bottomNavBar = 86;
 
     return Scaffold(
-      backgroundColor: cp.bg,
       body: Stack(
         children: [
           Column(
