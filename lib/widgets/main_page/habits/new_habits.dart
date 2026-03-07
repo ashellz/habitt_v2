@@ -7,6 +7,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/get_category_length.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
 import 'package:provider/provider.dart';
 
@@ -66,6 +67,49 @@ class _NewHabitsState extends State<NewHabits>
 
     final height = perfectDaysStreak > 0 ? baseHeightWithStreak : baseHeight;
     return MediaQuery.of(context).size.height - height;
+  }
+
+  double _calculateContentHeight(
+    List<Category> categories,
+    BuildContext context,
+  ) {
+    const double categoryTitleHeight = 26;
+    const double habitHeight = 74; // 42 icon + 32 padding
+    const double categoryTopPadding = 12;
+    const double categorySpacing = 10;
+    const double addButtonHeight = 40;
+    const double addButtonTopSpacing = 20;
+
+    double totalHeight = 0;
+
+    for (final category in categories) {
+      final categoryLength = getCategoryLength(
+        category,
+        context,
+        false,
+        widget.daySelected,
+      );
+
+      if (categoryLength > 0) {
+        // Add category top padding
+        totalHeight += categoryTopPadding;
+
+        // Add category title height
+        totalHeight += categoryTitleHeight;
+
+        // Add spacing after title
+        totalHeight += categorySpacing;
+
+        // Add all habits with spacing between them
+        totalHeight += (habitHeight * categoryLength);
+        totalHeight += (categorySpacing * (categoryLength - 1));
+      }
+    }
+
+    // Add "Add new" button height
+    totalHeight += addButtonTopSpacing + addButtonHeight;
+
+    return totalHeight;
   }
 
   List<Habit> _getHabits() {
@@ -141,6 +185,13 @@ class _NewHabitsState extends State<NewHabits>
 
     final List<Category> categories = categoryProvider.categoriesOrdered;
 
+    // Calculate remaining height for bottom spacing
+    final contentHeight = _calculateContentHeight(categories, context);
+    final bottomSpacing = (habitsListHeight - contentHeight).clamp(
+      0.0,
+      double.infinity,
+    );
+
     return Column(
       children: [
         for (final category in categories)
@@ -163,6 +214,15 @@ class _NewHabitsState extends State<NewHabits>
           ),
           // child additional tasks
         ),
+
+        NewDefaultButton.secondary(
+          height: 40,
+          label: "Add new",
+          onPressed: () {},
+          prefix: SvgPicture.asset("assets/images/new-svg/add.svg"),
+        ),
+
+        if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
       ],
     );
   }
