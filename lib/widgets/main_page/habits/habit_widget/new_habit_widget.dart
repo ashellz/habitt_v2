@@ -28,13 +28,11 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
     super.initState();
     _previousCompleted = widget.habit.completed;
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
     _buildAnimations();
-    if (widget.habit.completed) {
-      _controller.value = 1.0;
-    }
+    _controller.value = widget.habit.completed ? 1.0 : 0.0;
   }
 
   void _buildAnimations() {
@@ -60,6 +58,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
   @override
   void didUpdateWidget(NewHabitWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (widget.habit.completed != oldWidget.habit.completed) {
       if (widget.habit.completed) {
         _controller.forward();

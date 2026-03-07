@@ -89,6 +89,7 @@ class _NewHabitsState extends State<NewHabits>
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: NewHabitCategory(
+              key: ValueKey(selectedCategoryId),
               isToday: widget.daySelected == null,
               habits: habits,
               showOptionalHabits: true,
