@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
@@ -150,7 +152,7 @@ class LogProgressDialog extends StatelessWidget {
   }
 }
 
-class AmountProgressInput extends StatelessWidget {
+class AmountProgressInput extends StatefulWidget {
   const AmountProgressInput({
     super.key,
     required this.amount,
@@ -161,21 +163,89 @@ class AmountProgressInput extends StatelessWidget {
   final int amountCompleted;
 
   @override
+  State<AmountProgressInput> createState() => _AmountProgressInputState();
+}
+
+class _AmountProgressInputState extends State<AmountProgressInput> {
+  late TextEditingController controller;
+  late int stateAmount;
+  Timer? _incrementTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    stateAmount = widget.amountCompleted;
+    controller = TextEditingController(text: stateAmount.toString());
+  }
+
+  void onIncrement() {
+    setState(() {
+      stateAmount++;
+      controller.text = stateAmount.toString();
+    });
+  }
+
+  void onDecrement() {
+    if (stateAmount > 0) {
+      setState(() {
+        stateAmount--;
+        controller.text = stateAmount.toString();
+      });
+    }
+  }
+
+  void _startIncrementing() {
+    _incrementTimer?.cancel();
+    _incrementTimer = Timer.periodic(const Duration(milliseconds: 150), (_) {
+      onIncrement();
+    });
+  }
+
+  void _stopIncrementing() {
+    _incrementTimer?.cancel();
+    _incrementTimer = null;
+  }
+
+  @override
+  void dispose() {
+    _stopIncrementing();
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return NewDefaultTextField(
       title: "Amount",
       digitsOnly: true,
       centerValue: true,
-      controller: TextEditingController(),
-      prefix: IconButton(
-        style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
-        onPressed: () {},
-        icon: SvgPicture.asset("assets/images/new-svg/minus.svg"),
+      controller: controller,
+      prefix: GestureDetector(
+        onTap: () {
+          onDecrement();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SvgPicture.asset("assets/images/new-svg/minus.svg"),
+        ),
       ),
-      suffix: IconButton(
-        style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
-        onPressed: () {},
-        icon: SvgPicture.asset("assets/images/new-svg/plus.svg"),
+      suffix: GestureDetector(
+        onTap: () {
+          onIncrement();
+        },
+        onLongPressStart: (_) {
+          _startIncrementing();
+        },
+        onLongPressEnd: (_) {
+          _stopIncrementing();
+        },
+        onLongPressCancel: () {
+          _stopIncrementing();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SvgPicture.asset("assets/images/new-svg/plus.svg"),
+        ),
       ),
     );
   }
