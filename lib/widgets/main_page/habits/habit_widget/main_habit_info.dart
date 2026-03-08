@@ -25,13 +25,17 @@ class MainHabitInfo extends StatelessWidget {
 
       if (hasProgress && !isCompleted) {
         return "${habit.amountCompleted} / ${habit.amount} $amountLabel";
+      } else if (isCompleted) {
+        return "${habit.amountCompleted} $amountLabel";
       }
-      return "${habit.amountCompleted} $amountLabel";
+      return "${habit.amount} $amountLabel";
     }
 
     String durationText() {
       if (hasProgress && !isCompleted) {
         return "${getDurationString(habit.durationCompleted)} / ${getDurationString(habit.duration)}";
+      } else if (isCompleted) {
+        return getDurationString(habit.durationCompleted);
       }
       return getDurationString(habit.duration);
     }

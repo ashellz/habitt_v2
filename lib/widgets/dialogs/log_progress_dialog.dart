@@ -46,7 +46,10 @@ class LogProgressDialog extends StatelessWidget {
             amountCompleted: habit.amountCompleted,
           )
         else
-          DurationProgressInput(),
+          DurationProgressInput(
+            duration: habit.duration,
+            durationCompleted: habit.durationCompleted,
+          ),
         target(cp),
       ],
     );
@@ -71,17 +74,35 @@ class LogProgressDialog extends StatelessWidget {
         Expanded(
           child: NewDefaultButton.primary(
             onPressed: () {
-              if (habit.amountCompleted == stateProvider.habitAmount) {
-                Navigator.pop(context);
-                return;
+              if (progressType == ProgressType.amount) {
+                if (habit.amountCompleted == stateProvider.habitAmount) {
+                  Navigator.pop(context);
+                  return;
+                }
+
+                habitProvider.updateHabitAmountCompleted(
+                  habit.id,
+                  stateProvider.habitAmount,
+                  context,
+                  day: DateTime.now(),
+                );
               }
 
-              habitProvider.updateHabitAmountCompleted(
-                habit.id,
-                stateProvider.habitAmount,
-                context,
-                day: DateTime.now(),
-              );
+              if (progressType == ProgressType.duration) {
+                if (habit.durationCompleted ==
+                    stateProvider.habitDuration.inMinutes) {
+                  Navigator.pop(context);
+                  return;
+                }
+
+                habitProvider.updateHabitDurationCompleted(
+                  habit.id,
+                  stateProvider.habitDuration.inMinutes,
+                  context,
+                  day: DateTime.now(),
+                );
+              }
+
               Navigator.pop(context);
             },
             label: "Save",
