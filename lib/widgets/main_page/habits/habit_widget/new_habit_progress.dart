@@ -5,7 +5,6 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
-import 'package:habitt/widgets/habit_widget/progress_inputs/old/duration_completion_dialog.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitProgress extends StatefulWidget {
@@ -72,26 +71,20 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
           );
         } else {
           // Opens a dialog for selecting amount/duration completion
-
-          if (widget.habit.amount > 0) {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              isScrollControlled: true,
-              builder: (context) {
-                return LogProgressDialog(
-                  progressType: ProgressType.amount,
-                  habit: widget.habit,
-                );
-              },
-            );
-          } else {
-            showDurationCompletionDialog(
-              context,
-              widget.habit,
-              widget.focusedDay ?? DateTime.now(),
-            );
-          }
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (context) {
+              return LogProgressDialog(
+                progressType:
+                    widget.habit.amount > 0
+                        ? ProgressType.amount
+                        : ProgressType.duration,
+                habit: widget.habit,
+              );
+            },
+          );
         }
       },
       onTapDown: (context) {
