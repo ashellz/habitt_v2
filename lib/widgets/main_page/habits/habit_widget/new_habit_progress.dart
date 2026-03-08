@@ -5,7 +5,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
-import 'package:habitt/widgets/habit_widget/completion_dialogs/duration_completion_dialog.dart';
+import 'package:habitt/widgets/habit_widget/progress_inputs/old/duration_completion_dialog.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitProgress extends StatefulWidget {
@@ -63,9 +63,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
         });
 
         // If no amount or duration, toggle completion
-        if (widget.habit.amount == 0 && widget.habit.duration == 0 ||
-            widget.habit.completed ||
-            widget.habit.skipped) {
+        if (widget.habit.amount == 0 && widget.habit.duration == 0) {
           habitProvider.completeHabit(
             widget.habit.id,
             context,
