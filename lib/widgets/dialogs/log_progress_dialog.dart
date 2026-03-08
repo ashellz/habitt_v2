@@ -1,11 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
-import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
+import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
 import 'package:provider/provider.dart';
 
 enum ProgressType { amount, duration }
@@ -24,21 +26,12 @@ class LogProgressDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: cp.bg,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [titleAndDesc(cp), progress(cp), buttons(cp, context)],
-        ),
+    return NewDefaultDialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 20,
+        children: [titleAndDesc(cp), progress(cp), buttons(cp, context)],
       ),
     );
   }
@@ -60,6 +53,9 @@ class LogProgressDialog extends StatelessWidget {
   }
 
   Row buttons(ColorProvider cp, BuildContext context) {
+    final stateProvider = context.read<StateProvider>();
+    final habitProvider = context.read<HabitProvider>();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       spacing: 8,
@@ -75,6 +71,17 @@ class LogProgressDialog extends StatelessWidget {
         Expanded(
           child: NewDefaultButton.primary(
             onPressed: () {
+              if (habit.amountCompleted == stateProvider.habitAmount) {
+                Navigator.pop(context);
+                return;
+              }
+
+              habitProvider.updateHabitAmountCompleted(
+                habit.id,
+                stateProvider.habitAmount,
+                context,
+                day: DateTime.now(),
+              );
               Navigator.pop(context);
             },
             label: "Save",
@@ -149,113 +156,5 @@ class LogProgressDialog extends StatelessWidget {
         Text(desc, style: TextStyle(color: cp.greyText, fontSize: 16)),
       ],
     );
-  }
-}
-
-class AmountProgressInput extends StatefulWidget {
-  const AmountProgressInput({
-    super.key,
-    required this.amount,
-    required this.amountCompleted,
-  });
-
-  final int amount;
-  final int amountCompleted;
-
-  @override
-  State<AmountProgressInput> createState() => _AmountProgressInputState();
-}
-
-class _AmountProgressInputState extends State<AmountProgressInput> {
-  late TextEditingController controller;
-  late int stateAmount;
-  Timer? _incrementTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    stateAmount = widget.amountCompleted;
-    controller = TextEditingController(text: stateAmount.toString());
-  }
-
-  void onIncrement() {
-    setState(() {
-      stateAmount++;
-      controller.text = stateAmount.toString();
-    });
-  }
-
-  void onDecrement() {
-    if (stateAmount > 0) {
-      setState(() {
-        stateAmount--;
-        controller.text = stateAmount.toString();
-      });
-    }
-  }
-
-  void _startIncrementing() {
-    _incrementTimer?.cancel();
-    _incrementTimer = Timer.periodic(const Duration(milliseconds: 150), (_) {
-      onIncrement();
-    });
-  }
-
-  void _stopIncrementing() {
-    _incrementTimer?.cancel();
-    _incrementTimer = null;
-  }
-
-  @override
-  void dispose() {
-    _stopIncrementing();
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return NewDefaultTextField(
-      title: "Amount",
-      digitsOnly: true,
-      centerValue: true,
-      controller: controller,
-      prefix: GestureDetector(
-        onTap: () {
-          onDecrement();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SvgPicture.asset("assets/images/new-svg/minus.svg"),
-        ),
-      ),
-      suffix: GestureDetector(
-        onTap: () {
-          onIncrement();
-        },
-        onLongPressStart: (_) {
-          _startIncrementing();
-        },
-        onLongPressEnd: (_) {
-          _stopIncrementing();
-        },
-        onLongPressCancel: () {
-          _stopIncrementing();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SvgPicture.asset("assets/images/new-svg/plus.svg"),
-        ),
-      ),
-    );
-  }
-}
-
-class DurationProgressInput extends StatelessWidget {
-  const DurationProgressInput({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

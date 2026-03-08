@@ -26,7 +26,7 @@ class MainHabitInfo extends StatelessWidget {
       if (hasProgress && !isCompleted) {
         return "${habit.amountCompleted} / ${habit.amount} $amountLabel";
       }
-      return "${habit.amount} $amountLabel";
+      return "${habit.amountCompleted} $amountLabel";
     }
 
     String durationText() {
@@ -52,11 +52,13 @@ class MainHabitInfo extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              SvgPicture.asset(
-                "assets/images/new-svg/clock.svg",
-                width: 14,
-                height: 14,
-              ),
+              isAmount
+                  ? Icon(Icons.repeat, size: 14, color: cp.lightGreyText)
+                  : SvgPicture.asset(
+                    "assets/images/new-svg/clock.svg",
+                    width: 14,
+                    height: 14,
+                  ),
               Text(
                 isAmount ? amountText() : durationText(),
                 style: TextStyle(color: cp.lightGreyText, fontSize: 13),

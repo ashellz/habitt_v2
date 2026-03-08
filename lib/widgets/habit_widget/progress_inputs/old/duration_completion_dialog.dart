@@ -1,18 +1,21 @@
 import 'dart:ui';
-
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/preferences_provider.dart';
-import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/circle_button.dart';
-import 'package:habitt/widgets/habit_widget/completion_dialogs/enter_amount_slider.dart';
+import 'package:habitt/widgets/habit_widget/progress_inputs/old/duration_completion_dialog_slider.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
-void showAmountSliderDialog(BuildContext context, Habit habit, DateTime day) {
+void showDurationCompletionDialog(
+  BuildContext context,
+  Habit habit,
+  DateTime day,
+) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -23,7 +26,7 @@ void showAmountSliderDialog(BuildContext context, Habit habit, DateTime day) {
     // This builder is for the content of the dialog.
     // We pass the simplified dialog widget here.
     pageBuilder: (context, animation, secondaryAnimation) {
-      return EnterAmountSliderDialog(habit: habit, day: day);
+      return DurationCompletionDialog(habit: habit, day: day);
     },
 
     // This builder is for the transition animation.
@@ -59,8 +62,8 @@ void showAmountSliderDialog(BuildContext context, Habit habit, DateTime day) {
   );
 }
 
-class EnterAmountSliderDialog extends StatefulWidget {
-  const EnterAmountSliderDialog({
+class DurationCompletionDialog extends StatefulWidget {
+  const DurationCompletionDialog({
     super.key,
     required this.habit,
     required this.day,
@@ -70,28 +73,72 @@ class EnterAmountSliderDialog extends StatefulWidget {
   final DateTime day;
 
   @override
-  State<EnterAmountSliderDialog> createState() =>
-      _EnterAmountSliderDialogState();
+  State<DurationCompletionDialog> createState() =>
+      _DurationCompletionDialogState();
 }
 
-class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
+class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
+  FixedExtentScrollController hoursController = FixedExtentScrollController();
+  FixedExtentScrollController minutesController = FixedExtentScrollController();
+
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Sets the initial amount or duration
       final stateProvider = context.read<StateProvider>();
-      stateProvider.habitAmount = widget.habit.amountCompleted;
+      stateProvider.habitDuration = Duration(
+        hours: widget.habit.durationCompleted ~/ 60,
+        minutes: widget.habit.durationCompleted % 60,
+      );
     });
+
+    setState(() {
+      hoursController = FixedExtentScrollController(
+        initialItem: widget.habit.durationCompleted ~/ 60,
+      );
+      minutesController = FixedExtentScrollController(
+        initialItem: widget.habit.durationCompleted % 60,
+      );
+    });
+  }
+
+  Color getColor() {
+    final tp = context.read<ThemeProvider>();
+    final prefs = context.read<PreferencesProvider>();
+    switch (prefs.colorfulness) {
+      case Colorfulness.tinted:
+        return tp.primaryColor.darken(20).withOpacity(0.7);
+      case Colorfulness.standard:
+        return tp.successColor.darken(20).withOpacity(0.7);
+      case Colorfulness.colorful:
+        return widget.habit.resolveColor(tp)?.darken(20).withOpacity(0.7) ??
+            tp.successColor;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final stateProvider = context.watch<StateProvider>();
     final tp = context.watch<ThemeProvider>();
+    final sp = context.watch<StateProvider>();
     final colorfulness = context.read<PreferencesProvider>().colorfulness;
-    final habitProvider = context.read<HabitProvider>();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final width = screenWidth / 2.75;
+    final height = screenHeight / 2.75;
+
+    int minutes = widget.habit.duration % 60;
+    int hours = widget.habit.duration ~/ 60;
+
+    double getProgressValue() {
+      if (widget.habit.duration == 0) return 0.0; // Avoid divide by zero
+      final progress = sp.habitDuration.inMinutes / widget.habit.duration;
+      return progress.clamp(0.0, 1.0);
+    }
 
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor:
           Colors.transparent, // Important for the blur to show through
       insetPadding: EdgeInsets.zero,
@@ -100,33 +147,40 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
           child: Row(
             children: [
               SizedBox(width: 8 + 50),
-              EnterAmountSlider(
-                totalSegments: widget.habit.amount,
-                filledSegments: stateProvider.habitAmount,
-                habitColor: widget.habit.resolveColor(tp),
-                onChanged: (newValue) {
-                  stateProvider.habitAmount = newValue;
-                  HapticFeedback.selectionClick();
-                },
+              DurationCompletionDialogSlider(
+                width: width,
+                height: height,
+                tp: tp,
+                colorfulness: colorfulness,
+                habit: widget.habit,
+                progressValue: getProgressValue(),
+                numberColor: getColor(),
+                hours: hours,
+                minutes: minutes,
+                sp: sp,
+                hoursController: hoursController,
+                minutesController: minutesController,
               ),
               SizedBox(width: 8),
               Column(
                 children: [
                   CircleButton(
-                    cnIcon: CNSymbol('checkmark', size: 16),
+                    cnIcon: CNSymbol('checkmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.check, color: Colors.white),
                     color: widget.habit.getCompletionColor(tp, colorfulness),
                     onPressed: () {
-                      if (widget.habit.amountCompleted ==
-                          stateProvider.habitAmount) {
+                      // If nothing changed then don't update unnecessarily
+                      if (widget.habit.durationCompleted ==
+                          sp.habitDuration.inMinutes) {
                         Navigator.pop(context);
                         return;
                       }
 
-                      habitProvider.updateHabitAmountCompleted(
+                      final habitProvider = context.read<HabitProvider>();
+                      habitProvider.updateHabitDurationCompleted(
                         widget.habit.id,
-                        stateProvider.habitAmount,
+                        sp.habitDuration.inMinutes,
                         context,
                         day: widget.day,
                       );
@@ -136,10 +190,10 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                   ),
                   SizedBox(height: 4),
                   CircleButton(
-                    cnIcon: CNSymbol('xmark', size: 16),
+                    cnIcon: CNSymbol('xmark', size: 20),
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
-                    color: tp.secondaryButtonBackground,
+                    color: tp.surfaceColor,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
