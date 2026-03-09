@@ -146,7 +146,6 @@ flutter_native_splash:
   android: true
   ios: true
   web: false
-  ios_content_mode: scaleAspectFit
   image: assets/images/splash-light.png
   color: "#F9F9F9"
   color_dark: "#0C0C0C"
