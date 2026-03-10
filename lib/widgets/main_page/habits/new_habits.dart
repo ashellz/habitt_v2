@@ -9,9 +9,8 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
-import 'package:habitt/widgets/habit_widget/habit_icon.dart';
-import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
+import 'package:habitt/widgets/sheets/add_new_habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -232,6 +231,9 @@ class _NewHabitsState extends State<NewHabits>
         height: 40,
         label: "Add habit",
         onPressed: () {
+          final stateProvider = context.read<StateProvider>();
+          stateProvider.reset();
+
           showModalBottomSheet(
             context: context,
             backgroundColor: cp.bg,
@@ -246,100 +248,6 @@ class _NewHabitsState extends State<NewHabits>
           "assets/images/new-svg/add.svg",
           colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
         ),
-      ),
-    );
-  }
-}
-
-class AddNewHabitSheet extends StatelessWidget {
-  const AddNewHabitSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-    final stateProvider = context.watch<StateProvider>();
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
-      child: Column(
-        spacing: 20,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          topSection(context, cp),
-          chooseIcon(cp, stateProvider, context),
-        ],
-      ),
-    );
-  }
-
-  Column chooseIcon(
-    ColorProvider cp,
-    StateProvider stateProvider,
-    BuildContext context,
-  ) {
-    return Column(
-      spacing: 20,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Choose icon',
-          style: TextStyle(
-            color: cp.text,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        NewDefaultButton(
-          onPressed: () async {
-            final emoji = await showEmojiKeyboardDialog(context, cp);
-            if (emoji != null && context.mounted) {
-              stateProvider.iconPath = emoji;
-            }
-          },
-          width: 84,
-          height: 84,
-          color: cp.secondaryButton,
-          padding: EdgeInsets.all(20),
-          child: TextIcon(
-            stateProvider.iconPath.isEmpty ? "🏀" : stateProvider.iconPath,
-            size: 44,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Padding topSection(BuildContext context, ColorProvider cp) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 36, // button height
-            width: 66,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset("assets/images/new-svg/back.svg"),
-              ),
-            ),
-          ),
-          Text(
-            'New Habit',
-            style: TextStyle(
-              color: cp.text,
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          NewDefaultButton.small(onPressed: () {}, label: "Done"),
-        ],
       ),
     );
   }
