@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class NewHabitProgress extends StatefulWidget {
   const NewHabitProgress({super.key, required this.habit, this.focusedDay});
@@ -49,6 +51,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
+    final cp = context.watch<ColorProvider>();
 
     return GestureDetector(
       onTap: () {
@@ -74,6 +77,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
           showModalBottomSheet(
             context: context,
             backgroundColor: Colors.transparent,
+            barrierColor: cp.greyText.darken().withOpacity(0.3),
             isScrollControlled: true,
             builder: (context) {
               return LogProgressDialog(
