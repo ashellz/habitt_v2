@@ -5,9 +5,11 @@ import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/habit_details/new/schedule_option_widget.dart';
 import 'package:habitt/widgets/habit_details/new/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class AddNewHabitSheet extends StatelessWidget {
   const AddNewHabitSheet({super.key});
@@ -27,6 +29,58 @@ class AddNewHabitSheet extends StatelessWidget {
           topSection(context, cp),
           chooseIcon(cp, stateProvider, context),
           habitDetails(cp),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  'Schedule',
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap:
+                    () => showModalBottomSheet(
+                      context: context,
+
+                      backgroundColor: Colors.transparent,
+                      barrierColor: cp.greyText.darken().withOpacity(0.3),
+                      isScrollControlled: true,
+                      builder: (context) => SetScheduleDialog(),
+                    ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: cp.field,
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  height: 46,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Daily',
+                        style: TextStyle(color: cp.text, fontSize: 16),
+                      ),
+                      SvgPicture.asset(
+                        "assets/images/new-svg/calendar.svg",
+                        colorFilter: ColorFilter.mode(
+                          cp.lightGreyText,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
