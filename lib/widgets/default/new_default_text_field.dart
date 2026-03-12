@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class NewDefaultTextField extends StatefulWidget {
   const NewDefaultTextField({
     super.key,
-    required this.title,
+    this.title,
     required this.controller,
     this.maxTextLength,
     this.maxLines = 1,
@@ -19,9 +19,11 @@ class NewDefaultTextField extends StatefulWidget {
     this.prefix,
     this.suffix,
     this.centerValue = false,
+    this.hint,
+    this.fontWeight = FontWeight.w400,
   });
 
-  final String title;
+  final String? title;
   final TextEditingController controller;
   final int? maxTextLength;
   final int maxLines;
@@ -33,6 +35,8 @@ class NewDefaultTextField extends StatefulWidget {
   final Widget? prefix;
   final Widget? suffix;
   final bool centerValue;
+  final String? hint;
+  final FontWeight fontWeight;
 
   @override
   State<NewDefaultTextField> createState() => _NewDefaultTextFieldState();
@@ -76,14 +80,15 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
         spacing: 4,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Amount',
-            style: TextStyle(
-              color: cp.lightGreyText,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+          if (widget.title != null)
+            Text(
+              widget.title!,
+              style: TextStyle(
+                color: cp.lightGreyText,
+                fontSize: 13,
+                fontWeight: widget.fontWeight,
+              ),
             ),
-          ),
           TextFormField(
             controller: widget.controller,
             onTap: () => widget.onTap?.call(),
@@ -112,6 +117,14 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
 
             // Decoration
             decoration: InputDecoration(
+              hint:
+                  widget.hint != null
+                      ? Text(
+                        widget.hint!,
+                        style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                      )
+                      : null,
+
               prefixIcon: widget.prefix,
               suffixIcon: widget.suffix ?? getSuffixIcon(cp, widget.suffix),
               alignLabelWithHint: true,

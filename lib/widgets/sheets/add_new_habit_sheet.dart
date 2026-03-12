@@ -4,6 +4,8 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/habit_details/new/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +26,40 @@ class AddNewHabitSheet extends StatelessWidget {
         children: [
           topSection(context, cp),
           chooseIcon(cp, stateProvider, context),
+          habitDetails(cp),
         ],
       ),
+    );
+  }
+
+  Column habitDetails(ColorProvider cp) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: Text(
+            'Habit Details',
+            style: TextStyle(
+              color: cp.text,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        NewDefaultTextField(
+          title: "Habit Name",
+          hint: "Habit Name",
+          controller: TextEditingController(),
+        ),
+        NewDefaultTextField(
+          hint: "Notes",
+          maxLines: 4,
+          controller: TextEditingController(),
+        ),
+        SelectHabitDayPeriod(),
+      ],
     );
   }
 
@@ -55,7 +89,7 @@ class AddNewHabitSheet extends StatelessWidget {
           },
           width: 84,
           height: 84,
-          color: cp.secondaryButton,
+          color: cp.field,
           padding: EdgeInsets.all(20),
           child: TextIcon(
             stateProvider.iconPath.isEmpty ? "🏀" : stateProvider.iconPath,
