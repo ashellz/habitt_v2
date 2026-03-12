@@ -5,7 +5,7 @@ import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
-import 'package:habitt/widgets/habit_details/new/schedule_option_widget.dart';
+import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
