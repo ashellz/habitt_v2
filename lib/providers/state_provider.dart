@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/schedule_option_type.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/color_service.dart';
 import 'package:habitt/services/emoji_service.dart';
-import 'package:habitt/widgets/habit_details/new/schedule_option_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -167,6 +167,7 @@ class StateProvider extends ChangeNotifier {
 
     _habitColor = null;
     _habitColorName = null;
+    _selectedScheduleOption = ScheduleOptionType.daily;
 
     notifyListeners();
   }
