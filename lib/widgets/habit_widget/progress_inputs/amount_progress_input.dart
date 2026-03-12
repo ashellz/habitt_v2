@@ -72,6 +72,7 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
   @override
   Widget build(BuildContext context) {
     return NewDefaultTextField(
+      fontWeight: FontWeight.w500,
       title: "Amount",
       digitsOnly: true,
       centerValue: true,
