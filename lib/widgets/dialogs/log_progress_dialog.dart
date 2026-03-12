@@ -4,7 +4,6 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
-import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
@@ -26,13 +25,53 @@ class LogProgressDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
+    final title =
+        progressType == ProgressType.amount ? "Log progress" : "Log duration";
+    final desc =
+        progressType == ProgressType.amount
+            ? "How much did you complete today?"
+            : "How much time did you spend on this habit today?";
+
     return NewDefaultDialog(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 20,
-        children: [titleAndDesc(cp), progress(cp), buttons(cp, context)],
-      ),
+      title: title,
+      desc: desc,
+      primaryButtonLabel: "Save",
+      onPrimaryButtonPressed: () {
+        final habitProvider = context.read<HabitProvider>();
+        final stateProvider = context.read<StateProvider>();
+
+        if (progressType == ProgressType.amount) {
+          if (habit.amountCompleted == stateProvider.habitAmount) {
+            Navigator.pop(context);
+            return;
+          }
+
+          habitProvider.updateHabitAmountCompleted(
+            habit.id,
+            stateProvider.habitAmount,
+            context,
+            day: DateTime.now(),
+          );
+        }
+
+        if (progressType == ProgressType.duration) {
+          if (habit.durationCompleted ==
+              stateProvider.habitDuration.inMinutes) {
+            Navigator.pop(context);
+            return;
+          }
+
+          habitProvider.updateHabitDurationCompleted(
+            habit.id,
+            stateProvider.habitDuration.inMinutes,
+            context,
+            day: DateTime.now(),
+          );
+        }
+
+        Navigator.pop(context);
+      },
+      child: progress(cp),
     );
   }
 
@@ -51,63 +90,6 @@ class LogProgressDialog extends StatelessWidget {
             durationCompleted: habit.durationCompleted,
           ),
         target(cp),
-      ],
-    );
-  }
-
-  Row buttons(ColorProvider cp, BuildContext context) {
-    final stateProvider = context.read<StateProvider>();
-    final habitProvider = context.read<HabitProvider>();
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      spacing: 8,
-      children: [
-        Expanded(
-          child: NewDefaultButton.secondary(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            label: "Cancel",
-          ),
-        ),
-        Expanded(
-          child: NewDefaultButton.primary(
-            onPressed: () {
-              if (progressType == ProgressType.amount) {
-                if (habit.amountCompleted == stateProvider.habitAmount) {
-                  Navigator.pop(context);
-                  return;
-                }
-
-                habitProvider.updateHabitAmountCompleted(
-                  habit.id,
-                  stateProvider.habitAmount,
-                  context,
-                  day: DateTime.now(),
-                );
-              }
-
-              if (progressType == ProgressType.duration) {
-                if (habit.durationCompleted ==
-                    stateProvider.habitDuration.inMinutes) {
-                  Navigator.pop(context);
-                  return;
-                }
-
-                habitProvider.updateHabitDurationCompleted(
-                  habit.id,
-                  stateProvider.habitDuration.inMinutes,
-                  context,
-                  day: DateTime.now(),
-                );
-              }
-
-              Navigator.pop(context);
-            },
-            label: "Save",
-          ),
-        ),
       ],
     );
   }
@@ -150,31 +132,6 @@ class LogProgressDialog extends StatelessWidget {
             ),
           ],
         ),
-      ],
-    );
-  }
-
-  Column titleAndDesc(ColorProvider cp) {
-    final title =
-        progressType == ProgressType.amount ? "Log progress" : "Log duration";
-    final desc =
-        progressType == ProgressType.amount
-            ? "How much did you complete today?"
-            : "How much time did you spend on this habit today?";
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: cp.text,
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Text(desc, style: TextStyle(color: cp.greyText, fontSize: 16)),
       ],
     );
   }
