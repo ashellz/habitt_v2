@@ -4,6 +4,7 @@ import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
+import 'package:habitt/widgets/habit_details/new/select_days_weekly_schedule.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -155,139 +156,6 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                     ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class SelectDaysWeekly extends StatefulWidget {
-  const SelectDaysWeekly({super.key});
-
-  @override
-  State<SelectDaysWeekly> createState() => _SelectDaysWeeklyState();
-}
-
-class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
-  static const _selectionDuration = Duration(milliseconds: 200);
-  static const List<String> _weekDays = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
-  ];
-
-  final Set<String> _selectedDays = {};
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: cp.field,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12,
-        children: [
-          Text(
-            'Select days for this habit:',
-            style: TextStyle(color: cp.greyText, fontSize: 16),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children:
-                _weekDays.map((day) {
-                  final isSelected = _selectedDays.contains(day);
-
-                  return _SelectableWeekDayButton(
-                    label: day,
-                    isSelected: isSelected,
-                    selectionDuration: _selectionDuration,
-                    onPressed: () {
-                      setState(() {
-                        if (isSelected) {
-                          _selectedDays.remove(day);
-                        } else {
-                          _selectedDays.add(day);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SelectableWeekDayButton extends StatelessWidget {
-  const _SelectableWeekDayButton({
-    required this.label,
-    required this.isSelected,
-    required this.selectionDuration,
-    required this.onPressed,
-  });
-
-  final String label;
-  final bool isSelected;
-  final Duration selectionDuration;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-
-    return AnimatedContainer(
-      duration: selectionDuration,
-      curve: Curves.easeOut,
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isSelected ? cp.pill : Colors.transparent,
-        border: Border.all(width: 1, color: isSelected ? cp.pill : cp.disabled),
-      ),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          splashFactory: isAndroid ? null : NoSplash.splashFactory,
-          elevation: const WidgetStatePropertyAll(0),
-          overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
-            if (!states.contains(WidgetState.pressed)) {
-              return null;
-            }
-
-            if (isAndroid) {
-              return null;
-            }
-
-            return cp.bg.withValues(alpha: 0.2);
-          }),
-          backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
-          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-          shape: const WidgetStatePropertyAll(CircleBorder()),
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? cp.bg : cp.text,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
       ),
     );
   }
