@@ -42,6 +42,7 @@ extension ScheduleOptionTypeAction on ScheduleOptionType {
     ColorProvider cp, {
     required WidgetBuilder builder,
   }) {
+    Navigator.pop(context); // closes the set schedule dialog
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       barrierColor: cp.greyText.darken().withOpacity(0.3),
