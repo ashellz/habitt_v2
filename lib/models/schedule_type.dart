@@ -5,29 +5,29 @@ import 'package:habitt/widgets/dialogs/schedules/monthly_schedule_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/custom_schedule_dialog.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-enum ScheduleOptionType { daily, weekly, monthly, custom }
+enum ScheduleType { daily, weekly, monthly, custom }
 
-extension ScheduleOptionTypeAction on ScheduleOptionType {
+extension ScheduleOptionTypeAction on ScheduleType {
   void handlePrimaryButtonPressed(BuildContext context, ColorProvider cp) {
     switch (this) {
-      case ScheduleOptionType.daily:
+      case ScheduleType.daily:
         Navigator.pop(context);
         break;
-      case ScheduleOptionType.weekly:
+      case ScheduleType.weekly:
         _showScheduleDialog(
           context,
           cp,
           builder: (context) => WeeklyScheduleDialog(),
         );
         break;
-      case ScheduleOptionType.monthly:
+      case ScheduleType.monthly:
         _showScheduleDialog(
           context,
           cp,
           builder: (context) => MonthlyScheduleDialog(),
         );
         break;
-      case ScheduleOptionType.custom:
+      case ScheduleType.custom:
         _showScheduleDialog(
           context,
           cp,

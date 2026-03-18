@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/models/schedule_option_type.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/color_service.dart';
 import 'package:habitt/services/emoji_service.dart';
@@ -41,17 +41,96 @@ class StateProvider extends ChangeNotifier {
   bool _isOptional = false;
   Color? _habitColor;
   String? _habitColorName;
-  ScheduleOptionType _selectedScheduleOption = ScheduleOptionType.daily;
+  ScheduleType _selectedScheduleOption = ScheduleType.daily;
+  int _weeklyTarget = 1;
+  int _monthlyTarget = 1;
+  int _customIntervalDays = 2;
+  final Set<int> _selectedDaysAWeek = <int>{};
+  final Set<int> _selectedDaysAMonth = <int>{};
 
   String _alertText = "";
   bool _showAlert = false;
 
   String get alertText => _alertText;
   bool get showAlert => _showAlert;
-  ScheduleOptionType get selectedScheduleOption => _selectedScheduleOption;
+  ScheduleType get selectedScheduleOption => _selectedScheduleOption;
+  int get weeklyTarget => _weeklyTarget;
+  int get monthlyTarget => _monthlyTarget;
+  int get customIntervalDays => _customIntervalDays;
+  Set<int> get selectedDaysAWeek => Set<int>.from(_selectedDaysAWeek);
+  Set<int> get selectedDaysAMonth => Set<int>.from(_selectedDaysAMonth);
 
-  set selectedScheduleOption(ScheduleOptionType option) {
+  String get scheduleSummary {
+    switch (_selectedScheduleOption) {
+      case ScheduleType.daily:
+        return 'Daily';
+      case ScheduleType.weekly:
+        return 'Weekly';
+      case ScheduleType.monthly:
+        return 'Monthly';
+      case ScheduleType.custom:
+        return 'Custom';
+    }
+  }
+
+  set selectedScheduleOption(ScheduleType option) {
     _selectedScheduleOption = option;
+    notifyListeners();
+  }
+
+  set weeklyTarget(int value) {
+    _weeklyTarget = value.clamp(1, 6);
+    notifyListeners();
+  }
+
+  set monthlyTarget(int value) {
+    _monthlyTarget = value.clamp(1, 30);
+    notifyListeners();
+  }
+
+  set customIntervalDays(int value) {
+    _customIntervalDays = value.clamp(1, 365);
+    notifyListeners();
+  }
+
+  void toggleWeeklyDay(int weekday) {
+    if (weekday < 1 || weekday > 7) return;
+    if (_selectedDaysAWeek.contains(weekday)) {
+      _selectedDaysAWeek.remove(weekday);
+    } else {
+      _selectedDaysAWeek.add(weekday);
+    }
+    notifyListeners();
+  }
+
+  void toggleMonthlyDay(int day) {
+    if (day < 1 || day > 31) return;
+    if (_selectedDaysAMonth.contains(day)) {
+      _selectedDaysAMonth.remove(day);
+    } else {
+      _selectedDaysAMonth.add(day);
+    }
+    notifyListeners();
+  }
+
+  void setScheduleFromHabit({
+    required ScheduleType scheduleType,
+    required int weeklyTarget,
+    required int monthlyTarget,
+    required int customIntervalDays,
+    required List<int> selectedDaysAWeek,
+    required List<int> selectedDaysAMonth,
+  }) {
+    _selectedScheduleOption = scheduleType;
+    _weeklyTarget = weeklyTarget.clamp(1, 6);
+    _monthlyTarget = monthlyTarget.clamp(1, 30);
+    _customIntervalDays = customIntervalDays.clamp(1, 365);
+    _selectedDaysAWeek
+      ..clear()
+      ..addAll(selectedDaysAWeek.where((d) => d >= 1 && d <= 7));
+    _selectedDaysAMonth
+      ..clear()
+      ..addAll(selectedDaysAMonth.where((d) => d >= 1 && d <= 31));
     notifyListeners();
   }
 
@@ -167,7 +246,12 @@ class StateProvider extends ChangeNotifier {
 
     _habitColor = null;
     _habitColorName = null;
-    _selectedScheduleOption = ScheduleOptionType.daily;
+    _selectedScheduleOption = ScheduleType.daily;
+    _weeklyTarget = 1;
+    _monthlyTarget = 1;
+    _customIntervalDays = 2;
+    _selectedDaysAWeek.clear();
+    _selectedDaysAMonth.clear();
 
     notifyListeners();
   }

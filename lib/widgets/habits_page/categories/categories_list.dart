@@ -146,8 +146,8 @@ class _CategoriesListState extends State<CategoriesList> {
     final calendarProvider = context.watch<CalendarProvider>();
     final habitsList =
         widget.selectedDay == null
-            ? habitProvider.habits
-            : habitProvider.getHabitsFromDay(widget.selectedDay!);
+            ? habitProvider.todaysHabits
+            : habitProvider.getHabitsForDate(widget.selectedDay!);
     final List<bool> hasHabits = [];
 
     for (Category category in categoryProvider.categories) {

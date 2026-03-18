@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -22,6 +23,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final sp = context.watch<StateProvider>();
     return NewDefaultDialog(
       title: "Monthly",
       onSecondaryButtonPressed: () {
@@ -66,8 +68,18 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("1", style: TextStyle(fontSize: 16, color: cp.text)),
-                    SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                    Text(
+                      sp.monthlyTarget.toString(),
+                      style: TextStyle(fontSize: 16, color: cp.text),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        final next =
+                            sp.monthlyTarget == 30 ? 1 : sp.monthlyTarget + 1;
+                        sp.monthlyTarget = next;
+                      },
+                      child: SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                    ),
                   ],
                 ),
               ),
@@ -91,7 +103,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                           padding: const EdgeInsets.only(top: 12),
                           child: Text(
                             key: const ValueKey('monthly-helper-text'),
-                            'This habit will appear once a month until completed',
+                            'This habit will appear ${sp.monthlyTarget} time${sp.monthlyTarget == 1 ? '' : 's'} per month until completed',
                             style: TextStyle(color: cp.greyText, fontSize: 13),
                           ),
                         )

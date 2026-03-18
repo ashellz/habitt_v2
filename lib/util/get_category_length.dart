@@ -11,13 +11,17 @@ int getCategoryLength(
   DateTime? selectedDay,
 ]) {
   final habitProvider = context.watch<HabitProvider>();
-  if (habitProvider.habits.isEmpty) return 0;
+  final todayHabits = habitProvider.todaysHabits;
+  if (todayHabits.isEmpty && selectedDay == null) return 0;
   if (category.id == 0) {
-    return habitProvider.habits.length;
+    if (selectedDay != null) {
+      return habitProvider.getHabitsForDate(selectedDay).length;
+    }
+    return todayHabits.length;
   }
 
   if (selectedDay != null) {
-    final List<Habit> dayHabits = habitProvider.getHabitsFromDay(selectedDay);
+    final List<Habit> dayHabits = habitProvider.getHabitsForDate(selectedDay);
     return dayHabits
         .where(
           (h) =>
@@ -28,7 +32,7 @@ int getCategoryLength(
   }
 
   final int categoryHabits =
-      habitProvider.habits
+      todayHabits
           .where(
             (h) =>
                 h.categoryId == category.id &&
@@ -40,14 +44,14 @@ int getCategoryLength(
 
 int getCompletedHabits(Category category, BuildContext context) {
   final habitProvider = context.watch<HabitProvider>();
-  if (habitProvider.habits.isEmpty) return 0;
+  if (habitProvider.todaysHabits.isEmpty) return 0;
 
   if (category.id == 0) {
-    return habitProvider.habits.where((h) => h.completed).length;
+    return habitProvider.todaysHabits.where((h) => h.completed).length;
   }
 
   final int categoryHabits =
-      habitProvider.habits
+      habitProvider.todaysHabits
           .where((h) => h.categoryId == category.id && h.completed)
           .length;
   return categoryHabits;
@@ -55,14 +59,14 @@ int getCompletedHabits(Category category, BuildContext context) {
 
 int getNotCompletedHabits(Category category, BuildContext context) {
   final habitProvider = context.watch<HabitProvider>();
-  if (habitProvider.habits.isEmpty) return 0;
+  if (habitProvider.todaysHabits.isEmpty) return 0;
 
   if (category.id == 0) {
-    return habitProvider.habits.where((h) => !h.completed).length;
+    return habitProvider.todaysHabits.where((h) => !h.completed).length;
   }
 
   final int categoryHabits =
-      habitProvider.habits
+      habitProvider.todaysHabits
           .where((h) => h.categoryId == category.id && !h.completed)
           .length;
   return categoryHabits;

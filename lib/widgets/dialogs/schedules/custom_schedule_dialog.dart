@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
@@ -12,6 +13,7 @@ class CustomScheduleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final sp = context.watch<StateProvider>();
 
     return NewDefaultDialog(
       title: "Custom",
@@ -51,17 +53,26 @@ class CustomScheduleDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Other day",
+                  'Every ${sp.customIntervalDays} day${sp.customIntervalDays == 1 ? '' : 's'}',
                   style: TextStyle(fontSize: 16, color: cp.text),
                 ),
-                SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                GestureDetector(
+                  onTap: () {
+                    final next =
+                        sp.customIntervalDays == 30
+                            ? 1
+                            : sp.customIntervalDays + 1;
+                    sp.customIntervalDays = next;
+                  },
+                  child: SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                ),
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Text(
-              'This habit will appear every other day starting from today',
+              'This habit will appear every ${sp.customIntervalDays} day${sp.customIntervalDays == 1 ? '' : 's'} starting from today',
               style: TextStyle(color: cp.greyText, fontSize: 13),
             ),
           ),

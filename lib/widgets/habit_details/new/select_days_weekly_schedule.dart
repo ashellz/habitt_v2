@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/selectable_weekdays.dart';
 import 'package:provider/provider.dart';
@@ -11,11 +12,28 @@ class SelectDaysWeekly extends StatefulWidget {
 }
 
 class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
-  final Set<String> _selectedDays = {};
+  static const Map<String, int> _weekdayMap = {
+    'Mon': 1,
+    'Tue': 2,
+    'Wed': 3,
+    'Thu': 4,
+    'Fri': 5,
+    'Sat': 6,
+    'Sun': 7,
+  };
+
+  Set<String> _labelsFromIndices(Set<int> indices) {
+    return _weekdayMap.entries
+        .where((entry) => indices.contains(entry.value))
+        .map((entry) => entry.key)
+        .toSet();
+  }
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final sp = context.watch<StateProvider>();
+    final selectedDays = _labelsFromIndices(sp.selectedDaysAWeek);
 
     return Container(
       width: double.infinity,
@@ -34,15 +52,11 @@ class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
             style: TextStyle(color: cp.greyText, fontSize: 16),
           ),
           SelectableWeekdays(
-            selectedDays: _selectedDays,
+            selectedDays: selectedDays,
             onDaySelected: (day) {
-              setState(() {
-                if (_selectedDays.contains(day)) {
-                  _selectedDays.remove(day);
-                } else {
-                  _selectedDays.add(day);
-                }
-              });
+              final dayValue = _weekdayMap[day];
+              if (dayValue == null) return;
+              sp.toggleWeeklyDay(dayValue);
             },
           ),
         ],

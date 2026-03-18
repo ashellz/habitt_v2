@@ -58,6 +58,14 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.timeIntervalEnabled = widget.habit.timeIntervalEnabled;
       stateProvider.timeIntervalStart = widget.habit.timeIntervalStart;
       stateProvider.timeIntervalEnd = widget.habit.timeIntervalEnd;
+      stateProvider.setScheduleFromHabit(
+        scheduleType: widget.habit.scheduleType,
+        weeklyTarget: widget.habit.weeklyTarget,
+        monthlyTarget: widget.habit.monthlyTarget,
+        customIntervalDays: widget.habit.customIntervalDays,
+        selectedDaysAWeek: widget.habit.selectedDaysAWeek,
+        selectedDaysAMonth: widget.habit.selectedDaysAMonth,
+      );
       stateProvider.habitColorName = widget.habit.colorName;
       stateProvider.habitColor = widget.habit.resolveColor(tp);
 
@@ -95,6 +103,26 @@ class _EditHabitPageState extends State<EditHabitPage> {
         stateProvider.timeIntervalStart != widget.habit.timeIntervalStart;
     final changedTimeIntervalEnd =
         stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
+    final changedScheduleType =
+      stateProvider.selectedScheduleOption != widget.habit.scheduleType;
+    final changedWeeklyTarget =
+      stateProvider.weeklyTarget != widget.habit.weeklyTarget;
+    final changedMonthlyTarget =
+      stateProvider.monthlyTarget != widget.habit.monthlyTarget;
+    final changedCustomInterval =
+      stateProvider.customIntervalDays != widget.habit.customIntervalDays;
+    final changedSelectedWeekDays =
+      stateProvider.selectedDaysAWeek.length !=
+        widget.habit.selectedDaysAWeek.length ||
+      !stateProvider.selectedDaysAWeek.every(
+        (d) => widget.habit.selectedDaysAWeek.contains(d),
+      );
+    final changedSelectedMonthDays =
+      stateProvider.selectedDaysAMonth.length !=
+        widget.habit.selectedDaysAMonth.length ||
+      !stateProvider.selectedDaysAMonth.every(
+        (d) => widget.habit.selectedDaysAMonth.contains(d),
+      );
     final changedHabitColor =
         stateProvider.getHabitColor(themeProvider) !=
             widget.habit.resolveColor(themeProvider) ||
@@ -111,6 +139,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
         changedTimeIntervalEnabled ||
         changedTimeIntervalStart ||
         changedTimeIntervalEnd ||
+        changedScheduleType ||
+        changedWeeklyTarget ||
+        changedMonthlyTarget ||
+        changedCustomInterval ||
+        changedSelectedWeekDays ||
+        changedSelectedMonthDays ||
         changedHabitColor;
 
     if (newValue != showButtons) {

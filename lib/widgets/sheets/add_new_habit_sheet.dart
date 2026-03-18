@@ -65,7 +65,7 @@ class AddNewHabitSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Daily',
+                        stateProvider.scheduleSummary,
                         style: TextStyle(color: cp.text, fontSize: 16),
                       ),
                       SvgPicture.asset(

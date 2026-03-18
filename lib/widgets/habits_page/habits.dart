@@ -61,10 +61,10 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
     final today = DateTime.now();
     final todayShort = DateTime(today.year, today.month, today.day);
     if (widget.daySelected == null || widget.daySelected == todayShort) {
-      return habitProvider.habits;
+      return habitProvider.todaysHabits;
     }
 
-    return habitProvider.getHabitsFromDay(widget.daySelected!);
+    return habitProvider.getHabitsForDate(widget.daySelected!);
   }
 
   @override
@@ -75,6 +75,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    habits = _getHabits();
     final categoryProvider = context.watch<CategoryProvider>();
     final calendarProvider = context.watch<CalendarProvider>();
     final selectedCategoryId =

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -67,6 +68,31 @@ class EditHabitButton extends StatelessWidget {
                   stateProvider.timeIntervalEnabled;
               widget.habit.timeIntervalStart = stateProvider.timeIntervalStart;
               widget.habit.timeIntervalEnd = stateProvider.timeIntervalEnd;
+              widget.habit.scheduleType = stateProvider.selectedScheduleOption;
+              widget.habit.weeklyTarget = stateProvider.weeklyTarget;
+              widget.habit.monthlyTarget = stateProvider.monthlyTarget;
+              widget.habit.customIntervalDays =
+                  stateProvider.customIntervalDays;
+              widget.habit.selectedDaysAWeek =
+                  stateProvider.selectedDaysAWeek.toList()..sort();
+              widget.habit.selectedDaysAMonth =
+                  stateProvider.selectedDaysAMonth.toList()..sort();
+              if (widget.habit.scheduleType == ScheduleType.custom) {
+                final start = DateTime.now();
+                final anchor = DateTime(start.year, start.month, start.day);
+                final appearance = <String>[];
+                for (int i = 0; i < 180; i += widget.habit.customIntervalDays) {
+                  appearance.add(
+                    anchor
+                        .add(Duration(days: i))
+                        .toIso8601String()
+                        .split('T')
+                        .first,
+                  );
+                }
+                widget.habit.customAppearance = appearance;
+                widget.habit.lastCustomUpdate = DateTime.now().toUtc();
+              }
 
               final tp = context.read<ThemeProvider>();
               widget.habit.colorName = stateProvider.habitColorName;

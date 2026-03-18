@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -22,6 +23,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final sp = context.watch<StateProvider>();
 
     return NewDefaultDialog(
       title: "Weekly",
@@ -67,8 +69,17 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("1", style: TextStyle(fontSize: 16, color: cp.text)),
-                    SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                    Text(
+                      sp.weeklyTarget.toString(),
+                      style: TextStyle(fontSize: 16, color: cp.text),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        final next = sp.weeklyTarget == 6 ? 1 : sp.weeklyTarget + 1;
+                        sp.weeklyTarget = next;
+                      },
+                      child: SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                    ),
                   ],
                 ),
               ),
@@ -92,7 +103,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                           padding: const EdgeInsets.only(top: 12),
                           child: Text(
                             key: const ValueKey('weekly-helper-text'),
-                            'This habit will appear once a week until completed',
+                            'This habit will appear ${sp.weeklyTarget} time${sp.weeklyTarget == 1 ? '' : 's'} per week until completed',
                             style: TextStyle(color: cp.greyText, fontSize: 13),
                           ),
                         )

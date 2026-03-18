@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/models/schedule_option_type.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +11,7 @@ class ScheduleOptionWidget extends StatelessWidget {
 
   const ScheduleOptionWidget({super.key, required this.scheduleOptionType});
 
-  final ScheduleOptionType scheduleOptionType;
+  final ScheduleType scheduleOptionType;
 
   @override
   Widget build(BuildContext context) {

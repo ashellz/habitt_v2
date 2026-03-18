@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 26
+    nextIndex: 36
     fields:
       id:
         index: 0
@@ -53,6 +53,26 @@ types:
         index: 24
       optional:
         index: 25
+      scheduleType:
+        index: 26
+      weeklyTarget:
+        index: 27
+      monthlyTarget:
+        index: 28
+      customIntervalDays:
+        index: 29
+      selectedDaysAWeek:
+        index: 30
+      selectedDaysAMonth:
+        index: 31
+      customAppearance:
+        index: 32
+      timesCompletedThisWeek:
+        index: 33
+      timesCompletedThisMonth:
+        index: 34
+      lastCustomUpdate:
+        index: 35
   Day:
     typeId: 1
     nextIndex: 3
