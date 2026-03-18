@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/models/schedule_option_type.dart';
+import 'package:habitt/models/schedule_type.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -19,7 +20,7 @@ class SetScheduleDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 10,
         children: [
-          for (var option in ScheduleOptionType.values)
+          for (var option in ScheduleType.values)
             ScheduleOptionWidget(scheduleOptionType: option),
         ],
       ),

@@ -36,6 +36,19 @@ class HabitAdapter extends TypeAdapter<Habit> {
       timeIntervalEnabled: fields[17] == null ? false : fields[17] as bool,
       timeIntervalStart: fields[18] == null ? 420 : (fields[18] as num).toInt(),
       timeIntervalEnd: fields[19] == null ? 450 : (fields[19] as num).toInt(),
+      scheduleType:
+          fields[26] == null ? ScheduleType.daily : fields[26] as ScheduleType,
+      weeklyTarget: fields[27] == null ? 1 : (fields[27] as num).toInt(),
+      monthlyTarget: fields[28] == null ? 1 : (fields[28] as num).toInt(),
+      customIntervalDays: fields[29] == null ? 2 : (fields[29] as num).toInt(),
+      selectedDaysAWeek: (fields[30] as List?)?.cast<int>(),
+      selectedDaysAMonth: (fields[31] as List?)?.cast<int>(),
+      customAppearance: (fields[32] as List?)?.cast<String>(),
+      timesCompletedThisWeek:
+          fields[33] == null ? 0 : (fields[33] as num).toInt(),
+      timesCompletedThisMonth:
+          fields[34] == null ? 0 : (fields[34] as num).toInt(),
+      lastCustomUpdate: fields[35] as DateTime?,
       colorName: fields[22] as String?,
       isDeleted: fields[24] as bool?,
       timestamps: (fields[23] as Map?)?.cast<String, DateTime>(),
@@ -45,7 +58,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(23)
+      ..writeByte(33)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -91,7 +104,27 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(24)
       ..write(obj.isDeleted)
       ..writeByte(25)
-      ..write(obj.optional);
+      ..write(obj.optional)
+      ..writeByte(26)
+      ..write(obj.scheduleType)
+      ..writeByte(27)
+      ..write(obj.weeklyTarget)
+      ..writeByte(28)
+      ..write(obj.monthlyTarget)
+      ..writeByte(29)
+      ..write(obj.customIntervalDays)
+      ..writeByte(30)
+      ..write(obj.selectedDaysAWeek)
+      ..writeByte(31)
+      ..write(obj.selectedDaysAMonth)
+      ..writeByte(32)
+      ..write(obj.customAppearance)
+      ..writeByte(33)
+      ..write(obj.timesCompletedThisWeek)
+      ..writeByte(34)
+      ..write(obj.timesCompletedThisMonth)
+      ..writeByte(35)
+      ..write(obj.lastCustomUpdate);
   }
 
   @override

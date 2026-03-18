@@ -118,10 +118,10 @@ class _NewHabitsState extends State<NewHabits>
     final today = DateTime.now();
     final todayShort = DateTime(today.year, today.month, today.day);
     if (widget.daySelected == null || widget.daySelected == todayShort) {
-      return habitProvider.habits;
+      return habitProvider.todaysHabits;
     }
 
-    return habitProvider.getHabitsFromDay(widget.daySelected!);
+    return habitProvider.getHabitsForDate(widget.daySelected!);
   }
 
   @override
@@ -132,6 +132,7 @@ class _NewHabitsState extends State<NewHabits>
 
   @override
   Widget build(BuildContext context) {
+    habits = _getHabits();
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
 

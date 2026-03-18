@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/color_service.dart';
@@ -28,6 +29,16 @@ class Habit extends HiveObject {
   bool timeIntervalEnabled;
   int timeIntervalStart; // In minutes
   int timeIntervalEnd; // In minutes
+  ScheduleType scheduleType;
+  int weeklyTarget;
+  int monthlyTarget;
+  int customIntervalDays;
+  List<int> selectedDaysAWeek;
+  List<int> selectedDaysAMonth;
+  List<String> customAppearance;
+  int timesCompletedThisWeek;
+  int timesCompletedThisMonth;
+  DateTime? lastCustomUpdate;
   String? colorName; // Maps to theme-aware palette
   String? color;
   bool? isDeleted;
@@ -53,10 +64,23 @@ class Habit extends HiveObject {
     this.timeIntervalEnabled = false,
     this.timeIntervalStart = 420,
     this.timeIntervalEnd = 450,
+    this.scheduleType = ScheduleType.daily,
+    this.weeklyTarget = 1,
+    this.monthlyTarget = 1,
+    this.customIntervalDays = 2,
+    List<int>? selectedDaysAWeek,
+    List<int>? selectedDaysAMonth,
+    List<String>? customAppearance,
+    this.timesCompletedThisWeek = 0,
+    this.timesCompletedThisMonth = 0,
+    this.lastCustomUpdate,
     this.colorName,
     this.isDeleted,
     Map<String, DateTime>? timestamps,
-  }) : timestamps = timestamps ?? {};
+  }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
+       selectedDaysAMonth = selectedDaysAMonth ?? [],
+       customAppearance = customAppearance ?? [],
+       timestamps = timestamps ?? {};
 
   // convert to getter
   Color? resolveColor(ThemeProvider tp) {
@@ -102,6 +126,16 @@ class Habit extends HiveObject {
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
+      scheduleType: scheduleType,
+      weeklyTarget: weeklyTarget,
+      monthlyTarget: monthlyTarget,
+      customIntervalDays: customIntervalDays,
+      selectedDaysAWeek: List<int>.from(selectedDaysAWeek),
+      selectedDaysAMonth: List<int>.from(selectedDaysAMonth),
+      customAppearance: List<String>.from(customAppearance),
+      timesCompletedThisWeek: timesCompletedThisWeek,
+      timesCompletedThisMonth: timesCompletedThisMonth,
+      lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
       isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
@@ -129,6 +163,16 @@ class Habit extends HiveObject {
       timeIntervalEnabled: timeIntervalEnabled,
       timeIntervalStart: timeIntervalStart,
       timeIntervalEnd: timeIntervalEnd,
+      scheduleType: scheduleType,
+      weeklyTarget: weeklyTarget,
+      monthlyTarget: monthlyTarget,
+      customIntervalDays: customIntervalDays,
+      selectedDaysAWeek: List<int>.from(selectedDaysAWeek),
+      selectedDaysAMonth: List<int>.from(selectedDaysAMonth),
+      customAppearance: List<String>.from(customAppearance),
+      timesCompletedThisWeek: 0,
+      timesCompletedThisMonth: 0,
+      lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
       isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
@@ -206,6 +250,46 @@ class Habit extends HiveObject {
       timeIntervalEnd = habit.timeIntervalEnd;
       timestamps['timeIntervalEnd'] = now;
     }
+    if (scheduleType != habit.scheduleType) {
+      scheduleType = habit.scheduleType;
+      timestamps['scheduleType'] = now;
+    }
+    if (weeklyTarget != habit.weeklyTarget) {
+      weeklyTarget = habit.weeklyTarget;
+      timestamps['weeklyTarget'] = now;
+    }
+    if (monthlyTarget != habit.monthlyTarget) {
+      monthlyTarget = habit.monthlyTarget;
+      timestamps['monthlyTarget'] = now;
+    }
+    if (customIntervalDays != habit.customIntervalDays) {
+      customIntervalDays = habit.customIntervalDays;
+      timestamps['customIntervalDays'] = now;
+    }
+    if (!_sameIntList(selectedDaysAWeek, habit.selectedDaysAWeek)) {
+      selectedDaysAWeek = List<int>.from(habit.selectedDaysAWeek);
+      timestamps['selectedDaysAWeek'] = now;
+    }
+    if (!_sameIntList(selectedDaysAMonth, habit.selectedDaysAMonth)) {
+      selectedDaysAMonth = List<int>.from(habit.selectedDaysAMonth);
+      timestamps['selectedDaysAMonth'] = now;
+    }
+    if (!_sameStringList(customAppearance, habit.customAppearance)) {
+      customAppearance = List<String>.from(habit.customAppearance);
+      timestamps['customAppearance'] = now;
+    }
+    if (timesCompletedThisWeek != habit.timesCompletedThisWeek) {
+      timesCompletedThisWeek = habit.timesCompletedThisWeek;
+      timestamps['timesCompletedThisWeek'] = now;
+    }
+    if (timesCompletedThisMonth != habit.timesCompletedThisMonth) {
+      timesCompletedThisMonth = habit.timesCompletedThisMonth;
+      timestamps['timesCompletedThisMonth'] = now;
+    }
+    if (lastCustomUpdate != habit.lastCustomUpdate) {
+      lastCustomUpdate = habit.lastCustomUpdate;
+      timestamps['lastCustomUpdate'] = now;
+    }
     if (colorName != habit.colorName) {
       colorName = habit.colorName;
       timestamps['colorName'] = now;
@@ -274,10 +358,45 @@ class Habit extends HiveObject {
     skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
+    timesCompletedThisWeek = 0;
+    timesCompletedThisMonth = 0;
+    timestamps['timesCompletedThisWeek'] = DateTime.now().toUtc();
+    timestamps['timesCompletedThisMonth'] = DateTime.now().toUtc();
     timestamps['completed'] = DateTime.now().toUtc();
     timestamps['skipped'] = DateTime.now().toUtc();
     timestamps['amountCompleted'] = DateTime.now().toUtc();
     timestamps['durationCompleted'] = DateTime.now().toUtc();
+  }
+
+  void updateScheduleCountersOnCompletionToggle({
+    required bool wasCompleted,
+    required bool isCompleted,
+    int? weeklyBaseCount,
+    int? monthlyBaseCount,
+  }) {
+    final now = DateTime.now().toUtc();
+
+    if (scheduleType == ScheduleType.weekly && selectedDaysAWeek.isEmpty) {
+      final base = weeklyBaseCount ?? timesCompletedThisWeek;
+      if (!wasCompleted && isCompleted) {
+        timesCompletedThisWeek = (base + 1).clamp(0, weeklyTarget);
+        timestamps['timesCompletedThisWeek'] = now;
+      } else if (wasCompleted && !isCompleted) {
+        timesCompletedThisWeek = (base - 1).clamp(0, weeklyTarget);
+        timestamps['timesCompletedThisWeek'] = now;
+      }
+    }
+
+    if (scheduleType == ScheduleType.monthly && selectedDaysAMonth.isEmpty) {
+      final base = monthlyBaseCount ?? timesCompletedThisMonth;
+      if (!wasCompleted && isCompleted) {
+        timesCompletedThisMonth = (base + 1).clamp(0, monthlyTarget);
+        timestamps['timesCompletedThisMonth'] = now;
+      } else if (wasCompleted && !isCompleted) {
+        timesCompletedThisMonth = (base - 1).clamp(0, monthlyTarget);
+        timestamps['timesCompletedThisMonth'] = now;
+      }
+    }
   }
 
   void updateStreak({required int streak, required int longestStreak}) {
@@ -373,6 +492,16 @@ class Habit extends HiveObject {
       'timeIntervalEnabled': timeIntervalEnabled,
       'timeIntervalStart': timeIntervalStart,
       'timeIntervalEnd': timeIntervalEnd,
+      'scheduleType': scheduleType.name,
+      'weeklyTarget': weeklyTarget,
+      'monthlyTarget': monthlyTarget,
+      'customIntervalDays': customIntervalDays,
+      'selectedDaysAWeek': selectedDaysAWeek,
+      'selectedDaysAMonth': selectedDaysAMonth,
+      'customAppearance': customAppearance,
+      'timesCompletedThisWeek': timesCompletedThisWeek,
+      'timesCompletedThisMonth': timesCompletedThisMonth,
+      'lastCustomUpdate': lastCustomUpdate?.toIso8601String(),
       'colorName': colorName,
       'color': color,
       'isDeleted': isDeleted,
@@ -414,6 +543,19 @@ class Habit extends HiveObject {
       timeIntervalEnabled: (m['timeIntervalEnabled'] as bool?) ?? false,
       timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
       timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
+      scheduleType: _scheduleTypeFromString(
+        m['scheduleType']?.toString() ?? 'daily',
+      ),
+      weeklyTarget: (m['weeklyTarget'] as int?) ?? 1,
+      monthlyTarget: (m['monthlyTarget'] as int?) ?? 1,
+      customIntervalDays: (m['customIntervalDays'] as int?) ?? 2,
+      selectedDaysAWeek: _parseIntList(m['selectedDaysAWeek']),
+      selectedDaysAMonth: _parseIntList(m['selectedDaysAMonth']),
+      customAppearance: _parseStringList(m['customAppearance']),
+      timesCompletedThisWeek: (m['timesCompletedThisWeek'] as int?) ?? 0,
+      timesCompletedThisMonth: (m['timesCompletedThisMonth'] as int?) ?? 0,
+      lastCustomUpdate:
+          DateTime.tryParse(m['lastCustomUpdate']?.toString() ?? '')?.toUtc(),
       colorName: m['colorName'] as String?,
       isDeleted: m['isDeleted'] as bool?,
       timestamps: ts,
@@ -502,6 +644,56 @@ class Habit extends HiveObject {
         timeIntervalEnd,
         incoming.timeIntervalEnd,
       ),
+      scheduleType: resolve(
+        'scheduleType',
+        scheduleType,
+        incoming.scheduleType,
+      ),
+      weeklyTarget: resolve(
+        'weeklyTarget',
+        weeklyTarget,
+        incoming.weeklyTarget,
+      ),
+      monthlyTarget: resolve(
+        'monthlyTarget',
+        monthlyTarget,
+        incoming.monthlyTarget,
+      ),
+      customIntervalDays: resolve(
+        'customIntervalDays',
+        customIntervalDays,
+        incoming.customIntervalDays,
+      ),
+      selectedDaysAWeek: resolve(
+        'selectedDaysAWeek',
+        List<int>.from(selectedDaysAWeek),
+        List<int>.from(incoming.selectedDaysAWeek),
+      ),
+      selectedDaysAMonth: resolve(
+        'selectedDaysAMonth',
+        List<int>.from(selectedDaysAMonth),
+        List<int>.from(incoming.selectedDaysAMonth),
+      ),
+      customAppearance: resolve(
+        'customAppearance',
+        List<String>.from(customAppearance),
+        List<String>.from(incoming.customAppearance),
+      ),
+      timesCompletedThisWeek: resolve(
+        'timesCompletedThisWeek',
+        timesCompletedThisWeek,
+        incoming.timesCompletedThisWeek,
+      ),
+      timesCompletedThisMonth: resolve(
+        'timesCompletedThisMonth',
+        timesCompletedThisMonth,
+        incoming.timesCompletedThisMonth,
+      ),
+      lastCustomUpdate: resolve(
+        'lastCustomUpdate',
+        lastCustomUpdate,
+        incoming.lastCustomUpdate,
+      ),
       colorName: resolve('colorName', colorName, incoming.colorName),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       timestamps: mergedTimestamps,
@@ -539,5 +731,41 @@ class Habit extends HiveObject {
     }
 
     return merged;
+  }
+
+  static bool _sameIntList(List<int> a, List<int> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static bool _sameStringList(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static List<int> _parseIntList(dynamic value) {
+    if (value is! List) return [];
+    return value
+        .map((e) => int.tryParse(e.toString()))
+        .whereType<int>()
+        .toList();
+  }
+
+  static List<String> _parseStringList(dynamic value) {
+    if (value is! List) return [];
+    return value.map((e) => e.toString()).toList();
+  }
+
+  static ScheduleType _scheduleTypeFromString(String value) {
+    return ScheduleType.values.firstWhere(
+      (type) => type.name == value,
+      orElse: () => ScheduleType.daily,
+    );
   }
 }

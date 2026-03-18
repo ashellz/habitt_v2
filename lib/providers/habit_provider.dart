@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
+  List<Habit> todaysHabits = [];
 
   DateTime? _dateJoined;
   DateTime get dateJoined => _dateJoined ?? DateTime.now();
@@ -41,6 +43,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> init() async {
     await _loadHabits();
+    refreshTodaysHabits(notify: false);
     _fillToday();
     _loadDateJoined();
   }
@@ -90,6 +93,152 @@ class HabitProvider extends ChangeNotifier {
     }*/
   }
 
+  // Normalizing a datetime to be shorter so they can compare and be the same
+  DateTime _normalizeDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  // Function to check what week a date is in
+  int _weekKey(DateTime date) {
+    final normalized = _normalizeDate(date);
+    final monday = normalized.subtract(Duration(days: normalized.weekday - 1));
+    final startOfYear = DateTime(monday.year, 1, 1);
+    final dayOfYear = monday.difference(startOfYear).inDays + 1;
+    return (monday.year * 1000) + dayOfYear;
+  }
+
+  bool _isSameMonth(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month;
+  }
+
+  bool _isSameWeek(DateTime a, DateTime b) {
+    return _weekKey(a) == _weekKey(b);
+  }
+
+  // Checks how many times a habit has been completed in the current week
+  // Used for deterining if a habit with weekly schedule appears on a day
+  int _effectiveTimesCompletedThisWeek(Habit habit, DateTime day) {
+    final ts = habit.timestamps['timesCompletedThisWeek'];
+    if (ts == null) return habit.timesCompletedThisWeek;
+    return _weekKey(ts) == _weekKey(day) ? habit.timesCompletedThisWeek : 0;
+  }
+
+  // Checks how many times a habit has been completed in the current month
+  // Used for deterining if a habit with monthly schedule appears on a day
+  int _effectiveTimesCompletedThisMonth(Habit habit, DateTime day) {
+    final ts = habit.timestamps['timesCompletedThisMonth'];
+    if (ts == null) return habit.timesCompletedThisMonth;
+    return _isSameMonth(ts, day) ? habit.timesCompletedThisMonth : 0;
+  }
+
+  // Used for building the dates when habit should appear for a habit with custom schedule
+  List<String> _buildCustomAppearance({
+    required DateTime anchor,
+    required int intervalDays,
+  }) {
+    final normalizedAnchor = _normalizeDate(anchor);
+    final value = intervalDays.clamp(1, 365);
+    final output = <String>[];
+    for (int i = 0; i < 365; i += value) {
+      // Starting from the current day (anchor date), add dates to the appearance list based on the custom interval until we have a full year of appearances
+      output.add(
+        normalizedAnchor
+            .add(Duration(days: i))
+            .toIso8601String()
+            .split('T')
+            .first,
+      );
+    }
+    return output;
+  }
+
+  // Ensures that a habit with custom schedule has its customAppearance list updated with future dates if needed
+  void _ensureCustomAppearance(Habit habit, DateTime day) {
+    final now = DateTime.now().toUtc();
+    final normalizedDay = _normalizeDate(day);
+
+    // If custom schedule settings arent empty
+    if (habit.customAppearance.isNotEmpty && habit.lastCustomUpdate != null) {
+      final latest = DateTime.tryParse(habit.customAppearance.last);
+      // If the latest scheduled appearance is after the day we are checking, then we dont need to update the schedule appearances yet
+      if (latest != null && !normalizedDay.isAfter(latest)) {
+        return;
+      }
+    }
+
+    // If last update is null then we go from today (the given date), otherwise from the last update
+    final anchor =
+        habit.lastCustomUpdate == null
+            ? normalizedDay
+            : _normalizeDate(habit.lastCustomUpdate!);
+
+    // Updating habit data
+    habit.customAppearance = _buildCustomAppearance(
+      anchor: anchor,
+      intervalDays: habit.customIntervalDays,
+    );
+    habit.lastCustomUpdate = now;
+    habit.timestamps['customAppearance'] = now;
+    habit.timestamps['lastCustomUpdate'] = now;
+  }
+
+  // Here we check if a habit appears on a given day
+  bool _appearsOnDay(Habit habit, DateTime day) {
+    final normalizedDay = _normalizeDate(day);
+    switch (habit.scheduleType) {
+      case ScheduleType.daily:
+        return true;
+      case ScheduleType.weekly:
+        if (habit.selectedDaysAWeek.isNotEmpty) {
+          return habit.selectedDaysAWeek.contains(normalizedDay.weekday);
+        }
+        final weeklyCount = _effectiveTimesCompletedThisWeek(
+          habit,
+          normalizedDay,
+        );
+        return weeklyCount < habit.weeklyTarget;
+      case ScheduleType.monthly:
+        if (habit.selectedDaysAMonth.isNotEmpty) {
+          return habit.selectedDaysAMonth.contains(normalizedDay.day);
+        }
+        final monthlyCount = _effectiveTimesCompletedThisMonth(
+          habit,
+          normalizedDay,
+        );
+        return monthlyCount < habit.monthlyTarget;
+      case ScheduleType.custom:
+        _ensureCustomAppearance(habit, normalizedDay);
+        final key = normalizedDay.toIso8601String().split('T').first;
+        return habit.customAppearance.contains(key);
+    }
+  }
+
+  // Function to filter habits for a specific day based on their schedule and completion status
+  List<Habit> _filteredHabitsForDay(DateTime day, List<Habit> source) {
+    return source
+        .where((habit) => _appearsOnDay(habit, day) || habit.completed)
+        .toList();
+  }
+
+  // Getting habits for a certain day with extra logic
+  List<Habit> getHabitsForDate(DateTime day) {
+    final normalizedDay = _normalizeDate(day);
+    final today = _normalizeDate(DateTime.now());
+    if (normalizedDay == today) {
+      return List<Habit>.from(todaysHabits);
+    }
+    return getHabitsFromDay(normalizedDay);
+  }
+
+  // Refreshing todays habits
+  void refreshTodaysHabits({bool notify = true}) {
+    final today = _normalizeDate(DateTime.now());
+    todaysHabits = _filteredHabitsForDay(today, habits);
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
   void _fillToday() {
     final today = DateTime(
       DateTime.now().year,
@@ -104,7 +253,11 @@ class HabitProvider extends ChangeNotifier {
       debugPrint("Creating new day entry");
       daysBox.put(
         todayKey,
-        Day(date: today, habits: habits, timestamp: DateTime.now().toUtc()),
+        Day(
+          date: today,
+          habits: _filteredHabitsForDay(today, habits),
+          timestamp: DateTime.now().toUtc(),
+        ),
       );
     }
   }
@@ -197,22 +350,28 @@ class HabitProvider extends ChangeNotifier {
 
   // Function used to get list of habits from a specific day from database
   List<Habit> getHabitsFromDay(DateTime day, {bool hydrateMissing = false}) {
-    final dayKey = day.toIso8601String().split('T').first;
+    final normalizedDay = _normalizeDate(day);
+    final today = _normalizeDate(DateTime.now());
+    if (normalizedDay == today) {
+      return List<Habit>.from(todaysHabits);
+    }
+
+    final dayKey = normalizedDay.toIso8601String().split('T').first;
     Day? dayEntry = daysBox.get(dayKey);
     List<Habit> dayHabits = dayEntry?.habits ?? [];
 
     // Optionally hydrate missing days (only when explicitly requested)
     if (hydrateMissing &&
         dayHabits.isEmpty &&
-        day.isBefore(DateTime.now()) &&
-        (_dateJoined == null || day.isAfter(_dateJoined!)) &&
+        normalizedDay.isBefore(today) &&
+        (_dateJoined == null || normalizedDay.isAfter(_dateJoined!)) &&
         habits.isNotEmpty) {
-      saveHabitDay(day, resetCompletion: true);
+      saveHabitDay(normalizedDay, resetCompletion: true);
       dayEntry = daysBox.get(dayKey);
       dayHabits = dayEntry?.habits ?? [];
     }
 
-    return dayHabits;
+    return _filteredHabitsForDay(normalizedDay, dayHabits);
   }
 
   void addHabit(Habit habit) {
@@ -223,6 +382,7 @@ class HabitProvider extends ChangeNotifier {
     habits.add(habit);
     habitBox.add(habit);
     updateHabitInDB(habit);
+    refreshTodaysHabits(notify: false);
 
     notifyListeners();
   }
@@ -237,6 +397,7 @@ class HabitProvider extends ChangeNotifier {
     if (context.mounted) checkReorderCategories(context, habit);
 
     updateHabitInDB(habit);
+    refreshTodaysHabits(notify: false);
     notifyListeners();
   }
 
@@ -264,13 +425,42 @@ class HabitProvider extends ChangeNotifier {
     }
 
     debugPrint("Completing habit: $id, day: $day");
+    final wasCompleted = habit.completed;
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
+    final currentHabit = habits.firstWhere((h) => h.id == id);
+    // Check if habit is within the current week or month dependng on scheudle tpye
+    final shouldAffectCurrentPeriod =
+        (currentHabit.scheduleType == ScheduleType.weekly &&
+            _isSameWeek(daySimple, todaySimple)) ||
+        (currentHabit.scheduleType == ScheduleType.monthly &&
+            _isSameMonth(daySimple, todaySimple));
+
+    if (shouldAffectCurrentPeriod) {
+      // If it affects current period we update habit schedule counters
+      final weeklyBaseCount =
+          currentHabit.scheduleType == ScheduleType.weekly
+              ? _effectiveTimesCompletedThisWeek(currentHabit, daySimple)
+              : null;
+      final monthlyBaseCount =
+          currentHabit.scheduleType == ScheduleType.monthly
+              ? _effectiveTimesCompletedThisMonth(currentHabit, daySimple)
+              : null;
+
+      currentHabit.updateScheduleCountersOnCompletionToggle(
+        wasCompleted: wasCompleted,
+        isCompleted: habit.completed,
+        weeklyBaseCount: weeklyBaseCount,
+        monthlyBaseCount: monthlyBaseCount,
+      );
+    }
     if (context.mounted && daySimple == todaySimple) {
+      // Reordering categories if today
       checkReorderCategories(context, habit);
     }
 
     updateHabitInDB(habit, day: day);
+    refreshTodaysHabits(notify: false);
     notifyListeners();
   }
 
@@ -317,12 +507,14 @@ class HabitProvider extends ChangeNotifier {
       checkReorderCategories(context, habit);
     }
     updateHabitInDB(habit, day: day);
+    refreshTodaysHabits(notify: false);
     notifyListeners();
   }
 
   void updateHabit(Habit habit) {
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
     updateHabitInDB(habit);
+    refreshTodaysHabits(notify: false);
 
     notifyListeners();
   }
@@ -332,6 +524,7 @@ class HabitProvider extends ChangeNotifier {
       await habit.resetCompletion();
       await updateHabitInDB(habit);
     }
+    refreshTodaysHabits(notify: false);
     notifyListeners();
   }
 
@@ -358,6 +551,7 @@ class HabitProvider extends ChangeNotifier {
     if (context.mounted) checkReorderCategories(context, habit);
 
     updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    refreshTodaysHabits(notify: false);
     notifyListeners();
   }
 
@@ -385,6 +579,7 @@ class HabitProvider extends ChangeNotifier {
     if (context.mounted) checkReorderCategories(context, habit);
 
     updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    refreshTodaysHabits(notify: false);
     notifyListeners();
   }
 
@@ -404,11 +599,13 @@ class HabitProvider extends ChangeNotifier {
       clonedHabits = habits.map((h) => h.copy()).toList();
     }
 
+    final scheduledForDay = _filteredHabitsForDay(daySimple, clonedHabits);
+
     daysBox.put(
       dayKey,
       Day(
         date: daySimple,
-        habits: clonedHabits,
+        habits: scheduledForDay,
         timestamp: DateTime.now().toUtc(),
       ),
     );
@@ -416,92 +613,68 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> assignStreaks() async {
     debugPrint("Assigning streaks");
+
     final sortedDays = daysBox.values.toList();
+    // Getting all days from the database and sorting them from newest to oldest
+    sortedDays.sort((a, b) => b.date.compareTo(a.date));
 
-    sortedDays.sort(
-      (a, b) => (DateTime.now().difference(a.date).inDays).compareTo(
-        DateTime.now().difference(b.date).inDays,
-      ),
-    );
-
-    // We now remove today from the list
-    sortedDays.removeWhere((day) => day.date.day == DateTime.now().day);
-
-    // We now have a list of days to work with
-    // from today to the day we started using the app
-    // day has a date and habits
-
-    // If the difference between last saved day and today is bigger then 1, then all streaks are 0
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    // We start from the first one because that is the closest day to today
-    if (sortedDays.first.date.difference(today).inDays > 1) {
-      debugPrint("All habits are 0");
-      for (final habit in habits) {
-        habit.streak = 0;
-        habit.save();
-      }
-      notifyListeners();
-      return;
-    }
+    final today = _normalizeDate(DateTime.now());
+    // Removing today
+    sortedDays.removeWhere((day) => _normalizeDate(day.date) == today);
 
     final currentHabits = habitBox.values;
-
-    // We save all current habits from habitBox
-
-    // We should now check every single habit from currentHabits
-    // And for each habit we check every single day
-    // from today to the day we started using the app or the day habit isnt completed
 
     for (final habit in currentHabits) {
       debugPrint("Checking habit: ${habit.name}");
 
       int streak = 0;
       int longestStreak = habit.longestStreak;
-
-      bool shouldBreak = false;
-
-      bool completed = false;
-      bool skipped = false;
+      int consecutiveMisses = 0;
 
       for (final day in sortedDays) {
-        debugPrint("Checking day: ${day.date} for habit: ${habit.name}");
+        final normalizedDay = _normalizeDate(day.date);
 
-        for (final dayHabit in day.habits) {
-          if (dayHabit.id == habit.id) {
-            completed = dayHabit.completed;
-            skipped = dayHabit.skipped;
+        if (!_appearsOnDay(habit, normalizedDay)) {
+          // If it doenst appear on this day, we skip it, it doesnt affect the streak
+          continue;
+        }
 
-            debugPrint(
-              "Completed: $completed, Skipped: $skipped, Streak: $streak on day ${day.date}",
-            );
-
-            if (completed) {
-              streak++;
-            } else if (!skipped) {
-              shouldBreak = true;
-              break;
-            }
-
-            if (streak > longestStreak) {
-              longestStreak = streak;
-            }
+        Habit? dayHabit;
+        // We get the correct habit
+        for (final candidate in day.habits) {
+          if (candidate.id == habit.id) {
+            dayHabit = candidate;
+            break;
           }
         }
 
-        if (shouldBreak) {
-          break;
+        if (dayHabit == null) {
+          continue;
+        }
+
+        // If it's completed we reset misses counter and increase streak
+        if (dayHabit.completed) {
+          streak++;
+          consecutiveMisses = 0;
+          if (streak > longestStreak) {
+            longestStreak = streak;
+          }
+        } else {
+          // If not completed we increment misses counter
+
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2) {
+            // If there are 2 or more consecutive misses, we break the loop
+            break;
+          }
         }
       }
 
       habit.updateStreak(streak: streak, longestStreak: longestStreak);
       debugPrint("Streak: $streak, Longest Streak: $longestStreak");
-
-      habit.save();
+      await habit.save();
     }
 
-    // Trigger auto-sync after updating all streaks
     notifyListeners();
   }
 }

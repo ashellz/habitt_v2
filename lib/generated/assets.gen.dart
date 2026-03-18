@@ -14,12 +14,21 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/icon.png
-  AssetGenImage get icon => const AssetGenImage('assets/images/icon.png');
+  /// File path: assets/images/icon-dark-android.png
+  AssetGenImage get iconDarkAndroid =>
+      const AssetGenImage('assets/images/icon-dark-android.png');
 
-  /// File path: assets/images/icon_android.png
-  AssetGenImage get iconAndroid =>
-      const AssetGenImage('assets/images/icon_android.png');
+  /// File path: assets/images/icon-dark-ios.png
+  AssetGenImage get iconDarkIos =>
+      const AssetGenImage('assets/images/icon-dark-ios.png');
+
+  /// File path: assets/images/icon-light-android.png
+  AssetGenImage get iconLightAndroid =>
+      const AssetGenImage('assets/images/icon-light-android.png');
+
+  /// File path: assets/images/icon-light-ios.png
+  AssetGenImage get iconLightIos =>
+      const AssetGenImage('assets/images/icon-light-ios.png');
 
   /// File path: assets/images/icon_background.png
   AssetGenImage get iconBackground =>
@@ -39,16 +48,28 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/new-svg
   $AssetsImagesNewSvgGen get newSvg => const $AssetsImagesNewSvgGen();
 
+  /// File path: assets/images/splash-dark.png
+  AssetGenImage get splashDark =>
+      const AssetGenImage('assets/images/splash-dark.png');
+
+  /// File path: assets/images/splash-light.png
+  AssetGenImage get splashLight =>
+      const AssetGenImage('assets/images/splash-light.png');
+
   /// Directory path: assets/images/svg
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 
   /// List of all assets
   List<AssetGenImage> get values => [
-    icon,
-    iconAndroid,
+    iconDarkAndroid,
+    iconDarkIos,
+    iconLightAndroid,
+    iconLightIos,
     iconBackground,
     iconLight,
     iconSplashAndroid,
+    splashDark,
+    splashLight,
   ];
 }
 
@@ -522,6 +543,21 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/calendar.svg
   String get calendar => 'assets/images/new-svg/calendar.svg';
 
+  /// File path: assets/images/new-svg/check-off-dark.svg
+  String get checkOffDark => 'assets/images/new-svg/check-off-dark.svg';
+
+  /// File path: assets/images/new-svg/check-off-light.svg
+  String get checkOffLight => 'assets/images/new-svg/check-off-light.svg';
+
+  /// File path: assets/images/new-svg/check-on-dark.svg
+  String get checkOnDark => 'assets/images/new-svg/check-on-dark.svg';
+
+  /// File path: assets/images/new-svg/check-on-light.svg
+  String get checkOnLight => 'assets/images/new-svg/check-on-light.svg';
+
+  /// File path: assets/images/new-svg/clock.svg
+  String get clock => 'assets/images/new-svg/clock.svg';
+
   /// File path: assets/images/new-svg/close.svg
   String get close => 'assets/images/new-svg/close.svg';
 
@@ -621,9 +657,6 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/terms.svg
   String get terms => 'assets/images/new-svg/terms.svg';
 
-  /// File path: assets/images/new-svg/time.svg
-  String get time => 'assets/images/new-svg/time.svg';
-
   /// File path: assets/images/new-svg/total-time.svg
   String get totalTime => 'assets/images/new-svg/total-time.svg';
 
@@ -641,6 +674,11 @@ class $AssetsImagesNewSvgGen {
     arrowLeft,
     back,
     calendar,
+    checkOffDark,
+    checkOffLight,
+    checkOnDark,
+    checkOnLight,
+    clock,
     close,
     completed,
     completionRate,
@@ -674,7 +712,6 @@ class $AssetsImagesNewSvgGen {
     stats,
     streak,
     terms,
-    time,
     totalTime,
     uploadPhoto,
     wrapUp,

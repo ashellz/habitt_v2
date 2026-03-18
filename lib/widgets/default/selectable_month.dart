@@ -10,8 +10,8 @@ class SelectableMonth extends StatelessWidget {
     this.selectionDuration = const Duration(milliseconds: 200),
   });
 
-  final Set<String> selectedDays;
-  final ValueChanged<String> onDaySelected;
+  final Set<int> selectedDays;
+  final ValueChanged<int> onDaySelected;
   final Duration selectionDuration;
 
   @override
@@ -35,9 +35,9 @@ class SelectableMonth extends StatelessWidget {
                 List.generate(31, (index) => index + 1).map((day) {
                   return _SelectableMonthDayButton(
                     label: day.toString(),
-                    isSelected: selectedDays.contains(day.toString()),
+                    isSelected: selectedDays.contains(day),
                     selectionDuration: selectionDuration,
-                    onPressed: () => onDaySelected(day.toString()),
+                    onPressed: () => onDaySelected(day),
                   );
                 }).toList(),
           ),

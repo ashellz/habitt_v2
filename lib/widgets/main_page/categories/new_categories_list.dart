@@ -95,8 +95,8 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final habitProvider = context.read<HabitProvider>();
     final habitsList =
         widget.selectedDay == null
-            ? habitProvider.habits
-            : habitProvider.getHabitsFromDay(widget.selectedDay!);
+            ? habitProvider.todaysHabits
+            : habitProvider.getHabitsForDate(widget.selectedDay!);
 
     final selectedId = categoryProvider.selectedCategoryId;
     final visibleIds = _visibleCategoryIds(habitsList);
@@ -143,8 +143,8 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final habitProvider = context.watch<HabitProvider>();
     final habitsList =
         widget.selectedDay == null
-            ? habitProvider.habits
-            : habitProvider.getHabitsFromDay(widget.selectedDay!);
+            ? habitProvider.todaysHabits
+            : habitProvider.getHabitsForDate(widget.selectedDay!);
     final List<bool> hasHabits = [];
     final List<Category> visibleCategories = [];
 

@@ -46,6 +46,16 @@ class AddHabitButton extends StatelessWidget {
       return timeComponent * 1000 + random;
     }
 
+    List<String> buildCustomAppearance(int intervalDays) {
+      final start = DateTime.now();
+      final anchor = DateTime(start.year, start.month, start.day);
+      final output = <String>[];
+      for (int i = 0; i < 180; i += intervalDays) {
+        output.add(anchor.add(Duration(days: i)).toIso8601String().split('T').first);
+      }
+      return output;
+    }
+
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: nameController,
       builder: (context, value, child) {
@@ -80,6 +90,20 @@ class AddHabitButton extends StatelessWidget {
                   timeIntervalEnabled: stateProvider.timeIntervalEnabled,
                   timeIntervalStart: stateProvider.timeIntervalStart,
                   timeIntervalEnd: stateProvider.timeIntervalEnd,
+                  scheduleType: stateProvider.selectedScheduleOption,
+                  weeklyTarget: stateProvider.weeklyTarget,
+                  monthlyTarget: stateProvider.monthlyTarget,
+                  customIntervalDays: stateProvider.customIntervalDays,
+                  selectedDaysAWeek:
+                      stateProvider.selectedDaysAWeek.toList()..sort(),
+                  selectedDaysAMonth:
+                      stateProvider.selectedDaysAMonth.toList()..sort(),
+                  customAppearance: buildCustomAppearance(
+                    stateProvider.customIntervalDays,
+                  ),
+                  timesCompletedThisWeek: 0,
+                  timesCompletedThisMonth: 0,
+                  lastCustomUpdate: DateTime.now().toUtc(),
                   colorName: stateProvider.habitColorName,
                 ),
               );
