@@ -2,23 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:provider/provider.dart';
 
-class SelectableWeekdays extends StatelessWidget {
-  const SelectableWeekdays({
+class SelectableMonth extends StatelessWidget {
+  const SelectableMonth({
     super.key,
     required this.selectedDays,
     required this.onDaySelected,
     this.selectionDuration = const Duration(milliseconds: 200),
   });
-
-  static const List<String> _weekDays = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
-  ];
 
   final Set<String> selectedDays;
   final ValueChanged<String> onDaySelected;
@@ -26,23 +16,39 @@ class SelectableWeekdays extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children:
-          _weekDays.map((day) {
-            return _SelectableWeekDayButton(
-              label: day,
-              isSelected: selectedDays.contains(day),
-              selectionDuration: selectionDuration,
-              onPressed: () => onDaySelected(day),
-            );
-          }).toList(),
+    const itemSize = 38.0;
+    const verticalSpacing = 8.0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final totalItemWidth = itemSize * 7;
+        final remainingWidth = constraints.maxWidth - totalItemWidth;
+        final horizontalSpacing = remainingWidth > 0 ? remainingWidth / 6 : 0.0;
+
+        return SizedBox(
+          height: (itemSize * 5) + (verticalSpacing * 4),
+          child: Wrap(
+            direction: Axis.horizontal,
+            spacing: horizontalSpacing,
+            runSpacing: verticalSpacing,
+            children:
+                List.generate(31, (index) => index + 1).map((day) {
+                  return _SelectableMonthDayButton(
+                    label: day.toString(),
+                    isSelected: selectedDays.contains(day.toString()),
+                    selectionDuration: selectionDuration,
+                    onPressed: () => onDaySelected(day.toString()),
+                  );
+                }).toList(),
+          ),
+        );
+      },
     );
   }
 }
 
-class _SelectableWeekDayButton extends StatelessWidget {
-  const _SelectableWeekDayButton({
+class _SelectableMonthDayButton extends StatelessWidget {
+  const _SelectableMonthDayButton({
     required this.label,
     required this.isSelected,
     required this.selectionDuration,
@@ -62,12 +68,11 @@ class _SelectableWeekDayButton extends StatelessWidget {
     return AnimatedContainer(
       duration: selectionDuration,
       curve: Curves.easeOut,
-      width: 36,
-      height: 36,
+      width: 38,
+      height: 38,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isSelected ? cp.pill : Colors.transparent,
-        border: Border.all(width: 1, color: isSelected ? cp.pill : cp.disabled),
+        color: isSelected ? cp.main : cp.field,
       ),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -94,8 +99,8 @@ class _SelectableWeekDayButton extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? cp.bg : cp.text,
-              fontSize: 13,
+              color: cp.text,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
