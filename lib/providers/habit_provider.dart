@@ -205,7 +205,8 @@ class HabitProvider extends ChangeNotifier {
     if (hydrateMissing &&
         dayHabits.isEmpty &&
         day.isBefore(DateTime.now()) &&
-        (_dateJoined == null || day.isAfter(_dateJoined!))) {
+        (_dateJoined == null || day.isAfter(_dateJoined!)) &&
+        habits.isNotEmpty) {
       saveHabitDay(day, resetCompletion: true);
       dayEntry = daysBox.get(dayKey);
       dayHabits = dayEntry?.habits ?? [];
