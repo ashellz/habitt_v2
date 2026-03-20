@@ -18,19 +18,27 @@ class AddNewHabitSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final stateProvider = context.watch<StateProvider>();
+    final mediaQuery = MediaQuery.of(context);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
-      child: Column(
-        spacing: 20,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          topSection(context, cp),
-          chooseIcon(cp, stateProvider, context),
-          habitDetails(cp),
-          habitScheduling(cp, context, stateProvider),
-        ],
+    final maxSheetHeight = mediaQuery.size.height - 59 - 16;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxSheetHeight),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
+          child: Column(
+            spacing: 20,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              topSection(context, cp),
+              chooseIcon(cp, stateProvider, context),
+              habitDetails(cp),
+              habitScheduling(cp, context, stateProvider),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -171,7 +171,10 @@ class _SelectHabitDayPeriodState extends State<SelectHabitDayPeriod>
                       curve: Curves.easeInOut,
                     ),
                   ),
-                  child: SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                  child: SvgPicture.asset(
+                    "assets/images/new-svg/dropdown.svg",
+                    colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                  ),
                 ),
               ],
             ),

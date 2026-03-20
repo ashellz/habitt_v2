@@ -33,10 +33,10 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 52,
     this.child,
     this.padding = const EdgeInsets.only(),
+    this.textColor,
   }) : color = null,
        width = null,
        isGradient = true,
-       textColor = Colors.white,
        _variant = _ButtonVariant.primary;
 
   const NewDefaultButton.secondary({
@@ -49,8 +49,8 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 52,
     this.child,
     this.padding = const EdgeInsets.only(),
+    this.textColor,
   }) : color = null,
-       textColor = null,
        width = null,
        isGradient = false,
        _variant = _ButtonVariant.secondary;
@@ -65,9 +65,9 @@ class NewDefaultButton extends StatelessWidget {
     this.width = 66,
     this.height = 36,
     this.child,
+    this.textColor,
     this.padding = const EdgeInsets.only(),
   }) : color = null,
-       textColor = Colors.white,
        isGradient = true,
        _variant = _ButtonVariant.small;
 
@@ -111,7 +111,13 @@ class NewDefaultButton extends StatelessWidget {
         break;
     }
 
-    final Color resolvedTextColor = textColor ?? bestContrastingOn(buttonColor);
+    final bool isMainButtonVariant =
+        _variant == _ButtonVariant.primary || _variant == _ButtonVariant.small;
+    final Color resolvedTextColor =
+        textColor ??
+        (cp.isDark && isMainButtonVariant
+            ? const Color(0xFF0C0C0C)
+            : bestContrastingOn(buttonColor));
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 150),
