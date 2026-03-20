@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:provider/provider.dart';
 
@@ -71,6 +72,8 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
 
   @override
   Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+
     return NewDefaultTextField(
       fontWeight: FontWeight.w500,
       title: "Amount",
@@ -82,8 +85,11 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
           onDecrement();
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SvgPicture.asset("assets/images/new-svg/minus.svg"),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
+          child: SvgPicture.asset(
+            "assets/images/new-svg/minus.svg",
+            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+          ),
         ),
       ),
       suffix: GestureDetector(
@@ -100,8 +106,11 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
           _stopIncrementing();
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SvgPicture.asset("assets/images/new-svg/plus.svg"),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
+          child: SvgPicture.asset(
+            "assets/images/new-svg/plus.svg",
+            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+          ),
         ),
       ),
     );
