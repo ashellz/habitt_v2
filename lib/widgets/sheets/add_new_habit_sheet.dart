@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/new_color_service.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
@@ -19,20 +23,34 @@ class AddNewHabitSheet extends StatefulWidget {
 }
 
 class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
+  late final VoidCallback _nameListener;
+
   @override
   void initState() {
     super.initState();
-    final stateProvider = context.read<StateProvider>();
+    final sp = context.read<StateProvider>();
+    _nameListener = () {
+      if (mounted) {
+        setState(() {});
+      }
+    };
+    sp.nameController.addListener(_nameListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      stateProvider.reset();
+      sp.reset();
     });
+  }
+
+  @override
+  void dispose() {
+    context.read<StateProvider>().nameController.removeListener(_nameListener);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final stateProvider = context.watch<StateProvider>();
+    final sp = context.watch<StateProvider>();
     final mediaQuery = MediaQuery.of(context);
 
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
@@ -48,9 +66,9 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               topSection(context, cp),
-              chooseIcon(cp, stateProvider, context),
+              chooseIcon(cp, sp, context),
               habitDetails(cp),
-              habitScheduling(cp, context, stateProvider),
+              habitScheduling(cp, context, sp),
             ],
           ),
         ),
@@ -61,7 +79,7 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
   Column habitScheduling(
     ColorProvider cp,
     BuildContext context,
-    StateProvider stateProvider,
+    StateProvider sp,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,9 +103,9 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
   }
 
   Column habitDetails(ColorProvider cp) {
-    final stateProvider = context.read<StateProvider>();
-    final habitNameController = stateProvider.nameController;
-    final habitNotesController = stateProvider.descController;
+    final sp = context.read<StateProvider>();
+    final habitNameController = sp.nameController;
+    final habitNotesController = sp.descController;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,11 +138,7 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
     );
   }
 
-  Column chooseIcon(
-    ColorProvider cp,
-    StateProvider stateProvider,
-    BuildContext context,
-  ) {
+  Column chooseIcon(ColorProvider cp, StateProvider sp, BuildContext context) {
     return Column(
       spacing: 20,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,23 +155,22 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
           onPressed: () async {
             final emoji = await showEmojiKeyboardDialog(context, cp);
             if (emoji != null && context.mounted) {
-              stateProvider.iconPath = emoji;
+              sp.iconPath = emoji;
             }
           },
           width: 84,
           height: 84,
           color: cp.field,
           padding: EdgeInsets.all(20),
-          child: TextIcon(
-            stateProvider.iconPath.isEmpty ? "🏀" : stateProvider.iconPath,
-            size: 44,
-          ),
+          child: TextIcon(sp.iconPath.isEmpty ? "🏀" : sp.iconPath, size: 44),
         ),
       ],
     );
   }
 
   Padding topSection(BuildContext context, ColorProvider cp) {
+    final sp = context.read<StateProvider>();
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: Row(
@@ -188,9 +201,77 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          NewDefaultButton.small(onPressed: () {}, label: "Done"),
+          NewDefaultButton.small(
+            enabled: sp.nameController.text.isNotEmpty,
+            onPressed: () {
+              final habitProvider = context.read<HabitProvider>();
+              habitProvider.addHabit(
+                Habit(
+                  id: getUniqueId(),
+                  name: sp.nameController.text,
+                  description: sp.descController.text,
+                  iconPath: sp.iconPath,
+                  categoryId: sp.habitCategoryId,
+                  tag: "No tag",
+                  completed: false,
+                  skipped: false,
+                  amount: sp.habitAmount,
+                  amountLabel: sp.habitAmountLabelController.text,
+                  amountCompleted: 0,
+                  duration: sp.habitDuration.inMinutes,
+                  durationCompleted: 0,
+                  streak: 0,
+                  longestStreak: 0,
+                  optional: sp.isOptional,
+                  timeIntervalEnabled: sp.timeIntervalEnabled,
+                  timeIntervalStart: sp.timeIntervalStart,
+                  timeIntervalEnd: sp.timeIntervalEnd,
+                  scheduleType: sp.selectedScheduleOption,
+                  weeklyTarget: sp.weeklyTarget,
+                  monthlyTarget: sp.monthlyTarget,
+                  customIntervalDays: sp.customIntervalDays,
+                  selectedDaysAWeek: sp.selectedDaysAWeek.toList()..sort(),
+                  selectedDaysAMonth: sp.selectedDaysAMonth.toList()..sort(),
+                  customAppearance: buildCustomAppearance(
+                    sp.customIntervalDays,
+                  ),
+                  timesCompletedThisWeek: 0,
+                  timesCompletedThisMonth: 0,
+                  lastCustomUpdate: DateTime.now().toUtc(),
+                  colorName: sp.habitColorName,
+                ),
+              );
+              Navigator.of(context).pop();
+            },
+            label: "Done",
+          ),
         ],
       ),
     );
   }
+}
+
+int getUniqueId() {
+  final now = DateTime.now();
+  // Milliseconds since epoch provides the time component
+  final timeComponent = now.millisecondsSinceEpoch;
+
+  // Generate a random number between 0 and 999
+  final random = Random().nextInt(1000);
+
+  // Combine them. This makes the ID much more unique.
+  // The multiplication shifts the time component to make space for the random part.
+  return timeComponent * 1000 + random;
+}
+
+List<String> buildCustomAppearance(int intervalDays) {
+  final start = DateTime.now();
+  final anchor = DateTime(start.year, start.month, start.day);
+  final output = <String>[];
+  for (int i = 0; i < 180; i += intervalDays) {
+    output.add(
+      anchor.add(Duration(days: i)).toIso8601String().split('T').first,
+    );
+  }
+  return output;
 }
