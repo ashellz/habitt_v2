@@ -11,8 +11,23 @@ import 'package:habitt/widgets/habit_details/new/select_habit_type.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
 
-class AddNewHabitSheet extends StatelessWidget {
+class AddNewHabitSheet extends StatefulWidget {
   const AddNewHabitSheet({super.key});
+
+  @override
+  State<AddNewHabitSheet> createState() => _AddNewHabitSheetState();
+}
+
+class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
+  @override
+  void initState() {
+    super.initState();
+    final stateProvider = context.read<StateProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      stateProvider.reset();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +85,10 @@ class AddNewHabitSheet extends StatelessWidget {
   }
 
   Column habitDetails(ColorProvider cp) {
+    final stateProvider = context.read<StateProvider>();
+    final habitNameController = stateProvider.nameController;
+    final habitNotesController = stateProvider.descController;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
@@ -88,12 +107,12 @@ class AddNewHabitSheet extends StatelessWidget {
         NewDefaultTextField(
           title: "Habit Name",
           hint: "Habit Name",
-          controller: TextEditingController(),
+          controller: habitNameController,
         ),
         NewDefaultTextField(
           hint: "Notes",
           maxLines: 4,
-          controller: TextEditingController(),
+          controller: habitNotesController,
         ),
 
         SelectHabitDayPeriod(),
@@ -154,7 +173,10 @@ class AddNewHabitSheet extends StatelessWidget {
               },
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: SvgPicture.asset("assets/images/new-svg/back.svg"),
+                child: SvgPicture.asset(
+                  "assets/images/new-svg/back.svg",
+                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                ),
               ),
             ),
           ),

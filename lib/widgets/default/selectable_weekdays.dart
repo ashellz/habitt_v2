@@ -66,8 +66,8 @@ class _SelectableWeekDayButton extends StatelessWidget {
       height: 36,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isSelected ? cp.pill : Colors.transparent,
-        border: Border.all(width: 1, color: isSelected ? cp.pill : cp.disabled),
+        color: isSelected ? cp.text : Colors.transparent,
+        border: Border.all(width: 1, color: isSelected ? cp.text : cp.disabled),
       ),
       child: ElevatedButton(
         onPressed: onPressed,

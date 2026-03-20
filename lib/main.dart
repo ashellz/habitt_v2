@@ -215,7 +215,9 @@ class _MyAppState extends State<MyApp> {
         bodyColor: cp.text,
         displayColor: cp.text,
       ),
-      dialogTheme: DialogThemeData(backgroundColor: cp.habitBg),
+      dialogTheme: DialogThemeData(
+        backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: cp.main,

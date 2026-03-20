@@ -75,10 +75,13 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        final next = sp.weeklyTarget == 6 ? 1 : sp.weeklyTarget + 1;
+                        final next =
+                            sp.weeklyTarget == 6 ? 1 : sp.weeklyTarget + 1;
                         sp.weeklyTarget = next;
                       },
-                      child: SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                      child: SvgPicture.asset(
+                        "assets/images/new-svg/dropdown.svg",
+                      ),
                     ),
                   ],
                 ),
@@ -162,7 +165,10 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                         });
                       },
                       height: 40,
-                      prefix: SvgPicture.asset("assets/images/new-svg/add.svg"),
+                      prefix: SvgPicture.asset(
+                        "assets/images/new-svg/add.svg",
+                        colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                      ),
                       label: "Add more options",
                     ),
           ),

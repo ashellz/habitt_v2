@@ -78,7 +78,9 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                             sp.monthlyTarget == 30 ? 1 : sp.monthlyTarget + 1;
                         sp.monthlyTarget = next;
                       },
-                      child: SvgPicture.asset("assets/images/new-svg/dropdown.svg"),
+                      child: SvgPicture.asset(
+                        "assets/images/new-svg/dropdown.svg",
+                      ),
                     ),
                   ],
                 ),
@@ -162,7 +164,10 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                         });
                       },
                       height: 40,
-                      prefix: SvgPicture.asset("assets/images/new-svg/add.svg"),
+                      prefix: SvgPicture.asset(
+                        "assets/images/new-svg/add.svg",
+                        colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                      ),
                       label: "Add more options",
                     ),
           ),
