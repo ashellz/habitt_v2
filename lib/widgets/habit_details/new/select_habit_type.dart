@@ -10,20 +10,133 @@ import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_in
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-enum NewHabitType { amount, duration }
+enum HabitType { none, amount, duration }
 
-class SelectHabitType extends StatelessWidget {
+class SelectHabitType extends StatefulWidget {
   const SelectHabitType({super.key});
+
+  @override
+  State<SelectHabitType> createState() => _SelectHabitTypeState();
+}
+
+class _SelectHabitTypeState extends State<SelectHabitType> {
+  HabitType selectedType = HabitType.none;
+  HabitType lastSelectedType = HabitType.amount;
+
+  Alignment _getIndicatorAlignment() {
+    if (selectedType == HabitType.amount) {
+      return Alignment.centerLeft;
+    }
+
+    if (selectedType == HabitType.duration) {
+      return Alignment.centerRight;
+    }
+
+    return lastSelectedType == HabitType.duration
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
+  }
+
+  // We use this function to edit duration without resetting it
+  void longPressDuration() {
+    final stateProvider = context.read<StateProvider>();
+
+    setState(() {
+      selectedType =
+          HabitType.duration; // Setting the selected type to duration
+      lastSelectedType = HabitType.duration;
+    });
+
+    // Resetting the amount just in case
+    stateProvider.habitAmount = 0;
+
+    if (stateProvider.habitDuration.inMinutes == 0) {
+      // If the duration hasn't been selected before, we set it to 20 minutes as default
+      stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+    }
+  }
+
+  // We use this function to edit amount without resetting it
+  void longPressAmount() {
+    final stateProvider = context.read<StateProvider>();
+
+    setState(() {
+      selectedType = HabitType.amount; // Setting the selected type to amount
+      lastSelectedType = HabitType.amount;
+    });
+
+    // Resetting duration to zero just in case
+    stateProvider.habitDuration = Duration.zero;
+
+    if (stateProvider.habitAmount == 0) {
+      // If amount hasn't been set, we default it to 2
+      stateProvider.habitAmount = 2;
+    }
+  }
+
+  // This toggles the amount type on tap, and navigates if selected
+  void onTapAmount() {
+    debugPrint("Tapped amount");
+
+    final stateProvider = context.read<StateProvider>();
+
+    setState(() {
+      // Toggles the selected type between amount and none
+      selectedType =
+          selectedType == HabitType.amount ? HabitType.none : HabitType.amount;
+
+      if (selectedType == HabitType.amount) {
+        lastSelectedType = HabitType.amount;
+      }
+    });
+
+    if (selectedType == HabitType.none) {
+      // If deselected, clear amount
+      stateProvider.habitAmount = 0;
+    } else if (selectedType == HabitType.amount) {
+      // If selected, we reset duration and set default amount
+      stateProvider.habitDuration = Duration.zero;
+      stateProvider.habitAmount = 2;
+
+      debugPrint("Selected type: $selectedType");
+    }
+  }
+
+  // This toggles the duration type on tap, and navigates if selected
+  void onTapDuration() {
+    debugPrint("Tapped duration");
+    final stateProvider = context.read<StateProvider>();
+
+    setState(() {
+      // Toggles the selected type between duration and none
+      selectedType =
+          selectedType == HabitType.duration
+              ? HabitType.none
+              : HabitType.duration;
+
+      if (selectedType == HabitType.duration) {
+        lastSelectedType = HabitType.duration;
+      }
+    });
+
+    if (selectedType == HabitType.none) {
+      // If deselected, clear duration
+      stateProvider.habitDuration = Duration.zero;
+    } else if (selectedType == HabitType.duration) {
+      // If selected, reset amount and set default duration
+      stateProvider.habitAmount = 0;
+      stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+    }
+  }
+
+  int amount = 0;
+  int duration = 0;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
 
-    final selectedType =
-        sp.habitDuration.inMinutes > 0
-            ? NewHabitType.duration
-            : NewHabitType.amount;
     final selectedBg = cp.text;
     final selectedTextColor = cp.bg;
 
@@ -39,22 +152,22 @@ class SelectHabitType extends StatelessWidget {
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final bool isAmountSelected = selectedType == NewHabitType.amount;
-
               return Stack(
                 children: [
                   AnimatedAlign(
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeOutCubic,
-                    alignment:
-                        isAmountSelected
-                            ? Alignment.centerLeft
-                            : Alignment.centerRight,
-                    child: Container(
-                      width: constraints.maxWidth / 2,
-                      decoration: BoxDecoration(
-                        color: selectedBg,
-                        borderRadius: BorderRadius.circular(100),
+                    alignment: _getIndicatorAlignment(),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutCubic,
+                      opacity: selectedType == HabitType.none ? 0 : 1,
+                      child: Container(
+                        width: constraints.maxWidth / 2,
+                        decoration: BoxDecoration(
+                          color: selectedBg,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
                       ),
                     ),
                   ),
@@ -63,29 +176,24 @@ class SelectHabitType extends StatelessWidget {
                       Expanded(
                         child: _TypeButton(
                           label: 'Amount',
-                          selected: isAmountSelected,
+                          type: HabitType.amount,
+                          selected: selectedType,
                           selectedTextColor: selectedTextColor,
                           unselectedTextColor: cp.lightGreyText,
-                          onTap: () {
-                            sp.habitDuration = Duration.zero;
-                            if (sp.habitAmount <= 0) {
-                              sp.habitAmount = 2;
-                            }
-                          },
+                          onTap: onTapAmount,
+                          onLongPress: longPressAmount,
                         ),
                       ),
                       Expanded(
                         child: _TypeButton(
                           label: 'Duration',
-                          selected: !isAmountSelected,
+                          type: HabitType.duration,
+                          selected: selectedType,
                           selectedTextColor: selectedTextColor,
                           unselectedTextColor: cp.lightGreyText,
-                          onTap: () {
-                            sp.habitAmount = 0;
-                            if (sp.habitDuration.inMinutes <= 0) {
-                              sp.habitDuration = const Duration(minutes: 20);
-                            }
-                          },
+
+                          onTap: onTapDuration,
+                          onLongPress: longPressDuration,
                         ),
                       ),
                     ],
@@ -95,9 +203,9 @@ class SelectHabitType extends StatelessWidget {
             },
           ),
         ),
-        if (selectedType == NewHabitType.duration)
+        if (selectedType == HabitType.duration)
           _enterDuration(cp, context, sp)
-        else
+        else if (selectedType == HabitType.amount)
           _enterAmount(sp, cp),
       ],
     );
@@ -166,12 +274,7 @@ class SelectHabitType extends StatelessWidget {
     return Row(
       spacing: 10,
       children: [
-        Expanded(
-          child: AmountProgressInput(
-            amount: sp.habitAmount,
-            amountCompleted: 0,
-          ),
-        ),
+        Expanded(child: AmountProgressInput(amount: sp.habitAmount)),
         Expanded(
           child: NewDefaultTextField(
             controller: TextEditingController(),
@@ -200,22 +303,29 @@ class SelectHabitType extends StatelessWidget {
 class _TypeButton extends StatelessWidget {
   const _TypeButton({
     required this.label,
+    required this.type,
     required this.selected,
     required this.selectedTextColor,
     required this.unselectedTextColor,
     required this.onTap,
+    required this.onLongPress,
   });
 
   final String label;
-  final bool selected;
+  final HabitType type;
+  final HabitType selected;
   final Color selectedTextColor;
   final Color unselectedTextColor;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
   @override
   Widget build(BuildContext context) {
+    final bool selected = this.selected == type;
+
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: AnimatedDefaultTextStyle(
