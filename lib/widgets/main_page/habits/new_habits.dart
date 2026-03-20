@@ -237,7 +237,7 @@ class _NewHabitsState extends State<NewHabits>
 
           showModalBottomSheet(
             context: context,
-            backgroundColor: cp.bg,
+            backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
             barrierColor: cp.greyText.darken().withOpacity(0.3),
             isScrollControlled: true,
             builder: (context) {

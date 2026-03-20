@@ -32,7 +32,7 @@ class NewDefaultDialog extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: cp.bg,
+          color: cp.isDark ? cp.habitBg : cp.bg,
           borderRadius: BorderRadius.circular(24),
         ),
         padding: const EdgeInsets.all(20),

@@ -52,7 +52,7 @@ class _Dark {
 
   static const Color grayText = Color(0xFF7A7C81);
   static const Color lightGrayText = Color(0xFF8C909E);
-  static const Color disabled = Color(0xFF2F3030);
+  static const Color disabled = Color(0xFF464646);
 
   static const Color main = Color(0xFF11F29B);
   static const Color mid = Color(0xFFFFB764);
