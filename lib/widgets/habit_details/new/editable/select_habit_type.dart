@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/habit_details/new/editable/enter_habit_amount.dart';
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
-import 'package:habitt/widgets/habit_details/new/select_habit_type.dart';
 import 'package:provider/provider.dart';
 
 enum HabitType { none, amount, duration }

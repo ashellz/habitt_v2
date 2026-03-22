@@ -5,7 +5,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
-import 'package:habitt/widgets/habit_details/new/select_days_weekly_schedule.dart';
+import 'package:habitt/widgets/habit_details/new/editable/select_days_weekly_schedule.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
