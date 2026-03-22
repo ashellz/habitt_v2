@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 class NewPerfectDaysStreak extends StatelessWidget {

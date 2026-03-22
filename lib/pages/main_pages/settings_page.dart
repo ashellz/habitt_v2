@@ -5,7 +5,7 @@ import 'package:habitt/pages/other_pages/subscriptions_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/services/backup_service.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/alert_popup.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/old_color_service.dart';
 import 'package:habitt/services/emoji_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';

@@ -23,7 +23,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/billing_service.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';

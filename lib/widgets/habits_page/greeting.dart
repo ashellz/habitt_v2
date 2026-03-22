@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';

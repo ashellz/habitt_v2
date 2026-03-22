@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 Future<String?> showEmojiKeyboardDialog(

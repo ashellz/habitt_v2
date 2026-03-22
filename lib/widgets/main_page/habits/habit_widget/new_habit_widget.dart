@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';

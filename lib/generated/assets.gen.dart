@@ -34,9 +34,9 @@ class $AssetsImagesGen {
   AssetGenImage get iconBackground =>
       const AssetGenImage('assets/images/icon_background.png');
 
-  /// File path: assets/images/icon_light.png
+  /// File path: assets/images/iconLight.png
   AssetGenImage get iconLight =>
-      const AssetGenImage('assets/images/icon_light.png');
+      const AssetGenImage('assets/images/iconLight.png');
 
   /// File path: assets/images/icon_splash_android.png
   AssetGenImage get iconSplashAndroid =>

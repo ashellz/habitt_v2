@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/old_color_service.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
 

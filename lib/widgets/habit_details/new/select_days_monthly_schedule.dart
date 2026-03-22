@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/selectable_month.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/old_color_service.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 /// Bottom sheet for selecting accent / interface color palette.

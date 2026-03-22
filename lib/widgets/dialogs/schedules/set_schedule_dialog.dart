@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/schedule_type.dart';
-import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/schedule_option_widget.dart';
 import 'package:provider/provider.dart';
