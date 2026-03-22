@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/util/get_duration_string.dart';
-import 'package:habitt/widgets/default/new_default_dialog.dart';
-import 'package:habitt/widgets/default/new_default_text_field.dart';
-import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
-import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
+import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
+import 'package:habitt/widgets/habit_details/new/select_habit_type.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 enum HabitType { none, amount, duration }
 
@@ -22,12 +17,14 @@ class SelectHabitType extends StatefulWidget {
 class _SelectHabitTypeState extends State<SelectHabitType> {
   HabitType selectedType = HabitType.none;
   HabitType lastSelectedType = HabitType.amount;
+  bool useSlideTransition = false;
+  Offset slideBeginOffset = Offset.zero;
 
   // Align duration usage:
   // We tweak it so if you enable amount from none but it was previously duration
   // It would slide fade the indicator to left from right
   // Looks unpurposeful so we disable duration for that moment
-  Duration alignDuration = Duration(milliseconds: 220);
+  Duration alignDuration = Duration(milliseconds: 350);
 
   Alignment _getIndicatorAlignment() {
     if (selectedType == HabitType.amount) {
@@ -43,12 +40,25 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
         : Alignment.centerLeft;
   }
 
+  void _setTransitionState(HabitType nextType) {
+    final previousType = selectedType;
+
+    final shouldSlide =
+        previousType != HabitType.none &&
+        nextType != HabitType.none &&
+        previousType != nextType;
+
+    useSlideTransition = shouldSlide;
+    slideBeginOffset =
+        nextType == HabitType.amount ? const Offset(-1, 0) : const Offset(1, 0);
+  }
+
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
     debugPrint("Tapped amount");
 
     setState(() {
-      alignDuration = Duration(milliseconds: 220);
+      alignDuration = Duration(milliseconds: 350);
     });
 
     final stateProvider = context.read<StateProvider>();
@@ -59,9 +69,12 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
     }
 
     setState(() {
-      // Toggles the selected type between amount and none
-      selectedType =
+      final nextType =
           selectedType == HabitType.amount ? HabitType.none : HabitType.amount;
+      _setTransitionState(nextType);
+
+      // Toggles the selected type between amount and none
+      selectedType = nextType;
 
       if (selectedType == HabitType.amount) {
         lastSelectedType = HabitType.amount;
@@ -84,7 +97,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   void onTapDuration() {
     debugPrint("Tapped duration");
     setState(() {
-      alignDuration = Duration(milliseconds: 220);
+      alignDuration = Duration(milliseconds: 350);
     });
     final stateProvider = context.read<StateProvider>();
 
@@ -94,11 +107,14 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
     }
 
     setState(() {
-      // Toggles the selected type between duration and none
-      selectedType =
+      final nextType =
           selectedType == HabitType.duration
               ? HabitType.none
               : HabitType.duration;
+      _setTransitionState(nextType);
+
+      // Toggles the selected type between duration and none
+      selectedType = nextType;
 
       if (selectedType == HabitType.duration) {
         lastSelectedType = HabitType.duration;
@@ -121,7 +137,6 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final sp = context.watch<StateProvider>();
 
     final selectedBg = cp.text;
     final selectedTextColor = cp.bg;
@@ -187,96 +202,32 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
             },
           ),
         ),
-        if (selectedType == HabitType.duration)
-          _enterDuration(cp, context, sp)
-        else if (selectedType == HabitType.amount)
-          _enterAmount(sp, cp),
-      ],
-    );
-  }
+        AnimatedSize(
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            transitionBuilder: (child, animation) {
+              if (!useSlideTransition) {
+                return FadeTransition(opacity: animation, child: child);
+              }
 
-  Widget _enterDuration(
-    ColorProvider cp,
-    BuildContext context,
-    StateProvider sp,
-  ) {
-    final duration = sp.habitDuration.inMinutes;
-
-    return GestureDetector(
-      onTap:
-          () => showModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            barrierColor: cp.greyText.darken().withOpacity(0.3),
-            isScrollControlled: true,
-            builder: (context) {
-              return NewDefaultDialog(
-                title: "Set duration",
-                desc: "How long will this habit take?",
-                child: DurationProgressInput(
-                  duration: sp.habitDuration.inMinutes,
-                  durationCompleted: 0,
-                ),
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: slideBeginOffset,
+                  end: Offset.zero,
+                ).animate(animation),
+                child: FadeTransition(opacity: animation, child: child),
               );
             },
-          ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Time',
-            style: TextStyle(
-              color: cp.lightGreyText,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Container(
-            height: 46,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: ShapeDecoration(
-              color: cp.field,
-              shape: StadiumBorder(),
-            ),
-            child: Row(
-              spacing: 16,
-              children: [
-                Text(
-                  getDurationString(duration),
-                  style: TextStyle(color: cp.text, fontWeight: FontWeight.w500),
-                ),
-                SvgPicture.asset("assets/images/new-svg/clock.svg"),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Row _enterAmount(StateProvider sp, ColorProvider cp) {
-    return Row(
-      spacing: 10,
-      children: [
-        Expanded(child: AmountProgressInput(amount: sp.habitAmount)),
-        Expanded(
-          child: NewDefaultTextField(
-            controller: TextEditingController(),
-            title: "Amount name",
-            fontWeight: FontWeight.w500,
-            hint: "Amount name",
-            suffix: GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: SvgPicture.asset(
-                  "assets/images/new-svg/dropdown.svg",
-                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
-                ),
-              ),
-            ),
+            child:
+                selectedType == HabitType.duration
+                    ? EnterHabitDuration()
+                    : selectedType == HabitType.amount
+                    ? EnterHabitAmount()
+                    : SizedBox.shrink(),
           ),
         ),
       ],
