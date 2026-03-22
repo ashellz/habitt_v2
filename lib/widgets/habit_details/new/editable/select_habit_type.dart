@@ -1,284 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/habit_details/new/editable/enter_habit_amount.dart';
-import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
+import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:provider/provider.dart';
 
-enum HabitType { none, amount, duration }
-
 class SelectHabitType extends StatefulWidget {
-  const SelectHabitType({super.key});
+  const SelectHabitType({
+    super.key,
+    required this.selectedType,
+    required this.lastSelectedType,
+    required this.onTapAmount,
+    required this.onTapDuration,
+    required this.alignDuration,
+  });
+
+  final HabitType selectedType;
+  final HabitType lastSelectedType;
+  final VoidCallback onTapAmount;
+  final VoidCallback onTapDuration;
+  final Duration alignDuration;
 
   @override
   State<SelectHabitType> createState() => _SelectHabitTypeState();
 }
 
 class _SelectHabitTypeState extends State<SelectHabitType> {
-  HabitType selectedType = HabitType.none;
-  HabitType lastSelectedType = HabitType.amount;
-  bool useSlideTransition = false;
-  bool useDelayedEntryOpacity = false;
-  double entryOpacity = 1;
-  int _entryOpacityTicket = 0;
-  Offset slideBeginOffset = Offset.zero;
-
-  // Align duration usage:
-  // We tweak it so if you enable amount from none but it was previously duration
-  // It would slide fade the indicator to left from right
-  // Looks unpurposeful so we disable duration for that moment
-  Duration alignDuration = Duration(milliseconds: 250);
-
   Alignment _getIndicatorAlignment() {
-    if (selectedType == HabitType.amount) {
+    if (widget.selectedType == HabitType.amount) {
       return Alignment.centerLeft;
     }
 
-    if (selectedType == HabitType.duration) {
+    if (widget.selectedType == HabitType.duration) {
       return Alignment.centerRight;
     }
 
-    return lastSelectedType == HabitType.duration
+    return widget.lastSelectedType == HabitType.duration
         ? Alignment.centerRight
         : Alignment.centerLeft;
   }
-
-  void _setTransitionState(HabitType nextType) {
-    final previousType = selectedType;
-
-    final shouldSlide =
-        previousType != HabitType.none &&
-        nextType != HabitType.none &&
-        previousType != nextType;
-
-    useSlideTransition = shouldSlide;
-    slideBeginOffset =
-        nextType == HabitType.amount ? const Offset(-1, 0) : const Offset(1, 0);
-
-    _setEntryOpacityState(previousType, nextType);
-  }
-
-  void _setEntryOpacityState(HabitType previousType, HabitType nextType) {
-    final shouldUseDelayedOpacity =
-        previousType == HabitType.none && nextType != HabitType.none;
-
-    useDelayedEntryOpacity = shouldUseDelayedOpacity;
-
-    if (!shouldUseDelayedOpacity) {
-      entryOpacity = 1;
-      _entryOpacityTicket++;
-      return;
-    }
-
-    entryOpacity = 0;
-    final ticket = ++_entryOpacityTicket;
-
-    Future.delayed(const Duration(milliseconds: 250), () {
-      if (!mounted || ticket != _entryOpacityTicket) {
-        return;
-      }
-
-      if (selectedType == HabitType.none) {
-        return;
-      }
-
-      setState(() {
-        entryOpacity = 1;
-      });
-    });
-  }
-
-  // This toggles the amount type on tap, and navigates if selected
-  void onTapAmount() {
-    debugPrint("Tapped amount");
-
-    setState(() {
-      alignDuration = Duration(milliseconds: 250);
-    });
-
-    final stateProvider = context.read<StateProvider>();
-
-    if (lastSelectedType == HabitType.duration &&
-        selectedType == HabitType.none) {
-      alignDuration = Duration.zero;
-    }
-
-    setState(() {
-      final nextType =
-          selectedType == HabitType.amount ? HabitType.none : HabitType.amount;
-      _setTransitionState(nextType);
-
-      // Toggles the selected type between amount and none
-      selectedType = nextType;
-
-      if (selectedType == HabitType.amount) {
-        lastSelectedType = HabitType.amount;
-      }
-    });
-
-    if (selectedType == HabitType.none) {
-      // If deselected, clear amount
-      stateProvider.habitAmount = 0;
-    } else if (selectedType == HabitType.amount) {
-      // If selected, we reset duration and set default amount
-      stateProvider.habitDuration = Duration.zero;
-      stateProvider.habitAmount = 2;
-
-      debugPrint("Selected type: $selectedType");
-    }
-  }
-
-  // This toggles the duration type on tap, and navigates if selected
-  void onTapDuration() {
-    debugPrint("Tapped duration");
-    setState(() {
-      alignDuration = Duration(milliseconds: 250);
-    });
-    final stateProvider = context.read<StateProvider>();
-
-    if (lastSelectedType == HabitType.amount &&
-        selectedType == HabitType.none) {
-      alignDuration = Duration.zero;
-    }
-
-    setState(() {
-      final nextType =
-          selectedType == HabitType.duration
-              ? HabitType.none
-              : HabitType.duration;
-      _setTransitionState(nextType);
-
-      // Toggles the selected type between duration and none
-      selectedType = nextType;
-
-      if (selectedType == HabitType.duration) {
-        lastSelectedType = HabitType.duration;
-      }
-    });
-
-    if (selectedType == HabitType.none) {
-      // If deselected, clear duration
-      stateProvider.habitDuration = Duration.zero;
-    } else if (selectedType == HabitType.duration) {
-      // If selected, reset amount and set default duration
-      stateProvider.habitAmount = 0;
-      stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
-    }
-  }
-
-  int amount = 0;
-  int duration = 0;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    final selectedBg = cp.text;
-    final selectedTextColor = cp.bg;
-
-    return Column(
-      spacing: 10,
-      children: [
-        Container(
-          height: 46,
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: cp.field,
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Stack(
-                children: [
-                  AnimatedAlign(
-                    duration: alignDuration,
-                    curve: Curves.easeOutCubic,
-                    alignment: _getIndicatorAlignment(),
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeOutCubic,
-                      opacity: selectedType == HabitType.none ? 0 : 1,
-                      child: Container(
-                        width: constraints.maxWidth / 2,
-                        decoration: BoxDecoration(
-                          color: selectedBg,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                      ),
+    return Container(
+      height: 46,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: cp.field,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              AnimatedAlign(
+                duration: widget.alignDuration,
+                curve: Curves.easeOutCubic,
+                alignment: _getIndicatorAlignment(),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutCubic,
+                  opacity: widget.selectedType == HabitType.none ? 0 : 1,
+                  child: Container(
+                    width: constraints.maxWidth / 2,
+                    decoration: BoxDecoration(
+                      color: cp.text,
+                      borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _TypeButton(
-                          label: 'Amount',
-                          type: HabitType.amount,
-                          selected: selectedType,
-                          selectedTextColor: selectedTextColor,
-                          unselectedTextColor: cp.lightGreyText,
-                          onTap: onTapAmount,
-                        ),
-                      ),
-                      Expanded(
-                        child: _TypeButton(
-                          label: 'Duration',
-                          type: HabitType.duration,
-                          selected: selectedType,
-                          selectedTextColor: selectedTextColor,
-                          unselectedTextColor: cp.lightGreyText,
-
-                          onTap: onTapDuration,
-                        ),
-                      ),
-                    ],
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _TypeButton(
+                      label: 'Amount',
+                      type: HabitType.amount,
+                      selected: widget.selectedType,
+                      onTap: widget.onTapAmount,
+                    ),
+                  ),
+                  Expanded(
+                    child: _TypeButton(
+                      label: 'Duration',
+                      type: HabitType.duration,
+                      selected: widget.selectedType,
+                      onTap: widget.onTapDuration,
+                    ),
                   ),
                 ],
-              );
-            },
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            switchInCurve: Curves.easeOutCubic,
-            switchOutCurve: Curves.easeInCubic,
-            transitionBuilder: (child, animation) {
-              if (!useSlideTransition) {
-                return FadeTransition(opacity: animation, child: child);
-              }
-
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: slideBeginOffset,
-                  end: Offset.zero,
-                ).animate(animation),
-                child: FadeTransition(opacity: animation, child: child),
-              );
-            },
-            child: () {
-              final Widget content =
-                  selectedType == HabitType.duration
-                      ? EnterHabitDuration()
-                      : selectedType == HabitType.amount
-                      ? EnterHabitAmount()
-                      : const SizedBox.shrink();
-
-              if (selectedType == HabitType.none || !useDelayedEntryOpacity) {
-                return content;
-              }
-
-              return AnimatedOpacity(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOutCubic,
-                opacity: entryOpacity,
-                child: content,
-              );
-            }(),
-          ),
-        ),
-      ],
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -288,21 +103,20 @@ class _TypeButton extends StatelessWidget {
     required this.label,
     required this.type,
     required this.selected,
-    required this.selectedTextColor,
-    required this.unselectedTextColor,
     required this.onTap,
   });
 
   final String label;
   final HabitType type;
   final HabitType selected;
-  final Color selectedTextColor;
-  final Color unselectedTextColor;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final bool selected = this.selected == type;
+    final cp = context.watch<ColorProvider>();
+    final selectedTextColor = cp.bg;
+    final unselectedTextColor = cp.lightGreyText;
 
     return GestureDetector(
       onTap: onTap,

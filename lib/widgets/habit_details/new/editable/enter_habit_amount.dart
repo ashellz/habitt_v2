@@ -20,7 +20,7 @@ class EnterHabitAmount extends StatelessWidget {
         Expanded(child: AmountProgressInput(amount: sp.habitAmount)),
         Expanded(
           child: NewDefaultTextField(
-            controller: TextEditingController(),
+            controller: sp.habitAmountLabelController,
             title: "Amount name",
             fontWeight: FontWeight.w500,
             hint: "Amount name",

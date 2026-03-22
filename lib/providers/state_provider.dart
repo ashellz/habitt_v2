@@ -234,7 +234,7 @@ class StateProvider extends ChangeNotifier {
     _habitDuration = Duration.zero;
 
     _habitCategoryId = 1;
-    habitAmountLabelController.clear();
+    habitAmountLabelController.text = "times";
     nameController.clear();
     descController.clear();
     _iconPath = EmojiService.defaultEmoji;

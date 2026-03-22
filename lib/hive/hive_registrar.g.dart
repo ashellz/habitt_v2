@@ -7,6 +7,7 @@ import 'package:habitt/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(ScheduleTypeAdapter());
     registerAdapter(DayAdapter());
     registerAdapter(HabitAdapter());
   }
@@ -14,6 +15,7 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(ScheduleTypeAdapter());
     registerAdapter(DayAdapter());
     registerAdapter(HabitAdapter());
   }

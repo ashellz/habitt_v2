@@ -492,7 +492,7 @@ class Habit extends HiveObject {
       'timeIntervalEnabled': timeIntervalEnabled,
       'timeIntervalStart': timeIntervalStart,
       'timeIntervalEnd': timeIntervalEnd,
-      'scheduleType': scheduleType.name,
+      'scheduleType': _serializeScheduleType(scheduleType),
       'weeklyTarget': weeklyTarget,
       'monthlyTarget': monthlyTarget,
       'customIntervalDays': customIntervalDays,
@@ -543,7 +543,7 @@ class Habit extends HiveObject {
       timeIntervalEnabled: (m['timeIntervalEnabled'] as bool?) ?? false,
       timeIntervalStart: (m['timeIntervalStart'] as int?) ?? 420,
       timeIntervalEnd: (m['timeIntervalEnd'] as int?) ?? 450,
-      scheduleType: _scheduleTypeFromString(
+      scheduleType: _deserializeScheduleType(
         m['scheduleType']?.toString() ?? 'daily',
       ),
       weeklyTarget: (m['weeklyTarget'] as int?) ?? 1,
@@ -762,7 +762,13 @@ class Habit extends HiveObject {
     return value.map((e) => e.toString()).toList();
   }
 
-  static ScheduleType _scheduleTypeFromString(String value) {
+  /// Serialize ScheduleType to String for Hive storage
+  static String _serializeScheduleType(ScheduleType scheduleType) {
+    return scheduleType.name;
+  }
+
+  /// Deserialize String to ScheduleType from Hive storage
+  static ScheduleType _deserializeScheduleType(String value) {
     return ScheduleType.values.firstWhere(
       (type) => type.name == value,
       orElse: () => ScheduleType.daily,

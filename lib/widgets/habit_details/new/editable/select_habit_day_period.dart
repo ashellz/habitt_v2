@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -101,10 +102,10 @@ class _SelectHabitDayPeriodState extends State<SelectHabitDayPeriod>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 23),
-                        for (int i = 0; i < chooseCategoriesList.length; i++)
+                        for (Category category in chooseCategoriesList)
                           FadeTransition(
                             opacity: _categoryFadeAnimation(
-                              i,
+                              category.id,
                               chooseCategoriesList.length,
                             ),
                             child: Align(
@@ -114,24 +115,25 @@ class _SelectHabitDayPeriodState extends State<SelectHabitDayPeriod>
                                   left: 20.0,
                                   top: 12,
                                   bottom:
-                                      i == chooseCategoriesList.length - 1
+                                      category.id == chooseCategoriesList.length
                                           ? 12
                                           : 0,
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    stateProvider.habitCategoryId = i;
+                                    stateProvider.habitCategoryId = category.id;
                                     toggleExpansion();
                                   },
                                   child: Text(
-                                    chooseCategoriesList[i].name,
+                                    category.name,
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       color: cp.text,
                                       fontSize: 16,
 
                                       fontWeight:
-                                          i == stateProvider.habitCategoryId
+                                          category.id ==
+                                                  stateProvider.habitCategoryId
                                               ? FontWeight.w500
                                               : FontWeight.w400,
                                     ),
@@ -161,7 +163,7 @@ class _SelectHabitDayPeriodState extends State<SelectHabitDayPeriod>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  chooseCategoriesList[stateProvider.habitCategoryId].name,
+                  chooseCategoriesList[stateProvider.habitCategoryId - 1].name,
                   style: TextStyle(fontSize: 16, color: cp.text),
                 ),
                 RotationTransition(
