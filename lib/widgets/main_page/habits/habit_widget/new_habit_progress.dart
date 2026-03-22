@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:provider/provider.dart';

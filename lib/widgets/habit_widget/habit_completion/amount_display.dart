@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/old_color_service.dart';
 
 class AmountDisplay extends StatelessWidget {
   const AmountDisplay({

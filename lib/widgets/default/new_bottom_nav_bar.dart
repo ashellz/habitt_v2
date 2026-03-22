@@ -3,7 +3,7 @@ import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 class NewBottomNavBar extends StatefulWidget {

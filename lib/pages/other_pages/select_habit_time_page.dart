@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/old_color_service.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';

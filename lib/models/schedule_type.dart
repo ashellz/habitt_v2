@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/dialogs/schedules/weekly_schedule_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/monthly_schedule_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/custom_schedule_dialog.dart';

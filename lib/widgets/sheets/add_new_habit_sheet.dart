@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/services/new_color_service.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
@@ -39,12 +39,6 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       sp.reset();
     });
-  }
-
-  @override
-  void dispose() {
-    context.read<StateProvider>().nameController.removeListener(_nameListener);
-    super.dispose();
   }
 
   @override
