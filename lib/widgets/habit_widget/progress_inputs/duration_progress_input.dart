@@ -7,11 +7,11 @@ class DurationProgressInput extends StatefulWidget {
   const DurationProgressInput({
     super.key,
     required this.duration,
-    required this.durationCompleted,
+    this.durationCompleted,
   });
 
   final int duration;
-  final int durationCompleted;
+  final int? durationCompleted;
 
   @override
   State<DurationProgressInput> createState() => _DurationProgressInputState();
@@ -27,23 +27,23 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
   void initState() {
     super.initState();
 
+    final initialDuration = widget.durationCompleted ?? widget.duration;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Sets the initial amount or duration
       final stateProvider = context.read<StateProvider>();
       stateProvider.habitDuration = Duration(
-        hours: widget.durationCompleted ~/ 60,
-        minutes: widget.durationCompleted % 60,
+        hours: initialDuration ~/ 60,
+        minutes: initialDuration % 60,
       );
     });
 
-    setState(() {
-      hoursController = FixedExtentScrollController(
-        initialItem: widget.durationCompleted ~/ 60,
-      );
-      minutesController = FixedExtentScrollController(
-        initialItem: widget.durationCompleted % 60,
-      );
-    });
+    hoursController = FixedExtentScrollController(
+      initialItem: initialDuration ~/ 60,
+    );
+    minutesController = FixedExtentScrollController(
+      initialItem: initialDuration % 60,
+    );
   }
 
   @override
@@ -56,6 +56,7 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final sp = context.watch<StateProvider>();
 
     return NumberPicker(
       height: 211,
@@ -65,17 +66,15 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
       padZero: false,
       onChangedHours:
           (value) =>
-              context.read<StateProvider>().habitDuration = Duration(
+              sp.habitDuration = Duration(
                 hours: value,
-                minutes:
-                    context.read<StateProvider>().habitDuration.inMinutes % 60,
+                minutes: sp.habitDuration.inMinutes % 60,
               ),
 
       onChangedMinutes:
           (value) =>
-              context.read<StateProvider>().habitDuration = Duration(
-                hours:
-                    context.read<StateProvider>().habitDuration.inMinutes ~/ 60,
+              sp.habitDuration = Duration(
+                hours: sp.habitDuration.inMinutes ~/ 60,
                 minutes: value,
               ),
     );

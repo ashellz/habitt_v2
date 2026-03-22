@@ -12,13 +12,13 @@ class EnterAmountDurationText extends StatelessWidget {
   });
 
   final ThemeProvider tp;
-  final HabitType type;
+  final OldHabitType type;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final text =
-        "${type == HabitType.duration ? localizations.enterYourDuration : localizations.enterYourAmount}:"
+        "${type == OldHabitType.duration ? localizations.enterYourDuration : localizations.enterYourAmount}:"
             .toUpperCase();
 
     return Text.rich(

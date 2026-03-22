@@ -29,7 +29,6 @@ class EnterHabitDuration extends StatelessWidget {
                 desc: "How long will this habit take?",
                 child: DurationProgressInput(
                   duration: sp.habitDuration.inMinutes,
-                  durationCompleted: 0,
                 ),
               );
             },

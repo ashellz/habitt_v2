@@ -24,7 +24,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
   final ValueChanged<int> onChangedMinutes;
   final int wheelValue;
   final Duration durationValue;
-  final HabitType type;
+  final OldHabitType type;
   final TextEditingController habitAmountLabelController;
 
   @override
@@ -41,7 +41,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
           return Container(
             padding: EdgeInsets.all(12),
             child:
-                type == HabitType.amount
+                type == OldHabitType.amount
                     ? Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

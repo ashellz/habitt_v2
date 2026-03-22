@@ -104,6 +104,8 @@ class _NewHabitsState extends State<NewHabits>
         // Add all habits with spacing between them
         totalHeight += (habitHeight * categoryLength);
         totalHeight += (categorySpacing * (categoryLength - 1));
+
+        totalHeight += 50; // button
       }
     }
 

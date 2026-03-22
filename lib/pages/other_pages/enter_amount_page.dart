@@ -20,7 +20,7 @@ class EnterAmountPage extends StatefulWidget {
     this.durationValue = const Duration(hours: 0, minutes: 20),
   });
 
-  final HabitType type;
+  final OldHabitType type;
   final int wheelValue;
   final Duration durationValue;
 
@@ -41,7 +41,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
   }
 
   void increaseWheelValue() {
-    if (widget.type == HabitType.amount) {
+    if (widget.type == OldHabitType.amount) {
       if (wheelValue < 9999) {
         setState(() {
           wheelValue++;
@@ -65,7 +65,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
   }
 
   void decreaseWheelValue() {
-    if (widget.type == HabitType.amount) {
+    if (widget.type == OldHabitType.amount) {
       if (wheelValue > 2) {
         setState(() {
           wheelValue--;
@@ -91,7 +91,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
   void onDone() {
     final stateProvider = context.read<StateProvider>();
 
-    if (widget.type == HabitType.amount) {
+    if (widget.type == OldHabitType.amount) {
       stateProvider.habitAmount = wheelValue;
     } else {
       stateProvider.habitDuration = durationValue;
@@ -189,7 +189,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                               }),
                             ),
                         child:
-                            widget.type == HabitType.amount
+                            widget.type == OldHabitType.amount
                                 ? SizedBox(
                                   width: width - 32,
                                   child: Text.rich(

@@ -5,7 +5,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:provider/provider.dart';
 
-enum HabitType { none, amount, duration }
+enum OldHabitType { none, amount, duration }
 
 class SelectHabitTypeWidget extends StatelessWidget {
   const SelectHabitTypeWidget({
@@ -16,8 +16,8 @@ class SelectHabitTypeWidget extends StatelessWidget {
     required this.selectedType,
   });
 
-  final HabitType type;
-  final HabitType selectedType;
+  final OldHabitType type;
+  final OldHabitType selectedType;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
@@ -39,11 +39,11 @@ class SelectHabitTypeWidget extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       child: Padding(
-        padding: EdgeInsets.only(right: type == HabitType.amount ? 8 : 0),
+        padding: EdgeInsets.only(right: type == OldHabitType.amount ? 8 : 0),
         child: AnimatedContainer(
           width:
               // Only works when in a row with one more of this widget
-              selectedType == HabitType.none
+              selectedType == OldHabitType.none
                   ? screenWidth / 2
                   : isSelected
                   ? screenWidth / 1.75
@@ -78,7 +78,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                         opacity: isSelected ? 1.0 : 0.5,
                         child: FittedBox(
                           child: Text(
-                            type == HabitType.amount
+                            type == OldHabitType.amount
                                 ? localizations.amount
                                 : localizations.duration,
                             style: TextStyle(
@@ -97,7 +97,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                       child:
                           isSelected
                               ? Text(
-                                "${localizations.selected}: ${type == HabitType.amount ? habitAmount : habitDuration}",
+                                "${localizations.selected}: ${type == OldHabitType.amount ? habitAmount : habitDuration}",
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: tp.primaryTextColor,
@@ -117,7 +117,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                   opacity: isSelected ? 1.0 : 0,
                   curve: Curves.decelerate,
                   child: Image.asset(
-                    type == HabitType.amount
+                    type == OldHabitType.amount
                         ? "assets/images/icons/counter.png"
                         : "assets/images/icons/duration.png",
                     width: 40,

@@ -57,9 +57,35 @@ class _NewHabitCategoryTitleState extends State<NewHabitCategoryTitle>
     super.dispose();
   }
 
+  /// Checks if the current hour falls within the category's time range.
+  /// Returns true only for Morning (4-12), Afternoon (12-19), and Evening (19-4).
+  /// "Any time" (id 1) always returns false since it doesn't have a specific range.
+  bool _isCategoryInCurrentTimeRange() {
+    const int morningCategoryId = 2;
+    const int afternoonCategoryId = 3;
+    const int eveningCategoryId = 4;
+
+    final currentHour = DateTime.now().hour;
+
+    switch (widget.category.id) {
+      case morningCategoryId:
+        return currentHour >= 4 && currentHour < 12;
+      case afternoonCategoryId:
+        return currentHour >= 12 && currentHour < 19;
+      case eveningCategoryId:
+        return currentHour >= 19 || currentHour < 4;
+      default:
+        return false; // "Any time" or unknown categories
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    
+    // Show "Now" badge only if this is the first category AND it matches current time
+    final shouldShowNow = widget.isFirst && _isCategoryInCurrentTimeRange();
+    
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       child: Row(
@@ -69,7 +95,9 @@ class _NewHabitCategoryTitleState extends State<NewHabitCategoryTitle>
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
-              if (_controller.isDismissed) return const SizedBox.shrink();
+              if (_controller.isDismissed || !shouldShowNow) {
+                return const SizedBox.shrink();
+              }
               return FadeTransition(
                 opacity: _curved,
                 child: SlideTransition(position: _slideAnimation, child: child),

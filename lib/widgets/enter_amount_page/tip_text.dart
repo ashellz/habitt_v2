@@ -15,14 +15,14 @@ class TipText extends StatelessWidget {
   final double width;
   final AppLocalizations localizations;
   final ThemeProvider tp;
-  final HabitType type;
+  final OldHabitType type;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width / 2,
       child: Text(
-        "${localizations.youCanPressNumberAbove(type == HabitType.amount ? localizations.amount.toLowerCase() : localizations.duration.toLowerCase())} ${type == HabitType.amount ? localizations.orToChangeLabel : ""}",
+        "${localizations.youCanPressNumberAbove(type == OldHabitType.amount ? localizations.amount.toLowerCase() : localizations.duration.toLowerCase())} ${type == OldHabitType.amount ? localizations.orToChangeLabel : ""}",
         style: TextStyle(color: tp.primaryTextColor),
       ),
     );
