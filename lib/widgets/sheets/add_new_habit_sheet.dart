@@ -9,9 +9,9 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
-import 'package:habitt/widgets/habit_details/new/select_habit_day_period.dart';
-import 'package:habitt/widgets/habit_details/new/select_habit_schedule_type.dart';
-import 'package:habitt/widgets/habit_details/new/select_habit_type.dart';
+import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
+import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
+import 'package:habitt/widgets/habit_details/new/editable/select_habit_type.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
 
