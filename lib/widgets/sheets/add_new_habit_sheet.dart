@@ -195,7 +195,7 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          NewDefaultButton.small(
+          NewDefaultButton.primarySmall(
             enabled: sp.nameController.text.isNotEmpty,
             onPressed: () {
               final habitProvider = context.read<HabitProvider>();
