@@ -23,6 +23,12 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   HabitType selectedType = HabitType.none;
   HabitType lastSelectedType = HabitType.amount;
 
+  // Align duration usage:
+  // We tweak it so if you enable amount from none but it was previously duration
+  // It would slide fade the indicator to left from right
+  // Looks unpurposeful so we disable duration for that moment
+  Duration alignDuration = Duration(milliseconds: 220);
+
   Alignment _getIndicatorAlignment() {
     if (selectedType == HabitType.amount) {
       return Alignment.centerLeft;
@@ -37,48 +43,20 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
         : Alignment.centerLeft;
   }
 
-  // We use this function to edit duration without resetting it
-  void longPressDuration() {
-    final stateProvider = context.read<StateProvider>();
-
-    setState(() {
-      selectedType =
-          HabitType.duration; // Setting the selected type to duration
-      lastSelectedType = HabitType.duration;
-    });
-
-    // Resetting the amount just in case
-    stateProvider.habitAmount = 0;
-
-    if (stateProvider.habitDuration.inMinutes == 0) {
-      // If the duration hasn't been selected before, we set it to 20 minutes as default
-      stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
-    }
-  }
-
-  // We use this function to edit amount without resetting it
-  void longPressAmount() {
-    final stateProvider = context.read<StateProvider>();
-
-    setState(() {
-      selectedType = HabitType.amount; // Setting the selected type to amount
-      lastSelectedType = HabitType.amount;
-    });
-
-    // Resetting duration to zero just in case
-    stateProvider.habitDuration = Duration.zero;
-
-    if (stateProvider.habitAmount == 0) {
-      // If amount hasn't been set, we default it to 2
-      stateProvider.habitAmount = 2;
-    }
-  }
-
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
     debugPrint("Tapped amount");
 
+    setState(() {
+      alignDuration = Duration(milliseconds: 220);
+    });
+
     final stateProvider = context.read<StateProvider>();
+
+    if (lastSelectedType == HabitType.duration &&
+        selectedType == HabitType.none) {
+      alignDuration = Duration.zero;
+    }
 
     setState(() {
       // Toggles the selected type between amount and none
@@ -105,7 +83,15 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   // This toggles the duration type on tap, and navigates if selected
   void onTapDuration() {
     debugPrint("Tapped duration");
+    setState(() {
+      alignDuration = Duration(milliseconds: 220);
+    });
     final stateProvider = context.read<StateProvider>();
+
+    if (lastSelectedType == HabitType.amount &&
+        selectedType == HabitType.none) {
+      alignDuration = Duration.zero;
+    }
 
     setState(() {
       // Toggles the selected type between duration and none
@@ -155,7 +141,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
               return Stack(
                 children: [
                   AnimatedAlign(
-                    duration: const Duration(milliseconds: 220),
+                    duration: alignDuration,
                     curve: Curves.easeOutCubic,
                     alignment: _getIndicatorAlignment(),
                     child: AnimatedOpacity(
@@ -181,7 +167,6 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
                           selectedTextColor: selectedTextColor,
                           unselectedTextColor: cp.lightGreyText,
                           onTap: onTapAmount,
-                          onLongPress: longPressAmount,
                         ),
                       ),
                       Expanded(
@@ -193,7 +178,6 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
                           unselectedTextColor: cp.lightGreyText,
 
                           onTap: onTapDuration,
-                          onLongPress: longPressDuration,
                         ),
                       ),
                     ],
@@ -308,7 +292,6 @@ class _TypeButton extends StatelessWidget {
     required this.selectedTextColor,
     required this.unselectedTextColor,
     required this.onTap,
-    required this.onLongPress,
   });
 
   final String label;
@@ -317,7 +300,6 @@ class _TypeButton extends StatelessWidget {
   final Color selectedTextColor;
   final Color unselectedTextColor;
   final VoidCallback onTap;
-  final VoidCallback onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -325,7 +307,6 @@ class _TypeButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      onLongPress: onLongPress,
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: AnimatedDefaultTextStyle(
