@@ -9,6 +9,14 @@ import 'package:tinycolor2/tinycolor2.dart';
 class StateProvider extends ChangeNotifier {
   SharedPreferences? _prefs;
   bool _shouldUpdateStreaks = false;
+  static const String _amountLabelsPrefsKey = 'amount_labels';
+  static const List<String> _defaultAmountLabels = [
+    'steps',
+    'glasses',
+    'pages',
+    'times',
+  ];
+  List<String> _customAmountLabels = [];
 
   StateProvider(SharedPreferences prefs) {
     _prefs = prefs;
@@ -17,7 +25,69 @@ class StateProvider extends ChangeNotifier {
 
   void init() {
     _shouldUpdateStreaks = _prefs?.getBool('shouldUpdateStreaks') ?? false;
+    _loadAmountLabels();
     notifyListeners();
+  }
+
+  List<String> get defaultAmountLabels =>
+      List<String>.from(_defaultAmountLabels);
+
+  List<String> get customAmountLabels => List<String>.from(_customAmountLabels);
+
+  List<String> get allAmountLabels {
+    final labels = <String>[];
+
+    for (final label in _defaultAmountLabels) {
+      if (!labels.contains(label)) {
+        labels.add(label);
+      }
+    }
+
+    for (final label in _customAmountLabels) {
+      if (!labels.contains(label)) {
+        labels.add(label);
+      }
+    }
+
+    return labels;
+  }
+
+  String normalizeAmountLabel(String value) {
+    return value.trim().toLowerCase();
+  }
+
+  bool addCustomAmountLabel(String value) {
+    final normalized = normalizeAmountLabel(value);
+    if (normalized.isEmpty) {
+      return false;
+    }
+
+    if (_defaultAmountLabels.contains(normalized) ||
+        _customAmountLabels.contains(normalized)) {
+      return false;
+    }
+
+    _customAmountLabels = [..._customAmountLabels, normalized];
+    _prefs?.setStringList(_amountLabelsPrefsKey, _customAmountLabels);
+    notifyListeners();
+    return true;
+  }
+
+  void _loadAmountLabels() {
+    final stored = _prefs?.getStringList(_amountLabelsPrefsKey) ?? [];
+    final normalized = <String>[];
+
+    for (final value in stored) {
+      final label = normalizeAmountLabel(value);
+      if (label.isEmpty || _defaultAmountLabels.contains(label)) {
+        continue;
+      }
+      if (!normalized.contains(label)) {
+        normalized.add(label);
+      }
+    }
+
+    _customAmountLabels = normalized;
   }
 
   bool _showAllHabits = true;

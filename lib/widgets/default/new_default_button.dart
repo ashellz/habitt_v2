@@ -3,7 +3,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/color_contrast.dart';
 import 'package:provider/provider.dart';
 
-enum _ButtonVariant { custom, primary, secondary, small }
+enum _ButtonVariant { custom, primary, secondary, primarySmall, secondarySmall }
 
 class NewDefaultButton extends StatelessWidget {
   const NewDefaultButton({
@@ -55,7 +55,7 @@ class NewDefaultButton extends StatelessWidget {
        isGradient = false,
        _variant = _ButtonVariant.secondary;
 
-  const NewDefaultButton.small({
+  const NewDefaultButton.primarySmall({
     super.key,
     required this.onPressed,
     required this.label,
@@ -69,7 +69,23 @@ class NewDefaultButton extends StatelessWidget {
     this.padding = const EdgeInsets.only(),
   }) : color = null,
        isGradient = true,
-       _variant = _ButtonVariant.small;
+       _variant = _ButtonVariant.primarySmall;
+
+  const NewDefaultButton.secondarySmall({
+    super.key,
+    required this.onPressed,
+    required this.label,
+    this.enabled = true,
+    this.isLoading = false,
+    this.prefix,
+    this.width = 66,
+    this.height = 36,
+    this.child,
+    this.textColor,
+    this.padding = const EdgeInsets.only(),
+  }) : color = null,
+       isGradient = false,
+       _variant = _ButtonVariant.secondarySmall;
 
   final Function onPressed;
   final String? label;
@@ -106,13 +122,17 @@ class NewDefaultButton extends StatelessWidget {
       case _ButtonVariant.custom:
         buttonColor = color ?? cp.main;
         break;
-      case _ButtonVariant.small:
+      case _ButtonVariant.primarySmall:
         buttonColor = cp.main;
+        break;
+      case _ButtonVariant.secondarySmall:
+        buttonColor = cp.secondaryButton;
         break;
     }
 
     final bool isMainButtonVariant =
-        _variant == _ButtonVariant.primary || _variant == _ButtonVariant.small;
+        _variant == _ButtonVariant.primary ||
+        _variant == _ButtonVariant.primarySmall;
     final Color resolvedTextColor =
         textColor ??
         (cp.isDark && isMainButtonVariant
@@ -197,7 +217,11 @@ class NewDefaultButton extends StatelessWidget {
                               style: TextStyle(
                                 color: resolvedTextColor,
                                 fontSize:
-                                    _variant == _ButtonVariant.small ? 14 : 18,
+                                    _variant == _ButtonVariant.primarySmall ||
+                                            _variant ==
+                                                _ButtonVariant.secondarySmall
+                                        ? 14
+                                        : 18,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
