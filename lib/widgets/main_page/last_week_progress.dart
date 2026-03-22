@@ -26,37 +26,16 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
     growable: true,
   );
   Locale? _lastLocale;
+  bool _progressRefreshQueued = false;
 
   @override
   void initState() {
     super.initState();
     debugPrint("Initializing _LastWeekProgress with currentDay: $currentDay");
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       _checkLocale();
-      final habitProvider = Provider.of<HabitProvider>(context, listen: false);
-      final Map<DateTime, double> progress =
-          habitProvider.getThisWeekProgress();
-
-      // Progress is filled with all the valeus all the time
-
-      setState(() {
-        final values = progress.values.take(7).toList();
-        if (values.length < 7) {
-          values.addAll(List.filled(7 - values.length, 0.0));
-        }
-
-        _progressValues
-          ..clear()
-          ..addAll(values);
-
-        _previousProgressValues
-          ..clear()
-          ..addAll(List<double>.filled(7, 0.0));
-
-        debugPrint("Progress values updated: $_progressValues");
-        debugPrint("Current day: $currentDay");
-        debugPrint("Days: $_days");
-      });
+      _refreshProgressValues(animateFromCurrent: false);
     });
   }
 
@@ -80,8 +59,64 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
     });
   }
 
+  List<double> _getNormalizedWeekProgressValues(HabitProvider habitProvider) {
+    final Map<DateTime, double> progress = habitProvider.getThisWeekProgress();
+    final values = progress.values.take(7).toList(growable: true);
+    if (values.length < 7) {
+      values.addAll(List.filled(7 - values.length, 0.0));
+    }
+    return values.map((value) => value.clamp(0.0, 1.0)).toList(growable: false);
+  }
+
+  bool _progressListsEqual(List<double> first, List<double> second) {
+    if (first.length != second.length) return false;
+    for (int i = 0; i < first.length; i++) {
+      if ((first[i] - second[i]).abs() > 0.0001) return false;
+    }
+    return true;
+  }
+
+  void _refreshProgressValues({required bool animateFromCurrent}) {
+    final habitProvider = context.read<HabitProvider>();
+    final nextValues = _getNormalizedWeekProgressValues(habitProvider);
+
+    if (_progressListsEqual(_progressValues, nextValues)) {
+      return;
+    }
+
+    setState(() {
+      _previousProgressValues
+        ..clear()
+        ..addAll(
+          animateFromCurrent ? _progressValues : List<double>.filled(7, 0.0),
+        );
+
+      _progressValues
+        ..clear()
+        ..addAll(nextValues);
+
+      debugPrint("Progress values updated: $_progressValues");
+      debugPrint("Current day: $currentDay");
+      debugPrint("Days: $_days");
+    });
+  }
+
+  void _queueProgressRefresh() {
+    if (_progressRefreshQueued) return;
+    _progressRefreshQueued = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _progressRefreshQueued = false;
+      if (!mounted) return;
+      _refreshProgressValues(animateFromCurrent: true);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    context.watch<HabitProvider>();
+    _queueProgressRefresh();
+
     final cp = context.watch<ColorProvider>();
     final darkMode = cp.isDark;
 
