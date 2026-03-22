@@ -18,13 +18,16 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   HabitType selectedType = HabitType.none;
   HabitType lastSelectedType = HabitType.amount;
   bool useSlideTransition = false;
+  bool useDelayedEntryOpacity = false;
+  double entryOpacity = 1;
+  int _entryOpacityTicket = 0;
   Offset slideBeginOffset = Offset.zero;
 
   // Align duration usage:
   // We tweak it so if you enable amount from none but it was previously duration
   // It would slide fade the indicator to left from right
   // Looks unpurposeful so we disable duration for that moment
-  Duration alignDuration = Duration(milliseconds: 350);
+  Duration alignDuration = Duration(milliseconds: 250);
 
   Alignment _getIndicatorAlignment() {
     if (selectedType == HabitType.amount) {
@@ -51,6 +54,38 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
     useSlideTransition = shouldSlide;
     slideBeginOffset =
         nextType == HabitType.amount ? const Offset(-1, 0) : const Offset(1, 0);
+
+    _setEntryOpacityState(previousType, nextType);
+  }
+
+  void _setEntryOpacityState(HabitType previousType, HabitType nextType) {
+    final shouldUseDelayedOpacity =
+        previousType == HabitType.none && nextType != HabitType.none;
+
+    useDelayedEntryOpacity = shouldUseDelayedOpacity;
+
+    if (!shouldUseDelayedOpacity) {
+      entryOpacity = 1;
+      _entryOpacityTicket++;
+      return;
+    }
+
+    entryOpacity = 0;
+    final ticket = ++_entryOpacityTicket;
+
+    Future.delayed(const Duration(milliseconds: 250), () {
+      if (!mounted || ticket != _entryOpacityTicket) {
+        return;
+      }
+
+      if (selectedType == HabitType.none) {
+        return;
+      }
+
+      setState(() {
+        entryOpacity = 1;
+      });
+    });
   }
 
   // This toggles the amount type on tap, and navigates if selected
@@ -58,7 +93,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
     debugPrint("Tapped amount");
 
     setState(() {
-      alignDuration = Duration(milliseconds: 350);
+      alignDuration = Duration(milliseconds: 250);
     });
 
     final stateProvider = context.read<StateProvider>();
@@ -97,7 +132,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   void onTapDuration() {
     debugPrint("Tapped duration");
     setState(() {
-      alignDuration = Duration(milliseconds: 350);
+      alignDuration = Duration(milliseconds: 250);
     });
     final stateProvider = context.read<StateProvider>();
 
@@ -203,10 +238,10 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
           ),
         ),
         AnimatedSize(
-          duration: const Duration(milliseconds: 350),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 350),
+            duration: const Duration(milliseconds: 250),
             switchInCurve: Curves.easeOutCubic,
             switchOutCurve: Curves.easeInCubic,
             transitionBuilder: (child, animation) {
@@ -222,12 +257,25 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
                 child: FadeTransition(opacity: animation, child: child),
               );
             },
-            child:
-                selectedType == HabitType.duration
-                    ? EnterHabitDuration()
-                    : selectedType == HabitType.amount
-                    ? EnterHabitAmount()
-                    : SizedBox.shrink(),
+            child: () {
+              final Widget content =
+                  selectedType == HabitType.duration
+                      ? EnterHabitDuration()
+                      : selectedType == HabitType.amount
+                      ? EnterHabitAmount()
+                      : const SizedBox.shrink();
+
+              if (selectedType == HabitType.none || !useDelayedEntryOpacity) {
+                return content;
+              }
+
+              return AnimatedOpacity(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                opacity: entryOpacity,
+                child: content,
+              );
+            }(),
           ),
         ),
       ],
