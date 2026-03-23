@@ -8,6 +8,11 @@ class NewHabitCategory extends StatefulWidget {
   const NewHabitCategory({
     super.key,
     this.isFirst = false,
+    this.reorderActive = false,
+    this.reorderProgress = 0,
+    this.reorderSwapPoint = 0.48,
+    this.useFallbackAnimation = false,
+    this.fallbackVisibleHabits = 3,
     required this.showOptionalHabits,
     required this.category,
     required this.habits,
@@ -15,6 +20,11 @@ class NewHabitCategory extends StatefulWidget {
   });
 
   final bool isFirst;
+  final bool reorderActive;
+  final double reorderProgress;
+  final double reorderSwapPoint;
+  final bool useFallbackAnimation;
+  final int fallbackVisibleHabits;
   final Category category;
   final bool showOptionalHabits;
   final List<Habit> habits;
@@ -50,6 +60,49 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
             )
             .toList(); // It will not show additional habits/tasks
 
+    final hasFallbackCandidate =
+        widget.reorderActive &&
+        widget.useFallbackAnimation &&
+        categoryHabits.length > widget.fallbackVisibleHabits;
+
+    final normalizedPrimaryProgress =
+        widget.reorderActive && widget.reorderSwapPoint > 0
+            ? (widget.reorderProgress / widget.reorderSwapPoint).clamp(0.0, 1.0)
+            : 0.0;
+
+    final contentFadeT =
+        hasFallbackCandidate
+            ? (normalizedPrimaryProgress / 0.35).clamp(0.0, 1.0)
+            : 0.0;
+    final collapseT =
+        hasFallbackCandidate
+            ? ((normalizedPrimaryProgress - 0.25) / 0.75).clamp(0.0, 1.0)
+            : 0.0;
+
+    final contentOpacity =
+        hasFallbackCandidate
+            ? (1 - (0.55 * Curves.easeOut.transform(contentFadeT))).clamp(
+              0.0,
+              1.0,
+            )
+            : 1.0;
+
+    final extraHabits = categoryHabits.length - widget.fallbackVisibleHabits;
+    final collapsedExtra =
+        hasFallbackCandidate
+            ? (extraHabits * Curves.easeInOut.transform(collapseT)).floor()
+            : 0;
+    final visibleCount =
+        hasFallbackCandidate
+            ? (categoryHabits.length - collapsedExtra).clamp(
+              widget.fallbackVisibleHabits,
+              categoryHabits.length,
+            )
+            : categoryHabits.length;
+
+    final firstCollapsedIndex =
+        hasFallbackCandidate ? visibleCount : categoryHabits.length;
+
     return AnimatedOpacity(
       opacity: _opacity, // For the initial fade-in of the whole category block
       duration: const Duration(milliseconds: 150),
@@ -62,8 +115,24 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
               isFirst: widget.isFirst,
               category: widget.category,
             ),
-          for (final habit in categoryHabits)
-            NewHabitWidget(key: ValueKey(habit.id), habit: habit),
+          for (int index = 0; index < categoryHabits.length; index++)
+            AnimatedOpacity(
+              key: ValueKey('habit-fade-${categoryHabits[index].id}'),
+              duration: const Duration(milliseconds: 100),
+              opacity: contentOpacity,
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 120),
+                alignment: Alignment.topCenter,
+                curve: Curves.easeInOut,
+                child:
+                    index >= firstCollapsedIndex
+                        ? const SizedBox.shrink()
+                        : NewHabitWidget(
+                          key: ValueKey(categoryHabits[index].id),
+                          habit: categoryHabits[index],
+                        ),
+              ),
+            ),
           if (widget.showOptionalHabits) Container(),
           // additional tasks
         ],
