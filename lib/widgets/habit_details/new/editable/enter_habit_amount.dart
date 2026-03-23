@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/create_amount_label.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/set_amount_label.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class EnterHabitAmount extends StatelessWidget {
   const EnterHabitAmount({super.key});
@@ -16,7 +16,6 @@ class EnterHabitAmount extends StatelessWidget {
     BuildContext context, {
     String? initialSelection,
   }) async {
-    final cp = context.read<ColorProvider>();
     final sp = context.read<StateProvider>();
 
     String selectedLabel =
@@ -27,11 +26,8 @@ class EnterHabitAmount extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    await showModalBottomSheet(
+    await showDialogSheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
-      isScrollControlled: true,
       builder: (sheetContext) {
         return SetAmountLabelDialog(
           initialLabel: selectedLabel,
@@ -55,15 +51,10 @@ class EnterHabitAmount extends StatelessWidget {
     BuildContext context, {
     required String previousSelection,
   }) async {
-    final cp = context.read<ColorProvider>();
-
     if (!context.mounted) return;
 
-    await showModalBottomSheet(
+    await showDialogSheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
-      isScrollControlled: true,
       builder: (sheetContext) {
         return CreateAmountLabelDialog(
           previousSelection: previousSelection,

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/increment_decrement_text_field.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/schedule_dialog_snapshot.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
+import 'package:habitt/widgets/habit_details/new/editable/dialogs/clear_selected_days_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_days_weekly_schedule.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class WeeklyScheduleDialog extends StatefulWidget {
   const WeeklyScheduleDialog({super.key, required this.rootSnapshot});
@@ -67,10 +69,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
 
   void _returnToSetSchedule(ColorProvider cp) {
     Navigator.of(context).pop();
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      barrierColor: cp.greyText.darken().withOpacity(0.3),
-      isScrollControlled: true,
+    showDialogSheet(
       context: context,
       builder:
           (context) => SetScheduleDialog(rootSnapshot: widget.rootSnapshot),
@@ -83,10 +82,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
       return;
     }
 
-    await showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      barrierColor: cp.greyText.darken().withOpacity(0.3),
-      isScrollControlled: true,
+    await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
@@ -121,26 +117,14 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
     }
 
     _isClearDaysDialogOpen = true;
-    final shouldClear =
-        await showModalBottomSheet<bool>(
-          backgroundColor: Colors.transparent,
-          barrierColor: cp.greyText.darken().withOpacity(0.3),
-          isScrollControlled: true,
+    final bool shouldClear =
+        await showDialogSheet(
           context: context,
           builder:
-              (dialogContext) => NewDefaultDialog(
-                title: "Clear selected days",
-                desc:
-                    "Changing the amount of times habit appears in a week will clear selected days",
-                primaryButtonLabel: "Clear",
-                onPrimaryButtonPressed: () {
-                  sp.selectedDaysAWeek = <int>{};
-                  sp.weeklyTarget = nextValue;
-                  Navigator.of(dialogContext).pop(true);
-                },
-                onSecondaryButtonPressed: () {
-                  Navigator.of(dialogContext).pop(false);
-                },
+              (dialogContext) => ClearSelectedDaysDialog(
+                type: ScheduleType.weekly,
+                dialogContext: dialogContext,
+                nextValue: nextValue,
               ),
         ) ??
         false;
