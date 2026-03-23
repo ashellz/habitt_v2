@@ -284,6 +284,8 @@ class _NewHabitsState extends State<NewHabits>
             reorderActive: _isReorderActive,
             reorderProgress: progress,
             reorderSwapPoint: _swapPoint,
+            reorderDurationMs:
+                _reorderController.duration?.inMilliseconds ?? 760,
             fallbackVisibleHabits: _fallbackVisibleHabits,
             useFallbackAnimation: _fallbackCategoryIds.contains(categoryId),
             isToday: isToday,
@@ -477,6 +479,8 @@ class _NewHabitsState extends State<NewHabits>
               reorderActive: false,
               reorderProgress: 0,
               reorderSwapPoint: _swapPoint,
+              reorderDurationMs:
+                  _reorderController.duration?.inMilliseconds ?? 760,
               fallbackVisibleHabits: _fallbackVisibleHabits,
               useFallbackAnimation: false,
               isToday: widget.daySelected == null,
