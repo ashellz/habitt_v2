@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_category_title.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_widget.dart';
+import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
+import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class NewHabitCategory extends StatefulWidget {
   const NewHabitCategory({
@@ -127,9 +131,25 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
                 child:
                     index >= firstCollapsedIndex
                         ? const SizedBox.shrink()
-                        : NewHabitWidget(
-                          key: ValueKey(categoryHabits[index].id),
-                          habit: categoryHabits[index],
+                        : GestureDetector(
+                          onTap: () {
+                            final cp = context.read<ColorProvider>();
+                            final habit = categoryHabits[index];
+
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                              barrierColor: cp.greyText.darken().withOpacity(
+                                0.3,
+                              ),
+                              isScrollControlled: true,
+                              builder: (context) => HabitSheet(habit: habit),
+                            );
+                          },
+                          child: NewHabitWidget(
+                            key: ValueKey(categoryHabits[index].id),
+                            habit: categoryHabits[index],
+                          ),
                         ),
               ),
             ),

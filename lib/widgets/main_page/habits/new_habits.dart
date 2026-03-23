@@ -11,7 +11,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
-import 'package:habitt/widgets/sheets/add_new_habit_sheet.dart';
+import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -539,7 +539,7 @@ class _NewHabitsState extends State<NewHabits>
             barrierColor: cp.greyText.darken().withOpacity(0.3),
             isScrollControlled: true,
             builder: (context) {
-              return AddNewHabitSheet();
+              return HabitSheet();
             },
           );
         },
