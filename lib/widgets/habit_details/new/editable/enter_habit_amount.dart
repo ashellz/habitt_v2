@@ -91,7 +91,9 @@ class EnterHabitAmount extends StatelessWidget {
     return Row(
       spacing: 10,
       children: [
-        Expanded(child: AmountProgressInput(amount: sp.habitAmount)),
+        Expanded(
+          child: AmountProgressInput(amount: sp.habitAmount, minValue: 2),
+        ),
         Expanded(
           child: NewDefaultTextField(
             controller: sp.habitAmountLabelController,

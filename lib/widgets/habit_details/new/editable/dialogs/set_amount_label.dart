@@ -119,6 +119,9 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog> {
                 ),
                 child: Text(
                   item,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextStyle(
                     color: cp.text,
                     fontSize: 15,

@@ -16,11 +16,13 @@ class NewDefaultTextField extends StatefulWidget {
     this.textOnly = false,
     this.obscureText = false,
     this.onTap,
+    this.onChanged,
     this.prefix,
     this.suffix,
     this.centerValue = false,
     this.hint,
     this.fontWeight = FontWeight.w400,
+    this.regex,
   });
 
   final String? title;
@@ -29,6 +31,7 @@ class NewDefaultTextField extends StatefulWidget {
   final int maxLines;
   final double? topPadding;
   final VoidCallback? onTap;
+  final ValueChanged<String>? onChanged;
   final bool digitsOnly;
   final bool textOnly;
   final bool obscureText;
@@ -37,6 +40,7 @@ class NewDefaultTextField extends StatefulWidget {
   final bool centerValue;
   final String? hint;
   final FontWeight fontWeight;
+  final RegExp? regex;
 
   @override
   State<NewDefaultTextField> createState() => _NewDefaultTextFieldState();
@@ -65,6 +69,9 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
       bool textOnly,
       bool digitsOnly,
     ) {
+      if (widget.regex != null) {
+        return FilteringTextInputFormatter.allow(widget.regex!);
+      }
       if (textOnly) {
         return FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"));
       } else if (digitsOnly) {
@@ -92,6 +99,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
           TextFormField(
             controller: widget.controller,
             onTap: () => widget.onTap?.call(),
+            onChanged: widget.onChanged,
             textAlign: widget.centerValue ? TextAlign.center : TextAlign.start,
             keyboardAppearance: cp.isDark ? Brightness.dark : Brightness.light,
             inputFormatters: [
