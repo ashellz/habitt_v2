@@ -38,12 +38,99 @@ class NewHabitCategory extends StatefulWidget {
   State<NewHabitCategory> createState() => _NewHabitCategoryState();
 }
 
-class _NewHabitCategoryState extends State<NewHabitCategory> {
+class _NewHabitCategoryState extends State<NewHabitCategory>
+    with SingleTickerProviderStateMixin {
+  static const int _extraRevealBaseDelayMs = 350;
+  static const int _extraRevealFadeDurationMs = 120;
+
   double _opacity = 0; // For initial fade-in
+  late final AnimationController _extraRevealController;
+  bool _isRevealingExtras = false;
+
+  int get _maxExtraRevealDurationMs =>
+      _extraRevealBaseDelayMs + _extraRevealFadeDurationMs;
+
+  int _extraHabitsCountForWidget(NewHabitCategory widgetConfig) {
+    final categoryHabits =
+        widgetConfig.habits
+            .where(
+              (habit) =>
+                  habit.categoryId == widgetConfig.category.id &&
+                  !habit.optional,
+            )
+            .length;
+
+    return (categoryHabits - widgetConfig.fallbackVisibleHabits).clamp(
+      0,
+      categoryHabits,
+    );
+  }
+
+  void _startExtraReveal() {
+    _extraRevealController
+      ..value = 0
+      ..forward();
+    if (!_isRevealingExtras) {
+      setState(() {
+        _isRevealingExtras = true;
+      });
+    }
+  }
+
+  double _extraRevealOpacityForIndex(int index, int totalHabits) {
+    if (!_isRevealingExtras) {
+      return 1;
+    }
+
+    final extraCount = (totalHabits - widget.fallbackVisibleHabits).clamp(
+      0,
+      totalHabits,
+    );
+    if (extraCount <= 0 || index < widget.fallbackVisibleHabits) {
+      return 1;
+    }
+
+    final bottomMostExtraIndex = totalHabits - 1;
+    final extraOrderFromBottom = (bottomMostExtraIndex - index).clamp(
+      0,
+      extraCount,
+    );
+    final delayStep = _extraRevealBaseDelayMs / extraCount;
+    final delayMs =
+        (_extraRevealBaseDelayMs - (extraOrderFromBottom * delayStep)).clamp(
+      0,
+      _extraRevealBaseDelayMs.toDouble(),
+    );
+
+    final elapsedMs = _extraRevealController.value * _maxExtraRevealDurationMs;
+    final opacity = ((elapsedMs - delayMs) / _extraRevealFadeDurationMs).clamp(
+      0.0,
+      1.0,
+    );
+    return Curves.easeOut.transform(opacity);
+  }
 
   @override
   void initState() {
     super.initState();
+    _extraRevealController =
+        AnimationController(
+            vsync: this,
+            duration: Duration(milliseconds: _maxExtraRevealDurationMs),
+          )
+          ..addListener(() {
+            if (mounted) {
+              setState(() {});
+            }
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed && mounted) {
+              setState(() {
+                _isRevealingExtras = false;
+              });
+            }
+          });
+
     // Original fade-in animation
     Future.delayed(Duration.zero, () {
       if (mounted) {
@@ -52,6 +139,38 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
         });
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant NewHabitCategory oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.reorderActive) {
+      if (_isRevealingExtras || _extraRevealController.isAnimating) {
+        _extraRevealController.stop();
+        if (_isRevealingExtras && mounted) {
+          setState(() {
+            _isRevealingExtras = false;
+          });
+        }
+      }
+      return;
+    }
+
+    final reorderJustFinished =
+        oldWidget.reorderActive && !widget.reorderActive;
+    final hadFallbackInReorder = oldWidget.useFallbackAnimation;
+    final hasExtraHabitsNow = _extraHabitsCountForWidget(widget) > 0;
+
+    if (reorderJustFinished && hadFallbackInReorder && hasExtraHabitsNow) {
+      _startExtraReveal();
+    }
+  }
+
+  @override
+  void dispose() {
+    _extraRevealController.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,6 +225,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
 
     final firstCollapsedIndex =
         hasFallbackCandidate ? visibleCount : categoryHabits.length;
+    final disableInteractions = widget.reorderActive || _isRevealingExtras;
 
     return AnimatedOpacity(
       opacity: _opacity, // For the initial fade-in of the whole category block
@@ -123,34 +243,44 @@ class _NewHabitCategoryState extends State<NewHabitCategory> {
             AnimatedOpacity(
               key: ValueKey('habit-fade-${categoryHabits[index].id}'),
               duration: const Duration(milliseconds: 100),
-              opacity: contentOpacity,
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 120),
-                alignment: Alignment.topCenter,
-                curve: Curves.easeInOut,
-                child:
-                    index >= firstCollapsedIndex
-                        ? const SizedBox.shrink()
-                        : GestureDetector(
-                          onTap: () {
-                            final cp = context.read<ColorProvider>();
-                            final habit = categoryHabits[index];
+              opacity:
+                  contentOpacity *
+                  _extraRevealOpacityForIndex(index, categoryHabits.length),
+              child: SizedBox(
+                width: double.infinity,
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 350),
+                  alignment: Alignment.topCenter,
+                  curve: Curves.easeInOut,
+                  child:
+                      index >= firstCollapsedIndex
+                          ? const SizedBox.shrink()
+                          : GestureDetector(
+                            onTap: () {
+                              if (disableInteractions) return;
 
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                              barrierColor: cp.greyText.darken().withOpacity(
-                                0.3,
+                              final cp = context.read<ColorProvider>();
+                              final habit = categoryHabits[index];
+
+                              showModalBottomSheet(
+                                context: context,
+                                backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                                barrierColor: cp.greyText.darken().withOpacity(
+                                  0.3,
+                                ),
+                                isScrollControlled: true,
+                                builder: (context) => HabitSheet(habit: habit),
+                              );
+                            },
+                            child: IgnorePointer(
+                              ignoring: disableInteractions,
+                              child: NewHabitWidget(
+                                key: ValueKey(categoryHabits[index].id),
+                                habit: categoryHabits[index],
                               ),
-                              isScrollControlled: true,
-                              builder: (context) => HabitSheet(habit: habit),
-                            );
-                          },
-                          child: NewHabitWidget(
-                            key: ValueKey(categoryHabits[index].id),
-                            habit: categoryHabits[index],
+                            ),
                           ),
-                        ),
+                ),
               ),
             ),
           if (widget.showOptionalHabits) Container(),
