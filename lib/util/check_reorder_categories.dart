@@ -20,29 +20,34 @@ bool categoryStatusChanged(BuildContext context, Habit habit) {
     context,
     listen: false,
   );
-  final habits = habitProvider.habits;
-  final mainCategory = categoryProvider.categoriesOrdered.first;
+  final orderedCategories = categoryProvider.categoriesOrdered;
 
-  // After completing the habit we check if it's completed
-  // If it's completed then we check if the category is completed
-  // If the category is completed and it is the main category then we reorder categories with categoryProvider
+  if (orderedCategories.isEmpty) {
+    return false;
+  }
 
+  final mainCategoryId = orderedCategories.first.id;
+
+  final habitsInMainCategory =
+      habitProvider.habits
+          .where((h) => h.categoryId == mainCategoryId && !h.optional)
+          .toList();
+
+  if (habitsInMainCategory.isEmpty) {
+    return false;
+  }
+
+  final allMainCategoryCompleted = habitsInMainCategory.every(
+    (h) => h.completed,
+  );
+
+  // Reorder whenever the main category completion state can affect priority:
+  // 1) Completing a habit that makes the main category fully completed.
+  // 2) Un-completing any non-optional habit (that category may become ready and
+  //    should be allowed to move to main based on time-slot priority).
   if (habit.completed) {
-    final habitsInCategory =
-        habits.where((h) => h.categoryId == habit.categoryId).toList();
-    return habitsInCategory.every(
-      (h) => h.completed && h.categoryId == mainCategory.id,
-    );
+    return habit.categoryId == mainCategoryId && allMainCategoryCompleted;
   }
-  // If the habit isn't completed, we still check if the category went from completed to not completed
-  // If so, we reorder categories as well
-  else {
-    // Here we count total habits and completed habits
-    // If total habits - completed habits == 1 then the category went from completed to not completed
-    final habitsInCategory =
-        habits.where((h) => h.categoryId == habit.categoryId).toList();
-    final totalHabits = habitsInCategory.length;
-    final completedHabits = habitsInCategory.where((h) => h.completed).length;
-    return totalHabits - completedHabits == 1;
-  }
+
+  return true;
 }
