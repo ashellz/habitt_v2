@@ -7,6 +7,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
+import 'package:habitt/widgets/default/animated_checkbox.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
@@ -63,6 +64,27 @@ class _AddNewHabitSheetState extends State<AddNewHabitSheet> {
               chooseIcon(cp, sp, context),
               habitDetails(cp),
               habitScheduling(cp, context, sp),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Optional habit",
+                    style: TextStyle(
+                      color: cp.text,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  AnimatedCheckbox(
+                    value: sp.isOptional,
+                    onChanged: (value) {
+                      setState(() {
+                        sp.isOptional = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
