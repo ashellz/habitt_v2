@@ -292,7 +292,7 @@ class _NewHabitsState extends State<NewHabits>
             habits: habits,
             isFirst: isFirst,
             category: category,
-            showOptionalHabits: false,
+            showOptionalHabits: true,
           ),
         ),
       ),
