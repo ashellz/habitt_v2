@@ -58,7 +58,7 @@ class NewPerfectDaysStreak extends StatelessWidget {
                   spacing: 4,
                   children: [
                     Text(
-                      'Days Streak',
+                      ' ${statsProvider.perfectDaysStreak == 1 ? 'Day' : 'Days'} Streak',
                       style: TextStyle(
                         color: cp.text,
                         fontSize: 16,
