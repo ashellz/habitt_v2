@@ -143,6 +143,24 @@ class StateProvider extends ChangeNotifier {
     }
   }
 
+  set selectedDaysAWeek(Set<int> days) {
+    _selectedDaysAWeek
+      ..clear()
+      ..addAll(days.where((d) => d >= 1 && d <= 7));
+    weeklyTarget =
+        _selectedDaysAWeek.isNotEmpty ? _selectedDaysAWeek.length : 1;
+    notifyListeners();
+  }
+
+  set selectedDaysAMonth(Set<int> days) {
+    _selectedDaysAMonth
+      ..clear()
+      ..addAll(days.where((d) => d >= 1 && d <= 31));
+    monthlyTarget =
+        _selectedDaysAMonth.isNotEmpty ? _selectedDaysAMonth.length : 1;
+    notifyListeners();
+  }
+
   set selectedScheduleOption(ScheduleType option) {
     _selectedScheduleOption = option;
     notifyListeners();
@@ -170,6 +188,8 @@ class StateProvider extends ChangeNotifier {
     } else {
       _selectedDaysAWeek.add(weekday);
     }
+    weeklyTarget =
+        _selectedDaysAWeek.isNotEmpty ? _selectedDaysAWeek.length : 1;
     notifyListeners();
   }
 
@@ -180,6 +200,8 @@ class StateProvider extends ChangeNotifier {
     } else {
       _selectedDaysAMonth.add(day);
     }
+    monthlyTarget =
+        _selectedDaysAMonth.isNotEmpty ? _selectedDaysAMonth.length : 1;
     notifyListeners();
   }
 

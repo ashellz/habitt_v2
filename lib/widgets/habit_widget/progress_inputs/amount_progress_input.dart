@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/default/increment_decrement_text_field.dart';
 import 'package:provider/provider.dart';
 
 class AmountProgressInput extends StatefulWidget {
@@ -13,10 +11,12 @@ class AmountProgressInput extends StatefulWidget {
     super.key,
     required this.amount,
     this.amountCompleted,
+    this.minValue = 0,
   });
 
   final int amount;
   final int? amountCompleted;
+  final int minValue;
 
   @override
   State<AmountProgressInput> createState() => _AmountProgressInputState();
@@ -85,47 +85,30 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
 
   @override
   Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return NewDefaultTextField(
+    return IncrementDecrementTextField(
       fontWeight: FontWeight.w500,
       title: "Amount",
-      digitsOnly: true,
-      centerValue: true,
       controller: controller,
-      prefix: GestureDetector(
-        onTap: () {
-          onDecrement();
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
-          child: SvgPicture.asset(
-            "assets/images/new-svg/minus.svg",
-            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
-          ),
-        ),
-      ),
-      suffix: GestureDetector(
-        onTap: () {
-          onIncrement();
-        },
-        onLongPressStart: (_) {
-          _startIncrementing();
-        },
-        onLongPressEnd: (_) {
-          _stopIncrementing();
-        },
-        onLongPressCancel: () {
-          _stopIncrementing();
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
-          child: SvgPicture.asset(
-            "assets/images/new-svg/plus.svg",
-            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
-          ),
-        ),
-      ),
+      minValue: 2,
+      maxValue: 9999,
+      onValueChanged: (value) {
+        stateProvider.habitAmount = value;
+      },
+      onDecrement: () {
+        onDecrement();
+      },
+      onIncrement: () {
+        onIncrement();
+      },
+      onIncrementLongPressStart: (_) {
+        _startIncrementing();
+      },
+      onIncrementLongPressEnd: (_) {
+        _stopIncrementing();
+      },
+      onIncrementLongPressCancel: () {
+        _stopIncrementing();
+      },
     );
   }
 }
