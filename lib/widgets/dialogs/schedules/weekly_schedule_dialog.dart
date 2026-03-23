@@ -26,6 +26,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
   late int initialWeeklyTarget;
   late Set<int> initialWeeklyDays;
   late final TextEditingController weeklyTargetController;
+  bool _isClearDaysDialogOpen = false;
 
   @override
   void initState() {
@@ -101,6 +102,61 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
     );
   }
 
+  Future<void> _handleWeeklyTargetChange(
+    StateProvider sp,
+    ColorProvider cp,
+    int nextValue,
+  ) async {
+    if (sp.weeklyTarget == nextValue) {
+      return;
+    }
+
+    if (sp.selectedDaysAWeek.isEmpty) {
+      sp.weeklyTarget = nextValue;
+      return;
+    }
+
+    if (_isClearDaysDialogOpen) {
+      return;
+    }
+
+    _isClearDaysDialogOpen = true;
+    final shouldClear =
+        await showModalBottomSheet<bool>(
+          backgroundColor: Colors.transparent,
+          barrierColor: cp.greyText.darken().withOpacity(0.3),
+          isScrollControlled: true,
+          context: context,
+          builder:
+              (dialogContext) => NewDefaultDialog(
+                title: "Clear selected days",
+                desc:
+                    "Changing the amount of times habit appears in a week will clear selected days",
+                primaryButtonLabel: "Clear",
+                onPrimaryButtonPressed: () {
+                  sp.selectedDaysAWeek = <int>{};
+                  sp.weeklyTarget = nextValue;
+                  Navigator.of(dialogContext).pop(true);
+                },
+                onSecondaryButtonPressed: () {
+                  Navigator.of(dialogContext).pop(false);
+                },
+              ),
+        ) ??
+        false;
+    _isClearDaysDialogOpen = false;
+
+    if (!shouldClear) {
+      weeklyTargetController.value = weeklyTargetController.value.copyWith(
+        text: sp.weeklyTarget.toString(),
+        selection: TextSelection.collapsed(
+          offset: sp.weeklyTarget.toString().length,
+        ),
+        composing: TextRange.empty,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
@@ -143,15 +199,15 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                   minValue: 1,
                   maxValue: 6,
                   onValueChanged: (value) {
-                    sp.weeklyTarget = value;
+                    _handleWeeklyTargetChange(sp, cp, value);
                   },
                   onIncrement: () {
                     final next = sp.weeklyTarget == 6 ? 1 : sp.weeklyTarget + 1;
-                    sp.weeklyTarget = next;
+                    _handleWeeklyTargetChange(sp, cp, next);
                   },
                   onDecrement: () {
                     final next = sp.weeklyTarget == 1 ? 6 : sp.weeklyTarget - 1;
-                    sp.weeklyTarget = next;
+                    _handleWeeklyTargetChange(sp, cp, next);
                   },
                 ),
                 AnimatedSwitcher(

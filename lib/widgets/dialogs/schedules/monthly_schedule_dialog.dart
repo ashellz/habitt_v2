@@ -26,6 +26,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
   late int initialMonthlyTarget;
   late Set<int> initialMonthlyDays;
   late final TextEditingController monthlyTargetController;
+  bool _isClearDaysDialogOpen = false;
 
   @override
   void initState() {
@@ -101,6 +102,61 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
     );
   }
 
+  Future<void> _handleMonthlyTargetChange(
+    StateProvider sp,
+    ColorProvider cp,
+    int nextValue,
+  ) async {
+    if (sp.monthlyTarget == nextValue) {
+      return;
+    }
+
+    if (sp.selectedDaysAMonth.isEmpty) {
+      sp.monthlyTarget = nextValue;
+      return;
+    }
+
+    if (_isClearDaysDialogOpen) {
+      return;
+    }
+
+    _isClearDaysDialogOpen = true;
+    final shouldClear =
+        await showModalBottomSheet<bool>(
+          backgroundColor: Colors.transparent,
+          barrierColor: cp.greyText.darken().withOpacity(0.3),
+          isScrollControlled: true,
+          context: context,
+          builder:
+              (dialogContext) => NewDefaultDialog(
+                title: "Clear selected days",
+                desc:
+                    "Changing the amount of times habit appears in a month will clear selected days",
+                primaryButtonLabel: "Clear",
+                onPrimaryButtonPressed: () {
+                  sp.selectedDaysAMonth = <int>{};
+                  sp.monthlyTarget = nextValue;
+                  Navigator.of(dialogContext).pop(true);
+                },
+                onSecondaryButtonPressed: () {
+                  Navigator.of(dialogContext).pop(false);
+                },
+              ),
+        ) ??
+        false;
+    _isClearDaysDialogOpen = false;
+
+    if (!shouldClear) {
+      monthlyTargetController.value = monthlyTargetController.value.copyWith(
+        text: sp.monthlyTarget.toString(),
+        selection: TextSelection.collapsed(
+          offset: sp.monthlyTarget.toString().length,
+        ),
+        composing: TextRange.empty,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
@@ -143,17 +199,17 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                   minValue: 1,
                   maxValue: 30,
                   onValueChanged: (value) {
-                    sp.monthlyTarget = value;
+                    _handleMonthlyTargetChange(sp, cp, value);
                   },
                   onIncrement: () {
                     final next =
                         sp.monthlyTarget == 30 ? 1 : sp.monthlyTarget + 1;
-                    sp.monthlyTarget = next;
+                    _handleMonthlyTargetChange(sp, cp, next);
                   },
                   onDecrement: () {
                     final next =
                         sp.monthlyTarget == 1 ? 30 : sp.monthlyTarget - 1;
-                    sp.monthlyTarget = next;
+                    _handleMonthlyTargetChange(sp, cp, next);
                   },
                 ),
                 AnimatedSwitcher(
