@@ -15,6 +15,7 @@ class NewHabitCategory extends StatefulWidget {
     this.reorderActive = false,
     this.reorderProgress = 0,
     this.reorderSwapPoint = 0.48,
+    this.reorderDurationMs = 760,
     this.useFallbackAnimation = false,
     this.fallbackVisibleHabits = 3,
     required this.showOptionalHabits,
@@ -27,6 +28,7 @@ class NewHabitCategory extends StatefulWidget {
   final bool reorderActive;
   final double reorderProgress;
   final double reorderSwapPoint;
+  final int reorderDurationMs;
   final bool useFallbackAnimation;
   final int fallbackVisibleHabits;
   final Category category;
@@ -42,6 +44,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
     with SingleTickerProviderStateMixin {
   static const int _extraRevealBaseDelayMs = 350;
   static const int _extraRevealFadeDurationMs = 120;
+  static const int _collapseBaseFadeDurationMs = 120;
 
   double _opacity = 0; // For initial fade-in
   late final AnimationController _extraRevealController;
@@ -96,11 +99,9 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
       extraCount,
     );
     final delayStep = _extraRevealBaseDelayMs / extraCount;
-    final delayMs =
-        (_extraRevealBaseDelayMs - (extraOrderFromBottom * delayStep)).clamp(
-      0,
-      _extraRevealBaseDelayMs.toDouble(),
-    );
+    final delayMs = (_extraRevealBaseDelayMs -
+            (extraOrderFromBottom * delayStep))
+        .clamp(0, _extraRevealBaseDelayMs.toDouble());
 
     final elapsedMs = _extraRevealController.value * _maxExtraRevealDurationMs;
     final opacity = ((elapsedMs - delayMs) / _extraRevealFadeDurationMs).clamp(
@@ -108,6 +109,57 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
       1.0,
     );
     return Curves.easeOut.transform(opacity);
+  }
+
+  _FallbackCollapseState _collapseStateForIndex({
+    required int index,
+    required int totalHabits,
+    required bool hasFallbackCandidate,
+    required double normalizedPrimaryProgress,
+  }) {
+    if (!hasFallbackCandidate || index < widget.fallbackVisibleHabits) {
+      return const _FallbackCollapseState(visible: true, opacity: 1);
+    }
+
+    final extraCount = (totalHabits - widget.fallbackVisibleHabits).clamp(
+      0,
+      totalHabits,
+    );
+    if (extraCount <= 0) {
+      return const _FallbackCollapseState(visible: true, opacity: 1);
+    }
+
+    final collapseWindowMs = (widget.reorderDurationMs *
+            widget.reorderSwapPoint)
+        .round()
+        .clamp(1, widget.reorderDurationMs);
+
+    final adaptiveFadeMs = (collapseWindowMs / extraCount).clamp(
+      1,
+      _collapseBaseFadeDurationMs.toDouble(),
+    );
+
+    final bottomMostExtraIndex = totalHabits - 1;
+    final extraOrderFromBottom = (bottomMostExtraIndex - index).clamp(
+      0,
+      extraCount,
+    );
+
+    final startMs = extraOrderFromBottom * adaptiveFadeMs;
+    final endMs = startMs + adaptiveFadeMs;
+    final elapsedMs = normalizedPrimaryProgress * collapseWindowMs;
+
+    if (elapsedMs >= endMs) {
+      return const _FallbackCollapseState(visible: false, opacity: 0);
+    }
+
+    if (elapsedMs <= startMs) {
+      return const _FallbackCollapseState(visible: true, opacity: 1);
+    }
+
+    final fadeT = ((elapsedMs - startMs) / adaptiveFadeMs).clamp(0.0, 1.0);
+    final opacity = 1 - Curves.easeOut.transform(fadeT);
+    return _FallbackCollapseState(visible: true, opacity: opacity);
   }
 
   @override
@@ -192,39 +244,6 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
         widget.reorderActive && widget.reorderSwapPoint > 0
             ? (widget.reorderProgress / widget.reorderSwapPoint).clamp(0.0, 1.0)
             : 0.0;
-
-    final contentFadeT =
-        hasFallbackCandidate
-            ? (normalizedPrimaryProgress / 0.35).clamp(0.0, 1.0)
-            : 0.0;
-    final collapseT =
-        hasFallbackCandidate
-            ? ((normalizedPrimaryProgress - 0.25) / 0.75).clamp(0.0, 1.0)
-            : 0.0;
-
-    final contentOpacity =
-        hasFallbackCandidate
-            ? (1 - (0.55 * Curves.easeOut.transform(contentFadeT))).clamp(
-              0.0,
-              1.0,
-            )
-            : 1.0;
-
-    final extraHabits = categoryHabits.length - widget.fallbackVisibleHabits;
-    final collapsedExtra =
-        hasFallbackCandidate
-            ? (extraHabits * Curves.easeInOut.transform(collapseT)).floor()
-            : 0;
-    final visibleCount =
-        hasFallbackCandidate
-            ? (categoryHabits.length - collapsedExtra).clamp(
-              widget.fallbackVisibleHabits,
-              categoryHabits.length,
-            )
-            : categoryHabits.length;
-
-    final firstCollapsedIndex =
-        hasFallbackCandidate ? visibleCount : categoryHabits.length;
     final disableInteractions = widget.reorderActive || _isRevealingExtras;
 
     return AnimatedOpacity(
@@ -240,46 +259,64 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
               category: widget.category,
             ),
           for (int index = 0; index < categoryHabits.length; index++)
-            AnimatedOpacity(
+            Opacity(
               key: ValueKey('habit-fade-${categoryHabits[index].id}'),
-              duration: const Duration(milliseconds: 100),
-              opacity:
-                  contentOpacity *
-                  _extraRevealOpacityForIndex(index, categoryHabits.length),
+              opacity: () {
+                final collapseState = _collapseStateForIndex(
+                  index: index,
+                  totalHabits: categoryHabits.length,
+                  hasFallbackCandidate: hasFallbackCandidate,
+                  normalizedPrimaryProgress: normalizedPrimaryProgress,
+                );
+                return (collapseState.opacity *
+                        _extraRevealOpacityForIndex(
+                          index,
+                          categoryHabits.length,
+                        ))
+                    .clamp(0.0, 1.0);
+              }(),
               child: SizedBox(
                 width: double.infinity,
                 child: AnimatedSize(
                   duration: const Duration(milliseconds: 350),
                   alignment: Alignment.topCenter,
                   curve: Curves.easeInOut,
-                  child:
-                      index >= firstCollapsedIndex
-                          ? const SizedBox.shrink()
-                          : GestureDetector(
-                            onTap: () {
-                              if (disableInteractions) return;
+                  child: () {
+                    final collapseState = _collapseStateForIndex(
+                      index: index,
+                      totalHabits: categoryHabits.length,
+                      hasFallbackCandidate: hasFallbackCandidate,
+                      normalizedPrimaryProgress: normalizedPrimaryProgress,
+                    );
 
-                              final cp = context.read<ColorProvider>();
-                              final habit = categoryHabits[index];
+                    if (!collapseState.visible) {
+                      return const SizedBox.shrink();
+                    }
 
-                              showModalBottomSheet(
-                                context: context,
-                                backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                                barrierColor: cp.greyText.darken().withOpacity(
-                                  0.3,
-                                ),
-                                isScrollControlled: true,
-                                builder: (context) => HabitSheet(habit: habit),
-                              );
-                            },
-                            child: IgnorePointer(
-                              ignoring: disableInteractions,
-                              child: NewHabitWidget(
-                                key: ValueKey(categoryHabits[index].id),
-                                habit: categoryHabits[index],
-                              ),
-                            ),
-                          ),
+                    return GestureDetector(
+                      onTap: () {
+                        if (disableInteractions) return;
+
+                        final cp = context.read<ColorProvider>();
+                        final habit = categoryHabits[index];
+
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                          barrierColor: cp.greyText.darken().withOpacity(0.3),
+                          isScrollControlled: true,
+                          builder: (context) => HabitSheet(habit: habit),
+                        );
+                      },
+                      child: IgnorePointer(
+                        ignoring: disableInteractions,
+                        child: NewHabitWidget(
+                          key: ValueKey(categoryHabits[index].id),
+                          habit: categoryHabits[index],
+                        ),
+                      ),
+                    );
+                  }(),
                 ),
               ),
             ),
@@ -289,4 +326,11 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
       ),
     );
   }
+}
+
+class _FallbackCollapseState {
+  final bool visible;
+  final double opacity;
+
+  const _FallbackCollapseState({required this.visible, required this.opacity});
 }
