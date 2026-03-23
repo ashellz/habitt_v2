@@ -3,10 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class EnterHabitDuration extends StatelessWidget {
   const EnterHabitDuration({super.key});
@@ -18,11 +18,8 @@ class EnterHabitDuration extends StatelessWidget {
 
     return GestureDetector(
       onTap:
-          () => showModalBottomSheet(
+          () => showDialogSheet(
             context: context,
-            backgroundColor: Colors.transparent,
-            barrierColor: cp.greyText.darken().withOpacity(0.3),
-            isScrollControlled: true,
             builder: (context) {
               return NewDefaultDialog(
                 title: "Set duration",

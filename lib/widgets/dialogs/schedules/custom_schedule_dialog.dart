@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/increment_decrement_text_field.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/schedule_dialog_snapshot.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class CustomScheduleDialog extends StatefulWidget {
   const CustomScheduleDialog({super.key, required this.rootSnapshot});
@@ -43,10 +43,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
 
   void _returnToSetSchedule(ColorProvider cp) {
     Navigator.of(context).pop();
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      barrierColor: cp.greyText.darken().withOpacity(0.3),
-      isScrollControlled: true,
+    showDialogSheet(
       context: context,
       builder:
           (context) => SetScheduleDialog(rootSnapshot: widget.rootSnapshot),
@@ -59,10 +56,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
       return;
     }
 
-    await showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      barrierColor: cp.greyText.darken().withOpacity(0.3),
-      isScrollControlled: true,
+    await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(

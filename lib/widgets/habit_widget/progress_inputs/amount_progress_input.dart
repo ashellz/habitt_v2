@@ -89,7 +89,7 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
       fontWeight: FontWeight.w500,
       title: "Amount",
       controller: controller,
-      minValue: 2,
+      minValue: widget.minValue,
       maxValue: 9999,
       onValueChanged: (value) {
         stateProvider.habitAmount = value;
