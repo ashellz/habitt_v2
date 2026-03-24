@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
-enum _ButtonVariant { custom, primary, secondary, primarySmall, secondarySmall }
+enum _ButtonVariant {
+  custom,
+  primary,
+  secondary,
+  primarySmall,
+  secondarySmall,
+  circle,
+}
 
 class NewDefaultButton extends StatelessWidget {
   const NewDefaultButton({
@@ -86,6 +93,22 @@ class NewDefaultButton extends StatelessWidget {
        isGradient = false,
        _variant = _ButtonVariant.secondarySmall;
 
+  const NewDefaultButton.circle({
+    super.key,
+    required this.onPressed,
+    this.label,
+    this.enabled = true,
+    this.isLoading = false,
+    this.prefix,
+    this.width = 36,
+    this.height = 36,
+    this.child,
+    this.textColor,
+    this.padding = const EdgeInsets.all(10),
+  }) : color = null,
+       isGradient = false,
+       _variant = _ButtonVariant.circle;
+
   final Function onPressed;
   final String? label;
   final bool enabled;
@@ -127,11 +150,15 @@ class NewDefaultButton extends StatelessWidget {
       case _ButtonVariant.secondarySmall:
         buttonColor = cp.secondaryButton;
         break;
+      case _ButtonVariant.circle:
+        buttonColor = cp.main;
+        break;
     }
 
     final bool isMainButtonVariant =
         _variant == _ButtonVariant.primary ||
-        _variant == _ButtonVariant.primarySmall;
+        _variant == _ButtonVariant.primarySmall ||
+        _variant == _ButtonVariant.circle;
     final Color resolvedTextColor =
         textColor ?? (isMainButtonVariant ? cp.bg : cp.text);
 
