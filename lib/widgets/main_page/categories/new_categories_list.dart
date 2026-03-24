@@ -9,13 +9,13 @@ import 'package:provider/provider.dart';
 class NewCategoriesList extends StatefulWidget {
   const NewCategoriesList({
     super.key,
-    this.topPadding = 16,
+    this.padding = const EdgeInsets.only(top: 16.0),
     this.standardColor = false,
     this.habitsCount = true,
     this.selectedDay,
   });
 
-  final double topPadding;
+  final EdgeInsets? padding;
   final bool standardColor;
   final bool habitsCount;
   final DateTime? selectedDay;
@@ -168,7 +168,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     }
 
     return Padding(
-      padding: EdgeInsets.only(top: widget.topPadding),
+      padding: widget.padding ?? EdgeInsets.zero,
       // --- NEW: Wrap the list with ShaderMask to apply the fade effect ---
       child: SizedBox(
         height: 36,

@@ -4,6 +4,7 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_localized_category_name.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:provider/provider.dart';
 
 class NewSelectCategoryWidget extends StatelessWidget {
@@ -35,26 +36,25 @@ class NewSelectCategoryWidget extends StatelessWidget {
     final int selectedId = categoryProvider.selectedCategoryId;
     final bool isSelected = category.id == selectedId;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.only(
-          right: isLast ? 16.0 : 8.0,
-          left: isFirst ? 16.0 : 0,
-        ),
-        child: Container(
-          decoration: ShapeDecoration(
-            shape: StadiumBorder(),
-            color: isSelected ? cp.main : cp.bg,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
-          child: Text(
-            getLocalizedCategoryName(category, localizations),
-            style: TextStyle(
-              color: isSelected ? cp.bg : cp.lightGreyText,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+    return Padding(
+      padding: EdgeInsets.only(
+        right: isLast ? 16.0 : 8.0,
+        left: isFirst ? 16.0 : 0,
+      ),
+      child: NewDefaultButton(
+        onPressed: () => onTap?.call(),
+        color:
+            isSelected
+                ? cp.main
+                : standardColor
+                ? cp.habitBg
+                : cp.bg,
+        child: Text(
+          getLocalizedCategoryName(category, localizations),
+          style: TextStyle(
+            color: isSelected ? cp.bg : cp.lightGreyText,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
