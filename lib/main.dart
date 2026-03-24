@@ -231,8 +231,8 @@ class _MyAppState extends State<MyApp> {
     );
 
     Widget getHomePage() {
-      final didOnboard = widget.prefs.getString('didOnboard');
-      if (didOnboard == null) {
+      final didOnboard = widget.prefs.getBool('didOnboard');
+      if (didOnboard == null || !didOnboard) {
         return const OnboardingPages();
       } else {
         return const HomePage();

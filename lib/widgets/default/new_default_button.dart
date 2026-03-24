@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/util/color_contrast.dart';
 import 'package:provider/provider.dart';
 
 enum _ButtonVariant { custom, primary, secondary, primarySmall, secondarySmall }
@@ -66,7 +65,7 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 36,
     this.child,
     this.textColor,
-    this.padding = const EdgeInsets.only(),
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
   }) : color = null,
        isGradient = true,
        _variant = _ButtonVariant.primarySmall;
@@ -82,7 +81,7 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 36,
     this.child,
     this.textColor,
-    this.padding = const EdgeInsets.only(),
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
   }) : color = null,
        isGradient = false,
        _variant = _ButtonVariant.secondarySmall;
@@ -134,10 +133,7 @@ class NewDefaultButton extends StatelessWidget {
         _variant == _ButtonVariant.primary ||
         _variant == _ButtonVariant.primarySmall;
     final Color resolvedTextColor =
-        textColor ??
-        (cp.isDark && isMainButtonVariant
-            ? const Color(0xFF0C0C0C)
-            : bestContrastingOn(buttonColor));
+        textColor ?? (isMainButtonVariant ? cp.bg : cp.text);
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 150),
@@ -145,7 +141,7 @@ class NewDefaultButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         height: height,
-        width: width ?? double.infinity,
+        width: width,
         curve: Curves.easeOut,
         child: IgnorePointer(
           ignoring: !enabled,
