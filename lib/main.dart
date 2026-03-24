@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/firebase_options.dart';
 import 'package:habitt/hive/hive_registrar.g.dart';
-import 'package:habitt/l10n/l10n.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/pages/main_pages/settings_page.dart';
-import 'package:habitt/pages/other_pages/setup_name_page.dart';
+import 'package:habitt/pages/onboarding/onboarding_pages.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
+import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -33,6 +33,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final tp = await ThemeProvider.initFromPrefs(prefs);
+  final languageProvider = LanguageProvider.fromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await BillingService.init();
 
@@ -96,6 +97,7 @@ Future<void> main() async {
 
         // Independent provider
         ChangeNotifierProvider<ThemeProvider>.value(value: tp),
+        ChangeNotifierProvider<LanguageProvider>.value(value: languageProvider),
 
         // 2. HabitProvider: Depends on StatsProvider.
         ChangeNotifierProxyProvider<StatsProvider, HabitProvider>(
@@ -176,6 +178,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final languageProvider = context.watch<LanguageProvider>();
 
     // Choose base ColorScheme based on theme provider state
     final baseScheme =
@@ -228,9 +231,9 @@ class _MyAppState extends State<MyApp> {
     );
 
     Widget getHomePage() {
-      final name = widget.prefs.getString('name');
-      if (name == null) {
-        return SetupNamePage(prefs: widget.prefs, stateSetter: setState);
+      final didOnboard = widget.prefs.getString('didOnboard');
+      if (didOnboard == null) {
+        return const OnboardingPages();
       } else {
         return const HomePage();
       }
@@ -242,7 +245,8 @@ class _MyAppState extends State<MyApp> {
       theme: theme,
       darkTheme: theme,
       themeMode: cp.isDark ? ThemeMode.dark : ThemeMode.light,
-      supportedLocales: L10n.all,
+      locale: languageProvider.locale,
+      supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
