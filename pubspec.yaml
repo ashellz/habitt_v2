@@ -99,6 +99,7 @@ flutter:
   assets:
     - assets/images/svg/
     - assets/images/new-svg/
+    - assets/images/new-svg/languages/
     - assets/images/icons/
     - assets/images/
   
