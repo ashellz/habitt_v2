@@ -1,6 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -19,9 +22,6 @@ class NewHabitProgress extends StatefulWidget {
 }
 
 class _NewHabitProgressState extends State<NewHabitProgress> {
-  bool _hasAnimatedProgress = false;
-  double _lastProgress = 0.0;
-
   double getProgressValue() {
     final habit = widget.habit;
 
@@ -50,6 +50,9 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
+    final progress = getProgressValue();
+    final cp = context.watch<ColorProvider>();
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -121,11 +124,105 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
             child: SizedBox(
               width: 24,
               height: 24,
-              child: Checkmark(value: widget.habit.completed),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                child: KeyedSubtree(
+                  key: ValueKey(progress > 0 && progress < 1),
+                  child:
+                      progress > 0 && progress < 1
+                          ? TweenAnimationBuilder<double>(
+                            key: const ValueKey('partial-progress'),
+                            tween: Tween<double>(end: progress),
+                            duration: const Duration(milliseconds: 1250),
+                            curve: Curves.easeInOut,
+                            builder: (context, animatedProgress, child) {
+                              return _CircularProgressPie(
+                                progress: animatedProgress,
+                                color: cp.main,
+                              );
+                            },
+                          )
+                          : Checkmark(value: widget.habit.completed),
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _CircularProgressPie extends StatelessWidget {
+  const _CircularProgressPie({required this.progress, required this.color});
+
+  final double progress;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 24,
+      height: 24,
+      child: CustomPaint(
+        painter: _CircularProgressPiePainter(
+          progress: progress.clamp(0.0, 1.0),
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class _CircularProgressPiePainter extends CustomPainter {
+  const _CircularProgressPiePainter({
+    required this.progress,
+    required this.color,
+  });
+
+  final double progress;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.center(Offset.zero);
+    final radius = size.shortestSide / 2;
+    final rect = Rect.fromCircle(center: center, radius: radius);
+
+    final backgroundPaint =
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = Colors.transparent;
+
+    canvas.drawCircle(center, radius, backgroundPaint);
+
+    final progressPaint =
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = color;
+
+    canvas.drawArc(
+      rect,
+      -math.pi / 2,
+      2 * math.pi * progress,
+      true,
+      progressPaint,
+    );
+
+    final borderPaint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = color.withValues(alpha: 0.2);
+
+    canvas.drawCircle(center, radius - 1, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _CircularProgressPiePainter oldDelegate) {
+    return oldDelegate.progress != progress || oldDelegate.color != color;
   }
 }

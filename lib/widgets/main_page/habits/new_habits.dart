@@ -532,6 +532,7 @@ class _NewHabitsState extends State<NewHabits>
       padding: const EdgeInsets.only(top: 10),
       child: NewDefaultButton.secondary(
         height: 40,
+        width: double.infinity,
         label: "Add habit",
         onPressed: () {
           final stateProvider = context.read<StateProvider>();
