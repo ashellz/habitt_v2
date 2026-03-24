@@ -30,7 +30,9 @@ enum LanguageOption {
 }
 
 class ChooseAppLanguage extends StatefulWidget {
-  const ChooseAppLanguage({super.key});
+  const ChooseAppLanguage({super.key, this.onNext});
+
+  final VoidCallback? onNext;
 
   @override
   State<ChooseAppLanguage> createState() => _ChooseAppLanguageState();
@@ -293,7 +295,12 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
               right: 0,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: NewDefaultButton(label: 'Next', onPressed: () {}),
+                child: NewDefaultButton(
+                  label: 'Next',
+                  onPressed: () {
+                    widget.onNext?.call();
+                  },
+                ),
               ),
             ),
           ],
