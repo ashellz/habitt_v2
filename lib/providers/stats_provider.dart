@@ -137,6 +137,7 @@ class StatsProvider extends ChangeNotifier {
 
   int refreshPerfectStreak() {
     int allHabitsCompletedStreak = 0;
+    int missedDaysAllowed = 1;
 
     // First we order the days by date
     final orderedDays = daysBox.values.toList();
@@ -150,9 +151,11 @@ class StatsProvider extends ChangeNotifier {
       final day = orderedDays[i];
       int habitsCompleted = 0;
       int habitsSkipped = 0;
+      int requiredHabits = 0;
       for (final habit in day.habits) {
         // If habit is additional, we dont count it
         if (habit.optional) continue;
+        requiredHabits++;
         if (habit.completed) {
           habitsCompleted++;
           debugPrint("Completed habit found, {$habitsCompleted} total");
@@ -161,11 +164,15 @@ class StatsProvider extends ChangeNotifier {
           debugPrint("Skipped habit found, {$habitsSkipped} total");
         }
       }
-      if (day.habits.isEmpty) continue;
+      if (requiredHabits == 0) continue;
 
-      if (habitsCompleted + habitsSkipped == day.habits.length) {
+      if (habitsCompleted + habitsSkipped == requiredHabits) {
         allHabitsCompletedStreak++;
       } else {
+        if (missedDaysAllowed > 0) {
+          missedDaysAllowed--;
+          continue;
+        }
         break;
       }
     }
