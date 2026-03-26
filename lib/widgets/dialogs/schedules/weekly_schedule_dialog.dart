@@ -283,6 +283,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                             BlendMode.srcIn,
                           ),
                         ),
+                        width: double.infinity,
                         label: "Add more options",
                       ),
             ),
