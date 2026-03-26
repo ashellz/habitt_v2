@@ -1,19 +1,30 @@
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/widgets/default/custom_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-class HabitsPage extends StatelessWidget {
+class HabitsPage extends StatefulWidget {
   const HabitsPage({super.key});
+
+  @override
+  State<HabitsPage> createState() => _HabitsPageState();
+}
+
+class _HabitsPageState extends State<HabitsPage> {
+  bool _isScheduledTodayOn = false;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final hp = context.watch<HabitProvider>();
+    final habits = _isScheduledTodayOn ? hp.todaysHabits : hp.habits;
 
     return Scaffold(
       body: Padding(
@@ -22,6 +33,35 @@ class HabitsPage extends StatelessWidget {
           children: [
             topSection(context, cp),
             NewCategoriesList(padding: null, standardColor: true),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: cp.border, width: 1)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Scheduled today',
+                    style: TextStyle(
+                      color: cp.text,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  NewDefaultSwitch(
+                    value: _isScheduledTodayOn,
+                    onChanged: (value) {
+                      debugPrint("Scheduled Today toggled: $value");
+                      setState(() {
+                        _isScheduledTodayOn = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
