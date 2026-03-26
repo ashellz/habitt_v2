@@ -72,6 +72,8 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> _loadHabits() async {
     habits = habitBox.values.toList();
+    await _normalizeHabitOrders();
+    _sortHabitsByCategoryAndOrder(habits);
     /*
     bool checkCategory(int category) {
       return category == 1 || category == 2 || category == 3 || category == 4;
@@ -220,6 +222,79 @@ class HabitProvider extends ChangeNotifier {
         .toList();
   }
 
+  int _compareHabitsByOrder(Habit a, Habit b) {
+    final categoryCompare = a.categoryId.compareTo(b.categoryId);
+    if (categoryCompare != 0) {
+      return categoryCompare;
+    }
+
+    final aOrder = a.order <= 0 ? 1 << 30 : a.order;
+    final bOrder = b.order <= 0 ? 1 << 30 : b.order;
+    final orderCompare = aOrder.compareTo(bOrder);
+    if (orderCompare != 0) {
+      return orderCompare;
+    }
+
+    return a.id.compareTo(b.id);
+  }
+
+  void _sortHabitsByCategoryAndOrder(List<Habit> source) {
+    source.sort(_compareHabitsByOrder);
+  }
+
+  int _nextOrderForCategory(int categoryId) {
+    int maxOrder = 0;
+    for (final habit in habits) {
+      if (habit.categoryId != categoryId) {
+        continue;
+      }
+      if (habit.order > maxOrder) {
+        maxOrder = habit.order;
+      }
+    }
+    return maxOrder + 1;
+  }
+
+  Future<void> _normalizeHabitOrders() async {
+    if (habits.isEmpty) {
+      return;
+    }
+
+    final habitsByCategory = <int, List<Habit>>{};
+    for (final habit in habits) {
+      habitsByCategory.putIfAbsent(habit.categoryId, () => []).add(habit);
+    }
+
+    final now = DateTime.now().toUtc();
+
+    for (final entry in habitsByCategory.entries) {
+      final categoryHabits = entry.value;
+      categoryHabits.sort((a, b) {
+        final aOrder = a.order <= 0 ? 1 << 30 : a.order;
+        final bOrder = b.order <= 0 ? 1 << 30 : b.order;
+        final orderCompare = aOrder.compareTo(bOrder);
+        if (orderCompare != 0) {
+          return orderCompare;
+        }
+        return a.id.compareTo(b.id);
+      });
+
+      for (int index = 0; index < categoryHabits.length; index++) {
+        final desiredOrder = index + 1;
+        final habit = categoryHabits[index];
+        if (habit.order == desiredOrder) {
+          continue;
+        }
+
+        habit.order = desiredOrder;
+        habit.timestamps['order'] = now;
+        if (habit.isInBox) {
+          await habit.save();
+        }
+      }
+    }
+  }
+
   // Getting habits for a certain day with extra logic
   List<Habit> getHabitsForDate(DateTime day) {
     final normalizedDay = _normalizeDate(day);
@@ -234,6 +309,7 @@ class HabitProvider extends ChangeNotifier {
   void refreshTodaysHabits({bool notify = true}) {
     final today = _normalizeDate(DateTime.now());
     todaysHabits = _filteredHabitsForDay(today, habits);
+    _sortHabitsByCategoryAndOrder(todaysHabits);
     if (notify) {
       notifyListeners();
     }
@@ -371,7 +447,9 @@ class HabitProvider extends ChangeNotifier {
       dayHabits = dayEntry?.habits ?? [];
     }
 
-    return _filteredHabitsForDay(normalizedDay, dayHabits);
+    final filteredHabits = _filteredHabitsForDay(normalizedDay, dayHabits);
+    _sortHabitsByCategoryAndOrder(filteredHabits);
+    return filteredHabits;
   }
 
   void addHabit(Habit habit) {
@@ -379,12 +457,105 @@ class HabitProvider extends ChangeNotifier {
       statsProvider!.addShouldRefresh(StatsType.highestAmountOfHabitsLastWeek);
     }
 
+    if (habit.order <= 0) {
+      habit.order = _nextOrderForCategory(habit.categoryId);
+      habit.timestamps['order'] = DateTime.now().toUtc();
+    }
+
     habits.add(habit);
+    _sortHabitsByCategoryAndOrder(habits);
     habitBox.add(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
 
     notifyListeners();
+  }
+
+  Future<void> reorderHabitsInCategory({
+    required int categoryId,
+    required int oldIndex,
+    required int newIndex,
+    required bool todaysOnly,
+  }) async {
+    if (oldIndex < 0 || newIndex < 0 || oldIndex == newIndex) {
+      return;
+    }
+
+    final categoryHabits =
+        habits.where((h) => h.categoryId == categoryId).toList();
+    if (categoryHabits.length < 2) {
+      return;
+    }
+
+    categoryHabits.sort((a, b) {
+      final aOrder = a.order <= 0 ? 1 << 30 : a.order;
+      final bOrder = b.order <= 0 ? 1 << 30 : b.order;
+      final orderCompare = aOrder.compareTo(bOrder);
+      if (orderCompare != 0) {
+        return orderCompare;
+      }
+      return a.id.compareTo(b.id);
+    });
+
+    late final List<Habit> reorderedCategory;
+
+    if (!todaysOnly) {
+      if (oldIndex >= categoryHabits.length ||
+          newIndex >= categoryHabits.length) {
+        return;
+      }
+
+      reorderedCategory = List<Habit>.from(categoryHabits);
+      final moved = reorderedCategory.removeAt(oldIndex);
+      reorderedCategory.insert(newIndex, moved);
+    } else {
+      final scheduledCategoryHabits =
+          todaysHabits.where((h) => h.categoryId == categoryId).toList();
+      if (oldIndex >= scheduledCategoryHabits.length ||
+          newIndex >= scheduledCategoryHabits.length ||
+          scheduledCategoryHabits.length < 2) {
+        return;
+      }
+
+      final reorderedScheduled = List<Habit>.from(scheduledCategoryHabits);
+      final movedScheduled = reorderedScheduled.removeAt(oldIndex);
+      reorderedScheduled.insert(newIndex, movedScheduled);
+
+      final scheduledIdSet = scheduledCategoryHabits.map((h) => h.id).toSet();
+      int scheduledCursor = 0;
+      reorderedCategory = [];
+
+      for (final habit in categoryHabits) {
+        if (!scheduledIdSet.contains(habit.id)) {
+          reorderedCategory.add(habit);
+          continue;
+        }
+
+        reorderedCategory.add(reorderedScheduled[scheduledCursor]);
+        scheduledCursor += 1;
+      }
+    }
+
+    final now = DateTime.now().toUtc();
+
+    for (int index = 0; index < reorderedCategory.length; index++) {
+      final habit = reorderedCategory[index];
+      final desiredOrder = index + 1;
+      if (habit.order == desiredOrder) {
+        continue;
+      }
+
+      habit.order = desiredOrder;
+      habit.timestamps['order'] = now;
+      if (habit.isInBox) {
+        await habit.save();
+      }
+    }
+
+    _sortHabitsByCategoryAndOrder(habits);
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+    backupProvider?.scheduleAutoSync();
   }
 
   void removeHabit(Habit habit, BuildContext context) async {

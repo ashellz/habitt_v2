@@ -1,15 +1,17 @@
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
-import 'package:habitt/widgets/habit_widget/habit_icon.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
+import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -27,8 +29,6 @@ class _HabitsPageState extends State<HabitsPage> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final hp = context.watch<HabitProvider>();
-    final habits = _isScheduledTodayOn ? hp.todaysHabits : hp.habits;
 
     return Scaffold(
       body: Padding(
@@ -121,68 +121,228 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 }
 
-class ReorderingHabits extends StatelessWidget {
+class ReorderingHabits extends StatefulWidget {
   const ReorderingHabits({super.key, required this.todaysOnly});
 
   final bool todaysOnly;
 
   @override
+  State<ReorderingHabits> createState() => _ReorderingHabitsState();
+}
+
+class _ReorderingHabitsState extends State<ReorderingHabits> {
+  int? _draggingHabitId;
+
+  @override
   Widget build(BuildContext context) {
     final hp = context.watch<HabitProvider>();
-    final habits = todaysOnly ? hp.todaysHabits : hp.habits;
     final cp = context.watch<ColorProvider>();
+    final categoryProvider = context.watch<CategoryProvider>();
+
+    final scopedHabits = widget.todaysOnly ? hp.todaysHabits : hp.habits;
+    final selectedCategoryId = categoryProvider.selectedCategoryId;
+    final categories = categoryProvider.categories;
+    final showCategoryTitles = selectedCategoryId == 0;
+
+    final visibleCategories =
+        categories.where((category) {
+          if (selectedCategoryId != 0 && category.id != selectedCategoryId) {
+            return false;
+          }
+          return scopedHabits.any((habit) => habit.categoryId == category.id);
+        }).toList();
+
+    if (visibleCategories.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 28),
+        child: EmptyHabitsWidget(),
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Wrap(
-            spacing: 10,
-            runSpacing: 10,
-
-            children: [
-              for (final habit in habits)
-                Container(
-                  alignment: Alignment.topLeft,
-                  width: (constraints.maxWidth - 10) / 2,
-                  height: (constraints.maxWidth - 10) / 2,
-                  key: ValueKey(habit.id),
-                  padding: const EdgeInsets.all(16),
-                  decoration: ShapeDecoration(
-                    color: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: cp.border),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          NewHabitIcon(
-                            iconPath: habit.iconPath,
-                            isCompleted: false,
-                          ),
-                          SvgPicture.asset(
-                            "assets/images/new-svg/reorder.svg",
-                            colorFilter: ColorFilter.mode(
-                              cp.disabled,
-                              BlendMode.srcIn,
-                            ),
-                          ),
-                        ],
-                      ),
-                      MainHabitInfo(habit: habit, cp: cp),
-                    ],
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (
+            int sectionIndex = 0;
+            sectionIndex < visibleCategories.length;
+            sectionIndex++
+          ) ...[
+            if (sectionIndex > 0) const SizedBox(height: 18),
+            if (showCategoryTitles)
+              Text(
+                visibleCategories[sectionIndex].name,
+                style: TextStyle(
+                  color: cp.lightGreyText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
-            ],
-          );
-        },
+              ),
+            if (showCategoryTitles) const SizedBox(height: 10),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final categoryHabits =
+                    scopedHabits
+                        .where(
+                          (habit) =>
+                              habit.categoryId ==
+                              visibleCategories[sectionIndex].id,
+                        )
+                        .toList()
+                      ..sort((a, b) {
+                        final orderCompare = a.order.compareTo(b.order);
+                        if (orderCompare != 0) {
+                          return orderCompare;
+                        }
+                        return a.id.compareTo(b.id);
+                      });
+
+                return Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    for (int index = 0; index < categoryHabits.length; index++)
+                      DragTarget<_HabitDragData>(
+                        onWillAcceptWithDetails: (details) {
+                          final data = details.data;
+                          return data.categoryId ==
+                                  visibleCategories[sectionIndex].id &&
+                              data.habitId != categoryHabits[index].id;
+                        },
+                        onAcceptWithDetails: (details) {
+                          final data = details.data;
+                          hp.reorderHabitsInCategory(
+                            categoryId: data.categoryId,
+                            oldIndex: data.index,
+                            newIndex: index,
+                            todaysOnly: widget.todaysOnly,
+                          );
+                        },
+                        builder: (context, candidateData, rejectedData) {
+                          final cardSize = (constraints.maxWidth - 10) / 2;
+                          final isDropTarget = candidateData.isNotEmpty;
+                          final habit = categoryHabits[index];
+
+                          return LongPressDraggable<_HabitDragData>(
+                            data: _HabitDragData(
+                              habitId: habit.id,
+                              categoryId: visibleCategories[sectionIndex].id,
+                              index: index,
+                            ),
+                            onDragStarted: () {
+                              setState(() {
+                                _draggingHabitId = habit.id;
+                              });
+                            },
+                            onDragEnd: (_) {
+                              if (!mounted) return;
+                              setState(() {
+                                _draggingHabitId = null;
+                              });
+                            },
+                            feedback: Material(
+                              color: Colors.transparent,
+                              child: Opacity(
+                                opacity: 0.95,
+                                child: _HabitCard(
+                                  habit: habit,
+                                  cp: cp,
+                                  size: cardSize,
+                                  isDropTarget: false,
+                                ),
+                              ),
+                            ),
+                            childWhenDragging: Opacity(
+                              opacity: 0.35,
+                              child: _HabitCard(
+                                habit: habit,
+                                cp: cp,
+                                size: cardSize,
+                                isDropTarget: false,
+                              ),
+                            ),
+                            child: AnimatedOpacity(
+                              opacity: _draggingHabitId == habit.id ? 0.8 : 1,
+                              duration: const Duration(milliseconds: 150),
+                              child: _HabitCard(
+                                habit: habit,
+                                cp: cp,
+                                size: cardSize,
+                                isDropTarget: isDropTarget,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ],
       ),
     );
   }
+}
+
+class _HabitCard extends StatelessWidget {
+  const _HabitCard({
+    required this.habit,
+    required this.cp,
+    required this.size,
+    required this.isDropTarget,
+  });
+
+  final Habit habit;
+  final ColorProvider cp;
+  final double size;
+  final bool isDropTarget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      width: size,
+      height: size,
+      key: ValueKey(habit.id),
+      padding: const EdgeInsets.all(16),
+      decoration: ShapeDecoration(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 1, color: isDropTarget ? cp.main : cp.border),
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              NewHabitIcon(iconPath: habit.iconPath, isCompleted: false),
+              SvgPicture.asset(
+                "assets/images/new-svg/reorder.svg",
+                colorFilter: ColorFilter.mode(cp.disabled, BlendMode.srcIn),
+              ),
+            ],
+          ),
+          MainHabitInfo(habit: habit, cp: cp),
+        ],
+      ),
+    );
+  }
+}
+
+class _HabitDragData {
+  const _HabitDragData({
+    required this.habitId,
+    required this.categoryId,
+    required this.index,
+  });
+
+  final int habitId;
+  final int categoryId;
+  final int index;
 }

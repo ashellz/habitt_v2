@@ -15,6 +15,7 @@ class Habit extends HiveObject {
   String description;
   String iconPath;
   int categoryId; // Any time, Morning, Afternoon, Evening
+  int order;
   String tag; // Custom tags
   bool completed;
   bool skipped;
@@ -50,6 +51,7 @@ class Habit extends HiveObject {
     this.description = "",
     required this.iconPath,
     required this.categoryId,
+    this.order = 0,
     this.amountLabel = "times",
     this.tag = "No tag",
     this.completed = false,
@@ -114,6 +116,7 @@ class Habit extends HiveObject {
       description: description,
       iconPath: iconPath,
       categoryId: categoryId,
+      order: order,
       tag: tag,
       amount: amount,
       amountCompleted: amountCompleted,
@@ -151,6 +154,7 @@ class Habit extends HiveObject {
       description: description,
       iconPath: iconPath,
       categoryId: categoryId,
+      order: order,
       tag: tag,
       amount: amount,
       amountCompleted: 0,
@@ -197,6 +201,10 @@ class Habit extends HiveObject {
     if (categoryId != habit.categoryId) {
       categoryId = habit.categoryId;
       timestamps['categoryId'] = now;
+    }
+    if (order != habit.order) {
+      order = habit.order;
+      timestamps['order'] = now;
     }
     if (tag != habit.tag) {
       tag = habit.tag;
@@ -478,6 +486,7 @@ class Habit extends HiveObject {
       'description': description,
       'iconPath': iconPath,
       'categoryId': categoryId,
+      'order': order,
       'tag': tag,
       'completed': completed,
       'skipped': skipped,
@@ -529,6 +538,7 @@ class Habit extends HiveObject {
       description: (m['description'] as String?) ?? '',
       iconPath: m['iconPath'] as String,
       categoryId: m['categoryId'] as int,
+      order: (m['order'] as num?)?.toInt() ?? 0,
       amountLabel: (m['amountLabel'] as String?) ?? 'times',
       tag: (m['tag'] as String?) ?? 'No tag',
       completed: (m['completed'] as bool?) ?? false,
@@ -606,6 +616,7 @@ class Habit extends HiveObject {
       description: resolve('description', description, incoming.description),
       iconPath: resolve('iconPath', iconPath, incoming.iconPath),
       categoryId: resolve('categoryId', categoryId, incoming.categoryId),
+      order: resolve('order', order, incoming.order),
       amountLabel: resolve('amountLabel', amountLabel, incoming.amountLabel),
       tag: resolve('tag', tag, incoming.tag),
       completed: resolve('completed', completed, incoming.completed),
