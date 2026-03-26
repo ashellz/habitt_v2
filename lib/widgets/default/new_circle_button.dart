@@ -12,11 +12,21 @@ class NewCircleButton extends StatefulWidget {
     super.key,
     required this.svgPath,
     required this.cnIcon,
+    this.width = 46,
+    this.height = 46,
+    this.color,
+    this.textColor,
     this.onPressed,
+    this.padding,
   });
 
   final String svgPath;
   final CNSymbol cnIcon;
+  final Color? color;
+  final Color? textColor;
+  final double width;
+  final double height;
+  final EdgeInsets? padding;
   final VoidCallback? onPressed;
 
   @override
@@ -45,36 +55,39 @@ class _NewCircleButtonState extends State<NewCircleButton> {
 
     if (_supportsLiquidGlass) {
       return SizedBox(
-        height: 46,
-        width: 46,
+        height: widget.height,
+        width: widget.width,
         child: CNButton.icon(
           icon: widget.cnIcon,
           onPressed: widget.onPressed,
-          tint: cp.bg,
+          tint: widget.color ?? cp.bg,
           style: CNButtonStyle.prominentGlass,
         ),
       );
     }
 
     return Material(
-      color: cp.bg,
+      color: widget.color ?? cp.bg,
       shape: RoundedRectangleBorder(
-        side: BorderSide(width: 1, color: cp.border),
+        side: BorderSide(width: 1, color: widget.color ?? cp.border),
         borderRadius: BorderRadius.circular(100),
       ),
       child: InkWell(
         onTap: widget.onPressed,
         borderRadius: BorderRadius.circular(100),
         child: SizedBox(
-          width: 46,
-          height: 46,
+          height: widget.height,
+          width: widget.width,
           child: Padding(
-            padding: const EdgeInsets.all(13),
+            padding: widget.padding ?? const EdgeInsets.all(13),
             child: SvgPicture.asset(
               widget.svgPath,
               width: 20,
               height: 20,
-              colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                widget.textColor ?? cp.text,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),
