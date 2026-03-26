@@ -5,7 +5,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/habit_details/add_habit_button.dart';
+import 'package:habitt/widgets/habit_details/old_add_habit_button.dart';
 import 'package:habitt/widgets/habit_details/optional_habit_switch.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
@@ -104,7 +104,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         MediaQuery.of(context).padding.bottom + extraPadding,
                     left: 0,
                     right: 0,
-                    child: AddHabitButton(
+                    child: OldAddHabitButton(
                       nameController: nameController,
                       habitProvider: habitProvider,
                       descController: descController,

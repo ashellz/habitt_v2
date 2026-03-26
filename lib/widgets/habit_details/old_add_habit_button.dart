@@ -9,8 +9,8 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 
-class AddHabitButton extends StatelessWidget {
-  const AddHabitButton({
+class OldAddHabitButton extends StatelessWidget {
+  const OldAddHabitButton({
     super.key,
     required this.nameController,
     required this.habitProvider,
@@ -51,7 +51,9 @@ class AddHabitButton extends StatelessWidget {
       final anchor = DateTime(start.year, start.month, start.day);
       final output = <String>[];
       for (int i = 0; i < 180; i += intervalDays) {
-        output.add(anchor.add(Duration(days: i)).toIso8601String().split('T').first);
+        output.add(
+          anchor.add(Duration(days: i)).toIso8601String().split('T').first,
+        );
       }
       return output;
     }
