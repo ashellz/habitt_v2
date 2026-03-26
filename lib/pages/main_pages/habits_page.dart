@@ -1,8 +1,8 @@
+import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,14 @@ class HabitsPage extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          NewDefaultButton.circle(
+          NewCircleButton(
+            svgPath: "assets/images/new-svg/plus.svg",
+            cnIcon: CNSymbol("plus", size: 16),
+            width: 36,
+            height: 36,
+            textColor: cp.bg,
+            padding: EdgeInsets.all(10),
+            color: cp.main,
             onPressed: () {
               final stateProvider = context.read<StateProvider>();
               stateProvider.reset();
@@ -58,10 +65,6 @@ class HabitsPage extends StatelessWidget {
                 },
               );
             },
-            child: SvgPicture.asset(
-              "assets/images/new-svg/plus.svg",
-              colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
-            ),
           ),
         ],
       ),
