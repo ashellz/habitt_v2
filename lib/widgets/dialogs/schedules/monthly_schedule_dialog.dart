@@ -276,6 +276,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                           });
                         },
                         height: 40,
+                        width: double.infinity,
                         prefix: SvgPicture.asset(
                           "assets/images/new-svg/add.svg",
                           colorFilter: ColorFilter.mode(
