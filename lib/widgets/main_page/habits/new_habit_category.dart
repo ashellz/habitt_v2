@@ -18,6 +18,7 @@ class NewHabitCategory extends StatefulWidget {
     this.reorderDurationMs = 760,
     this.useFallbackAnimation = false,
     this.fallbackVisibleHabits = 3,
+    this.showTitle = true,
     required this.showOptionalHabits,
     required this.category,
     required this.habits,
@@ -35,6 +36,7 @@ class NewHabitCategory extends StatefulWidget {
   final bool showOptionalHabits;
   final List<Habit> habits;
   final bool isToday;
+  final bool showTitle;
 
   @override
   State<NewHabitCategory> createState() => _NewHabitCategoryState();
@@ -249,7 +251,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
       spacing: 10,
       children: [
         // Using the new ScrollTransformedHabitCategoryTitle
-        if (categoryHabits.isNotEmpty)
+        if (categoryHabits.isNotEmpty && widget.showTitle)
           NewHabitCategoryTitle(
             isFirst: widget.isFirst,
             category: widget.category,

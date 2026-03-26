@@ -5,15 +5,12 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
-import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/main_page/add_habit_button.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
-import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class NewHabits extends StatefulWidget {
   final DateTime? daySelected;
@@ -401,7 +398,6 @@ class _NewHabitsState extends State<NewHabits>
     final selectedCategoryId = categoryProvider.selectedCategoryId;
 
     final optionalHabitsCount = habits.where((habit) => habit.optional).length;
-    final cp = context.watch<ColorProvider>();
 
     final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
     final habitsListHeight = _calculateHabitsListHeight(
@@ -418,13 +414,9 @@ class _NewHabitsState extends State<NewHabits>
           spacing: 16,
           children: [
             Spacer(),
-            SvgPicture.asset("assets/images/new-svg/empty-box.svg"),
-            Text(
-              "You haven’t added any habits yet",
-              style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-            ),
+            EmptyHabitsWidget(),
             const Spacer(),
-            addHabitButton(cp),
+            AddHabitButton(),
           ],
         ),
       );
@@ -475,6 +467,7 @@ class _NewHabitsState extends State<NewHabits>
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: NewHabitCategory(
+              showTitle: false,
               key: ValueKey(selectedCategoryId),
               reorderActive: false,
               reorderProgress: 0,
@@ -518,7 +511,7 @@ class _NewHabitsState extends State<NewHabits>
               // child additional tasks
             ),
 
-            addHabitButton(cp),
+            AddHabitButton(),
 
             if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
           ],
@@ -526,33 +519,24 @@ class _NewHabitsState extends State<NewHabits>
       },
     );
   }
+}
 
-  Padding addHabitButton(ColorProvider cp) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: NewDefaultButton.secondary(
-        height: 40,
-        width: double.infinity,
-        label: "Add habit",
-        onPressed: () {
-          final stateProvider = context.read<StateProvider>();
-          stateProvider.reset();
+class EmptyHabitsWidget extends StatelessWidget {
+  const EmptyHabitsWidget({super.key});
 
-          showModalBottomSheet(
-            context: context,
-            backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-            barrierColor: cp.greyText.darken().withOpacity(0.3),
-            isScrollControlled: true,
-            builder: (context) {
-              return HabitSheet();
-            },
-          );
-        },
-        prefix: SvgPicture.asset(
-          "assets/images/new-svg/add.svg",
-          colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+
+    return Column(
+      spacing: 16,
+      children: [
+        SvgPicture.asset("assets/images/new-svg/empty-box.svg"),
+        Text(
+          "You haven’t added any habits yet",
+          style: TextStyle(color: cp.lightGreyText, fontSize: 16),
         ),
-      ),
+      ],
     );
   }
 }
