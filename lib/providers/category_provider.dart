@@ -52,7 +52,7 @@ class CategoryProvider extends ChangeNotifier {
     const int eveningCategoryId = 4;
 
     // Getting all habits from the habitProvider
-    final habits = _habitProvider?.habits;
+    final habits = _habitProvider?.todaysHabits;
 
     // If the provider failed to load, or we have no habits: abort
     if (habits == null || habits.isEmpty) {
@@ -72,9 +72,6 @@ class CategoryProvider extends ChangeNotifier {
 
     // 2. Calculate habit counts
     for (var habit in habits) {
-      // Dont count additional habits
-      if (habit.optional) continue;
-
       // Get the effective category id
       int effectiveCategoryId;
       if (habit.categoryId == morningCategoryId) {

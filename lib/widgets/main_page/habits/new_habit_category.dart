@@ -57,9 +57,8 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
     final categoryHabits =
         widgetConfig.habits
             .where(
-              (habit) =>
-                  habit.categoryId == widgetConfig.category.id &&
-                  !habit.optional,
+              (habit) => habit.categoryId == widgetConfig.category.id, //&&
+              //!habit.optional,
             )
             .length;
 
@@ -246,84 +245,77 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
             : 0.0;
     final disableInteractions = widget.reorderActive || _isRevealingExtras;
 
-    return AnimatedOpacity(
-      opacity: _opacity, // For the initial fade-in of the whole category block
-      duration: const Duration(milliseconds: 150),
-      child: Column(
-        spacing: 10,
-        children: [
-          // Using the new ScrollTransformedHabitCategoryTitle
-          if (categoryHabits.isNotEmpty)
-            NewHabitCategoryTitle(
-              isFirst: widget.isFirst,
-              category: widget.category,
-            ),
-          for (int index = 0; index < categoryHabits.length; index++)
-            Opacity(
-              key: ValueKey('habit-fade-${categoryHabits[index].id}'),
-              opacity: () {
-                final collapseState = _collapseStateForIndex(
-                  index: index,
-                  totalHabits: categoryHabits.length,
-                  hasFallbackCandidate: hasFallbackCandidate,
-                  normalizedPrimaryProgress: normalizedPrimaryProgress,
-                );
-                return (collapseState.opacity *
-                        _extraRevealOpacityForIndex(
-                          index,
-                          categoryHabits.length,
-                        ))
-                    .clamp(0.0, 1.0);
-              }(),
-              child: SizedBox(
-                width: double.infinity,
-                child: AnimatedSize(
-                  duration: const Duration(milliseconds: 350),
-                  alignment: Alignment.topCenter,
-                  curve: Curves.easeInOut,
-                  child: () {
-                    final collapseState = _collapseStateForIndex(
-                      index: index,
-                      totalHabits: categoryHabits.length,
-                      hasFallbackCandidate: hasFallbackCandidate,
-                      normalizedPrimaryProgress: normalizedPrimaryProgress,
-                    );
+    return Column(
+      spacing: 10,
+      children: [
+        // Using the new ScrollTransformedHabitCategoryTitle
+        if (categoryHabits.isNotEmpty)
+          NewHabitCategoryTitle(
+            isFirst: widget.isFirst,
+            category: widget.category,
+          ),
+        for (int index = 0; index < categoryHabits.length; index++)
+          Opacity(
+            key: ValueKey('habit-fade-${categoryHabits[index].id}'),
+            opacity: () {
+              final collapseState = _collapseStateForIndex(
+                index: index,
+                totalHabits: categoryHabits.length,
+                hasFallbackCandidate: hasFallbackCandidate,
+                normalizedPrimaryProgress: normalizedPrimaryProgress,
+              );
+              return (collapseState.opacity *
+                      _extraRevealOpacityForIndex(index, categoryHabits.length))
+                  .clamp(0.0, 1.0);
+            }(),
+            child: SizedBox(
+              width: double.infinity,
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 350),
+                alignment: Alignment.topCenter,
+                curve: Curves.easeInOut,
+                child: () {
+                  final collapseState = _collapseStateForIndex(
+                    index: index,
+                    totalHabits: categoryHabits.length,
+                    hasFallbackCandidate: hasFallbackCandidate,
+                    normalizedPrimaryProgress: normalizedPrimaryProgress,
+                  );
 
-                    if (!collapseState.visible) {
-                      return const SizedBox.shrink();
-                    }
+                  if (!collapseState.visible) {
+                    return const SizedBox.shrink();
+                  }
 
-                    return GestureDetector(
-                      onTap: () {
-                        if (disableInteractions) return;
+                  return GestureDetector(
+                    onTap: () {
+                      if (disableInteractions) return;
 
-                        final cp = context.read<ColorProvider>();
-                        final habit = categoryHabits[index];
+                      final cp = context.read<ColorProvider>();
+                      final habit = categoryHabits[index];
 
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                          barrierColor: cp.greyText.darken().withOpacity(0.3),
-                          isScrollControlled: true,
-                          builder: (context) => HabitSheet(habit: habit),
-                        );
-                      },
-                      child: IgnorePointer(
-                        ignoring: disableInteractions,
-                        child: NewHabitWidget(
-                          key: ValueKey(categoryHabits[index].id),
-                          habit: categoryHabits[index],
-                        ),
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                        barrierColor: cp.greyText.darken().withOpacity(0.3),
+                        isScrollControlled: true,
+                        builder: (context) => HabitSheet(habit: habit),
+                      );
+                    },
+                    child: IgnorePointer(
+                      ignoring: disableInteractions,
+                      child: NewHabitWidget(
+                        key: ValueKey(categoryHabits[index].id),
+                        habit: categoryHabits[index],
                       ),
-                    );
-                  }(),
-                ),
+                    ),
+                  );
+                }(),
               ),
             ),
-          if (widget.showOptionalHabits) Container(),
-          // additional tasks
-        ],
-      ),
+          ),
+        if (widget.showOptionalHabits) Container(),
+        // additional tasks
+      ],
     );
   }
 }

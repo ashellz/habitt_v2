@@ -5,11 +5,17 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 void checkReorderCategories(BuildContext context, Habit habit) {
-  if (habit.optional) return;
+  debugPrint(
+    'Checking if we should reorder categories based on habit change...',
+  );
+  // if (habit.optional) return;
 
   if (categoryStatusChanged(context, habit)) {
     final categoryProvider = context.read<CategoryProvider>();
     // Reorder categories
+    debugPrint(
+      'Category status changed, reordering categories based on time slot priority...',
+    );
     categoryProvider.reorderCategoriesBasedOnTime();
   }
 }
@@ -29,8 +35,8 @@ bool categoryStatusChanged(BuildContext context, Habit habit) {
   final mainCategoryId = orderedCategories.first.id;
 
   final habitsInMainCategory =
-      habitProvider.habits
-          .where((h) => h.categoryId == mainCategoryId && !h.optional)
+      habitProvider.todaysHabits
+          .where((h) => h.categoryId == mainCategoryId)
           .toList();
 
   if (habitsInMainCategory.isEmpty) {
