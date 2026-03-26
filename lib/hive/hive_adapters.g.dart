@@ -22,6 +22,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       description: fields[2] == null ? "" : fields[2] as String,
       iconPath: fields[3] as String,
       categoryId: (fields[4] as num).toInt(),
+      order: fields[36] == null ? 0 : (fields[36] as num).toInt(),
       amountLabel: fields[13] == null ? "times" : fields[13] as String,
       tag: fields[5] == null ? "No tag" : fields[5] as String,
       completed: fields[6] == null ? false : fields[6] as bool,
@@ -58,7 +59,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(33)
+      ..writeByte(34)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -124,7 +125,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(34)
       ..write(obj.timesCompletedThisMonth)
       ..writeByte(35)
-      ..write(obj.lastCustomUpdate);
+      ..write(obj.lastCustomUpdate)
+      ..writeByte(36)
+      ..write(obj.order);
   }
 
   @override
