@@ -142,6 +142,9 @@ class StatsProvider extends ChangeNotifier {
     // First we order the days by date
     final orderedDays = daysBox.values.toList();
     orderedDays.sort((a, b) => b.date.compareTo(a.date));
+    debugPrint(
+      "Refreshing perfect days streak, first date: ${orderedDays.first.date}, last date: ${orderedDays.last.date}, total days: ${orderedDays.length}",
+    );
 
     // Then we check all days from yesterday to the day we started using the app
     // If all habits are completed, we add 1 to the streak
@@ -153,7 +156,7 @@ class StatsProvider extends ChangeNotifier {
       int habitsSkipped = 0;
       int requiredHabits = 0;
       for (final habit in day.habits) {
-        // If habit is additional, we dont count it
+        // If habit is optional, we dont count it
         if (habit.optional) continue;
         requiredHabits++;
         if (habit.completed) {
@@ -166,8 +169,9 @@ class StatsProvider extends ChangeNotifier {
       }
       if (requiredHabits == 0) continue;
 
-      if (habitsCompleted + habitsSkipped == requiredHabits) {
+      if (habitsCompleted + habitsSkipped >= requiredHabits) {
         allHabitsCompletedStreak++;
+        missedDaysAllowed = 1;
       } else {
         if (missedDaysAllowed > 0) {
           missedDaysAllowed--;

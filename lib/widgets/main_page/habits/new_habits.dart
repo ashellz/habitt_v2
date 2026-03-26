@@ -127,7 +127,7 @@ class _NewHabitsState extends State<NewHabits>
 
   int _habitCountForCategory(int categoryId) {
     return habits
-        .where((habit) => habit.categoryId == categoryId && !habit.optional)
+        .where((habit) => habit.categoryId == categoryId) //  && !habit.optional
         .length;
   }
 
@@ -346,7 +346,7 @@ class _NewHabitsState extends State<NewHabits>
       final categoryLength = getCategoryLength(
         category,
         context,
-        false,
+        true,
         widget.daySelected,
       );
 
@@ -438,7 +438,7 @@ class _NewHabitsState extends State<NewHabits>
                   getCategoryLength(
                     category,
                     context,
-                    false,
+                    true,
                     widget.daySelected,
                   ) >
                   0,
