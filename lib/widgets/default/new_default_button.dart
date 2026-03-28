@@ -33,7 +33,6 @@ class NewDefaultButton extends StatelessWidget {
     required this.onPressed,
     this.label,
     this.enabled = true,
-
     this.isLoading = false,
     this.prefix,
     this.height = 52,
@@ -156,6 +155,7 @@ class NewDefaultButton extends StatelessWidget {
     }
 
     final bool isMainButtonVariant =
+        _variant == _ButtonVariant.custom ||
         _variant == _ButtonVariant.primary ||
         _variant == _ButtonVariant.primarySmall ||
         _variant == _ButtonVariant.circle;

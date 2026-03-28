@@ -280,6 +280,7 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
               },
             ),
           ],
+          SizedBox(height: 50),
         ],
       ),
     );

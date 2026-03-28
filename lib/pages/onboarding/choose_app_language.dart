@@ -295,7 +295,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
               right: 0,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: NewDefaultButton(
+                child: NewDefaultButton.primary(
                   label: 'Next',
                   onPressed: () {
                     widget.onNext?.call();
