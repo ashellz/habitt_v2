@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/color_provider.dart';
+import 'package:provider/provider.dart';
 
 class NewDefaultSwitch extends StatefulWidget {
   const NewDefaultSwitch({
@@ -9,8 +11,6 @@ class NewDefaultSwitch extends StatefulWidget {
     this.height = 32,
     this.padding = 4,
     this.thumbSize = 24,
-    this.activeColor = const Color(0xFF0B0B0B),
-    this.inactiveColor = const Color(0xFFE1E3E6),
     this.thumbColor = Colors.white,
     this.animationDuration = const Duration(milliseconds: 220),
   });
@@ -23,8 +23,6 @@ class NewDefaultSwitch extends StatefulWidget {
   final double padding;
   final double thumbSize;
 
-  final Color activeColor;
-  final Color inactiveColor;
   final Color thumbColor;
 
   final Duration animationDuration;
@@ -57,6 +55,10 @@ class _NewDefaultSwitchState extends State<NewDefaultSwitch> {
   Widget build(BuildContext context) {
     final visualRatio = _dragRatio ?? (widget.value ? 1.0 : 0.0);
     final thumbLeft = _ratioToLeft(visualRatio);
+
+    final cp = context.watch<ColorProvider>();
+    final activeColor = cp.isDark ? cp.main : cp.text;
+    final inactiveColor = cp.secondaryButton;
 
     return Semantics(
       toggled: widget.value,
@@ -102,8 +104,7 @@ class _NewDefaultSwitchState extends State<NewDefaultSwitch> {
           height: widget.height,
           padding: EdgeInsets.all(widget.padding),
           decoration: ShapeDecoration(
-            color:
-                visualRatio > 0.5 ? widget.activeColor : widget.inactiveColor,
+            color: visualRatio > 0.5 ? activeColor : inactiveColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
             ),
