@@ -36,7 +36,11 @@ class _HabitsPageState extends State<HabitsPage> {
         child: ListView(
           children: [
             topSection(context, cp),
-            NewCategoriesList(padding: null, standardColor: true),
+            NewCategoriesList(
+              padding: null,
+              standardColor: true,
+              showAll: !_isScheduledTodayOn,
+            ),
             scheduledTodayToggle(cp),
             ReorderingHabits(todaysOnly: _isScheduledTodayOn),
           ],
@@ -153,9 +157,12 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
         }).toList();
 
     if (visibleCategories.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 28),
-        child: EmptyHabitsWidget(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.55,
+          child: EmptyHabitsWidget(),
+        ),
       );
     }
 
