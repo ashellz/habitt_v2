@@ -530,6 +530,7 @@ class EmptyHabitsWidget extends StatelessWidget {
 
     return Column(
       spacing: 16,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset("assets/images/new-svg/empty-box.svg"),
         Text(

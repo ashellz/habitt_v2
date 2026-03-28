@@ -12,12 +12,14 @@ class NewCategoriesList extends StatefulWidget {
     this.padding = const EdgeInsets.only(top: 16.0),
     this.standardColor = false,
     this.habitsCount = true,
+    this.showAll = false,
     this.selectedDay,
   });
 
   final EdgeInsets? padding;
   final bool standardColor;
   final bool habitsCount;
+  final bool showAll;
   final DateTime? selectedDay;
 
   @override
@@ -95,7 +97,9 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final habitProvider = context.read<HabitProvider>();
     final habitsList =
         widget.selectedDay == null
-            ? habitProvider.todaysHabits
+            ? widget.showAll
+                ? habitProvider.habits
+                : habitProvider.todaysHabits
             : habitProvider.getHabitsForDate(widget.selectedDay!);
 
     final selectedId = categoryProvider.selectedCategoryId;
@@ -143,7 +147,9 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final habitProvider = context.watch<HabitProvider>();
     final habitsList =
         widget.selectedDay == null
-            ? habitProvider.todaysHabits
+            ? widget.showAll
+                ? habitProvider.habits
+                : habitProvider.todaysHabits
             : habitProvider.getHabitsForDate(widget.selectedDay!);
     final List<bool> hasHabits = [];
     final List<Category> visibleCategories = [];
