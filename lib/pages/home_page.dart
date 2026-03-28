@@ -132,8 +132,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final loading = backupProvider.syncState == SyncState.syncing;
     final tp = context.watch<ThemeProvider>();
 
-    return SizedBox(
-      child: Stack(
+    return Scaffold(
+      body: Stack(
         children: <Widget>[
           //Page
           Stack(
