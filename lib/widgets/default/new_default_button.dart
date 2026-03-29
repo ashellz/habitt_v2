@@ -79,7 +79,7 @@ class NewDefaultButton extends StatelessWidget {
   const NewDefaultButton.secondarySmall({
     super.key,
     required this.onPressed,
-    required this.label,
+    this.label,
     this.enabled = true,
     this.isLoading = false,
     this.prefix,

@@ -19,14 +19,14 @@ import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+class OldSettingsPage extends StatefulWidget {
+  const OldSettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<OldSettingsPage> createState() => _OldSettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _OldSettingsPageState extends State<OldSettingsPage> {
   String? _alertMessage;
   bool _showAlert = false;
 
