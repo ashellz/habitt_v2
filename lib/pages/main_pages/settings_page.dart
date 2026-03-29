@@ -1,6 +1,7 @@
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
@@ -8,14 +9,6 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/sheets/app_language_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
-
-const Map<String, String> _languageFlagByCode = {
-  'en': 'assets/images/new-svg/languages/en.svg',
-  'bs': 'assets/images/new-svg/languages/ba.svg',
-  'de': 'assets/images/new-svg/languages/de.svg',
-  'es': 'assets/images/new-svg/languages/es.svg',
-  'it': 'assets/images/new-svg/languages/it.svg',
-};
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -47,10 +40,10 @@ class LanguageSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final languageProvider = context.watch<LanguageProvider>();
-    final localeCode = languageProvider.locale?.languageCode ?? 'en';
-    final lc = localeCode.toUpperCase();
-    final flagPath = _languageFlagByCode[localeCode];
+    final lp = context.watch<LanguageProvider>();
+    final currentLanguage = lp.currentLanguage;
+    final lc = currentLanguage?.languageCode.toUpperCase() ?? 'en';
+    final flagPath = currentLanguage?.svgPath ?? LanguageOption.english.svgPath;
 
     final mediaQuery = MediaQuery.of(context);
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/models/language_option.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageProvider extends ChangeNotifier {
@@ -10,6 +11,10 @@ class LanguageProvider extends ChangeNotifier {
 
   final SharedPreferences _prefs;
   Locale? _locale;
+  LanguageOption? get currentLanguage =>
+      _locale == null
+          ? null
+          : LanguageOption.fromLanguageCode(_locale!.languageCode);
 
   Locale? get locale => _locale;
 
