@@ -5,7 +5,9 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/sheets/app_language_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 const Map<String, String> _languageFlagByCode = {
   'en': 'assets/images/new-svg/languages/en.svg',
@@ -50,6 +52,9 @@ class LanguageSetting extends StatelessWidget {
     final lc = localeCode.toUpperCase();
     final flagPath = _languageFlagByCode[localeCode];
 
+    final mediaQuery = MediaQuery.of(context);
+    final maxSheetHeight = mediaQuery.size.height - 59 - 16;
+
     return Column(
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,9 +88,10 @@ class LanguageSetting extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              NewDefaultButton.secondarySmall(
+              NewDefaultButton(
                 width: 89,
                 height: 46,
+                color: cp.field,
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   spacing: 16,
@@ -104,7 +110,20 @@ class LanguageSetting extends StatelessWidget {
                       Icon(Icons.language_rounded, size: 20, color: cp.text),
                   ],
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                    barrierColor: cp.greyText.darken().withOpacity(0.3),
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return AppLanguageSheet(
+                        maxSheetHeight: maxSheetHeight,
+                        cp: cp,
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),

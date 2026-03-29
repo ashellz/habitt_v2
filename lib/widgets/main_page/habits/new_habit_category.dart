@@ -4,7 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_category_title.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_widget.dart';
-import 'package:habitt/widgets/sheets/edit_habit_sheet.dart';
+import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -48,7 +48,6 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
   static const int _extraRevealFadeDurationMs = 120;
   static const int _collapseBaseFadeDurationMs = 120;
 
-  double _opacity = 0; // For initial fade-in
   late final AnimationController _extraRevealController;
   bool _isRevealingExtras = false;
 
@@ -183,15 +182,6 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
               });
             }
           });
-
-    // Original fade-in animation
-    Future.delayed(Duration.zero, () {
-      if (mounted) {
-        setState(() {
-          _opacity = 1;
-        });
-      }
-    });
   }
 
   @override
