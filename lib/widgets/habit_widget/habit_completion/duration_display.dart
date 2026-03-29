@@ -90,7 +90,7 @@ class DurationDisplayState extends State<DurationDisplay> {
           blurRadius: 5,
         ),
       ],
-      color: widget.habit.skipped ? ColorService.textMuted : Colors.white,
+      color: widget.habit.skipped ? OldColorService.textMuted : Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: _fontSize,
     );
@@ -109,7 +109,8 @@ class DurationDisplayState extends State<DurationDisplay> {
           child: Divider(
             height: 2,
             thickness: 2,
-            color: widget.habit.skipped ? ColorService.textMuted : Colors.white,
+            color:
+                widget.habit.skipped ? OldColorService.textMuted : Colors.white,
           ),
         ),
         Text(durationString, style: textStyle, maxLines: 1, softWrap: false),

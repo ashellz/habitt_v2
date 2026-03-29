@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/settings/app_language_sheet.dart';
+import 'package:habitt/widgets/settings/lanugage_option_widget.dart';
 
 class AppLanguageSheet extends StatelessWidget {
   const AppLanguageSheet({

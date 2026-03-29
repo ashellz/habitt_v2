@@ -5,6 +5,7 @@ enum ColorMode { light, dark, system }
 
 class ColorProvider extends ChangeNotifier {
   ColorMode _mode = ColorMode.system;
+  VoidCallback? _previousBrightnessCallback;
 
   ColorMode get mode => _mode;
 
@@ -44,18 +45,16 @@ class ColorProvider extends ChangeNotifier {
     _updateColors();
 
     // Listen to system brightness changes
+    _previousBrightnessCallback =
+        WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged;
     WidgetsBinding
         .instance
         .platformDispatcher
         .onPlatformBrightnessChanged = () {
+      _previousBrightnessCallback?.call();
       if (_mode == ColorMode.system) {
-        _mode =
-            WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-                    Brightness.dark
-                ? ColorMode.dark
-                : ColorMode.light;
-        isDark ? _mode = ColorMode.dark : _mode = ColorMode.light;
         _updateColors();
+        notifyListeners();
       }
     };
   }
@@ -120,5 +119,12 @@ class ColorProvider extends ChangeNotifier {
       widget = Light.bg;
       pill = Light.black;
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+        _previousBrightnessCallback;
+    super.dispose();
   }
 }

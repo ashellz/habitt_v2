@@ -53,7 +53,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
           child: AnimatedRotation(
             duration: const Duration(milliseconds: 250),
             turns: sheetExpanded ? 0.25 : 0.75,
-            child: Icon(Icons.chevron_right, color: ColorService.bgSurface),
+            child: Icon(Icons.chevron_right, color: OldColorService.bgSurface),
           ),
         ),
         body: GradientBackground(
@@ -80,7 +80,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
                               ? "assets/images/svg/show.svg"
                               : "assets/images/svg/dont-show.svg",
                           colorFilter: ColorFilter.mode(
-                            ColorService.bgSurface,
+                            OldColorService.bgSurface,
                             BlendMode.srcIn,
                           ),
                         ),

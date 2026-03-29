@@ -57,53 +57,57 @@ class ThemeProvider extends ChangeNotifier {
   // Accent palette resolved for current brightness
   AccentPalette? get _accentPalette =>
       isDark
-          ? ColorService.accentDark[accentName]
-          : ColorService.accentLight[accentName];
+          ? OldColorService.accentDark[accentName]
+          : OldColorService.accentLight[accentName];
 
   // Core colors (primary derived from accent selection)
   Color get primaryColor =>
       (_accentPalette?.primary) ??
-      (isDark ? ColorService.dmPrimary : ColorService.primary);
+      (isDark ? OldColorService.dmPrimary : OldColorService.primary);
   Color get primaryVariant =>
       (_accentPalette?.primaryVariant) ??
-      (isDark ? ColorService.dmPrimaryVariant : ColorService.primaryVariant);
+      (isDark
+          ? OldColorService.dmPrimaryVariant
+          : OldColorService.primaryVariant);
   Color get secondaryColor =>
       (_accentPalette?.secondary) ??
-      (isDark ? ColorService.dmSecondary : ColorService.secondary);
+      (isDark ? OldColorService.dmSecondary : OldColorService.secondary);
   Color get successColor =>
-      isDark ? ColorService.dmSuccess : ColorService.success;
+      isDark ? OldColorService.dmSuccess : OldColorService.success;
   Color get warningColor =>
-      isDark ? ColorService.dmWarning : ColorService.warning;
-  Color get dangerColor => isDark ? ColorService.dmDanger : ColorService.danger;
+      isDark ? OldColorService.dmWarning : OldColorService.warning;
+  Color get dangerColor =>
+      isDark ? OldColorService.dmDanger : OldColorService.danger;
 
   // Backgrounds / surfaces
   Color get backgroundColor =>
-      isDark ? ColorService.dmBgDefault : ColorService.bgDefault;
+      isDark ? OldColorService.dmBgDefault : OldColorService.bgDefault;
   Color get surfaceColor =>
-      isDark ? ColorService.dmBgSurface : ColorService.bgSurface;
+      isDark ? OldColorService.dmBgSurface : OldColorService.bgSurface;
   Color get elevatedSurfaceColor =>
       (_accentPalette?.bgElevated) ??
-      (isDark ? ColorService.dmBgElevated : ColorService.bgElevated);
+      (isDark ? OldColorService.dmBgElevated : OldColorService.bgElevated);
   Color get mutedBgColor =>
-      isDark ? ColorService.dmBgMuted : ColorService.bgMuted;
+      isDark ? OldColorService.dmBgMuted : OldColorService.bgMuted;
   Color get nestedSurfaceColor =>
-      isDark ? ColorService.dmNestedSurface : ColorService.nestedSurface;
+      isDark ? OldColorService.dmNestedSurface : OldColorService.nestedSurface;
 
   // Borders & focus
-  Color get borderColor => isDark ? ColorService.dmBorder : ColorService.border;
+  Color get borderColor =>
+      isDark ? OldColorService.dmBorder : OldColorService.border;
   Color get focusColor =>
       (_accentPalette?.focus) ??
-      (isDark ? ColorService.dmFocus : ColorService.focus);
+      (isDark ? OldColorService.dmFocus : OldColorService.focus);
 
   // Text colors
   Color get primaryTextColor =>
-      isDark ? ColorService.dmTextPrimary : ColorService.textPrimary;
+      isDark ? OldColorService.dmTextPrimary : OldColorService.textPrimary;
   Color get secondaryTextColor =>
-      isDark ? ColorService.dmTextSecondary : ColorService.textSecondary;
+      isDark ? OldColorService.dmTextSecondary : OldColorService.textSecondary;
   Color get mutedTextColor =>
-      isDark ? ColorService.dmTextMuted : ColorService.textMuted;
+      isDark ? OldColorService.dmTextMuted : OldColorService.textMuted;
   Color get onPrimaryTextColor =>
-      isDark ? ColorService.dmTextOnPrimary : ColorService.textOnPrimary;
+      isDark ? OldColorService.dmTextOnPrimary : OldColorService.textOnPrimary;
 
   // Buttons
   Color get primaryButtonBackground => primaryColor;
@@ -125,25 +129,25 @@ class ThemeProvider extends ChangeNotifier {
   // Semantic subtle backgrounds
   Color get infoBackground =>
       (_accentPalette?.infoBg) ??
-      (isDark ? ColorService.dmInfoBg : ColorService.infoBg);
+      (isDark ? OldColorService.dmInfoBg : OldColorService.infoBg);
   Color get successBackground =>
-      isDark ? ColorService.dmSuccessBg : ColorService.successBg;
+      isDark ? OldColorService.dmSuccessBg : OldColorService.successBg;
   Color get warningBackground =>
-      isDark ? ColorService.dmWarningBg : ColorService.warningBg;
+      isDark ? OldColorService.dmWarningBg : OldColorService.warningBg;
   Color get errorBackground =>
-      isDark ? ColorService.dmErrorBg : ColorService.errorBg;
+      isDark ? OldColorService.dmErrorBg : OldColorService.errorBg;
 
   // Shadows & overlays
   Color get shadowTint =>
       (_accentPalette?.shadowTint) ??
-      (isDark ? ColorService.dmShadowTint : ColorService.shadowTint);
+      (isDark ? OldColorService.dmShadowTint : OldColorService.shadowTint);
   Color get modalOverlay =>
-      isDark ? ColorService.dmModalOverlay : ColorService.modalOverlay;
+      isDark ? OldColorService.dmModalOverlay : OldColorService.modalOverlay;
 
   // Habit color presets resolved for current theme
   List<HabitColorChoice> get habitColorOptions {
     final dark = isDark;
-    return ColorService.habitColorSpecs.entries.map((entry) {
+    return OldColorService.habitColorSpecs.entries.map((entry) {
       final spec = entry.value;
       return HabitColorChoice(
         name: entry.key,

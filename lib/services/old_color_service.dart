@@ -49,7 +49,7 @@ class HabitColorChoice {
   });
 }
 
-class ColorService {
+class OldColorService {
   // Light mode (default)
   static const Color primary = Color(0xFF0B6FF0);
   static const Color primaryVariant = Color(0xFF095BD6);

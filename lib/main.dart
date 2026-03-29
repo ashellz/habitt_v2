@@ -314,7 +314,12 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: theme,
       darkTheme: theme,
-      themeMode: cp.isDark ? ThemeMode.dark : ThemeMode.light,
+      themeMode:
+          cp.mode == ColorMode.light
+              ? ThemeMode.light
+              : cp.mode == ColorMode.dark
+              ? ThemeMode.dark
+              : ThemeMode.system,
       locale: languageProvider.locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
