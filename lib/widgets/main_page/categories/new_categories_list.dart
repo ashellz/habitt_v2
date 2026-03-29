@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/category.dart';
@@ -17,19 +19,27 @@ class NewCategoriesList extends StatefulWidget {
   });
 
   final EdgeInsets? padding;
-  final bool standardColor;
+  final bool standardColor; // Different variant of colors for habits page
   final bool habitsCount;
-  final bool showAll;
-  final DateTime? selectedDay;
+  final bool showAll; // shows habits instead of todaysHabits
+  final DateTime?
+  selectedDay; // shows habits for the selected day instead of today
 
   @override
   State<NewCategoriesList> createState() => _NewCategoriesListState();
 }
 
 class _NewCategoriesListState extends State<NewCategoriesList> {
+  static const Duration _animationDuration = Duration(milliseconds: 260);
+
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _listKey = GlobalKey();
   final Map<int, GlobalKey> _itemKeys = {};
+  final Set<int> _exitingCategoryIds = <int>{};
+  final Map<int, Timer> _exitTimers = <int, Timer>{};
+  List<int> _lastVisibleIds = <int>[0];
+
+  bool _isSchedulingFallback = false; // Avoid multiple schedules
 
   GlobalKey _keyFor(int id) => _itemKeys.putIfAbsent(id, () => GlobalKey());
 
@@ -44,25 +54,119 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
 
   @override
   void dispose() {
+    for (final timer in _exitTimers.values) {
+      timer.cancel();
+    }
+
     _scrollController.dispose();
     super.dispose();
   }
 
-  List<int> _visibleCategoryIds(List habitsList) {
-    final categoryProvider = context.read<CategoryProvider>();
-    final visibleIds = <int>[];
+  Category _allCategory(AppLocalizations localizations) {
+    return Category(id: 0, name: localizations.all);
+  }
 
-    visibleIds.add(0);
+  void _scheduleFallbackToAll(CategoryProvider categoryProvider) {
+    if (_isSchedulingFallback) return; // Avoid multiple schedules
 
-    for (final category in categoryProvider.categories) {
-      final hasHabits =
-          habitsList
-              .where((habit) => habit.categoryId == category.id)
-              .isNotEmpty;
-      if (!hasHabits) {
+    debugPrint("Scheduling fallback to 'All'");
+
+    _isSchedulingFallback = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        _isSchedulingFallback = false;
+        return;
+      }
+
+      categoryProvider.selectCategory(0);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          _isSchedulingFallback = false;
+          return;
+        }
+        _scrollToSelectedCategory();
+        _isSchedulingFallback = false;
+      });
+    });
+  }
+
+  void _startExitAnimation(int categoryId) {
+    if (_exitingCategoryIds.contains(categoryId)) return;
+
+    _exitingCategoryIds.add(categoryId);
+    _exitTimers[categoryId]?.cancel();
+    _exitTimers[categoryId] = Timer(_animationDuration, () {
+      if (!mounted) return;
+
+      setState(() {
+        _exitingCategoryIds.remove(categoryId);
+        _exitTimers.remove(categoryId);
+        _itemKeys.remove(categoryId);
+      });
+
+      _scrollToSelectedCategory();
+    });
+  }
+
+  void _cancelExitAnimation(int categoryId) {
+    _exitTimers[categoryId]?.cancel();
+    _exitTimers.remove(categoryId);
+    _exitingCategoryIds.remove(categoryId);
+  }
+
+  List<int> _buildRenderedIds(List<int> currentVisibleIds) {
+    final renderedIds = List<int>.from(currentVisibleIds);
+
+    final removedIds =
+        _lastVisibleIds
+            .where((id) => !currentVisibleIds.contains(id) && id != 0)
+            .toList();
+
+    for (final id in removedIds) {
+      _startExitAnimation(id);
+    }
+
+    for (final id in _exitingCategoryIds.toList()) {
+      if (currentVisibleIds.contains(id)) {
+        _cancelExitAnimation(id);
         continue;
       }
 
+      if (renderedIds.contains(id)) {
+        continue;
+      }
+
+      final previousIndex = _lastVisibleIds.indexOf(id);
+      if (previousIndex >= 0 && previousIndex <= renderedIds.length) {
+        renderedIds.insert(previousIndex, id);
+      } else {
+        renderedIds.add(id);
+      }
+    }
+
+    return renderedIds;
+  }
+
+  void _cleanupItemKeys(Set<int> renderedIds) {
+    _itemKeys.removeWhere(
+      (id, _) => !renderedIds.contains(id) && !_exitingCategoryIds.contains(id),
+    );
+  }
+
+  List<int> _visibleCategoryIds(List habitsList) {
+    final categoryProvider = context.read<CategoryProvider>();
+    final visibleIds = <int>[0];
+    final categoryIdsWithHabits = <int>{};
+
+    for (final habit in habitsList) {
+      categoryIdsWithHabits.add(habit.categoryId);
+    }
+
+    for (final category in categoryProvider.categories) {
+      if (!categoryIdsWithHabits.contains(category.id)) {
+        continue;
+      }
       visibleIds.add(category.id);
     }
 
@@ -92,9 +196,11 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
 
   void _scrollToSelectedCategory() {
     if (!_scrollController.hasClients) return;
+    // Scrolls to selected category
 
     final categoryProvider = context.read<CategoryProvider>();
     final habitProvider = context.read<HabitProvider>();
+    // Get habits accordingly
     final habitsList =
         widget.selectedDay == null
             ? widget.showAll
@@ -145,33 +251,60 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
     final habitProvider = context.watch<HabitProvider>();
+
+    // Get habits accordingly
     final habitsList =
         widget.selectedDay == null
             ? widget.showAll
                 ? habitProvider.habits
                 : habitProvider.todaysHabits
             : habitProvider.getHabitsForDate(widget.selectedDay!);
-    final List<bool> hasHabits = [];
-    final List<Category> visibleCategories = [];
 
-    for (Category category in categoryProvider.categories) {
-      int categoryHabits =
-          habitsList
-              .where((habit) => habit.categoryId == category.id)
-              .toList()
-              .length;
-      hasHabits.add(categoryHabits > 0);
+    final List<Category> visibleCategories = [];
+    final allCategory = _allCategory(localizations);
+    final categoryIdsWithHabits = <int>{};
+
+    for (final habit in habitsList) {
+      categoryIdsWithHabits.add(habit.categoryId);
     }
 
-    visibleCategories.add(Category(id: 0, name: localizations.all));
+    visibleCategories.add(allCategory);
 
-    for (int index = 0; index < categoryProvider.categories.length; index++) {
-      final category = categoryProvider.categories[index];
-      if (!hasHabits[index]) {
+    for (final category in categoryProvider.categories) {
+      if (!categoryIdsWithHabits.contains(category.id)) {
         continue;
       }
       visibleCategories.add(category);
     }
+
+    final visibleIds =
+        visibleCategories.map((category) => category.id).toList();
+    final selectedId = categoryProvider.selectedCategoryId;
+    final wasSelectedVisibleInPreviousFrame = _lastVisibleIds.contains(
+      selectedId,
+    );
+    debugPrint("Selected id: $selectedId | showAll=${widget.showAll}");
+    final isSelectedVisible = visibleIds.contains(selectedId);
+    debugPrint(
+      "Is selected visible: $isSelectedVisible | wasVisiblePreviously=$wasSelectedVisibleInPreviousFrame | ids=$visibleIds",
+    );
+
+    if (!isSelectedVisible && wasSelectedVisibleInPreviousFrame) {
+      // If selected category is not visible fallback to "All"
+      _scheduleFallbackToAll(categoryProvider);
+    }
+
+    final renderedIds = _buildRenderedIds(visibleIds);
+    final visibleById = <int, Category>{
+      for (final c in visibleCategories) c.id: c,
+    };
+    final categoriesById = {
+      for (final c in categoryProvider.categories) c.id: c,
+      allCategory.id: allCategory,
+    };
+
+    _cleanupItemKeys(renderedIds.toSet());
+    _lastVisibleIds = List<int>.from(visibleIds);
 
     return Padding(
       padding: widget.padding ?? EdgeInsets.zero,
@@ -185,19 +318,31 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
           scrollDirection: Axis.horizontal,
           children: [
             Row(
-              children: List.generate(visibleCategories.length, (index) {
-                final category = visibleCategories[index];
+              children: List.generate(renderedIds.length, (index) {
+                final categoryId = renderedIds[index];
+                final isExiting =
+                    _exitingCategoryIds.contains(categoryId) &&
+                    !visibleById.containsKey(categoryId);
+                final category =
+                    visibleById[categoryId] ?? categoriesById[categoryId];
 
-                return KeyedSubtree(
+                if (category == null) {
+                  return const SizedBox.shrink();
+                }
+
+                final chip = KeyedSubtree(
                   key: _keyFor(category.id),
                   child: NewSelectCategoryWidget(
                     selectedDay: widget.selectedDay,
                     standardColor: widget.standardColor,
-                    habitsCount: widget.habitsCount,
                     category: category,
                     isFirst: index == 0,
-                    isLast: index == visibleCategories.length - 1,
+                    isLast: index == renderedIds.length - 1,
                     onTap: () {
+                      if (isExiting) {
+                        return;
+                      }
+
                       if (category.id == categoryProvider.selectedCategoryId) {
                         return;
                       }
@@ -206,6 +351,23 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
                       _scrollToSelectedCategory();
                     },
                   ),
+                );
+
+                return TweenAnimationBuilder<double>(
+                  key: ValueKey<int>(categoryId),
+                  tween: Tween<double>(begin: 1.0, end: isExiting ? 0.0 : 1.0),
+                  duration: _animationDuration,
+                  curve: Curves.easeInOut,
+                  child: IgnorePointer(ignoring: isExiting, child: chip),
+                  builder: (context, value, child) {
+                    return ClipRect(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: value,
+                        child: Opacity(opacity: value, child: child),
+                      ),
+                    );
+                  },
                 );
               }),
             ),

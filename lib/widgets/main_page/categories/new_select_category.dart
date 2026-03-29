@@ -12,7 +12,6 @@ class NewSelectCategoryWidget extends StatelessWidget {
     super.key,
     required this.category,
     this.onTap,
-    required this.habitsCount,
     required this.standardColor,
     this.selectedDay,
     this.isFirst = false,
@@ -21,7 +20,6 @@ class NewSelectCategoryWidget extends StatelessWidget {
 
   final Category category;
   final VoidCallback? onTap;
-  final bool habitsCount;
   final bool standardColor;
   final DateTime? selectedDay;
   final bool isFirst;
