@@ -10,7 +10,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/home_page.dart';
-import 'package:habitt/pages/main_pages/old/settings_page.dart';
+import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_pages.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -211,12 +211,82 @@ class _MyAppState extends State<MyApp> {
       fontFamily: 'Satoshi',
       colorScheme: baseScheme,
       scaffoldBackgroundColor: cp.bg,
-      textTheme: ThemeData(
-        brightness: cp.isDark ? Brightness.dark : Brightness.light,
-      ).textTheme.apply(
-        fontFamily: 'Satoshi',
-        bodyColor: cp.text,
-        displayColor: cp.text,
+      textTheme: TextTheme(
+        displayLarge: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        displayMedium: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        displaySmall: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        headlineLarge: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        headlineMedium: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        headlineSmall: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        titleLarge: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        titleMedium: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        titleSmall: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        bodySmall: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        labelLarge: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        labelMedium: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
+        labelSmall: TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          color: cp.text,
+        ),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: cp.isDark ? cp.habitBg : cp.bg,

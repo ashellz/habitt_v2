@@ -1,5 +1,6 @@
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/habits_page/greeting.dart';
 import 'package:habitt/widgets/main_page/last_week_progress.dart';
@@ -44,7 +45,12 @@ class _MainPageTopSectionState extends State<MainPageTopSection> {
                 cnIcon: CNSymbol("gearshape", size: 16),
 
                 onPressed: () {
-                  Navigator.pushNamed(context, "/settings");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ),
+                  );
                 },
               ),
             ],
