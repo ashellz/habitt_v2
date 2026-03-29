@@ -1,33 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/settings/app_language_sheet.dart';
 import 'package:provider/provider.dart';
-
-enum LanguageOption {
-  english('en', 'English', 'assets/images/new-svg/languages/en.svg'),
-  bosnian('bs', 'Bosnian', 'assets/images/new-svg/languages/ba.svg'),
-  german('de', 'Deutsch', 'assets/images/new-svg/languages/de.svg'),
-  spanish('es', 'Español', 'assets/images/new-svg/languages/es.svg'),
-  italian('it', 'Italiano', 'assets/images/new-svg/languages/it.svg');
-
-  final String languageCode;
-  final String displayName;
-  final String? svgPath;
-
-  const LanguageOption(this.languageCode, this.displayName, this.svgPath);
-
-  static LanguageOption? fromLanguageCode(String languageCode) {
-    for (final option in values) {
-      if (option.languageCode == languageCode) {
-        return option;
-      }
-    }
-    return null;
-  }
-}
 
 class ChooseAppLanguage extends StatefulWidget {
   const ChooseAppLanguage({super.key, this.onNext});
@@ -64,14 +43,6 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
   }
 
   List<Widget> _buildLanguageRows({required ColorProvider cp}) {
-    final checkSvgPath =
-        cp.isDark
-            ? 'assets/images/new-svg/check-on-dark.svg'
-            : 'assets/images/new-svg/check-on-light.svg';
-
-    const selectionDuration = Duration(milliseconds: 200);
-    const iconTurns = 0.18;
-
     final query = searchController.text.trim().toLowerCase();
     final items =
         LanguageOption.values.where((option) {
@@ -106,116 +77,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
         final item = rowItems[j];
 
         final labelWidget = Expanded(
-          child: SizedBox(
-            height: 46,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-              decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    width: 1,
-                    color:
-                        selectedLanguage == item
-                            ? cp.main.withValues(alpha: 0.2)
-                            : cp.border,
-                  ),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                color:
-                    selectedLanguage == item
-                        ? cp.main.withValues(alpha: 0.1)
-                        : Colors.transparent,
-              ),
-              child: ElevatedButton(
-                onPressed: () async {
-                  await context.read<LanguageProvider>().setLocale(
-                    Locale(item.languageCode),
-                  );
-                  if (!mounted) {
-                    return;
-                  }
-
-                  setState(() {
-                    selectedLanguage = item;
-                  });
-                },
-                style: ButtonStyle(
-                  splashFactory: NoSplash.splashFactory,
-                  elevation: const WidgetStatePropertyAll(0),
-                  overlayColor: WidgetStateProperty.resolveWith<Color?>((
-                    states,
-                  ) {
-                    if (!states.contains(WidgetState.pressed)) {
-                      return null;
-                    }
-                    return cp.bg.withValues(alpha: 0.2);
-                  }),
-                  backgroundColor: const WidgetStatePropertyAll(
-                    Colors.transparent,
-                  ),
-                  shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-                  shape: WidgetStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                  ),
-                  padding: const WidgetStatePropertyAll(
-                    EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      spacing: 10,
-                      children: [
-                        if (item.svgPath != null)
-                          SvgPicture.asset(item.svgPath!, width: 20, height: 20)
-                        else
-                          Icon(
-                            Icons.language_rounded,
-                            size: 20,
-                            color: cp.lightGreyText,
-                          ),
-                        Text(
-                          item.displayName,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: cp.text,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: AnimatedOpacity(
-                        duration: selectionDuration,
-                        curve: Curves.easeOut,
-                        opacity: selectedLanguage == item ? 1 : 0,
-                        child: AnimatedScale(
-                          duration: selectionDuration,
-                          curve: Curves.easeOutBack,
-                          scale: selectedLanguage == item ? 1 : 0.7,
-                          child: AnimatedRotation(
-                            duration: selectionDuration,
-                            curve: Curves.easeOutBack,
-                            turns: selectedLanguage == item ? 0 : iconTurns,
-                            child: SvgPicture.asset(checkSvgPath),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          child: LanguageOptionWidget(languageOption: item),
         );
 
         rowChildren.add(labelWidget);
