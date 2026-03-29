@@ -125,7 +125,7 @@ class LogProgressDialog extends StatelessWidget {
             Text(
               getTargetText(),
               style: TextStyle(
-                color: const Color(0xFF0B0B0B),
+                color: cp.text,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
