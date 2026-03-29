@@ -10,7 +10,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/home_page.dart';
-import 'package:habitt/pages/main_pages/settings_page.dart';
+import 'package:habitt/pages/main_pages/old/settings_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_pages.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
