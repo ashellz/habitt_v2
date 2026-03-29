@@ -87,7 +87,7 @@ class Habit extends HiveObject {
   // convert to getter
   Color? resolveColor(ThemeProvider tp) {
     if (colorName != null) {
-      final spec = ColorService.habitColorSpecs[colorName!];
+      final spec = OldColorService.habitColorSpecs[colorName!];
       if (spec != null) {
         return tp.isDark ? spec.dark : spec.light;
       }
@@ -98,7 +98,7 @@ class Habit extends HiveObject {
 
   Color? resolveTextColor(ThemeProvider tp) {
     if (colorName != null) {
-      final spec = ColorService.habitColorSpecs[colorName!];
+      final spec = OldColorService.habitColorSpecs[colorName!];
       if (spec != null) {
         return tp.isDark ? spec.darkText : spec.lightText;
       }

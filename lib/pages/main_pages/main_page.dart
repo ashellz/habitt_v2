@@ -66,6 +66,7 @@ class _MainPageState extends State<MainPage> {
           ),
           ListView(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            physics: const ClampingScrollPhysics(),
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),

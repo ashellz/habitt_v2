@@ -362,7 +362,7 @@ class StateProvider extends ChangeNotifier {
 
   Color? getHabitColor(ThemeProvider tp) {
     if (_habitColorName != null) {
-      final spec = ColorService.habitColorSpecs[_habitColorName!];
+      final spec = OldColorService.habitColorSpecs[_habitColorName!];
       if (spec != null) {
         return tp.isDark ? spec.dark : spec.light;
       }
@@ -372,7 +372,7 @@ class StateProvider extends ChangeNotifier {
 
   Color? getHabitTextColor(ThemeProvider tp) {
     if (_habitColorName != null) {
-      final spec = ColorService.habitColorSpecs[_habitColorName!];
+      final spec = OldColorService.habitColorSpecs[_habitColorName!];
       if (spec != null) {
         return tp.isDark ? spec.darkText : spec.lightText;
       }

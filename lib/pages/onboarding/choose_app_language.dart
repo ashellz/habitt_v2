@@ -5,7 +5,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
-import 'package:habitt/widgets/settings/app_language_sheet.dart';
+import 'package:habitt/widgets/settings/lanugage_option_widget.dart';
 import 'package:provider/provider.dart';
 
 class ChooseAppLanguage extends StatefulWidget {

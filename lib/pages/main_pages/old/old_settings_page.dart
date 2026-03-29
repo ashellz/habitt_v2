@@ -12,12 +12,12 @@ import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
-import 'package:habitt/widgets/settings/select_color_sheet.dart';
-import 'package:habitt/widgets/settings/segmented_control.dart';
-import 'package:habitt/widgets/settings/setting_tile.dart';
+import 'package:habitt/widgets/old_settings/select_color_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:habitt/widgets/old_settings/setting_tile.dart';
+import 'package:habitt/widgets/old_settings/segmented_control.dart';
 
 class OldSettingsPage extends StatefulWidget {
   const OldSettingsPage({super.key});

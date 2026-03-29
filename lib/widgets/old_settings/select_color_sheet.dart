@@ -17,7 +17,7 @@ class SelectColorSheet extends StatelessWidget {
     final maxHeight = mq.size.height * 0.9; // allow up to 90% of screen
 
     final Map<String, AccentPalette> palettes =
-        tp.isDark ? ColorService.accentDark : ColorService.accentLight;
+        tp.isDark ? OldColorService.accentDark : OldColorService.accentLight;
 
     final sheet = Container(
       width: double.infinity,

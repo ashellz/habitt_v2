@@ -25,7 +25,7 @@ class AmountDisplay extends StatelessWidget {
           blurRadius: 5,
         ),
       ],
-      color: skipped ? ColorService.textMuted : Colors.white,
+      color: skipped ? OldColorService.textMuted : Colors.white,
       fontWeight: FontWeight.bold,
     );
 
@@ -38,7 +38,7 @@ class AmountDisplay extends StatelessWidget {
           child: Divider(
             height: 2,
             thickness: 2,
-            color: skipped ? ColorService.textMuted : Colors.white,
+            color: skipped ? OldColorService.textMuted : Colors.white,
           ),
         ),
         Text(habit.amount.toString(), style: textStyle),
