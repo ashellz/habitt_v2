@@ -22,25 +22,87 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
   final Map<String, double> _progressValuesByDate = <String, double>{};
   final Map<String, double> _previousProgressValuesByDate = <String, double>{};
   Locale? _lastLocale;
-  bool _frameUpdateQueued = false;
   bool _didInitialScrollToRight = false;
-  double _slotExtent = _dayWidth;
+  late VoidCallback _habitProviderListener;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_handleScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _checkLocale();
-      _queueFrameUpdate(animateFromCurrent: false);
+      _initializeAllProgressValues();
+      _attachHabitProviderListener();
+      _ensureInitialScrollToRight();
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _checkLocale();
+  void _attachHabitProviderListener() {
+    final habitProvider = context.read<HabitProvider>();
+    _habitProviderListener = () {
+      if (!mounted) return;
+      _updateChangedDayProgress();
+    };
+    habitProvider.addListener(_habitProviderListener);
+  }
+
+  void _initializeAllProgressValues() {
+    final habitProvider = context.read<HabitProvider>();
+    final allDates = _allDates;
+
+    if (allDates.isEmpty) return;
+
+    setState(() {
+      for (final date in allDates) {
+        final key = _dateKey(date);
+        final progressValue = _progressForDate(habitProvider, date);
+        _progressValuesByDate[key] = progressValue;
+        _previousProgressValuesByDate[key] = 0.0;
+      }
+      debugPrint("Initial progress values loaded for all days");
+    });
+  }
+
+  void _updateChangedDayProgress() {
+    final habitProvider = context.read<HabitProvider>();
+    final today = _normalizeDate(DateTime.now());
+
+    // Update progress for today
+    final todayKey = _dateKey(today);
+    final newTodayProgress = _progressForDate(habitProvider, today);
+    final oldTodayProgress = _progressValuesByDate[todayKey] ?? 0.0;
+
+    if ((newTodayProgress - oldTodayProgress).abs() > 0.0001) {
+      setState(() {
+        _previousProgressValuesByDate[todayKey] = oldTodayProgress;
+        _progressValuesByDate[todayKey] = newTodayProgress;
+      });
+      debugPrint(
+        "Updated today's progress: $newTodayProgress (was: $oldTodayProgress)",
+      );
+      return;
+    }
+
+    // If today didn't change, check the selected date
+    final selectedDate = _normalizeDate(
+      habitProvider.selectedDate ?? DateTime.now(),
+    );
+
+    if (_isSameDay(selectedDate, today)) return;
+
+    final selectedKey = _dateKey(selectedDate);
+    final newSelectedProgress = _progressForDate(habitProvider, selectedDate);
+    final oldSelectedProgress = _progressValuesByDate[selectedKey] ?? 0.0;
+
+    if ((newSelectedProgress - oldSelectedProgress).abs() > 0.0001) {
+      setState(() {
+        _previousProgressValuesByDate[selectedKey] = oldSelectedProgress;
+        _progressValuesByDate[selectedKey] = newSelectedProgress;
+      });
+      debugPrint(
+        "Updated selected date progress: $newSelectedProgress (was: $oldSelectedProgress)",
+      );
+    }
   }
 
   void _checkLocale() {
@@ -57,6 +119,15 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
     });
   }
 
+  void _ensureInitialScrollToRight() {
+    if (_didInitialScrollToRight || !_scrollController.hasClients) {
+      return;
+    }
+
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
+    _didInitialScrollToRight = true;
+  }
+
   DateTime _normalizeDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
@@ -69,19 +140,6 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
   String _dateKey(DateTime date) {
     return _normalizeDate(date).toIso8601String().split('T').first;
-  }
-
-  int _maxStartIndex() {
-    return max(0, _allDates.length - _visibleDays);
-  }
-
-  int _visibleStartIndex() {
-    if (!_scrollController.hasClients || _slotExtent <= 0) {
-      return 0;
-    }
-
-    final start = (_scrollController.offset / _slotExtent).round();
-    return start.clamp(0, _maxStartIndex());
   }
 
   List<DateTime> get _allDates {
@@ -115,87 +173,21 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
     return (weekProgress[day] ?? 0.0).clamp(0.0, 1.0);
   }
 
-  bool _didVisibleProgressChange(Map<String, double> nextValues) {
-    for (final entry in nextValues.entries) {
-      final currentValue = _progressValuesByDate[entry.key];
-      if (currentValue == null) {
-        return true;
-      }
-      if ((currentValue - entry.value).abs() > 0.0001) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  void _refreshVisibleProgress({required bool animateFromCurrent}) {
-    final habitProvider = context.read<HabitProvider>();
-    final start = _visibleStartIndex();
-    final visibleDates = _allDates.skip(start).take(_visibleDays).toList();
-
-    if (visibleDates.isEmpty) {
-      return;
-    }
-
-    final nextValues = <String, double>{};
-    for (final date in visibleDates) {
-      final key = _dateKey(date);
-      nextValues[key] = _progressForDate(habitProvider, date);
-    }
-
-    if (!_didVisibleProgressChange(nextValues)) {
-      return;
-    }
-
-    setState(() {
-      for (final entry in nextValues.entries) {
-        final previous = _progressValuesByDate[entry.key] ?? 0.0;
-        _previousProgressValuesByDate[entry.key] =
-            animateFromCurrent ? previous : 0.0;
-        _progressValuesByDate[entry.key] = entry.value;
-      }
-
-      debugPrint("Progress values updated: $nextValues");
-      debugPrint("Days: $_days");
-    });
-  }
-
-  void _handleScroll() {
-    _queueFrameUpdate(animateFromCurrent: true);
-  }
-
-  void _ensureInitialScrollToRight() {
-    if (_didInitialScrollToRight || !_scrollController.hasClients) {
-      return;
-    }
-
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
-    _didInitialScrollToRight = true;
-  }
-
-  void _queueFrameUpdate({required bool animateFromCurrent}) {
-    if (_frameUpdateQueued) return;
-    _frameUpdateQueued = true;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _frameUpdateQueued = false;
-      if (!mounted) return;
-      _ensureInitialScrollToRight();
-      _refreshVisibleProgress(animateFromCurrent: animateFromCurrent);
-    });
-  }
-
   @override
   void dispose() {
-    _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
+    try {
+      final habitProvider = context.read<HabitProvider>();
+      habitProvider.removeListener(_habitProviderListener);
+    } catch (_) {
+      // Provider not available, ignore
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final habitProvider = context.watch<HabitProvider>();
+    final habitProvider = context.read<HabitProvider>();
     final selectedDate = _normalizeDate(
       habitProvider.selectedDate ?? DateTime.now(),
     );
@@ -212,10 +204,6 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                       (_dayWidth * _visibleDays)) /
                   (_visibleDays - 1))
               .clamp(0.0, 24.0);
-
-          _slotExtent = _dayWidth + spacing;
-
-          _queueFrameUpdate(animateFromCurrent: true);
 
           final allDates = _allDates;
           final today = _normalizeDate(DateTime.now());
