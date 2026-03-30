@@ -16,8 +16,10 @@ class LanguageSetting extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final lp = context.watch<LanguageProvider>();
     final currentLanguage = lp.currentLanguage;
-    final lc = currentLanguage?.languageCode.toUpperCase() ?? 'en';
+    final lc = currentLanguage?.languageCode.toUpperCase() ?? 'EN';
     final flagPath = currentLanguage?.svgPath ?? LanguageOption.english.svgPath;
+
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
 
     final mediaQuery = MediaQuery.of(context);
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
@@ -35,7 +37,7 @@ class LanguageSetting extends StatelessWidget {
           ),
         ),
         AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: Duration(milliseconds: isAndroid ? 0 : 200),
           width: double.infinity,
           padding: const EdgeInsets.only(top: 4, left: 12, right: 4, bottom: 4),
           clipBehavior: Clip.antiAlias,

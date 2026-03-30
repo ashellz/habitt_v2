@@ -250,8 +250,8 @@ class _ColorMorphingIconState extends State<_ColorMorphingIcon> {
           height: 28,
           child: SvgPicture.asset(
             widget.svgPath,
-            width: 20,
-            height: 20,
+            width: 28,
+            height: 28,
             colorFilter: ColorFilter.mode(
               color ?? widget.targetColor,
               BlendMode.srcIn,

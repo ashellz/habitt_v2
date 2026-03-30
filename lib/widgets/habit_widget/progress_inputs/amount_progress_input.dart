@@ -85,30 +85,34 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
 
   @override
   Widget build(BuildContext context) {
-    return IncrementDecrementTextField(
-      fontWeight: FontWeight.w500,
-      title: "Amount",
-      controller: controller,
-      minValue: widget.minValue,
-      maxValue: 9999,
-      onValueChanged: (value) {
-        stateProvider.habitAmount = value;
-      },
-      onDecrement: () {
-        onDecrement();
-      },
-      onIncrement: () {
-        onIncrement();
-      },
-      onIncrementLongPressStart: (_) {
-        _startIncrementing();
-      },
-      onIncrementLongPressEnd: (_) {
-        _stopIncrementing();
-      },
-      onIncrementLongPressCancel: () {
-        _stopIncrementing();
-      },
+    return SizedBox(
+      height: 72,
+      width: double.infinity,
+      child: IncrementDecrementTextField(
+        fontWeight: FontWeight.w500,
+        title: "Amount",
+        controller: controller,
+        minValue: widget.minValue,
+        maxValue: 9999,
+        onValueChanged: (value) {
+          stateProvider.habitAmount = value;
+        },
+        onDecrement: () {
+          onDecrement();
+        },
+        onIncrement: () {
+          onIncrement();
+        },
+        onIncrementLongPressStart: (_) {
+          _startIncrementing();
+        },
+        onIncrementLongPressEnd: (_) {
+          _stopIncrementing();
+        },
+        onIncrementLongPressCancel: () {
+          _stopIncrementing();
+        },
+      ),
     );
   }
 }

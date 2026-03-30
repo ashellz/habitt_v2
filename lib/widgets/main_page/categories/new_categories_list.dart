@@ -41,6 +41,19 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
 
   bool _isSchedulingFallback = false; // Avoid multiple schedules
 
+  DateTime _normalizeDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  DateTime? _effectiveSelectedDay([HabitProvider? habitProvider]) {
+    final provider = habitProvider ?? context.read<HabitProvider>();
+    final source = provider.selectedDate ?? widget.selectedDay;
+    if (source == null) {
+      return null;
+    }
+    return _normalizeDate(source);
+  }
+
   GlobalKey _keyFor(int id) => _itemKeys.putIfAbsent(id, () => GlobalKey());
 
   @override
@@ -200,13 +213,14 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
 
     final categoryProvider = context.read<CategoryProvider>();
     final habitProvider = context.read<HabitProvider>();
+    final selectedDay = _effectiveSelectedDay(habitProvider);
     // Get habits accordingly
     final habitsList =
-        widget.selectedDay == null
+        selectedDay == null
             ? widget.showAll
                 ? habitProvider.habits
                 : habitProvider.todaysHabits
-            : habitProvider.getHabitsForDate(widget.selectedDay!);
+            : habitProvider.getHabitsForDate(selectedDay);
 
     final selectedId = categoryProvider.selectedCategoryId;
     final visibleIds = _visibleCategoryIds(habitsList);
@@ -251,14 +265,15 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final localizations = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
     final habitProvider = context.watch<HabitProvider>();
+    final selectedDay = _effectiveSelectedDay(habitProvider);
 
     // Get habits accordingly
     final habitsList =
-        widget.selectedDay == null
+        selectedDay == null
             ? widget.showAll
                 ? habitProvider.habits
                 : habitProvider.todaysHabits
-            : habitProvider.getHabitsForDate(widget.selectedDay!);
+            : habitProvider.getHabitsForDate(selectedDay);
 
     final List<Category> visibleCategories = [];
     final allCategory = _allCategory(localizations);
@@ -333,7 +348,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
                 final chip = KeyedSubtree(
                   key: _keyFor(category.id),
                   child: NewSelectCategoryWidget(
-                    selectedDay: widget.selectedDay,
+                    selectedDay: selectedDay,
                     standardColor: widget.standardColor,
                     category: category,
                     isFirst: index == 0,

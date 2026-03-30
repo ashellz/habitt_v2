@@ -55,7 +55,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
     textObscured = widget.obscureText;
   }
 
-  _toggleObscureText() {
+  void _toggleObscureText() {
     setState(() {
       textObscured = !textObscured;
     });
@@ -81,6 +81,11 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
       }
     }
 
+    final filteringFormatter = getFilteringTextInputFormatter(
+      widget.textOnly,
+      widget.digitsOnly,
+    );
+
     return Padding(
       padding: EdgeInsets.only(top: widget.topPadding ?? 0),
       child: Column(
@@ -96,20 +101,17 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
                 fontWeight: widget.fontWeight,
               ),
             ),
+
           TextFormField(
             controller: widget.controller,
-            onTap: () => widget.onTap?.call(),
+            onTap: widget.onTap,
             onChanged: widget.onChanged,
             textAlign: widget.centerValue ? TextAlign.center : TextAlign.start,
             keyboardAppearance: cp.isDark ? Brightness.dark : Brightness.light,
             inputFormatters: [
               if (widget.maxTextLength != null)
                 LengthLimitingTextInputFormatter(widget.maxTextLength),
-              getFilteringTextInputFormatter(
-                    widget.textOnly,
-                    widget.digitsOnly,
-                  ) ??
-                  FilteringTextInputFormatter.deny(""),
+              if (filteringFormatter != null) filteringFormatter,
             ],
             cursorColor: cp.text,
             cursorWidth: 1.0,
@@ -134,7 +136,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
                       : null,
 
               prefixIcon: widget.prefix,
-              suffixIcon: widget.suffix ?? getSuffixIcon(cp, widget.suffix),
+              suffixIcon: widget.suffix ?? getSuffixIcon(cp),
               alignLabelWithHint: true,
 
               // Borders
@@ -169,7 +171,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
     );
   }
 
-  Widget? getSuffixIcon(ColorProvider cp, Widget? suffix) {
+  Widget? getSuffixIcon(ColorProvider cp) {
     if (!widget.obscureText) {
       return null;
     }

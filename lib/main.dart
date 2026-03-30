@@ -211,82 +211,12 @@ class _MyAppState extends State<MyApp> {
       fontFamily: 'Satoshi',
       colorScheme: baseScheme,
       scaffoldBackgroundColor: cp.bg,
-      textTheme: TextTheme(
-        displayLarge: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        displayMedium: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        displaySmall: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        headlineLarge: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        headlineMedium: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        headlineSmall: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        titleLarge: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        titleMedium: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        titleSmall: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        bodySmall: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        labelLarge: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        labelMedium: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
-        labelSmall: TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          color: cp.text,
-        ),
+      textTheme: ThemeData(
+        brightness: cp.isDark ? Brightness.dark : Brightness.light,
+      ).textTheme.apply(
+        fontFamily: 'Satoshi',
+        bodyColor: cp.text,
+        displayColor: cp.text,
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
