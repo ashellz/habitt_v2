@@ -13,7 +13,7 @@ class LastWeekProgress extends StatefulWidget {
 }
 
 class _LastWeekProgressState extends State<LastWeekProgress> {
-  int currentDay = DateTime.now().weekday;
+  DateTime currentDate = DateTime.now();
   List<String> _days = const ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   final List<double> _progressValues = List<double>.filled(
     7,
@@ -31,7 +31,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
   @override
   void initState() {
     super.initState();
-    debugPrint("Initializing _LastWeekProgress with currentDay: $currentDay");
+    debugPrint("Initializing _LastWeekProgress with currentDate: $currentDate");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _checkLocale();
@@ -96,7 +96,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
         ..addAll(nextValues);
 
       debugPrint("Progress values updated: $_progressValues");
-      debugPrint("Current day: $currentDay");
+      debugPrint("Current date: $currentDate");
       debugPrint("Days: $_days");
     });
   }
@@ -125,7 +125,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(7, (index) {
-          final adjustedDay = currentDay - 1;
+          final adjustedDay = currentDate.weekday;
           final isSelected = adjustedDay == index;
 
           final dayLabel = index < _days.length ? _days[index] : "";
@@ -195,7 +195,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    "${index + 1}",
+                    "${currentDate.add(Duration(days: index)).day}",
                     style: TextStyle(
                       color: getDayNumberColor(),
                       fontSize: 17,
