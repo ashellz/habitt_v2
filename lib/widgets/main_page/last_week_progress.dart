@@ -229,11 +229,12 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
               itemCount: allDates.length,
               separatorBuilder: (_, __) => SizedBox(width: spacing),
               itemBuilder: (context, index) {
+                final startDate = context.read<HabitProvider>().dateJoined;
                 final date = allDates[index];
                 final dayKey = _dateKey(date);
                 final isSelected = _isSameDay(date, selectedDate);
-                final isSelectable = !date.isAfter(today);
-                final isAfterToday = date.isAfter(today);
+                final isSelectable =
+                    !date.isAfter(today) && !date.isBefore(startDate);
 
                 final progressValue =
                     _progressValuesByDate[dayKey]?.clamp(0.0, 1.0) ?? 0.0;
@@ -274,7 +275,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                   if (isSelected) {
                     return cp.progressBarSelected;
                   }
-                  if (isAfterToday) {
+                  if (!isSelectable) {
                     if (darkMode) return Color(0xFF1A1A1A);
                     return Color(0xFFF1F1F1);
                   }

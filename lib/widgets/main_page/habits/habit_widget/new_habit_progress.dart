@@ -66,12 +66,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
 
         // If no amount or duration, toggle completion
         if (widget.habit.amount == 0 && widget.habit.duration == 0) {
-          habitProvider.completeHabit(
-            widget.habit.id,
-            context,
-            stateProvider,
-            day: widget.focusedDay,
-          );
+          habitProvider.completeHabit(widget.habit.id, context, stateProvider);
         } else {
           // Opens a dialog for selecting amount/duration completion
           showDialogSheet(
@@ -106,12 +101,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
         });
       },
       onLongPress: () {
-        habitProvider.completeHabit(
-          widget.habit.id,
-          context,
-          stateProvider,
-          day: widget.focusedDay,
-        );
+        habitProvider.completeHabit(widget.habit.id, context, stateProvider);
       },
       child: Container(
         color: Colors.transparent,

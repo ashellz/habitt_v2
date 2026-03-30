@@ -286,6 +286,14 @@ class StateProvider extends ChangeNotifier {
     }
   }
 
+  void setIconPathImmediately(String newPath) {
+    if (_iconPath == newPath) {
+      return;
+    }
+    _iconPath = newPath;
+    notifyListeners();
+  }
+
   set selectedHabitId(int id) {
     _selectedHabitId = id;
     notifyListeners();
