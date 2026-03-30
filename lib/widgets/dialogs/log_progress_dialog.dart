@@ -50,7 +50,6 @@ class LogProgressDialog extends StatelessWidget {
             habit.id,
             stateProvider.habitAmount,
             context,
-            day: DateTime.now(),
           );
         }
 
@@ -65,7 +64,6 @@ class LogProgressDialog extends StatelessWidget {
             habit.id,
             stateProvider.habitDuration.inMinutes,
             context,
-            day: DateTime.now(),
           );
         }
 

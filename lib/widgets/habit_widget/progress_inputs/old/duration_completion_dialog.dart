@@ -182,7 +182,6 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
                         widget.habit.id,
                         sp.habitDuration.inMinutes,
                         context,
-                        day: widget.day,
                       );
 
                       Navigator.pop(context);

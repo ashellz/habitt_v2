@@ -581,27 +581,33 @@ class HabitProvider extends ChangeNotifier {
   void completeHabit(
     int id,
     BuildContext context,
-    StateProvider stateProvider, {
-    required DateTime? day,
-  }) async {
+    StateProvider stateProvider,
+  ) async {
     late Habit habit;
 
     final today = DateTime.now();
-    day ??= today;
+    final _selectedDate = selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
-    final daySimple = DateTime(day.year, day.month, day.day);
+    final daySimple = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
 
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
+      final List<Habit> dayHabits = getHabitsFromDay(
+        daySimple,
+        hydrateMissing: true,
+      );
       habit = dayHabits.firstWhere((h) => h.id == id);
       if (!stateProvider.shouldUpdateStreaks) {
         stateProvider.shouldUpdateStreaks = true;
       }
     }
 
-    debugPrint("Completing habit: $id, day: $day");
+    debugPrint("Completing habit: $id, day: $daySimple");
     final wasCompleted = habit.completed;
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
@@ -636,7 +642,7 @@ class HabitProvider extends ChangeNotifier {
       checkReorderCategories(context, habit);
     }
 
-    updateHabitInDB(habit, day: day);
+    updateHabitInDB(habit, day: daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }
@@ -655,9 +661,6 @@ class HabitProvider extends ChangeNotifier {
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(day.year, day.month, day.day);
     final dayBefore = daySimple.subtract(const Duration(days: 1));
-
-    // IMPLEMENT CHECKING IF THE HABIT BEFORE IS SKIPPED
-    // IF ITS SKIPPED, THEN DONT ALLOW THE USER TO SKIP THIS HABIT
 
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
@@ -708,19 +711,26 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitAmountCompleted(
     int id,
     int amountCompleted,
-    BuildContext context, {
-    required DateTime day,
-  }) {
+    BuildContext context,
+  ) {
     late Habit habit;
 
     final today = DateTime.now();
+    final _selectedDate = selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
-    final daySimple = DateTime(day.year, day.month, day.day);
+    final daySimple = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
 
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
+      final List<Habit> dayHabits = getHabitsFromDay(
+        daySimple,
+        hydrateMissing: true,
+      );
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 
@@ -735,19 +745,26 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitDurationCompleted(
     int id,
     int durationCompleted,
-    BuildContext context, {
-    required DateTime day,
-  }) {
+    BuildContext context,
+  ) {
     late Habit habit;
 
     final today = DateTime.now();
+    final _selectedDate = selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
-    final daySimple = DateTime(day.year, day.month, day.day);
+    final daySimple = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
 
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(day, hydrateMissing: true);
+      final List<Habit> dayHabits = getHabitsFromDay(
+        daySimple,
+        hydrateMissing: true,
+      );
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 

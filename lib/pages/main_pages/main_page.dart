@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage> {
                 numberOfParticles: 24,
                 maxBlastForce: 20,
                 minBlastForce: 5,
-                gravity: 0.6,
+                gravity: 0.3,
               ),
             ),
           ),

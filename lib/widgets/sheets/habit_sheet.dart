@@ -81,8 +81,6 @@ class _HabitSheetState extends State<HabitSheet> {
   }
 
   void _setEditInitialValues(StateProvider stateProvider, Habit habit) {
-    final tp = context.read<ThemeProvider>();
-
     stateProvider.selectedHabitId = habit.id;
     stateProvider.habitCategoryId = habit.categoryId;
     stateProvider.nameController.text = habit.name;
@@ -90,7 +88,7 @@ class _HabitSheetState extends State<HabitSheet> {
     stateProvider.habitAmount = habit.amount;
     stateProvider.habitDuration = Duration(minutes: habit.duration);
     stateProvider.habitAmountLabelController.text = habit.amountLabel;
-    stateProvider.iconPath = habit.iconPath;
+    stateProvider.setIconPathImmediately(habit.iconPath);
     stateProvider.isOptional = habit.optional;
     stateProvider.timeIntervalEnabled = habit.timeIntervalEnabled;
     stateProvider.timeIntervalStart = habit.timeIntervalStart;
@@ -104,7 +102,9 @@ class _HabitSheetState extends State<HabitSheet> {
       selectedDaysAMonth: habit.selectedDaysAMonth,
     );
     stateProvider.habitColorName = habit.colorName;
-    stateProvider.habitColor = habit.resolveColor(tp);
+    stateProvider.habitColor = habit.resolveColor(
+      context.read<ThemeProvider>(),
+    );
   }
 
   bool _hasEditChanges(StateProvider sp, ThemeProvider tp) {
@@ -351,8 +351,11 @@ class _HabitSheetState extends State<HabitSheet> {
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
 
     final hasName = sp.nameController.text.trim().isNotEmpty;
-    final canSave = hasName && (!_isEditMode || _hasEditChanges(sp, tp));
-    final hasUnsavedChanges = _hasUnsavedChanges(sp, tp);
+    final canSave =
+        !_isInitializing &&
+        hasName &&
+        (!_isEditMode || _hasEditChanges(sp, tp));
+    final hasUnsavedChanges = !_isInitializing && _hasUnsavedChanges(sp, tp);
 
     return PopScope(
       canPop: _allowPop || !hasUnsavedChanges,

@@ -108,7 +108,6 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                     widget.habit.id,
                     context,
                     stateProvider,
-                    day: widget.isToday ? DateTime.now() : focusedDay,
                   );
                 } else {
                   // Opens a dialog for selecting amount/duration completion
@@ -156,12 +155,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
           );
           return;
         }
-        habitProvider.completeHabit(
-          widget.habit.id,
-          context,
-          stateProvider,
-          day: widget.isToday ? DateTime.now() : focusedDay,
-        );
+        habitProvider.completeHabit(widget.habit.id, context, stateProvider);
       },
       child: AnimatedScale(
         duration: const Duration(milliseconds: 150),

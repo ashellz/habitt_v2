@@ -128,7 +128,6 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                         widget.habit.id,
                         stateProvider.habitAmount,
                         context,
-                        day: widget.day,
                       );
 
                       Navigator.pop(context);
