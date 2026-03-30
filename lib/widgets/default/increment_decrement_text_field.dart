@@ -71,11 +71,14 @@ class IncrementDecrementTextField extends StatelessWidget {
       onChanged: _onTextChanged,
       prefix: GestureDetector(
         onTap: onDecrement,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
-          child: SvgPicture.asset(
-            "assets/images/new-svg/minus.svg",
-            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+        child: Container(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
+            child: SvgPicture.asset(
+              "assets/images/new-svg/minus.svg",
+              colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+            ),
           ),
         ),
       ),
@@ -84,11 +87,14 @@ class IncrementDecrementTextField extends StatelessWidget {
         onLongPressStart: onIncrementLongPressStart,
         onLongPressEnd: onIncrementLongPressEnd,
         onLongPressCancel: onIncrementLongPressCancel,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
-          child: SvgPicture.asset(
-            "assets/images/new-svg/plus.svg",
-            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+        child: Container(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
+            child: SvgPicture.asset(
+              "assets/images/new-svg/plus.svg",
+              colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+            ),
           ),
         ),
       ),
