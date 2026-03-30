@@ -28,74 +28,79 @@ class NewDefaultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: cp.isDark ? cp.habitBg : cp.bg,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 10,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: cp.text,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                if (desc != null)
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 40 + keyboardInset),
+      child: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: cp.isDark ? cp.habitBg : cp.bg,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 20,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10,
+                children: [
                   Text(
-                    desc!,
-                    style: TextStyle(color: cp.greyText, fontSize: 16),
+                    title,
+                    style: TextStyle(
+                      color: cp.text,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-              ],
-            ),
-            if (child != null) child!,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              spacing: 8,
-              children: [
-                Expanded(
-                  child: NewDefaultButton.secondary(
-                    onPressed: () {
-                      if (onSecondaryButtonPressed != null) {
-                        onSecondaryButtonPressed!();
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
-                    label: secondaryButtonLabel,
+                  if (desc != null)
+                    Text(
+                      desc!,
+                      style: TextStyle(color: cp.greyText, fontSize: 16),
+                    ),
+                ],
+              ),
+              if (child != null) child!,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: NewDefaultButton.secondary(
+                      onPressed: () {
+                        if (onSecondaryButtonPressed != null) {
+                          onSecondaryButtonPressed!();
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      label: secondaryButtonLabel,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: NewDefaultButton.primary(
-                    enabled: primaryButtonEnabled,
-                    onPressed: () {
-                      if (onPrimaryButtonPressed != null) {
-                        onPrimaryButtonPressed!();
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
-                    label: primaryButtonLabel,
+                  Expanded(
+                    child: NewDefaultButton.primary(
+                      enabled: primaryButtonEnabled,
+                      onPressed: () {
+                        if (onPrimaryButtonPressed != null) {
+                          onPrimaryButtonPressed!();
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      label: primaryButtonLabel,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -353,50 +353,53 @@ class _HabitSheetState extends State<HabitSheet> {
     final canSave = hasName && (!_isEditMode || _hasEditChanges(sp, tp));
     final hasUnsavedChanges = _hasUnsavedChanges(sp, tp);
 
-    return PopScope(
-      canPop: _allowPop || !hasUnsavedChanges,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) {
-          return;
-        }
-        await _handleCloseAttempt(sp, tp);
-      },
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxSheetHeight),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
-            child: Column(
-              spacing: 20,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                topSection(context, cp, sp, tp, canSave),
-                chooseIcon(cp, sp, context),
-                habitDetails(cp),
-                habitScheduling(cp),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Optional habit",
-                      style: TextStyle(
-                        color: cp.text,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+    return Listener(
+      onPointerDown: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      child: PopScope(
+        canPop: _allowPop || !hasUnsavedChanges,
+        onPopInvokedWithResult: (didPop, _) async {
+          if (didPop) {
+            return;
+          }
+          await _handleCloseAttempt(sp, tp);
+        },
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxSheetHeight),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
+              child: Column(
+                spacing: 20,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  topSection(context, cp, sp, tp, canSave),
+                  chooseIcon(cp, sp, context),
+                  habitDetails(cp),
+                  habitScheduling(cp),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Optional habit",
+                        style: TextStyle(
+                          color: cp.text,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    AnimatedCheckbox(
-                      value: sp.isOptional,
-                      onChanged: (value) {
-                        setState(() {
-                          sp.isOptional = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                      AnimatedCheckbox(
+                        value: sp.isOptional,
+                        onChanged: (value) {
+                          setState(() {
+                            sp.isOptional = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

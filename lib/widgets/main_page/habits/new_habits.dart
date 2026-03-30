@@ -40,6 +40,19 @@ class _NewHabitsState extends State<NewHabits>
   int _previousMainNewIndex = -1;
   Set<int> _fallbackCategoryIds = <int>{};
 
+  DateTime _normalizeDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  DateTime? _effectiveSelectedDay([HabitProvider? habitProvider]) {
+    final provider = habitProvider ?? context.read<HabitProvider>();
+    final source = provider.selectedDate ?? widget.daySelected;
+    if (source == null) {
+      return null;
+    }
+    return _normalizeDate(source);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,15 +68,13 @@ class _NewHabitsState extends State<NewHabits>
   }
 
   bool _isTodayView() {
-    final selected = widget.daySelected;
+    final selected = _effectiveSelectedDay();
     if (selected == null) {
       return true;
     }
 
-    final today = DateTime.now();
-    final todayShort = DateTime(today.year, today.month, today.day);
-    final selectedShort = DateTime(selected.year, selected.month, selected.day);
-    return selectedShort == todayShort;
+    final todayShort = _normalizeDate(DateTime.now());
+    return selected == todayShort;
   }
 
   void _onReorderTick() {
@@ -348,7 +359,7 @@ class _NewHabitsState extends State<NewHabits>
         category,
         context,
         true,
-        widget.daySelected,
+        _effectiveSelectedDay(),
       );
 
       if (categoryLength > 0) {
@@ -373,17 +384,18 @@ class _NewHabitsState extends State<NewHabits>
   }
 
   List<Habit> _getHabits() {
-    debugPrint(
-      "Getting habits for Habits widget ======================================== new DAY SELECTED: ${widget.daySelected} ",
-    );
     final habitProvider = context.read<HabitProvider>();
-    final today = DateTime.now();
-    final todayShort = DateTime(today.year, today.month, today.day);
-    if (widget.daySelected == null || widget.daySelected == todayShort) {
+    final selectedDay = _effectiveSelectedDay(habitProvider);
+
+    debugPrint(
+      "Getting habits for Habits widget ======================================== selected DAY: $selectedDay ",
+    );
+    final todayShort = _normalizeDate(DateTime.now());
+    if (selectedDay == null || selectedDay == todayShort) {
       return habitProvider.todaysHabits;
     }
 
-    return habitProvider.getHabitsForDate(widget.daySelected!);
+    return habitProvider.getHabitsForDate(selectedDay);
   }
 
   @override
@@ -398,6 +410,7 @@ class _NewHabitsState extends State<NewHabits>
   @override
   Widget build(BuildContext context) {
     habits = _getHabits();
+    final selectedDay = _effectiveSelectedDay();
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
     debugPrint("Selected category id in build: $selectedCategoryId");
@@ -432,13 +445,7 @@ class _NewHabitsState extends State<NewHabits>
         categories
             .where(
               (category) =>
-                  getCategoryLength(
-                    category,
-                    context,
-                    true,
-                    widget.daySelected,
-                  ) >
-                  0,
+                  getCategoryLength(category, context, true, selectedDay) > 0,
             )
             .toList();
 
@@ -488,7 +495,7 @@ class _NewHabitsState extends State<NewHabits>
                   _reorderController.duration?.inMilliseconds ?? 760,
               fallbackVisibleHabits: _fallbackVisibleHabits,
               useFallbackAnimation: false,
-              isToday: widget.daySelected == null,
+              isToday: _isTodayView(),
               habits: habits,
               showOptionalHabits: true,
               category: selectedCategory,
@@ -512,7 +519,7 @@ class _NewHabitsState extends State<NewHabits>
                 category: displayedCategories[index],
                 categoryIndex: index,
                 isFirst: index == 0,
-                isToday: widget.daySelected == null,
+                isToday: _isTodayView(),
                 progress: reorderProgress,
               ),
 

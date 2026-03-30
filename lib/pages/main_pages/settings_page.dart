@@ -400,7 +400,10 @@ class SettingsPage extends StatelessWidget {
       );
     }
 
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+
     return Scaffold(
+      backgroundColor: cp.isDark ? cp.bg : cp.habitBg,
       body: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 20),
         child: ListView(
@@ -425,7 +428,7 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                       AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
+                        duration: Duration(milliseconds: isAndroid ? 0 : 200),
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: ShapeDecoration(

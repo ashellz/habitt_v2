@@ -17,6 +17,12 @@ class HabitProvider extends ChangeNotifier {
   DateTime get dateJoined => _dateJoined ?? DateTime.now();
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
+  DateTime? selectedDate;
+
+  void setSelectedDate(DateTime date) {
+    selectedDate = date;
+    notifyListeners();
+  }
 
   StatsProvider? statsProvider;
   BackupProvider? backupProvider;
@@ -338,12 +344,12 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  Map<DateTime, double> getThisWeekProgress() {
-    final now = DateTime.now();
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+  Map<DateTime, double> getThisWeekProgress({DateTime? anchorDate}) {
+    final baseDate = _normalizeDate(anchorDate ?? DateTime.now());
+    final startOfWeek = baseDate.subtract(Duration(days: baseDate.weekday - 1));
 
     debugPrint(
-      "Calculating this week progress. Start of week: $startOfWeek, Today: $now",
+      "Calculating week progress. Start of week: $startOfWeek, Anchor: $baseDate",
     );
 
     List<Day> thisWeekDays = [];

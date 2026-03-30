@@ -68,10 +68,7 @@ class _MainPageState extends State<MainPage> {
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             physics: const ClampingScrollPhysics(),
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: MainPageTopSection(),
-              ),
+              MainPageTopSection(),
               SizedBox(height: 20),
               Container(
                 color: cp.habitBg,

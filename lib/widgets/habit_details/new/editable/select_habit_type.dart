@@ -128,6 +128,7 @@ class _TypeButton extends StatelessWidget {
           style: TextStyle(
             color: selected ? selectedTextColor : unselectedTextColor,
             fontSize: 14,
+            fontFamily: "Satoshi",
             fontWeight: FontWeight.w500,
           ),
           child: Text(label),

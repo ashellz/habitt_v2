@@ -36,27 +36,33 @@ class _MainPageTopSectionState extends State<MainPageTopSection> {
       child: Column(
         spacing: 20,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Greeting(),
-              NewCircleButton(
-                svgPath: "assets/images/new-svg/settings.svg",
-                cnIcon: CNSymbol("gearshape", size: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Greeting(),
+                NewCircleButton(
+                  svgPath: "assets/images/new-svg/settings.svg",
+                  cnIcon: CNSymbol("gearshape", size: 16),
 
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
-                    ),
-                  );
-                },
-              ),
-            ],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           LastWeekProgress(), // 79
-          NewPerfectDaysStreak(), // 82
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: NewPerfectDaysStreak(),
+          ), // 82
         ],
       ),
     );

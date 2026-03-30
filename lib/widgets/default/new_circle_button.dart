@@ -66,7 +66,10 @@ class _NewCircleButtonState extends State<NewCircleButton> {
       );
     }
 
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+
     return Material(
+      animationDuration: Duration(milliseconds: isAndroid ? 0 : 200),
       color: widget.color ?? cp.bg,
       shape: RoundedRectangleBorder(
         side: BorderSide(width: 1, color: widget.color ?? cp.border),
