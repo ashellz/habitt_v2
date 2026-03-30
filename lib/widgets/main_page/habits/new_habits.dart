@@ -331,6 +331,7 @@ class _NewHabitsState extends State<NewHabits>
   double _calculateContentHeight(
     List<Category> categories,
     BuildContext context,
+    int? selectedCategoryId,
   ) {
     const double categoryTitleHeight = 26;
     const double habitHeight = 74; // 42 icon + 32 padding
@@ -340,6 +341,9 @@ class _NewHabitsState extends State<NewHabits>
     double totalHeight = 0;
 
     for (final category in categories) {
+      if (selectedCategoryId != 0 && category.id != selectedCategoryId) {
+        continue;
+      }
       final categoryLength = getCategoryLength(
         category,
         context,
@@ -396,6 +400,7 @@ class _NewHabitsState extends State<NewHabits>
     habits = _getHabits();
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
+    debugPrint("Selected category id in build: $selectedCategoryId");
 
     final optionalHabitsCount = habits.where((habit) => habit.optional).length;
 
@@ -452,7 +457,14 @@ class _NewHabitsState extends State<NewHabits>
             .toList();
 
     // Calculate remaining height for bottom spacing
-    final contentHeight = _calculateContentHeight(displayedCategories, context);
+    final contentHeight = _calculateContentHeight(
+      displayedCategories,
+      context,
+      selectedCategoryId,
+    );
+    debugPrint(
+      "habitsListHeight: $habitsListHeight, contentHeight: $contentHeight",
+    );
     final bottomSpacing = (habitsListHeight - contentHeight).clamp(
       0.0,
       double.infinity,
