@@ -23,6 +23,27 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
   int _entryOpacityTicket = 0;
   Offset slideBeginOffset = Offset.zero;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final sp = context.read<StateProvider>();
+      final amount = sp.habitAmount;
+      final duration = sp.habitDuration;
+
+      setState(() {
+        selectedType =
+            amount > 1
+                ? HabitType.amount
+                : duration > Duration.zero
+                ? HabitType.duration
+                : HabitType.none;
+        lastSelectedType = selectedType;
+      });
+    });
+  }
+
   // Align duration usage:
   // We tweak it so if you enable amount from none but it was previously duration
   // It would slide fade the indicator to left from right
