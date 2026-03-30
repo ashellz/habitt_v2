@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/services/color_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum ColorMode { light, dark, system }
 
 class ColorProvider extends ChangeNotifier {
+  SharedPreferences prefs;
+
   ColorMode _mode = ColorMode.system;
   VoidCallback? _previousBrightnessCallback;
 
@@ -41,8 +44,25 @@ class ColorProvider extends ChangeNotifier {
   late Color widget;
   late Color pill;
 
-  ColorProvider() {
+  _getModeFromPrefs(SharedPreferences prefs) {
+    String? modeString = prefs.getString('color_mode');
+    if (modeString != null) {
+      return ColorMode.values.firstWhere(
+        (e) => e.toString() == modeString,
+        orElse: () => ColorMode.system,
+      );
+    }
+    return ColorMode.system;
+  }
+
+  Future<void> initFromPrefs() async {
+    _mode = _getModeFromPrefs(prefs);
     _updateColors();
+    notifyListeners();
+  }
+
+  ColorProvider(this.prefs) {
+    initFromPrefs();
 
     // Listen to system brightness changes
     _previousBrightnessCallback =
@@ -61,6 +81,7 @@ class ColorProvider extends ChangeNotifier {
 
   void setMode(ColorMode newMode) {
     _mode = newMode;
+    prefs.setString('color_mode', newMode.toString());
     _updateColors();
     notifyListeners();
   }
