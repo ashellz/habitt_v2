@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await updateLastOpenedDate(
           context.read<HabitProvider>(),
           context.read<StateProvider>(),
+          context.read<StatsProvider>(),
         );
         categoryProvider.reorderCategoriesBasedOnTime();
 
@@ -81,9 +82,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final stateProvider = context.read<StateProvider>();
       final backupProvider = context.read<BackupProvider>();
+      final statsProvider = context.read<StatsProvider>();
 
       // Update last opened date, reset habit completion
-      await updateLastOpenedDate(context.read<HabitProvider>(), stateProvider);
+      await updateLastOpenedDate(
+        context.read<HabitProvider>(),
+        stateProvider,
+        statsProvider,
+      );
       await backupProvider.performSync();
 
       if (stateProvider.shouldUpdateStreaks && mounted) {
