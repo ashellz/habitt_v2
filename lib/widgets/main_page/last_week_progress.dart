@@ -223,6 +223,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                 final isSelected = _isSameDay(date, selectedDate);
                 final isSelectable =
                     !date.isAfter(today) && !date.isBefore(startDate);
+                final isToday = _isSameDay(date, today);
 
                 final progressValue =
                     _progressValuesByDate[dayKey]?.clamp(0.0, 1.0) ?? 0.0;
@@ -234,14 +235,27 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                   if (isSelected) {
                     return cp.pill;
                   }
+                  if (isToday && !darkMode) {
+                    return cp.border;
+                  }
                   return Colors.transparent;
                 }
 
                 Color getWeekdayColor() {
-                  if (isSelected) {
+                  if (isSelected && !darkMode) {
+                    return Colors.white.withValues(alpha: 0.7);
+                  }
+                  if (isToday && darkMode) {
                     return Colors.white.withValues(alpha: 0.7);
                   }
                   return cp.greyText;
+                }
+
+                Color getBorderColor() {
+                  if (isToday && darkMode && !isSelected) {
+                    return cp.border;
+                  }
+                  return Colors.transparent;
                 }
 
                 Color getDayNumberColor() {
@@ -262,6 +276,9 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                 Color emptyProgressColor() {
                   if (isSelected) {
                     return cp.progressBarSelected;
+                  }
+                  if (isToday) {
+                    return cp.disabled;
                   }
                   if (!isSelectable) {
                     if (darkMode) return Color(0xFF1A1A1A);
@@ -289,6 +306,9 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                               }
                               : null,
                       style: ButtonStyle(
+                        side: WidgetStatePropertyAll(
+                          BorderSide(color: getBorderColor(), width: 1),
+                        ),
                         minimumSize: const WidgetStatePropertyAll(Size(45, 79)),
                         maximumSize: const WidgetStatePropertyAll(Size(45, 79)),
                         fixedSize: const WidgetStatePropertyAll(Size(45, 79)),
@@ -304,6 +324,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
                           return cp.pill.withValues(alpha: 0.2);
                         }),
+
                         backgroundColor: WidgetStatePropertyAll(getBgColor()),
                         shadowColor: const WidgetStatePropertyAll(
                           Colors.transparent,
