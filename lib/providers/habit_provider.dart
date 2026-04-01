@@ -344,6 +344,39 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  bool _isDayFullyCompleted(DateTime day) {
+    final normalizedDay = _normalizeDate(day);
+    final dayHabits = getHabitsFromDay(normalizedDay, hydrateMissing: true);
+
+    int requiredHabits = 0;
+    int satisfiedHabits = 0;
+
+    for (final habit in dayHabits) {
+      if (habit.optional) {
+        continue;
+      }
+
+      requiredHabits++;
+      if (habit.completed || habit.skipped) {
+        satisfiedHabits++;
+      }
+    }
+
+    return requiredHabits > 0 && satisfiedHabits >= requiredHabits;
+  }
+
+  void _refreshPerfectStreakForDayIfNeeded(DateTime day) {
+    if (statsProvider == null) {
+      return;
+    }
+
+    // Always recompute after a completion-state transition. This keeps the
+    // streak correct when a day becomes perfect and when it loses perfection.
+    _isDayFullyCompleted(day);
+
+    statsProvider!.perfectDaysStreak = statsProvider!.refreshPerfectStreak();
+  }
+
   Map<DateTime, double> getThisWeekProgress({DateTime? anchorDate}) {
     final baseDate = _normalizeDate(anchorDate ?? DateTime.now());
     final startOfWeek = baseDate.subtract(Duration(days: baseDate.weekday - 1));
@@ -642,7 +675,8 @@ class HabitProvider extends ChangeNotifier {
       checkReorderCategories(context, habit);
     }
 
-    updateHabitInDB(habit, day: daySimple);
+    await updateHabitInDB(habit, day: daySimple);
+    _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }
@@ -712,7 +746,7 @@ class HabitProvider extends ChangeNotifier {
     int id,
     int amountCompleted,
     BuildContext context,
-  ) {
+  ) async {
     late Habit habit;
 
     final today = DateTime.now();
@@ -737,7 +771,8 @@ class HabitProvider extends ChangeNotifier {
     habit.updateHabitAmountCompleted(amountCompleted);
     if (context.mounted) checkReorderCategories(context, habit);
 
-    updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    await updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }
@@ -746,7 +781,7 @@ class HabitProvider extends ChangeNotifier {
     int id,
     int durationCompleted,
     BuildContext context,
-  ) {
+  ) async {
     late Habit habit;
 
     final today = DateTime.now();
@@ -772,7 +807,8 @@ class HabitProvider extends ChangeNotifier {
 
     if (context.mounted) checkReorderCategories(context, habit);
 
-    updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    await updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }

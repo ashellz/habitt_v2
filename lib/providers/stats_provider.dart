@@ -20,7 +20,12 @@ class StatsProvider extends ChangeNotifier {
   get habitsCompleted => getHabitsCompleted();
   get highestAmountOfHabitsLastWeek => getHighestAmountOfHabitsLastWeek();
   get habitsCompletedLastWeek => getHabitsCompletedLastWeek();
-  get perfectDaysStreak => getPerfectStreak();
+  int get perfectDaysStreak => getPerfectStreak();
+
+  set perfectDaysStreak(int value) {
+    _perfectDaysStreak = value;
+    notifyListeners();
+  }
 
   bool shouldRefresh(StatsType type) => _refreshList.contains(type);
 
