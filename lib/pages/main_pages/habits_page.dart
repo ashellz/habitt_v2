@@ -14,6 +14,7 @@ import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dar
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:reorderables/reorderables.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 class HabitsPage extends StatefulWidget {
@@ -88,7 +89,7 @@ class _HabitsPageState extends State<HabitsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Habits List ',
+            'Habits List',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: cp.text,
@@ -135,8 +136,6 @@ class ReorderingHabits extends StatefulWidget {
 }
 
 class _ReorderingHabitsState extends State<ReorderingHabits> {
-  int? _draggingHabitId;
-
   @override
   Widget build(BuildContext context) {
     final hp = context.watch<HabitProvider>();
@@ -205,82 +204,26 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                         return a.id.compareTo(b.id);
                       });
 
-                return Wrap(
+                final cardSize = (constraints.maxWidth - 10) / 2;
+
+                return ReorderableWrap(
                   spacing: 10,
                   runSpacing: 10,
+                  onReorder: (oldIndex, newIndex) {
+                    hp.reorderHabitsInCategory(
+                      categoryId: visibleCategories[sectionIndex].id,
+                      oldIndex: oldIndex,
+                      newIndex: newIndex,
+                      todaysOnly: widget.todaysOnly,
+                    );
+                  },
                   children: [
                     for (int index = 0; index < categoryHabits.length; index++)
-                      DragTarget<_HabitDragData>(
-                        onWillAcceptWithDetails: (details) {
-                          final data = details.data;
-                          return data.categoryId ==
-                                  visibleCategories[sectionIndex].id &&
-                              data.habitId != categoryHabits[index].id;
-                        },
-                        onAcceptWithDetails: (details) {
-                          final data = details.data;
-                          hp.reorderHabitsInCategory(
-                            categoryId: data.categoryId,
-                            oldIndex: data.index,
-                            newIndex: index,
-                            todaysOnly: widget.todaysOnly,
-                          );
-                        },
-                        builder: (context, candidateData, rejectedData) {
-                          final cardSize = (constraints.maxWidth - 10) / 2;
-                          final isDropTarget = candidateData.isNotEmpty;
-                          final habit = categoryHabits[index];
-
-                          return LongPressDraggable<_HabitDragData>(
-                            data: _HabitDragData(
-                              habitId: habit.id,
-                              categoryId: visibleCategories[sectionIndex].id,
-                              index: index,
-                            ),
-                            onDragStarted: () {
-                              setState(() {
-                                _draggingHabitId = habit.id;
-                              });
-                            },
-                            onDragEnd: (_) {
-                              if (!mounted) return;
-                              setState(() {
-                                _draggingHabitId = null;
-                              });
-                            },
-                            feedback: Material(
-                              color: Colors.transparent,
-                              child: Opacity(
-                                opacity: 0.95,
-                                child: _HabitCard(
-                                  habit: habit,
-                                  cp: cp,
-                                  size: cardSize,
-                                  isDropTarget: false,
-                                ),
-                              ),
-                            ),
-                            childWhenDragging: Opacity(
-                              opacity: 0.35,
-                              child: _HabitCard(
-                                habit: habit,
-                                cp: cp,
-                                size: cardSize,
-                                isDropTarget: false,
-                              ),
-                            ),
-                            child: AnimatedOpacity(
-                              opacity: _draggingHabitId == habit.id ? 0.8 : 1,
-                              duration: const Duration(milliseconds: 150),
-                              child: _HabitCard(
-                                habit: habit,
-                                cp: cp,
-                                size: cardSize,
-                                isDropTarget: isDropTarget,
-                              ),
-                            ),
-                          );
-                        },
+                      _HabitCard(
+                        key: ValueKey(categoryHabits[index].id),
+                        habit: categoryHabits[index],
+                        cp: cp,
+                        size: cardSize,
                       ),
                   ],
                 );
@@ -299,13 +242,12 @@ class _HabitCard extends StatelessWidget {
     required this.habit,
     required this.cp,
     required this.size,
-    required this.isDropTarget,
-  });
+    required Key key,
+  }) : super(key: key);
 
   final Habit habit;
   final ColorProvider cp;
   final double size;
-  final bool isDropTarget;
 
   @override
   Widget build(BuildContext context) {
@@ -313,12 +255,11 @@ class _HabitCard extends StatelessWidget {
       alignment: Alignment.topLeft,
       width: size,
       height: size,
-      key: ValueKey(habit.id),
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: isDropTarget ? cp.main : cp.border),
+          side: BorderSide(width: 1, color: cp.border),
           borderRadius: BorderRadius.circular(24),
         ),
       ),
@@ -341,16 +282,4 @@ class _HabitCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class _HabitDragData {
-  const _HabitDragData({
-    required this.habitId,
-    required this.categoryId,
-    required this.index,
-  });
-
-  final int habitId;
-  final int categoryId;
-  final int index;
 }

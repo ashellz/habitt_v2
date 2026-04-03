@@ -576,6 +576,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     final now = DateTime.now().toUtc();
+    final changedHabits = <Habit>[];
 
     for (int index = 0; index < reorderedCategory.length; index++) {
       final habit = reorderedCategory[index];
@@ -586,14 +587,19 @@ class HabitProvider extends ChangeNotifier {
 
       habit.order = desiredOrder;
       habit.timestamps['order'] = now;
-      if (habit.isInBox) {
-        await habit.save();
-      }
+      changedHabits.add(habit);
     }
 
     _sortHabitsByCategoryAndOrder(habits);
     refreshTodaysHabits(notify: false);
     notifyListeners();
+
+    for (final habit in changedHabits) {
+      if (habit.isInBox) {
+        await habit.save();
+      }
+    }
+
     backupProvider?.scheduleAutoSync();
   }
 
