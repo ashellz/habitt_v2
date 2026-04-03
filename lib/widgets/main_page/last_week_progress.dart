@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -22,18 +23,20 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
   final Map<String, double> _progressValuesByDate = <String, double>{};
   final Map<String, double> _previousProgressValuesByDate = <String, double>{};
   Locale? _lastLocale;
-  bool _didInitialScrollToRight = false;
+  bool? _didInitialScrollToRight;
+  bool _isAtRightEdge = true;
   late VoidCallback _habitProviderListener;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_handleScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _checkLocale();
       _initializeAllProgressValues();
       _attachHabitProviderListener();
-      _ensureInitialScrollToRight();
+      _ensureInitialScrollPosition();
     });
   }
 
@@ -119,13 +122,63 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
     });
   }
 
-  void _ensureInitialScrollToRight() {
-    if (_didInitialScrollToRight || !_scrollController.hasClients) {
+  void _ensureInitialScrollPosition() {
+    if (_didInitialScrollToRight == true || !_scrollController.hasClients) {
       return;
+    }
+
+    final habitProvider = context.read<HabitProvider>();
+    final selectedDate = habitProvider.selectedDate;
+    final allDates = _allDates;
+
+    if (selectedDate != null) {
+      final normalizedSelected = _normalizeDate(selectedDate);
+      final selectedIndex = allDates.indexWhere(
+        (d) => _isSameDay(d, normalizedSelected),
+      );
+
+      if (selectedIndex != -1) {
+        final viewportWidth = _scrollController.position.viewportDimension;
+        final spacing = ((viewportWidth - 32 - (_dayWidth * _visibleDays)) /
+                (_visibleDays - 1))
+            .clamp(0.0, 24.0);
+
+        final itemStart = selectedIndex * (_dayWidth + spacing);
+        final itemCenter = itemStart + (_dayWidth / 2);
+        final targetOffset = (itemCenter - (viewportWidth / 2)).clamp(
+          0.0,
+          _scrollController.position.maxScrollExtent,
+        );
+
+        _scrollController.jumpTo(targetOffset);
+        _didInitialScrollToRight = true;
+        _updateRightEdgeState();
+        return;
+      }
     }
 
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
     _didInitialScrollToRight = true;
+    _updateRightEdgeState();
+  }
+
+  void _handleScroll() {
+    if (!_scrollController.hasClients) return;
+    _updateRightEdgeState();
+  }
+
+  void _updateRightEdgeState() {
+    if (!_scrollController.hasClients || !mounted) return;
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final current = _scrollController.offset;
+    final atRightEdge = current >= (maxScroll - 0.5);
+
+    if (atRightEdge == _isAtRightEdge) return;
+
+    setState(() {
+      _isAtRightEdge = atRightEdge;
+    });
   }
 
   DateTime _normalizeDate(DateTime date) {
@@ -175,6 +228,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
     try {
       final habitProvider = context.read<HabitProvider>();
@@ -194,6 +248,8 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
     final cp = context.watch<ColorProvider>();
     final darkMode = cp.isDark;
+    final showRightArrowHint = !_isAtRightEdge;
+    final rightFadeWidth = showRightArrowHint ? 96.0 : 32.0;
 
     return SizedBox(
       height: 79,
@@ -209,179 +265,269 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
           final today = _normalizeDate(DateTime.now());
 
           return ClipRect(
-            child: ListView.separated(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.zero,
-              itemCount: allDates.length,
-              separatorBuilder: (_, __) => SizedBox(width: spacing),
-              itemBuilder: (context, index) {
-                final startDate = context.read<HabitProvider>().dateJoined;
-                final date = allDates[index];
-                final dayKey = _dateKey(date);
-                final isSelected = _isSameDay(date, selectedDate);
-                final isSelectable =
-                    !date.isAfter(today) && !date.isBefore(startDate);
-                final isToday = _isSameDay(date, today);
+            child: Stack(
+              children: [
+                ListView.separated(
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.zero,
+                  itemCount: allDates.length,
+                  separatorBuilder: (_, __) => SizedBox(width: spacing),
+                  itemBuilder: (context, index) {
+                    final startDate = context.read<HabitProvider>().dateJoined;
+                    final date = allDates[index];
+                    final dayKey = _dateKey(date);
+                    final isSelected = _isSameDay(date, selectedDate);
+                    final isSelectable =
+                        !date.isAfter(today) && !date.isBefore(startDate);
+                    final isToday = _isSameDay(date, today);
 
-                final progressValue =
-                    _progressValuesByDate[dayKey]?.clamp(0.0, 1.0) ?? 0.0;
-                final previousValue =
-                    _previousProgressValuesByDate[dayKey]?.clamp(0.0, 1.0) ??
-                    0.0;
+                    final progressValue =
+                        _progressValuesByDate[dayKey]?.clamp(0.0, 1.0) ?? 0.0;
+                    final previousValue =
+                        _previousProgressValuesByDate[dayKey]?.clamp(
+                          0.0,
+                          1.0,
+                        ) ??
+                        0.0;
 
-                Color getBgColor() {
-                  if (isSelected) {
-                    return cp.pill;
-                  }
-                  if (isToday && !darkMode) {
-                    return cp.border;
-                  }
-                  return Colors.transparent;
-                }
+                    Color getBgColor() {
+                      if (isSelected) {
+                        return cp.pill;
+                      }
+                      if (isToday && !darkMode) {
+                        return cp.border;
+                      }
+                      return Colors.transparent;
+                    }
 
-                Color getWeekdayColor() {
-                  if (isSelected && !darkMode) {
-                    return Colors.white.withValues(alpha: 0.7);
-                  }
-                  if (isToday && darkMode) {
-                    return Colors.white.withValues(alpha: 0.7);
-                  }
-                  return cp.greyText;
-                }
+                    Color getWeekdayColor() {
+                      if (isSelected && !darkMode) {
+                        return Colors.white.withValues(alpha: 0.7);
+                      }
+                      if (isToday && darkMode) {
+                        return Colors.white.withValues(alpha: 0.7);
+                      }
+                      return cp.greyText;
+                    }
 
-                Color getBorderColor() {
-                  if (isToday && darkMode && !isSelected) {
-                    return cp.border;
-                  }
-                  return Colors.transparent;
-                }
+                    Color getBorderColor() {
+                      if (isToday && darkMode && !isSelected) {
+                        return cp.border;
+                      }
+                      return Colors.transparent;
+                    }
 
-                Color getDayNumberColor() {
-                  if (isSelected) {
-                    if (darkMode) return Colors.white;
-                    return cp.bg;
-                  }
-                  return cp.text;
-                }
+                    Color getDayNumberColor() {
+                      if (isSelected) {
+                        if (darkMode) return Colors.white;
+                        return cp.bg;
+                      }
+                      return cp.text;
+                    }
 
-                Color progressColor() {
-                  if (progressValue >= 0.5) return cp.main;
-                  if (progressValue >= 0.3) return cp.mid;
-                  if (progressValue < 0.3) return cp.fail;
-                  return cp.disabled;
-                }
+                    Color progressColor() {
+                      if (progressValue >= 0.5) return cp.main;
+                      if (progressValue >= 0.3) return cp.mid;
+                      if (progressValue < 0.3) return cp.fail;
+                      return cp.disabled;
+                    }
 
-                Color emptyProgressColor() {
-                  if (isSelected) {
-                    return cp.progressBarSelected;
-                  }
-                  if (isToday) {
-                    return cp.disabled;
-                  }
-                  if (!isSelectable) {
-                    if (darkMode) return Color(0xFF1A1A1A);
-                    return Color(0xFFF1F1F1);
-                  }
-                  return cp.disabled;
-                }
+                    Color emptyProgressColor() {
+                      if (isSelected) {
+                        return cp.progressBarSelected;
+                      }
+                      if (isToday) {
+                        return cp.disabled;
+                      }
+                      if (!isSelectable) {
+                        if (darkMode) return Color(0xFF1A1A1A);
+                        return Color(0xFFF1F1F1);
+                      }
+                      return cp.disabled;
+                    }
 
-                final isAndroid =
-                    Theme.of(context).platform == TargetPlatform.android;
+                    final isAndroid =
+                        Theme.of(context).platform == TargetPlatform.android;
 
-                final isLast = index == allDates.length - 1;
+                    final isLast = index == allDates.length - 1;
 
-                return Padding(
-                  padding: EdgeInsets.only(right: isLast ? 16 : 0),
-                  child: SizedBox(
-                    width: _dayWidth,
-                    child: ElevatedButton(
-                      onPressed:
-                          isSelectable
-                              ? () {
-                                context.read<HabitProvider>().setSelectedDate(
-                                  date,
-                                );
-                              }
-                              : null,
-                      style: ButtonStyle(
-                        side: WidgetStatePropertyAll(
-                          BorderSide(color: getBorderColor(), width: 1),
-                        ),
-                        minimumSize: const WidgetStatePropertyAll(Size(45, 79)),
-                        maximumSize: const WidgetStatePropertyAll(Size(45, 79)),
-                        fixedSize: const WidgetStatePropertyAll(Size(45, 79)),
-                        splashFactory:
-                            isAndroid ? null : NoSplash.splashFactory,
-                        elevation: const WidgetStatePropertyAll(0),
-                        overlayColor: WidgetStateProperty.resolveWith<Color?>((
-                          states,
-                        ) {
-                          if (!states.contains(WidgetState.pressed)) {
-                            return null;
-                          }
-
-                          return cp.pill.withValues(alpha: 0.2);
-                        }),
-
-                        backgroundColor: WidgetStatePropertyAll(getBgColor()),
-                        shadowColor: const WidgetStatePropertyAll(
-                          Colors.transparent,
-                        ),
-                        shape: const WidgetStatePropertyAll(StadiumBorder()),
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 9),
-                        child: Column(
-                          children: [
-                            Text(
-                              _dayLabel(date),
-                              style: TextStyle(
-                                color: getWeekdayColor(),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                              ),
+                    return Padding(
+                      padding: EdgeInsets.only(right: isLast ? 16 : 0),
+                      child: SizedBox(
+                        width: _dayWidth,
+                        child: ElevatedButton(
+                          onPressed:
+                              isSelectable
+                                  ? () {
+                                    context
+                                        .read<HabitProvider>()
+                                        .setSelectedDate(date);
+                                  }
+                                  : null,
+                          style: ButtonStyle(
+                            side: WidgetStatePropertyAll(
+                              BorderSide(color: getBorderColor(), width: 1),
                             ),
-                            SizedBox(height: 3),
-                            Text(
-                              '${date.day}',
-                              style: TextStyle(
-                                color: getDayNumberColor(),
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            minimumSize: const WidgetStatePropertyAll(
+                              Size(45, 79),
                             ),
-                            SizedBox(height: 15),
-                            SizedBox(
-                              width: 27,
-                              child: TweenAnimationBuilder<double>(
-                                key: ValueKey<String>(dayKey),
-                                duration: const Duration(milliseconds: 1200),
-                                curve: Curves.easeOut,
-                                tween: Tween<double>(
-                                  begin: previousValue,
-                                  end: progressValue,
+                            maximumSize: const WidgetStatePropertyAll(
+                              Size(45, 79),
+                            ),
+                            fixedSize: const WidgetStatePropertyAll(
+                              Size(45, 79),
+                            ),
+                            splashFactory:
+                                isAndroid ? null : NoSplash.splashFactory,
+                            elevation: const WidgetStatePropertyAll(0),
+                            overlayColor:
+                                WidgetStateProperty.resolveWith<Color?>((
+                                  states,
+                                ) {
+                                  if (!states.contains(WidgetState.pressed)) {
+                                    return null;
+                                  }
+
+                                  return cp.pill.withValues(alpha: 0.2);
+                                }),
+
+                            backgroundColor: WidgetStatePropertyAll(
+                              getBgColor(),
+                            ),
+                            shadowColor: const WidgetStatePropertyAll(
+                              Colors.transparent,
+                            ),
+                            shape: const WidgetStatePropertyAll(
+                              StadiumBorder(),
+                            ),
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.zero,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 9),
+                            child: Column(
+                              children: [
+                                Text(
+                                  _dayLabel(date),
+                                  style: TextStyle(
+                                    color: getWeekdayColor(),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                                builder: (context, animatedProgress, _) {
-                                  return CustomPaint(
-                                    painter: PartialArcPainter(
-                                      progress: animatedProgress,
-                                      color: progressColor(),
-                                      backgroundColor: emptyProgressColor(),
+                                SizedBox(height: 3),
+                                Text(
+                                  '${date.day}',
+                                  style: TextStyle(
+                                    color: getDayNumberColor(),
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                                SizedBox(
+                                  width: 27,
+                                  child: TweenAnimationBuilder<double>(
+                                    key: ValueKey<String>(dayKey),
+                                    duration: const Duration(
+                                      milliseconds: 1200,
                                     ),
-                                  );
-                                },
-                              ),
+                                    curve: Curves.easeOut,
+                                    tween: Tween<double>(
+                                      begin: previousValue,
+                                      end: progressValue,
+                                    ),
+                                    builder: (context, animatedProgress, _) {
+                                      return CustomPaint(
+                                        painter: PartialArcPainter(
+                                          progress: animatedProgress,
+                                          color: progressColor(),
+                                          backgroundColor: emptyProgressColor(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                IgnorePointer(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeOut,
+                      height: double.infinity,
+                      width: rightFadeWidth,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerRight,
+                          end: Alignment.centerLeft,
+                          colors: [cp.bg, cp.habitBg.withValues(alpha: 0)],
+                        ),
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 180),
+                        switchInCurve: Curves.easeOut,
+                        switchOutCurve: Curves.easeIn,
+                        transitionBuilder:
+                            (child, animation) => FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
+                        child:
+                            showRightArrowHint
+                                ? Align(
+                                  key: const ValueKey(
+                                    'right-arrow-hint-visible',
+                                  ),
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: RotatedBox(
+                                      quarterTurns: 2,
+                                      child: SvgPicture.asset(
+                                        "assets/images/new-svg/back.svg",
+                                        colorFilter: ColorFilter.mode(
+                                          cp.greyText,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                : const SizedBox(
+                                  key: ValueKey('right-arrow-hint-hidden'),
+                                ),
+                      ),
+                    ),
+                  ),
+                ),
+                IgnorePointer(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: double.infinity,
+                      width: 32,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [cp.bg, cp.habitBg.withValues(alpha: 0)],
                         ),
                       ),
                     ),
                   ),
-                );
-              },
+                ),
+              ],
             ),
           );
         },
