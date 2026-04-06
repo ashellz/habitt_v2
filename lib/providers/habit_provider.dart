@@ -3,6 +3,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/backup_provider.dart';
+import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
@@ -24,7 +25,13 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearSelectedDate() {
+    selectedDate = null;
+    notifyListeners();
+  }
+
   StatsProvider? statsProvider;
+  HabitStatsProvider? habitStatsProvider;
   BackupProvider? backupProvider;
 
   HabitProvider({this.statsProvider}) {
@@ -45,6 +52,10 @@ class HabitProvider extends ChangeNotifier {
 
   void attachBackupProvider(BackupProvider provider) {
     backupProvider = provider;
+  }
+
+  void attachHabitStatsProvider(HabitStatsProvider provider) {
+    habitStatsProvider = provider;
   }
 
   Future<void> init() async {
@@ -80,6 +91,7 @@ class HabitProvider extends ChangeNotifier {
     habits = habitBox.values.toList();
     await _normalizeHabitOrders();
     _sortHabitsByCategoryAndOrder(habits);
+    await _hydrateHabitCreatedAtFallbacks();
     /*
     bool checkCategory(int category) {
       return category == 1 || category == 2 || category == 3 || category == 4;
@@ -99,6 +111,38 @@ class HabitProvider extends ChangeNotifier {
     for (final day in daysBox.values) {
       day.habits.removeWhere((habit) => !checkCategory(habit.categoryId));
     }*/
+  }
+
+  Future<void> _hydrateHabitCreatedAtFallbacks() async {
+    final now = DateTime.now().toUtc();
+
+    for (final habit in habits) {
+      DateTime? oldestDay;
+      for (final day in daysBox.values) {
+        final hasHabit = day.habits.any((h) => h.id == habit.id);
+        if (!hasHabit) {
+          continue;
+        }
+
+        final normalizedDay = _normalizeDate(day.date);
+        if (oldestDay == null || normalizedDay.isBefore(oldestDay)) {
+          oldestDay = normalizedDay;
+        }
+      }
+
+      final normalizedCreatedAt = _normalizeDate(habit.createdAt);
+      final resolvedCreatedAt = oldestDay ?? normalizedCreatedAt;
+
+      if (!resolvedCreatedAt.isBefore(normalizedCreatedAt)) {
+        continue;
+      }
+
+      habit.createdAt = resolvedCreatedAt.toUtc();
+      habit.timestamps['createdAt'] = now;
+      if (habit.isInBox) {
+        await habit.save();
+      }
+    }
   }
 
   // Normalizing a datetime to be shorter so they can compare and be the same
@@ -219,6 +263,10 @@ class HabitProvider extends ChangeNotifier {
         final key = normalizedDay.toIso8601String().split('T').first;
         return habit.customAppearance.contains(key);
     }
+  }
+
+  bool appearsOnDay(Habit habit, DateTime day) {
+    return _appearsOnDay(habit, day);
   }
 
   // Function to filter habits for a specific day based on their schedule and completion status
@@ -420,6 +468,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> updateHabitInDB(Habit habit, {DateTime? day}) async {
     debugPrint("Updating habit in DB: $habit");
+    habitStatsProvider?.invalidateHabit(habit.id);
     if (statsProvider != null) {
       statsProvider!.addShouldRefresh(StatsType.habitsCompleted);
     }
@@ -502,6 +551,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     habits.add(habit);
+    habitStatsProvider?.invalidateHabit(habit.id);
     _sortHabitsByCategoryAndOrder(habits);
     habitBox.add(habit);
     updateHabitInDB(habit);
@@ -609,6 +659,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     habits.removeWhere((h) => h.id == habit.id);
+    habitStatsProvider?.removeHabit(habit.id);
     await habit.deleteHabit();
     if (context.mounted) checkReorderCategories(context, habit);
 
@@ -620,12 +671,13 @@ class HabitProvider extends ChangeNotifier {
   void completeHabit(
     int id,
     BuildContext context,
-    StateProvider stateProvider,
-  ) async {
+    StateProvider stateProvider, {
+    DateTime? dayOverride,
+  }) async {
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = selectedDate ?? today;
+    final _selectedDate = dayOverride ?? selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -647,6 +699,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     debugPrint("Completing habit: $id, day: $daySimple");
+    habitStatsProvider?.invalidateHabit(id);
     final wasCompleted = habit.completed;
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
@@ -694,6 +747,7 @@ class HabitProvider extends ChangeNotifier {
     required DateTime day,
   }) async {
     debugPrint("Skipping habit: $id");
+    habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
     Habit? habitDayBefore;
 
@@ -732,6 +786,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void updateHabit(Habit habit) {
+    habitStatsProvider?.invalidateHabit(habit.id);
     habits.where((h) => h.id == habit.id).first.updateHabit(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
@@ -740,6 +795,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void resetCompletion() async {
+    habitStatsProvider?.clearAll();
     for (final habit in habits) {
       await habit.resetCompletion();
       await updateHabitInDB(habit);
@@ -751,12 +807,14 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitAmountCompleted(
     int id,
     int amountCompleted,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    DateTime? dayOverride,
+  }) async {
+    habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = selectedDate ?? today;
+    final _selectedDate = dayOverride ?? selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -786,12 +844,14 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitDurationCompleted(
     int id,
     int durationCompleted,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    DateTime? dayOverride,
+  }) async {
+    habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = selectedDate ?? today;
+    final _selectedDate = dayOverride ?? selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -823,6 +883,7 @@ class HabitProvider extends ChangeNotifier {
     DateTime day, {
     bool resetCompletion = false,
   }) async {
+    habitStatsProvider?.clearAll();
     final daySimple = DateTime(day.year, day.month, day.day);
     final String dayKey = daySimple.toIso8601String().split('T').first;
     debugPrint("Saving day at: $daySimple");
