@@ -9,7 +9,9 @@ class NewDefaultTextField extends StatefulWidget {
     super.key,
     this.title,
     required this.controller,
+    this.focusNode,
     this.maxTextLength,
+    this.minLines,
     this.maxLines = 1,
     this.topPadding,
     this.digitsOnly = false,
@@ -22,12 +24,16 @@ class NewDefaultTextField extends StatefulWidget {
     this.centerValue = false,
     this.hint,
     this.fontWeight = FontWeight.w400,
+    this.textStyle,
     this.regex,
+    this.showBorder = false,
   });
 
   final String? title;
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final int? maxTextLength;
+  final int? minLines;
   final int maxLines;
   final double? topPadding;
   final VoidCallback? onTap;
@@ -40,7 +46,9 @@ class NewDefaultTextField extends StatefulWidget {
   final bool centerValue;
   final String? hint;
   final FontWeight fontWeight;
+  final TextStyle? textStyle;
   final RegExp? regex;
+  final bool showBorder;
 
   @override
   State<NewDefaultTextField> createState() => _NewDefaultTextFieldState();
@@ -103,6 +111,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
             ),
 
           TextFormField(
+            focusNode: widget.focusNode,
             controller: widget.controller,
             onTap: widget.onTap,
             onChanged: widget.onChanged,
@@ -119,11 +128,18 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
             cursorRadius: const Radius.circular(12.0),
             cursorOpacityAnimates: true,
             enableInteractiveSelection: true,
+            minLines: widget.minLines,
             maxLines: widget.maxLines,
             obscureText: textObscured,
 
             // Main input text style
-            style: TextStyle(color: cp.text, fontSize: 16),
+            style:
+                widget.textStyle ??
+                TextStyle(
+                  color: cp.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
 
             // Decoration
             decoration: InputDecoration(
@@ -142,16 +158,25 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
               // Borders
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                borderSide: BorderSide.none,
+                borderSide:
+                    widget.showBorder
+                        ? BorderSide(width: 1, color: cp.border)
+                        : BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24.0),
-                borderSide: BorderSide.none,
+                borderSide:
+                    widget.showBorder
+                        ? BorderSide(width: 1, color: cp.border)
+                        : BorderSide.none,
               ),
 
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                borderSide: BorderSide.none,
+                borderSide:
+                    widget.showBorder
+                        ? BorderSide(width: 1, color: cp.border)
+                        : BorderSide.none,
               ),
 
               // Fill color

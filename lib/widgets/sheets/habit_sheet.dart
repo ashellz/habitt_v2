@@ -330,6 +330,7 @@ class _HabitSheetState extends State<HabitSheet> {
         customAppearance: buildCustomAppearance(sp.customIntervalDays),
         timesCompletedThisWeek: 0,
         timesCompletedThisMonth: 0,
+        createdAt: DateTime.now().toUtc(),
         lastCustomUpdate: DateTime.now().toUtc(),
         colorName: sp.habitColorName,
       ),

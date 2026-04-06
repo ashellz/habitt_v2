@@ -39,6 +39,7 @@ class Habit extends HiveObject {
   List<String> customAppearance;
   int timesCompletedThisWeek;
   int timesCompletedThisMonth;
+  DateTime createdAt;
   DateTime? lastCustomUpdate;
   String? colorName; // Maps to theme-aware palette
   String? color;
@@ -75,6 +76,7 @@ class Habit extends HiveObject {
     List<String>? customAppearance,
     this.timesCompletedThisWeek = 0,
     this.timesCompletedThisMonth = 0,
+    DateTime? createdAt,
     this.lastCustomUpdate,
     this.colorName,
     this.isDeleted,
@@ -82,7 +84,10 @@ class Habit extends HiveObject {
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
        selectedDaysAMonth = selectedDaysAMonth ?? [],
        customAppearance = customAppearance ?? [],
-       timestamps = timestamps ?? {};
+       createdAt = (createdAt ?? DateTime.now()).toUtc(),
+       timestamps = timestamps ?? {} {
+    this.timestamps['createdAt'] ??= this.createdAt;
+  }
 
   // convert to getter
   Color? resolveColor(ThemeProvider tp) {
@@ -138,6 +143,7 @@ class Habit extends HiveObject {
       customAppearance: List<String>.from(customAppearance),
       timesCompletedThisWeek: timesCompletedThisWeek,
       timesCompletedThisMonth: timesCompletedThisMonth,
+      createdAt: createdAt,
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
       isDeleted: isDeleted,
@@ -176,6 +182,7 @@ class Habit extends HiveObject {
       customAppearance: List<String>.from(customAppearance),
       timesCompletedThisWeek: 0,
       timesCompletedThisMonth: 0,
+      createdAt: createdAt,
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
       isDeleted: isDeleted,
@@ -293,6 +300,10 @@ class Habit extends HiveObject {
     if (timesCompletedThisMonth != habit.timesCompletedThisMonth) {
       timesCompletedThisMonth = habit.timesCompletedThisMonth;
       timestamps['timesCompletedThisMonth'] = now;
+    }
+    if (createdAt != habit.createdAt) {
+      createdAt = habit.createdAt;
+      timestamps['createdAt'] = now;
     }
     if (lastCustomUpdate != habit.lastCustomUpdate) {
       lastCustomUpdate = habit.lastCustomUpdate;
@@ -510,6 +521,7 @@ class Habit extends HiveObject {
       'customAppearance': customAppearance,
       'timesCompletedThisWeek': timesCompletedThisWeek,
       'timesCompletedThisMonth': timesCompletedThisMonth,
+      'createdAt': createdAt.toIso8601String(),
       'lastCustomUpdate': lastCustomUpdate?.toIso8601String(),
       'colorName': colorName,
       'color': color,
@@ -564,6 +576,9 @@ class Habit extends HiveObject {
       customAppearance: _parseStringList(m['customAppearance']),
       timesCompletedThisWeek: (m['timesCompletedThisWeek'] as int?) ?? 0,
       timesCompletedThisMonth: (m['timesCompletedThisMonth'] as int?) ?? 0,
+      createdAt:
+          DateTime.tryParse(m['createdAt']?.toString() ?? '')?.toUtc() ??
+          DateTime.now().toUtc(),
       lastCustomUpdate:
           DateTime.tryParse(m['lastCustomUpdate']?.toString() ?? '')?.toUtc(),
       colorName: m['colorName'] as String?,
@@ -700,6 +715,7 @@ class Habit extends HiveObject {
         timesCompletedThisMonth,
         incoming.timesCompletedThisMonth,
       ),
+      createdAt: resolve('createdAt', createdAt, incoming.createdAt),
       lastCustomUpdate: resolve(
         'lastCustomUpdate',
         lastCustomUpdate,

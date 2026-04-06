@@ -8,10 +8,12 @@ class NewHabitIcon extends StatelessWidget {
     super.key,
     required this.iconPath,
     required this.isCompleted,
+    this.forceColor,
   });
 
   final String iconPath;
   final bool isCompleted;
+  final Color? forceColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class NewHabitIcon extends StatelessWidget {
       height: 42,
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: isCompleted ? cp.bg : cp.habitIconBg,
+        color: forceColor ?? (isCompleted ? cp.bg : cp.habitIconBg),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
       padding: const EdgeInsets.all(9),

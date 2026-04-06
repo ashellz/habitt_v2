@@ -18,6 +18,7 @@ import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
@@ -112,6 +113,17 @@ Future<void> main() async {
             // The '!' asserts that `previous` will not be null after `create`.
             // The '..' cascade operator calls the method and returns the object.
             return previous!..updateDependencies(stats);
+          },
+          lazy: false,
+        ),
+
+        ChangeNotifierProxyProvider<HabitProvider, HabitStatsProvider>(
+          create: (_) => HabitStatsProvider(),
+          update: (_, habitProvider, previous) {
+            final provider = previous ?? HabitStatsProvider();
+            provider.attachHabitProvider(habitProvider);
+            habitProvider.attachHabitStatsProvider(provider);
+            return provider;
           },
           lazy: false,
         ),

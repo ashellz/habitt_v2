@@ -2,6 +2,7 @@ import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -251,34 +252,43 @@ class _HabitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topLeft,
-      width: size,
-      height: size,
-      padding: const EdgeInsets.all(16),
-      decoration: ShapeDecoration(
-        color: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: cp.border),
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              NewHabitIcon(iconPath: habit.iconPath, isCompleted: false),
-              SvgPicture.asset(
-                "assets/images/new-svg/reorder.svg",
-                colorFilter: ColorFilter.mode(cp.disabled, BlendMode.srcIn),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => HabitDetailsPage(habitId: habit.id),
           ),
-          MainHabitInfo(habit: habit, cp: cp),
-        ],
+        );
+      },
+      child: Container(
+        alignment: Alignment.topLeft,
+        width: size,
+        height: size,
+        padding: const EdgeInsets.all(16),
+        decoration: ShapeDecoration(
+          color: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(width: 1, color: cp.border),
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                NewHabitIcon(iconPath: habit.iconPath, isCompleted: false),
+                SvgPicture.asset(
+                  "assets/images/new-svg/reorder.svg",
+                  colorFilter: ColorFilter.mode(cp.disabled, BlendMode.srcIn),
+                ),
+              ],
+            ),
+            MainHabitInfo(habit: habit, cp: cp),
+          ],
+        ),
       ),
     );
   }

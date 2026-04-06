@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_category_title.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_widget.dart';
-import 'package:habitt/widgets/sheets/habit_sheet.dart';
-import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class NewHabitCategory extends StatefulWidget {
   const NewHabitCategory({
@@ -282,15 +279,12 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
                     onTap: () {
                       if (disableInteractions) return;
 
-                      final cp = context.read<ColorProvider>();
                       final habit = categoryHabits[index];
 
-                      showModalBottomSheet(
-                        context: context,
-                        backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                        barrierColor: cp.greyText.darken().withOpacity(0.3),
-                        isScrollControlled: true,
-                        builder: (context) => HabitSheet(habit: habit),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => HabitDetailsPage(habitId: habit.id),
+                        ),
                       );
                     },
                     child: IgnorePointer(
