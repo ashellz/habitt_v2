@@ -157,7 +157,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
       }
     }
 
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent - 16);
     _didInitialScrollToRight = true;
     _updateRightEdgeState();
   }
@@ -459,7 +459,13 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
                     );
                   },
                 ),
-                IgnorePointer(
+                GestureDetector(
+                  onTap:
+                      () => _scrollController.animateTo(
+                        _scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeOut,
+                      ),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: AnimatedContainer(

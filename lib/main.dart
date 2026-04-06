@@ -192,7 +192,6 @@ class _MyAppState extends State<MyApp> {
               onSecondary: cp.text,
               onSurface: cp.text,
               onError: cp.bg,
-              background: cp.bg,
             )
             : ColorScheme.light(
               primary: cp.main,
@@ -203,7 +202,6 @@ class _MyAppState extends State<MyApp> {
               onSecondary: cp.text,
               onSurface: cp.text,
               onError: cp.bg,
-              background: cp.bg,
             );
 
     final theme = ThemeData(
