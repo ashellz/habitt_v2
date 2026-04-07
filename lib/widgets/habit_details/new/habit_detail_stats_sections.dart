@@ -205,11 +205,7 @@ class _StatCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: cp.lightGreyText,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -262,7 +258,7 @@ class _CompletionRatioLeft extends StatelessWidget {
               '$percentage%',
               style: TextStyle(
                 color: cp.text,
-                fontSize: 34 / 1.8,
+                fontSize: 22,
                 fontWeight: FontWeight.w500,
               ),
             ),

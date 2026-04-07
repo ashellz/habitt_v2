@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
-
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -316,37 +314,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
           const SizedBox(width: 6),
           Text(
             hasAmount ? _amountLine(habit) : _durationLine(habit),
-            style: TextStyle(
-              color: cp.lightGreyText,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: cp.lightGreyText, fontSize: 13),
           ),
         ],
       );
     }
 
-    if (habit.description.trim().isEmpty) {
-      return Text(
-        'No notes yet',
-        style: TextStyle(
-          color: cp.lightGreyText,
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-        ),
-      );
-    }
-
-    return Text(
-      habit.description,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        color: cp.lightGreyText,
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-      ),
-    );
+    return SizedBox.shrink();
   }
 
   String _amountLine(Habit habit) {
@@ -372,24 +346,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   }
 
   Widget _notesSection(ColorProvider cp) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Notes', style: TextStyle(color: cp.lightGreyText, fontSize: 16)),
-        const SizedBox(height: 8),
-        NewDefaultTextField(
-          focusNode: _notesFocusNode,
-          controller: _notesController,
-          minLines: 3,
-          maxLines: 5,
-          showBorder: true,
-          textStyle: TextStyle(
-            color: cp.text,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+    return NewDefaultTextField(
+      title: 'Notes',
+      titleFontSize: 16,
+      focusNode: _notesFocusNode,
+      controller: _notesController,
+      minLines: 3,
+      maxLines: 5,
     );
   }
 }
@@ -402,37 +365,45 @@ class _StrengthRing extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
 
     return SizedBox(
-      width: 78,
-      height: 78,
+      width: 82,
+      height: 82,
       child: Stack(
         alignment: Alignment.center,
         children: [
           SizedBox(
-            width: 78,
+            width: 82,
             height: 82,
             child: CircularProgressIndicator(
               value: 0.79,
               strokeWidth: 6,
-              backgroundColor: cp.border,
+              backgroundColor: cp.habitBg,
               valueColor: AlwaysStoppedAnimation<Color>(cp.text),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '79%',
-                style: TextStyle(
-                  color: cp.text,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+          Container(
+            height: 68,
+            width: 68,
+            decoration: BoxDecoration(
+              color: cp.habitBg,
+              shape: BoxShape.circle,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '79%',
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Text(
-                'Strength',
-                style: TextStyle(color: cp.lightGreyText, fontSize: 13),
-              ),
-            ],
+                Text(
+                  'Strength',
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -10,6 +10,7 @@ class NewDefaultTextField extends StatefulWidget {
     this.title,
     required this.controller,
     this.focusNode,
+    this.titleFontSize = 13,
     this.maxTextLength,
     this.minLines,
     this.maxLines = 1,
@@ -31,6 +32,7 @@ class NewDefaultTextField extends StatefulWidget {
 
   final String? title;
   final TextEditingController controller;
+  final double titleFontSize;
   final FocusNode? focusNode;
   final int? maxTextLength;
   final int? minLines;
@@ -105,7 +107,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
               widget.title!,
               style: TextStyle(
                 color: cp.lightGreyText,
-                fontSize: 13,
+                fontSize: widget.titleFontSize,
                 fontWeight: widget.fontWeight,
               ),
             ),
