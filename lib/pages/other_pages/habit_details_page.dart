@@ -18,6 +18,7 @@ import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/habit_detail_stats_sections.dart';
 import 'package:habitt/widgets/habit_details/new/habit_details_calendar.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
+import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -541,7 +542,7 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
             IgnorePointer(
               child: _ActionProgressIcon(
                 progress: _progressValue(),
-                completed: widget.habit.completed,
+                habit: widget.habit,
               ),
             ),
             const SizedBox(width: 10),
@@ -561,74 +562,20 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
 }
 
 class _ActionProgressIcon extends StatelessWidget {
-  const _ActionProgressIcon({required this.progress, required this.completed});
+  const _ActionProgressIcon({required this.progress, required this.habit});
 
   final double progress;
-  final bool completed;
+  final Habit habit;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    if (progress > 0 && progress < 1) {
-      return SizedBox(
-        width: 18,
-        height: 18,
-        child: CustomPaint(
-          painter: _MiniCircularProgressPainter(
-            progress: progress,
-            color: cp.bg,
-          ),
-        ),
-      );
-    }
-
-    final svgPath =
-        'assets/images/new-svg/check-${completed ? 'off' : 'on'}-inverted-${cp.isDark ? 'dark' : 'light'}.svg';
-
-    return SvgPicture.asset(svgPath, width: 18, height: 18);
-  }
-}
-
-class _MiniCircularProgressPainter extends CustomPainter {
-  const _MiniCircularProgressPainter({
-    required this.progress,
-    required this.color,
-  });
-
-  final double progress;
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-    final radius = size.shortestSide / 2;
-    final rect = Rect.fromCircle(center: center, radius: radius);
-
-    final progressPaint =
-        Paint()
-          ..style = PaintingStyle.fill
-          ..color = color;
-
-    canvas.drawArc(
-      rect,
-      -math.pi / 2,
-      2 * math.pi * progress.clamp(0.0, 1.0),
-      true,
-      progressPaint,
+    return NewHabitProgress(
+      habit: habit,
+      color: cp.bg,
+      extraTapArea: false,
+      secondaryCheckmarks: true,
     );
-
-    final borderPaint =
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.6
-          ..color = color.withValues(alpha: 0.4);
-
-    canvas.drawCircle(center, radius - 1, borderPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _MiniCircularProgressPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.color != color;
   }
 }

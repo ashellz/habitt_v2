@@ -12,10 +12,20 @@ import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitProgress extends StatefulWidget {
-  const NewHabitProgress({super.key, required this.habit, this.focusedDay});
+  const NewHabitProgress({
+    super.key,
+    required this.habit,
+    this.focusedDay,
+    this.color,
+    this.extraTapArea = true,
+    this.secondaryCheckmarks = false,
+  });
 
   final Habit habit;
   final DateTime? focusedDay;
+  final Color? color;
+  final bool extraTapArea;
+  final bool secondaryCheckmarks;
 
   @override
   State<NewHabitProgress> createState() => _NewHabitProgressState();
@@ -105,7 +115,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
       },
       child: Container(
         color: Colors.transparent,
-        width: 32 + 24,
+        width: 24 + (widget.extraTapArea ? 32 : 0),
         height: 42,
         child: Center(
           child: AnimatedScale(
@@ -131,11 +141,14 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                             builder: (context, animatedProgress, child) {
                               return _CircularProgressPie(
                                 progress: animatedProgress,
-                                color: cp.main,
+                                color: widget.color ?? cp.main,
                               );
                             },
                           )
-                          : Checkmark(value: widget.habit.completed),
+                          : Checkmark(
+                            value: widget.habit.completed,
+                            secondaryCheckmarks: widget.secondaryCheckmarks,
+                          ),
                 ),
               ),
             ),
