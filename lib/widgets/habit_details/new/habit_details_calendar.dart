@@ -322,35 +322,27 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
             borderRadius: BorderRadius.circular(100),
           ),
         ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Text(
-              '${day.day}',
-              style: TextStyle(
-                color: textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+        child: Center(
+          child: Text(
+            '${day.day}',
+            style: TextStyle(
+              color: textColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
-            if (isToday && !outsideOrDisabled)
-              Container(
-                width: 38,
-                height: 38,
-                decoration: ShapeDecoration(
-                  shape: OvalBorder(
-                    side: BorderSide(width: 1.5, color: cp.main),
-                  ),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   static bool _isEnabledDay(DateTime day, DateTime createdAt, DateTime today) {
-    return !day.isBefore(createdAt) && !day.isAfter(today);
+    final normalizedDay = _normalize(day);
+    final normalizedCreatedAt = _normalize(createdAt);
+    final normalizedToday = _normalize(today);
+
+    return !normalizedDay.isBefore(normalizedCreatedAt) &&
+        !normalizedDay.isAfter(normalizedToday);
   }
 
   static bool _isOutsideMonth(DateTime day, DateTime focusedDay) {
