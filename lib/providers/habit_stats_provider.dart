@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/habit_strength_calculator.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_ce/hive.dart';
 
@@ -36,6 +37,11 @@ class HabitStatsData {
     required this.bestWeekday,
     required this.worstWeekday,
     required this.dailyProgress,
+    required this.currentStrength,
+    required this.strengthHistory,
+    required this.actionableInsight,
+    required this.strengthDropLast5Days,
+    required this.strengthVarianceLast30Days,
   });
 
   final int habitId;
@@ -50,6 +56,11 @@ class HabitStatsData {
   final HabitWeekdayRate bestWeekday;
   final HabitWeekdayRate worstWeekday;
   final Map<DateTime, double> dailyProgress;
+  final double currentStrength;
+  final List<double> strengthHistory;
+  final HabitStrengthInsight actionableInsight;
+  final double strengthDropLast5Days;
+  final double strengthVarianceLast30Days;
 }
 
 class _HabitStatsCacheEntry {
@@ -149,6 +160,7 @@ class HabitStatsProvider extends ChangeNotifier {
     int totalDurationCompletedMinutes = 0;
 
     final progressByDay = <DateTime, double>{};
+    final strengthEntries = <HabitEntry>[];
 
     DateTime? earliestDayWithHabit;
 
@@ -169,6 +181,7 @@ class HabitStatsProvider extends ChangeNotifier {
               : earliestDayWithHabit;
 
       progressByDay[dayDate] = _progressValue(dayHabit);
+      strengthEntries.add(_toHabitEntry(dayDate, dayHabit));
 
       if (dayHabit.completed) {
         completedCount += 1;
@@ -214,6 +227,7 @@ class HabitStatsProvider extends ChangeNotifier {
       scheduledByWeekday: scheduledByWeekday,
       pickBest: false,
     );
+    final strengthResult = HabitStrengthCalculator.calculate(strengthEntries);
 
     return HabitStatsData(
       habitId: habit.id,
@@ -228,6 +242,35 @@ class HabitStatsProvider extends ChangeNotifier {
       bestWeekday: best,
       worstWeekday: worst,
       dailyProgress: progressByDay,
+      currentStrength: strengthResult.currentStrength,
+      strengthHistory: strengthResult.strengthHistory,
+      actionableInsight: strengthResult.actionableInsight,
+      strengthDropLast5Days: strengthResult.recentDropFraction,
+      strengthVarianceLast30Days: strengthResult.varianceLast30Days,
+    );
+  }
+
+  static HabitEntry _toHabitEntry(DateTime dayDate, Habit dayHabit) {
+    if (dayHabit.amount > 0) {
+      return HabitEntry(
+        date: dayDate,
+        goal: dayHabit.amount.toDouble(),
+        actual: dayHabit.amountCompleted.toDouble(),
+      );
+    }
+
+    if (dayHabit.duration > 0) {
+      return HabitEntry(
+        date: dayDate,
+        goal: dayHabit.duration.toDouble(),
+        actual: dayHabit.durationCompleted.toDouble(),
+      );
+    }
+
+    return HabitEntry(
+      date: dayDate,
+      goal: 1,
+      actual: dayHabit.completed ? 1 : 0,
     );
   }
 
