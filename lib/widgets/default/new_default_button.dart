@@ -161,23 +161,27 @@ class NewDefaultButton extends StatelessWidget {
         _variant == _ButtonVariant.circle;
     final Color resolvedTextColor =
         textColor ?? (isMainButtonVariant ? cp.bg : cp.text);
+    const transitionDuration = Duration(milliseconds: 200);
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 150),
       opacity: enabled ? 1 : 0.5,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        height: height,
-        width: width,
-        curve: Curves.easeOut,
-        child: IgnorePointer(
-          ignoring: !enabled,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: isGradient && color == null ? gradient : null,
-              color: isGradient && color == null ? null : buttonColor,
-              borderRadius: BorderRadius.circular(24),
-            ),
+      child: AnimatedSize(
+        duration: transitionDuration,
+        curve: Curves.easeInOut,
+        alignment: Alignment.center,
+        child: AnimatedContainer(
+          duration: transitionDuration,
+          height: height,
+          width: width,
+          curve: Curves.easeInOut,
+          decoration: BoxDecoration(
+            gradient: isGradient && color == null ? gradient : null,
+            color: isGradient && color == null ? null : buttonColor,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: IgnorePointer(
+            ignoring: !enabled,
             child: ElevatedButton(
               onPressed: () => enabled && !isLoading ? onPressed() : null,
               style: ButtonStyle(
@@ -194,10 +198,8 @@ class NewDefaultButton extends StatelessWidget {
 
                   return cp.bg.withValues(alpha: 0.2);
                 }),
-                backgroundColor: WidgetStatePropertyAll(
-                  isGradient && color == null
-                      ? Colors.transparent
-                      : buttonColor,
+                backgroundColor: const WidgetStatePropertyAll(
+                  Colors.transparent,
                 ),
                 shadowColor: const WidgetStatePropertyAll(Colors.transparent),
                 shape: const WidgetStatePropertyAll(
