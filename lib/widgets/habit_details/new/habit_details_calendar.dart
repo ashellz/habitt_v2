@@ -104,7 +104,7 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
                   day: day,
                   createdAt: selectableFirstDay,
                   today: today,
-                  isOutside: day.month != focusedDay.month,
+                  isOutside: _isOutsideMonth(day, focusedDay),
                   isToday: false,
                 ),
             todayBuilder:
@@ -113,8 +113,18 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
                   day: day,
                   createdAt: selectableFirstDay,
                   today: today,
-                  isOutside: day.month != focusedDay.month,
+                  isOutside: _isOutsideMonth(day, focusedDay),
                   isToday: true,
+                ),
+            outsideBuilder:
+                (context, day, _) => _dayCell(
+                  context: context,
+                  day: day,
+                  createdAt: selectableFirstDay,
+                  today: today,
+                  isOutside: true,
+                  isToday: false,
+                  forceDisabled: true,
                 ),
             disabledBuilder:
                 (context, day, _) => _dayCell(
@@ -122,22 +132,14 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
                   day: day,
                   createdAt: selectableFirstDay,
                   today: today,
-                  isOutside: day.month != focusedDay.month,
+                  isOutside: _isOutsideMonth(day, focusedDay),
                   isToday: false,
                   forceDisabled: true,
                 ),
           ),
           daysOfWeekStyle: DaysOfWeekStyle(
-            weekendStyle: TextStyle(
-              color: cp.lightGreyText,
-              fontSize: 16 / 1.3,
-              fontWeight: FontWeight.w500,
-            ),
-            weekdayStyle: TextStyle(
-              color: cp.lightGreyText,
-              fontSize: 16 / 1.3,
-              fontWeight: FontWeight.w500,
-            ),
+            weekendStyle: TextStyle(color: cp.lightGreyText, fontSize: 13),
+            weekdayStyle: TextStyle(color: cp.lightGreyText, fontSize: 13),
             dowTextFormatter:
                 (date, locale) => DateFormat.E(locale).format(date),
           ),
@@ -157,11 +159,7 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
           children: [
             Text(
               'Less',
-              style: TextStyle(
-                color: cp.lightGreyText,
-                fontSize: 25 / 2,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: cp.lightGreyText, fontSize: 16),
             ),
             const SizedBox(width: 14),
             for (final color in dots) ...[
@@ -178,11 +176,7 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
             const SizedBox(width: 6),
             Text(
               'More',
-              style: TextStyle(
-                color: cp.lightGreyText,
-                fontSize: 25 / 2,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: cp.lightGreyText, fontSize: 16),
             ),
           ],
         ),
@@ -307,7 +301,7 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
     final Color fillColor;
     final Color textColor;
 
-    Color outsideDisabledFill = cp.bg;
+    Color outsideDisabledFill = cp.habitBg;
     Color outsideDisabledText = cp.lightGreyText;
 
     if (outsideOrDisabled) {
@@ -357,6 +351,10 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
 
   static bool _isEnabledDay(DateTime day, DateTime createdAt, DateTime today) {
     return !day.isBefore(createdAt) && !day.isAfter(today);
+  }
+
+  static bool _isOutsideMonth(DateTime day, DateTime focusedDay) {
+    return day.year != focusedDay.year || day.month != focusedDay.month;
   }
 
   Color? _colorForProgress(double progress) {
