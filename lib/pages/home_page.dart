@@ -24,14 +24,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _currentPageIndex = 0;
+  int _lifecycleTick = 0;
   bool _supportsLiquidGlass = false;
-
-  final List<Widget> _pages = const [
-    MainPage(),
-    HabitsPage(),
-    CalendarPage(),
-    ProfilePage(),
-  ];
 
   // Check if app state has changed, therefore run _updateLastOpenedDate
   @override
@@ -52,6 +46,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         categoryProvider.reorderCategoriesBasedOnTime();
 
         await backupProvider.performSync();
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _lifecycleTick += 1;
+        });
       });
     }
   }
@@ -96,6 +96,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         context.read<HabitProvider>().assignStreaks();
         stateProvider.shouldUpdateStreaks = false;
       }
+
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _lifecycleTick += 1;
+      });
     });
   }
 
@@ -138,6 +145,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final loading = backupProvider.syncState == SyncState.syncing;
     final tp = context.watch<ThemeProvider>();
 
+    final pages = [
+      MainPage(isActive: _currentPageIndex == 0, lifecycleTick: _lifecycleTick),
+      const HabitsPage(),
+      const CalendarPage(),
+      const ProfilePage(),
+    ];
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -152,7 +166,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: IndexedStack(
                   key: ValueKey<int>(_currentPageIndex),
                   index: _currentPageIndex,
-                  children: _pages,
+                  children: pages,
                 ),
               ),
               if (loading)
@@ -161,7 +175,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   right: 0,
                   top: 0,
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.grey.withOpacity(0.3),
+                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
                     color: tp.primaryTextColor,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       tp.primaryTextColor,

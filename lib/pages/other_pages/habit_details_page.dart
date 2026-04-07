@@ -118,7 +118,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-      barrierColor: cp.greyText.darken().withOpacity(0.3),
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
       isScrollControlled: true,
       builder: (context) => HabitSheet(habit: habit),
     );
@@ -170,7 +170,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                 children: [
                   _topBar(cp, habit),
                   const SizedBox(height: 14),
-                  _summaryCard(cp, habit),
+                  _summaryCard(cp, habit, stats),
                   const SizedBox(height: 18),
                   _notesSection(cp),
                   const SizedBox(height: 24),
@@ -244,7 +244,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     );
   }
 
-  Widget _summaryCard(ColorProvider cp, Habit habit) {
+  Widget _summaryCard(ColorProvider cp, Habit habit, HabitStatsData stats) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(
@@ -291,7 +291,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
               ],
             ),
           ),
-          _StrengthRing(),
+          _StrengthRing(strength: stats.currentStrength),
         ],
       ),
     );
@@ -358,11 +358,15 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
 }
 
 class _StrengthRing extends StatelessWidget {
-  const _StrengthRing();
+  const _StrengthRing({required this.strength});
+
+  final double strength;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final normalizedStrength = strength.clamp(0.0, 1.0);
+    final percent = (normalizedStrength * 100).round();
 
     return SizedBox(
       width: 82,
@@ -374,7 +378,7 @@ class _StrengthRing extends StatelessWidget {
             width: 82,
             height: 82,
             child: CircularProgressIndicator(
-              value: 0.79,
+              value: normalizedStrength,
               strokeWidth: 6,
               backgroundColor: cp.habitBg,
               valueColor: AlwaysStoppedAnimation<Color>(cp.text),
@@ -391,7 +395,7 @@ class _StrengthRing extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '79%',
+                  '$percent%',
                   style: TextStyle(
                     color: cp.text,
                     fontSize: 16,
