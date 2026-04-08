@@ -253,6 +253,7 @@ class _MainPageState extends State<MainPage> {
             title: title,
             desc: desc,
             primaryButtonLabel: primaryLabel,
+            showSecondaryButton: !isMotivationOnly,
             secondaryButtonLabel: 'Later',
             onPrimaryButtonPressed: () {
               Navigator.pop(dialogContext);

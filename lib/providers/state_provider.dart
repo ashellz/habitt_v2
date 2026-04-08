@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/premade_habit_template.dart';
+import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/old_color_service.dart';
@@ -117,6 +119,7 @@ class StateProvider extends ChangeNotifier {
   int _customIntervalDays = 2;
   final Set<int> _selectedDaysAWeek = <int>{};
   final Set<int> _selectedDaysAMonth = <int>{};
+  PremadeHabitType? _selectedPremadeHabitType;
 
   String _alertText = "";
   bool _showAlert = false;
@@ -129,6 +132,7 @@ class StateProvider extends ChangeNotifier {
   int get customIntervalDays => _customIntervalDays;
   Set<int> get selectedDaysAWeek => Set<int>.from(_selectedDaysAWeek);
   Set<int> get selectedDaysAMonth => Set<int>.from(_selectedDaysAMonth);
+  PremadeHabitType? get selectedPremadeHabitType => _selectedPremadeHabitType;
 
   String get scheduleSummary {
     switch (_selectedScheduleOption) {
@@ -178,6 +182,51 @@ class StateProvider extends ChangeNotifier {
 
   set customIntervalDays(int value) {
     _customIntervalDays = value.clamp(1, 365);
+    notifyListeners();
+  }
+
+  set selectedPremadeHabitType(PremadeHabitType? value) {
+    _selectedPremadeHabitType = value;
+    notifyListeners();
+  }
+
+  void clearSelectedPremadeHabitType() {
+    _selectedPremadeHabitType = null;
+    notifyListeners();
+  }
+
+  void applyPremadeHabitTemplate(PremadeHabitTemplate template) {
+    _selectedPremadeHabitType = template.type;
+    _habitCategoryId = template.categoryId;
+
+    nameController.text = template.name;
+    descController.clear();
+    _iconPath = template.iconPath;
+
+    _habitAmount = template.amount;
+    _habitDuration = Duration(minutes: template.durationMinutes);
+    habitAmountLabelController.text = template.amountLabel;
+
+    _isOptional = false;
+    _timeIntervalEnabled = false;
+    _timeIntervalStart = 420;
+    _timeIntervalEnd = 450;
+
+    _habitColor = null;
+    _habitColorName = null;
+
+    _selectedScheduleOption = template.scheduleType;
+    _weeklyTarget = template.weeklyTarget.clamp(1, 6);
+    _monthlyTarget = template.monthlyTarget.clamp(1, 30);
+    _customIntervalDays = template.customIntervalDays.clamp(1, 365);
+
+    _selectedDaysAWeek
+      ..clear()
+      ..addAll(template.selectedDaysAWeek.where((d) => d >= 1 && d <= 7));
+    _selectedDaysAMonth
+      ..clear()
+      ..addAll(template.selectedDaysAMonth.where((d) => d >= 1 && d <= 31));
+
     notifyListeners();
   }
 
@@ -352,6 +401,7 @@ class StateProvider extends ChangeNotifier {
     _customIntervalDays = 2;
     _selectedDaysAWeek.clear();
     _selectedDaysAMonth.clear();
+    _selectedPremadeHabitType = null;
 
     notifyListeners();
   }

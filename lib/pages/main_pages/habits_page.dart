@@ -6,17 +6,15 @@ import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/show_new_habit_creation_flow.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
-import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class HabitsPage extends StatefulWidget {
   const HabitsPage({super.key});
@@ -106,20 +104,7 @@ class _HabitsPageState extends State<HabitsPage> {
             textColor: cp.bg,
             padding: EdgeInsets.all(10),
             color: cp.main,
-            onPressed: () {
-              final stateProvider = context.read<StateProvider>();
-              stateProvider.reset();
-
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                barrierColor: cp.greyText.darken().withOpacity(0.3),
-                isScrollControlled: true,
-                builder: (context) {
-                  return HabitSheet();
-                },
-              );
-            },
+            onPressed: () => showNewHabitCreationFlow(context),
           ),
         ],
       ),

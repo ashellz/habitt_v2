@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -43,6 +44,7 @@ class Habit extends HiveObject {
   DateTime? lastCustomUpdate;
   String? colorName; // Maps to theme-aware palette
   String? color;
+  PremadeHabitType? premadeHabitType;
   bool? isDeleted;
   Map<String, DateTime> timestamps;
 
@@ -79,6 +81,7 @@ class Habit extends HiveObject {
     DateTime? createdAt,
     this.lastCustomUpdate,
     this.colorName,
+    this.premadeHabitType,
     this.isDeleted,
     Map<String, DateTime>? timestamps,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
@@ -146,6 +149,7 @@ class Habit extends HiveObject {
       createdAt: createdAt,
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
+      premadeHabitType: premadeHabitType,
       isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
@@ -185,6 +189,7 @@ class Habit extends HiveObject {
       createdAt: createdAt,
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
+      premadeHabitType: premadeHabitType,
       isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
@@ -316,6 +321,10 @@ class Habit extends HiveObject {
     if (color != habit.color) {
       color = habit.color;
       timestamps['color'] = now;
+    }
+    if (premadeHabitType != habit.premadeHabitType) {
+      premadeHabitType = habit.premadeHabitType;
+      timestamps['premadeHabitType'] = now;
     }
     if (isDeleted != habit.isDeleted) {
       isDeleted = habit.isDeleted;
@@ -525,6 +534,7 @@ class Habit extends HiveObject {
       'lastCustomUpdate': lastCustomUpdate?.toIso8601String(),
       'colorName': colorName,
       'color': color,
+      'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'isDeleted': isDeleted,
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
@@ -582,6 +592,9 @@ class Habit extends HiveObject {
       lastCustomUpdate:
           DateTime.tryParse(m['lastCustomUpdate']?.toString() ?? '')?.toUtc(),
       colorName: m['colorName'] as String?,
+      premadeHabitType: _deserializePremadeHabitType(
+        m['premadeHabitType']?.toString(),
+      ),
       isDeleted: m['isDeleted'] as bool?,
       timestamps: ts,
     )..color = m['color'] as String?;
@@ -722,6 +735,11 @@ class Habit extends HiveObject {
         incoming.lastCustomUpdate,
       ),
       colorName: resolve('colorName', colorName, incoming.colorName),
+      premadeHabitType: resolve(
+        'premadeHabitType',
+        premadeHabitType,
+        incoming.premadeHabitType,
+      ),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       timestamps: mergedTimestamps,
     );
@@ -800,5 +818,23 @@ class Habit extends HiveObject {
       (type) => type.name == value,
       orElse: () => ScheduleType.daily,
     );
+  }
+
+  static String? _serializePremadeHabitType(PremadeHabitType? type) {
+    return type?.name;
+  }
+
+  static PremadeHabitType? _deserializePremadeHabitType(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    for (final type in PremadeHabitType.values) {
+      if (type.name == value) {
+        return type;
+      }
+    }
+
+    return null;
   }
 }
