@@ -3,11 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/services/emoji_service.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -20,12 +22,23 @@ import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_perio
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
+import 'package:habitt/widgets/sheets/premade_habit_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
+
+enum HabitSheetCloseResult { saved, dismissed, reopenPremade }
 
 class HabitSheet extends StatefulWidget {
-  const HabitSheet({super.key, this.habit});
+  const HabitSheet({
+    super.key,
+    this.habit,
+    this.initialPremadeTemplate,
+    this.reopenPremadeOnTopBack = false,
+  });
 
   final Habit? habit;
+  final PremadeHabitTemplate? initialPremadeTemplate;
+  final bool reopenPremadeOnTopBack;
 
   @override
   State<HabitSheet> createState() => _HabitSheetState();
@@ -68,6 +81,10 @@ class _HabitSheetState extends State<HabitSheet> {
         _setEditInitialValues(sp, widget.habit!);
       } else {
         sp.reset();
+        final initialTemplate = widget.initialPremadeTemplate;
+        if (initialTemplate != null) {
+          sp.applyPremadeHabitTemplate(initialTemplate);
+        }
       }
 
       if (!mounted) {
@@ -105,6 +122,7 @@ class _HabitSheetState extends State<HabitSheet> {
     stateProvider.habitColor = habit.resolveColor(
       context.read<ThemeProvider>(),
     );
+    stateProvider.selectedPremadeHabitType = habit.premadeHabitType;
   }
 
   bool _hasEditChanges(StateProvider sp, ThemeProvider tp) {
@@ -141,6 +159,8 @@ class _HabitSheetState extends State<HabitSheet> {
     final changedHabitColor =
         sp.getHabitColor(tp) != habit.resolveColor(tp) ||
         sp.habitColorName != habit.colorName;
+    final changedPremadeHabitType =
+        sp.selectedPremadeHabitType != habit.premadeHabitType;
 
     return changedName ||
         changedDesc ||
@@ -158,7 +178,8 @@ class _HabitSheetState extends State<HabitSheet> {
         changedCustomInterval ||
         changedSelectedWeekDays ||
         changedSelectedMonthDays ||
-        changedHabitColor;
+        changedHabitColor ||
+        changedPremadeHabitType;
   }
 
   bool _hasCreateChanges(StateProvider sp) {
@@ -181,6 +202,7 @@ class _HabitSheetState extends State<HabitSheet> {
     final changedSelectedWeekDays = sp.selectedDaysAWeek.isNotEmpty;
     final changedSelectedMonthDays = sp.selectedDaysAMonth.isNotEmpty;
     final changedColorName = sp.habitColorName != null;
+    final changedPremadeHabitType = sp.selectedPremadeHabitType != null;
 
     return changedName ||
         changedDesc ||
@@ -199,7 +221,8 @@ class _HabitSheetState extends State<HabitSheet> {
         changedCustomInterval ||
         changedSelectedWeekDays ||
         changedSelectedMonthDays ||
-        changedColorName;
+        changedColorName ||
+        changedPremadeHabitType;
   }
 
   bool _hasUnsavedChanges(StateProvider sp, ThemeProvider tp) {
@@ -209,17 +232,80 @@ class _HabitSheetState extends State<HabitSheet> {
     return _hasCreateChanges(sp);
   }
 
-  void _popSheet() {
+  HabitSheetCloseResult get _topBackCloseResult {
+    if (_isEditMode) {
+      return HabitSheetCloseResult.dismissed;
+    }
+    return widget.reopenPremadeOnTopBack
+        ? HabitSheetCloseResult.reopenPremade
+        : HabitSheetCloseResult.dismissed;
+  }
+
+  void _popSheet({
+    HabitSheetCloseResult result = HabitSheetCloseResult.dismissed,
+  }) {
     if (!mounted) {
       return;
     }
     setState(() {
       _allowPop = true;
     });
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(result);
   }
 
-  Future<void> _showExitConfirmation() async {
+  Future<void> _openPremadeHabitSheet(StateProvider sp) async {
+    final cp = context.read<ColorProvider>();
+
+    final result = await showModalBottomSheet<PremadeHabitSheetResult>(
+      context: context,
+      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder:
+          (_) => PremadeHabitSheet(
+            mode: PremadeHabitSheetMode.editFromHabitSheet,
+            selectedPremadeHabitType: sp.selectedPremadeHabitType,
+          ),
+    );
+
+    if (!mounted || result == null) {
+      return;
+    }
+
+    if (result.action == PremadeHabitSheetAction.clear) {
+      sp.clearSelectedPremadeHabitType();
+      return;
+    }
+
+    if (result.action != PremadeHabitSheetAction.select ||
+        result.template == null) {
+      return;
+    }
+
+    await _showPremadeOverrideConfirmation(sp, result.template!);
+  }
+
+  Future<void> _showPremadeOverrideConfirmation(
+    StateProvider sp,
+    PremadeHabitTemplate template,
+  ) async {
+    await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: 'Apply premade habit?',
+            desc:
+                'This will override your current habit details with the selected premade habit.',
+            primaryButtonLabel: 'Apply',
+            onPrimaryButtonPressed: () {
+              sp.applyPremadeHabitTemplate(template);
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+    );
+  }
+
+  Future<void> _showExitConfirmation(HabitSheetCloseResult closeResult) async {
     if (_isExitDialogOpen) {
       return;
     }
@@ -234,20 +320,24 @@ class _HabitSheetState extends State<HabitSheet> {
             primaryButtonLabel: "Exit",
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();
-              _popSheet();
+              _popSheet(result: closeResult);
             },
           ),
     );
     _isExitDialogOpen = false;
   }
 
-  Future<void> _handleCloseAttempt(StateProvider sp, ThemeProvider tp) async {
+  Future<void> _handleCloseAttempt(
+    StateProvider sp,
+    ThemeProvider tp, {
+    HabitSheetCloseResult closeResult = HabitSheetCloseResult.dismissed,
+  }) async {
     if (_allowPop || !_hasUnsavedChanges(sp, tp)) {
-      _popSheet();
+      _popSheet(result: closeResult);
       return;
     }
 
-    await _showExitConfirmation();
+    await _showExitConfirmation(closeResult);
   }
 
   Future<void> _saveHabit(StateProvider sp) async {
@@ -280,6 +370,7 @@ class _HabitSheetState extends State<HabitSheet> {
       habit.customIntervalDays = sp.customIntervalDays;
       habit.selectedDaysAWeek = sp.selectedDaysAWeek.toList()..sort();
       habit.selectedDaysAMonth = sp.selectedDaysAMonth.toList()..sort();
+      habit.premadeHabitType = sp.selectedPremadeHabitType;
 
       if (habit.scheduleType == ScheduleType.custom) {
         habit.customAppearance = buildCustomAppearance(
@@ -295,7 +386,7 @@ class _HabitSheetState extends State<HabitSheet> {
       sp.alertText = "Changes saved!";
       sp.toggleAlert(show: true);
       if (mounted) {
-        _popSheet();
+        _popSheet(result: HabitSheetCloseResult.saved);
       }
       return;
     }
@@ -333,11 +424,12 @@ class _HabitSheetState extends State<HabitSheet> {
         createdAt: DateTime.now().toUtc(),
         lastCustomUpdate: DateTime.now().toUtc(),
         colorName: sp.habitColorName,
+        premadeHabitType: sp.selectedPremadeHabitType,
       ),
     );
 
     if (mounted) {
-      _popSheet();
+      _popSheet(result: HabitSheetCloseResult.saved);
     }
   }
 
@@ -364,7 +456,11 @@ class _HabitSheetState extends State<HabitSheet> {
         if (didPop) {
           return;
         }
-        await _handleCloseAttempt(sp, tp);
+        await _handleCloseAttempt(
+          sp,
+          tp,
+          closeResult: HabitSheetCloseResult.dismissed,
+        );
       },
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxSheetHeight),
@@ -388,6 +484,7 @@ class _HabitSheetState extends State<HabitSheet> {
                     chooseIcon(cp, sp, context),
                     habitDetails(cp),
                     habitScheduling(cp),
+                    habitTypeRow(cp, sp),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -416,6 +513,34 @@ class _HabitSheetState extends State<HabitSheet> {
           ),
         ),
       ),
+    );
+  }
+
+  Row habitTypeRow(ColorProvider cp, StateProvider sp) {
+    final selectedType = sp.selectedPremadeHabitType;
+    final selectedTemplate =
+        selectedType == null ? null : PremadeHabitCatalog.byType(selectedType);
+    final label = selectedTemplate?.name ?? 'Select';
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Habit type',
+          style: TextStyle(
+            color: cp.text,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        NewDefaultButton.secondarySmall(
+          width: null,
+          onPressed: () async {
+            await _openPremadeHabitSheet(sp);
+          },
+          label: label,
+        ),
+      ],
     );
   }
 
@@ -525,7 +650,7 @@ class _HabitSheetState extends State<HabitSheet> {
             width: 66,
             child: GestureDetector(
               onTap: () {
-                _handleCloseAttempt(sp, tp);
+                _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
               },
               child: Align(
                 alignment: Alignment.centerLeft,

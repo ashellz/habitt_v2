@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 36
+    nextIndex: 39
     fields:
       id:
         index: 0
@@ -73,6 +73,12 @@ types:
         index: 34
       lastCustomUpdate:
         index: 35
+      order:
+        index: 36
+      createdAt:
+        index: 37
+      premadeHabitType:
+        index: 38
   Day:
     typeId: 1
     nextIndex: 3

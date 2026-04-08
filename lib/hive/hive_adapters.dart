@@ -1,5 +1,6 @@
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:hive_ce/hive.dart';
 
@@ -22,6 +23,22 @@ class ScheduleTypeAdapter extends TypeAdapter<ScheduleType> {
 
   @override
   void write(BinaryWriter writer, ScheduleType obj) {
+    writer.writeByte(obj.index);
+  }
+}
+
+class PremadeHabitTypeAdapter extends TypeAdapter<PremadeHabitType> {
+  @override
+  int get typeId => 5;
+
+  @override
+  PremadeHabitType read(BinaryReader reader) {
+    final index = reader.readByte();
+    return PremadeHabitType.values[index];
+  }
+
+  @override
+  void write(BinaryWriter writer, PremadeHabitType obj) {
     writer.writeByte(obj.index);
   }
 }

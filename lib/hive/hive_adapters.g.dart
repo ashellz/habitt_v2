@@ -55,6 +55,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
               : (fields[37] as DateTime).toUtc(),
       lastCustomUpdate: fields[35] as DateTime?,
       colorName: fields[22] as String?,
+      premadeHabitType: fields[38] as PremadeHabitType?,
       isDeleted: fields[24] as bool?,
       timestamps: (fields[23] as Map?)?.cast<String, DateTime>(),
     )..color = fields[20] as String?;
@@ -63,7 +64,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(35)
+      ..writeByte(36)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -133,7 +134,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(36)
       ..write(obj.order)
       ..writeByte(37)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(38)
+      ..write(obj.premadeHabitType);
   }
 
   @override

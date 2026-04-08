@@ -157,7 +157,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
       }
     }
 
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent - 16);
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     _didInitialScrollToRight = true;
     _updateRightEdgeState();
   }

@@ -10,6 +10,7 @@ class NewDefaultDialog extends StatelessWidget {
     required this.title,
     this.primaryButtonLabel = "Done",
     this.primaryButtonEnabled = true,
+    this.showSecondaryButton = true,
     this.secondaryButtonLabel = "Cancel",
     this.desc,
     this.onPrimaryButtonPressed,
@@ -22,6 +23,7 @@ class NewDefaultDialog extends StatelessWidget {
   final String secondaryButtonLabel;
   final String primaryButtonLabel;
   final bool primaryButtonEnabled;
+  final bool showSecondaryButton;
   final VoidCallback? onPrimaryButtonPressed;
   final VoidCallback? onSecondaryButtonPressed;
 
@@ -72,18 +74,19 @@ class NewDefaultDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 spacing: 8,
                 children: [
-                  Expanded(
-                    child: NewDefaultButton.secondary(
-                      onPressed: () {
-                        if (onSecondaryButtonPressed != null) {
-                          onSecondaryButtonPressed!();
-                        } else {
-                          Navigator.pop(context);
-                        }
-                      },
-                      label: secondaryButtonLabel,
+                  if (showSecondaryButton)
+                    Expanded(
+                      child: NewDefaultButton.secondary(
+                        onPressed: () {
+                          if (onSecondaryButtonPressed != null) {
+                            onSecondaryButtonPressed!();
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        label: secondaryButtonLabel,
+                      ),
                     ),
-                  ),
                   Expanded(
                     child: NewDefaultButton.primary(
                       enabled: primaryButtonEnabled,
