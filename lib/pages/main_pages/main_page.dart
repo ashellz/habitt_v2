@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,8 @@ import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/main_page/main_page_top_section.dart';
-import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -34,6 +33,22 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   static const String _kInsightShownStoragePrefix =
       'habit_strength_insight_shown';
+
+  static const List<String> _noTargetMotivationMessagesDecrease = [
+    'You added this habit for a reason, don\'t fall behind now.',
+    'Do not lose your edge now. Finish what you started.',
+    'You set this goal. Keep your word to yourself today.',
+    'No excuses today. Stay disciplined and keep this habit alive.',
+    'Don\'t let this habit slip. Complete your goal today and don\'t risk it.',
+    'Stay focused. Falling off once makes it easier to fall again.',
+    'You are not done on this habit yet. Keep pressure on and stay consistent.',
+    'Protect your streak. One solid effort today keeps momentum alive.',
+    'Do not negotiate with laziness. Execute the habit and move on.',
+    'You\'re falling behind on this habit. You know what to do.',
+    'You came too far to coast now. Lock in and complete it.',
+    'This is your promise to yourself. Keep it.',
+    'Discipline over mood. Get it done.',
+  ];
 
   late final ConfettiController _confettiController;
   bool _wasAllCompleted = false;
@@ -147,6 +162,12 @@ class _MainPageState extends State<MainPage> {
           continue;
         }
 
+        if (insight == HabitStrengthInsight.pushHarder &&
+            habit.amount <= 0 &&
+            habit.duration <= 0) {
+          continue;
+        }
+
         final storageKey = _storageKey(habit.id, insight);
         final sessionKey = '$storageKey|$todayKey';
         final shownToday = prefs.getString(storageKey) == todayKey;
@@ -201,20 +222,27 @@ class _MainPageState extends State<MainPage> {
       return;
     }
 
+    final recommendation = _buildTargetRecommendation(candidate);
+    final isMotivationOnly = recommendation == null;
+
     final title =
-        candidate.insight == HabitStrengthInsight.startSmall
-            ? 'Try a smaller target for ${candidate.habit.name}'
-            : 'You are consistent with ${candidate.habit.name}';
+        isMotivationOnly
+            ? 'Keep pushing ${candidate.habit.name}'
+            : candidate.insight == HabitStrengthInsight.startSmall
+            ? 'Lower target for ${candidate.habit.name}'
+            : 'Increase target for ${candidate.habit.name}';
 
     final desc =
-        candidate.insight == HabitStrengthInsight.startSmall
-            ? 'Strength dropped by ${(candidate.stats.strengthDropLast5Days * 100).round()}% in the last 5 days. Consider lowering amount or duration to rebuild consistency.'
-            : 'Your habit strength is stable above ${(candidate.stats.currentStrength * 100).round()}%, and you are sometimes over-performing. You can gently increase the target if you want.';
+        isMotivationOnly
+            ? _motivationDescription(candidate, todayKey)
+            : _recommendationDescription(candidate, recommendation);
 
     final primaryLabel =
-        candidate.insight == HabitStrengthInsight.startSmall
-            ? 'Adjust target'
-            : 'Tune target';
+        isMotivationOnly
+            ? _gotItLabel(candidate, todayKey)
+            : candidate.insight == HabitStrengthInsight.startSmall
+            ? 'Apply decrease'
+            : 'Apply increase';
 
     _isInsightSheetOpen = true;
     try {
@@ -228,12 +256,12 @@ class _MainPageState extends State<MainPage> {
             secondaryButtonLabel: 'Later',
             onPrimaryButtonPressed: () {
               Navigator.pop(dialogContext);
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!mounted || !widget.isActive) {
-                  return;
-                }
-                _openHabitEditSheet(candidate.habit);
-              });
+              if (!mounted || !widget.isActive) {
+                return;
+              }
+              if (recommendation != null) {
+                _applyRecommendation(candidate.habit, recommendation);
+              }
             },
           );
         },
@@ -243,16 +271,143 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  Future<void> _openHabitEditSheet(Habit habit) async {
-    final cp = context.read<ColorProvider>();
+  _TargetRecommendation? _buildTargetRecommendation(
+    _InsightCandidate candidate,
+  ) {
+    final habit = candidate.habit;
+    final isStartSmall = candidate.insight == HabitStrengthInsight.startSmall;
 
-    await showModalBottomSheet(
-      context: context,
-      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
-      isScrollControlled: true,
-      builder: (_) => HabitSheet(habit: habit),
-    );
+    if (habit.amount > 0) {
+      final current = habit.amount;
+      final recommended =
+          isStartSmall
+              ? _decreaseRecommendation(
+                current,
+                candidate.stats.strengthDropLast5Days,
+              )
+              : _increaseRecommendation(
+                current,
+                candidate.stats.currentStrength,
+              );
+
+      if (recommended == current) {
+        return null;
+      }
+
+      final label =
+          habit.amountLabel.trim().isEmpty ? 'times' : habit.amountLabel.trim();
+
+      return _TargetRecommendation(
+        kind: _TargetKind.amount,
+        currentValue: current,
+        recommendedValue: recommended,
+        unitLabel: label,
+      );
+    }
+
+    if (habit.duration > 0) {
+      final current = habit.duration;
+      final recommended =
+          isStartSmall
+              ? _decreaseRecommendation(
+                current,
+                candidate.stats.strengthDropLast5Days,
+              )
+              : _increaseRecommendation(
+                current,
+                candidate.stats.currentStrength,
+              );
+
+      if (recommended == current) {
+        return null;
+      }
+
+      return _TargetRecommendation(
+        kind: _TargetKind.duration,
+        currentValue: current,
+        recommendedValue: recommended,
+        unitLabel: 'min',
+      );
+    }
+
+    return null;
+  }
+
+  int _decreaseRecommendation(int current, double dropFraction) {
+    if (current <= 1) {
+      return 1;
+    }
+
+    final factor = (0.10 + (dropFraction * 0.50)).clamp(0.10, 0.35);
+    int next = (current * (1 - factor)).round();
+    next = next.clamp(1, current).toInt();
+
+    if (next == current) {
+      next = current - 1;
+    }
+
+    return math.max(1, next);
+  }
+
+  int _increaseRecommendation(int current, double currentStrength) {
+    final factor = (0.08 + ((currentStrength - 0.85).clamp(0.0, 0.15) * 0.8))
+        .clamp(0.08, 0.20);
+    final delta = math.max(1, (current * factor).round());
+    return current + delta;
+  }
+
+  String _recommendationDescription(
+    _InsightCandidate candidate,
+    _TargetRecommendation recommendation,
+  ) {
+    final fromValue =
+        recommendation.kind == _TargetKind.duration
+            ? '${recommendation.currentValue} min'
+            : '${recommendation.currentValue} ${recommendation.unitLabel}';
+
+    final toValue =
+        recommendation.kind == _TargetKind.duration
+            ? '${recommendation.recommendedValue} min'
+            : '${recommendation.recommendedValue} ${recommendation.unitLabel}';
+
+    if (candidate.insight == HabitStrengthInsight.startSmall) {
+      final drop = (candidate.stats.strengthDropLast5Days * 100).round();
+      return 'Strength dropped by $drop% in the last 5 days. Recommended target: $fromValue -> $toValue to improve consistency.';
+    }
+
+    final strength = (candidate.stats.currentStrength * 100).round();
+    return 'Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing.';
+  }
+
+  String _motivationDescription(_InsightCandidate candidate, String todayKey) {
+    final source = _noTargetMotivationMessagesDecrease;
+    final idx = (candidate.habit.id ^ todayKey.hashCode).abs() % source.length;
+    return source[idx];
+  }
+
+  String _gotItLabel(_InsightCandidate candidate, String todayKey) {
+    final idx = (candidate.habit.id ^ todayKey.hashCode).abs();
+    final emoji = idx.isEven ? '💪' : '🚀';
+    return '$emoji Got it';
+  }
+
+  void _applyRecommendation(Habit habit, _TargetRecommendation recommendation) {
+    final habitProvider = context.read<HabitProvider>();
+    final updated = habit.copy();
+
+    if (recommendation.kind == _TargetKind.amount) {
+      updated.amount = recommendation.recommendedValue;
+      if (updated.amountCompleted > updated.amount) {
+        updated.amountCompleted = updated.amount;
+      }
+    } else {
+      updated.duration = recommendation.recommendedValue;
+      if (updated.durationCompleted > updated.duration) {
+        updated.durationCompleted = updated.duration;
+      }
+    }
+
+    habitProvider.updateHabit(updated);
   }
 
   static String _storageKey(int habitId, HabitStrengthInsight insight) {
@@ -354,4 +509,20 @@ class _InsightCandidate {
   final HabitStatsData stats;
   final String storageKey;
   final double signalMagnitude;
+}
+
+enum _TargetKind { amount, duration }
+
+class _TargetRecommendation {
+  const _TargetRecommendation({
+    required this.kind,
+    required this.currentValue,
+    required this.recommendedValue,
+    required this.unitLabel,
+  });
+
+  final _TargetKind kind;
+  final int currentValue;
+  final int recommendedValue;
+  final String unitLabel;
 }
