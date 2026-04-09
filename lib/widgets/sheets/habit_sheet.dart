@@ -311,13 +311,19 @@ class _HabitSheetState extends State<HabitSheet> {
       return;
     }
 
+    final title = _isEditMode ? "Exit without saving?" : "Leave setup?";
+    final desc =
+        _isEditMode
+            ? "All changes you made will be discarded."
+            : "All habit configuration you have done will be discarded.";
+
     _isExitDialogOpen = true;
     await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: "Exit without saving?",
-            desc: "All changes you made will be discarded.",
+            title: title,
+            desc: desc,
             primaryButtonLabel: "Exit",
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();

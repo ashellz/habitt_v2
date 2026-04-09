@@ -59,8 +59,6 @@ class PremadeHabitsSheet extends StatelessWidget {
     final desc =
         mode == PremadeHabitSheetMode.create
             ? 'Choose a habit from categories — or skip and create your own habit'
-            /// Selecting a habit here will customize your experience with personalized
-            /// notifications, UI styling, and text based on the chosen premade habit.
             : 'Notifications, UI styling, and text gets customized based on the chosen habit.';
 
     return ConstrainedBox(

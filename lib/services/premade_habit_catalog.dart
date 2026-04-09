@@ -94,8 +94,8 @@ class PremadeHabitCatalog {
           name: 'Medications',
           iconPath: '💊',
           categoryId: 2,
-          amount: 0,
-          durationMinutes: 5,
+          amount: 2,
+          durationMinutes: 0,
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.drinkWater,
