@@ -83,7 +83,7 @@ class EnterHabitAmount extends StatelessWidget {
       spacing: 10,
       children: [
         Expanded(
-          child: AmountProgressInput(amount: sp.habitAmount, minValue: 2),
+          child: AmountProgressInput(amount: sp.habitAmount, minValue: 1),
         ),
         Expanded(
           child: NewDefaultTextField(

@@ -34,9 +34,9 @@ class $AssetsImagesGen {
   AssetGenImage get iconBackground =>
       const AssetGenImage('assets/images/icon_background.png');
 
-  /// File path: assets/images/iconLight.png
+  /// File path: assets/images/icon_light.png
   AssetGenImage get iconLight =>
-      const AssetGenImage('assets/images/iconLight.png');
+      const AssetGenImage('assets/images/icon_light.png');
 
   /// File path: assets/images/icon_splash_android.png
   AssetGenImage get iconSplashAndroid =>
@@ -546,14 +546,33 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/check-off-dark.svg
   String get checkOffDark => 'assets/images/new-svg/check-off-dark.svg';
 
+  /// File path: assets/images/new-svg/check-off-inverted-dark.svg
+  String get checkOffInvertedDark =>
+      'assets/images/new-svg/check-off-inverted-dark.svg';
+
+  /// File path: assets/images/new-svg/check-off-inverted-light.svg
+  String get checkOffInvertedLight =>
+      'assets/images/new-svg/check-off-inverted-light.svg';
+
   /// File path: assets/images/new-svg/check-off-light.svg
   String get checkOffLight => 'assets/images/new-svg/check-off-light.svg';
 
   /// File path: assets/images/new-svg/check-on-dark.svg
   String get checkOnDark => 'assets/images/new-svg/check-on-dark.svg';
 
+  /// File path: assets/images/new-svg/check-on-inverted-dark.svg
+  String get checkOnInvertedDark =>
+      'assets/images/new-svg/check-on-inverted-dark.svg';
+
+  /// File path: assets/images/new-svg/check-on-inverted-light.svg
+  String get checkOnInvertedLight =>
+      'assets/images/new-svg/check-on-inverted-light.svg';
+
   /// File path: assets/images/new-svg/check-on-light.svg
   String get checkOnLight => 'assets/images/new-svg/check-on-light.svg';
+
+  /// File path: assets/images/new-svg/check.svg
+  String get check => 'assets/images/new-svg/check.svg';
 
   /// File path: assets/images/new-svg/clock.svg
   String get clock => 'assets/images/new-svg/clock.svg';
@@ -599,6 +618,10 @@ class $AssetsImagesNewSvgGen {
 
   /// File path: assets/images/new-svg/it.svg
   String get it => 'assets/images/new-svg/it.svg';
+
+  /// Directory path: assets/images/new-svg/languages
+  $AssetsImagesNewSvgLanguagesGen get languages =>
+      const $AssetsImagesNewSvgLanguagesGen();
 
   /// File path: assets/images/new-svg/log-out.svg
   String get logOut => 'assets/images/new-svg/log-out.svg';
@@ -675,9 +698,14 @@ class $AssetsImagesNewSvgGen {
     back,
     calendar,
     checkOffDark,
+    checkOffInvertedDark,
+    checkOffInvertedLight,
     checkOffLight,
     checkOnDark,
+    checkOnInvertedDark,
+    checkOnInvertedLight,
     checkOnLight,
+    check,
     clock,
     close,
     completed,
@@ -780,6 +808,28 @@ class $AssetsImagesSvgGen {
     slider,
     stats,
   ];
+}
+
+class $AssetsImagesNewSvgLanguagesGen {
+  const $AssetsImagesNewSvgLanguagesGen();
+
+  /// File path: assets/images/new-svg/languages/ba.svg
+  String get ba => 'assets/images/new-svg/languages/ba.svg';
+
+  /// File path: assets/images/new-svg/languages/de.svg
+  String get de => 'assets/images/new-svg/languages/de.svg';
+
+  /// File path: assets/images/new-svg/languages/en.svg
+  String get en => 'assets/images/new-svg/languages/en.svg';
+
+  /// File path: assets/images/new-svg/languages/es.svg
+  String get es => 'assets/images/new-svg/languages/es.svg';
+
+  /// File path: assets/images/new-svg/languages/it.svg
+  String get it => 'assets/images/new-svg/languages/it.svg';
+
+  /// List of all assets
+  List<String> get values => [ba, de, en, es, it];
 }
 
 class Assets {

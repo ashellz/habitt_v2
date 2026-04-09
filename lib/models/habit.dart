@@ -10,6 +10,8 @@ import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
+enum HabitTrackingType { amount, duration }
+
 class Habit extends HiveObject {
   final int id;
   String name;
@@ -45,6 +47,7 @@ class Habit extends HiveObject {
   String? colorName; // Maps to theme-aware palette
   String? color;
   PremadeHabitType? premadeHabitType;
+  HabitTrackingType? trackingType;
   bool? isDeleted;
   Map<String, DateTime> timestamps;
 
@@ -82,6 +85,7 @@ class Habit extends HiveObject {
     this.lastCustomUpdate,
     this.colorName,
     this.premadeHabitType,
+    this.trackingType,
     this.isDeleted,
     Map<String, DateTime>? timestamps,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
@@ -89,6 +93,10 @@ class Habit extends HiveObject {
        customAppearance = customAppearance ?? [],
        createdAt = (createdAt ?? DateTime.now()).toUtc(),
        timestamps = timestamps ?? {} {
+    trackingType ??= _inferTrackingType(
+      amount: this.amount,
+      duration: this.duration,
+    );
     this.timestamps['createdAt'] ??= this.createdAt;
   }
 
@@ -150,6 +158,7 @@ class Habit extends HiveObject {
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
       premadeHabitType: premadeHabitType,
+      trackingType: trackingType,
       isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
@@ -190,6 +199,7 @@ class Habit extends HiveObject {
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
       premadeHabitType: premadeHabitType,
+      trackingType: trackingType,
       isDeleted: isDeleted,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
@@ -325,6 +335,10 @@ class Habit extends HiveObject {
     if (premadeHabitType != habit.premadeHabitType) {
       premadeHabitType = habit.premadeHabitType;
       timestamps['premadeHabitType'] = now;
+    }
+    if (trackingType != habit.trackingType) {
+      trackingType = habit.trackingType;
+      timestamps['trackingType'] = now;
     }
     if (isDeleted != habit.isDeleted) {
       isDeleted = habit.isDeleted;
@@ -499,6 +513,12 @@ class Habit extends HiveObject {
     }
   }
 
+  bool get tracksAmount => trackingType == HabitTrackingType.amount;
+
+  bool get tracksDuration => trackingType == HabitTrackingType.duration;
+
+  bool get hasTrackingType => trackingType != null;
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -535,6 +555,7 @@ class Habit extends HiveObject {
       'colorName': colorName,
       'color': color,
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
+      'trackingType': _serializeTrackingType(trackingType),
       'isDeleted': isDeleted,
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
@@ -595,6 +616,12 @@ class Habit extends HiveObject {
       premadeHabitType: _deserializePremadeHabitType(
         m['premadeHabitType']?.toString(),
       ),
+      trackingType:
+          _deserializeTrackingType(m['trackingType']?.toString()) ??
+          _inferTrackingType(
+            amount: (m['amount'] as int?) ?? 0,
+            duration: (m['duration'] as int?) ?? 0,
+          ),
       isDeleted: m['isDeleted'] as bool?,
       timestamps: ts,
     )..color = m['color'] as String?;
@@ -740,6 +767,11 @@ class Habit extends HiveObject {
         premadeHabitType,
         incoming.premadeHabitType,
       ),
+      trackingType: resolve(
+        'trackingType',
+        trackingType,
+        incoming.trackingType,
+      ),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       timestamps: mergedTimestamps,
     );
@@ -833,6 +865,39 @@ class Habit extends HiveObject {
       if (type.name == value) {
         return type;
       }
+    }
+
+    return null;
+  }
+
+  static String? _serializeTrackingType(HabitTrackingType? type) {
+    return type?.name;
+  }
+
+  static HabitTrackingType? _deserializeTrackingType(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    for (final type in HabitTrackingType.values) {
+      if (type.name == value) {
+        return type;
+      }
+    }
+
+    return null;
+  }
+
+  static HabitTrackingType? _inferTrackingType({
+    required int amount,
+    required int duration,
+  }) {
+    if (amount >= 1) {
+      return HabitTrackingType.amount;
+    }
+
+    if (duration > 0) {
+      return HabitTrackingType.duration;
     }
 
     return null;

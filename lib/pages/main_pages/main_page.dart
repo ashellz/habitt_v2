@@ -163,8 +163,7 @@ class _MainPageState extends State<MainPage> {
         }
 
         if (insight == HabitStrengthInsight.pushHarder &&
-            habit.amount <= 1 &&
-            habit.duration <= 0) {
+            !habit.hasTrackingType) {
           continue;
         }
 
@@ -295,7 +294,7 @@ class _MainPageState extends State<MainPage> {
     final habit = candidate.habit;
     final isStartSmall = candidate.insight == HabitStrengthInsight.startSmall;
 
-    if (habit.amount > 0) {
+    if (habit.tracksAmount) {
       final current = habit.amount;
       final recommended =
           isStartSmall
@@ -323,7 +322,7 @@ class _MainPageState extends State<MainPage> {
       );
     }
 
-    if (habit.duration > 0) {
+    if (habit.tracksDuration) {
       final current = habit.duration;
       final recommended =
           isStartSmall

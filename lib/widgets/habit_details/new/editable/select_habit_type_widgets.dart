@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_amount.dart';
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
@@ -29,17 +30,17 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final sp = context.read<StateProvider>();
-      final amount = sp.habitAmount;
-      final duration = sp.habitDuration;
+      final trackingType = sp.selectedHabitTrackingType;
 
       setState(() {
         selectedType =
-            amount > 1
+            trackingType == HabitTrackingType.amount
                 ? HabitType.amount
-                : duration > Duration.zero
+                : trackingType == HabitTrackingType.duration
                 ? HabitType.duration
                 : HabitType.none;
-        lastSelectedType = selectedType;
+        lastSelectedType =
+            selectedType == HabitType.none ? lastSelectedType : selectedType;
       });
     });
   }
@@ -124,14 +125,17 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
     });
 
     if (selectedType == HabitType.none) {
+      stateProvider.selectedHabitTrackingType = null;
       // If deselected, clear amount
       Future.delayed(const Duration(milliseconds: 100), () {
         stateProvider.habitAmount = 0;
       });
     } else if (selectedType == HabitType.amount) {
+      stateProvider.selectedHabitTrackingType = HabitTrackingType.amount;
       // If selected, we reset duration and set default amount
       setState(() {
-        stateProvider.habitAmount = 2;
+        stateProvider.habitAmount =
+            stateProvider.habitAmount < 1 ? 1 : stateProvider.habitAmount;
       });
       Future.delayed(const Duration(milliseconds: 100), () {
         stateProvider.habitDuration = Duration.zero;
@@ -170,13 +174,18 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
     });
 
     if (selectedType == HabitType.none) {
+      stateProvider.selectedHabitTrackingType = null;
       // If deselected, clear duration
       Future.delayed(const Duration(milliseconds: 100), () {
         stateProvider.habitDuration = Duration.zero;
       });
     } else if (selectedType == HabitType.duration) {
+      stateProvider.selectedHabitTrackingType = HabitTrackingType.duration;
       setState(() {
-        stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+        stateProvider.habitDuration =
+            stateProvider.habitDuration == Duration.zero
+                ? Duration(hours: 0, minutes: 20)
+                : stateProvider.habitDuration;
       });
       // If selected, reset amount and set default duration
       Future.delayed(const Duration(milliseconds: 100), () {

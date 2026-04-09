@@ -104,6 +104,7 @@ class _HabitSheetState extends State<HabitSheet> {
     stateProvider.descController.text = habit.description;
     stateProvider.habitAmount = habit.amount;
     stateProvider.habitDuration = Duration(minutes: habit.duration);
+    stateProvider.selectedHabitTrackingType = habit.trackingType;
     stateProvider.habitAmountLabelController.text = habit.amountLabel;
     stateProvider.setIconPathImmediately(habit.iconPath);
     stateProvider.isOptional = habit.optional;
@@ -136,6 +137,8 @@ class _HabitSheetState extends State<HabitSheet> {
     final changedCategory = sp.habitCategoryId != habit.categoryId;
     final changedDuration = sp.habitDuration.inMinutes != habit.duration;
     final changedAmount = sp.habitAmount != habit.amount;
+    final changedTrackingType =
+        sp.selectedHabitTrackingType != habit.trackingType;
     final changedOptionalHabit = sp.isOptional != habit.optional;
     final changedIcon = sp.iconPath != habit.iconPath;
     final changedTimeIntervalEnabled =
@@ -167,6 +170,7 @@ class _HabitSheetState extends State<HabitSheet> {
         changedCategory ||
         changedDuration ||
         changedAmount ||
+        changedTrackingType ||
         changedOptionalHabit ||
         changedIcon ||
         changedTimeIntervalEnabled ||
@@ -188,6 +192,7 @@ class _HabitSheetState extends State<HabitSheet> {
     final changedCategory = sp.habitCategoryId != 1;
     final changedAmount = sp.habitAmount != 0;
     final changedDuration = sp.habitDuration != Duration.zero;
+    final changedTrackingType = sp.selectedHabitTrackingType != null;
     final changedAmountLabel = sp.habitAmountLabelController.text != "times";
     final changedIcon =
         sp.iconPath.isNotEmpty && sp.iconPath != EmojiService.defaultEmoji;
@@ -209,6 +214,7 @@ class _HabitSheetState extends State<HabitSheet> {
         changedCategory ||
         changedAmount ||
         changedDuration ||
+        changedTrackingType ||
         changedAmountLabel ||
         changedIcon ||
         changedOptional ||
@@ -347,14 +353,9 @@ class _HabitSheetState extends State<HabitSheet> {
       final tp = context.read<ThemeProvider>();
       final habit = widget.habit!;
 
-      if (sp.habitAmount != habit.amount) {
-        await habit.resetCompletion();
-        habit.amount = sp.habitAmount;
-      } else if (sp.habitDuration.inMinutes != habit.duration) {
-        await habit.resetCompletion();
-        habit.duration = sp.habitDuration.inMinutes;
-      }
-
+      habit.amount = sp.habitAmount;
+      habit.duration = sp.habitDuration.inMinutes;
+      habit.trackingType = sp.selectedHabitTrackingType;
       habit.name = sp.nameController.text;
       habit.description = sp.descController.text;
       habit.categoryId = sp.habitCategoryId;
@@ -405,6 +406,7 @@ class _HabitSheetState extends State<HabitSheet> {
         amountLabel: sp.habitAmountLabelController.text,
         amountCompleted: 0,
         duration: sp.habitDuration.inMinutes,
+        trackingType: sp.selectedHabitTrackingType,
         durationCompleted: 0,
         streak: 0,
         longestStreak: 0,

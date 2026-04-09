@@ -35,12 +35,16 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
         text: widget.amountCompleted.toString(),
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        stateProvider.habitAmount = widget.amountCompleted ?? 0;
+        setState(() {
+          stateProvider.habitAmount = widget.amountCompleted ?? 0;
+        });
       });
     } else {
       controller = TextEditingController(text: widget.amount.toString());
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        stateProvider.habitAmount = widget.amount;
+        setState(() {
+          stateProvider.habitAmount = widget.amount;
+        });
       });
     }
   }
@@ -54,7 +58,11 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
   }
 
   void onDecrement() {
-    if (stateProvider.habitAmount > 2) {
+    debugPrint(
+      "Habit amount: ${stateProvider.habitAmount}, min: ${widget.minValue}",
+    );
+    if (stateProvider.habitAmount > widget.minValue) {
+      debugPrint("Decrementing habit amount");
       setState(() {
         stateProvider.habitAmount--;
         controller.text = stateProvider.habitAmount.toString();

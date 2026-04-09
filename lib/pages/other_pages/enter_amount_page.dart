@@ -16,7 +16,7 @@ class EnterAmountPage extends StatefulWidget {
   const EnterAmountPage({
     super.key,
     required this.type,
-    this.wheelValue = 2,
+    this.wheelValue = 1,
     this.durationValue = const Duration(hours: 0, minutes: 20),
   });
 
@@ -66,7 +66,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
 
   void decreaseWheelValue() {
     if (widget.type == OldHabitType.amount) {
-      if (wheelValue > 2) {
+      if (wheelValue > 1) {
         setState(() {
           wheelValue--;
         });

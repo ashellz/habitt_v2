@@ -61,6 +61,8 @@ class EditHabitButton extends StatelessWidget {
               widget.habit.categoryId = stateProvider.habitCategoryId;
               widget.habit.amountLabel =
                   stateProvider.habitAmountLabelController.text;
+              widget.habit.trackingType =
+                  stateProvider.selectedHabitTrackingType;
               widget.habit.iconPath = stateProvider.iconPath;
               widget.habit.optional = stateProvider.isOptional;
 

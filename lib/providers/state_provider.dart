@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
@@ -106,6 +107,7 @@ class StateProvider extends ChangeNotifier {
   int _habitCategoryId = 1;
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
+  HabitTrackingType? _selectedHabitTrackingType;
   TextEditingController habitAmountLabelController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController descController = TextEditingController();
@@ -133,6 +135,8 @@ class StateProvider extends ChangeNotifier {
   Set<int> get selectedDaysAWeek => Set<int>.from(_selectedDaysAWeek);
   Set<int> get selectedDaysAMonth => Set<int>.from(_selectedDaysAMonth);
   PremadeHabitType? get selectedPremadeHabitType => _selectedPremadeHabitType;
+  HabitTrackingType? get selectedHabitTrackingType =>
+      _selectedHabitTrackingType;
 
   String get scheduleSummary {
     switch (_selectedScheduleOption) {
@@ -190,6 +194,15 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set selectedHabitTrackingType(HabitTrackingType? value) {
+    _selectedHabitTrackingType = value;
+    if (_selectedHabitTrackingType == HabitTrackingType.amount &&
+        _habitAmount < 1) {
+      _habitAmount = 1;
+    }
+    notifyListeners();
+  }
+
   void clearSelectedPremadeHabitType() {
     _selectedPremadeHabitType = null;
     notifyListeners();
@@ -205,6 +218,12 @@ class StateProvider extends ChangeNotifier {
 
     _habitAmount = template.amount;
     _habitDuration = Duration(minutes: template.durationMinutes);
+    _selectedHabitTrackingType =
+        template.amount >= 1
+            ? HabitTrackingType.amount
+            : template.durationMinutes > 0
+            ? HabitTrackingType.duration
+            : null;
     habitAmountLabelController.text = template.amountLabel;
 
     _isOptional = false;
@@ -381,6 +400,7 @@ class StateProvider extends ChangeNotifier {
     _showAllHabits = true;
 
     _habitDuration = Duration.zero;
+    _selectedHabitTrackingType = null;
 
     _habitCategoryId = 1;
     habitAmountLabelController.text = "times";

@@ -136,10 +136,10 @@ class _StatsGrid extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         _StatCard(
-          title: habit.duration > 0 ? 'Duration' : 'Amount',
+          title: habit.tracksDuration ? 'Duration' : 'Amount',
           value: _amountText(habit, stats),
           iconPath:
-              habit.duration > 0
+              habit.tracksDuration
                   ? 'assets/images/new-svg/clock.svg'
                   : 'assets/images/new-svg/amount.svg',
           fullWidth: true,
@@ -149,7 +149,7 @@ class _StatsGrid extends StatelessWidget {
   }
 
   String _amountText(Habit habit, HabitStatsData stats) {
-    if (habit.duration > 0) {
+    if (habit.tracksDuration) {
       return getDurationString(stats.totalDurationCompletedMinutes);
     }
 
