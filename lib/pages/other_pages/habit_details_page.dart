@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:cupertino_native/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -389,7 +390,7 @@ class _StrengthRingState extends State<_StrengthRing>
     _currentStrength = widget.strength.clamp(0.0, 1.0);
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 420),
+      duration: const Duration(milliseconds: 650),
     );
     _animation = AlwaysStoppedAnimation(_currentStrength);
   }
@@ -453,12 +454,16 @@ class _StrengthRingState extends State<_StrengthRing>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '$percent%',
-                      style: TextStyle(
-                        color: cp.text,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    _RingValueBlurCloud(
+                      progress: _controller.value,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Text(
+                        '$percent%',
+                        style: TextStyle(
+                          color: cp.text,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     Text(
@@ -472,6 +477,65 @@ class _StrengthRingState extends State<_StrengthRing>
           );
         },
       ),
+    );
+  }
+}
+
+class _RingValueBlurCloud extends StatelessWidget {
+  const _RingValueBlurCloud({
+    required this.child,
+    required this.progress,
+    this.borderRadius = BorderRadius.zero,
+  });
+
+  final Widget child;
+  final double progress;
+  final BorderRadius borderRadius;
+
+  double _opacityFor(double t) {
+    if (t <= 0 || t >= 0.58) {
+      return 0;
+    }
+    if (t < 0.16) {
+      return (t / 0.16) * 0.85;
+    }
+    return (1 - ((t - 0.16) / 0.42)).clamp(0.0, 1.0) * 0.85;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final opacity = _opacityFor(progress);
+    final sigma = 1 + (opacity * 5);
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        child,
+        if (opacity > 0)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: ClipRRect(
+                borderRadius: borderRadius,
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        colors: [
+                          cp.field.withValues(alpha: opacity * 0.95),
+                          cp.field.withValues(alpha: opacity * 0.35),
+                          Colors.transparent,
+                        ],
+                        stops: const [0, 0.65, 1],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
