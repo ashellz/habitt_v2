@@ -368,59 +368,109 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   }
 }
 
-class _StrengthRing extends StatelessWidget {
+class _StrengthRing extends StatefulWidget {
   const _StrengthRing({required this.strength});
 
   final double strength;
 
   @override
+  State<_StrengthRing> createState() => _StrengthRingState();
+}
+
+class _StrengthRingState extends State<_StrengthRing>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late Animation<double> _animation;
+  late double _currentStrength;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentStrength = widget.strength.clamp(0.0, 1.0);
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    _animation = AlwaysStoppedAnimation(_currentStrength);
+  }
+
+  @override
+  void didUpdateWidget(covariant _StrengthRing oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final nextStrength = widget.strength.clamp(0.0, 1.0);
+    if (nextStrength == _currentStrength) {
+      return;
+    }
+
+    _animation = Tween<double>(
+      begin: _currentStrength,
+      end: nextStrength,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _currentStrength = nextStrength;
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final normalizedStrength = strength.clamp(0.0, 1.0);
-    final percent = (normalizedStrength * 100).round();
 
     return SizedBox(
       width: 82,
       height: 82,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            width: 82,
-            height: 82,
-            child: CircularProgressIndicator(
-              value: normalizedStrength,
-              strokeWidth: 6,
-              backgroundColor: cp.habitBg,
-              valueColor: AlwaysStoppedAnimation<Color>(cp.text),
-            ),
-          ),
-          Container(
-            height: 68,
-            width: 68,
-            decoration: BoxDecoration(
-              color: cp.habitBg,
-              shape: BoxShape.circle,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$percent%',
-                  style: TextStyle(
-                    color: cp.text,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+      child: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, _) {
+          final animatedStrength = _animation.value;
+          final percent = (animatedStrength * 100).round();
+
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 82,
+                height: 82,
+                child: CircularProgressIndicator(
+                  value: animatedStrength,
+                  strokeWidth: 6,
+                  backgroundColor: cp.habitBg,
+                  valueColor: AlwaysStoppedAnimation(cp.text),
                 ),
-                Text(
-                  'Strength',
-                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+              ),
+              Container(
+                height: 68,
+                width: 68,
+                decoration: BoxDecoration(
+                  color: cp.habitBg,
+                  shape: BoxShape.circle,
                 ),
-              ],
-            ),
-          ),
-        ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$percent%',
+                      style: TextStyle(
+                        color: cp.text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'Strength',
+                      style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
