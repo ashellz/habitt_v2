@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/create_amount_label.dart';
@@ -39,7 +40,10 @@ class EnterHabitAmount extends StatelessWidget {
             );
           },
           onConfirm: (label) {
-            sp.habitAmountLabelController.text = label;
+            sp.habitAmountLabelController.text = resolveAmountLabelForValue(
+              label,
+              sp.habitAmount,
+            );
             Navigator.of(sheetContext).pop();
           },
         );
@@ -78,6 +82,20 @@ class EnterHabitAmount extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
+
+    final currentLabel = sp.habitAmountLabelController.text;
+    final resolvedLabel = resolveAmountLabelForValue(
+      currentLabel,
+      sp.habitAmount,
+    );
+    if (resolvedLabel != currentLabel) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        if (sp.habitAmountLabelController.text != resolvedLabel) {
+          sp.habitAmountLabelController.text = resolvedLabel;
+        }
+      });
+    }
 
     return Row(
       spacing: 10,
