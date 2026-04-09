@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 
 class MainHabitInfo extends StatelessWidget {
   const MainHabitInfo({super.key, required this.habit, required this.cp});
@@ -20,8 +21,14 @@ class MainHabitInfo extends StatelessWidget {
     final bool isCompleted = habit.completed;
 
     String amountText() {
-      final String amountLabel =
-          habit.amountLabel.isEmpty ? "times" : habit.amountLabel;
+      final int amountForLabel =
+          hasProgress && !isCompleted
+              ? habit.amount
+              : (isCompleted ? habit.amountCompleted : habit.amount);
+      final String amountLabel = resolveAmountLabelForValue(
+        habit.amountLabel.isEmpty ? "times" : habit.amountLabel,
+        amountForLabel,
+      );
 
       if (hasProgress && !isCompleted) {
         return "${habit.amountCompleted} / ${habit.amount} $amountLabel";
