@@ -43,6 +43,7 @@ class ColorProvider extends ChangeNotifier {
   late Color habitIconBg;
   late Color widget;
   late Color pill;
+  late Color error;
 
   _getModeFromPrefs(SharedPreferences prefs) {
     String? modeString = prefs.getString('color_mode');
@@ -113,6 +114,7 @@ class ColorProvider extends ChangeNotifier {
       habitIconBg = Dark.border;
       widget = Dark.field;
       pill = Dark.field;
+      error = Dark.error;
     } else {
       bg = Light.bg;
       habitBg = Light.habitsBg;
@@ -139,6 +141,7 @@ class ColorProvider extends ChangeNotifier {
       habitIconBg = Light.white10;
       widget = Light.bg;
       pill = Light.black;
+      error = Light.error;
     }
   }
 

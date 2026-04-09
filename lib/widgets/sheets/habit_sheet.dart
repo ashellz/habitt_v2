@@ -18,6 +18,7 @@ import 'package:habitt/widgets/default/animated_checkbox.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/dialogs/override_current_config_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
@@ -298,15 +299,9 @@ class _HabitSheetState extends State<HabitSheet> {
     await showDialogSheet(
       context: context,
       builder:
-          (dialogContext) => NewDefaultDialog(
-            title: 'Apply premade habit?',
-            desc:
-                'This will override your current habit details with the selected premade habit.',
-            primaryButtonLabel: 'Apply',
-            onPrimaryButtonPressed: () {
-              sp.applyPremadeHabitTemplate(template);
-              Navigator.of(dialogContext).pop();
-            },
+          (dialogContext) => OverrideCurrentConfigDialog(
+            dialogContext: dialogContext,
+            template: template,
           ),
     );
   }
@@ -535,12 +530,24 @@ class _HabitSheetState extends State<HabitSheet> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        NewDefaultButton.secondarySmall(
-          width: null,
+        NewDefaultButton(
+          height: 46,
+          color: cp.field,
+          textColor: cp.text,
+          isGradient: false,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
           onPressed: () async {
             await _openPremadeHabitSheet(sp);
           },
-          label: label,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 10,
+            children: [
+              if (selectedTemplate != null)
+                TextIcon(selectedTemplate.iconPath, size: 24),
+              Text(label, style: TextStyle(color: cp.text, fontSize: 16)),
+            ],
+          ),
         ),
       ],
     );

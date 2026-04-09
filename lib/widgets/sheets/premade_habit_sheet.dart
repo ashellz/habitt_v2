@@ -68,7 +68,7 @@ class PremadeHabitSheet extends StatelessWidget {
             children: [
               _topSection(context, cp, rightActionLabel),
               Text(
-                'Choose a habit from categories...',
+                'Choose a habit from categories — or skip and create your own habit',
                 style: TextStyle(
                   color: cp.greyText,
                   fontSize: 18,
@@ -127,14 +127,13 @@ class PremadeHabitSheet extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextIcon(template.iconPath, size: 22),
+                      TextIcon(template.iconPath, size: 24),
                       const SizedBox(width: 10),
                       Text(
                         template.name,
                         style: TextStyle(
                           color: isSelected ? cp.bg : cp.text,
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -172,7 +171,7 @@ class PremadeHabitSheet extends StatelessWidget {
           ),
         ),
         Text(
-          'New Habit',
+          'Select Habit',
           style: TextStyle(
             color: cp.text,
             fontSize: 22,
@@ -180,6 +179,7 @@ class PremadeHabitSheet extends StatelessWidget {
           ),
         ),
         NewDefaultButton.secondarySmall(
+          width: null,
           label: rightActionLabel,
           onPressed: () {
             final result =

@@ -15,6 +15,7 @@ class NewDefaultDialog extends StatelessWidget {
     this.desc,
     this.onPrimaryButtonPressed,
     this.onSecondaryButtonPressed,
+    this.primaryButtonColor,
   });
 
   final Widget? child;
@@ -26,6 +27,7 @@ class NewDefaultDialog extends StatelessWidget {
   final bool showSecondaryButton;
   final VoidCallback? onPrimaryButtonPressed;
   final VoidCallback? onSecondaryButtonPressed;
+  final Color? primaryButtonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class NewDefaultDialog extends StatelessWidget {
                   Expanded(
                     child: NewDefaultButton.primary(
                       enabled: primaryButtonEnabled,
+                      color: primaryButtonColor,
                       onPressed: () {
                         if (onPrimaryButtonPressed != null) {
                           onPrimaryButtonPressed!();

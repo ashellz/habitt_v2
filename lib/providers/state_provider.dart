@@ -208,8 +208,15 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void applyPremadeHabitTemplate(PremadeHabitTemplate template) {
+  void applyPremadeHabitTemplate(
+    PremadeHabitTemplate template, {
+    bool overrideConfig = true,
+  }) {
     _selectedPremadeHabitType = template.type;
+    if (!overrideConfig) {
+      notifyListeners();
+      return;
+    }
     _habitCategoryId = template.categoryId;
 
     nameController.text = template.name;
