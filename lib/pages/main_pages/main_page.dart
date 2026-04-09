@@ -163,9 +163,13 @@ class _MainPageState extends State<MainPage> {
         }
 
         if (insight == HabitStrengthInsight.pushHarder &&
-            habit.amount <= 0 &&
+            habit.amount <= 1 &&
             habit.duration <= 0) {
           continue;
+        }
+
+        if (insight == HabitStrengthInsight.startSmall && habit.optional) {
+          return;
         }
 
         final storageKey = _storageKey(habit.id, insight);
@@ -224,21 +228,30 @@ class _MainPageState extends State<MainPage> {
 
     final recommendation = _buildTargetRecommendation(candidate);
     final isMotivationOnly = recommendation == null;
+    final isOptionalPushHarder =
+        candidate.insight == HabitStrengthInsight.pushHarder &&
+        candidate.habit.optional;
 
     final title =
-        isMotivationOnly
+        isOptionalPushHarder
+            ? 'Ready to level up ${candidate.habit.name}?'
+            : isMotivationOnly
             ? 'Keep pushing ${candidate.habit.name}'
             : candidate.insight == HabitStrengthInsight.startSmall
             ? 'Lower target for ${candidate.habit.name}'
             : 'Increase target for ${candidate.habit.name}';
 
     final desc =
-        isMotivationOnly
+        isOptionalPushHarder
+            ? "You're getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?"
+            : isMotivationOnly
             ? _motivationDescription(candidate, todayKey)
             : _recommendationDescription(candidate, recommendation);
 
     final primaryLabel =
-        isMotivationOnly
+        isOptionalPushHarder
+            ? 'Update now'
+            : isMotivationOnly
             ? _gotItLabel(candidate, todayKey)
             : candidate.insight == HabitStrengthInsight.startSmall
             ? 'Apply decrease'
@@ -258,6 +271,10 @@ class _MainPageState extends State<MainPage> {
             onPrimaryButtonPressed: () {
               Navigator.pop(dialogContext);
               if (!mounted || !widget.isActive) {
+                return;
+              }
+              if (isOptionalPushHarder) {
+                _applyOptionalPushHarderUpdate(candidate.habit);
                 return;
               }
               if (recommendation != null) {
@@ -408,6 +425,12 @@ class _MainPageState extends State<MainPage> {
       }
     }
 
+    habitProvider.updateHabit(updated);
+  }
+
+  void _applyOptionalPushHarderUpdate(Habit habit) {
+    final habitProvider = context.read<HabitProvider>();
+    final updated = habit.copy()..optional = false;
     habitProvider.updateHabit(updated);
   }
 
