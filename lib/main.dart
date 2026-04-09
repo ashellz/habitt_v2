@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/firebase_options.dart';
+import 'package:habitt/hive/hive_adapters.dart';
 import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
@@ -49,6 +50,18 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapters();
+  if (!Hive.isAdapterRegistered(2)) {
+    Hive.registerAdapter(ScheduleTypeAdapter());
+  }
+  if (!Hive.isAdapterRegistered(5)) {
+    Hive.registerAdapter(PremadeHabitTypeAdapter());
+  }
+  if (!Hive.isAdapterRegistered(6)) {
+    Hive.registerAdapter(HabitTrackingTypeAdapter());
+  }
+  if (!Hive.isAdapterRegistered(34)) {
+    Hive.registerAdapter(LegacyHabitTrackingTypeAdapter());
+  }
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Day>('days');
 

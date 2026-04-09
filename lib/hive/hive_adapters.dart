@@ -58,3 +58,24 @@ class HabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
     writer.writeByte(obj.index);
   }
 }
+
+/// Backward-compatibility adapter for older persisted HabitTrackingType values.
+/// Some existing boxes contain this enum under typeId 34.
+class LegacyHabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
+  @override
+  int get typeId => 34;
+
+  @override
+  HabitTrackingType read(BinaryReader reader) {
+    final index = reader.readByte();
+    if (index < 0 || index >= HabitTrackingType.values.length) {
+      return HabitTrackingType.amount;
+    }
+    return HabitTrackingType.values[index];
+  }
+
+  @override
+  void write(BinaryWriter writer, HabitTrackingType obj) {
+    writer.writeByte(obj.index);
+  }
+}
