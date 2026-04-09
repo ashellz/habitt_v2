@@ -38,8 +38,8 @@ class PremadeHabitSheetResult {
   }
 }
 
-class PremadeHabitSheet extends StatelessWidget {
-  const PremadeHabitSheet({
+class PremadeHabitsSheet extends StatelessWidget {
+  const PremadeHabitsSheet({
     super.key,
     required this.mode,
     this.selectedPremadeHabitType,
@@ -56,6 +56,12 @@ class PremadeHabitSheet extends StatelessWidget {
 
     final rightActionLabel =
         mode == PremadeHabitSheetMode.create ? 'Skip' : 'Clear';
+    final desc =
+        mode == PremadeHabitSheetMode.create
+            ? 'Choose a habit from categories — or skip and create your own habit'
+            /// Selecting a habit here will customize your experience with personalized
+            /// notifications, UI styling, and text based on the chosen premade habit.
+            : 'Notifications, UI styling, and text gets customized based on the chosen habit.';
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: maxSheetHeight),
@@ -68,12 +74,8 @@ class PremadeHabitSheet extends StatelessWidget {
             children: [
               _topSection(context, cp, rightActionLabel),
               Text(
-                'Choose a habit from categories — or skip and create your own habit',
-                style: TextStyle(
-                  color: cp.greyText,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
+                desc,
+                style: TextStyle(color: cp.lightGreyText, fontSize: 16),
               ),
               ...PremadeHabitCatalog.sections.map(
                 (section) => _buildCategorySection(context, section),

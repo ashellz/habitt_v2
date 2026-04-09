@@ -3,7 +3,7 @@ import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
-import 'package:habitt/widgets/sheets/premade_habit_sheet.dart';
+import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -56,7 +56,7 @@ Future<PremadeHabitSheetResult?> _showPremadeSheet(BuildContext context) {
     backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
     barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
     isScrollControlled: true,
-    builder: (_) => PremadeHabitSheet(mode: PremadeHabitSheetMode.create),
+    builder: (_) => PremadeHabitsSheet(mode: PremadeHabitSheetMode.create),
   );
 }
 
