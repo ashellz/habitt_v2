@@ -135,27 +135,98 @@ class _StatsGrid extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        _StatCard(
-          title: habit.tracksDuration ? 'Duration' : 'Amount',
-          value: _amountText(habit, stats),
-          iconPath:
-              habit.tracksDuration
-                  ? 'assets/images/new-svg/clock.svg'
-                  : 'assets/images/new-svg/amount.svg',
-          fullWidth: true,
+        _AnimatedTotalSpentCard(
+          habit: habit,
+          stats: stats,
         ),
       ],
     );
   }
+}
 
-  String _amountText(Habit habit, HabitStatsData stats) {
+class _AnimatedTotalSpentCard extends StatefulWidget {
+  const _AnimatedTotalSpentCard({required this.habit, required this.stats});
+
+  final Habit habit;
+  final HabitStatsData stats;
+
+  @override
+  State<_AnimatedTotalSpentCard> createState() => _AnimatedTotalSpentCardState();
+}
+
+class _AnimatedTotalSpentCardState extends State<_AnimatedTotalSpentCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late Animation<double> _animation;
+  late int _currentRawValue;
+
+  int _rawValueFor(Habit habit, HabitStatsData stats) {
     if (habit.tracksDuration) {
-      return getDurationString(stats.totalDurationCompletedMinutes);
+      return stats.totalDurationCompletedMinutes;
+    }
+    return stats.totalAmountCompleted;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _currentRawValue = _rawValueFor(widget.habit, widget.stats).clamp(0, 999999999);
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    _animation = AlwaysStoppedAnimation(_currentRawValue.toDouble());
+  }
+
+  @override
+  void didUpdateWidget(covariant _AnimatedTotalSpentCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final nextRawValue = _rawValueFor(widget.habit, widget.stats).clamp(0, 999999999);
+    if (nextRawValue == _currentRawValue) {
+      return;
     }
 
-    final label =
-        habit.amountLabel.trim().isEmpty ? 'times' : habit.amountLabel;
-    return '${stats.totalAmountCompleted} $label';
+    _animation = Tween<double>(
+      begin: _currentRawValue.toDouble(),
+      end: nextRawValue.toDouble(),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _currentRawValue = nextRawValue;
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final habit = widget.habit;
+    final title = habit.tracksDuration ? 'Duration' : 'Amount';
+    final iconPath =
+        habit.tracksDuration
+            ? 'assets/images/new-svg/clock.svg'
+            : 'assets/images/new-svg/amount.svg';
+
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, _) {
+        final animatedRaw = _animation.value.round();
+        final value =
+            habit.tracksDuration
+                ? getDurationString(animatedRaw)
+                : '$animatedRaw ${habit.amountLabel.trim().isEmpty ? 'times' : habit.amountLabel}';
+
+        return _StatCard(
+          title: title,
+          value: value,
+          iconPath: iconPath,
+          fullWidth: true,
+        );
+      },
+    );
   }
 }
 
@@ -225,78 +296,183 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-class _CompletionRatioLeft extends StatelessWidget {
+class _CompletionRatioLeft extends StatefulWidget {
   const _CompletionRatioLeft({required this.percentage});
 
   final int percentage;
 
   @override
+  State<_CompletionRatioLeft> createState() => _CompletionRatioLeftState();
+}
+
+class _CompletionRatioLeftState extends State<_CompletionRatioLeft>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late Animation<double> _animation;
+  late int _currentPercentage;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentPercentage = widget.percentage.clamp(0, 100);
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    _animation = AlwaysStoppedAnimation(_currentPercentage.toDouble());
+  }
+
+  @override
+  void didUpdateWidget(covariant _CompletionRatioLeft oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final nextPercentage = widget.percentage.clamp(0, 100);
+    if (nextPercentage == _currentPercentage) {
+      return;
+    }
+
+    _animation = Tween<double>(
+      begin: _currentPercentage.toDouble(),
+      end: nextPercentage.toDouble(),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _currentPercentage = nextPercentage;
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: cp.field,
-            shape: BoxShape.circle,
-            border: Border.all(width: 1, color: cp.border),
-          ),
-          padding: const EdgeInsets.all(12),
-          child: SvgPicture.asset(
-            'assets/images/new-svg/completion-rate.svg',
-            colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, _) {
+        final animatedPercentage = _animation.value.round();
+
+        return Row(
           children: [
-            Text(
-              '$percentage%',
-              style: TextStyle(
-                color: cp.text,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: cp.field,
+                shape: BoxShape.circle,
+                border: Border.all(width: 1, color: cp.border),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: SvgPicture.asset(
+                'assets/images/new-svg/completion-rate.svg',
+                colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
               ),
             ),
-            Text(
-              'Completion rate',
-              style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$animatedPercentage%',
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  'Completion rate',
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
-class _WeekdayRateRow extends StatelessWidget {
+class _WeekdayRateRow extends StatefulWidget {
   const _WeekdayRateRow({required this.label, required this.percentage});
 
   final String label;
   final int percentage;
 
   @override
+  State<_WeekdayRateRow> createState() => _WeekdayRateRowState();
+}
+
+class _WeekdayRateRowState extends State<_WeekdayRateRow>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late Animation<double> _animation;
+  late int _currentPercentage;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentPercentage = widget.percentage.clamp(0, 100);
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    _animation = AlwaysStoppedAnimation(_currentPercentage.toDouble());
+  }
+
+  @override
+  void didUpdateWidget(covariant _WeekdayRateRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final nextPercentage = widget.percentage.clamp(0, 100);
+    if (nextPercentage == _currentPercentage) {
+      return;
+    }
+
+    _animation = Tween<double>(
+      begin: _currentPercentage.toDouble(),
+      end: nextPercentage.toDouble(),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _currentPercentage = nextPercentage;
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    return Row(
-      spacing: 4,
-      children: [
-        Text(label, style: TextStyle(color: cp.lightGreyText, fontSize: 13)),
-        Text('-', style: TextStyle(color: cp.lightGreyText, fontSize: 13)),
-        Text(
-          '$percentage%',
-          style: TextStyle(
-            color: cp.text,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, _) {
+        final animatedPercentage = _animation.value.round();
+
+        return Row(
+          spacing: 4,
+          children: [
+            Text(
+              widget.label,
+              style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+            ),
+            Text('-', style: TextStyle(color: cp.lightGreyText, fontSize: 13)),
+            Text(
+              '$animatedPercentage%',
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
