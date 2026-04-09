@@ -456,10 +456,31 @@ class HabitProvider extends ChangeNotifier {
     final Map<DateTime, double> daysProgress = {};
 
     for (final day in thisWeekDays) {
-      final dayProgress =
-          day.habits.where((habit) => habit.completed).length /
-          (day.habits.isEmpty ? 1 : day.habits.length);
-      daysProgress[day.date] = dayProgress;
+      final totalHabits = day.habits.isEmpty ? 1 : day.habits.length;
+      final completedWeight = day.habits.fold<double>(0.0, (sum, habit) {
+        if (habit.completed) {
+          return sum + 1.0;
+        }
+
+        if (habit.tracksAmount) {
+          if (habit.amount <= 0) {
+            return sum;
+          }
+          return sum + (habit.amountCompleted / habit.amount).clamp(0.0, 1.0);
+        }
+
+        if (habit.tracksDuration) {
+          if (habit.duration <= 0) {
+            return sum;
+          }
+          return sum +
+              (habit.durationCompleted / habit.duration).clamp(0.0, 1.0);
+        }
+
+        return sum;
+      });
+
+      daysProgress[day.date] = (completedWeight / totalHabits).clamp(0.0, 1.0);
     }
 
     debugPrint("Returning Days progress: $daysProgress");
