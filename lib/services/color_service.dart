@@ -26,6 +26,8 @@ class Light {
   static const Color mid = Color(0xFFFFB764);
   static const Color fail = Color(0xFFFF6464);
 
+  static const Color error = Color(0xFFFF6464);
+
   static const Color mainButtonLeftGradient = Color(0xFF02D382);
   static const Color mainButtonRightGradient = Color(0xFF02C378);
 
@@ -57,6 +59,8 @@ class Dark {
   static const Color main = Color(0xFF11F29B);
   static const Color mid = Color(0xFFFFB764);
   static const Color fail = Color(0xFFFF6464);
+
+  static const Color error = Color(0xFFFF7E7E);
 
   static const Color mainButtonLeftGradient = Color(0xFF24FFAA);
   static const Color mainButtonRightGradient = Color(0xFF02E990);

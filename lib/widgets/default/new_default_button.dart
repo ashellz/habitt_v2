@@ -39,8 +39,8 @@ class NewDefaultButton extends StatelessWidget {
     this.child,
     this.padding = const EdgeInsets.only(),
     this.textColor,
-  }) : color = null,
-       width = null,
+    this.color,
+  }) : width = null,
        isGradient = true,
        _variant = _ButtonVariant.primary;
 
@@ -135,7 +135,7 @@ class NewDefaultButton extends StatelessWidget {
     Color buttonColor;
     switch (_variant) {
       case _ButtonVariant.primary:
-        buttonColor = cp.main;
+        buttonColor = color ?? cp.main;
         break;
       case _ButtonVariant.secondary:
         buttonColor = cp.secondaryButton;
