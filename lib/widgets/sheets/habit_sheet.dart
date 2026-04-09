@@ -23,7 +23,7 @@ import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_perio
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
-import 'package:habitt/widgets/sheets/premade_habit_sheet.dart';
+import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -269,7 +269,7 @@ class _HabitSheetState extends State<HabitSheet> {
       barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
       isScrollControlled: true,
       builder:
-          (_) => PremadeHabitSheet(
+          (_) => PremadeHabitsSheet(
             mode: PremadeHabitSheetMode.editFromHabitSheet,
             selectedPremadeHabitType: sp.selectedPremadeHabitType,
           ),
