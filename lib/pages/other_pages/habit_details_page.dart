@@ -33,6 +33,7 @@ class HabitDetailsPage extends StatefulWidget {
 class _HabitDetailsPageState extends State<HabitDetailsPage> {
   late final TextEditingController _notesController;
   late final FocusNode _notesFocusNode;
+  HabitProvider? _habitProvider;
 
   Timer? _notesDebounce;
   bool _isApplyingExternalNotes = false;
@@ -43,6 +44,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     _notesController = TextEditingController();
     _notesFocusNode = FocusNode();
     _notesController.addListener(_onNotesChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _habitProvider ??= context.read<HabitProvider>();
   }
 
   @override
@@ -72,7 +79,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       return;
     }
 
-    final habitProvider = context.read<HabitProvider>();
+    final habitProvider = _habitProvider;
+    if (habitProvider == null) {
+      return;
+    }
+
     final habit = _findHabit(habitProvider);
     if (habit == null) {
       return;
