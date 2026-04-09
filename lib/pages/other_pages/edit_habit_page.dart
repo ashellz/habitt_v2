@@ -37,7 +37,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
   late final TextEditingController _descController;
 
   Duration initialDuration = Duration.zero;
-  int initialAmount = 1;
+  int initialAmount = 0;
+  HabitTrackingType? initialTrackingType;
   bool showButtons = false;
   bool initialized = false;
 
@@ -52,6 +53,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.descController.text = widget.habit.description;
       stateProvider.habitAmount = widget.habit.amount;
       stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
+      stateProvider.selectedHabitTrackingType = widget.habit.trackingType;
       stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
       stateProvider.iconPath = widget.habit.iconPath;
       stateProvider.isOptional = widget.habit.optional;
@@ -71,6 +73,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
       initialDuration = Duration(minutes: widget.habit.duration);
       initialAmount = widget.habit.amount;
+      initialTrackingType = widget.habit.trackingType;
 
       _nameController.text = widget.habit.name;
       _descController.text = widget.habit.description;
@@ -94,6 +97,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final changedDuration =
         stateProvider.habitDuration.inMinutes != initialDuration.inMinutes;
     final changedAmount = stateProvider.habitAmount != initialAmount;
+    final changedTrackingType =
+        stateProvider.selectedHabitTrackingType != initialTrackingType;
     final changedOptionalHabit =
         stateProvider.isOptional != widget.habit.optional;
     final changedIcon = stateProvider.iconPath != widget.habit.iconPath;
@@ -104,25 +109,25 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final changedTimeIntervalEnd =
         stateProvider.timeIntervalEnd != widget.habit.timeIntervalEnd;
     final changedScheduleType =
-      stateProvider.selectedScheduleOption != widget.habit.scheduleType;
+        stateProvider.selectedScheduleOption != widget.habit.scheduleType;
     final changedWeeklyTarget =
-      stateProvider.weeklyTarget != widget.habit.weeklyTarget;
+        stateProvider.weeklyTarget != widget.habit.weeklyTarget;
     final changedMonthlyTarget =
-      stateProvider.monthlyTarget != widget.habit.monthlyTarget;
+        stateProvider.monthlyTarget != widget.habit.monthlyTarget;
     final changedCustomInterval =
-      stateProvider.customIntervalDays != widget.habit.customIntervalDays;
+        stateProvider.customIntervalDays != widget.habit.customIntervalDays;
     final changedSelectedWeekDays =
-      stateProvider.selectedDaysAWeek.length !=
-        widget.habit.selectedDaysAWeek.length ||
-      !stateProvider.selectedDaysAWeek.every(
-        (d) => widget.habit.selectedDaysAWeek.contains(d),
-      );
+        stateProvider.selectedDaysAWeek.length !=
+            widget.habit.selectedDaysAWeek.length ||
+        !stateProvider.selectedDaysAWeek.every(
+          (d) => widget.habit.selectedDaysAWeek.contains(d),
+        );
     final changedSelectedMonthDays =
-      stateProvider.selectedDaysAMonth.length !=
-        widget.habit.selectedDaysAMonth.length ||
-      !stateProvider.selectedDaysAMonth.every(
-        (d) => widget.habit.selectedDaysAMonth.contains(d),
-      );
+        stateProvider.selectedDaysAMonth.length !=
+            widget.habit.selectedDaysAMonth.length ||
+        !stateProvider.selectedDaysAMonth.every(
+          (d) => widget.habit.selectedDaysAMonth.contains(d),
+        );
     final changedHabitColor =
         stateProvider.getHabitColor(themeProvider) !=
             widget.habit.resolveColor(themeProvider) ||
@@ -134,6 +139,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
         changedCategory ||
         changedDuration ||
         changedAmount ||
+        changedTrackingType ||
         changedOptionalHabit ||
         changedIcon ||
         changedTimeIntervalEnabled ||

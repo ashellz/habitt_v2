@@ -42,3 +42,19 @@ class PremadeHabitTypeAdapter extends TypeAdapter<PremadeHabitType> {
     writer.writeByte(obj.index);
   }
 }
+
+class HabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
+  @override
+  int get typeId => 6;
+
+  @override
+  HabitTrackingType read(BinaryReader reader) {
+    final index = reader.readByte();
+    return HabitTrackingType.values[index];
+  }
+
+  @override
+  void write(BinaryWriter writer, HabitTrackingType obj) {
+    writer.writeByte(obj.index);
+  }
+}

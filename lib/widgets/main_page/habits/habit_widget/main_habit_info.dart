@@ -12,8 +12,8 @@ class MainHabitInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAmount = habit.amount > 1;
-    final bool isDuration = habit.duration > 0;
+    final bool isAmount = habit.tracksAmount;
+    final bool isDuration = habit.tracksDuration;
 
     final bool hasProgress =
         isAmount ? habit.amountCompleted > 0 : habit.durationCompleted > 0;

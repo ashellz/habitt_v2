@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:habitt/pages/other_pages/enter_amount_page.dart';
@@ -23,6 +24,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
       selectedType =
           OldHabitType.duration; // Setting the selected type to duration
     });
+    stateProvider.selectedHabitTrackingType = HabitTrackingType.duration;
 
     // Resetting the amount just in case
     stateProvider.habitAmount = 0;
@@ -66,13 +68,14 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
     setState(() {
       selectedType = OldHabitType.amount; // Setting the selected type to amount
     });
+    stateProvider.selectedHabitTrackingType = HabitTrackingType.amount;
 
     // Resetting duration to zero just in case
     stateProvider.habitDuration = Duration.zero;
 
     if (stateProvider.habitAmount == 0) {
-      // If amount hasn't been set, we default it to 2
-      stateProvider.habitAmount = 2;
+      // If amount hasn't been set, we default it to 1
+      stateProvider.habitAmount = 1;
     }
 
     if (previousType == OldHabitType.duration) {
@@ -115,12 +118,15 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
     });
 
     if (selectedType == OldHabitType.none) {
+      stateProvider.selectedHabitTrackingType = null;
       // If deselected, clear amount
       stateProvider.habitAmount = 0;
     } else if (selectedType == OldHabitType.amount) {
+      stateProvider.selectedHabitTrackingType = HabitTrackingType.amount;
       // If selected, we reset duration and set default amount
       stateProvider.habitDuration = Duration.zero;
-      stateProvider.habitAmount = 2;
+      stateProvider.habitAmount =
+          stateProvider.habitAmount < 1 ? 1 : stateProvider.habitAmount;
 
       debugPrint("Selected type: $selectedType");
 
@@ -152,12 +158,17 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
     });
 
     if (selectedType == OldHabitType.none) {
+      stateProvider.selectedHabitTrackingType = null;
       // If deselected, clear duration
       stateProvider.habitDuration = Duration.zero;
     } else if (selectedType == OldHabitType.duration) {
+      stateProvider.selectedHabitTrackingType = HabitTrackingType.duration;
       // If selected, reset amount and set default duration
       stateProvider.habitAmount = 0;
-      stateProvider.habitDuration = Duration(hours: 0, minutes: 20);
+      stateProvider.habitDuration =
+          stateProvider.habitDuration == Duration.zero
+              ? Duration(hours: 0, minutes: 20)
+              : stateProvider.habitDuration;
 
       // Navigates to input page after short delay
       Future.delayed(Duration(milliseconds: 150)).then((value) {
@@ -180,13 +191,12 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final stateProvider = context.read<StateProvider>();
-      amount = stateProvider.habitAmount;
-      duration = stateProvider.habitDuration.inMinutes;
+      final trackingType = stateProvider.selectedHabitTrackingType;
 
       setState(() {
-        if (amount > 1) {
+        if (trackingType == HabitTrackingType.amount) {
           selectedType = OldHabitType.amount;
-        } else if (duration > 0) {
+        } else if (trackingType == HabitTrackingType.duration) {
           selectedType = OldHabitType.duration;
         } else {
           selectedType = OldHabitType.none;
@@ -197,12 +207,6 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   @override
   Widget build(BuildContext context) {
-    final stateProvider = context.read<StateProvider>();
-    if (selectedType == OldHabitType.duration &&
-        stateProvider.habitDuration == Duration.zero) {
-      selectedType = OldHabitType.none;
-    }
-
     return Padding(
       padding: EdgeInsets.only(top: 16),
       child: SizedBox(

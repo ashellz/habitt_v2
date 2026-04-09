@@ -42,16 +42,16 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
     if (habit.completed || habit.skipped) return 1.0;
 
-    if (habit.amount > 0) {
+    if (habit.tracksAmount) {
       // Habit tracked by amount
-      if (habit.amount == 0) return 0.0; // Avoid divide by zero
+      if (habit.amount <= 0) return 0.0; // Avoid divide by zero
       final progress = habit.amountCompleted / habit.amount;
       return progress.clamp(0.0, 1.0);
     }
 
-    if (habit.duration > 0) {
+    if (habit.tracksDuration) {
       // Habit tracked by duration
-      if (habit.duration == 0) return 0.0; // Avoid divide by zero
+      if (habit.duration <= 0) return 0.0; // Avoid divide by zero
       final progress = habit.durationCompleted / habit.duration;
       return progress.clamp(0.0, 1.0);
     }
@@ -101,7 +101,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 });
 
                 // If no amount or duration, toggle completion
-                if (widget.habit.amount == 0 && widget.habit.duration == 0 ||
+                if (!widget.habit.hasTrackingType ||
                     widget.habit.completed ||
                     widget.habit.skipped) {
                   habitProvider.completeHabit(
@@ -112,7 +112,7 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
                 } else {
                   // Opens a dialog for selecting amount/duration completion
 
-                  if (widget.habit.amount > 0) {
+                  if (widget.habit.tracksAmount) {
                     showAmountSliderDialog(
                       context,
                       widget.habit,
@@ -241,13 +241,13 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
 
   // Middle child inside of the container (checkmark or amount/duration)
   Widget getCompletionWidget() {
-    if (widget.habit.amount > 0 && !widget.habit.completed) {
+    if (widget.habit.tracksAmount && !widget.habit.completed) {
       return AmountDisplay(
         habit: widget.habit,
         tp: widget.tp,
         skipped: widget.habit.skipped,
       );
-    } else if (widget.habit.duration > 0 && !widget.habit.completed) {
+    } else if (widget.habit.tracksDuration && !widget.habit.completed) {
       return DurationDisplay(habit: widget.habit);
     } else {
       return centerIcon();

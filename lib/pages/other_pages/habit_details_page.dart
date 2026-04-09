@@ -298,8 +298,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   }
 
   Widget _summaryMeta(ColorProvider cp, Habit habit) {
-    final hasAmount = habit.amount > 0;
-    final hasDuration = habit.duration > 0;
+    final hasAmount = habit.tracksAmount;
+    final hasDuration = habit.tracksDuration;
 
     if (hasAmount || hasDuration) {
       return Row(
@@ -431,14 +431,20 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
       return 1;
     }
 
-    if (widget.habit.amount > 0) {
+    if (widget.habit.tracksAmount) {
+      if (widget.habit.amount <= 0) {
+        return 0;
+      }
       return (widget.habit.amountCompleted / widget.habit.amount).clamp(
         0.0,
         1.0,
       );
     }
 
-    if (widget.habit.duration > 0) {
+    if (widget.habit.tracksDuration) {
+      if (widget.habit.duration <= 0) {
+        return 0;
+      }
       return (widget.habit.durationCompleted / widget.habit.duration).clamp(
         0.0,
         1.0,
@@ -453,7 +459,7 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
     if (widget.habit.completed) {
       return 'Completed';
     }
-    if (widget.habit.amount > 0 || widget.habit.duration > 0) {
+    if (widget.habit.hasTrackingType) {
       return 'Log progress';
     }
     return 'Mark as complete';
@@ -464,7 +470,7 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
     final stateProvider = context.read<StateProvider>();
     final dayOverride = DateTime.now();
 
-    if (widget.habit.amount == 0 && widget.habit.duration == 0) {
+    if (!widget.habit.hasTrackingType) {
       habitProvider.completeHabit(
         widget.habit.id,
         context,
@@ -479,7 +485,7 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
       builder: (context) {
         return LogProgressDialog(
           progressType:
-              widget.habit.amount > 0
+              widget.habit.tracksAmount
                   ? ProgressType.amount
                   : ProgressType.duration,
           habit: widget.habit,

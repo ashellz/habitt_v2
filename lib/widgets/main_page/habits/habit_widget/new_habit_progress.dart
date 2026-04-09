@@ -37,16 +37,16 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
 
     if (habit.completed || habit.skipped) return 1.0;
 
-    if (habit.amount > 0) {
+    if (habit.tracksAmount) {
       // Habit tracked by amount
-      if (habit.amount == 0) return 0.0; // Avoid divide by zero
+      if (habit.amount <= 0) return 0.0; // Avoid divide by zero
       final progress = habit.amountCompleted / habit.amount;
       return progress.clamp(0.0, 1.0);
     }
 
-    if (habit.duration > 0) {
+    if (habit.tracksDuration) {
       // Habit tracked by duration
-      if (habit.duration == 0) return 0.0; // Avoid divide by zero
+      if (habit.duration <= 0) return 0.0; // Avoid divide by zero
       final progress = habit.durationCompleted / habit.duration;
       return progress.clamp(0.0, 1.0);
     }
@@ -75,7 +75,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
         });
 
         // If no amount or duration, toggle completion
-        if (widget.habit.amount == 0 && widget.habit.duration == 0) {
+        if (!widget.habit.hasTrackingType) {
           habitProvider.completeHabit(widget.habit.id, context, stateProvider);
         } else {
           // Opens a dialog for selecting amount/duration completion
@@ -84,7 +84,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
             builder: (context) {
               return LogProgressDialog(
                 progressType:
-                    widget.habit.amount > 0
+                    widget.habit.tracksAmount
                         ? ProgressType.amount
                         : ProgressType.duration,
                 habit: widget.habit,

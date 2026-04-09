@@ -251,7 +251,14 @@ class HabitStatsProvider extends ChangeNotifier {
   }
 
   static HabitEntry _toHabitEntry(DateTime dayDate, Habit dayHabit) {
-    if (dayHabit.amount > 0) {
+    if (dayHabit.tracksAmount) {
+      if (dayHabit.amount <= 0) {
+        return HabitEntry(
+          date: dayDate,
+          goal: 1,
+          actual: dayHabit.completed ? 1 : 0,
+        );
+      }
       return HabitEntry(
         date: dayDate,
         goal: dayHabit.amount.toDouble(),
@@ -259,7 +266,14 @@ class HabitStatsProvider extends ChangeNotifier {
       );
     }
 
-    if (dayHabit.duration > 0) {
+    if (dayHabit.tracksDuration) {
+      if (dayHabit.duration <= 0) {
+        return HabitEntry(
+          date: dayDate,
+          goal: 1,
+          actual: dayHabit.completed ? 1 : 0,
+        );
+      }
       return HabitEntry(
         date: dayDate,
         goal: dayHabit.duration.toDouble(),
@@ -407,11 +421,17 @@ class HabitStatsProvider extends ChangeNotifier {
       return 1;
     }
 
-    if (habit.amount > 0) {
+    if (habit.tracksAmount) {
+      if (habit.amount <= 0) {
+        return 0;
+      }
       return (habit.amountCompleted / habit.amount).clamp(0.0, 1.0);
     }
 
-    if (habit.duration > 0) {
+    if (habit.tracksDuration) {
+      if (habit.duration <= 0) {
+        return 0;
+      }
       return (habit.durationCompleted / habit.duration).clamp(0.0, 1.0);
     }
 
