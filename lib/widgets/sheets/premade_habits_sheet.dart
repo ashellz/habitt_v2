@@ -73,7 +73,10 @@ class PremadeHabitsSheet extends StatelessWidget {
               _topSection(context, cp, rightActionLabel),
               Text(
                 desc,
-                style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                style: TextStyle(
+                  color: cp.isDark ? cp.lightGreyText : cp.greyText,
+                  fontSize: 16,
+                ),
               ),
               ...PremadeHabitCatalog.sections.map(
                 (section) => _buildCategorySection(context, section),
@@ -150,6 +153,10 @@ class PremadeHabitsSheet extends StatelessWidget {
     ColorProvider cp,
     String rightActionLabel,
   ) {
+    final shouldShowRightButton =
+        mode == PremadeHabitSheetMode.create ||
+        selectedPremadeHabitType != null;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -178,17 +185,19 @@ class PremadeHabitsSheet extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        NewDefaultButton.secondarySmall(
-          width: null,
-          label: rightActionLabel,
-          onPressed: () {
-            final result =
-                mode == PremadeHabitSheetMode.create
-                    ? PremadeHabitSheetResult.skip()
-                    : PremadeHabitSheetResult.clear();
-            Navigator.of(context).pop(result);
-          },
-        ),
+        shouldShowRightButton
+            ? NewDefaultButton.secondarySmall(
+              width: null,
+              label: rightActionLabel,
+              onPressed: () {
+                final result =
+                    mode == PremadeHabitSheetMode.create
+                        ? PremadeHabitSheetResult.skip()
+                        : PremadeHabitSheetResult.clear();
+                Navigator.of(context).pop(result);
+              },
+            )
+            : const SizedBox(width: 66),
       ],
     );
   }
