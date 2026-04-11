@@ -134,8 +134,10 @@ class _StatsGrid extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 10),
-        _AnimatedTotalSpentCard(habit: habit, stats: stats),
+        if (habit.tracksAmount || habit.tracksDuration) ...[
+          const SizedBox(height: 10),
+          _AnimatedTotalSpentCard(habit: habit, stats: stats),
+        ],
       ],
     );
   }
