@@ -229,7 +229,10 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
             child: Center(
               child: Text(
                 monthLabel,
-                style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                style: TextStyle(
+                  color: cp.isDark ? cp.lightGreyText : cp.greyText,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),

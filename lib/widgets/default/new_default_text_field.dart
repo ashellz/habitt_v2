@@ -28,6 +28,7 @@ class NewDefaultTextField extends StatefulWidget {
     this.textStyle,
     this.regex,
     this.showBorder = false,
+    this.color,
   });
 
   final String? title;
@@ -51,6 +52,7 @@ class NewDefaultTextField extends StatefulWidget {
   final TextStyle? textStyle;
   final RegExp? regex;
   final bool showBorder;
+  final Color? color;
 
   @override
   State<NewDefaultTextField> createState() => _NewDefaultTextFieldState();
@@ -183,7 +185,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
 
               // Fill color
               filled: true,
-              fillColor: cp.field,
+              fillColor: widget.color ?? cp.field,
 
               // Content padding
               contentPadding: const EdgeInsets.symmetric(

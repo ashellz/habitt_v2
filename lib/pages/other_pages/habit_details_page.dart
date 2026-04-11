@@ -260,7 +260,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(
-        color: cp.field,
+        color: cp.isDark ? cp.field : cp.bg,
         shape: RoundedRectangleBorder(
           side: BorderSide(width: 1, color: cp.border),
           borderRadius: BorderRadius.circular(24),
@@ -360,6 +360,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   Widget _notesSection(ColorProvider cp) {
     return NewDefaultTextField(
       title: 'Notes',
+      color: cp.isDark ? cp.field : cp.bg,
       titleFontSize: 16,
       focusNode: _notesFocusNode,
       controller: _notesController,
