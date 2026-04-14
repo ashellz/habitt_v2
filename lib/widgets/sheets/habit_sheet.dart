@@ -479,38 +479,27 @@ class _HabitSheetState extends State<HabitSheet> {
             },
             child: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
+                padding: const EdgeInsets.fromLTRB(16, 20, 0, 28),
                 child: Column(
-                  spacing: 20,
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    topSection(context, cp, sp, tp, canSave),
-                    chooseIcon(cp, sp, context),
-                    habitDetails(cp),
-                    habitScheduling(cp),
-                    habitTypeRow(cp, sp),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Optional habit",
-                          style: TextStyle(
-                            color: cp.text,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        AnimatedCheckbox(
-                          value: sp.isOptional,
-                          onChanged: (value) {
-                            setState(() {
-                              sp.isOptional = value;
-                            });
-                          },
-                        ),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(right: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 20,
+                        children: [
+                          topSection(context, cp, sp, tp, canSave),
+                          chooseIcon(cp, sp, context),
+                          habitDetails(cp),
+                          habitScheduling(cp),
+                          habitTypeRow(cp, sp),
+                        ],
+                      ),
                     ),
+                    optionalHabitCheck(cp, sp),
                   ],
                 ),
               ),
@@ -518,6 +507,40 @@ class _HabitSheetState extends State<HabitSheet> {
           ),
         ),
       ),
+    );
+  }
+
+  Row optionalHabitCheck(ColorProvider cp, StateProvider sp) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Optional habit",
+          style: TextStyle(
+            color: cp.text,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        GestureDetector(
+          onTap:
+              () => setState(() {
+                sp.isOptional = !sp.isOptional;
+              }),
+          child: Container(
+            color: Colors.transparent,
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+            child: AnimatedCheckbox(
+              value: sp.isOptional,
+              onChanged: (value) {
+                setState(() {
+                  sp.isOptional = value;
+                });
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
