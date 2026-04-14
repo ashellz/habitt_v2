@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
@@ -99,7 +100,7 @@ class LogProgressDialog extends StatelessWidget {
   Row target(ColorProvider cp) {
     String getTargetText() {
       if (progressType == ProgressType.amount) {
-        return "${habit.amount} ${habit.amountLabel.isEmpty ? "times" : habit.amountLabel}";
+        return "${habit.amount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? 'times' : habit.amountLabel, habit.amount)}";
       } else {
         final hours = habit.duration ~/ 60;
         final minutes = habit.duration % 60;

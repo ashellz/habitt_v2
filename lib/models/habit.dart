@@ -5,6 +5,7 @@ import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/old_color_service.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -18,11 +19,11 @@ class Habit extends HiveObject {
   String description;
   String iconPath;
   int categoryId; // Any time, Morning, Afternoon, Evening
-  int order;
+  int order; // order within category
   String tag; // Custom tags
   bool completed;
-  bool skipped;
-  String amountLabel;
+  bool skipped; // deprecated
+  String amountLabel; // times, pages, steps
   int amount; // Number of times to do
   int amountCompleted; // Number of times completed
   int duration; // How long to do
@@ -30,19 +31,20 @@ class Habit extends HiveObject {
   int streak;
   int longestStreak;
   bool optional;
-  bool timeIntervalEnabled;
+  bool
+  timeIntervalEnabled; // habit has a specific time interval from-to hour range
   int timeIntervalStart; // In minutes
   int timeIntervalEnd; // In minutes
-  ScheduleType scheduleType;
-  int weeklyTarget;
-  int monthlyTarget;
+  ScheduleType scheduleType; // daily, weekly, monthly, custom
+  int weeklyTarget; // 1,2,3... times a week
+  int monthlyTarget; // 1,2,3... times a month
   int customIntervalDays;
-  List<int> selectedDaysAWeek;
-  List<int> selectedDaysAMonth;
+  List<int> selectedDaysAWeek; // 1,3,5... 1 = monday
+  List<int> selectedDaysAMonth; // 1,3,5... 1 = 1st
   List<String> customAppearance;
   int timesCompletedThisWeek;
   int timesCompletedThisMonth;
-  DateTime createdAt;
+  DateTime createdAt; // When habit was created
   DateTime? lastCustomUpdate;
   String? colorName; // Maps to theme-aware palette
   String? color;
@@ -58,7 +60,7 @@ class Habit extends HiveObject {
     required this.iconPath,
     required this.categoryId,
     this.order = 0,
-    this.amountLabel = "times",
+    this.amountLabel = AmountLabelPreset.defaultAmountLabel,
     this.tag = "No tag",
     this.completed = false,
     this.skipped = false,
@@ -400,14 +402,27 @@ class Habit extends HiveObject {
     skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
-    timesCompletedThisWeek = 0;
-    timesCompletedThisMonth = 0;
-    timestamps['timesCompletedThisWeek'] = DateTime.now().toUtc();
-    timestamps['timesCompletedThisMonth'] = DateTime.now().toUtc();
     timestamps['completed'] = DateTime.now().toUtc();
     timestamps['skipped'] = DateTime.now().toUtc();
     timestamps['amountCompleted'] = DateTime.now().toUtc();
     timestamps['durationCompleted'] = DateTime.now().toUtc();
+  }
+
+  Future<void> resetScheduleCounters({
+    required bool resetWeekly,
+    required bool resetMonthly,
+  }) async {
+    final now = DateTime.now().toUtc();
+
+    if (resetWeekly) {
+      timesCompletedThisWeek = 0;
+      timestamps['timesCompletedThisWeek'] = now;
+    }
+
+    if (resetMonthly) {
+      timesCompletedThisMonth = 0;
+      timestamps['timesCompletedThisMonth'] = now;
+    }
   }
 
   void updateScheduleCountersOnCompletionToggle({
@@ -582,7 +597,8 @@ class Habit extends HiveObject {
       iconPath: m['iconPath'] as String,
       categoryId: m['categoryId'] as int,
       order: (m['order'] as num?)?.toInt() ?? 0,
-      amountLabel: (m['amountLabel'] as String?) ?? 'times',
+      amountLabel:
+          (m['amountLabel'] as String?) ?? AmountLabelPreset.times.plural,
       tag: (m['tag'] as String?) ?? 'No tag',
       completed: (m['completed'] as bool?) ?? false,
       skipped: (m['skipped'] as bool?) ?? false,

@@ -1,5 +1,6 @@
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 
 class PremadeHabitTemplate {
   const PremadeHabitTemplate({
@@ -9,7 +10,7 @@ class PremadeHabitTemplate {
     required this.categoryId,
     required this.amount,
     required this.durationMinutes,
-    this.amountLabel = 'times',
+    this.amountLabel = AmountLabelPreset.defaultAmountLabel,
     this.scheduleType = ScheduleType.daily,
     this.weeklyTarget = 1,
     this.monthlyTarget = 1,

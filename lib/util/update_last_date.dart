@@ -46,13 +46,20 @@ void checkForNewDay(
   StatsProvider statsProvider,
 ) async {
   DateTime today = DateTime.now();
+  final crossedWeekBoundary = !_isSameWeek(lastOpenedDate, today);
+  final crossedMonthBoundary =
+      lastOpenedDate.month != today.month || lastOpenedDate.year != today.year;
 
   if (lastOpenedDate.day != today.day ||
       lastOpenedDate.month != today.month ||
       lastOpenedDate.year != today.year) {
     debugPrint("New day, resetting completion");
     await habitProvider.saveHabitDay(lastOpenedDate);
-    habitProvider.resetCompletion();
+    await habitProvider.resetCompletion();
+    await habitProvider.resetScheduleCountersIfNeeded(
+      resetWeekly: crossedWeekBoundary,
+      resetMonthly: crossedMonthBoundary,
+    );
     await habitProvider.assignStreaks();
     statsProvider.perfectDaysStreak = statsProvider.refreshPerfectStreak();
     if (stateProvider.shouldUpdateStreaks) {
@@ -61,4 +68,16 @@ void checkForNewDay(
 
     prefs.setString("lastOpenedDate", today.toString());
   }
+}
+
+int _weekKey(DateTime date) {
+  final normalized = DateTime(date.year, date.month, date.day);
+  final monday = normalized.subtract(Duration(days: normalized.weekday - 1));
+  final startOfYear = DateTime(monday.year, 1, 1);
+  final dayOfYear = monday.difference(startOfYear).inDays + 1;
+  return (monday.year * 1000) + dayOfYear;
+}
+
+bool _isSameWeek(DateTime a, DateTime b) {
+  return _weekKey(a) == _weekKey(b);
 }

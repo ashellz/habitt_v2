@@ -6,6 +6,7 @@ import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/old_color_service.dart';
 import 'package:habitt/services/emoji_service.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -13,12 +14,6 @@ class StateProvider extends ChangeNotifier {
   SharedPreferences? _prefs;
   bool _shouldUpdateStreaks = false;
   static const String _amountLabelsPrefsKey = 'amount_labels';
-  static const List<String> _defaultAmountLabels = [
-    'steps',
-    'glasses',
-    'pages',
-    'times',
-  ];
   List<String> _customAmountLabels = [];
 
   StateProvider(SharedPreferences prefs) {
@@ -33,14 +28,14 @@ class StateProvider extends ChangeNotifier {
   }
 
   List<String> get defaultAmountLabels =>
-      List<String>.from(_defaultAmountLabels);
+      AmountLabelPreset.defaultLabels;
 
   List<String> get customAmountLabels => List<String>.from(_customAmountLabels);
 
   List<String> get allAmountLabels {
     final labels = <String>[];
 
-    for (final label in _defaultAmountLabels) {
+    for (final label in AmountLabelPreset.defaultLabels) {
       if (!labels.contains(label)) {
         labels.add(label);
       }
@@ -59,13 +54,17 @@ class StateProvider extends ChangeNotifier {
     return value.trim().toLowerCase();
   }
 
+  String canonicalizeAmountLabel(String value) {
+    return AmountLabelPreset.canonicalize(value);
+  }
+
   bool addCustomAmountLabel(String value) {
-    final normalized = normalizeAmountLabel(value);
+    final normalized = canonicalizeAmountLabel(value);
     if (normalized.isEmpty) {
       return false;
     }
 
-    if (_defaultAmountLabels.contains(normalized) ||
+    if (AmountLabelPreset.isPredefinedLabel(normalized) ||
         _customAmountLabels.contains(normalized)) {
       return false;
     }
@@ -81,8 +80,8 @@ class StateProvider extends ChangeNotifier {
     final normalized = <String>[];
 
     for (final value in stored) {
-      final label = normalizeAmountLabel(value);
-      if (label.isEmpty || _defaultAmountLabels.contains(label)) {
+      final label = canonicalizeAmountLabel(value);
+      if (label.isEmpty || AmountLabelPreset.isPredefinedLabel(label)) {
         continue;
       }
       if (!normalized.contains(label)) {
@@ -231,7 +230,9 @@ class StateProvider extends ChangeNotifier {
             : template.durationMinutes > 0
             ? HabitTrackingType.duration
             : null;
-    habitAmountLabelController.text = template.amountLabel;
+    habitAmountLabelController.text = canonicalizeAmountLabel(
+      template.amountLabel,
+    );
 
     _isOptional = false;
     _timeIntervalEnabled = false;
@@ -410,7 +411,7 @@ class StateProvider extends ChangeNotifier {
     _selectedHabitTrackingType = null;
 
     _habitCategoryId = 1;
-    habitAmountLabelController.text = "times";
+    habitAmountLabelController.text = AmountLabelPreset.times.plural;
     nameController.clear();
     descController.clear();
     _iconPath = EmojiService.defaultEmoji;

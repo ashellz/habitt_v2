@@ -6,6 +6,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:provider/provider.dart';
 
 class HabitDetailStatsSections extends StatelessWidget {
@@ -299,7 +300,7 @@ class _AnimatedTotalSpentCardState extends State<_AnimatedTotalSpentCard>
         final value =
             habit.tracksDuration
                 ? getDurationString(animatedRaw)
-                : '$animatedRaw ${habit.amountLabel.trim().isEmpty ? 'times' : habit.amountLabel}';
+            : '$animatedRaw ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? 'times' : habit.amountLabel, animatedRaw)}';
 
         return _StatCard(
           title: title,

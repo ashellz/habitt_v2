@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/widgets/enter_amount_page/amount_wheel.dart';
 import 'package:habitt/widgets/enter_amount_page/enter_amount_text.dart';
 import 'package:habitt/widgets/enter_amount_page/select_amount_duration_dialog.dart';
@@ -184,7 +185,7 @@ class EnterAmountPageState extends State<EnterAmountPage> {
                               () => setState(() {
                                 if (amountLabelController.text.isEmpty) {
                                   amountLabelController.text =
-                                      localizations.times;
+                                      AmountLabelPreset.times.plural;
                                 }
                               }),
                             ),

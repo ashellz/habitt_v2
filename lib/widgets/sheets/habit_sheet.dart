@@ -11,6 +11,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/services/emoji_service.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
@@ -194,7 +195,8 @@ class _HabitSheetState extends State<HabitSheet> {
     final changedAmount = sp.habitAmount != 0;
     final changedDuration = sp.habitDuration != Duration.zero;
     final changedTrackingType = sp.selectedHabitTrackingType != null;
-    final changedAmountLabel = sp.habitAmountLabelController.text != "times";
+    final changedAmountLabel =
+        sp.habitAmountLabelController.text != AmountLabelPreset.times.plural;
     final changedIcon =
         sp.iconPath.isNotEmpty && sp.iconPath != EmojiService.defaultEmoji;
     final changedOptional = sp.isOptional;
