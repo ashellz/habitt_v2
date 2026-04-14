@@ -20,7 +20,7 @@ class Habit extends HiveObject {
   String iconPath;
   int categoryId; // Any time, Morning, Afternoon, Evening
   int order; // order within category
-  String tag; // Custom tags
+  String tag; // Custom tags, not implemented
   bool completed;
   bool skipped; // deprecated
   String amountLabel; // times, pages, steps
@@ -48,8 +48,9 @@ class Habit extends HiveObject {
   DateTime? lastCustomUpdate;
   String? colorName; // Maps to theme-aware palette
   String? color;
-  PremadeHabitType? premadeHabitType;
-  HabitTrackingType? trackingType;
+  PremadeHabitType?
+  premadeHabitType; // If created from a premade template which type
+  HabitTrackingType? trackingType; // amount or duration
   bool? isDeleted;
   Map<String, DateTime> timestamps;
 
