@@ -22,7 +22,7 @@ class EnterHabitAmount extends StatelessWidget {
     String selectedLabel =
         initialSelection ??
         (sp.habitAmountLabelController.text.trim().isNotEmpty
-            ? sp.normalizeAmountLabel(sp.habitAmountLabelController.text)
+        ? sp.canonicalizeAmountLabel(sp.habitAmountLabelController.text)
             : 'reps');
 
     if (!context.mounted) return;
@@ -40,10 +40,10 @@ class EnterHabitAmount extends StatelessWidget {
             );
           },
           onConfirm: (label) {
-            sp.habitAmountLabelController.text = resolveAmountLabelForValue(
-              label,
-              sp.habitAmount,
-            );
+            sp.habitAmountLabelController.text =
+                sp.canonicalizeAmountLabel(
+                  resolveAmountLabelForValue(label, sp.habitAmount),
+                );
             Navigator.of(sheetContext).pop();
           },
         );
@@ -92,7 +92,8 @@ class EnterHabitAmount extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!context.mounted) return;
         if (sp.habitAmountLabelController.text != resolvedLabel) {
-          sp.habitAmountLabelController.text = resolvedLabel;
+          sp.habitAmountLabelController.text =
+              sp.canonicalizeAmountLabel(resolvedLabel);
         }
       });
     }

@@ -7,7 +7,9 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/habit_strength_calculator.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
@@ -312,7 +314,9 @@ class _MainPageState extends State<MainPage> {
       }
 
       final label =
-          habit.amountLabel.trim().isEmpty ? 'times' : habit.amountLabel.trim();
+          habit.amountLabel.trim().isEmpty
+              ? AmountLabelPreset.times.plural
+              : habit.amountLabel.trim();
 
       return _TargetRecommendation(
         kind: _TargetKind.amount,
@@ -380,12 +384,12 @@ class _MainPageState extends State<MainPage> {
     final fromValue =
         recommendation.kind == _TargetKind.duration
             ? '${recommendation.currentValue} min'
-            : '${recommendation.currentValue} ${recommendation.unitLabel}';
+            : '${recommendation.currentValue} ${resolveAmountLabelForValue(recommendation.unitLabel, recommendation.currentValue)}';
 
     final toValue =
         recommendation.kind == _TargetKind.duration
             ? '${recommendation.recommendedValue} min'
-            : '${recommendation.recommendedValue} ${recommendation.unitLabel}';
+            : '${recommendation.recommendedValue} ${resolveAmountLabelForValue(recommendation.unitLabel, recommendation.recommendedValue)}';
 
     if (candidate.insight == HabitStrengthInsight.startSmall) {
       final drop = (candidate.stats.strengthDropLast5Days * 100).round();

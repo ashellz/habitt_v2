@@ -8,7 +8,9 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -336,8 +338,19 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   }
 
   String _amountLine(Habit habit) {
-    final label =
-        habit.amountLabel.trim().isEmpty ? 'times' : habit.amountLabel;
+    final baseLabel =
+        habit.amountLabel.trim().isEmpty
+            ? AmountLabelPreset.times.plural
+            : habit.amountLabel;
+
+    final label = resolveAmountLabelForValue(
+      baseLabel,
+      habit.completed
+          ? habit.amountCompleted
+          : habit.amountCompleted > 0
+          ? habit.amount
+          : habit.amount,
+    );
     if (habit.completed) {
       return '${habit.amountCompleted} $label';
     }

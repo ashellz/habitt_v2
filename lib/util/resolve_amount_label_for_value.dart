@@ -1,8 +1,5 @@
-String resolveAmountLabelForValue(String label, int value) {
-  final normalized = label.trim().toLowerCase();
-  if (normalized != 'time' && normalized != 'times') {
-    return label;
-  }
+import 'package:habitt/util/amount_label_preset.dart';
 
-  return value == 1 ? 'time' : 'times';
+String resolveAmountLabelForValue(String label, int value) {
+  return AmountLabelPreset.resolveForValue(label, value);
 }

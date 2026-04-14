@@ -815,12 +815,34 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetCompletion() async {
+  Future<void> resetCompletion() async {
     habitStatsProvider?.clearAll();
     for (final habit in habits) {
       await habit.resetCompletion();
       await updateHabitInDB(habit);
     }
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+  }
+
+  Future<void> resetScheduleCountersIfNeeded({
+    required bool resetWeekly,
+    required bool resetMonthly,
+  }) async {
+    if (!resetWeekly && !resetMonthly) {
+      return;
+    }
+
+    habitStatsProvider?.clearAll();
+
+    for (final habit in habits) {
+      await habit.resetScheduleCounters(
+        resetWeekly: resetWeekly,
+        resetMonthly: resetMonthly,
+      );
+      await updateHabitInDB(habit);
+    }
+
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }
