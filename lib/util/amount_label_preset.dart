@@ -2,6 +2,9 @@ enum AmountLabelPreset {
   steps(singular: 'step', plural: 'steps'),
   glasses(singular: 'glass', plural: 'glasses'),
   pages(singular: 'page', plural: 'pages'),
+  dl(singular: 'dl', plural: 'dl'),
+  km(singular: 'km', plural: 'km'),
+  meals(singular: 'meal', plural: 'meals'),
   times(singular: 'time', plural: 'times');
 
   static const String defaultAmountLabel = 'times';

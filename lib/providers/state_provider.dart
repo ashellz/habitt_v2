@@ -248,7 +248,7 @@ class StateProvider extends ChangeNotifier {
             ? HabitTrackingType.duration
             : null;
     habitAmountLabelController.text = canonicalizeAmountLabel(
-      template.amountLabel,
+      template.resolvedAmountLabel,
     );
 
     _isOptional = false;
@@ -256,9 +256,12 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalStart = 420;
     _timeIntervalEnd = 450;
     _habitNotificationsEnabled = false;
-    _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
-      _habitCategoryId,
-    );
+    _habitNotificationTimes =
+        template.notificationTimesMinutesOfDay.isNotEmpty
+            ? _buildNotificationTimesFromMinutes(
+              template.notificationTimesMinutesOfDay,
+            )
+            : _buildDefaultNotificationTimesForCategory(_habitCategoryId);
 
     _habitColor = null;
     _habitColorName = null;
@@ -603,6 +606,22 @@ class StateProvider extends ChangeNotifier {
         minutesOfDay: _getDefaultNotificationTimeForCategory(categoryId),
       ),
     ];
+  }
+
+  List<HabitNotificationTime> _buildNotificationTimesFromMinutes(
+    List<int> minutesOfDay,
+  ) {
+    final baseId = DateTime.now().microsecondsSinceEpoch;
+    return minutesOfDay
+        .asMap()
+        .entries
+        .map(
+          (entry) => HabitNotificationTime(
+            id: baseId + entry.key,
+            minutesOfDay: entry.value.clamp(0, (24 * 60) - 1),
+          ),
+        )
+        .toList();
   }
 
   bool _matchesCategoryDefaultNotificationTimes(
