@@ -59,6 +59,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   bool _isExitDialogOpen = false;
   bool _isInitializing = true;
   int? _heldNotificationId;
+  ScrollController scrollController = ScrollController();
 
   bool get _isEditMode => widget.habit != null;
 
@@ -572,6 +573,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
               FocusManager.instance.primaryFocus?.unfocus();
             },
             child: SingleChildScrollView(
+              controller: scrollController,
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 20, 0, 28),
                 child: Column(
@@ -791,8 +793,16 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                   ),
                   NewDefaultSwitch(
                     value: sp.habitNotificationsEnabled,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       sp.habitNotificationsEnabled = value;
+                      if (value) {
+                        await Future.delayed(const Duration(milliseconds: 300));
+                        scrollController.animateTo(
+                          scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.decelerate,
+                        );
+                      }
                     },
                   ),
                 ],
