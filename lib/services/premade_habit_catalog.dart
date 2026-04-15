@@ -1,6 +1,7 @@
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 
 class PremadeHabitCatalog {
   static const List<PremadeHabitCategorySection> sections = [
@@ -14,6 +15,7 @@ class PremadeHabitCatalog {
           categoryId: 4,
           amount: 0,
           durationMinutes: 0,
+          notificationTimesMinutesOfDay: [22 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.brushTeeth,
@@ -22,6 +24,7 @@ class PremadeHabitCatalog {
           categoryId: 4,
           amount: 0,
           durationMinutes: 0,
+          notificationTimesMinutesOfDay: [21 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.skinCare,
@@ -30,6 +33,7 @@ class PremadeHabitCatalog {
           categoryId: 4,
           amount: 0,
           durationMinutes: 0,
+          notificationTimesMinutesOfDay: [(7 * 60) + 20],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.wakeUpEarly,
@@ -38,6 +42,7 @@ class PremadeHabitCatalog {
           categoryId: 2,
           amount: 0,
           durationMinutes: 0,
+          notificationTimesMinutesOfDay: [7 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.shower,
@@ -46,6 +51,7 @@ class PremadeHabitCatalog {
           categoryId: 2,
           amount: 0,
           durationMinutes: 10,
+          notificationTimesMinutesOfDay: [(7 * 60) + 5],
         ),
       ],
     ),
@@ -57,18 +63,22 @@ class PremadeHabitCatalog {
           name: 'Running',
           iconPath: '🏃',
           categoryId: 1,
-          amount: 0,
+          amount: 3,
+          amountLabelPreset: AmountLabelPreset.km,
           durationMinutes: 15,
           scheduleType: ScheduleType.weekly,
           weeklyTarget: 3,
+          notificationTimesMinutesOfDay: [17 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.walk,
           name: 'Walk',
           iconPath: '🚶',
           categoryId: 1,
-          amount: 0,
+          amount: 1,
+          amountLabelPreset: AmountLabelPreset.km,
           durationMinutes: 15,
+          notificationTimesMinutesOfDay: [15 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.gym,
@@ -79,6 +89,7 @@ class PremadeHabitCatalog {
           durationMinutes: 60,
           scheduleType: ScheduleType.weekly,
           weeklyTarget: 3,
+          notificationTimesMinutesOfDay: [18 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.nutrition,
@@ -87,7 +98,8 @@ class PremadeHabitCatalog {
           categoryId: 1,
           amount: 3,
           durationMinutes: 0,
-          amountLabel: 'meals',
+          amountLabelPreset: AmountLabelPreset.meals,
+          notificationTimesMinutesOfDay: [8 * 60, 12 * 60, 15 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.medications,
@@ -96,6 +108,7 @@ class PremadeHabitCatalog {
           categoryId: 2,
           amount: 2,
           durationMinutes: 0,
+          notificationTimesMinutesOfDay: [8 * 60, 20 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.drinkWater,
@@ -104,7 +117,8 @@ class PremadeHabitCatalog {
           categoryId: 1,
           amount: 10,
           durationMinutes: 0,
-          amountLabel: 'dl',
+          amountLabelPreset: AmountLabelPreset.dl,
+          notificationTimesMinutesOfDay: [9 * 60, 14 * 60, 19 * 60],
         ),
       ],
     ),
@@ -118,6 +132,7 @@ class PremadeHabitCatalog {
           categoryId: 2,
           amount: 0,
           durationMinutes: 45,
+          notificationTimesMinutesOfDay: [(8 * 60) + 30],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.work,
@@ -126,6 +141,7 @@ class PremadeHabitCatalog {
           categoryId: 2,
           amount: 0,
           durationMinutes: 120,
+          notificationTimesMinutesOfDay: [(8 * 60) + 45],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.research,
@@ -134,6 +150,18 @@ class PremadeHabitCatalog {
           categoryId: 3,
           amount: 0,
           durationMinutes: 30,
+          notificationTimesMinutesOfDay: [15 * 60],
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.read,
+          name: 'Read',
+          iconPath: '📖',
+          categoryId: 1,
+          amount: 5,
+          amountLabelPreset: AmountLabelPreset.pages,
+          durationMinutes: 0,
+          scheduleType: ScheduleType.daily,
+          notificationTimesMinutesOfDay: [(7 * 60) + 30, 17 * 60],
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.productivitySession,
@@ -142,6 +170,7 @@ class PremadeHabitCatalog {
           categoryId: 3,
           amount: 0,
           durationMinutes: 45,
+          notificationTimesMinutesOfDay: [(8 * 60) + 45, 20 * 60],
         ),
       ],
     ),

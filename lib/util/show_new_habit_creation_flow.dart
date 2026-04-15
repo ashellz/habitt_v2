@@ -41,7 +41,7 @@ Future<void> showNewHabitCreationFlow(BuildContext context) async {
     }
 
     if (habitResult == HabitSheetCloseResult.reopenPremade) {
-      continue;
+      return;
     }
 
     return;

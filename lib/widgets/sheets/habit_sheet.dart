@@ -707,7 +707,7 @@ class _HabitSheetState extends State<HabitSheet> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
-
+        padding: EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           color: cp.field,
           borderRadius: BorderRadius.circular(24),
@@ -792,12 +792,7 @@ class _HabitSheetState extends State<HabitSheet> {
                             ),
 
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                12,
-                                10,
-                                12,
-                                12,
-                              ),
+                              padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
                               child: NewDefaultButton.secondary(
                                 width: double.infinity,
                                 height: 40,

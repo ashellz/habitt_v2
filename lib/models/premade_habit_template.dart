@@ -11,14 +11,18 @@ class PremadeHabitTemplate {
     required this.amount,
     required this.durationMinutes,
     this.amountLabel = AmountLabelPreset.defaultAmountLabel,
+    this.amountLabelPreset,
     this.scheduleType = ScheduleType.daily,
     this.weeklyTarget = 1,
     this.monthlyTarget = 1,
     this.customIntervalDays = 2,
+    List<int>? notificationTimesMinutesOfDay,
     Set<int>? selectedDaysAWeek,
     Set<int>? selectedDaysAMonth,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? const <int>{},
-       selectedDaysAMonth = selectedDaysAMonth ?? const <int>{};
+       selectedDaysAMonth = selectedDaysAMonth ?? const <int>{},
+       notificationTimesMinutesOfDay =
+           notificationTimesMinutesOfDay ?? const <int>[];
 
   final PremadeHabitType type;
   final String name;
@@ -27,12 +31,16 @@ class PremadeHabitTemplate {
   final int amount;
   final int durationMinutes;
   final String amountLabel;
+  final AmountLabelPreset? amountLabelPreset;
   final ScheduleType scheduleType;
   final int weeklyTarget;
   final int monthlyTarget;
   final int customIntervalDays;
+  final List<int> notificationTimesMinutesOfDay;
   final Set<int> selectedDaysAWeek;
   final Set<int> selectedDaysAMonth;
+
+  String get resolvedAmountLabel => amountLabelPreset?.plural ?? amountLabel;
 }
 
 class PremadeHabitCategorySection {

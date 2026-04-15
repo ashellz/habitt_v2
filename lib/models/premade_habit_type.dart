@@ -15,6 +15,7 @@ enum PremadeHabitType {
   work,
   research,
   productivitySession,
+  read,
 }
 
 extension PremadeHabitTypeLabel on PremadeHabitType {
@@ -52,6 +53,8 @@ extension PremadeHabitTypeLabel on PremadeHabitType {
         return 'Research';
       case PremadeHabitType.productivitySession:
         return 'Productivity session';
+      case PremadeHabitType.read:
+        return 'Read';
     }
   }
 }
