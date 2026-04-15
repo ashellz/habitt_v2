@@ -6,7 +6,7 @@ import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/create_amount_label.dart';
-import 'package:habitt/widgets/habit_details/new/editable/dialogs/set_amount_label.dart';
+import 'package:habitt/widgets/habit_details/new/editable/dialogs/set_amount_label_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class EnterHabitAmount extends StatelessWidget {
     String selectedLabel =
         initialSelection ??
         (sp.habitAmountLabelController.text.trim().isNotEmpty
-        ? sp.canonicalizeAmountLabel(sp.habitAmountLabelController.text)
+            ? sp.canonicalizeAmountLabel(sp.habitAmountLabelController.text)
             : 'reps');
 
     if (!context.mounted) return;
@@ -40,10 +40,9 @@ class EnterHabitAmount extends StatelessWidget {
             );
           },
           onConfirm: (label) {
-            sp.habitAmountLabelController.text =
-                sp.canonicalizeAmountLabel(
-                  resolveAmountLabelForValue(label, sp.habitAmount),
-                );
+            sp.habitAmountLabelController.text = sp.canonicalizeAmountLabel(
+              resolveAmountLabelForValue(label, sp.habitAmount),
+            );
             Navigator.of(sheetContext).pop();
           },
         );
@@ -92,8 +91,9 @@ class EnterHabitAmount extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!context.mounted) return;
         if (sp.habitAmountLabelController.text != resolvedLabel) {
-          sp.habitAmountLabelController.text =
-              sp.canonicalizeAmountLabel(resolvedLabel);
+          sp.habitAmountLabelController.text = sp.canonicalizeAmountLabel(
+            resolvedLabel,
+          );
         }
       });
     }

@@ -75,6 +75,23 @@ class StateProvider extends ChangeNotifier {
     return true;
   }
 
+  bool removeCustomAmountLabel(String value) {
+    final normalized = canonicalizeAmountLabel(value);
+    if (normalized.isEmpty || AmountLabelPreset.isPredefinedLabel(normalized)) {
+      return false;
+    }
+
+    if (!_customAmountLabels.contains(normalized)) {
+      return false;
+    }
+
+    _customAmountLabels =
+        _customAmountLabels.where((label) => label != normalized).toList();
+    _prefs?.setStringList(_amountLabelsPrefsKey, _customAmountLabels);
+    notifyListeners();
+    return true;
+  }
+
   void _loadAmountLabels() {
     final stored = _prefs?.getStringList(_amountLabelsPrefsKey) ?? [];
     final normalized = <String>[];
