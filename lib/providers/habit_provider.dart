@@ -6,6 +6,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,6 +64,21 @@ class HabitProvider extends ChangeNotifier {
     refreshTodaysHabits(notify: false);
     _fillToday();
     _loadDateJoined();
+    _syncAllHabitNotifications();
+  }
+
+  Future<void> _syncAllHabitNotifications() async {
+    await NotificationService.scheduleAllHabitNotifications(
+      habits: habits.where((habit) => habit.isDeleted != true),
+      appearsOnDay: appearsOnDay,
+    );
+  }
+
+  Future<void> _syncSingleHabitNotifications(Habit habit) async {
+    await NotificationService.rescheduleHabitNotifications(
+      habit: habit,
+      appearsOnDay: appearsOnDay,
+    );
   }
 
   Future<void> _loadDateJoined() async {
@@ -578,6 +594,9 @@ class HabitProvider extends ChangeNotifier {
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
 
+    // Scheduels notifications for added habit
+    _syncSingleHabitNotifications(habit);
+
     notifyListeners();
   }
 
@@ -682,6 +701,8 @@ class HabitProvider extends ChangeNotifier {
     habits.removeWhere((h) => h.id == habit.id);
     habitStatsProvider?.removeHabit(habit.id);
     await habit.deleteHabit();
+    // Cancels deleted habit notifications
+    await NotificationService.cancelHabitNotifications(habit.id);
     if (context.mounted) checkReorderCategories(context, habit);
 
     updateHabitInDB(habit);
@@ -756,6 +777,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     await updateHabitInDB(habit, day: daySimple);
+    _syncSingleHabitNotifications(currentHabit);
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
@@ -808,9 +830,11 @@ class HabitProvider extends ChangeNotifier {
 
   void updateHabit(Habit habit) {
     habitStatsProvider?.invalidateHabit(habit.id);
-    habits.where((h) => h.id == habit.id).first.updateHabit(habit);
+    final persistedHabit = habits.where((h) => h.id == habit.id).first;
+    persistedHabit.updateHabit(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
+    _syncSingleHabitNotifications(persistedHabit);
 
     notifyListeners();
   }
@@ -822,6 +846,7 @@ class HabitProvider extends ChangeNotifier {
       await updateHabitInDB(habit);
     }
     refreshTodaysHabits(notify: false);
+    _syncAllHabitNotifications();
     notifyListeners();
   }
 
@@ -844,6 +869,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     refreshTodaysHabits(notify: false);
+    _syncAllHabitNotifications();
     notifyListeners();
   }
 

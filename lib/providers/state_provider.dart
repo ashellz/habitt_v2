@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
@@ -27,8 +28,7 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> get defaultAmountLabels =>
-      AmountLabelPreset.defaultLabels;
+  List<String> get defaultAmountLabels => AmountLabelPreset.defaultLabels;
 
   List<String> get customAmountLabels => List<String>.from(_customAmountLabels);
 
@@ -238,6 +238,10 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalEnabled = false;
     _timeIntervalStart = 420;
     _timeIntervalEnd = 450;
+    _habitNotificationsEnabled = false;
+    _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
+      _habitCategoryId,
+    );
 
     _habitColor = null;
     _habitColorName = null;
@@ -315,10 +319,20 @@ class StateProvider extends ChangeNotifier {
   bool _timeIntervalEnabled = false;
   int _timeIntervalStart = 420;
   int _timeIntervalEnd = 450;
+  bool _habitNotificationsEnabled = false;
+  List<HabitNotificationTime> _habitNotificationTimes = [
+    HabitNotificationTime(
+      id: DateTime.now().microsecondsSinceEpoch,
+      minutesOfDay: 9 * 60,
+    ),
+  ];
 
   bool get timeIntervalEnabled => _timeIntervalEnabled;
   int get timeIntervalStart => _timeIntervalStart;
   int get timeIntervalEnd => _timeIntervalEnd;
+  bool get habitNotificationsEnabled => _habitNotificationsEnabled;
+  List<HabitNotificationTime> get habitNotificationTimes =>
+      _habitNotificationTimes.map((slot) => slot.copy()).toList();
 
   set timeIntervalEnabled(bool value) {
     _timeIntervalEnabled = value;
@@ -332,6 +346,69 @@ class StateProvider extends ChangeNotifier {
 
   set timeIntervalEnd(int value) {
     _timeIntervalEnd = value;
+    notifyListeners();
+  }
+
+  set habitNotificationsEnabled(bool value) {
+    _habitNotificationsEnabled = value;
+    notifyListeners();
+  }
+
+  void setNotificationsFromHabit({
+    required bool enabled,
+    required List<HabitNotificationTime> notificationTimes,
+  }) {
+    _habitNotificationsEnabled = enabled;
+    if (notificationTimes.isEmpty) {
+      _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
+        _habitCategoryId,
+      );
+    } else {
+      _habitNotificationTimes =
+          notificationTimes.map((slot) => slot.copy()).toList();
+    }
+    notifyListeners();
+  }
+
+  void addHabitNotificationTime({int? minutesOfDay}) {
+    final defaultMinutesOfDay = _getDefaultNotificationTimeForCategory(
+      _habitCategoryId,
+    );
+    _habitNotificationTimes = [
+      ..._habitNotificationTimes,
+      HabitNotificationTime(
+        id: DateTime.now().microsecondsSinceEpoch,
+        minutesOfDay: (minutesOfDay ?? defaultMinutesOfDay).clamp(
+          0,
+          (24 * 60) - 1,
+        ),
+      ),
+    ];
+    notifyListeners();
+  }
+
+  void updateHabitNotificationTime(int id, int minutesOfDay) {
+    _habitNotificationTimes =
+        _habitNotificationTimes
+            .map(
+              (slot) =>
+                  slot.id == id
+                      ? HabitNotificationTime(
+                        id: slot.id,
+                        minutesOfDay: minutesOfDay.clamp(0, (24 * 60) - 1),
+                      )
+                      : slot,
+            )
+            .toList();
+    notifyListeners();
+  }
+
+  void removeHabitNotificationTime(int id) {
+    if (_habitNotificationTimes.length <= 1) {
+      return;
+    }
+    _habitNotificationTimes =
+        _habitNotificationTimes.where((slot) => slot.id != id).toList();
     notifyListeners();
   }
 
@@ -376,7 +453,17 @@ class StateProvider extends ChangeNotifier {
   }
 
   set habitCategoryId(int id) {
+    final previousCategoryId = _habitCategoryId;
+    final hasCategoryDefaultNotifs = _matchesCategoryDefaultNotificationTimes(
+      _habitNotificationTimes,
+      previousCategoryId,
+    );
+
     _habitCategoryId = id;
+
+    if (hasCategoryDefaultNotifs) {
+      _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(id);
+    }
     notifyListeners();
   }
 
@@ -420,6 +507,10 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalEnabled = false;
     _timeIntervalStart = 420;
     _timeIntervalEnd = 450;
+    _habitNotificationsEnabled = false;
+    _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
+      _habitCategoryId,
+    );
 
     _habitColor = null;
     _habitColorName = null;
@@ -471,4 +562,41 @@ class StateProvider extends ChangeNotifier {
   }
 
   String? get habitColorName => _habitColorName;
+
+  int _getDefaultNotificationTimeForCategory(int categoryId) {
+    switch (categoryId) {
+      case 2:
+        return 9 * 60; // Morning 09:00
+      case 3:
+        return 14 * 60; // Afternoon 14:00
+      case 4:
+        return 21 * 60; // Evening 21:00
+      case 1:
+      default:
+        return 9 * 60; // Any time 09:00
+    }
+  }
+
+  List<HabitNotificationTime> _buildDefaultNotificationTimesForCategory(
+    int categoryId,
+  ) {
+    return [
+      HabitNotificationTime(
+        id: DateTime.now().microsecondsSinceEpoch,
+        minutesOfDay: _getDefaultNotificationTimeForCategory(categoryId),
+      ),
+    ];
+  }
+
+  bool _matchesCategoryDefaultNotificationTimes(
+    List<HabitNotificationTime> notificationTimes,
+    int categoryId,
+  ) {
+    if (notificationTimes.length != 1) {
+      return false;
+    }
+
+    return notificationTimes.first.minutesOfDay ==
+        _getDefaultNotificationTimeForCategory(categoryId);
+  }
 }

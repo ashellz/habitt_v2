@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -19,6 +20,8 @@ import 'package:habitt/widgets/default/animated_checkbox.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/default/new_default_switch.dart';
+import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:habitt/widgets/dialogs/override_current_config_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
@@ -52,6 +55,7 @@ class _HabitSheetState extends State<HabitSheet> {
   bool _allowPop = false;
   bool _isExitDialogOpen = false;
   bool _isInitializing = true;
+  int? _heldNotificationId;
 
   bool get _isEditMode => widget.habit != null;
 
@@ -126,6 +130,27 @@ class _HabitSheetState extends State<HabitSheet> {
       context.read<ThemeProvider>(),
     );
     stateProvider.selectedPremadeHabitType = habit.premadeHabitType;
+    stateProvider.setNotificationsFromHabit(
+      enabled: habit.notificationsEnabled,
+      notificationTimes: habit.notificationTimes,
+    );
+  }
+
+  bool _sameNotificationTimes(
+    List<HabitNotificationTime> a,
+    List<HabitNotificationTime> b,
+  ) {
+    if (a.length != b.length) {
+      return false;
+    }
+
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].id != b[i].id || a[i].minutesOfDay != b[i].minutesOfDay) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   bool _hasEditChanges(StateProvider sp, ThemeProvider tp) {
@@ -166,6 +191,13 @@ class _HabitSheetState extends State<HabitSheet> {
         sp.habitColorName != habit.colorName;
     final changedPremadeHabitType =
         sp.selectedPremadeHabitType != habit.premadeHabitType;
+    final changedNotificationsEnabled =
+        sp.habitNotificationsEnabled != habit.notificationsEnabled;
+    final changedNotificationTimes =
+        !_sameNotificationTimes(
+          sp.habitNotificationTimes,
+          habit.notificationTimes,
+        );
 
     return changedName ||
         changedDesc ||
@@ -185,7 +217,9 @@ class _HabitSheetState extends State<HabitSheet> {
         changedSelectedWeekDays ||
         changedSelectedMonthDays ||
         changedHabitColor ||
-        changedPremadeHabitType;
+        changedPremadeHabitType ||
+        changedNotificationsEnabled ||
+        changedNotificationTimes;
   }
 
   bool _hasCreateChanges(StateProvider sp) {
@@ -211,6 +245,10 @@ class _HabitSheetState extends State<HabitSheet> {
     final changedSelectedMonthDays = sp.selectedDaysAMonth.isNotEmpty;
     final changedColorName = sp.habitColorName != null;
     final changedPremadeHabitType = sp.selectedPremadeHabitType != null;
+    final changedNotificationsEnabled = sp.habitNotificationsEnabled;
+    final changedNotificationTimes =
+        sp.habitNotificationTimes.length != 1 ||
+        sp.habitNotificationTimes.first.minutesOfDay != 8 * 60;
 
     return changedName ||
         changedDesc ||
@@ -231,7 +269,9 @@ class _HabitSheetState extends State<HabitSheet> {
         changedSelectedWeekDays ||
         changedSelectedMonthDays ||
         changedColorName ||
-        changedPremadeHabitType;
+        changedPremadeHabitType ||
+        changedNotificationsEnabled ||
+        changedNotificationTimes;
   }
 
   bool _hasUnsavedChanges(StateProvider sp, ThemeProvider tp) {
@@ -336,6 +376,28 @@ class _HabitSheetState extends State<HabitSheet> {
     _isExitDialogOpen = false;
   }
 
+  Future<void> _showDeleteNotificationConfirmation(
+    StateProvider sp,
+    HabitNotificationTime slot,
+  ) async {
+    final cp = context.read<ColorProvider>();
+
+    await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: "Delete notification?",
+            desc: "This notification time will be removed.",
+            primaryButtonLabel: "Delete",
+            primaryButtonColor: cp.fail,
+            onPrimaryButtonPressed: () {
+              sp.removeHabitNotificationTime(slot.id);
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+    );
+  }
+
   Future<void> _handleCloseAttempt(
     StateProvider sp,
     ThemeProvider tp, {
@@ -375,6 +437,9 @@ class _HabitSheetState extends State<HabitSheet> {
       habit.selectedDaysAWeek = sp.selectedDaysAWeek.toList()..sort();
       habit.selectedDaysAMonth = sp.selectedDaysAMonth.toList()..sort();
       habit.premadeHabitType = sp.selectedPremadeHabitType;
+      habit.notificationsEnabled = sp.habitNotificationsEnabled;
+      habit.notificationTimes =
+          sp.habitNotificationTimes.map((slot) => slot.copy()).toList();
 
       if (habit.scheduleType == ScheduleType.custom) {
         habit.customAppearance = buildCustomAppearance(
@@ -429,6 +494,9 @@ class _HabitSheetState extends State<HabitSheet> {
         createdAt: DateTime.now().toUtc(),
         lastCustomUpdate: DateTime.now().toUtc(),
         colorName: sp.habitColorName,
+        notificationsEnabled: sp.habitNotificationsEnabled,
+        notificationTimes:
+            sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
         premadeHabitType: sp.selectedPremadeHabitType,
       ),
     );
@@ -500,6 +568,10 @@ class _HabitSheetState extends State<HabitSheet> {
                       ),
                     ),
                     optionalHabitCheck(cp, sp),
+                    Padding(
+                      padding: EdgeInsets.only(right: 16),
+                      child: notificationSection(cp, sp),
+                    ),
                   ],
                 ),
               ),
@@ -541,6 +613,317 @@ class _HabitSheetState extends State<HabitSheet> {
           ),
         ),
       ],
+    );
+  }
+
+  String _formatTimeOfDayFromMinutes(int minutesOfDay) {
+    final hour = (minutesOfDay ~/ 60) % 24;
+    final minute = minutesOfDay % 60;
+    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
+  }
+
+  Future<void> _openNotificationTimeDialog(
+    StateProvider sp,
+    HabitNotificationTime slot,
+  ) async {
+    await _showNotificationTimeDialog(
+      initialMinutes: slot.minutesOfDay,
+      onTimeSelected: (minutesOfDay) {
+        sp.updateHabitNotificationTime(slot.id, minutesOfDay);
+      },
+    );
+  }
+
+  Future<void> _openAddNotificationTimeDialog(StateProvider sp) async {
+    final notificationTimes = sp.habitNotificationTimes;
+    final initialMinutes =
+        notificationTimes.isNotEmpty
+            ? notificationTimes.last.minutesOfDay
+            : 9 * 60;
+
+    await _showNotificationTimeDialog(
+      initialMinutes: initialMinutes,
+      onTimeSelected: (minutesOfDay) {
+        sp.addHabitNotificationTime(minutesOfDay: minutesOfDay);
+      },
+    );
+  }
+
+  Future<void> _showNotificationTimeDialog({
+    required int initialMinutes,
+    required ValueChanged<int> onTimeSelected,
+  }) async {
+    int selectedHour = initialMinutes ~/ 60;
+    int selectedMinute = initialMinutes % 60;
+
+    final hoursController = FixedExtentScrollController(
+      initialItem: selectedHour,
+    );
+    final minutesController = FixedExtentScrollController(
+      initialItem: selectedMinute,
+    );
+
+    try {
+      await showDialogSheet(
+        context: context,
+        builder:
+            (dialogContext) => StatefulBuilder(
+              builder: (dialogContext, setDialogState) {
+                return NewDefaultDialog(
+                  title: "Set notification time",
+                  desc:
+                      "This reminder will trigger only on scheduled habit days.",
+                  onPrimaryButtonPressed: () {
+                    onTimeSelected((selectedHour * 60) + selectedMinute);
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: NumberPicker(
+                    hoursController: hoursController,
+                    minutesController: minutesController,
+                    width: MediaQuery.of(dialogContext).size.width,
+                    onChangedHours: (value) {
+                      setDialogState(() {
+                        selectedHour = value;
+                      });
+                    },
+                    onChangedMinutes: (value) {
+                      setDialogState(() {
+                        selectedMinute = value;
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
+      );
+    } finally {
+      hoursController.dispose();
+      minutesController.dispose();
+    }
+  }
+
+  Widget notificationSection(ColorProvider cp, StateProvider sp) {
+    return GestureDetector(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: double.infinity,
+
+        decoration: BoxDecoration(
+          color: cp.field,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              child: Row(
+                spacing: 10,
+                children: [
+                  Container(
+                    width: 46,
+                    padding: const EdgeInsets.all(13),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      color: cp.orange100,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: cp.orange200, width: 1),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        "assets/images/new-svg/notifications.svg",
+                        colorFilter: ColorFilter.mode(
+                          cp.orange300,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Expanded(
+                    child: Column(
+                      spacing: 8,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Notifications",
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "Get reminded about your habit",
+                          style: TextStyle(
+                            color: cp.lightGreyText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  NewDefaultSwitch(
+                    value: sp.habitNotificationsEnabled,
+                    onChanged: (value) {
+                      sp.habitNotificationsEnabled = value;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              transitionBuilder:
+                  (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(sizeFactor: animation, child: child),
+                  ),
+              child:
+                  sp.habitNotificationsEnabled
+                      ? Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Column(
+                          key: const ValueKey('notifications-expanded'),
+                          spacing: 10,
+                          children: [
+                            ...sp.habitNotificationTimes.map(
+                              (slot) => _notificationTimeRow(cp, sp, slot),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                12,
+                                10,
+                                12,
+                                12,
+                              ),
+                              child: NewDefaultButton.secondary(
+                                width: double.infinity,
+                                height: 40,
+                                label: "Add a notification",
+                                prefix: SvgPicture.asset(
+                                  "assets/images/new-svg/add.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    cp.text,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  _openAddNotificationTimeDialog(sp);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      : const SizedBox.shrink(
+                        key: ValueKey('notifications-off'),
+                      ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _notificationTimeRow(
+    ColorProvider cp,
+    StateProvider sp,
+    HabitNotificationTime slot,
+  ) {
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          _heldNotificationId = slot.id;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _heldNotificationId = null;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          _heldNotificationId = null;
+        });
+      },
+      onLongPress: () async {
+        await _showDeleteNotificationConfirmation(sp, slot);
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _heldNotificationId = null;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: AnimatedScale(
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOut,
+          scale: _heldNotificationId == slot.id ? 1.04 : 1.0,
+          child: Container(
+            padding: const EdgeInsets.only(
+              top: 4,
+              left: 12,
+              right: 4,
+              bottom: 4,
+            ),
+            clipBehavior: Clip.antiAlias,
+            decoration: ShapeDecoration(
+              color: cp.isDark ? cp.habitBg : cp.bg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Time",
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await _openNotificationTimeDialog(sp, slot);
+                  },
+                  child: Container(
+                    height: 46,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: cp.field,
+                      shape: StadiumBorder(),
+                    ),
+                    child: Row(
+                      spacing: 16,
+                      children: [
+                        Text(
+                          _formatTimeOfDayFromMinutes(slot.minutesOfDay),
+                          style: TextStyle(
+                            color: cp.text,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          "assets/images/new-svg/clock.svg",
+                          colorFilter: ColorFilter.mode(
+                            cp.text,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 

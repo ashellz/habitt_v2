@@ -1,7 +1,9 @@
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:hive_ce/hive.dart';
 
 part 'hive_adapters.g.dart';
@@ -77,5 +79,36 @@ class LegacyHabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
   @override
   void write(BinaryWriter writer, HabitTrackingType obj) {
     writer.writeByte(obj.index);
+  }
+}
+
+class HabitNotificationTimeAdapter extends TypeAdapter<HabitNotificationTime> {
+  @override
+  int get typeId => 7;
+
+  @override
+  HabitNotificationTime read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+
+    return HabitNotificationTime(
+      id: (fields[0] as num?)?.toInt() ?? DateTime.now().microsecondsSinceEpoch,
+      minutesOfDay: ((fields[1] as num?)?.toInt() ?? (8 * 60)).clamp(
+        0,
+        (24 * 60) - 1,
+      ),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HabitNotificationTime obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.minutesOfDay);
   }
 }

@@ -59,6 +59,9 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(6)) {
     Hive.registerAdapter(HabitTrackingTypeAdapter());
   }
+  if (!Hive.isAdapterRegistered(7)) {
+    Hive.registerAdapter(HabitNotificationTimeAdapter());
+  }
   if (!Hive.isAdapterRegistered(34)) {
     Hive.registerAdapter(LegacyHabitTrackingTypeAdapter());
   }

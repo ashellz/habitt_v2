@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -48,6 +49,8 @@ class Habit extends HiveObject {
   DateTime? lastCustomUpdate;
   String? colorName; // Maps to theme-aware palette
   String? color;
+  bool notificationsEnabled;
+  List<HabitNotificationTime> notificationTimes;
   PremadeHabitType?
   premadeHabitType; // If created from a premade template which type
   HabitTrackingType? trackingType; // amount or duration
@@ -87,6 +90,8 @@ class Habit extends HiveObject {
     DateTime? createdAt,
     this.lastCustomUpdate,
     this.colorName,
+    this.notificationsEnabled = false,
+    List<HabitNotificationTime>? notificationTimes,
     this.premadeHabitType,
     this.trackingType,
     this.isDeleted,
@@ -94,6 +99,14 @@ class Habit extends HiveObject {
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
        selectedDaysAMonth = selectedDaysAMonth ?? [],
        customAppearance = customAppearance ?? [],
+       notificationTimes =
+           notificationTimes ??
+           [
+             HabitNotificationTime(
+               id: DateTime.now().microsecondsSinceEpoch,
+               minutesOfDay: 8 * 60,
+             ),
+           ],
        createdAt = (createdAt ?? DateTime.now()).toUtc(),
        timestamps = timestamps ?? {} {
     trackingType ??= _inferTrackingType(
@@ -160,6 +173,8 @@ class Habit extends HiveObject {
       createdAt: createdAt,
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
+      notificationsEnabled: notificationsEnabled,
+      notificationTimes: notificationTimes.map((slot) => slot.copy()).toList(),
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
@@ -201,6 +216,8 @@ class Habit extends HiveObject {
       createdAt: createdAt,
       lastCustomUpdate: lastCustomUpdate,
       colorName: colorName,
+      notificationsEnabled: notificationsEnabled,
+      notificationTimes: notificationTimes.map((slot) => slot.copy()).toList(),
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
@@ -334,6 +351,15 @@ class Habit extends HiveObject {
     if (color != habit.color) {
       color = habit.color;
       timestamps['color'] = now;
+    }
+    if (notificationsEnabled != habit.notificationsEnabled) {
+      notificationsEnabled = habit.notificationsEnabled;
+      timestamps['notificationsEnabled'] = now;
+    }
+    if (!_sameNotificationList(notificationTimes, habit.notificationTimes)) {
+      notificationTimes =
+          habit.notificationTimes.map((slot) => slot.copy()).toList();
+      timestamps['notificationTimes'] = now;
     }
     if (premadeHabitType != habit.premadeHabitType) {
       premadeHabitType = habit.premadeHabitType;
@@ -570,6 +596,11 @@ class Habit extends HiveObject {
       'lastCustomUpdate': lastCustomUpdate?.toIso8601String(),
       'colorName': colorName,
       'color': color,
+      'notificationsEnabled': notificationsEnabled,
+      'notificationTimes':
+          notificationTimes
+              .map((notification) => notification.toMap())
+              .toList(),
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'trackingType': _serializeTrackingType(trackingType),
       'isDeleted': isDeleted,
@@ -630,6 +661,8 @@ class Habit extends HiveObject {
       lastCustomUpdate:
           DateTime.tryParse(m['lastCustomUpdate']?.toString() ?? '')?.toUtc(),
       colorName: m['colorName'] as String?,
+      notificationsEnabled: (m['notificationsEnabled'] as bool?) ?? false,
+      notificationTimes: _parseNotificationTimes(m['notificationTimes']),
       premadeHabitType: _deserializePremadeHabitType(
         m['premadeHabitType']?.toString(),
       ),
@@ -779,6 +812,16 @@ class Habit extends HiveObject {
         incoming.lastCustomUpdate,
       ),
       colorName: resolve('colorName', colorName, incoming.colorName),
+      notificationsEnabled: resolve(
+        'notificationsEnabled',
+        notificationsEnabled,
+        incoming.notificationsEnabled,
+      ),
+      notificationTimes: resolve(
+        'notificationTimes',
+        notificationTimes.map((slot) => slot.copy()).toList(),
+        incoming.notificationTimes.map((slot) => slot.copy()).toList(),
+      ),
       premadeHabitType: resolve(
         'premadeHabitType',
         premadeHabitType,
@@ -843,6 +886,19 @@ class Habit extends HiveObject {
     return true;
   }
 
+  static bool _sameNotificationList(
+    List<HabitNotificationTime> a,
+    List<HabitNotificationTime> b,
+  ) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].id != b[i].id || a[i].minutesOfDay != b[i].minutesOfDay) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   static List<int> _parseIntList(dynamic value) {
     if (value is! List) return [];
     return value
@@ -854,6 +910,38 @@ class Habit extends HiveObject {
   static List<String> _parseStringList(dynamic value) {
     if (value is! List) return [];
     return value.map((e) => e.toString()).toList();
+  }
+
+  static List<HabitNotificationTime> _parseNotificationTimes(dynamic value) {
+    if (value is! List) {
+      return [
+        HabitNotificationTime(
+          id: DateTime.now().microsecondsSinceEpoch,
+          minutesOfDay: 8 * 60,
+        ),
+      ];
+    }
+
+    final parsed =
+        value
+            .whereType<Map>()
+            .map(
+              (entry) => HabitNotificationTime.fromMap(
+                Map<String, dynamic>.from(entry),
+              ),
+            )
+            .toList();
+
+    if (parsed.isEmpty) {
+      return [
+        HabitNotificationTime(
+          id: DateTime.now().microsecondsSinceEpoch,
+          minutesOfDay: 8 * 60,
+        ),
+      ];
+    }
+
+    return parsed;
   }
 
   /// Serialize ScheduleType to String for Hive storage
