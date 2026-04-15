@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
@@ -28,139 +27,19 @@ class SetAmountLabelDialog extends StatefulWidget {
 class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
     with TickerProviderStateMixin {
   late String selectedLabel;
-  OverlayEntry? _deleteFailedOverlayEntry;
-  Timer? _deleteFailedOverlayTimer;
-  AnimationController? _deleteFailedOverlayController;
+  late final StatusOverlayPopupController _statusOverlay;
 
   @override
   void initState() {
     super.initState();
     selectedLabel = widget.initialLabel;
+    _statusOverlay = StatusOverlayPopupController(vsync: this);
   }
 
   @override
   void dispose() {
-    _removeDeleteFailedOverlay();
+    _statusOverlay.dispose();
     super.dispose();
-  }
-
-  void _removeDeleteFailedOverlay() {
-    _deleteFailedOverlayTimer?.cancel();
-    _deleteFailedOverlayTimer = null;
-    _deleteFailedOverlayEntry?.remove();
-    _deleteFailedOverlayEntry = null;
-    _deleteFailedOverlayController?.dispose();
-    _deleteFailedOverlayController = null;
-  }
-
-  void _showDeleteFailedOverlay({
-    required BuildContext context,
-    required ColorProvider cp,
-  }) {
-    _removeDeleteFailedOverlay();
-
-    final overlay = Overlay.of(context, rootOverlay: true);
-    if (overlay.mounted == false) {
-      return;
-    }
-
-    final controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 450),
-      reverseDuration: const Duration(milliseconds: 280),
-    );
-    _deleteFailedOverlayController = controller;
-
-    final animation = CurvedAnimation(
-      parent: controller,
-      curve: Curves.easeOutBack,
-      reverseCurve: Curves.easeInCubic,
-    );
-
-    final entry = OverlayEntry(
-      builder: (overlayContext) {
-        final topPadding = MediaQuery.viewPaddingOf(overlayContext).top;
-        return Positioned(
-          top: topPadding + 10,
-          left: 0,
-          right: 0,
-          child: IgnorePointer(
-            child: Center(
-              child: FadeTransition(
-                opacity: animation,
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, -0.35),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: ScaleTransition(
-                    scale: Tween<double>(
-                      begin: 0.94,
-                      end: 1,
-                    ).animate(animation),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: ShapeDecoration(
-                          color: cp.field,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              color: cp.fail.withValues(alpha: 0.35),
-                            ),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 10,
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: SvgPicture.asset(
-                                "assets/images/new-svg/skipped.svg",
-                              ),
-                            ),
-                            const Text(
-                              "This label can't be deleted",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontFamily: 'Satoshi',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-
-    _deleteFailedOverlayEntry = entry;
-    overlay.insert(entry);
-    controller.forward();
-
-    _deleteFailedOverlayTimer = Timer(const Duration(milliseconds: 1800), () {
-      if (!mounted || _deleteFailedOverlayController != controller) {
-        return;
-      }
-
-      controller.reverse().whenComplete(() {
-        if (!mounted || _deleteFailedOverlayController != controller) {
-          return;
-        }
-        _removeDeleteFailedOverlay();
-      });
-    });
   }
 
   Future<void> _showDeleteLabelDialog({
@@ -181,15 +60,29 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
             final removed = sp.removeCustomAmountLabel(label);
             Navigator.of(dialogContext).pop();
 
-            if (removed && mounted && selectedLabel == label) {
-              final labels = sp.allAmountLabels;
-              setState(() {
-                selectedLabel = labels.isNotEmpty ? labels.first : 'times';
-              });
+            if (removed && mounted) {
+              if (selectedLabel == label) {
+                final labels = sp.allAmountLabels;
+                setState(() {
+                  selectedLabel = labels.isNotEmpty ? labels.first : 'times';
+                });
+              }
+
+              _statusOverlay.show(
+                context: context,
+                cp: cp,
+                title: 'Amount label deleted',
+                isError: false,
+              );
             }
 
             if (!removed && mounted) {
-              _showDeleteFailedOverlay(context: context, cp: cp);
+              _statusOverlay.show(
+                context: context,
+                cp: cp,
+                title: "This label can't be deleted",
+                isError: true,
+              );
             }
           },
         );
@@ -263,7 +156,12 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                 },
                 onLongPress: () {
                   if (!isDeletable) {
-                    _showDeleteFailedOverlay(context: context, cp: cp);
+                    _statusOverlay.show(
+                      context: context,
+                      cp: cp,
+                      title: "This label can't be deleted",
+                      isError: true,
+                    );
                     return;
                   }
 

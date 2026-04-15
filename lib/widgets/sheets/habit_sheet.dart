@@ -16,6 +16,7 @@ import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/show_emoji_dialog.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/animated_checkbox.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -49,9 +50,11 @@ class HabitSheet extends StatefulWidget {
   State<HabitSheet> createState() => _HabitSheetState();
 }
 
-class _HabitSheetState extends State<HabitSheet> {
+class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   late final VoidCallback _nameListener;
   late final VoidCallback _descListener;
+  late final StateProvider _sp;
+  late final StatusOverlayPopupController _statusOverlay;
   bool _allowPop = false;
   bool _isExitDialogOpen = false;
   bool _isInitializing = true;
@@ -63,7 +66,8 @@ class _HabitSheetState extends State<HabitSheet> {
   void initState() {
     super.initState();
 
-    final sp = context.read<StateProvider>();
+    _sp = context.read<StateProvider>();
+    _statusOverlay = StatusOverlayPopupController(vsync: this);
 
     _nameListener = () {
       if (mounted && !_isInitializing) {
@@ -75,8 +79,8 @@ class _HabitSheetState extends State<HabitSheet> {
         setState(() {});
       }
     };
-    sp.nameController.addListener(_nameListener);
-    sp.descController.addListener(_descListener);
+    _sp.nameController.addListener(_nameListener);
+    _sp.descController.addListener(_descListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
@@ -84,12 +88,12 @@ class _HabitSheetState extends State<HabitSheet> {
       }
 
       if (_isEditMode) {
-        _setEditInitialValues(sp, widget.habit!);
+        _setEditInitialValues(_sp, widget.habit!);
       } else {
-        sp.reset();
+        _sp.reset();
         final initialTemplate = widget.initialPremadeTemplate;
         if (initialTemplate != null) {
-          sp.applyPremadeHabitTemplate(initialTemplate);
+          _sp.applyPremadeHabitTemplate(initialTemplate);
         }
       }
 
@@ -101,6 +105,14 @@ class _HabitSheetState extends State<HabitSheet> {
         _isInitializing = false;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _statusOverlay.dispose();
+    _sp.nameController.removeListener(_nameListener);
+    _sp.descController.removeListener(_descListener);
+    super.dispose();
   }
 
   void _setEditInitialValues(StateProvider stateProvider, Habit habit) {
@@ -391,8 +403,22 @@ class _HabitSheetState extends State<HabitSheet> {
             primaryButtonLabel: "Delete",
             primaryButtonColor: cp.fail,
             onPrimaryButtonPressed: () {
-              sp.removeHabitNotificationTime(slot.id);
+              final removed = sp.removeHabitNotificationTime(slot.id);
               Navigator.of(dialogContext).pop();
+
+              if (!mounted) {
+                return;
+              }
+
+              _statusOverlay.show(
+                context: context,
+                cp: cp,
+                title:
+                    removed
+                        ? 'Notification deleted'
+                        : "This notification can't be deleted",
+                isError: !removed,
+              );
             },
           ),
     );
@@ -844,6 +870,19 @@ class _HabitSheetState extends State<HabitSheet> {
         });
       },
       onLongPress: () async {
+        if (sp.habitNotificationTimes.length <= 1) {
+          _statusOverlay.show(
+            context: context,
+            cp: cp,
+            title: "This notification can't be deleted",
+            isError: true,
+          );
+          setState(() {
+            _heldNotificationId = null;
+          });
+          return;
+        }
+
         await _showDeleteNotificationConfirmation(sp, slot);
         if (!mounted) {
           return;
