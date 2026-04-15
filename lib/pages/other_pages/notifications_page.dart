@@ -59,7 +59,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final shouldRequest = await showDialog<bool>(
       context: context,
       builder:
-          (context) => DefaultDialog(
+          (context) => OldDefaultDialog(
             title: "Missing Permissions",
             desc:
                 "To receive reminders, please enable notification permissions for Habitt.",

@@ -11,6 +11,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:habitt/util/show_delete_habit_flow.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -201,6 +202,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   SizedBox(height: 24),
                   HabitDetailsCalendar(stats: stats),
                   const SizedBox(height: 24),
+                  NewDefaultButton(
+                    height: 40,
+                    color: cp.fail,
+                    onPressed: () => showDeleteHabitFlow(habit, context),
+                    child: Text('Delete habit'),
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
@@ -242,6 +250,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
               ),
             ),
           ),
+
           NewCircleButton(
             svgPath: 'assets/images/new-svg/edit.svg',
             cnIcon: CNSymbol('pencil.line', size: 14),

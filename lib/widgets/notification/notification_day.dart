@@ -58,7 +58,7 @@ class NotificationDay extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-          (context) => DefaultDialog(
+          (context) => OldDefaultDialog(
             title: "Invalid Time",
             desc:
                 'Please select a time within the ${notificationPeriod.name} period ($rangeText)',

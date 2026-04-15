@@ -136,7 +136,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
               if (!isLoading) setState(() {});
             });
 
-            return DefaultDialog(
+            return OldDefaultDialog(
               title: title,
               desc:
                   "You will use this passphrase to decrypt your data when importing it.",

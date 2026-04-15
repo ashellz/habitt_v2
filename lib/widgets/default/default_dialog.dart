@@ -3,8 +3,8 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:provider/provider.dart';
 
-class DefaultDialog extends StatelessWidget {
-  const DefaultDialog({
+class OldDefaultDialog extends StatelessWidget {
+  const OldDefaultDialog({
     super.key,
     this.title,
     this.desc,

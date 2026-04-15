@@ -5,6 +5,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/habit_details/new/editable/dialogs/delete_label_dialog.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -44,46 +45,21 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
 
   Future<void> _showDeleteLabelDialog({
     required BuildContext context,
-    required StateProvider sp,
-    required ColorProvider cp,
     required String label,
   }) async {
     await showDialogSheet(
       context: context,
       builder: (dialogContext) {
-        return NewDefaultDialog(
-          title: "Delete '$label'?",
-          desc: "This amount label will be removed.",
-          primaryButtonLabel: "Delete",
-          primaryButtonColor: cp.fail,
-          onPrimaryButtonPressed: () {
-            final removed = sp.removeCustomAmountLabel(label);
-            Navigator.of(dialogContext).pop();
-
-            if (removed && mounted) {
-              if (selectedLabel == label) {
-                final labels = sp.allAmountLabels;
-                setState(() {
-                  selectedLabel = labels.isNotEmpty ? labels.first : 'times';
-                });
-              }
-
-              _statusOverlay.show(
-                context: context,
-                cp: cp,
-                title: 'Amount label deleted',
-                isError: false,
-              );
-            }
-
-            if (!removed && mounted) {
-              _statusOverlay.show(
-                context: context,
-                cp: cp,
-                title: "This label can't be deleted",
-                isError: true,
-              );
-            }
+        return DeleteLabelDialog(
+          mounted: mounted,
+          statusOverlay: _statusOverlay,
+          dialogContext: dialogContext,
+          label: label,
+          selectedLabel: selectedLabel,
+          onSelectedLabelChanged: (updatedLabel) {
+            setState(() {
+              selectedLabel = updatedLabel;
+            });
           },
         );
       },
@@ -165,12 +141,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                     return;
                   }
 
-                  _showDeleteLabelDialog(
-                    context: context,
-                    sp: sp,
-                    cp: cp,
-                    label: item,
-                  );
+                  _showDeleteLabelDialog(context: context, label: item);
                 },
                 style: ButtonStyle(
                   enableFeedback: false,

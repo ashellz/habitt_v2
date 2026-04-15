@@ -10,7 +10,7 @@ import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
-import 'package:habitt/widgets/dialogs/delete_habit_dialog.dart';
+import 'package:habitt/widgets/dialogs/old_delete_habit_dialog.dart';
 import 'package:habitt/widgets/default/discard_changes_dialog.dart';
 import 'package:habitt/widgets/habit_details/edit_habit_button.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
@@ -251,8 +251,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     () => showDialog(
                                       context: context,
                                       builder:
-                                          (context) =>
-                                              DeleteHabitDialog(widget: widget),
+                                          (context) => OldDeleteHabitDialog(
+                                            habit: widget.habit,
+                                          ),
                                     ),
                                 icon: Icon(
                                   Icons.delete,
@@ -321,7 +322,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     () => showDialog(
                                       context: context,
                                       builder:
-                                          (context) => DefaultDialog(
+                                          (context) => OldDefaultDialog(
                                             title: "Reset changes?",
                                             desc:
                                                 "All changes you've made now will be reset.",

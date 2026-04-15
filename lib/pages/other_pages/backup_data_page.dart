@@ -142,7 +142,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                   showDialog(
                                     context: context,
                                     builder:
-                                        (context) => DefaultDialog(
+                                        (context) => OldDefaultDialog(
                                           title: "Opt out of Backup?",
                                           desc:
                                               "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",

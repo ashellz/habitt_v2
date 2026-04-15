@@ -7,7 +7,7 @@ class DiscardChangesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultDialog(
+    return OldDefaultDialog(
       title: "Discard changes?",
       desc:
           "You have unsaved changes. Are you sure you want to go back and discard them?",

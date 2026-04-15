@@ -24,6 +24,7 @@ import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:habitt/widgets/dialogs/override_current_config_dialog.dart';
+import 'package:habitt/widgets/habit_details/new/editable/dialogs/delete_notification_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
@@ -393,34 +394,14 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     StateProvider sp,
     HabitNotificationTime slot,
   ) async {
-    final cp = context.read<ColorProvider>();
-
     await showDialogSheet(
       context: context,
       builder:
-          (dialogContext) => NewDefaultDialog(
-            title: "Delete notification?",
-            desc: "This notification time will be removed.",
-            primaryButtonLabel: "Delete",
-            primaryButtonColor: cp.fail,
-            onPrimaryButtonPressed: () {
-              final removed = sp.removeHabitNotificationTime(slot.id);
-              Navigator.of(dialogContext).pop();
-
-              if (!mounted) {
-                return;
-              }
-
-              _statusOverlay.show(
-                context: context,
-                cp: cp,
-                title:
-                    removed
-                        ? 'Notification deleted'
-                        : "This notification can't be deleted",
-                isError: !removed,
-              );
-            },
+          (dialogContext) => DeleteNotificationDialog(
+            dialogContext: dialogContext,
+            mounted: mounted,
+            statusOverlay: _statusOverlay,
+            slot: slot,
           ),
     );
   }
