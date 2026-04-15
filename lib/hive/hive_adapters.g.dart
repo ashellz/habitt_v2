@@ -23,7 +23,10 @@ class HabitAdapter extends TypeAdapter<Habit> {
       iconPath: fields[3] as String,
       categoryId: (fields[4] as num).toInt(),
       order: fields[36] == null ? 0 : (fields[36] as num).toInt(),
-      amountLabel: fields[13] == null ? "times" : fields[13] as String,
+      amountLabel:
+          fields[13] == null
+              ? AmountLabelPreset.defaultAmountLabel
+              : fields[13] as String,
       tag: fields[5] == null ? "No tag" : fields[5] as String,
       completed: fields[6] == null ? false : fields[6] as bool,
       skipped: fields[14] == null ? false : fields[14] as bool,
@@ -52,6 +55,8 @@ class HabitAdapter extends TypeAdapter<Habit> {
       createdAt: fields[37] as DateTime?,
       lastCustomUpdate: fields[35] as DateTime?,
       colorName: fields[22] as String?,
+      notificationsEnabled: fields[40] == null ? false : fields[40] as bool,
+      notificationTimes: (fields[41] as List?)?.cast<HabitNotificationTime>(),
       premadeHabitType: fields[38] as PremadeHabitType?,
       trackingType: fields[39] as HabitTrackingType?,
       isDeleted: fields[24] as bool?,
@@ -62,7 +67,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(37)
+      ..writeByte(39)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -136,7 +141,11 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(38)
       ..write(obj.premadeHabitType)
       ..writeByte(39)
-      ..write(obj.trackingType);
+      ..write(obj.trackingType)
+      ..writeByte(40)
+      ..write(obj.notificationsEnabled)
+      ..writeByte(41)
+      ..write(obj.notificationTimes);
   }
 
   @override

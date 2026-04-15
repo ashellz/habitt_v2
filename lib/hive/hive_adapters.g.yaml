@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 40
+    nextIndex: 42
     fields:
       id:
         index: 0
@@ -81,6 +81,10 @@ types:
         index: 38
       trackingType:
         index: 39
+      notificationsEnabled:
+        index: 40
+      notificationTimes:
+        index: 41
   Day:
     typeId: 1
     nextIndex: 3
