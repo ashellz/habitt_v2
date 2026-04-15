@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
@@ -31,12 +32,42 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog> {
     selectedLabel = widget.initialLabel;
   }
 
+  Future<void> _showDeleteLabelDialog({
+    required BuildContext context,
+    required StateProvider sp,
+    required ColorProvider cp,
+    required String label,
+  }) async {
+    await showDialogSheet(
+      context: context,
+      builder: (dialogContext) {
+        return NewDefaultDialog(
+          title: "Delete '$label'?",
+          desc: "This amount label will be removed.",
+          primaryButtonLabel: "Delete",
+          primaryButtonColor: cp.fail,
+          onPrimaryButtonPressed: () {
+            final removed = sp.removeCustomAmountLabel(label);
+            if (removed && mounted && selectedLabel == label) {
+              final labels = sp.allAmountLabels;
+              setState(() {
+                selectedLabel = labels.isNotEmpty ? labels.first : 'times';
+              });
+            }
+            Navigator.of(dialogContext).pop();
+          },
+        );
+      },
+    );
+  }
+
   List<Widget> _buildLabelRows({
     required BuildContext context,
     required StateProvider sp,
     required ColorProvider cp,
   }) {
     final labels = sp.allAmountLabels;
+    final customLabels = sp.customAmountLabels.toSet();
     final rows = <Widget>[];
 
     // Add button as the last "item"
@@ -66,6 +97,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog> {
             ),
           );
         } else {
+          final isCustomLabel = customLabels.contains(item);
           final labelWidget = SizedBox(
             height: 40,
             child: AnimatedContainer(
@@ -93,7 +125,19 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog> {
                     selectedLabel = item;
                   });
                 },
+                onLongPress:
+                    isCustomLabel
+                        ? () {
+                          _showDeleteLabelDialog(
+                            context: context,
+                            sp: sp,
+                            cp: cp,
+                            label: item,
+                          );
+                        }
+                        : null,
                 style: ButtonStyle(
+                  enableFeedback: false,
                   splashFactory: NoSplash.splashFactory,
                   elevation: const WidgetStatePropertyAll(0),
                   overlayColor: WidgetStateProperty.resolveWith<Color?>((
