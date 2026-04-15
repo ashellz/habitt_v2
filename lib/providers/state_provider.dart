@@ -423,13 +423,20 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeHabitNotificationTime(int id) {
+  bool removeHabitNotificationTime(int id) {
     if (_habitNotificationTimes.length <= 1) {
-      return;
+      return false;
     }
+
+    final previousLength = _habitNotificationTimes.length;
     _habitNotificationTimes =
         _habitNotificationTimes.where((slot) => slot.id != id).toList();
+    if (_habitNotificationTimes.length == previousLength) {
+      return false;
+    }
+
     notifyListeners();
+    return true;
   }
 
   bool get shouldUpdateStreaks => _shouldUpdateStreaks;
