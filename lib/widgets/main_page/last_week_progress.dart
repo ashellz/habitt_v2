@@ -130,6 +130,15 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
     final habitProvider = context.read<HabitProvider>();
     final selectedDate = habitProvider.selectedDate;
     final allDates = _allDates;
+    final today = _normalizeDate(DateTime.now());
+
+    // Keep today's selection pinned to the latest day instead of centering it.
+    if (selectedDate != null && _isSameDay(selectedDate, today)) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      _didInitialScrollToRight = true;
+      _updateRightEdgeState();
+      return;
+    }
 
     if (selectedDate != null) {
       final normalizedSelected = _normalizeDate(selectedDate);
