@@ -55,7 +55,7 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
             ? "Enter your existing backup passphrase to access your data."
             : "This passphrase is used for your data encryption. Save it securely, you will use it again when getting your data on other devices.";
 
-    return DefaultDialog(
+    return OldDefaultDialog(
       title: "Backup Passphrase",
       desc: desc,
       content: DefaultTextField(

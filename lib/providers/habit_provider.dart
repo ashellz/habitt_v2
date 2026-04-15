@@ -252,6 +252,9 @@ class HabitProvider extends ChangeNotifier {
 
   // Here we check if a habit appears on a given day
   bool _appearsOnDay(Habit habit, DateTime day) {
+    if (habit.isDeleted == true) {
+      return false;
+    }
     final normalizedDay = _normalizeDate(day);
     switch (habit.scheduleType) {
       case ScheduleType.daily:
