@@ -39,6 +39,7 @@ class _NewHabitsState extends State<NewHabits>
   int _newMainOldIndex = -1;
   int _previousMainNewIndex = -1;
   Set<int> _fallbackCategoryIds = <int>{};
+  String? _activeDayKey;
 
   DateTime _normalizeDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
@@ -51,6 +52,13 @@ class _NewHabitsState extends State<NewHabits>
       return null;
     }
     return _normalizeDate(source);
+  }
+
+  String _dateIdentityKey(DateTime? date) {
+    final normalized = date ?? _normalizeDate(DateTime.now());
+    final month = normalized.month.toString().padLeft(2, '0');
+    final day = normalized.day.toString().padLeft(2, '0');
+    return '${normalized.year}-$month-$day';
   }
 
   @override
@@ -139,7 +147,27 @@ class _NewHabitsState extends State<NewHabits>
         .length;
   }
 
-  void _syncOrderState(List<int> providerOrderIds, bool shouldAnimate) {
+  void _syncOrderState(
+    List<int> providerOrderIds,
+    bool shouldAnimate,
+    String dayKey,
+  ) {
+    if (_activeDayKey != dayKey) {
+      _activeDayKey = dayKey;
+      _reorderController.stop();
+      _isReorderActive = false;
+      _hasSwappedToTargetOrder = false;
+      _queuedProviderOrderIds = null;
+      _fallbackCategoryIds = <int>{};
+      _previousMainCategoryId = null;
+      _newMainCategoryId = null;
+      _newMainOldIndex = -1;
+      _previousMainNewIndex = -1;
+      _lastProviderOrderIds = List<int>.from(providerOrderIds);
+      _displayOrderIds = List<int>.from(providerOrderIds);
+      return;
+    }
+
     if (_lastProviderOrderIds.isEmpty) {
       _lastProviderOrderIds = List<int>.from(providerOrderIds);
       _displayOrderIds = List<int>.from(providerOrderIds);
@@ -231,6 +259,8 @@ class _NewHabitsState extends State<NewHabits>
     required int categoryIndex,
     required bool isFirst,
     required bool isToday,
+    required String dayKey,
+    required DateTime? selectedDay,
     required double progress,
   }) {
     final categoryId = category.id;
@@ -280,7 +310,7 @@ class _NewHabitsState extends State<NewHabits>
     }
 
     return Padding(
-      key: ValueKey('category-$categoryId'),
+      key: ValueKey('category-$dayKey-$categoryId'),
       padding: const EdgeInsets.only(top: 12),
       child: Transform.translate(
         offset: Offset(0, translateY),
@@ -288,7 +318,7 @@ class _NewHabitsState extends State<NewHabits>
           scale: scale,
           alignment: Alignment.topCenter,
           child: NewHabitCategory(
-            key: ValueKey(categoryId),
+            key: ValueKey('category-body-$dayKey-$categoryId'),
             reorderActive: _isReorderActive,
             reorderProgress: progress,
             reorderSwapPoint: _swapPoint,
@@ -297,6 +327,7 @@ class _NewHabitsState extends State<NewHabits>
             fallbackVisibleHabits: _fallbackVisibleHabits,
             useFallbackAnimation: _fallbackCategoryIds.contains(categoryId),
             isToday: isToday,
+            selectedDate: selectedDay,
             habits: habits,
             isFirst: isFirst,
             category: category,
@@ -411,6 +442,7 @@ class _NewHabitsState extends State<NewHabits>
   Widget build(BuildContext context) {
     habits = _getHabits();
     final selectedDay = _effectiveSelectedDay();
+    final dayKey = _dateIdentityKey(selectedDay);
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
     debugPrint("Selected category id in build: $selectedCategoryId");
@@ -452,7 +484,7 @@ class _NewHabitsState extends State<NewHabits>
     final providerOrderIds =
         visibleCategories.map((category) => category.id).toList();
     final shouldAnimateReorder = _isTodayView() && selectedCategoryId == 0;
-    _syncOrderState(providerOrderIds, shouldAnimateReorder);
+    _syncOrderState(providerOrderIds, shouldAnimateReorder, dayKey);
 
     final idToCategory = {
       for (final category in visibleCategories) category.id: category,
@@ -487,7 +519,7 @@ class _NewHabitsState extends State<NewHabits>
             padding: const EdgeInsets.only(top: 12),
             child: NewHabitCategory(
               showTitle: false,
-              key: ValueKey(selectedCategoryId),
+              key: ValueKey('selected-category-$dayKey-$selectedCategoryId'),
               reorderActive: false,
               reorderProgress: 0,
               reorderSwapPoint: _swapPoint,
@@ -496,6 +528,7 @@ class _NewHabitsState extends State<NewHabits>
               fallbackVisibleHabits: _fallbackVisibleHabits,
               useFallbackAnimation: false,
               isToday: _isTodayView(),
+              selectedDate: selectedDay,
               habits: habits,
               showOptionalHabits: true,
               category: selectedCategory,
@@ -520,6 +553,8 @@ class _NewHabitsState extends State<NewHabits>
                 categoryIndex: index,
                 isFirst: index == 0,
                 isToday: _isTodayView(),
+                dayKey: dayKey,
+                selectedDay: selectedDay,
                 progress: reorderProgress,
               ),
 

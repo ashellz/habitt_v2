@@ -1,8 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
+import 'package:habitt/services/habit_notification_text_builder.dart';
+import 'package:habitt/services/notification_text/locale_resolver.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -135,10 +138,13 @@ class NotificationService {
     }
 
     await cancelHabitNotifications(habit.id);
+    final localizations =
+        await HabitNotificationLocaleResolver.resolveFromPreferences();
     await _scheduleHabitNotifications(
       habit: habit,
       appearsOnDay: appearsOnDay,
       horizonDays: horizonDays,
+      localizations: localizations,
     );
   }
 
@@ -153,12 +159,15 @@ class NotificationService {
     }
 
     await cancelAllHabitNotifications();
+    final localizations =
+        await HabitNotificationLocaleResolver.resolveFromPreferences();
 
     for (final habit in habits) {
       await _scheduleHabitNotifications(
         habit: habit,
         appearsOnDay: appearsOnDay,
         horizonDays: horizonDays,
+        localizations: localizations,
       );
     }
   }
@@ -167,6 +176,7 @@ class NotificationService {
     required Habit habit,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
     required int horizonDays,
+    required AppLocalizations localizations,
   }) async {
     if (habit.isDeleted == true ||
         !habit.notificationsEnabled ||
@@ -199,13 +209,22 @@ class NotificationService {
         }
 
         final notificationId = _getHabitNotificationId(habit.id, slot.id, day);
+        final text = HabitNotificationTextBuilder.build(
+          HabitNotificationContext(
+            habit: habit,
+            scheduledAt: scheduledAt,
+            appearsOnDay: appearsOnDay,
+            localizations: localizations,
+            now: now,
+          ),
+        );
 
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: notificationId,
             channelKey: 'basic_channel',
-            title: 'Habitt',
-            body: 'Reminder: ${habit.name}',
+            title: text.title,
+            body: text.description,
             notificationLayout: NotificationLayout.Default,
             wakeUpScreen: true,
             category: NotificationCategory.Reminder,

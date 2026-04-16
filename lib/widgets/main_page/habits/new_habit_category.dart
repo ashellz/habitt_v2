@@ -20,6 +20,7 @@ class NewHabitCategory extends StatefulWidget {
     required this.category,
     required this.habits,
     required this.isToday,
+    this.selectedDate,
   });
 
   final bool isFirst;
@@ -34,6 +35,7 @@ class NewHabitCategory extends StatefulWidget {
   final List<Habit> habits;
   final bool isToday;
   final bool showTitle;
+  final DateTime? selectedDate;
 
   @override
   State<NewHabitCategory> createState() => _NewHabitCategoryState();
@@ -50,6 +52,16 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
 
   int get _maxExtraRevealDurationMs =>
       _extraRevealBaseDelayMs + _extraRevealFadeDurationMs;
+
+  String _dateIdentityKey(DateTime? date) {
+    final normalized =
+        date == null
+            ? DateUtils.dateOnly(DateTime.now())
+            : DateUtils.dateOnly(date);
+    final month = normalized.month.toString().padLeft(2, '0');
+    final day = normalized.day.toString().padLeft(2, '0');
+    return '${normalized.year}-$month-$day';
+  }
 
   int _extraHabitsCountForWidget(NewHabitCategory widgetConfig) {
     final categoryHabits =
@@ -215,6 +227,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
 
   @override
   Widget build(BuildContext context) {
+    final dayKey = _dateIdentityKey(widget.selectedDate);
     final categoryHabits =
         widget.habits
             .where(
@@ -240,12 +253,13 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
         // Using the new ScrollTransformedHabitCategoryTitle
         if (categoryHabits.isNotEmpty && widget.showTitle)
           NewHabitCategoryTitle(
+            key: ValueKey('category-title-$dayKey-${widget.category.id}'),
             isFirst: widget.isFirst,
             category: widget.category,
           ),
         for (int index = 0; index < categoryHabits.length; index++)
           Opacity(
-            key: ValueKey('habit-fade-${categoryHabits[index].id}'),
+            key: ValueKey('habit-fade-$dayKey-${categoryHabits[index].id}'),
             opacity: () {
               final collapseState = _collapseStateForIndex(
                 index: index,
@@ -290,7 +304,9 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
                     child: IgnorePointer(
                       ignoring: disableInteractions,
                       child: NewHabitWidget(
-                        key: ValueKey(categoryHabits[index].id),
+                        key: ValueKey(
+                          'habit-row-$dayKey-${categoryHabits[index].id}',
+                        ),
                         habit: categoryHabits[index],
                       ),
                     ),
