@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
@@ -12,6 +13,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/services/emoji_service.dart';
+import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -419,7 +421,63 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
+  Future<void> _showNotificationSettingsDialog() async {
+    if (!mounted) {
+      return;
+    }
+
+    await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: "Notifications are disabled",
+            desc:
+                "To use habit reminders, enable notifications in your device settings.",
+            primaryButtonLabel: "Settings",
+            secondaryButtonLabel: "Not now",
+            onPrimaryButtonPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await AwesomeNotifications().showNotificationConfigPage();
+            },
+          ),
+    );
+  }
+
+  Future<void> _ensureNotificationPermissionForSave(StateProvider sp) async {
+    if (!sp.habitNotificationsEnabled) {
+      return;
+    }
+
+    final allowed = await NotificationService.areNotificationsAllowed();
+    if (allowed) {
+      return;
+    }
+
+    final lockedBeforeRequest =
+        await AwesomeNotifications().shouldShowRationaleToRequest();
+    if (lockedBeforeRequest.isNotEmpty) {
+      await _showNotificationSettingsDialog();
+      return;
+    }
+
+    await AwesomeNotifications().requestPermissionToSendNotifications();
+
+    final allowedAfterRequest =
+        await NotificationService.areNotificationsAllowed();
+    if (allowedAfterRequest) {
+      return;
+    }
+
+    final lockedAfterRequest =
+        await AwesomeNotifications().shouldShowRationaleToRequest();
+    if (lockedAfterRequest.isNotEmpty) {
+      await _showNotificationSettingsDialog();
+    }
+  }
+
   Future<void> _saveHabit(StateProvider sp) async {
+    await _ensureNotificationPermissionForSave(sp);
+
     final habitProvider = context.read<HabitProvider>();
 
     if (_isEditMode) {

@@ -39,15 +39,6 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await BillingService.init();
 
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.transparent, // ← bottom nav bar
-      systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.transparent, // ← top status bar
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
-
   await Hive.initFlutter();
   Hive.registerAdapters();
   if (!Hive.isAdapterRegistered(2)) {
@@ -86,14 +77,6 @@ Future<void> main() async {
       ),
     ],
     debug: kDebugMode,
-  );
-
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.black, // Set status bar background to white
-      statusBarIconBrightness: Brightness.light, // Set icons to dark (black)
-      statusBarBrightness: Brightness.dark, // For iOS: dark icons
-    ),
   );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -207,6 +190,22 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final languageProvider = context.watch<LanguageProvider>();
+    final systemUiOverlayStyle =
+        cp.isDark
+            ? const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.dark,
+              systemNavigationBarColor: Colors.transparent,
+              systemNavigationBarIconBrightness: Brightness.light,
+            )
+            : const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+              systemNavigationBarColor: Colors.transparent,
+              systemNavigationBarIconBrightness: Brightness.dark,
+            );
 
     // Choose base ColorScheme based on theme provider state
     final baseScheme =
@@ -265,27 +264,30 @@ class _MyAppState extends State<MyApp> {
       }
     }
 
-    return MaterialApp(
-      title: 'habitt',
-      debugShowCheckedModeBanner: false,
-      theme: theme,
-      darkTheme: theme,
-      themeMode:
-          cp.mode == ColorMode.light
-              ? ThemeMode.light
-              : cp.mode == ColorMode.dark
-              ? ThemeMode.dark
-              : ThemeMode.system,
-      locale: languageProvider.locale,
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      routes: {'/settings': (context) => const SettingsPage()},
-      home: getHomePage(),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: systemUiOverlayStyle,
+      child: MaterialApp(
+        title: 'habitt',
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        darkTheme: theme,
+        themeMode:
+            cp.mode == ColorMode.light
+                ? ThemeMode.light
+                : cp.mode == ColorMode.dark
+                ? ThemeMode.dark
+                : ThemeMode.system,
+        locale: languageProvider.locale,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        routes: {'/settings': (context) => const SettingsPage()},
+        home: getHomePage(),
+      ),
     );
   }
 }
