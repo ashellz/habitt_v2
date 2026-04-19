@@ -614,19 +614,19 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             child: SingleChildScrollView(
               controller: scrollController,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 20, 0, 28),
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    topSection(context, cp, sp, tp, canSave),
                     Padding(
-                      padding: EdgeInsets.only(right: 16),
+                      padding: EdgeInsets.only(left: 16, right: 16),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 20,
                         children: [
-                          topSection(context, cp, sp, tp, canSave),
                           chooseIcon(cp, sp, context),
                           habitDetails(cp),
                           habitScheduling(cp),
@@ -634,10 +634,17 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    optionalHabitCheck(cp, sp),
                     Padding(
-                      padding: EdgeInsets.only(right: 16),
-                      child: notificationSection(cp, sp),
+                      padding: EdgeInsets.only(left: 16),
+                      child: Column(
+                        children: [
+                          optionalHabitCheck(cp, sp),
+                          Padding(
+                            padding: EdgeInsets.only(right: 16),
+                            child: notificationSection(cp, sp),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -1151,13 +1158,15 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 36,
-            width: 66,
-            child: GestureDetector(
-              onTap: () {
-                _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
-              },
+          GestureDetector(
+            onTap: () {
+              _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
+            },
+            child: Container(
+              padding: const EdgeInsets.only(left: 16),
+              color: Colors.transparent,
+              height: 36,
+              width: 66 + 16,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: SvgPicture.asset(
@@ -1175,15 +1184,18 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
               fontWeight: FontWeight.w500,
             ),
           ),
-          NewDefaultButton.primarySmall(
-            enabled: canSave,
-            onPressed: () async {
-              if (!canSave) {
-                return;
-              }
-              await _saveHabit(sp);
-            },
-            label: "Save",
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: NewDefaultButton.primarySmall(
+              enabled: canSave,
+              onPressed: () async {
+                if (!canSave) {
+                  return;
+                }
+                await _saveHabit(sp);
+              },
+              label: "Save",
+            ),
           ),
         ],
       ),

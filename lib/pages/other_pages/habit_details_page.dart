@@ -179,16 +179,22 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
           physics: const ClampingScrollPhysics(),
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
               color: cp.habitBg,
               child: Column(
                 children: [
                   _topBar(cp, habit),
-                  const SizedBox(height: 14),
-                  _summaryCard(cp, habit, stats),
-                  const SizedBox(height: 18),
-                  _notesSection(cp),
-                  const SizedBox(height: 24),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 14),
+                        _summaryCard(cp, habit, stats),
+                        const SizedBox(height: 18),
+                        _notesSection(cp),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -227,12 +233,15 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: SizedBox(
-              width: 34,
-              height: 34,
-              child: Center(
+            child: Container(
+              padding: const EdgeInsets.only(left: 16),
+              color: Colors.transparent,
+              height: 36,
+              width: 60,
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: SvgPicture.asset(
-                  'assets/images/new-svg/back.svg',
+                  "assets/images/new-svg/back.svg",
                   colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
                 ),
               ),
@@ -251,16 +260,19 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
             ),
           ),
 
-          NewCircleButton(
-            svgPath: 'assets/images/new-svg/edit.svg',
-            cnIcon: CNSymbol('pencil.line', size: 14),
-            width: 44,
-            height: 44,
-            color: cp.bg,
-            padding: const EdgeInsets.all(13),
-            onPressed: () async {
-              await _openEditSheet(habit);
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: NewCircleButton(
+              svgPath: 'assets/images/new-svg/edit.svg',
+              cnIcon: CNSymbol('pencil.line', size: 14),
+              width: 44,
+              height: 44,
+              color: cp.bg,
+              padding: const EdgeInsets.all(13),
+              onPressed: () async {
+                await _openEditSheet(habit);
+              },
+            ),
           ),
         ],
       ),
