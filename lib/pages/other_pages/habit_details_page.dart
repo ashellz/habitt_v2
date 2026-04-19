@@ -48,6 +48,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     _notesController = TextEditingController();
     _notesFocusNode = FocusNode();
     _notesController.addListener(_onNotesChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final sp = context.read<StateProvider>();
+      final habitProvider = context.read<HabitProvider>();
+      if (sp.shouldUpdateStreaks) {
+        habitProvider.assignStreaks(widget.habitId);
+      }
+    });
   }
 
   @override

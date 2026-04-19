@@ -484,12 +484,17 @@ class Habit extends HiveObject {
   }
 
   void updateStreak({required int streak, required int longestStreak}) {
+    final now = DateTime.now().toUtc();
     this.streak = streak;
-    if (streak > longestStreak) {
-      this.longestStreak = streak;
-      timestamps['longestStreak'] = DateTime.now().toUtc();
+    timestamps['streak'] = now;
+
+    final nextLongest = longestStreak > this.longestStreak
+        ? longestStreak
+        : this.longestStreak;
+    if (nextLongest != this.longestStreak) {
+      this.longestStreak = nextLongest;
+      timestamps['longestStreak'] = now;
     }
-    timestamps['streak'] = DateTime.now().toUtc();
   }
 
   /// Get the habit name color based on theme mode
