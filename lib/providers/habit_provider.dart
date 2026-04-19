@@ -980,7 +980,7 @@ class HabitProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> assignStreaks() async {
+  Future<void> assignStreaks([int? onlyHabitId]) async {
     debugPrint("Assigning streaks");
 
     final sortedDays = daysBox.values.toList();
@@ -994,6 +994,9 @@ class HabitProvider extends ChangeNotifier {
     final currentHabits = habitBox.values;
 
     for (final habit in currentHabits) {
+      if (onlyHabitId != null && habit.id != onlyHabitId) {
+        continue;
+      }
       debugPrint("Checking habit: ${habit.name}");
 
       int streak = 0;
@@ -1025,11 +1028,25 @@ class HabitProvider extends ChangeNotifier {
         if (dayHabit.completed) {
           streak++;
           consecutiveMisses = 0;
-          if (streak > longestStreak) {
+          if (streak >= longestStreak) {
             longestStreak = streak;
           }
         } else {
           // If not completed we increment misses counter
+
+          if (dayHabit.hasTrackingType) {
+            if (dayHabit.tracksAmount) {
+              if (dayHabit.amountCompleted > 0) {
+                consecutiveMisses = 0;
+                continue;
+              }
+            } else if (dayHabit.tracksDuration) {
+              if (dayHabit.durationCompleted > 0) {
+                consecutiveMisses = 0;
+                continue;
+              }
+            }
+          }
 
           consecutiveMisses++;
           if (consecutiveMisses >= 2) {
