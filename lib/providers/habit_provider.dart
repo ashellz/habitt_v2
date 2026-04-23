@@ -75,6 +75,11 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> _syncSingleHabitNotifications(Habit habit) async {
+    if (habit.completed) {
+      await NotificationService.cancelHabitNotifications(habit.id);
+      return;
+    }
+
     await NotificationService.rescheduleHabitNotifications(
       habit: habit,
       appearsOnDay: appearsOnDay,
@@ -780,7 +785,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     await updateHabitInDB(habit, day: daySimple);
-    _syncSingleHabitNotifications(currentHabit);
+    await _syncSingleHabitNotifications(currentHabit);
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
@@ -907,7 +912,9 @@ class HabitProvider extends ChangeNotifier {
     habit.updateHabitAmountCompleted(amountCompleted);
     if (context.mounted) checkReorderCategories(context, habit);
 
-    await updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    final currentHabit = habits.firstWhere((h) => h.id == id);
+    await updateHabitInDB(currentHabit);
+    await _syncSingleHabitNotifications(currentHabit);
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
@@ -945,7 +952,9 @@ class HabitProvider extends ChangeNotifier {
 
     if (context.mounted) checkReorderCategories(context, habit);
 
-    await updateHabitInDB(habits.firstWhere((h) => h.id == id));
+    final currentHabit = habits.firstWhere((h) => h.id == id);
+    await updateHabitInDB(currentHabit);
+    await _syncSingleHabitNotifications(currentHabit);
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
