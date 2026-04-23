@@ -702,6 +702,954 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read a little now and let consistency do the rest.'**
   String get notificationPremadeRead;
+
+  /// No description provided for @notificationPeriodWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'weekly'**
+  String get notificationPeriodWeekly;
+
+  /// No description provided for @notificationPeriodMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'monthly'**
+  String get notificationPeriodMonthly;
+
+  /// No description provided for @notificationCombinedOneOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t miss today, it\'s your last {period} chance and {encouragement}.'**
+  String notificationCombinedOneOff(Object encouragement, Object period);
+
+  /// No description provided for @notificationCombinedFresh.
+  ///
+  /// In en, this message translates to:
+  /// **'You started this habit {days} days ago, and {encouragement}.'**
+  String notificationCombinedFresh(Object days, Object encouragement);
+
+  /// No description provided for @notificationCombinedAmountNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Start now, even one step counts, and {encouragement}.'**
+  String notificationCombinedAmountNotStarted(Object encouragement);
+
+  /// No description provided for @notificationCombinedAmountInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at {progress}, and {encouragement}.'**
+  String notificationCombinedAmountInProgress(
+    Object encouragement,
+    Object progress,
+  );
+
+  /// No description provided for @notificationCombinedAmountAlmostDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {remaining} left, and {encouragement}.'**
+  String notificationCombinedAmountAlmostDone(
+    Object encouragement,
+    Object remaining,
+  );
+
+  /// No description provided for @notificationCombinedAmountCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Target reached already, and {encouragement}.'**
+  String notificationCombinedAmountCompleted(Object encouragement);
+
+  /// No description provided for @notificationCombinedDurationNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a short session now, and {encouragement}.'**
+  String notificationCombinedDurationNotStarted(Object encouragement);
+
+  /// No description provided for @notificationCombinedDurationInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'You are at {progress}, and {encouragement}.'**
+  String notificationCombinedDurationInProgress(
+    Object encouragement,
+    Object progress,
+  );
+
+  /// No description provided for @notificationCombinedDurationAlmostDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {remaining} left, and {encouragement}.'**
+  String notificationCombinedDurationAlmostDone(
+    Object encouragement,
+    Object remaining,
+  );
+
+  /// No description provided for @notificationCombinedDurationCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Target reached already, and {encouragement}.'**
+  String notificationCombinedDurationCompleted(Object encouragement);
+
+  /// No description provided for @notificationCombinedGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'{encouragement}.'**
+  String notificationCombinedGeneral(Object encouragement);
+
+  /// No description provided for @notificationEncourageGeneric1.
+  ///
+  /// In en, this message translates to:
+  /// **'showing up today keeps the habit alive'**
+  String get notificationEncourageGeneric1;
+
+  /// No description provided for @notificationEncourageGeneric2.
+  ///
+  /// In en, this message translates to:
+  /// **'a small action now protects your momentum'**
+  String get notificationEncourageGeneric2;
+
+  /// No description provided for @notificationEncourageGeneric3.
+  ///
+  /// In en, this message translates to:
+  /// **'consistency today makes tomorrow easier'**
+  String get notificationEncourageGeneric3;
+
+  /// No description provided for @notificationEncourageGoToBedEarly1.
+  ///
+  /// In en, this message translates to:
+  /// **'protecting tonight helps tomorrow feel lighter'**
+  String get notificationEncourageGoToBedEarly1;
+
+  /// No description provided for @notificationEncourageGoToBedEarly2.
+  ///
+  /// In en, this message translates to:
+  /// **'an earlier bedtime now gives your mind a cleaner start'**
+  String get notificationEncourageGoToBedEarly2;
+
+  /// No description provided for @notificationEncourageGoToBedEarly3.
+  ///
+  /// In en, this message translates to:
+  /// **'this choice tonight sets up a better morning'**
+  String get notificationEncourageGoToBedEarly3;
+
+  /// No description provided for @notificationEncourageGoToBedEarly4.
+  ///
+  /// In en, this message translates to:
+  /// **'sleep consistency now pays off all day tomorrow'**
+  String get notificationEncourageGoToBedEarly4;
+
+  /// No description provided for @notificationEncourageGoToBedEarly5.
+  ///
+  /// In en, this message translates to:
+  /// **'one calm night routine protects your energy curve'**
+  String get notificationEncourageGoToBedEarly5;
+
+  /// No description provided for @notificationEncourageGoToBedEarly6.
+  ///
+  /// In en, this message translates to:
+  /// **'ending the day on time keeps your rhythm stable'**
+  String get notificationEncourageGoToBedEarly6;
+
+  /// No description provided for @notificationEncourageGoToBedEarly7.
+  ///
+  /// In en, this message translates to:
+  /// **'better sleep timing is a quiet performance advantage'**
+  String get notificationEncourageGoToBedEarly7;
+
+  /// No description provided for @notificationEncourageGoToBedEarly8.
+  ///
+  /// In en, this message translates to:
+  /// **'an earlier lights-out keeps your recovery on track'**
+  String get notificationEncourageGoToBedEarly8;
+
+  /// No description provided for @notificationEncourageGoToBedEarly9.
+  ///
+  /// In en, this message translates to:
+  /// **'small bedtime discipline creates stronger mornings'**
+  String get notificationEncourageGoToBedEarly9;
+
+  /// No description provided for @notificationEncourageGoToBedEarly10.
+  ///
+  /// In en, this message translates to:
+  /// **'this evening decision helps your whole week run smoother'**
+  String get notificationEncourageGoToBedEarly10;
+
+  /// No description provided for @notificationEncourageBrushTeeth1.
+  ///
+  /// In en, this message translates to:
+  /// **'keeping your hygiene streak strong'**
+  String get notificationEncourageBrushTeeth1;
+
+  /// No description provided for @notificationEncourageBrushTeeth2.
+  ///
+  /// In en, this message translates to:
+  /// **'protecting your routine with a quick win'**
+  String get notificationEncourageBrushTeeth2;
+
+  /// No description provided for @notificationEncourageBrushTeeth3.
+  ///
+  /// In en, this message translates to:
+  /// **'staying consistent with basic care'**
+  String get notificationEncourageBrushTeeth3;
+
+  /// No description provided for @notificationEncourageSkinCare1.
+  ///
+  /// In en, this message translates to:
+  /// **'protecting your skin with one steady step'**
+  String get notificationEncourageSkinCare1;
+
+  /// No description provided for @notificationEncourageSkinCare2.
+  ///
+  /// In en, this message translates to:
+  /// **'making consistency your skincare advantage'**
+  String get notificationEncourageSkinCare2;
+
+  /// No description provided for @notificationEncourageSkinCare3.
+  ///
+  /// In en, this message translates to:
+  /// **'keeping your routine reliable and simple'**
+  String get notificationEncourageSkinCare3;
+
+  /// No description provided for @notificationEncourageWakeUpEarly1.
+  ///
+  /// In en, this message translates to:
+  /// **'starting your day with intention'**
+  String get notificationEncourageWakeUpEarly1;
+
+  /// No description provided for @notificationEncourageWakeUpEarly2.
+  ///
+  /// In en, this message translates to:
+  /// **'keeping your morning rhythm consistent'**
+  String get notificationEncourageWakeUpEarly2;
+
+  /// No description provided for @notificationEncourageWakeUpEarly3.
+  ///
+  /// In en, this message translates to:
+  /// **'giving yourself a calmer start'**
+  String get notificationEncourageWakeUpEarly3;
+
+  /// No description provided for @notificationEncourageShower1.
+  ///
+  /// In en, this message translates to:
+  /// **'a quick reset can lift your focus'**
+  String get notificationEncourageShower1;
+
+  /// No description provided for @notificationEncourageShower2.
+  ///
+  /// In en, this message translates to:
+  /// **'this routine helps you feel switched on'**
+  String get notificationEncourageShower2;
+
+  /// No description provided for @notificationEncourageShower3.
+  ///
+  /// In en, this message translates to:
+  /// **'a clean reset keeps your day moving'**
+  String get notificationEncourageShower3;
+
+  /// No description provided for @notificationEncourageRunning1.
+  ///
+  /// In en, this message translates to:
+  /// **'one training rep today builds endurance'**
+  String get notificationEncourageRunning1;
+
+  /// No description provided for @notificationEncourageRunning2.
+  ///
+  /// In en, this message translates to:
+  /// **'showing up now strengthens your running baseline'**
+  String get notificationEncourageRunning2;
+
+  /// No description provided for @notificationEncourageRunning3.
+  ///
+  /// In en, this message translates to:
+  /// **'this effort keeps your fitness momentum real'**
+  String get notificationEncourageRunning3;
+
+  /// No description provided for @notificationEncourageWalk1.
+  ///
+  /// In en, this message translates to:
+  /// **'a short walk is enough to keep momentum'**
+  String get notificationEncourageWalk1;
+
+  /// No description provided for @notificationEncourageWalk2.
+  ///
+  /// In en, this message translates to:
+  /// **'moving now helps your energy and focus'**
+  String get notificationEncourageWalk2;
+
+  /// No description provided for @notificationEncourageWalk3.
+  ///
+  /// In en, this message translates to:
+  /// **'this simple rep supports long-term consistency'**
+  String get notificationEncourageWalk3;
+
+  /// No description provided for @notificationEncourageGym1.
+  ///
+  /// In en, this message translates to:
+  /// **'one gym rep today keeps your standard high'**
+  String get notificationEncourageGym1;
+
+  /// No description provided for @notificationEncourageGym2.
+  ///
+  /// In en, this message translates to:
+  /// **'showing up now protects your strength momentum'**
+  String get notificationEncourageGym2;
+
+  /// No description provided for @notificationEncourageGym3.
+  ///
+  /// In en, this message translates to:
+  /// **'today\'s session compounds over time'**
+  String get notificationEncourageGym3;
+
+  /// No description provided for @notificationEncourageNutrition1.
+  ///
+  /// In en, this message translates to:
+  /// **'one intentional choice now supports your baseline'**
+  String get notificationEncourageNutrition1;
+
+  /// No description provided for @notificationEncourageNutrition2.
+  ///
+  /// In en, this message translates to:
+  /// **'small nutrition wins add up fast'**
+  String get notificationEncourageNutrition2;
+
+  /// No description provided for @notificationEncourageNutrition3.
+  ///
+  /// In en, this message translates to:
+  /// **'consistency here improves everything else'**
+  String get notificationEncourageNutrition3;
+
+  /// No description provided for @notificationEncourageMedications1.
+  ///
+  /// In en, this message translates to:
+  /// **'timing this right protects your health routine'**
+  String get notificationEncourageMedications1;
+
+  /// No description provided for @notificationEncourageMedications2.
+  ///
+  /// In en, this message translates to:
+  /// **'staying on schedule keeps your baseline stable'**
+  String get notificationEncourageMedications2;
+
+  /// No description provided for @notificationEncourageMedications3.
+  ///
+  /// In en, this message translates to:
+  /// **'this step supports your long-term wellbeing'**
+  String get notificationEncourageMedications3;
+
+  /// No description provided for @notificationEncourageDrinkWater1.
+  ///
+  /// In en, this message translates to:
+  /// **'hydration now supports your whole system'**
+  String get notificationEncourageDrinkWater1;
+
+  /// No description provided for @notificationEncourageDrinkWater2.
+  ///
+  /// In en, this message translates to:
+  /// **'one glass now keeps your energy steadier'**
+  String get notificationEncourageDrinkWater2;
+
+  /// No description provided for @notificationEncourageDrinkWater3.
+  ///
+  /// In en, this message translates to:
+  /// **'small hydration reps improve daily performance'**
+  String get notificationEncourageDrinkWater3;
+
+  /// No description provided for @notificationEncourageStudying1.
+  ///
+  /// In en, this message translates to:
+  /// **'one focused block now builds learning momentum'**
+  String get notificationEncourageStudying1;
+
+  /// No description provided for @notificationEncourageStudying2.
+  ///
+  /// In en, this message translates to:
+  /// **'showing up today keeps knowledge compounding'**
+  String get notificationEncourageStudying2;
+
+  /// No description provided for @notificationEncourageStudying3.
+  ///
+  /// In en, this message translates to:
+  /// **'small sessions consistently beat cramming'**
+  String get notificationEncourageStudying3;
+
+  /// No description provided for @notificationEncourageWork1.
+  ///
+  /// In en, this message translates to:
+  /// **'starting now creates real traction'**
+  String get notificationEncourageWork1;
+
+  /// No description provided for @notificationEncourageWork2.
+  ///
+  /// In en, this message translates to:
+  /// **'one meaningful push can unlock your day'**
+  String get notificationEncourageWork2;
+
+  /// No description provided for @notificationEncourageWork3.
+  ///
+  /// In en, this message translates to:
+  /// **'consistent execution keeps progress visible'**
+  String get notificationEncourageWork3;
+
+  /// No description provided for @notificationEncourageResearch1.
+  ///
+  /// In en, this message translates to:
+  /// **'one insight today moves your work forward'**
+  String get notificationEncourageResearch1;
+
+  /// No description provided for @notificationEncourageResearch2.
+  ///
+  /// In en, this message translates to:
+  /// **'steady exploration compounds into clarity'**
+  String get notificationEncourageResearch2;
+
+  /// No description provided for @notificationEncourageResearch3.
+  ///
+  /// In en, this message translates to:
+  /// **'capturing one finding now keeps momentum'**
+  String get notificationEncourageResearch3;
+
+  /// No description provided for @notificationEncourageProductivitySession1.
+  ///
+  /// In en, this message translates to:
+  /// **'one focused session protects deep work time'**
+  String get notificationEncourageProductivitySession1;
+
+  /// No description provided for @notificationEncourageProductivitySession2.
+  ///
+  /// In en, this message translates to:
+  /// **'a clean focus block now can change your day'**
+  String get notificationEncourageProductivitySession2;
+
+  /// No description provided for @notificationEncourageProductivitySession3.
+  ///
+  /// In en, this message translates to:
+  /// **'consistency in focus drives better output'**
+  String get notificationEncourageProductivitySession3;
+
+  /// No description provided for @notificationEncourageRead1.
+  ///
+  /// In en, this message translates to:
+  /// **'a few pages now keep your reading identity strong'**
+  String get notificationEncourageRead1;
+
+  /// No description provided for @notificationEncourageRead2.
+  ///
+  /// In en, this message translates to:
+  /// **'small daily reading compounds into real progress'**
+  String get notificationEncourageRead2;
+
+  /// No description provided for @notificationEncourageRead3.
+  ///
+  /// In en, this message translates to:
+  /// **'showing up today keeps the streak alive'**
+  String get notificationEncourageRead3;
+
+  /// No description provided for @insightStrengthKeepPushingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep pushing {habitName}'**
+  String insightStrengthKeepPushingTitle(Object habitName);
+
+  /// No description provided for @insightStrengthLowerTargetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower target for {habitName}'**
+  String insightStrengthLowerTargetTitle(Object habitName);
+
+  /// No description provided for @insightStrengthIncreaseTargetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase target for {habitName}'**
+  String insightStrengthIncreaseTargetTitle(Object habitName);
+
+  /// No description provided for @insightStrengthApplyDecrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply decrease'**
+  String get insightStrengthApplyDecrease;
+
+  /// No description provided for @insightStrengthApplyIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply increase'**
+  String get insightStrengthApplyIncrease;
+
+  /// No description provided for @insightStrengthGotItEven.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get insightStrengthGotItEven;
+
+  /// No description provided for @insightStrengthGotItOdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get insightStrengthGotItOdd;
+
+  /// No description provided for @insightStrengthStartSmallType1Generic.
+  ///
+  /// In en, this message translates to:
+  /// **'You added this habit for a reason. Do not let it slip now.||Momentum is fading on this habit. Show up today and keep it alive.||You are falling behind on this habit. Lock in and get your rep done.||Do not negotiate with laziness here. Protect this habit today.||You came too far to let this habit drift. Stay consistent today.'**
+  String get insightStrengthStartSmallType1Generic;
+
+  /// No description provided for @insightStrengthStartSmallType2Generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency dropped on this habit. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to stabilize again.||You have been off track lately. Strength dropped by {drop}%. Try this target shift: {fromValue} -> {toValue} to rebuild rhythm.||Recent performance is slipping. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to get back on track.||This habit needs a lighter target for now. Strength dropped by {drop}%. Move from {fromValue} to {toValue} to improve consistency.||Your habit signal weakened recently. Strength dropped by {drop}%. Recommended target: {fromValue} -> {toValue} so you can stay consistent.'**
+  String insightStrengthStartSmallType2Generic(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Your consistency is strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.||You are handling this habit well. Strength is stable at {strength}%. Push the target from {fromValue} to {toValue} for more growth.||Momentum is solid here. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to level up.||You built a reliable baseline. Strength is stable at {strength}%. Move from {fromValue} to {toValue} and keep improving.||Great consistency lately. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep your progress rising.'**
+  String insightStrengthIncreaseGeneric(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1GoToBedEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'Your go to bed early habit is slipping. Do not let this routine fall off now.||You have been off track with go to bed early. Show up today and protect the habit.||Momentum on go to bed early is fading. Keep it alive with one solid rep today.||Do not let go to bed early become inconsistent. Lock in and do your part today.||You started to go to bed early for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1GoToBedEarly;
+
+  /// No description provided for @insightStrengthStartSmallType2GoToBedEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with go to bed early lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Go to bed early has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent go to bed early consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your go to bed early habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Go to bed early needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2GoToBedEarly(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseGoToBedEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on go to bed early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for go to bed early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseGoToBedEarly(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1BrushTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'Your brush your teeth habit is slipping. Do not let this routine fall off now.||You have been off track with brush your teeth. Show up today and protect the habit.||Momentum on brush your teeth is fading. Keep it alive with one solid rep today.||Do not let brush your teeth become inconsistent. Lock in and do your part today.||You started to brush your teeth for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1BrushTeeth;
+
+  /// No description provided for @insightStrengthStartSmallType2BrushTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with brush your teeth lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Brush your teeth has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent brush your teeth consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your brush your teeth habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Brush your teeth needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2BrushTeeth(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseBrushTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with brush your teeth. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on brush your teeth. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your brush your teeth habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for brush your teeth. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on brush your teeth. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseBrushTeeth(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1SkinCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your skin care routine habit is slipping. Do not let this routine fall off now.||You have been off track with your skin care routine. Show up today and protect the habit.||Momentum on your skin care routine is fading. Keep it alive with one solid rep today.||Do not let your skin care routine become inconsistent. Lock in and do your part today.||You started to your skin care routine for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1SkinCare;
+
+  /// No description provided for @insightStrengthStartSmallType2SkinCare.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your skin care routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your skin care routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your skin care routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your skin care routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your skin care routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2SkinCare(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseSkinCare.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your skin care routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your skin care routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your skin care routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your skin care routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your skin care routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseSkinCare(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1WakeUpEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wake up early habit is slipping. Do not let this routine fall off now.||You have been off track with wake up early. Show up today and protect the habit.||Momentum on wake up early is fading. Keep it alive with one solid rep today.||Do not let wake up early become inconsistent. Lock in and do your part today.||You started to wake up early for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1WakeUpEarly;
+
+  /// No description provided for @insightStrengthStartSmallType2WakeUpEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with wake up early lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Wake up early has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent wake up early consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your wake up early habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Wake up early needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2WakeUpEarly(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseWakeUpEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with wake up early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on wake up early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your wake up early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for wake up early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on wake up early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseWakeUpEarly(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Shower.
+  ///
+  /// In en, this message translates to:
+  /// **'Your take your shower habit is slipping. Do not let this routine fall off now.||You have been off track with take your shower. Show up today and protect the habit.||Momentum on take your shower is fading. Keep it alive with one solid rep today.||Do not let take your shower become inconsistent. Lock in and do your part today.||You started to take your shower for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Shower;
+
+  /// No description provided for @insightStrengthStartSmallType2Shower.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with take your shower lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Take your shower has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent take your shower consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your take your shower habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Take your shower needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Shower(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseShower.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with take your shower. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on take your shower. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your take your shower habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for take your shower. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on take your shower. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseShower(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Praying.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pray consistently habit is slipping. Do not let this routine fall off now.||You have been off track with pray consistently. Show up today and protect the habit.||Momentum on pray consistently is fading. Keep it alive with one solid rep today.||Do not let pray consistently become inconsistent. Lock in and do your part today.||You started to pray consistently for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Praying;
+
+  /// No description provided for @insightStrengthStartSmallType2Praying.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with pray consistently lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Pray consistently has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent pray consistently consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your pray consistently habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Pray consistently needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Praying(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreasePraying.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on pray consistently. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your pray consistently habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for pray consistently. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreasePraying(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Running.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your running routine habit is slipping. Do not let this routine fall off now.||You have been off track with your running routine. Show up today and protect the habit.||Momentum on your running routine is fading. Keep it alive with one solid rep today.||Do not let your running routine become inconsistent. Lock in and do your part today.||You started to your running routine for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Running;
+
+  /// No description provided for @insightStrengthStartSmallType2Running.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your running routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your running routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your running routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your running routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your running routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Running(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your running routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your running routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your running routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your running routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your running routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseRunning(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Walk.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your walking routine habit is slipping. Do not let this routine fall off now.||You have been off track with your walking routine. Show up today and protect the habit.||Momentum on your walking routine is fading. Keep it alive with one solid rep today.||Do not let your walking routine become inconsistent. Lock in and do your part today.||You started to your walking routine for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Walk;
+
+  /// No description provided for @insightStrengthStartSmallType2Walk.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your walking routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your walking routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your walking routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your walking routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your walking routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Walk(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseWalk.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your walking routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your walking routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your walking routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your walking routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your walking routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseWalk(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Gym.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your gym routine habit is slipping. Do not let this routine fall off now.||You have been off track with your gym routine. Show up today and protect the habit.||Momentum on your gym routine is fading. Keep it alive with one solid rep today.||Do not let your gym routine become inconsistent. Lock in and do your part today.||You started to your gym routine for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Gym;
+
+  /// No description provided for @insightStrengthStartSmallType2Gym.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your gym routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your gym routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your gym routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your gym routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your gym routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Gym(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseGym.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your gym routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your gym routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your gym routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseGym(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Nutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your nutrition plan habit is slipping. Do not let this routine fall off now.||You have been off track with your nutrition plan. Show up today and protect the habit.||Momentum on your nutrition plan is fading. Keep it alive with one solid rep today.||Do not let your nutrition plan become inconsistent. Lock in and do your part today.||You started to your nutrition plan for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Nutrition;
+
+  /// No description provided for @insightStrengthStartSmallType2Nutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your nutrition plan lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your nutrition plan has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your nutrition plan consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your nutrition plan habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your nutrition plan needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Nutrition(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your nutrition plan. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your nutrition plan habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your nutrition plan. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseNutrition(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Medications.
+  ///
+  /// In en, this message translates to:
+  /// **'Your take your medications on time habit is slipping. Do not let this routine fall off now.||You have been off track with take your medications on time. Show up today and protect the habit.||Momentum on take your medications on time is fading. Keep it alive with one solid rep today.||Do not let take your medications on time become inconsistent. Lock in and do your part today.||You started to take your medications on time for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Medications;
+
+  /// No description provided for @insightStrengthStartSmallType2Medications.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with take your medications on time lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Take your medications on time has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent take your medications on time consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your take your medications on time habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Take your medications on time needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Medications(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseMedications.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on take your medications on time. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your take your medications on time habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for take your medications on time. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseMedications(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1DrinkWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Your drink enough water habit is slipping. Do not let this routine fall off now.||You have been off track with drink enough water. Show up today and protect the habit.||Momentum on drink enough water is fading. Keep it alive with one solid rep today.||Do not let drink enough water become inconsistent. Lock in and do your part today.||You started to drink enough water for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1DrinkWater;
+
+  /// No description provided for @insightStrengthStartSmallType2DrinkWater.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with drink enough water lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Drink enough water has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent drink enough water consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your drink enough water habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Drink enough water needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2DrinkWater(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseDrinkWater.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on drink enough water. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your drink enough water habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for drink enough water. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseDrinkWater(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Studying.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your studying habit habit is slipping. Do not let this routine fall off now.||You have been off track with your studying habit. Show up today and protect the habit.||Momentum on your studying habit is fading. Keep it alive with one solid rep today.||Do not let your studying habit become inconsistent. Lock in and do your part today.||You started to your studying habit for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Studying;
+
+  /// No description provided for @insightStrengthStartSmallType2Studying.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your studying habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your studying habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your studying habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your studying habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your studying habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Studying(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseStudying.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your studying habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your studying habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your studying habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your studying habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your studying habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseStudying(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Work.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your work habit habit is slipping. Do not let this routine fall off now.||You have been off track with your work habit. Show up today and protect the habit.||Momentum on your work habit is fading. Keep it alive with one solid rep today.||Do not let your work habit become inconsistent. Lock in and do your part today.||You started to your work habit for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Work;
+
+  /// No description provided for @insightStrengthStartSmallType2Work.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your work habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your work habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your work habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your work habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your work habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Work(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseWork.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your work habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your work habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your work habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your work habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your work habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseWork(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Research.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your research habit habit is slipping. Do not let this routine fall off now.||You have been off track with your research habit. Show up today and protect the habit.||Momentum on your research habit is fading. Keep it alive with one solid rep today.||Do not let your research habit become inconsistent. Lock in and do your part today.||You started to your research habit for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Research;
+
+  /// No description provided for @insightStrengthStartSmallType2Research.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your research habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your research habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your research habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your research habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your research habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Research(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseResearch.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your research habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your research habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your research habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseResearch(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1ProductivitySession.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your productivity sessions habit is slipping. Do not let this routine fall off now.||You have been off track with your productivity sessions. Show up today and protect the habit.||Momentum on your productivity sessions is fading. Keep it alive with one solid rep today.||Do not let your productivity sessions become inconsistent. Lock in and do your part today.||You started to your productivity sessions for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1ProductivitySession;
+
+  /// No description provided for @insightStrengthStartSmallType2ProductivitySession.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your productivity sessions lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your productivity sessions has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your productivity sessions consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your productivity sessions habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your productivity sessions needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2ProductivitySession(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseProductivitySession.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your productivity sessions. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your productivity sessions habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your productivity sessions. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseProductivitySession(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthStartSmallType1Read.
+  ///
+  /// In en, this message translates to:
+  /// **'Your your reading habit habit is slipping. Do not let this routine fall off now.||You have been off track with your reading habit. Show up today and protect the habit.||Momentum on your reading habit is fading. Keep it alive with one solid rep today.||Do not let your reading habit become inconsistent. Lock in and do your part today.||You started to your reading habit for a reason. Stay disciplined and keep it from slipping.'**
+  String get insightStrengthStartSmallType1Read;
+
+  /// No description provided for @insightStrengthStartSmallType2Read.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not been consistent with your reading habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your reading habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your reading habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your reading habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your reading habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.'**
+  String insightStrengthStartSmallType2Read(
+    Object drop,
+    Object fromValue,
+    Object toValue,
+  );
+
+  /// No description provided for @insightStrengthIncreaseRead.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing great with your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your reading habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your reading habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your reading habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.'**
+  String insightStrengthIncreaseRead(
+    Object strength,
+    Object fromValue,
+    Object toValue,
+  );
 }
 
 class _AppLocalizationsDelegate
