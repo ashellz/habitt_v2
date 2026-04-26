@@ -246,6 +246,13 @@ class InsightSheetFlow {
     final habit = candidate.habit;
     final isStartSmall = candidate.insight == HabitStrengthInsight.startSmall;
 
+    if (isStartSmall &&
+        HabitStrengthInsightTextService.shouldSuppressTargetDecreaseInsight(
+          habit,
+        )) {
+      return null;
+    }
+
     if (habit.tracksAmount) {
       final current = habit.amount;
       final recommended =
