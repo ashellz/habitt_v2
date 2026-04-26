@@ -14,8 +14,12 @@ class MainPageTopSection extends StatefulWidget {
   State<MainPageTopSection> createState() => _MainPageTopSectionState();
 }
 
-class _MainPageTopSectionState extends State<MainPageTopSection> {
+class _MainPageTopSectionState extends State<MainPageTopSection>
+    with AutomaticKeepAliveClientMixin<MainPageTopSection> {
   String? name;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -31,6 +35,7 @@ class _MainPageTopSectionState extends State<MainPageTopSection> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(

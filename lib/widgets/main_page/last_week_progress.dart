@@ -13,10 +13,14 @@ class LastWeekProgress extends StatefulWidget {
   State<LastWeekProgress> createState() => _LastWeekProgressState();
 }
 
-class _LastWeekProgressState extends State<LastWeekProgress> {
+class _LastWeekProgressState extends State<LastWeekProgress>
+    with AutomaticKeepAliveClientMixin<LastWeekProgress> {
   static const int _visibleDays = 7;
   static const int _maxPastDays = 30;
   static const double _dayWidth = 45;
+
+  @override
+  bool get wantKeepAlive => true;
 
   List<String> _days = const ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   final ScrollController _scrollController = ScrollController();
@@ -250,6 +254,7 @@ class _LastWeekProgressState extends State<LastWeekProgress> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final habitProvider = context.read<HabitProvider>();
     final selectedDate = _normalizeDate(
       habitProvider.selectedDate ?? DateTime.now(),
