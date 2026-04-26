@@ -29,9 +29,22 @@ class HabitStrengthInsightTextService {
     PremadeHabitType.work,
   };
 
+  static const Set<PremadeHabitType> _kNoTargetDecreaseInsightPremadeTypes = {
+    PremadeHabitType.goToBedEarly,
+    PremadeHabitType.brushTeeth,
+    PremadeHabitType.wakeUpEarly,
+    PremadeHabitType.medications,
+    PremadeHabitType.work,
+  };
+
   static bool shouldSuppressImprovementInsight(Habit habit) {
     final type = habit.premadeHabitType;
     return type != null && _kNoImprovementInsightPremadeTypes.contains(type);
+  }
+
+  static bool shouldSuppressTargetDecreaseInsight(Habit habit) {
+    final type = habit.premadeHabitType;
+    return type != null && _kNoTargetDecreaseInsightPremadeTypes.contains(type);
   }
 
   static HabitStrengthInsightDialogCopy buildDialogCopy({
