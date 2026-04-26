@@ -425,77 +425,78 @@ abstract class AppLocalizations {
   /// No description provided for @notificationOptional.
   ///
   /// In en, this message translates to:
-  /// **'This one is optional today, but even one step still counts.'**
+  /// **'This one is optional today, but still mind giving it a try?|You got some extra time?'**
   String get notificationOptional;
 
   /// No description provided for @notificationFreshnessBrandNew.
   ///
   /// In en, this message translates to:
-  /// **'This habit is brand new. Early reps matter most, so do not give up.'**
+  /// **'Time for this brand new habit to shine!'**
   String get notificationFreshnessBrandNew;
 
   /// No description provided for @notificationFreshnessNewDays.
   ///
   /// In en, this message translates to:
-  /// **'You started this {days} days ago. Keep this fresh habit alive.'**
+  /// **'You started {days} ago. Keep it up!|Day {days}. The early days are the foundation — solid work.|You started {days} days ago. Each one matters equally.'**
   String notificationFreshnessNewDays(Object days);
 
   /// No description provided for @notificationFreshnessEstablishedDays.
   ///
   /// In en, this message translates to:
-  /// **'You have been building this for {days} days. Keep compounding wins.'**
+  /// **'You have been building this for {days} days so far. Keep compounding wins.'**
   String notificationFreshnessEstablishedDays(Object days);
 
   /// No description provided for @notificationProgressNotStartedAmount.
   ///
   /// In en, this message translates to:
-  /// **'You have not started yet. Begin with 1 {label} and build momentum.'**
+  /// **'Begin with 1 {label} only and build momentum. It\'s easy!|You don\'t need motivation. Just start.|The hardest part is starting. You can do it!'**
   String notificationProgressNotStartedAmount(Object label);
 
   /// No description provided for @notificationProgressCompletedAmount.
   ///
   /// In en, this message translates to:
-  /// **'You already hit {completed} {label}. Bonus rep?'**
+  /// **'You already hit {completed} {label}. Ready for more?|{completed} {label} done. Momentum is on your side now.|{completed} {label} in the bank. Your habit is working.|Nice — {completed} {label} completed. Want to stretch a little?'**
   String notificationProgressCompletedAmount(Object completed, Object label);
 
   /// No description provided for @notificationProgressAlmostDoneAmount.
   ///
   /// In en, this message translates to:
-  /// **'You are so close. Just {remaining} {label} left.'**
+  /// **'You are so close. Just {remaining} {label} left.|{remaining} {label} left. This is your rhythm — lean into it.|{remaining} {label} to go. You\'ve already done the majority.|Almost there — {remaining} {label} separates you from done.|You\'re {remaining} {label} away from your target. Finish strong.|The finish line is close. Just {remaining} {label} to wrap up.'**
   String notificationProgressAlmostDoneAmount(Object label, Object remaining);
 
   /// No description provided for @notificationProgressInProgressAmount.
   ///
   /// In en, this message translates to:
-  /// **'Progress is {completed}/{target} {label}. Keep the streak moving.'**
+  /// **'{completed} out of {target} {label}. Get on it!.|You\'ve already logged {completed} {label}. Great start.|{completed}/{target} {label} so far. Keep the pace steady.|{completed} done, {remaining} to go. You\'ve got this.|{completed} out of {target}. Keep going.'**
   String notificationProgressInProgressAmount(
     Object completed,
     Object label,
+    Object remaining,
     Object target,
   );
 
   /// No description provided for @notificationProgressNotStartedDuration.
   ///
   /// In en, this message translates to:
-  /// **'You have not started yet. Start with a short session to begin.'**
+  /// **'Start with a short session at least!|You don\'t need motivation. Just start.|The hardest part is starting. You can do it!|Few minutes from now, you\'ll be glad you started.'**
   String get notificationProgressNotStartedDuration;
 
   /// No description provided for @notificationProgressCompletedDuration.
   ///
   /// In en, this message translates to:
-  /// **'Target done: {completed} completed already.'**
+  /// **'Target done: {completed} done already.|Time target hit: {completed}. You showed up and stayed.|{completed} of focused time. Done. That\'s real commitment.|Session complete: {completed}. Your consistency just grew.|{completed} logged. Your future self will thank you.|Target time reached: {completed}. Great use of focused effort.'**
   String notificationProgressCompletedDuration(Object completed);
 
   /// No description provided for @notificationProgressAlmostDoneDuration.
   ///
   /// In en, this message translates to:
-  /// **'Only {remaining} left. You are very close now.'**
+  /// **'Only {remaining} left. Tune in for a little bit more and you\'re done!|{remaining} to go. You can always do just a little more.|{remaining} remaining. Finishing is its own reward.|{remaining} to go. You can do this!'**
   String notificationProgressAlmostDoneDuration(Object remaining);
 
   /// No description provided for @notificationProgressInProgressDuration.
   ///
   /// In en, this message translates to:
-  /// **'You logged {completed} of {target}.'**
+  /// **'{completed} so far, your goal is {target} so keep it up!|You\'ve done the hard part — starting. Keep rolling.|You\'ve logged {completed} of {target}. Stay in the zone.|{completed} of {target} completed. That\'s good, keep it up!'**
   String notificationProgressInProgressDuration(
     Object completed,
     Object target,
@@ -504,41 +505,37 @@ abstract class AppLocalizations {
   /// No description provided for @notificationProgressNoTracking.
   ///
   /// In en, this message translates to:
-  /// **'Small action now keeps this habit alive.'**
+  /// **'Small action now keeps this habit alive.|Don\'t let this habit fade, a little effort now protects your momentum.|Consistency today makes tomorrow easier. Mind giving it a try?|Don\'t forget about your habit today!|A small action now keeps your habit strong.|Hey there! Time for your habiiit!|One small step keeps the streak alive.|Done is better than perfect. Get it done.|Consistency compounds. One more day matters.|Your habit is a promise to yourself. Keep it.|Same habit, one day stronger. Keep building.|You don\'t need motivation. Just start.|Think of this as a gift to your future self. Get on it!|You\'re building something important. Keep going.|Making time for what matters. That\'s you.|Curious what happens when you never skip?|Habit used notification; What\'s your move?|Time to act on your plan.|Don\'t break the chain. One more day.|No need to be perfect. Just need to be present.|Small actions today = big results tomorrow.'**
   String get notificationProgressNoTracking;
 
   /// No description provided for @notificationScheduleDaily.
   ///
   /// In en, this message translates to:
-  /// **'Daily rhythm: show up today and protect your momentum.'**
+  /// **'Your daily anchor awaits. Lock it in.|Daily window is open. Step through it.|Your daily practice builds quietly. But it builds.|This is your daily habit call. Respond to it!'**
   String get notificationScheduleDaily;
 
   /// No description provided for @notificationScheduleCustomEveryDays.
   ///
   /// In en, this message translates to:
-  /// **'Custom cadence: every {days} days. Today is one of your slots.'**
+  /// **'Custom cadence: every {days} days. Today is one of your slots.|Every {days} days rhythm. Today is a scheduled day.|Your {days}-day cycle aligns today. Time to act.|Custom schedule says: today is this habit\'s day. Use your slot!|This habit runs every {days} days. You\'re due right now.|Today is part of this habit\'s rhythm. Honor the pattern.'**
   String notificationScheduleCustomEveryDays(Object days);
 
   /// No description provided for @notificationScheduleWeeklyReached.
   ///
   /// In en, this message translates to:
-  /// **'Weekly target already reached ({completed}/{target}). This is bonus consistency.'**
+  /// **'Weekly target already reached ({completed}/{target}). This is bonus consistency.|You hit your weekly goal ({completed}/{target}). Everything extra is a win.|Weekly target: achieved ({completed}/{target}). Bonus reps build elite habits.|{completed}/{target} for the week. You\'re above and beyond.|Weekly goal already met ({completed}/{target}). You\'re operating at a higher level.|You\'ve done your weekly target ({completed}/{target}). Consistency is now surplus.'**
   String notificationScheduleWeeklyReached(Object completed, Object target);
 
   /// No description provided for @notificationScheduleWeeklyImpossible.
   ///
   /// In en, this message translates to:
-  /// **'You need {remaining} more this week ({completed}/{target} done). Even if you do it now, the target is out of reach this week.'**
-  String notificationScheduleWeeklyImpossible(
-    Object completed,
-    Object remaining,
-    Object target,
-  );
+  /// **'This week\'s target is out of reach ({completed}/{target}). Still, every rep builds for next week.|Goal won\'t be met this week ({completed}/{target}). But unfinished weeks teach us what to adjust.|The weekly number won\'t align ({completed}/{target}). Do it anyway — consistency ignores the scoreboard.|Target missed this week ({completed}/{target}). Each attempt still strengthens the habit loop.|{completed}/{target} this week. The goal is out of range — but the habit isn\'t.'**
+  String notificationScheduleWeeklyImpossible(Object completed, Object target);
 
   /// No description provided for @notificationScheduleWeeklyAtRisk.
   ///
   /// In en, this message translates to:
-  /// **'You need {remaining} more this week ({completed}/{target} done). If you skip today, your goal gets much harder.'**
+  /// **'You need {remaining} more this week ({completed}/{target} done). If you skip today, your goal gets much harder.|You need {remaining} more this week ({completed}/{target}). Today keeps it manageable.|{remaining} to go this week ({completed}/{target}). Skipping today adds pressure.|Your weekly target ({completed}/{target}) is still reachable. Today is a leverage point.|{completed}/{target} for the week. One today keeps your goal on track.|{remaining} remaining this week ({completed}/{target}). Today is your best move.'**
   String notificationScheduleWeeklyAtRisk(
     Object completed,
     Object remaining,
@@ -548,35 +545,31 @@ abstract class AppLocalizations {
   /// No description provided for @notificationScheduleWeeklyOneLeft.
   ///
   /// In en, this message translates to:
-  /// **'One more completion this week and you hit your target ({completed}/{target}).'**
+  /// **'One more completion this week and you hit your target ({completed}/{target}).|One more this week and you\'re at {target} ({completed} done). Close the loop.|You\'re one session away from your weekly goal ({completed}/{target}). Make it count.|This week\'s target needs just one more ({completed}/{target}). You can close it now.|One more completion stands between you and {target} this week ({completed} done).|Weekly goal within reach: one more ({completed}/{target}). That\'s just today.'**
   String notificationScheduleWeeklyOneLeft(Object completed, Object target);
 
   /// No description provided for @notificationScheduleWeeklyRemaining.
   ///
   /// In en, this message translates to:
-  /// **'You need {remaining} more this week to reach {target}.'**
+  /// **'You need {remaining} more this week to reach {target}.|{remaining} to go for weekly target of {target}. Steady pacing works.|You need {remaining} more this week. Today is a great time to start one.|Weekly goal: {remaining} remaining of {target}. Spread the effort.|{remaining} sessions left to hit {target} this week. Each one matters equally.|Your weekly target is {target}, with {remaining} to go. One step at a time.'**
   String notificationScheduleWeeklyRemaining(Object remaining, Object target);
 
   /// No description provided for @notificationScheduleMonthlyReached.
   ///
   /// In en, this message translates to:
-  /// **'Monthly target already reached ({completed}/{target}). Extra rep, extra momentum.'**
+  /// **'Monthly target already reached ({completed}/{target}). Extra rep, extra momentum.|You\'ve nailed your monthly goal ({completed}/{target}). This is elite consistency.|Monthly target: done ({completed}/{target}). Everything now is exponential growth.|Monthly goal already crushed ({completed}/{target}). Bonus reps deepen the groove.'**
   String notificationScheduleMonthlyReached(Object completed, Object target);
 
   /// No description provided for @notificationScheduleMonthlyImpossible.
   ///
   /// In en, this message translates to:
-  /// **'You need {remaining} more this month ({completed}/{target} done). Even if you do it now, the target is out of reach this month.'**
-  String notificationScheduleMonthlyImpossible(
-    Object completed,
-    Object remaining,
-    Object target,
-  );
+  /// **'This month\'s target won\'t be met ({completed}/{target}). Use the remaining days for practice, not pressure.|The monthly number is out of reach ({completed}/{target}). But habits are built in the gaps, not just the goals.|Target unreachable this month ({completed}/{target}). Every attempt still rewires the loop.|{completed}/{target} this month. The goal won\'t align — but the habit still counts.|This month\'s target exceeded your available days ({completed}/{target}). Adjust and keep moving.'**
+  String notificationScheduleMonthlyImpossible(Object completed, Object target);
 
   /// No description provided for @notificationScheduleMonthlyAtRisk.
   ///
   /// In en, this message translates to:
-  /// **'You need {remaining} more this month ({completed}/{target} done). Skipping today puts your target at risk.'**
+  /// **'You need {remaining} more this month ({completed}/{target} done). Skipping today puts your target at risk.|{remaining} to go this month ({completed}/{target}). Today protects your progress.|Your monthly goal ({completed}/{target}) is still possible. Today is a key move.|{completed}/{target} for the month. Don\'t let today be the gap.|{remaining} needed this month ({completed}/{target}). One session at a time stays on track.|Monthly target within reach ({completed}/{target}). Today keeps the door open.'**
   String notificationScheduleMonthlyAtRisk(
     Object completed,
     Object remaining,
@@ -586,19 +579,19 @@ abstract class AppLocalizations {
   /// No description provided for @notificationScheduleMonthlyOneLeft.
   ///
   /// In en, this message translates to:
-  /// **'One more completion this month and you hit your target ({completed}/{target}).'**
+  /// **'One more completion this month and you hit your target ({completed}/{target}).|One more this month hits {target} ({completed} done). This is your closing move.|You\'re one session from your monthly goal ({completed}/{target}). Seal it.|Monthly target needs one final completion ({completed}/{target}). Today can be that day.|One more and you\'re at {target} for the month ({completed} done). Finish what you started.|Your monthly goal is one away ({completed}/{target}). That\'s a single session.'**
   String notificationScheduleMonthlyOneLeft(Object completed, Object target);
 
   /// No description provided for @notificationScheduleMonthlyRemaining.
   ///
   /// In en, this message translates to:
-  /// **'You need {remaining} more this month to reach {target}.'**
+  /// **'You need {remaining} more this month to reach {target}.|{remaining} sessions left this month to hit {target}. Consistent pacing wins.|You need {remaining} more for your monthly goal of {target}. Each one builds.|Monthly target: {remaining} of {target} remaining. You have time — use it wisely.|{remaining} to go this month for {target}. Small, steady actions close the gap.|Your monthly number is {target} with {remaining} left. Today moves the goal forward.'**
   String notificationScheduleMonthlyRemaining(Object remaining, Object target);
 
   /// No description provided for @notificationAmountLabelFocus.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s target is {target} {label}.'**
+  /// **'Today\'s target is {target} {label}.|Your number for today: {target} {label}. Start with one.|Today\'s dose: {target} {label}. Clear target, simple execution.|Today asks for {target} {label}. You know the rhythm.|Target for today: {target} {label}. A precise goal is a powerful cue.'**
   String notificationAmountLabelFocus(Object label, Object target);
 
   /// No description provided for @notificationPremadeGoToBedEarly.
