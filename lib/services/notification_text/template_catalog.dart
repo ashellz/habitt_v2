@@ -1,5 +1,6 @@
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/premade_habit_type.dart';
+import 'package:habitt/util/get_duration_string.dart';
 
 class NotificationTemplateToken {
   const NotificationTemplateToken({required this.key, this.args = const {}});
@@ -134,142 +135,198 @@ class NotificationTemplateCatalog {
     final a = token.args;
     switch (token.key) {
       case NotificationTemplateKey.fallbackGeneric:
-        return l.notificationFallbackGeneric;
+        return _pickTemplateVariant(l.notificationFallbackGeneric);
       case NotificationTemplateKey.fallbackTitle:
-        return l.notificationFallbackTitle;
+        return _pickTemplateVariant(l.notificationFallbackTitle);
       case NotificationTemplateKey.optional:
-        return l.notificationOptional;
+        return _pickTemplateVariant(l.notificationOptional);
       case NotificationTemplateKey.freshnessBrandNew:
-        return l.notificationFreshnessBrandNew;
+        return _pickTemplateVariant(l.notificationFreshnessBrandNew);
       case NotificationTemplateKey.freshnessNewDays:
-        return l.notificationFreshnessNewDays(a['days']!);
+        return _pickTemplateVariant(l.notificationFreshnessNewDays(a['days']!));
       case NotificationTemplateKey.freshnessEstablishedDays:
-        return l.notificationFreshnessEstablishedDays(a['days']!);
+        return _pickTemplateVariant(
+          l.notificationFreshnessEstablishedDays(a['days']!),
+        );
       case NotificationTemplateKey.progressNotStartedAmount:
-        return l.notificationProgressNotStartedAmount(a['label']!);
+        return _pickTemplateVariant(
+          l.notificationProgressNotStartedAmount(a['label']!),
+        );
       case NotificationTemplateKey.progressCompletedAmount:
-        return l.notificationProgressCompletedAmount(
-          a['completed']!,
-          a['label']!,
+        return _pickTemplateVariant(
+          l.notificationProgressCompletedAmount(a['completed']!, a['label']!),
         );
       case NotificationTemplateKey.progressAlmostDoneAmount:
-        return l.notificationProgressAlmostDoneAmount(
-          a['label']!,
-          a['remaining']!,
+        return _pickTemplateVariant(
+          l.notificationProgressAlmostDoneAmount(a['label']!, a['remaining']!),
         );
       case NotificationTemplateKey.progressInProgressAmount:
-        return l.notificationProgressInProgressAmount(
-          a['completed']!,
-          a['label']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationProgressInProgressAmount(
+            a['completed']!,
+            a['label']!,
+            a['target']!,
+          ),
         );
       case NotificationTemplateKey.progressNotStartedDuration:
-        return l.notificationProgressNotStartedDuration;
+        return _pickTemplateVariant(l.notificationProgressNotStartedDuration);
       case NotificationTemplateKey.progressCompletedDuration:
-        return l.notificationProgressCompletedDuration(a['completed']!);
+        final completed = _formatDurationValue(a['completed']!);
+        return _pickTemplateVariant(
+          l.notificationProgressCompletedDuration(completed),
+        );
       case NotificationTemplateKey.progressAlmostDoneDuration:
-        return l.notificationProgressAlmostDoneDuration(a['remaining']!);
+        final remaining = _formatDurationValue(a['remaining']!);
+        return _pickTemplateVariant(
+          l.notificationProgressAlmostDoneDuration(remaining),
+        );
       case NotificationTemplateKey.progressInProgressDuration:
-        return l.notificationProgressInProgressDuration(
-          a['completed']!,
-          a['target']!,
+        final completed = _formatDurationValue(a['completed']!);
+        final target = _formatDurationValue(a['target']!);
+        return _pickTemplateVariant(
+          l.notificationProgressInProgressDuration(completed, target),
         );
       case NotificationTemplateKey.progressNoTracking:
-        return l.notificationProgressNoTracking;
+        return _pickTemplateVariant(l.notificationProgressNoTracking);
       case NotificationTemplateKey.scheduleDaily:
-        return l.notificationScheduleDaily;
+        return _pickTemplateVariant(l.notificationScheduleDaily);
       case NotificationTemplateKey.scheduleCustomEveryDays:
-        return l.notificationScheduleCustomEveryDays(a['days']!);
+        return _pickTemplateVariant(
+          l.notificationScheduleCustomEveryDays(a['days']!),
+        );
       case NotificationTemplateKey.scheduleWeeklyReached:
-        return l.notificationScheduleWeeklyReached(
-          a['completed']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleWeeklyReached(a['completed']!, a['target']!),
         );
       case NotificationTemplateKey.scheduleWeeklyImpossible:
-        return l.notificationScheduleWeeklyImpossible(
-          a['completed']!,
-          a['remaining']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleWeeklyImpossible(
+            a['completed']!,
+            a['remaining']!,
+            a['target']!,
+          ),
         );
       case NotificationTemplateKey.scheduleWeeklyAtRisk:
-        return l.notificationScheduleWeeklyAtRisk(
-          a['completed']!,
-          a['remaining']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleWeeklyAtRisk(
+            a['completed']!,
+            a['remaining']!,
+            a['target']!,
+          ),
         );
       case NotificationTemplateKey.scheduleWeeklyOneLeft:
-        return l.notificationScheduleWeeklyOneLeft(
-          a['completed']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleWeeklyOneLeft(a['completed']!, a['target']!),
         );
       case NotificationTemplateKey.scheduleWeeklyRemaining:
-        return l.notificationScheduleWeeklyRemaining(
-          a['remaining']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleWeeklyRemaining(a['remaining']!, a['target']!),
         );
       case NotificationTemplateKey.scheduleMonthlyReached:
-        return l.notificationScheduleMonthlyReached(
-          a['completed']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleMonthlyReached(a['completed']!, a['target']!),
         );
       case NotificationTemplateKey.scheduleMonthlyImpossible:
-        return l.notificationScheduleMonthlyImpossible(
-          a['completed']!,
-          a['remaining']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleMonthlyImpossible(
+            a['completed']!,
+            a['remaining']!,
+            a['target']!,
+          ),
         );
       case NotificationTemplateKey.scheduleMonthlyAtRisk:
-        return l.notificationScheduleMonthlyAtRisk(
-          a['completed']!,
-          a['remaining']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleMonthlyAtRisk(
+            a['completed']!,
+            a['remaining']!,
+            a['target']!,
+          ),
         );
       case NotificationTemplateKey.scheduleMonthlyOneLeft:
-        return l.notificationScheduleMonthlyOneLeft(
-          a['completed']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleMonthlyOneLeft(a['completed']!, a['target']!),
         );
       case NotificationTemplateKey.scheduleMonthlyRemaining:
-        return l.notificationScheduleMonthlyRemaining(
-          a['remaining']!,
-          a['target']!,
+        return _pickTemplateVariant(
+          l.notificationScheduleMonthlyRemaining(a['remaining']!, a['target']!),
         );
       case NotificationTemplateKey.amountLabelFocus:
-        return l.notificationAmountLabelFocus(a['label']!, a['target']!);
+        return _pickTemplateVariant(
+          l.notificationAmountLabelFocus(a['label']!, a['target']!),
+        );
       case NotificationTemplateKey.premadeGoToBedEarly:
-        return l.notificationPremadeGoToBedEarly;
+        return _pickTemplateVariant(l.notificationPremadeGoToBedEarly);
       case NotificationTemplateKey.premadeBrushTeeth:
-        return l.notificationPremadeBrushTeeth;
+        return _pickTemplateVariant(l.notificationPremadeBrushTeeth);
       case NotificationTemplateKey.premadeSkinCare:
-        return l.notificationPremadeSkinCare;
+        return _pickTemplateVariant(l.notificationPremadeSkinCare);
       case NotificationTemplateKey.premadeWakeUpEarly:
-        return l.notificationPremadeWakeUpEarly;
+        return _pickTemplateVariant(l.notificationPremadeWakeUpEarly);
       case NotificationTemplateKey.premadeShower:
-        return l.notificationPremadeShower;
+        return _pickTemplateVariant(l.notificationPremadeShower);
       case NotificationTemplateKey.premadePraying:
-        return l.notificationPremadePraying;
+        return _pickTemplateVariant(l.notificationPremadePraying);
       case NotificationTemplateKey.premadeRunning:
-        return l.notificationPremadeRunning;
+        return _pickTemplateVariant(l.notificationPremadeRunning);
       case NotificationTemplateKey.premadeWalk:
-        return l.notificationPremadeWalk;
+        return _pickTemplateVariant(l.notificationPremadeWalk);
       case NotificationTemplateKey.premadeGym:
-        return l.notificationPremadeGym;
+        return _pickTemplateVariant(l.notificationPremadeGym);
       case NotificationTemplateKey.premadeNutrition:
-        return l.notificationPremadeNutrition;
+        return _pickTemplateVariant(l.notificationPremadeNutrition);
       case NotificationTemplateKey.premadeMedications:
-        return l.notificationPremadeMedications;
+        return _pickTemplateVariant(l.notificationPremadeMedications);
       case NotificationTemplateKey.premadeDrinkWater:
-        return l.notificationPremadeDrinkWater;
+        return _pickTemplateVariant(l.notificationPremadeDrinkWater);
       case NotificationTemplateKey.premadeStudying:
-        return l.notificationPremadeStudying;
+        return _pickTemplateVariant(l.notificationPremadeStudying);
       case NotificationTemplateKey.premadeWork:
-        return l.notificationPremadeWork;
+        return _pickTemplateVariant(l.notificationPremadeWork);
       case NotificationTemplateKey.premadeResearch:
-        return l.notificationPremadeResearch;
+        return _pickTemplateVariant(l.notificationPremadeResearch);
       case NotificationTemplateKey.premadeProductivitySession:
-        return l.notificationPremadeProductivitySession;
+        return _pickTemplateVariant(l.notificationPremadeProductivitySession);
       case NotificationTemplateKey.premadeRead:
-        return l.notificationPremadeRead;
+        return _pickTemplateVariant(l.notificationPremadeRead);
     }
   }
+}
+
+String _pickTemplateVariant(String value) {
+  final separated =
+      value
+          .split('|')
+          .map((part) => part.trim())
+          .where((part) => part.isNotEmpty)
+          .toList();
+  if (separated.isEmpty) {
+    return value;
+  }
+
+  // Chooses one option from pipe-separated variants.
+  separated.shuffle();
+  return separated.first;
+}
+
+String _formatDurationValue(Object raw) {
+  var formatted = raw.toString();
+
+  // if raw is string, parse to int
+  // if raw is int, use directly
+  if (raw is String) {
+    final parsed = int.tryParse(raw);
+    if (parsed != null) {
+      formatted = getDurationString(parsed);
+    }
+  } else if (raw is int) {
+    formatted = getDurationString(raw);
+  } else if (raw is double) {
+    final totalMinutes = raw.round();
+    formatted = getDurationString(totalMinutes);
+  } else if (raw is num) {
+    final totalMinutes = raw.round();
+    formatted = getDurationString(totalMinutes);
+  }
+
+  return formatted;
 }
