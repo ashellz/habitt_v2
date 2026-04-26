@@ -165,6 +165,7 @@ class NotificationTemplateCatalog {
           l.notificationProgressInProgressAmount(
             a['completed']!,
             a['label']!,
+            a['remaining']!,
             a['target']!,
           ),
         );
@@ -200,11 +201,7 @@ class NotificationTemplateCatalog {
         );
       case NotificationTemplateKey.scheduleWeeklyImpossible:
         return _pickTemplateVariant(
-          l.notificationScheduleWeeklyImpossible(
-            a['completed']!,
-            a['remaining']!,
-            a['target']!,
-          ),
+          l.notificationScheduleWeeklyImpossible(a['completed']!, a['target']!),
         );
       case NotificationTemplateKey.scheduleWeeklyAtRisk:
         return _pickTemplateVariant(
@@ -230,7 +227,6 @@ class NotificationTemplateCatalog {
         return _pickTemplateVariant(
           l.notificationScheduleMonthlyImpossible(
             a['completed']!,
-            a['remaining']!,
             a['target']!,
           ),
         );
