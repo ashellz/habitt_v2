@@ -9,14 +9,14 @@ import 'package:habitt/widgets/habits_page/categories/categories_list.dart';
 import 'package:habitt/widgets/habits_page/habits.dart';
 import 'package:provider/provider.dart';
 
-class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+class OldCalendarPage extends StatefulWidget {
+  const OldCalendarPage({super.key});
 
   @override
-  State<CalendarPage> createState() => _CalendarPageState();
+  State<OldCalendarPage> createState() => _OldCalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> {
+class _OldCalendarPageState extends State<OldCalendarPage> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _listViewKey = GlobalKey();
 

@@ -92,7 +92,10 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         // 1. StatsProvider: No dependencies.
-        ChangeNotifierProvider(create: (_) => StatsProvider(), lazy: false),
+        ChangeNotifierProvider(
+          create: (_) => StatsProvider(prefs: prefs),
+          lazy: false,
+        ),
         ChangeNotifierProvider(create: (_) => ColorProvider(prefs)),
 
         // Independent provider
