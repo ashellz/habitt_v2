@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:habitt/pages/main_pages/calendar_page.dart';
 import 'package:habitt/pages/main_pages/habits_page.dart';
 import 'package:habitt/pages/main_pages/main_page.dart';
-import 'package:habitt/pages/main_pages/old/calendar_page.dart';
 import 'package:habitt/pages/main_pages/profile_page.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/category_provider.dart';

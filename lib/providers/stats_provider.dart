@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum StatsType {
   habitsCompleted,
@@ -15,12 +16,22 @@ class StatsProvider extends ChangeNotifier {
   int _highestAmountOfHabitsLastWeek = -1;
   List<int> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
   int _perfectDaysStreak = -1;
+  int _longestPerfectDaysStreak = -1;
   List<StatsType> _refreshList = [];
+  SharedPreferences? prefs;
+
+  static const String longestPerfectDaysStreakKey = 'longestPerfectDaysStreak';
+
+  StatsProvider({this.prefs}) {
+    _longestPerfectDaysStreak =
+        prefs?.getInt(longestPerfectDaysStreakKey) ?? -1;
+  }
 
   get habitsCompleted => getHabitsCompleted();
   get highestAmountOfHabitsLastWeek => getHighestAmountOfHabitsLastWeek();
   get habitsCompletedLastWeek => getHabitsCompletedLastWeek();
   int get perfectDaysStreak => getPerfectStreak();
+  int get longestPerfectDaysStreak => _longestPerfectDaysStreak;
 
   set perfectDaysStreak(int value) {
     _perfectDaysStreak = value;
@@ -154,6 +165,7 @@ class StatsProvider extends ChangeNotifier {
     // Then we check all days from yesterday to the day we started using the app
     // If all habits are completed, we add 1 to the streak
     // Else we stop there
+    int longestStreak = 0;
 
     for (int i = 1; i < orderedDays.length; i++) {
       final day = orderedDays[i];
@@ -184,6 +196,12 @@ class StatsProvider extends ChangeNotifier {
         }
         break;
       }
+    }
+
+    if (allHabitsCompletedStreak > longestStreak) {
+      longestStreak = allHabitsCompletedStreak;
+      notifyListeners();
+      prefs?.setInt(longestPerfectDaysStreakKey, longestStreak);
     }
 
     return allHabitsCompletedStreak;
