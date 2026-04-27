@@ -1,30 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class HabitDetailsCalendar extends StatefulWidget {
-  const HabitDetailsCalendar({super.key, required this.stats});
+class StreakCalendar extends StatefulWidget {
+  const StreakCalendar({super.key, required this.allStats});
 
-  final HabitStatsData stats;
+  final Map<DateTime, double> allStats;
 
   @override
-  State<HabitDetailsCalendar> createState() => _HabitDetailsCalendarState();
+  State<StreakCalendar> createState() => _StreakCalendarState();
 }
 
-class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
-  static const List<Color> _progressScale = [
-    Color(0x1A11F29B),
-    Color(0x330CD280),
-    Color(0x6611F29B),
-    Color(0x9911F29B),
-    Color(0xCC11F29B),
-    Color(0xFF11F29B),
-  ];
-
+class _StreakCalendarState extends State<StreakCalendar> {
   late DateTime _focusedDay;
 
   @override
@@ -56,33 +46,26 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final today = _normalize(DateTime.now());
-    final createdAtRaw = _normalize(widget.stats.createdAt.toLocal());
+
+    DateTime getCreatedAt() {
+      if (widget.allStats.isNotEmpty) {
+        return widget.allStats.keys.reduce((a, b) => a.isBefore(b) ? a : b);
+      } else {
+        return today;
+      }
+    }
+
+    final createdAtRaw = _normalize(getCreatedAt());
     final selectableFirstDay =
         createdAtRaw.isAfter(today) ? today : createdAtRaw;
     final calendarFirstDay = _monthStart(selectableFirstDay);
     final focusedDay = _clampFocusedDay(_focusedDay, calendarFirstDay, today);
 
-    final dots = _progressScale;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Consistency',
-          style: TextStyle(
-            color: cp.text,
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Your activity over time',
-          style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-        ),
-        const SizedBox(height: 14),
         _calendarHeader(cp, calendarFirstDay, today, focusedDay),
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
         TableCalendar<void>(
           key: ValueKey(
             'habit-details-calendar-${calendarFirstDay.millisecondsSinceEpoch}-${today.millisecondsSinceEpoch}',
@@ -152,33 +135,6 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
               );
             });
           },
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Less',
-              style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-            ),
-            const SizedBox(width: 14),
-            for (final color in dots) ...[
-              Container(
-                width: 10,
-                height: 10,
-                decoration: ShapeDecoration(
-                  color: color,
-                  shape: const OvalBorder(),
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
-            const SizedBox(width: 6),
-            Text(
-              'More',
-              style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-            ),
-          ],
         ),
       ],
     );
@@ -300,18 +256,22 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
         !forceDisabled && _isEnabledDay(normalizedDay, createdAt, today);
     final outsideOrDisabled = isOutside || !enabled;
 
-    final progress = widget.stats.dailyProgress[normalizedDay] ?? 0;
+    final progress = widget.allStats[normalizedDay] ?? 0;
     final Color fillColor;
     final Color textColor;
+    final Color borderColor;
 
-    Color outsideDisabledFill = cp.habitBg;
+    Color outsideDisabledFill = cp.bg;
     Color outsideDisabledText = cp.lightGreyText;
 
     if (outsideOrDisabled) {
       fillColor = outsideDisabledFill;
       textColor = outsideDisabledText;
+      borderColor = outsideDisabledFill;
     } else {
-      fillColor = _colorForProgress(progress) ?? cp.habitBg;
+      fillColor = _colorForProgress(progress, isToday) ?? cp.bg;
+      borderColor =
+          _colorForProgress(progress, isToday, isBorder: true) ?? cp.bg;
       textColor = cp.text;
     }
 
@@ -323,6 +283,7 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
           color: fillColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
+            side: BorderSide(width: 1, color: borderColor),
           ),
         ),
         child: Center(
@@ -352,17 +313,33 @@ class _HabitDetailsCalendarState extends State<HabitDetailsCalendar> {
     return day.year != focusedDay.year || day.month != focusedDay.month;
   }
 
-  Color? _colorForProgress(double progress) {
+  Color? _colorForProgress(
+    double progress,
+    bool isToday, {
+    bool isBorder = false,
+  }) {
     if (progress <= 0) {
       return null;
     }
 
+    final cp = context.watch<ColorProvider>();
+
     final clamped = progress.clamp(0.0, 1.0);
-    final index = ((clamped * _progressScale.length).ceil() - 1).clamp(
-      0,
-      _progressScale.length - 1,
-    );
-    return _progressScale[index];
+
+    if (isBorder) {
+      if (clamped == 1) {
+        if (isToday) {
+          return cp.orange300;
+        }
+        return cp.orange200;
+      }
+      return cp.bg;
+    }
+
+    if (clamped == 1 && isToday) {
+      return cp.orange300;
+    }
+    return cp.bg;
   }
 
   static DateTime _normalize(DateTime date) {

@@ -18,7 +18,7 @@ class SettingsPage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         color: cp.isDark ? cp.bg : cp.habitBg,
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20),
         child: ListView(
           children: [
             SettingsTopSection(),
