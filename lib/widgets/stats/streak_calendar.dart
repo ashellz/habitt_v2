@@ -6,9 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class StreakCalendar extends StatefulWidget {
-  const StreakCalendar({super.key, required this.allStats});
+  const StreakCalendar({
+    super.key,
+    required this.allStats,
+    required this.perfectDayCompletion,
+  });
 
   final Map<DateTime, double> allStats;
+  final Map<DateTime, bool> perfectDayCompletion;
 
   @override
   State<StreakCalendar> createState() => _StreakCalendarState();
@@ -17,11 +22,34 @@ class StreakCalendar extends StatefulWidget {
 class _StreakCalendarState extends State<StreakCalendar> {
   late DateTime _focusedDay;
 
+  Map<int, Map<DateTime, _StreakVisualDayData>> _monthMetadataCache = {};
+  List<_ToleratedMissRun> _cachedRuns = const [];
+  DateTime? _cachedSelectableFirstDay;
+  DateTime? _cachedToday;
+  Map<DateTime, double>? _cachedAllStatsReference;
+  Map<DateTime, bool>? _cachedPerfectDayCompletionReference;
+  int? _activeMonthKey;
+  bool _isMonthMetadataReady = false;
+  int _monthLoadToken = 0;
+  int? _scheduledMonthKey;
+
   @override
   void initState() {
     super.initState();
     final now = DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
+  }
+
+  @override
+  void didUpdateWidget(covariant StreakCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.allStats, widget.allStats) ||
+        !identical(
+          oldWidget.perfectDayCompletion,
+          widget.perfectDayCompletion,
+        )) {
+      _invalidateStreakCaches();
+    }
   }
 
   DateTime _monthStart(DateTime date) {
@@ -42,24 +70,254 @@ class _StreakCalendarState extends State<StreakCalendar> {
     return candidate;
   }
 
+  void _invalidateStreakCaches() {
+    _cachedRuns = const [];
+    _cachedSelectableFirstDay = null;
+    _cachedToday = null;
+    _cachedAllStatsReference = null;
+    _cachedPerfectDayCompletionReference = null;
+    _monthMetadataCache = {};
+    _activeMonthKey = null;
+    _isMonthMetadataReady = false;
+    _scheduledMonthKey = null;
+    _monthLoadToken++;
+  }
+
+  DateTime _resolveSelectableFirstDay(DateTime today) {
+    if (widget.allStats.isEmpty) {
+      return today;
+    }
+
+    final createdAtRaw = _normalize(
+      widget.allStats.keys.reduce((a, b) => a.isBefore(b) ? a : b),
+    );
+    return createdAtRaw.isAfter(today) ? today : createdAtRaw;
+  }
+
+  void _ensureStreakCachesUpToDate(DateTime today) {
+    if (identical(_cachedAllStatsReference, widget.allStats) &&
+        identical(
+          _cachedPerfectDayCompletionReference,
+          widget.perfectDayCompletion,
+        ) &&
+        _cachedToday == today &&
+        _cachedSelectableFirstDay != null) {
+      return;
+    }
+
+    final selectableFirstDay = _resolveSelectableFirstDay(today);
+    final completedDays = <DateTime>{
+      for (final entry in widget.perfectDayCompletion.entries)
+        if (entry.value) _normalize(entry.key),
+    };
+
+    _cachedRuns = _buildToleratedMissRuns(
+      selectableFirstDay: selectableFirstDay,
+      today: today,
+      completedDays: completedDays,
+    );
+    _cachedSelectableFirstDay = selectableFirstDay;
+    _cachedToday = today;
+    _cachedAllStatsReference = widget.allStats;
+    _cachedPerfectDayCompletionReference = widget.perfectDayCompletion;
+    _monthMetadataCache = {};
+    _activeMonthKey = null;
+    _isMonthMetadataReady = false;
+    _scheduledMonthKey = null;
+    _monthLoadToken++;
+  }
+
+  int _monthKey(DateTime day) => day.year * 100 + day.month;
+
+  bool _isMonthInRange({
+    required DateTime month,
+    required DateTime selectableFirstDay,
+    required DateTime today,
+  }) {
+    final normalizedMonth = _monthStart(month);
+    final minMonth = _monthStart(selectableFirstDay);
+    final maxMonth = _monthStart(today);
+    return !normalizedMonth.isBefore(minMonth) &&
+        !normalizedMonth.isAfter(maxMonth);
+  }
+
+  void _scheduleMonthMetadataLoad({
+    required DateTime focusedDay,
+    required DateTime selectableFirstDay,
+    required DateTime today,
+  }) {
+    final month = _monthStart(focusedDay);
+    final key = _monthKey(month);
+    if (_scheduledMonthKey == key) {
+      return;
+    }
+
+    final hasMetadata = _monthMetadataCache.containsKey(key);
+    if (hasMetadata && _activeMonthKey == key && _isMonthMetadataReady) {
+      return;
+    }
+
+    _scheduledMonthKey = key;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      _scheduledMonthKey = null;
+      _loadMonthMetadata(
+        focusedDay: month,
+        selectableFirstDay: selectableFirstDay,
+        today: today,
+      );
+    });
+  }
+
+  Future<void> _loadMonthMetadata({
+    required DateTime focusedDay,
+    required DateTime selectableFirstDay,
+    required DateTime today,
+  }) async {
+    final month = _monthStart(focusedDay);
+    final key = _monthKey(month);
+
+    final cached = _monthMetadataCache[key];
+    if (cached != null) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _activeMonthKey = key;
+        _isMonthMetadataReady = true;
+      });
+      return;
+    }
+
+    final token = ++_monthLoadToken;
+    if (mounted) {
+      setState(() {
+        _activeMonthKey = key;
+        _isMonthMetadataReady = false;
+      });
+    }
+
+    await Future<void>.delayed(Duration.zero);
+
+    final metadata = _buildStreakVisualMetadata(
+      runs: _cachedRuns,
+      selectableFirstDay: selectableFirstDay,
+      today: today,
+      focusedDay: month,
+    );
+
+    if (!mounted || token != _monthLoadToken) {
+      return;
+    }
+
+    setState(() {
+      _monthMetadataCache[key] = metadata;
+      _activeMonthKey = key;
+      _isMonthMetadataReady = true;
+    });
+
+    _prefetchAdjacentMonthMetadata(
+      focusedDay: month,
+      selectableFirstDay: selectableFirstDay,
+      today: today,
+    );
+  }
+
+  void _prefetchAdjacentMonthMetadata({
+    required DateTime focusedDay,
+    required DateTime selectableFirstDay,
+    required DateTime today,
+  }) {
+    final candidates = [
+      DateTime(focusedDay.year, focusedDay.month - 1, 1),
+      DateTime(focusedDay.year, focusedDay.month + 1, 1),
+    ];
+
+    for (final candidate in candidates) {
+      if (!_isMonthInRange(
+        month: candidate,
+        selectableFirstDay: selectableFirstDay,
+        today: today,
+      )) {
+        continue;
+      }
+
+      final key = _monthKey(candidate);
+      if (_monthMetadataCache.containsKey(key)) {
+        continue;
+      }
+
+      _monthMetadataCache[key] = _buildStreakVisualMetadata(
+        runs: _cachedRuns,
+        selectableFirstDay: selectableFirstDay,
+        today: today,
+        focusedDay: candidate,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final today = _normalize(DateTime.now());
 
-    DateTime getCreatedAt() {
-      if (widget.allStats.isNotEmpty) {
-        return widget.allStats.keys.reduce((a, b) => a.isBefore(b) ? a : b);
-      } else {
-        return today;
-      }
-    }
+    _ensureStreakCachesUpToDate(today);
 
-    final createdAtRaw = _normalize(getCreatedAt());
-    final selectableFirstDay =
-        createdAtRaw.isAfter(today) ? today : createdAtRaw;
+    final selectableFirstDay = _cachedSelectableFirstDay ?? today;
     final calendarFirstDay = _monthStart(selectableFirstDay);
     final focusedDay = _clampFocusedDay(_focusedDay, calendarFirstDay, today);
+
+    if (_focusedDay != focusedDay) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _focusedDay = focusedDay;
+        });
+      });
+    }
+
+    _scheduleMonthMetadataLoad(
+      focusedDay: focusedDay,
+      selectableFirstDay: selectableFirstDay,
+      today: today,
+    );
+    final currentMonthKey = _monthKey(focusedDay);
+    final streakVisualMetadata =
+        _monthMetadataCache[currentMonthKey] ??
+        const <DateTime, _StreakVisualDayData>{};
+    final streakDecorationsOpacity =
+        (_isMonthMetadataReady && _activeMonthKey == currentMonthKey)
+            ? 1.0
+            : 0.0;
+
+    Widget buildDayCell({
+      required BuildContext context,
+      required DateTime day,
+      required bool isOutside,
+      required bool isToday,
+      bool forceDisabled = false,
+    }) {
+      final metadata =
+          streakVisualMetadata[_normalize(day)] ?? const _StreakVisualDayData();
+      return _dayCell(
+        context: context,
+        day: day,
+        createdAt: selectableFirstDay,
+        today: today,
+        isOutside: isOutside,
+        isToday: isToday,
+        forceDisabled: forceDisabled,
+        hasLeftConnector: metadata.hasLeftConnector,
+        hasRightConnector: metadata.hasRightConnector,
+        isOngoingStreakStartCompletedDay:
+            metadata.isOngoingStreakStartCompletedDay,
+        streakDecorationsOpacity: streakDecorationsOpacity,
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,46 +333,38 @@ class _StreakCalendarState extends State<StreakCalendar> {
           focusedDay: focusedDay,
           calendarFormat: CalendarFormat.month,
           headerVisible: false,
-          availableGestures: AvailableGestures.none,
+          availableGestures: AvailableGestures.horizontalSwipe,
           startingDayOfWeek: StartingDayOfWeek.monday,
           daysOfWeekHeight: 30,
           enabledDayPredicate:
               (day) => _isEnabledDay(day, selectableFirstDay, today),
           calendarBuilders: CalendarBuilders(
             defaultBuilder:
-                (context, day, _) => _dayCell(
+                (context, day, _) => buildDayCell(
                   context: context,
                   day: day,
-                  createdAt: selectableFirstDay,
-                  today: today,
                   isOutside: _isOutsideMonth(day, focusedDay),
                   isToday: false,
                 ),
             todayBuilder:
-                (context, day, _) => _dayCell(
+                (context, day, _) => buildDayCell(
                   context: context,
                   day: day,
-                  createdAt: selectableFirstDay,
-                  today: today,
                   isOutside: _isOutsideMonth(day, focusedDay),
                   isToday: true,
                 ),
             outsideBuilder:
-                (context, day, _) => _dayCell(
+                (context, day, _) => buildDayCell(
                   context: context,
                   day: day,
-                  createdAt: selectableFirstDay,
-                  today: today,
                   isOutside: true,
                   isToday: false,
                   forceDisabled: true,
                 ),
             disabledBuilder:
-                (context, day, _) => _dayCell(
+                (context, day, _) => buildDayCell(
                   context: context,
                   day: day,
-                  createdAt: selectableFirstDay,
-                  today: today,
                   isOutside: _isOutsideMonth(day, focusedDay),
                   isToday: false,
                   forceDisabled: true,
@@ -248,56 +498,268 @@ class _StreakCalendarState extends State<StreakCalendar> {
     required DateTime today,
     required bool isOutside,
     required bool isToday,
+    required bool hasLeftConnector,
+    required bool hasRightConnector,
+    required bool isOngoingStreakStartCompletedDay,
+    required double streakDecorationsOpacity,
     bool forceDisabled = false,
   }) {
     final cp = context.watch<ColorProvider>();
+    const dayCircleSize = 38.0;
     final normalizedDay = _normalize(day);
     final enabled =
         !forceDisabled && _isEnabledDay(normalizedDay, createdAt, today);
     final outsideOrDisabled = isOutside || !enabled;
 
     final progress = widget.allStats[normalizedDay] ?? 0;
-    final Color fillColor;
-    final Color textColor;
-    final Color borderColor;
+    late Color fillColor;
+    late Color textColor;
+    late Color borderColor;
 
-    Color outsideDisabledFill = cp.bg;
-    Color outsideDisabledText = cp.lightGreyText;
+    final outsideDisabledFill = cp.bg;
+    final outsideDisabledText = cp.lightGreyText;
 
     if (outsideOrDisabled) {
       fillColor = outsideDisabledFill;
       textColor = outsideDisabledText;
       borderColor = outsideDisabledFill;
     } else {
-      fillColor = _colorForProgress(progress, isToday) ?? cp.bg;
+      fillColor = _colorForProgress(cp, progress, isToday) ?? cp.bg;
       borderColor =
-          _colorForProgress(progress, isToday, isBorder: true) ?? cp.bg;
+          _colorForProgress(cp, progress, isToday, isBorder: true) ?? cp.bg;
       textColor = cp.text;
+
+      if (isOngoingStreakStartCompletedDay) {
+        fillColor =
+            Color.lerp(fillColor, cp.orange300, streakDecorationsOpacity) ??
+            fillColor;
+      }
     }
 
-    return Center(
-      child: Container(
-        width: 38,
-        height: 38,
-        decoration: ShapeDecoration(
-          color: fillColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(width: 1, color: borderColor),
-          ),
-        ),
-        child: Center(
-          child: Text(
-            '${day.day}',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+    final connectorColor = cp.orange100;
+    final showLeftConnector =
+        hasLeftConnector && normalizedDay.weekday != DateTime.monday;
+    final showRightConnector =
+        hasRightConnector && normalizedDay.weekday != DateTime.sunday;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOut,
+              opacity: streakDecorationsOpacity,
+              child: SizedBox(
+                height: dayCircleSize,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: dayCircleSize,
+                        color:
+                            showLeftConnector
+                                ? connectorColor
+                                : Colors.transparent,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: dayCircleSize,
+                        color:
+                            showRightConnector
+                                ? connectorColor
+                                : Colors.transparent,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Center(
+          child: Container(
+            width: dayCircleSize,
+            height: dayCircleSize,
+            decoration: ShapeDecoration(
+              color: fillColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+                side: BorderSide(width: 1, color: borderColor),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                '${day.day}',
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
+  }
+
+  Map<DateTime, _StreakVisualDayData> _buildStreakVisualMetadata({
+    required List<_ToleratedMissRun> runs,
+    required DateTime selectableFirstDay,
+    required DateTime today,
+    required DateTime focusedDay,
+  }) {
+    final visibleDays = _visibleMonthGridDays(focusedDay);
+    final visibleSet = visibleDays.toSet();
+    final metadata = {
+      for (final day in visibleDays) day: const _StreakVisualDayData(),
+    };
+
+    if (selectableFirstDay.isAfter(today) || runs.isEmpty) {
+      return metadata;
+    }
+
+    for (final run in runs) {
+      for (int i = 0; i < run.days.length - 1; i++) {
+        final leftDay = run.days[i];
+        final rightDay = run.days[i + 1];
+        final segmentTouchesOutside =
+            _isOutsideMonth(leftDay, focusedDay) ||
+            _isOutsideMonth(rightDay, focusedDay);
+
+        if (segmentTouchesOutside && !run.includesToday) {
+          continue;
+        }
+
+        if (visibleSet.contains(leftDay)) {
+          metadata[leftDay] = (metadata[leftDay] ??
+                  const _StreakVisualDayData())
+              .copyWith(hasRightConnector: true);
+        }
+        if (visibleSet.contains(rightDay)) {
+          metadata[rightDay] = (metadata[rightDay] ??
+                  const _StreakVisualDayData())
+              .copyWith(hasLeftConnector: true);
+        }
+      }
+    }
+
+    _ToleratedMissRun? ongoingRun;
+    for (final run in runs) {
+      debugPrint('Evaluating run: ${run.days} for ongoing streak start');
+      if (run.includesToday) {
+        ongoingRun = run;
+      }
+    }
+
+    final ongoingStart = ongoingRun?.firstCompletedDay;
+    debugPrint('Ongoing run: $ongoingRun, start: $ongoingStart');
+    if (ongoingStart != null && visibleSet.contains(ongoingStart)) {
+      metadata[ongoingStart] = (metadata[ongoingStart] ??
+              const _StreakVisualDayData())
+          .copyWith(isOngoingStreakStartCompletedDay: true);
+    }
+
+    return metadata;
+  }
+
+  List<DateTime> _visibleMonthGridDays(DateTime focusedDay) {
+    final monthStart = DateTime(focusedDay.year, focusedDay.month, 1);
+    final monthEnd = DateTime(focusedDay.year, focusedDay.month + 1, 0);
+
+    final daysBefore = (monthStart.weekday - DateTime.monday) % 7;
+    final start = monthStart.subtract(Duration(days: daysBefore));
+
+    final daysAfter = (DateTime.sunday - monthEnd.weekday) % 7;
+    final end = monthEnd.add(Duration(days: daysAfter));
+
+    final dayCount = end.difference(start).inDays + 1;
+    return List<DateTime>.generate(
+      dayCount,
+      (index) => _normalize(start.add(Duration(days: index))),
+    );
+  }
+
+  List<_ToleratedMissRun> _buildToleratedMissRuns({
+    required DateTime selectableFirstDay,
+    required DateTime today,
+    required Set<DateTime> completedDays,
+  }) {
+    final runs = <_ToleratedMissRun>[];
+    final currentDays = <DateTime>[];
+    final currentCompletedDays = <DateTime>[];
+
+    var hasCompletion = false;
+    var toleratedMissesUsed = 0;
+    var cursor = selectableFirstDay;
+
+    while (!cursor.isAfter(today)) {
+      final normalizedCursor = _normalize(cursor);
+      final isCompleted = completedDays.contains(normalizedCursor);
+
+      if (!hasCompletion) {
+        if (isCompleted) {
+          hasCompletion = true;
+          toleratedMissesUsed = 0;
+          currentDays.add(normalizedCursor);
+          currentCompletedDays.add(normalizedCursor);
+        }
+        cursor = cursor.add(const Duration(days: 1));
+        continue;
+      }
+
+      if (isCompleted) {
+        currentDays.add(normalizedCursor);
+        currentCompletedDays.add(normalizedCursor);
+        toleratedMissesUsed = 0;
+      } else if (toleratedMissesUsed == 0) {
+        currentDays.add(normalizedCursor);
+        toleratedMissesUsed = 1;
+      } else {
+        // If a second miss happens, the previous tolerated miss did not bridge
+        // to a completion and should not be part of the rendered streak run.
+        if (currentDays.isNotEmpty &&
+            !completedDays.contains(currentDays.last)) {
+          currentDays.removeLast();
+        }
+
+        if (currentDays.isNotEmpty && currentCompletedDays.isNotEmpty) {
+          runs.add(
+            _ToleratedMissRun(
+              days: List<DateTime>.from(currentDays),
+              completedDays: List<DateTime>.from(currentCompletedDays),
+              includesToday: false,
+            ),
+          );
+        }
+
+        currentDays.clear();
+        currentCompletedDays.clear();
+        hasCompletion = false;
+        toleratedMissesUsed = 0;
+      }
+
+      cursor = cursor.add(const Duration(days: 1));
+    }
+
+    if (hasCompletion &&
+        currentDays.isNotEmpty &&
+        currentCompletedDays.isNotEmpty) {
+      runs.add(
+        _ToleratedMissRun(
+          days: List<DateTime>.from(currentDays),
+          completedDays: List<DateTime>.from(currentCompletedDays),
+          includesToday:
+              currentDays.last == today.subtract(const Duration(days: 1)),
+        ),
+      );
+    }
+
+    return runs;
   }
 
   static bool _isEnabledDay(DateTime day, DateTime createdAt, DateTime today) {
@@ -314,6 +776,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   }
 
   Color? _colorForProgress(
+    ColorProvider cp,
     double progress,
     bool isToday, {
     bool isBorder = false,
@@ -321,9 +784,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
     if (progress <= 0) {
       return null;
     }
-
-    final cp = context.watch<ColorProvider>();
-
     final clamped = progress.clamp(0.0, 1.0);
 
     if (isBorder) {
@@ -332,6 +792,8 @@ class _StreakCalendarState extends State<StreakCalendar> {
           return cp.orange300;
         }
         return cp.orange200;
+      } else if (clamped != 0) {
+        return cp.disabled;
       }
       return cp.bg;
     }
@@ -344,5 +806,50 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
   static DateTime _normalize(DateTime date) {
     return DateTime(date.year, date.month, date.day);
+  }
+}
+
+class _StreakVisualDayData {
+  const _StreakVisualDayData({
+    this.hasLeftConnector = false,
+    this.hasRightConnector = false,
+    this.isOngoingStreakStartCompletedDay = false,
+  });
+
+  final bool hasLeftConnector;
+  final bool hasRightConnector;
+  final bool isOngoingStreakStartCompletedDay;
+
+  _StreakVisualDayData copyWith({
+    bool? hasLeftConnector,
+    bool? hasRightConnector,
+    bool? isOngoingStreakStartCompletedDay,
+  }) {
+    return _StreakVisualDayData(
+      hasLeftConnector: hasLeftConnector ?? this.hasLeftConnector,
+      hasRightConnector: hasRightConnector ?? this.hasRightConnector,
+      isOngoingStreakStartCompletedDay:
+          isOngoingStreakStartCompletedDay ??
+          this.isOngoingStreakStartCompletedDay,
+    );
+  }
+}
+
+class _ToleratedMissRun {
+  const _ToleratedMissRun({
+    required this.days,
+    required this.completedDays,
+    required this.includesToday,
+  });
+
+  final List<DateTime> days;
+  final List<DateTime> completedDays;
+  final bool includesToday;
+
+  DateTime? get firstCompletedDay {
+    if (completedDays.isEmpty) {
+      return null;
+    }
+    return completedDays.first;
   }
 }

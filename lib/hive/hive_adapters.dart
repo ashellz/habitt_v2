@@ -63,7 +63,9 @@ class HabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
 
 /// Backward-compatibility adapter for older persisted HabitTrackingType values.
 /// Some existing boxes contain this enum under typeId 34.
-class LegacyHabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
+/// This adapter is intentionally `dynamic` so Hive can keep the canonical
+/// typed adapter (typeId 6) for writes while still decoding legacy typeId 34.
+class LegacyHabitTrackingTypeAdapter extends TypeAdapter<dynamic> {
   @override
   int get typeId => 34;
 
@@ -77,8 +79,9 @@ class LegacyHabitTrackingTypeAdapter extends TypeAdapter<HabitTrackingType> {
   }
 
   @override
-  void write(BinaryWriter writer, HabitTrackingType obj) {
-    writer.writeByte(obj.index);
+  void write(BinaryWriter writer, dynamic obj) {
+    final value = obj is HabitTrackingType ? obj : HabitTrackingType.amount;
+    writer.writeByte(value.index);
   }
 }
 
