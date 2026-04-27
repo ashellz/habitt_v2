@@ -16,7 +16,8 @@ class StatsProvider extends ChangeNotifier {
 
   int _habitsCompleted = -1;
   int _highestAmountOfHabitsLastWeek = -1;
-  List<int> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
+  int _completionRateLastWeek = -1;
+  List<double> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
   int _perfectDaysStreak = -1;
   int _longestPerfectDaysStreak = -1;
   List<StatsType> _refreshList = [];
@@ -32,6 +33,7 @@ class StatsProvider extends ChangeNotifier {
   get habitsCompleted => getHabitsCompleted();
   get highestAmountOfHabitsLastWeek => getHighestAmountOfHabitsLastWeek();
   get habitsCompletedLastWeek => getHabitsCompletedLastWeek();
+  get completionRateLastWeek => getCompletionRateLastWeek();
   int get perfectDaysStreak => getPerfectStreak();
   int get longestPerfectDaysStreak => _longestPerfectDaysStreak;
 
@@ -169,11 +171,18 @@ class StatsProvider extends ChangeNotifier {
     return _highestAmountOfHabitsLastWeek;
   }
 
-  List<int> getHabitsCompletedLastWeek() {
+  List<double> getHabitsCompletedLastWeek() {
     if (_habitsCompletedLastWeek.every((element) => element == -1)) {
       _habitsCompletedLastWeek = refreshHabitsCompletedLastWeek();
     }
     return _habitsCompletedLastWeek;
+  }
+
+  int getCompletionRateLastWeek() {
+    if (_completionRateLastWeek == -1) {
+      _completionRateLastWeek = refreshCompletionRateLastWeek();
+    }
+    return _completionRateLastWeek;
   }
 
   int getPerfectStreak() {
@@ -224,16 +233,76 @@ class StatsProvider extends ChangeNotifier {
     // Then we check the last 7 days
     for (int i = 0; i < 7 && i < orderedDays.length; i++) {
       final day = orderedDays[i];
-      if (day.habits.length > highestAmountOfHabits) {
-        highestAmountOfHabits = day.habits.length;
+      int tracking = 0;
+      for (final habit in day.habits) {
+        if (habit.optional) continue;
+        tracking++;
+      }
+      if (tracking > highestAmountOfHabits) {
+        highestAmountOfHabits = tracking;
       }
     }
 
     return highestAmountOfHabits;
   }
 
-  List<int> refreshHabitsCompletedLastWeek() {
-    List<int> habitsCompletedLastWeek = List.generate(7, (i) => 0);
+  int refreshCompletionRateLastWeek() {
+    int totalHabits = 0;
+    int completedHabits = 0;
+    for (final day in daysBox.values) {
+      for (final habit in day.habits) {
+        if (habit.optional) continue;
+        totalHabits++;
+        if (habit.completed) {
+          completedHabits++;
+        }
+      }
+    }
+    return (completedHabits / totalHabits * 100).clamp(0, 100).toInt();
+  }
+
+  List<double> getCompletionRateLastWeekByDay(HabitProvider hp) {
+    final allDays = _allDaysIncludingToday(hp);
+    final daysByDate = <DateTime, Day>{};
+
+    for (final day in allDays) {
+      daysByDate[DateTime(day.date.year, day.date.month, day.date.day)] = day;
+    }
+
+    return List.generate(7, (index) {
+      final targetDate = DateTime.now().subtract(Duration(days: 6 - index));
+      final normalizedDate = DateTime(
+        targetDate.year,
+        targetDate.month,
+        targetDate.day,
+      );
+      final day = daysByDate[normalizedDate];
+
+      if (day == null) {
+        return 0.0;
+      }
+
+      int requiredHabits = 0;
+      int completedHabits = 0;
+
+      for (final habit in day.habits) {
+        if (habit.optional) continue;
+        requiredHabits++;
+        if (habit.completed) {
+          completedHabits++;
+        }
+      }
+
+      if (requiredHabits == 0) {
+        return 0.0;
+      }
+
+      return (completedHabits / requiredHabits * 100).clamp(0, 100);
+    });
+  }
+
+  List<double> refreshHabitsCompletedLastWeek() {
+    List<double> habitsCompletedLastWeek = List.generate(7, (i) => 0);
 
     // First we order the days by date
     final orderedDays = daysBox.values.toList();
@@ -242,11 +311,26 @@ class StatsProvider extends ChangeNotifier {
     // Then we check the last 7 days
     for (int i = 0; i < 7 && i < orderedDays.length; i++) {
       final day = orderedDays[i];
-      int habitsCompleted = 0;
+      double habitsCompleted = 0;
       for (final habit in day.habits) {
+        if (habit.optional) continue;
         if (habit.completed) {
           habitsCompleted++;
           debugPrint("Completed habit found, {$habitsCompleted} total");
+        } else if (habit.tracksAmount) {
+          if (habit.amount > 0) {
+            habitsCompleted += (habit.amountCompleted / habit.amount).clamp(
+              0.0,
+              1.0,
+            );
+          }
+        } else if (habit.tracksDuration) {
+          if (habit.duration > 0) {
+            habitsCompleted += (habit.durationCompleted / habit.duration).clamp(
+              0.0,
+              1.0,
+            );
+          }
         }
       }
       habitsCompletedLastWeek[i] = habitsCompleted;
