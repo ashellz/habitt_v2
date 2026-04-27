@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
+import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,6 +45,68 @@ class StatsProvider extends ChangeNotifier {
   void addShouldRefresh(StatsType type) {
     _refreshList.add(type);
     notifyListeners();
+  }
+
+  Map<DateTime, double> getAllDaysProgress(HabitProvider hp) {
+    List<Day> allDays = [];
+    for (final day in daysBox.values) {
+      // dont add today
+      if (day.date.year == DateTime.now().year &&
+          day.date.month == DateTime.now().month &&
+          day.date.day == DateTime.now().day) {
+        continue;
+      }
+      allDays.add(day);
+    }
+
+    final now = DateTime.now();
+    final nowNormalized = DateTime(now.year, now.month, now.day);
+
+    allDays.add(
+      Day(
+        date: nowNormalized,
+        habits: hp.todaysHabits,
+        timestamp: DateTime.now(),
+      ),
+    );
+
+    // Calculating progress for each day 0 - 1
+
+    final Map<DateTime, double> daysProgress = {};
+
+    for (final day in allDays) {
+      daysProgress[day.date] = getDayProgress(day.date, day.habits);
+    }
+
+    debugPrint("Returning Days progress: $daysProgress");
+    return daysProgress;
+  }
+
+  double getDayProgress(DateTime date, List<Habit> habits) {
+    final totalHabits = habits.isEmpty ? 1 : habits.length;
+    final completedWeight = habits.fold<double>(0.0, (sum, habit) {
+      if (habit.completed) {
+        return sum + 1.0;
+      }
+
+      if (habit.tracksAmount) {
+        if (habit.amount <= 0) {
+          return sum;
+        }
+        return sum + (habit.amountCompleted / habit.amount).clamp(0.0, 1.0);
+      }
+
+      if (habit.tracksDuration) {
+        if (habit.duration <= 0) {
+          return sum;
+        }
+        return sum + (habit.durationCompleted / habit.duration).clamp(0.0, 1.0);
+      }
+
+      return sum;
+    });
+
+    return (completedWeight / totalHabits).clamp(0.0, 1.0);
   }
 
   int getHabitsCompleted() {

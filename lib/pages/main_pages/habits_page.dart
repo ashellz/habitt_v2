@@ -32,7 +32,7 @@ class _HabitsPageState extends State<HabitsPage> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        padding: const EdgeInsets.only(bottom: 20),
         child: ListView(
           children: [
             topSection(context, cp),

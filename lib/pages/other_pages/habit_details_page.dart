@@ -18,7 +18,7 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/habit_detail_stats_sections.dart';
-import 'package:habitt/widgets/habit_details/new/habit_details_calendar.dart';
+import 'package:habitt/widgets/stats/consistency_calendar.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
@@ -213,7 +213,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   SizedBox(height: 24),
                   HabitDetailStatsSections(habit: habit, stats: stats),
                   SizedBox(height: 24),
-                  HabitDetailsCalendar(stats: stats),
+                  ConsistencyCalendar(habitStats: stats),
                   const SizedBox(height: 24),
                   NewDefaultButton(
                     height: 40,
