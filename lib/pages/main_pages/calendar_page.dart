@@ -15,6 +15,8 @@ class CalendarPage extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StatsProvider>();
     final hp = context.watch<HabitProvider>();
+    final allStats = sp.getAllDaysProgress(hp);
+    final perfectDayCompletion = sp.getPerfectDayCompletion(hp);
 
     final streak = sp.perfectDaysStreak;
     final longestStreak = sp.longestPerfectDaysStreak;
@@ -34,9 +36,14 @@ class CalendarPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24),
-            StreakCalendarSection(streak: streak, longestStreak: longestStreak),
+            StreakCalendarSection(
+              streak: streak,
+              longestStreak: longestStreak,
+              allStats: allStats,
+              perfectDayCompletion: perfectDayCompletion,
+            ),
             SizedBox(height: 32),
-            ConsistencyCalendar(allStats: sp.getAllDaysProgress(hp)),
+            ConsistencyCalendar(allStats: allStats),
           ],
         ),
       ),
@@ -49,16 +56,17 @@ class StreakCalendarSection extends StatelessWidget {
     super.key,
     required this.streak,
     required this.longestStreak,
+    required this.allStats,
+    required this.perfectDayCompletion,
   });
 
   final int streak;
   final int longestStreak;
+  final Map<DateTime, double> allStats;
+  final Map<DateTime, bool> perfectDayCompletion;
 
   @override
   Widget build(BuildContext context) {
-    final sp = context.watch<StatsProvider>();
-    final hp = context.watch<HabitProvider>();
-
     return Column(
       spacing: 20,
       children: [
@@ -83,7 +91,10 @@ class StreakCalendarSection extends StatelessWidget {
             ),
           ],
         ),
-        StreakCalendar(allStats: sp.getAllDaysProgress(hp)),
+        StreakCalendar(
+          allStats: allStats,
+          perfectDayCompletion: perfectDayCompletion,
+        ),
       ],
     );
   }

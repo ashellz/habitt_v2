@@ -47,21 +47,21 @@ class StatsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map<DateTime, double> getAllDaysProgress(HabitProvider hp) {
-    List<Day> allDays = [];
+  List<Day> _allDaysIncludingToday(HabitProvider hp) {
+    final allDays = <Day>[];
+    final now = DateTime.now();
+
     for (final day in daysBox.values) {
-      // dont add today
-      if (day.date.year == DateTime.now().year &&
-          day.date.month == DateTime.now().month &&
-          day.date.day == DateTime.now().day) {
+      // Do not keep persisted "today"; replace with live today's habits.
+      if (day.date.year == now.year &&
+          day.date.month == now.month &&
+          day.date.day == now.day) {
         continue;
       }
       allDays.add(day);
     }
 
-    final now = DateTime.now();
     final nowNormalized = DateTime(now.year, now.month, now.day);
-
     allDays.add(
       Day(
         date: nowNormalized,
@@ -69,6 +69,33 @@ class StatsProvider extends ChangeNotifier {
         timestamp: DateTime.now(),
       ),
     );
+
+    return allDays;
+  }
+
+  bool _isPerfectDay(List<Habit> habits) {
+    int requiredHabits = 0;
+    int completedOrSkipped = 0;
+
+    for (final habit in habits) {
+      if (habit.optional) {
+        continue;
+      }
+      requiredHabits++;
+      if (habit.completed || habit.skipped) {
+        completedOrSkipped++;
+      }
+    }
+
+    if (requiredHabits == 0) {
+      return false;
+    }
+
+    return completedOrSkipped >= requiredHabits;
+  }
+
+  Map<DateTime, double> getAllDaysProgress(HabitProvider hp) {
+    final allDays = _allDaysIncludingToday(hp);
 
     // Calculating progress for each day 0 - 1
 
@@ -80,6 +107,22 @@ class StatsProvider extends ChangeNotifier {
 
     debugPrint("Returning Days progress: $daysProgress");
     return daysProgress;
+  }
+
+  Map<DateTime, bool> getPerfectDayCompletion(HabitProvider hp) {
+    final allDays = _allDaysIncludingToday(hp);
+    final perfectDayCompletion = <DateTime, bool>{};
+
+    for (final day in allDays) {
+      final normalizedDate = DateTime(
+        day.date.year,
+        day.date.month,
+        day.date.day,
+      );
+      perfectDayCompletion[normalizedDate] = _isPerfectDay(day.habits);
+    }
+
+    return perfectDayCompletion;
   }
 
   double getDayProgress(DateTime date, List<Habit> habits) {
@@ -264,7 +307,6 @@ class StatsProvider extends ChangeNotifier {
 
     if (allHabitsCompletedStreak > longestStreak) {
       longestStreak = allHabitsCompletedStreak;
-      notifyListeners();
       prefs?.setInt(longestPerfectDaysStreakKey, longestStreak);
     }
 

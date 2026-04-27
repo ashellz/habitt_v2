@@ -113,7 +113,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
           focusedDay: focusedDay,
           calendarFormat: CalendarFormat.month,
           headerVisible: false,
-          availableGestures: AvailableGestures.none,
+          availableGestures: AvailableGestures.horizontalSwipe,
           startingDayOfWeek: StartingDayOfWeek.monday,
           daysOfWeekHeight: 30,
           enabledDayPredicate:
