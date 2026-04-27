@@ -527,7 +527,11 @@ class _StreakCalendarState extends State<StreakCalendar> {
       fillColor = _colorForProgress(cp, progress, isToday) ?? cp.bg;
       borderColor =
           _colorForProgress(cp, progress, isToday, isBorder: true) ?? cp.bg;
-      textColor = cp.text;
+      textColor =
+          isOngoingStreakStartCompletedDay
+              ? Colors.white
+              : _colorForProgress(cp, progress, isToday, isText: true) ??
+                  cp.text;
 
       if (isOngoingStreakStartCompletedDay) {
         fillColor =
@@ -780,11 +784,19 @@ class _StreakCalendarState extends State<StreakCalendar> {
     double progress,
     bool isToday, {
     bool isBorder = false,
+    bool isText = false,
   }) {
     if (progress <= 0) {
       return null;
     }
     final clamped = progress.clamp(0.0, 1.0);
+
+    if (isText) {
+      if (clamped == 1 && isToday) {
+        return Colors.white;
+      }
+      return cp.text;
+    }
 
     if (isBorder) {
       if (clamped == 1) {
