@@ -38,6 +38,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     super.initState();
     final now = DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
+    debugPrint('StreakCalendar initialized with focused day: $_focusedDay');
   }
 
   @override
@@ -177,6 +178,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     required DateTime today,
   }) async {
     final month = _monthStart(focusedDay);
+    debugPrint('_loadMonthMetadata: focusedDay=$focusedDay, month=$month');
     final key = _monthKey(month);
 
     final cached = _monthMetadataCache[key];
@@ -280,6 +282,10 @@ class _StreakCalendarState extends State<StreakCalendar> {
       });
     }
 
+    debugPrint(
+      'build: _focusedDay=$_focusedDay, focusedDay=$focusedDay, calendarFirstDay=$calendarFirstDay',
+    );
+
     _scheduleMonthMetadataLoad(
       focusedDay: focusedDay,
       selectableFirstDay: selectableFirstDay,
@@ -301,6 +307,11 @@ class _StreakCalendarState extends State<StreakCalendar> {
       required bool isToday,
       bool forceDisabled = false,
     }) {
+      if (streakVisualMetadata[_normalize(day)] == null) {
+        debugPrint(
+          'No streak metadata for day ${_normalize(day)} in focusedDay=$focusedDay, defaulting to no connectors.',
+        );
+      }
       final metadata =
           streakVisualMetadata[_normalize(day)] ?? const _StreakVisualDayData();
       return _dayCell(
@@ -618,7 +629,9 @@ class _StreakCalendarState extends State<StreakCalendar> {
     required DateTime focusedDay,
   }) {
     final visibleDays = _visibleMonthGridDays(focusedDay);
+
     final visibleSet = visibleDays.toSet();
+
     final metadata = {
       for (final day in visibleDays) day: const _StreakVisualDayData(),
     };
@@ -628,6 +641,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     }
 
     for (final run in runs) {
+      debugPrint('Evaluating run: ${run.days}');
       for (int i = 0; i < run.days.length - 1; i++) {
         final leftDay = run.days[i];
         final rightDay = run.days[i + 1];
@@ -681,6 +695,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     final daysAfter = (DateTime.sunday - monthEnd.weekday) % 7;
     final end = monthEnd.add(Duration(days: daysAfter));
 
+    debugPrint('_visibleMonthGridDays for $focusedDay: start=$start, end=$end');
     final dayCount = end.difference(start).inDays + 1;
     return List<DateTime>.generate(
       dayCount,
@@ -701,7 +716,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     var toleratedMissesUsed = 0;
     var cursor = selectableFirstDay;
 
-    while (!cursor.isAfter(today)) {
+    while (!cursor.isAfter(today.add(const Duration(days: 1)))) {
       final normalizedCursor = _normalize(cursor);
       final isCompleted = completedDays.contains(normalizedCursor);
 
@@ -757,8 +772,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
         _ToleratedMissRun(
           days: List<DateTime>.from(currentDays),
           completedDays: List<DateTime>.from(currentCompletedDays),
-          includesToday:
-              currentDays.last == today.subtract(const Duration(days: 1)),
+          includesToday: currentDays.last == today,
         ),
       );
     }

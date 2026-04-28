@@ -128,7 +128,15 @@ class StatsProvider extends ChangeNotifier {
   }
 
   double getDayProgress(DateTime date, List<Habit> habits) {
-    final totalHabits = habits.isEmpty ? 1 : habits.length;
+    int totalHabits = 0;
+
+    for (final habit in habits) {
+      if (habit.optional) {
+        continue;
+      }
+      totalHabits++;
+    }
+
     final completedWeight = habits.fold<double>(0.0, (sum, habit) {
       if (habit.completed) {
         return sum + 1.0;
@@ -249,7 +257,28 @@ class StatsProvider extends ChangeNotifier {
   int refreshCompletionRateLastWeek() {
     int totalHabits = 0;
     int completedHabits = 0;
-    for (final day in daysBox.values) {
+
+    final now = DateTime.now();
+
+    if (daysBox.values.isEmpty) {
+      return 0;
+    }
+
+    // First we order the days by date
+    final orderedDays = daysBox.values.toList();
+    orderedDays.sort((a, b) => b.date.compareTo(a.date));
+
+    // We remove today
+    orderedDays.removeWhere(
+      (day) =>
+          day.date.year == now.year &&
+          day.date.month == now.month &&
+          day.date.day == now.day,
+    );
+
+    // Then we check the last 7 days
+    for (int i = 0; i < 6 && i < orderedDays.length; i++) {
+      final day = orderedDays[i];
       for (final habit in day.habits) {
         if (habit.optional) continue;
         totalHabits++;
@@ -258,6 +287,7 @@ class StatsProvider extends ChangeNotifier {
         }
       }
     }
+
     return (completedHabits / totalHabits * 100).clamp(0, 100).toInt();
   }
 
