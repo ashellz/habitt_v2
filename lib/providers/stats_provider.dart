@@ -137,6 +137,10 @@ class StatsProvider extends ChangeNotifier {
       totalHabits++;
     }
 
+    if (totalHabits == 0) {
+      return 0.0;
+    }
+
     final completedWeight = habits.fold<double>(0.0, (sum, habit) {
       if (habit.completed) {
         return sum + 1.0;
@@ -286,6 +290,10 @@ class StatsProvider extends ChangeNotifier {
           completedHabits++;
         }
       }
+    }
+
+    if (totalHabits == 0) {
+      return 0;
     }
 
     return (completedHabits / totalHabits * 100).clamp(0, 100).toInt();

@@ -27,7 +27,7 @@ class CalendarPage extends StatelessWidget {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 78),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: ListView(
           children: [
             Text(
@@ -51,9 +51,9 @@ class CalendarPage extends StatelessWidget {
               cp: cp,
               completionRateLastWeek: completionRateLastWeek,
             ),
-
             SizedBox(height: 32),
             ConsistencyCalendar(allStats: allStats),
+            SizedBox(height: 145),
           ],
         ),
       ),
