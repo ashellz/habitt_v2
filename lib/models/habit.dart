@@ -56,6 +56,7 @@ class Habit extends HiveObject {
   HabitTrackingType? trackingType; // amount or duration
   bool? isDeleted;
   Map<String, DateTime> timestamps;
+  DateTime? insightPopstonedUntil;
 
   Habit({
     required this.id,
@@ -96,6 +97,7 @@ class Habit extends HiveObject {
     this.trackingType,
     this.isDeleted,
     Map<String, DateTime>? timestamps,
+    this.insightPopstonedUntil,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
        selectedDaysAMonth = selectedDaysAMonth ?? [],
        customAppearance = customAppearance ?? [],
@@ -178,6 +180,7 @@ class Habit extends HiveObject {
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
+      insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
   }
@@ -221,6 +224,7 @@ class Habit extends HiveObject {
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
+      insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
   }
@@ -373,6 +377,10 @@ class Habit extends HiveObject {
       isDeleted = habit.isDeleted;
       timestamps['isDeleted'] = now;
     }
+    if (insightPopstonedUntil != habit.insightPopstonedUntil) {
+      insightPopstonedUntil = habit.insightPopstonedUntil;
+      timestamps['insightPopstonedUntil'] = now;
+    }
   }
 
   Future<void> deleteHabit() async {
@@ -488,9 +496,8 @@ class Habit extends HiveObject {
     this.streak = streak;
     timestamps['streak'] = now;
 
-    final nextLongest = longestStreak > this.longestStreak
-        ? longestStreak
-        : this.longestStreak;
+    final nextLongest =
+        longestStreak > this.longestStreak ? longestStreak : this.longestStreak;
     if (nextLongest != this.longestStreak) {
       this.longestStreak = nextLongest;
       timestamps['longestStreak'] = now;
@@ -609,6 +616,7 @@ class Habit extends HiveObject {
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'trackingType': _serializeTrackingType(trackingType),
       'isDeleted': isDeleted,
+      'insightPopstonedUntil': insightPopstonedUntil?.toIso8601String(),
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
       ),
@@ -678,6 +686,10 @@ class Habit extends HiveObject {
             duration: (m['duration'] as int?) ?? 0,
           ),
       isDeleted: m['isDeleted'] as bool?,
+      insightPopstonedUntil:
+          DateTime.tryParse(
+            m['insightPopstonedUntil']?.toString() ?? '',
+          )?.toUtc(),
       timestamps: ts,
     )..color = m['color'] as String?;
   }
@@ -831,6 +843,11 @@ class Habit extends HiveObject {
         'premadeHabitType',
         premadeHabitType,
         incoming.premadeHabitType,
+      ),
+      insightPopstonedUntil: resolve(
+        'insightPopstonedUntil',
+        insightPopstonedUntil,
+        incoming.insightPopstonedUntil,
       ),
       trackingType: resolve(
         'trackingType',

@@ -62,8 +62,9 @@ class HabitProvider extends ChangeNotifier {
   Future<void> init() async {
     await _loadHabits();
     refreshTodaysHabits(notify: false);
+    await _loadDateJoined();
+    await _loadMissingDays();
     _fillToday();
-    _loadDateJoined();
     _syncAllHabitNotifications();
   }
 
@@ -75,26 +76,66 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> _syncSingleHabitNotifications(Habit habit) async {
-    if (habit.completed) {
-      await NotificationService.cancelHabitNotifications(habit.id);
-      return;
-    }
-
     await NotificationService.rescheduleHabitNotifications(
       habit: habit,
       appearsOnDay: appearsOnDay,
     );
   }
 
+  Future<void> _loadMissingDays() async {
+    if (_dateJoined == null) {
+      debugPrint("Date joined is null");
+      return;
+    }
+
+    final today = _normalizeDate(DateTime.now());
+    final normalizedDateJoined = _normalizeDate(_dateJoined!);
+
+    // Iterate through each day from dateJoined to today
+    DateTime currentDay = normalizedDateJoined;
+
+    while (!currentDay.isAfter(today)) {
+      final dayKey = currentDay.toIso8601String().split('T').first;
+
+      // Check if this day already exists in the database
+      if (daysBox.get(dayKey) == null) {
+        // Save the day with habits that should be scheduled for that day
+        await saveHabitDay(currentDay, resetCompletion: true);
+      }
+
+      // Move to the next day
+      currentDay = currentDay.add(const Duration(days: 1));
+    }
+  }
+
   Future<void> _loadDateJoined() async {
     final prefs = await SharedPreferences.getInstance();
-    final dateString = prefs.getString('dateJoined');
-    if (dateString != null) {
-      _dateJoined = DateTime.parse(dateString);
+
+    // Check daysBox for the earliest day with habits
+    final allDays = daysBox.values.toList();
+    final daysWithHabits =
+        allDays.where((day) => day.habits.isNotEmpty).toList();
+    daysWithHabits.sort((a, b) => a.date.compareTo(b.date));
+
+    if (daysWithHabits.isNotEmpty) {
+      // Earliest day with habits is the dateJoined
+      _dateJoined = _normalizeDate(daysWithHabits.first.date);
+      debugPrint("Date joined set from daysBox: $_dateJoined");
+      // Update SharedPreferences with the correct date
+      prefs.setString("dateJoined", _dateJoined!.toIso8601String());
     } else {
-      _dateJoined = DateTime.now();
-      prefs.setString("dateJoined", _dateJoined.toString());
+      // No days with habits, fall back to SharedPreferences or today
+      final dateString = prefs.getString('dateJoined');
+      if (dateString != null) {
+        _dateJoined = _normalizeDate(DateTime.parse(dateString));
+        debugPrint("Date joined set from SharedPreferences: $_dateJoined");
+      } else {
+        _dateJoined = _normalizeDate(DateTime.now());
+        debugPrint("Date joined set to today: $_dateJoined");
+        prefs.setString("dateJoined", _dateJoined!.toIso8601String());
+      }
     }
+
     notifyListeners();
   }
 
