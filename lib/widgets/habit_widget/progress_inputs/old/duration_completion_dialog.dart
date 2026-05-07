@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:cupertino_native/style/sf_symbol.dart';
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';

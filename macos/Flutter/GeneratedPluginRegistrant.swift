@@ -7,7 +7,7 @@ import Foundation
 
 import awesome_notifications
 import awesome_notifications_core
-import cupertino_native
+import cupertino_native_better
 import device_info_plus
 import file_picker
 import firebase_auth

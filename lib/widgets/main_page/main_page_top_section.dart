@@ -1,4 +1,4 @@
-import 'package:cupertino_native/style/sf_symbol.dart';
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/main_pages/settings_page.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:cupertino_native/components/tab_bar.dart';
-import 'package:cupertino_native/style/sf_symbol.dart';
+import 'package:cupertino_native_better/components/tab_bar.dart';
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -178,8 +178,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
 
     if (glassFeel && _supportsLiquidGlass) {
+      final brightness =
+          MediaQuery.of(context).platformBrightness == Brightness.dark
+              ? 'dark'
+              : 'light';
       return Expanded(
         child: CNTabBar(
+          key: ValueKey(
+            'cn_tabbar_${tp.isDark}_${tp.primaryColor.value}_${_supportsLiquidGlass}_$brightness',
+          ),
           tint: tp.primaryColor,
           height: 85,
           items: const [
