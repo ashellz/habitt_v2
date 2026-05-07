@@ -272,16 +272,40 @@ class _MyAppState extends State<MyApp> {
     final platform = Theme.of(context).platform;
     final isIOS = platform == TargetPlatform.iOS;
 
+    final cupertinoTheme = CupertinoThemeData(
+      brightness: cp.isDark ? Brightness.dark : Brightness.light,
+      primaryColor: cp.main,
+      textTheme: CupertinoTextThemeData(
+        textStyle: TextStyle(fontFamily: 'Satoshi', color: cp.text),
+        actionTextStyle: TextStyle(fontFamily: 'Satoshi', color: cp.text),
+        navTitleTextStyle: TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+          color: cp.text,
+        ),
+        navLargeTitleTextStyle: TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 34,
+          fontWeight: FontWeight.w700,
+          color: cp.text,
+        ),
+        navActionTextStyle: TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+          color: cp.text,
+        ),
+      ),
+    );
+
     final app =
         isIOS
             ? CupertinoApp(
               navigatorObservers: [CNTabBarRouteObserver()],
               title: 'habitt',
               debugShowCheckedModeBanner: false,
-              theme: CupertinoThemeData(
-                brightness: cp.isDark ? Brightness.dark : Brightness.light,
-                primaryColor: cp.main,
-              ),
+              theme: cupertinoTheme,
               locale: languageProvider.locale,
               supportedLocales: AppLocalizations.supportedLocales,
               localizationsDelegates: const [
@@ -290,6 +314,18 @@ class _MyAppState extends State<MyApp> {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
+              builder: (context, child) {
+                return Theme(
+                  data: theme,
+                  child: CupertinoTheme(
+                    data: cupertinoTheme,
+                    child: DefaultTextStyle.merge(
+                      style: TextStyle(fontFamily: 'Satoshi', color: cp.text),
+                      child: child ?? const SizedBox.shrink(),
+                    ),
+                  ),
+                );
+              },
               routes: {'/settings': (context) => const SettingsPage()},
               home: getHomePage(),
             )
@@ -313,6 +349,12 @@ class _MyAppState extends State<MyApp> {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
+              builder: (context, child) {
+                return DefaultTextStyle.merge(
+                  style: TextStyle(fontFamily: 'Satoshi', color: cp.text),
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },
               routes: {'/settings': (context) => const SettingsPage()},
               home: getHomePage(),
             );

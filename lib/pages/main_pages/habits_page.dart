@@ -98,7 +98,7 @@ class _HabitsPageState extends State<HabitsPage> {
           ),
           NewCircleButton(
             svgPath: "assets/images/new-svg/plus.svg",
-            cnIcon: CNSymbol("plus", size: 16),
+            cnIcon: CNSymbol("plus", size: 16, color: cp.bg),
             width: 36,
             height: 36,
             textColor: cp.bg,
