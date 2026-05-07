@@ -51,7 +51,7 @@ class NotificationDay extends StatelessWidget {
   void _showInvalidTimeDialog(BuildContext context) {
     final (start, end) = notificationPeriod.hourRange;
     final rangeText =
-        notificationPeriod == NotificationPeriod.evening
+        notificationPeriod == NotificationPeriod.wrapUp
             ? '7:00 PM - 3:59 AM'
             : '$start:00 - ${end - 1}:59';
 

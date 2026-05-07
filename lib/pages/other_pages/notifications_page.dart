@@ -222,36 +222,36 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             ),
                       ),
                       NotificationDay(
-                        notificationPeriod: NotificationPeriod.afternoon,
-                        settings: _realDataCopy[NotificationPeriod.afternoon]!,
+                        notificationPeriod: NotificationPeriod.midday,
+                        settings: _realDataCopy[NotificationPeriod.midday]!,
                         onToggleEnabled:
                             (enabled) => _handleToggle(
-                              NotificationPeriod.afternoon,
+                              NotificationPeriod.midday,
                               enabled,
                             ),
                         onTimeChanged:
                             (time) =>
-                                _handleTime(NotificationPeriod.afternoon, time),
+                                _handleTime(NotificationPeriod.midday, time),
                         onWeekdayToggled:
                             (weekday) => _handleWeekday(
-                              NotificationPeriod.afternoon,
+                              NotificationPeriod.midday,
                               weekday,
                             ),
                       ),
                       NotificationDay(
-                        notificationPeriod: NotificationPeriod.evening,
-                        settings: _realDataCopy[NotificationPeriod.evening]!,
+                        notificationPeriod: NotificationPeriod.wrapUp,
+                        settings: _realDataCopy[NotificationPeriod.wrapUp]!,
                         onToggleEnabled:
                             (enabled) => _handleToggle(
-                              NotificationPeriod.evening,
+                              NotificationPeriod.wrapUp,
                               enabled,
                             ),
                         onTimeChanged:
                             (time) =>
-                                _handleTime(NotificationPeriod.evening, time),
+                                _handleTime(NotificationPeriod.wrapUp, time),
                         onWeekdayToggled:
                             (weekday) => _handleWeekday(
-                              NotificationPeriod.evening,
+                              NotificationPeriod.wrapUp,
                               weekday,
                             ),
                       ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 class SelectableWeekdays extends StatelessWidget {
   const SelectableWeekdays({
     super.key,
+    this.isNotification = false,
     required this.selectedDays,
     required this.onDaySelected,
     this.selectionDuration = const Duration(milliseconds: 200),
@@ -23,6 +24,7 @@ class SelectableWeekdays extends StatelessWidget {
   final Set<String> selectedDays;
   final ValueChanged<String> onDaySelected;
   final Duration selectionDuration;
+  final bool isNotification;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class SelectableWeekdays extends StatelessWidget {
           _weekDays.map((day) {
             return _SelectableWeekDayButton(
               label: day,
+              isNotification: isNotification,
               isSelected: selectedDays.contains(day),
               selectionDuration: selectionDuration,
               onPressed: () => onDaySelected(day),
@@ -47,12 +50,14 @@ class _SelectableWeekDayButton extends StatelessWidget {
     required this.isSelected,
     required this.selectionDuration,
     required this.onPressed,
+    this.isNotification = false,
   });
 
   final String label;
   final bool isSelected;
   final Duration selectionDuration;
   final VoidCallback onPressed;
+  final bool isNotification;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +67,8 @@ class _SelectableWeekDayButton extends StatelessWidget {
     return AnimatedContainer(
       duration: selectionDuration,
       curve: Curves.easeOut,
-      width: 36,
-      height: 36,
+      width: isNotification ? 40 : 36,
+      height: isNotification ? 40 : 36,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isSelected ? cp.text : Colors.transparent,

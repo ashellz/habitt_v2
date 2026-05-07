@@ -162,7 +162,11 @@ class NotificationService {
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
 
+    debugPrint(
+      'Scheduling notifications for ${habits.length} habits over next $horizonDays days',
+    );
     for (final habit in habits) {
+      debugPrint('Scheduling notifications for habit ${habit.name}');
       await _scheduleHabitNotifications(
         habit: habit,
         appearsOnDay: appearsOnDay,
@@ -170,6 +174,8 @@ class NotificationService {
         localizations: localizations,
       );
     }
+
+    debugPrint('Scheduled notifications for all habits');
   }
 
   static Future<void> _scheduleHabitNotifications({

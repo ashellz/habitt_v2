@@ -36,9 +36,11 @@ class PreferencesProvider extends ChangeNotifier {
   bool _glassFeel = true;
   // colorful interface level
   Colorfulness _colorfulness = Colorfulness.standard;
+  bool _americanTimeFormat = false;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
+  bool get americanTimeFormat => _americanTimeFormat;
 
   SharedPreferences? _prefs;
 
@@ -49,8 +51,15 @@ class PreferencesProvider extends ChangeNotifier {
 
   void init() {
     _glassFeel = _prefs?.getBool('glassFeel') ?? true;
+    _americanTimeFormat = _prefs?.getBool('americanTimeFormat') ?? false;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
+    notifyListeners();
+  }
+
+  void toggleAmericanTimeFormat() {
+    _americanTimeFormat = !_americanTimeFormat;
+    _prefs?.setBool('americanTimeFormat', _americanTimeFormat);
     notifyListeners();
   }
 

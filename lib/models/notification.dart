@@ -2,17 +2,28 @@ import 'package:flutter/material.dart';
 
 enum NotificationPeriod {
   morning,
-  afternoon,
-  evening;
+  midday,
+  wrapUp;
 
   String get name {
     switch (this) {
       case NotificationPeriod.morning:
         return "Morning";
-      case NotificationPeriod.afternoon:
-        return "Afternoon";
-      case NotificationPeriod.evening:
-        return "Evening";
+      case NotificationPeriod.midday:
+        return "Mid-day";
+      case NotificationPeriod.wrapUp:
+        return "Wrap up";
+    }
+  }
+
+  String get iconPath {
+    switch (this) {
+      case NotificationPeriod.morning:
+        return "assets/images/new-svg/morning.svg";
+      case NotificationPeriod.midday:
+        return "assets/images/new-svg/mid-day.svg";
+      case NotificationPeriod.wrapUp:
+        return "assets/images/new-svg/wrap-up.svg";
     }
   }
 
@@ -21,10 +32,10 @@ enum NotificationPeriod {
     switch (this) {
       case NotificationPeriod.morning:
         return (4, 12);
-      case NotificationPeriod.afternoon:
+      case NotificationPeriod.midday:
         return (12, 19);
-      case NotificationPeriod.evening:
-        return (19, 24); // Note: evening wraps to next day at 4am
+      case NotificationPeriod.wrapUp:
+        return (19, 24); // Note: wrap-up wraps to next day at 4am
     }
   }
 
@@ -33,9 +44,9 @@ enum NotificationPeriod {
     switch (this) {
       case NotificationPeriod.morning:
         return const TimeOfDay(hour: 8, minute: 0);
-      case NotificationPeriod.afternoon:
+      case NotificationPeriod.midday:
         return const TimeOfDay(hour: 15, minute: 0);
-      case NotificationPeriod.evening:
+      case NotificationPeriod.wrapUp:
         return const TimeOfDay(hour: 20, minute: 0);
     }
   }
@@ -45,18 +56,18 @@ enum NotificationPeriod {
     switch (this) {
       case NotificationPeriod.morning:
         return "Good morning! Time to check your habits";
-      case NotificationPeriod.afternoon:
-        return "Afternoon check-in time for your habits";
-      case NotificationPeriod.evening:
-        return "Evening reflection: How did your habits go today?";
+      case NotificationPeriod.midday:
+        return "Mid-day check-in time for your habits";
+      case NotificationPeriod.wrapUp:
+        return "Wrap up reflection: How did your habits go today?";
     }
   }
 
   /// Validates if a time falls within this period's range
   bool isTimeInRange(TimeOfDay time) {
     final (start, end) = hourRange;
-    if (this == NotificationPeriod.evening) {
-      // Evening wraps around: 19-23 or 0-3
+    if (this == NotificationPeriod.wrapUp) {
+      // Wrap-up is around: 19-23 or 0-3
       return time.hour >= 19 || time.hour < 4;
     }
     return time.hour >= start && time.hour < end;
