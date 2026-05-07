@@ -478,6 +478,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   Future<void> _saveHabit(StateProvider sp) async {
     await _ensureNotificationPermissionForSave(sp);
 
+    if (!mounted) {
+      debugPrint(
+        "Not mounted after notification permission request, aborting save.",
+      );
+      return;
+    }
+
     final habitProvider = context.read<HabitProvider>();
 
     if (_isEditMode) {

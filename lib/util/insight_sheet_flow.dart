@@ -84,6 +84,11 @@ class InsightSheetFlow {
           continue;
         }
 
+        if (habit.insightPopstonedUntil != null &&
+            habit.insightPopstonedUntil!.isAfter(DateTime.now())) {
+          continue;
+        }
+
         if (insight == HabitStrengthInsight.pushHarder &&
             HabitStrengthInsightTextService.shouldSuppressImprovementInsight(
               habit,
@@ -219,6 +224,13 @@ class InsightSheetFlow {
             primaryButtonLabel: primaryLabel,
             showSecondaryButton: !isMotivationOnly,
             secondaryButtonLabel: 'Later',
+            onSecondaryButtonPressed: () {
+              // Update habit insight sheet popstoned until date
+              candidate.habit.insightPopstonedUntil = DateTime.now().add(
+                const Duration(days: 3),
+              );
+              Navigator.pop(dialogContext);
+            },
             onPrimaryButtonPressed: () {
               Navigator.pop(dialogContext);
               if (!_canProceed(context, isActive)) {
