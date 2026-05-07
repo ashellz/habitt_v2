@@ -549,7 +549,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                       padding: const EdgeInsets.only(right: 16.0),
                       child: NewDefaultButton.primarySmall(
                         width: 60,
-                        padding: EdgeInsets.zero,
+                        padding:
+                            _isSaving
+                                ? EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 22,
+                                )
+                                : EdgeInsets.zero,
                         enabled: !_isSaving,
                         isLoading: _isSaving,
                         onPressed: () async {
