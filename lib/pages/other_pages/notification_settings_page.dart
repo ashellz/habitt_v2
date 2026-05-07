@@ -275,6 +275,22 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                       setState(() {
                                         _draftMasterEnabled = value;
                                       });
+
+                                      if (!value) {
+                                        setState(() {
+                                          _draftPeriodEnabled = false;
+                                          _draftHabitsEnabled = false;
+                                          for (final p
+                                              in NotificationPeriod.values) {
+                                            final cur = _draftSettings[p];
+                                            if (cur != null && cur.enabled) {
+                                              _draftSettings[p] = cur.copyWith(
+                                                enabled: false,
+                                              );
+                                            }
+                                          }
+                                        });
+                                      }
                                     },
                                   ),
                                 ],
@@ -303,6 +319,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                       setState(() {
                                         _draftHabitsEnabled = value;
                                       });
+
+                                      if (value) {
+                                        setState(() {
+                                          _draftMasterEnabled = true;
+                                        });
+                                      }
                                     },
                                   ),
                                 ],
@@ -334,7 +356,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                         // that immediately in the local draft state
                                         // by disabling all period drafts so the UI
                                         // matches the toggle.
-                                        if (!value) {
+                                        if (value) {
+                                          setState(() {
+                                            _draftMasterEnabled = true;
+                                          });
+                                        } else if (!value) {
                                           for (final p
                                               in NotificationPeriod.values) {
                                             final cur = _draftSettings[p];
