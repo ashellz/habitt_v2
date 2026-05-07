@@ -14,8 +14,12 @@ PODS:
     - IosAwnCore (~> 0.10.0)
   - awesome_notifications_core (0.0.1):
     - Flutter
-  - cupertino_native (0.0.1):
+  - CocoaLumberjack (3.9.1):
+    - CocoaLumberjack/Core (= 3.9.1)
+  - CocoaLumberjack/Core (3.9.1)
+  - cupertino_native_better (0.0.1):
     - Flutter
+    - SVGKit (~> 3.0)
   - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.9):
@@ -160,12 +164,14 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - SVGKit (3.0.0):
+    - CocoaLumberjack (~> 3.0)
   - SwiftyGif (5.4.5)
 
 DEPENDENCIES:
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - awesome_notifications_core (from `.symlinks/plugins/awesome_notifications_core/ios`)
-  - cupertino_native (from `.symlinks/plugins/cupertino_native/ios`)
+  - cupertino_native_better (from `.symlinks/plugins/cupertino_native_better/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
@@ -184,6 +190,7 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - AppCheckCore
+    - CocoaLumberjack
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -205,6 +212,7 @@ SPEC REPOS:
     - RevenueCat
     - RevenueCatUI
     - SDWebImage
+    - SVGKit
     - SwiftyGif
 
 EXTERNAL SOURCES:
@@ -212,8 +220,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/awesome_notifications/ios"
   awesome_notifications_core:
     :path: ".symlinks/plugins/awesome_notifications_core/ios"
-  cupertino_native:
-    :path: ".symlinks/plugins/cupertino_native/ios"
+  cupertino_native_better:
+    :path: ".symlinks/plugins/cupertino_native_better/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
   file_picker:
@@ -246,7 +254,8 @@ SPEC CHECKSUMS:
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   awesome_notifications: 0f432b28098d193920b11a44cfa9d2d9313a3888
   awesome_notifications_core: 429c28df8746780a474de177e5acde33af87da63
-  cupertino_native: 1db0611c94f9a9ea28433ed16a344dcb996370b5
+  CocoaLumberjack: e4ba3b414dfca8c1916c6303d37f63b3a95134c6
+  cupertino_native_better: 1548ee565186534a34a406bf56b7c49510485844
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
@@ -281,6 +290,7 @@ SPEC CHECKSUMS:
   RevenueCatUI: 25c86cf10c6cb9e3e9f308c48df55b31bf7fdba5
   SDWebImage: 16309af6d214ba3f77a7c6f6fdda888cb313a50a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
+  SVGKit: 1ad7513f8c74d9652f94ed64ddecda1a23864dea
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
 
 PODFILE CHECKSUM: 2d00c0997c993cb27b628da867a8c3048faf9217

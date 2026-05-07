@@ -1,5 +1,5 @@
-import 'package:cupertino_native/components/tab_bar.dart';
-import 'package:cupertino_native/style/sf_symbol.dart';
+import 'package:cupertino_native_better/components/tab_bar.dart';
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
@@ -165,10 +165,18 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
     final platform = Theme.of(context).platform;
 
     if (platform == TargetPlatform.iOS) {
+      final brightness =
+          MediaQuery.of(context).platformBrightness == Brightness.dark
+              ? 'dark'
+              : 'light';
       return Expanded(
         child: CNTabBar(
+          key: ValueKey(
+            'cn_tabbar_${cp.isDark}_${cp.main.value}_${widget.supportsLiquidGlass}_$brightness',
+          ),
           tint: cp.main,
-          height: widget.supportsLiquidGlass ? 86 : 88,
+          height: widget.supportsLiquidGlass ? 100 : 88,
+          iconSize: 20,
           items: const [
             CNTabBarItem(label: 'Home', icon: CNSymbol('house')),
             CNTabBarItem(label: 'Habits', icon: CNSymbol('square.grid.2x2')),

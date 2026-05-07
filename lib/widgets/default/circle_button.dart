@@ -1,6 +1,8 @@
 import 'dart:io';
 
-import 'package:cupertino_native/cupertino_native.dart';
+import 'package:cupertino_native_better/components/button.dart';
+import 'package:cupertino_native_better/style/button_style.dart';
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -66,7 +68,7 @@ class _CircleButtonState extends State<CircleButton> {
           icon: widget.cnIcon,
           onPressed: widget.onPressed,
           tint: widget.color,
-          style: CNButtonStyle.prominentGlass,
+          config: CNButtonConfig(style: CNButtonStyle.prominentGlass),
         ),
       );
     }

@@ -1,7 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:cupertino_native_better/components/tab_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/firebase_options.dart';
 import 'package:habitt/hive/hive_adapters.dart';
@@ -267,30 +269,57 @@ class _MyAppState extends State<MyApp> {
       }
     }
 
+    final platform = Theme.of(context).platform;
+    final isIOS = platform == TargetPlatform.iOS;
+
+    final app =
+        isIOS
+            ? CupertinoApp(
+              navigatorObservers: [CNTabBarRouteObserver()],
+              title: 'habitt',
+              debugShowCheckedModeBanner: false,
+              theme: CupertinoThemeData(
+                brightness: cp.isDark ? Brightness.dark : Brightness.light,
+                primaryColor: cp.main,
+              ),
+              locale: languageProvider.locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              routes: {'/settings': (context) => const SettingsPage()},
+              home: getHomePage(),
+            )
+            : MaterialApp(
+              navigatorObservers: [CNTabBarRouteObserver()],
+              title: 'habitt',
+              debugShowCheckedModeBanner: false,
+              theme: theme,
+              darkTheme: theme,
+              themeMode:
+                  cp.mode == ColorMode.light
+                      ? ThemeMode.light
+                      : cp.mode == ColorMode.dark
+                      ? ThemeMode.dark
+                      : ThemeMode.system,
+              locale: languageProvider.locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              routes: {'/settings': (context) => const SettingsPage()},
+              home: getHomePage(),
+            );
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: systemUiOverlayStyle,
-      child: MaterialApp(
-        title: 'habitt',
-        debugShowCheckedModeBanner: false,
-        theme: theme,
-        darkTheme: theme,
-        themeMode:
-            cp.mode == ColorMode.light
-                ? ThemeMode.light
-                : cp.mode == ColorMode.dark
-                ? ThemeMode.dark
-                : ThemeMode.system,
-        locale: languageProvider.locale,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        routes: {'/settings': (context) => const SettingsPage()},
-        home: getHomePage(),
-      ),
+      child: app,
     );
   }
 }

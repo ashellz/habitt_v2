@@ -1,4 +1,4 @@
-import 'package:cupertino_native/components/segmented_control.dart';
+import 'package:cupertino_native_better/components/segmented_control.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
