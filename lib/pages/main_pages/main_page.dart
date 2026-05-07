@@ -105,9 +105,11 @@ class _MainPageState extends State<MainPage> {
     const bottomNavBar = 86;
 
     final habits = context.watch<HabitProvider>().todaysHabits;
+    final requiredHabits = habits.where((habit) => !habit.optional);
 
     final bool allCompleted =
-        habits.isNotEmpty && habits.every((habit) => habit.completed);
+      requiredHabits.isNotEmpty &&
+      requiredHabits.every((habit) => habit.completed);
     if (!_initializedCompletionState) {
       _wasAllCompleted = allCompleted;
       _initializedCompletionState = true;
