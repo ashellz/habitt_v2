@@ -24,13 +24,13 @@ import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
-import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:habitt/widgets/dialogs/override_current_config_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/delete_notification_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
+import 'package:habitt/widgets/notification/notification_time_row.dart';
 import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -61,7 +61,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   bool _allowPop = false;
   bool _isExitDialogOpen = false;
   bool _isInitializing = true;
-  int? _heldNotificationId;
+  int? heldNotificationId;
   ScrollController scrollController = ScrollController();
 
   bool get _isEditMode => widget.habit != null;
@@ -697,21 +697,16 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     );
   }
 
-  String _formatTimeOfDayFromMinutes(int minutesOfDay) {
-    final hour = (minutesOfDay ~/ 60) % 24;
-    final minute = minutesOfDay % 60;
-    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
-  }
-
   Future<void> _openNotificationTimeDialog(
     StateProvider sp,
     HabitNotificationTime slot,
   ) async {
-    await _showNotificationTimeDialog(
+    await showNotificationTimeDialog(
       initialMinutes: slot.minutesOfDay,
       onTimeSelected: (minutesOfDay) {
         sp.updateHabitNotificationTime(slot.id, minutesOfDay);
       },
+      context: context,
     );
   }
 
@@ -722,304 +717,184 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             ? notificationTimes.last.minutesOfDay
             : 9 * 60;
 
-    await _showNotificationTimeDialog(
+    await showNotificationTimeDialog(
       initialMinutes: initialMinutes,
       onTimeSelected: (minutesOfDay) {
         sp.addHabitNotificationTime(minutesOfDay: minutesOfDay);
       },
+      context: context,
     );
-  }
-
-  Future<void> _showNotificationTimeDialog({
-    required int initialMinutes,
-    required ValueChanged<int> onTimeSelected,
-  }) async {
-    int selectedHour = initialMinutes ~/ 60;
-    int selectedMinute = initialMinutes % 60;
-
-    final hoursController = FixedExtentScrollController(
-      initialItem: selectedHour,
-    );
-    final minutesController = FixedExtentScrollController(
-      initialItem: selectedMinute,
-    );
-
-    try {
-      await showDialogSheet(
-        context: context,
-        builder:
-            (dialogContext) => StatefulBuilder(
-              builder: (dialogContext, setDialogState) {
-                return NewDefaultDialog(
-                  title: "Set notification time",
-                  desc:
-                      "This reminder will trigger only on scheduled habit days.",
-                  onPrimaryButtonPressed: () {
-                    onTimeSelected((selectedHour * 60) + selectedMinute);
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: NumberPicker(
-                    hoursController: hoursController,
-                    minutesController: minutesController,
-                    width: MediaQuery.of(dialogContext).size.width,
-                    onChangedHours: (value) {
-                      setDialogState(() {
-                        selectedHour = value;
-                      });
-                    },
-                    onChangedMinutes: (value) {
-                      setDialogState(() {
-                        selectedMinute = value;
-                      });
-                    },
-                  ),
-                );
-              },
-            ),
-      );
-    } finally {
-      hoursController.dispose();
-      minutesController.dispose();
-    }
   }
 
   Widget notificationSection(ColorProvider cp, StateProvider sp) {
-    return GestureDetector(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: double.infinity,
-        padding: EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          color: cp.field,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: Row(
-                spacing: 10,
-                children: [
-                  Container(
-                    width: 46,
-                    padding: const EdgeInsets.all(13),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      color: cp.orange100,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: cp.orange200, width: 1),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        "assets/images/new-svg/notifications.svg",
-                        colorFilter: ColorFilter.mode(
-                          cp.orange300,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Expanded(
-                    child: Column(
-                      spacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Notifications",
-                          style: TextStyle(
-                            color: cp.text,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          "Get reminded about your habit",
-                          style: TextStyle(
-                            color: cp.lightGreyText,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  NewDefaultSwitch(
-                    value: sp.habitNotificationsEnabled,
-                    onChanged: (value) async {
-                      sp.habitNotificationsEnabled = value;
-                      if (value) {
-                        await Future.delayed(const Duration(milliseconds: 300));
-                        scrollController.animateTo(
-                          scrollController.position.maxScrollExtent,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.decelerate,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 220),
-              transitionBuilder:
-                  (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: SizeTransition(sizeFactor: animation, child: child),
-                  ),
-              child:
-                  sp.habitNotificationsEnabled
-                      ? Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Column(
-                          key: const ValueKey('notifications-expanded'),
-                          spacing: 10,
-                          children: [
-                            ...sp.habitNotificationTimes.map(
-                              (slot) => _notificationTimeRow(cp, sp, slot),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-                              child: NewDefaultButton.secondary(
-                                width: double.infinity,
-                                height: 40,
-                                label: "Add a notification",
-                                prefix: SvgPicture.asset(
-                                  "assets/images/new-svg/add.svg",
-                                  colorFilter: ColorFilter.mode(
-                                    cp.text,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  _openAddNotificationTimeDialog(sp);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                      : const SizedBox.shrink(
-                        key: ValueKey('notifications-off'),
-                      ),
-            ),
-          ],
-        ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: double.infinity,
+      padding: EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: cp.field,
+        borderRadius: BorderRadius.circular(24),
       ),
-    );
-  }
-
-  Widget _notificationTimeRow(
-    ColorProvider cp,
-    StateProvider sp,
-    HabitNotificationTime slot,
-  ) {
-    return GestureDetector(
-      onTapDown: (_) {
-        setState(() {
-          _heldNotificationId = slot.id;
-        });
-      },
-      onTapUp: (_) {
-        setState(() {
-          _heldNotificationId = null;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          _heldNotificationId = null;
-        });
-      },
-      onLongPress: () async {
-        if (sp.habitNotificationTimes.length <= 1) {
-          _statusOverlay.show(
-            context: context,
-            cp: cp,
-            title: "This notification can't be deleted",
-            isError: true,
-          );
-          setState(() {
-            _heldNotificationId = null;
-          });
-          return;
-        }
-
-        await _showDeleteNotificationConfirmation(sp, slot);
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          _heldNotificationId = null;
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: AnimatedScale(
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeOut,
-          scale: _heldNotificationId == slot.id ? 1.04 : 1.0,
-          child: Container(
-            padding: const EdgeInsets.only(
-              top: 4,
-              left: 12,
-              right: 4,
-              bottom: 4,
-            ),
-            clipBehavior: Clip.antiAlias,
-            decoration: ShapeDecoration(
-              color: cp.isDark ? cp.habitBg : cp.bg,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              spacing: 10,
               children: [
-                Text(
-                  "Time",
-                  style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await _openNotificationTimeDialog(sp, slot);
-                  },
-                  child: Container(
-                    height: 46,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: ShapeDecoration(
-                      color: cp.field,
-                      shape: StadiumBorder(),
-                    ),
-                    child: Row(
-                      spacing: 16,
-                      children: [
-                        Text(
-                          _formatTimeOfDayFromMinutes(slot.minutesOfDay),
-                          style: TextStyle(
-                            color: cp.text,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          "assets/images/new-svg/clock.svg",
-                          colorFilter: ColorFilter.mode(
-                            cp.text,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ],
+                Container(
+                  width: 46,
+                  padding: const EdgeInsets.all(13),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: cp.orange100,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: cp.orange200, width: 1),
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      "assets/images/new-svg/notifications.svg",
+                      colorFilter: ColorFilter.mode(
+                        cp.orange300,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
+                ),
+
+                Expanded(
+                  child: Column(
+                    spacing: 8,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Notifications",
+                        style: TextStyle(
+                          color: cp.text,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        "Get reminded about your habit",
+                        style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+                NewDefaultSwitch(
+                  value: sp.habitNotificationsEnabled,
+                  onChanged: (value) async {
+                    sp.habitNotificationsEnabled = value;
+                    if (value) {
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.decelerate,
+                      );
+                    }
+                  },
                 ),
               ],
             ),
           ),
-        ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            transitionBuilder:
+                (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SizeTransition(sizeFactor: animation, child: child),
+                ),
+            child:
+                sp.habitNotificationsEnabled
+                    ? Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Column(
+                        key: const ValueKey('notifications-expanded'),
+                        spacing: 10,
+                        children: [
+                          ...sp.habitNotificationTimes.map(
+                            (slot) => NotificationTimeRow(
+                              onOpenTimeDialog: () async {
+                                await _openNotificationTimeDialog(sp, slot);
+                              },
+                              onTimeSelected: (minutesOfDay) {
+                                sp.updateHabitNotificationTime(
+                                  slot.id,
+                                  minutesOfDay,
+                                );
+                              },
+                              isHabit: true,
+                              minutesOfDay: slot.minutesOfDay,
+                              onTapDown: () {
+                                setState(() {
+                                  heldNotificationId = slot.id;
+                                });
+                              },
+                              onTapUp: () {
+                                setState(() {
+                                  heldNotificationId = null;
+                                });
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  heldNotificationId = null;
+                                });
+                              },
+                              onLongPress: () async {
+                                if (sp.habitNotificationTimes.length <= 1) {
+                                  _statusOverlay.show(
+                                    context: context,
+                                    cp: cp,
+                                    title: "This notification can't be deleted",
+                                    isError: true,
+                                  );
+                                  setState(() {
+                                    heldNotificationId = null;
+                                  });
+                                  return;
+                                }
+
+                                await _showDeleteNotificationConfirmation(
+                                  sp,
+                                  slot,
+                                );
+                                if (!mounted) {
+                                  return;
+                                }
+                                setState(() {
+                                  heldNotificationId = null;
+                                });
+                              },
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+                            child: NewDefaultButton.secondary(
+                              width: double.infinity,
+                              height: 40,
+                              label: "Add a notification",
+                              prefix: SvgPicture.asset(
+                                "assets/images/new-svg/add.svg",
+                                colorFilter: ColorFilter.mode(
+                                  cp.text,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                              onPressed: () async {
+                                await _openAddNotificationTimeDialog(sp);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    : const SizedBox.shrink(key: ValueKey('notifications-off')),
+          ),
+        ],
       ),
     );
   }
