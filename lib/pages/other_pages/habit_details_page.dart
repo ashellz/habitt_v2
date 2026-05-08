@@ -40,6 +40,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   HabitProvider? _habitProvider;
 
   Timer? _notesDebounce;
+  String? _pendingNotes;
   bool _isApplyingExternalNotes = false;
 
   @override
@@ -79,6 +80,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       return;
     }
 
+    // Keep a copy of the latest text so we can persist it immediately
+    // for example on dispose without relying on the debounce timer.
+    _pendingNotes = _notesController.text;
+
     _notesDebounce?.cancel();
     _notesDebounce = Timer(const Duration(milliseconds: 500), () {
       _persistNotesIfNeeded();
@@ -100,7 +105,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       return;
     }
 
-    final newNotes = _notesController.text;
+    // Prefer the pending notes buffer if present — this captures the
+    // very latest edit even if the debounce timer didn't fire yet.
+    final newNotes = _pendingNotes ?? _notesController.text;
+    _pendingNotes = null;
     if (newNotes == habit.description) {
       return;
     }
