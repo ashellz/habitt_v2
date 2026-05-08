@@ -587,14 +587,14 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final mediaQuery = MediaQuery.of(context);
     final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    final maxSheetHeight = mediaQuery.size.height - 59 - 16;
-
     final hasName = sp.nameController.text.trim().isNotEmpty;
     final canSave =
         !_isInitializing &&
         hasName &&
         (!_isEditMode || _hasEditChanges(sp, tp));
     final hasUnsavedChanges = !_isInitializing && _hasUnsavedChanges(sp, tp);
+
+    final maxSheetHeight = mediaQuery.size.height - 59 - 16;
 
     return PopScope(
       canPop: _allowPop || !hasUnsavedChanges,

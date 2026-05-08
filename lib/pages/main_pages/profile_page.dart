@@ -2,9 +2,14 @@ import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -40,6 +45,7 @@ class ProfileTopPart extends StatefulWidget {
 
 class _ProfileTopPartState extends State<ProfileTopPart> {
   String? name;
+  String? email;
 
   @override
   void initState() {
@@ -49,6 +55,7 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         name = prefs.getString('name');
+        email = prefs.getString('backup_user_email');
       });
     });
   }
@@ -56,6 +63,7 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
   @override
   Widget build(BuildContext context) {
     final name = this.name ?? 'Guest';
+    final email = this.email ?? '';
 
     return Container(
       color: widget.cp.bg,
@@ -102,13 +110,14 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Text(
-                      'oliviaolivia@gmail.com',
-                      style: TextStyle(
-                        color: widget.cp.lightGreyText,
-                        fontSize: 16,
+                    if (email.isNotEmpty)
+                      Text(
+                        email,
+                        style: TextStyle(
+                          color: widget.cp.lightGreyText,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],
@@ -140,148 +149,177 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
           height: 44,
           color: cp.bg,
           padding: const EdgeInsets.all(13),
-          onPressed: () async {},
+          onPressed: () async {
+            await showModalBottomSheet(
+              context: context,
+              backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+              barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+              isScrollControlled: true,
+              builder: (context) => EditProfileSheet(),
+            );
+          },
         ),
       ],
     );
   }
 }
 
-class ProfileOptions extends StatelessWidget {
-  const ProfileOptions({super.key, required this.cp});
+class EditProfileSheet extends StatefulWidget {
+  const EditProfileSheet({super.key});
 
-  final ColorProvider cp;
+  @override
+  State<EditProfileSheet> createState() => _EditProfileSheetState();
+}
+
+class _EditProfileSheetState extends State<EditProfileSheet> {
+  bool _isExitDialogOpen = false;
+  bool _allowPop = false;
+  final closeResult = false;
+  final scrollController = ScrollController();
+  final hasUnsavedChanges = false;
+
+  void _popSheet({required bool result}) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _allowPop = true;
+    });
+    Navigator.of(context).pop(result);
+  }
+
+  Future<void> _showExitConfirmation(bool allowPop) async {
+    if (_isExitDialogOpen) {
+      return;
+    }
+
+    final title = "Exit without saving?";
+    final desc = "All changes you made will be discarded.";
+
+    _isExitDialogOpen = true;
+    await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: title,
+            desc: desc,
+            primaryButtonLabel: "Exit",
+            onPrimaryButtonPressed: () {
+              Navigator.of(dialogContext).pop();
+              _popSheet(result: closeResult);
+            },
+          ),
+    );
+    _isExitDialogOpen = false;
+  }
+
+  Future<void> _handleCloseAttempt() async {
+    if (_allowPop || !hasUnsavedChanges) {
+      _popSheet(result: closeResult);
+      return;
+    }
+
+    await _showExitConfirmation(closeResult);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      color: cp.habitBg,
-      child: Column(
-        spacing: 10,
-        children: [
-          GetPremiumWidget(cp: cp),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: ShapeDecoration(
-                  color: cp.field,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1, color: cp.border),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    ProfileOption(
-                      cp: cp,
-                      text: 'Privacy policy',
-                      svgPath: 'assets/images/new-svg/privacy-policy.svg',
-                    ),
+    final cp = context.watch<ColorProvider>();
+    final mediaQuery = MediaQuery.of(context);
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final maxSheetHeight = mediaQuery.size.height - 59 - 16;
+    final canSave = true;
 
-                    Divider(color: cp.border, height: 32),
-                    ProfileOption(
-                      cp: cp,
-                      text: 'Terms of service',
-                      svgPath: 'assets/images/new-svg/terms.svg',
-                    ),
-                    Divider(color: cp.border, height: 32),
-                    ProfileOption(
-                      cp: cp,
-                      text: 'Rate us',
-                      svgPath: 'assets/images/new-svg/rate.svg',
-                    ),
-                    Divider(color: cp.border, height: 32),
-                    ProfileOption(
-                      cp: cp,
-                      text: 'Backup & Sync',
-                      svgPath: 'assets/images/new-svg/backup.svg',
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: ShapeDecoration(
-                  color: cp.field,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1, color: cp.border),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                child: Row(
-                  spacing: 12,
+    return PopScope(
+      canPop: _allowPop || !hasUnsavedChanges,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) {
+          return;
+        }
+        await _handleCloseAttempt();
+      },
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxSheetHeight),
+        child: AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(bottom: keyboardInset),
+          child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Log out',
-                      style: TextStyle(
-                        color: cp.error,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    topSection(context, cp, canSave),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 20,
+                        children: [],
                       ),
                     ),
-                    Spacer(),
-                    SvgPicture.asset(
-                      'assets/images/new-svg/log-out.svg',
-                      colorFilter: ColorFilter.mode(cp.error, BlendMode.srcIn),
-                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
-}
 
-class ProfileOption extends StatelessWidget {
-  const ProfileOption({
-    super.key,
-    required this.cp,
-    required this.text,
-    required this.svgPath,
-  });
-
-  final ColorProvider cp;
-  final String text;
-  final String svgPath;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
+  Padding topSection(BuildContext context, ColorProvider cp, bool canSave) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
       child: Row(
-        spacing: 12,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 20,
-            width: 20,
-            child: SvgPicture.asset(
-              svgPath,
-              colorFilter: ColorFilter.mode(cp.lightGreyText, BlendMode.srcIn),
-              fit: BoxFit.contain,
+          GestureDetector(
+            onTap: () {
+              _handleCloseAttempt();
+            },
+            child: Container(
+              padding: const EdgeInsets.only(left: 16),
+              color: Colors.transparent,
+              height: 36,
+              width: 66 + 16,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/new-svg/back.svg",
+                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                ),
+              ),
             ),
           ),
           Text(
-            text,
+            "Edit profile",
             style: TextStyle(
               color: cp.text,
-              fontSize: 16,
+              fontSize: 22,
               fontWeight: FontWeight.w500,
             ),
           ),
-          Spacer(),
-          RotatedBox(
-            quarterTurns: 2,
-            child: SvgPicture.asset(
-              'assets/images/new-svg/back.svg',
-              colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: NewDefaultButton.primarySmall(
+              enabled: canSave,
+              onPressed: () async {
+                if (!canSave) {
+                  return;
+                }
+                // Save logic here
+              },
+              label: "Save",
             ),
           ),
         ],
