@@ -46,12 +46,12 @@ class BillingService {
     }
   }
 
-  static void presentPaywall() async {
+  static Future<void> presentPaywall() async {
     final paywallResult = await RevenueCatUI.presentPaywall();
     debugPrint('Paywall result: $paywallResult');
   }
 
-  static void presentPaywallIfNeeded() async {
+  static Future<void> presentPaywallIfNeeded() async {
     final paywallResult = await RevenueCatUI.presentPaywallIfNeeded("pro");
     debugPrint('Paywall result: $paywallResult');
   }
