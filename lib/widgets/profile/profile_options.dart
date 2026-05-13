@@ -39,9 +39,14 @@ class ProfileOptions extends StatelessWidget {
                       text: 'Privacy policy',
                       svgPath: 'assets/images/new-svg/privacy-policy.svg',
                       onTap: () async {
-                        final privacyUrl = Uri.parse('https://ashellz.github.io/habitt_v2/privacy.html');
+                        final privacyUrl = Uri.parse(
+                          'https://ashellz.github.io/habitt_v2/privacy.html',
+                        );
                         if (await canLaunchUrl(privacyUrl)) {
-                          await launchUrl(privacyUrl, mode: LaunchMode.externalApplication);
+                          await launchUrl(
+                            privacyUrl,
+                            mode: LaunchMode.externalApplication,
+                          );
                         }
                       },
                     ),
@@ -52,9 +57,14 @@ class ProfileOptions extends StatelessWidget {
                       text: 'Terms of service',
                       svgPath: 'assets/images/new-svg/terms.svg',
                       onTap: () async {
-                        final tosUrl = Uri.parse('https://ashellz.github.io/habitt_v2/tos.html');
+                        final tosUrl = Uri.parse(
+                          'https://ashellz.github.io/habitt_v2/tos.html',
+                        );
                         if (await canLaunchUrl(tosUrl)) {
-                          await launchUrl(tosUrl, mode: LaunchMode.externalApplication);
+                          await launchUrl(
+                            tosUrl,
+                            mode: LaunchMode.externalApplication,
+                          );
                         }
                       },
                     ),
@@ -137,7 +147,10 @@ class ProfileOption extends StatelessWidget {
               width: 20,
               child: SvgPicture.asset(
                 svgPath,
-                colorFilter: ColorFilter.mode(cp.lightGreyText, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  cp.lightGreyText,
+                  BlendMode.srcIn,
+                ),
                 fit: BoxFit.contain,
               ),
             ),
