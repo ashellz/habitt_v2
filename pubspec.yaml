@@ -69,6 +69,7 @@ dependencies:
   purchases_flutter: ^9.11.0
   purchases_ui_flutter: ^9.11.0
   reorderables: ^0.6.0
+  url_launcher: ^6.3.0
 
 
 dev_dependencies:

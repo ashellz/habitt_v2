@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/main_pages/profile_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileOptions extends StatelessWidget {
   const ProfileOptions({super.key, required this.cp});
@@ -37,6 +38,12 @@ class ProfileOptions extends StatelessWidget {
                       cp: cp,
                       text: 'Privacy policy',
                       svgPath: 'assets/images/new-svg/privacy-policy.svg',
+                      onTap: () async {
+                        final privacyUrl = Uri.parse('https://ashellz.github.io/habitt_v2/privacy.html');
+                        if (await canLaunchUrl(privacyUrl)) {
+                          await launchUrl(privacyUrl, mode: LaunchMode.externalApplication);
+                        }
+                      },
                     ),
 
                     Divider(color: cp.border, height: 32),
@@ -44,6 +51,12 @@ class ProfileOptions extends StatelessWidget {
                       cp: cp,
                       text: 'Terms of service',
                       svgPath: 'assets/images/new-svg/terms.svg',
+                      onTap: () async {
+                        final tosUrl = Uri.parse('https://ashellz.github.io/habitt_v2/tos.html');
+                        if (await canLaunchUrl(tosUrl)) {
+                          await launchUrl(tosUrl, mode: LaunchMode.externalApplication);
+                        }
+                      },
                     ),
                     Divider(color: cp.border, height: 32),
                     ProfileOption(
@@ -102,45 +115,50 @@ class ProfileOption extends StatelessWidget {
     required this.cp,
     required this.text,
     required this.svgPath,
+    this.onTap,
   });
 
   final ColorProvider cp;
   final String text;
   final String svgPath;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      child: Row(
-        spacing: 12,
-        children: [
-          SizedBox(
-            height: 20,
-            width: 20,
-            child: SvgPicture.asset(
-              svgPath,
-              colorFilter: ColorFilter.mode(cp.lightGreyText, BlendMode.srcIn),
-              fit: BoxFit.contain,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.transparent,
+        child: Row(
+          spacing: 12,
+          children: [
+            SizedBox(
+              height: 20,
+              width: 20,
+              child: SvgPicture.asset(
+                svgPath,
+                colorFilter: ColorFilter.mode(cp.lightGreyText, BlendMode.srcIn),
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
-          Text(
-            text,
-            style: TextStyle(
-              color: cp.text,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+            Text(
+              text,
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          Spacer(),
-          RotatedBox(
-            quarterTurns: 2,
-            child: SvgPicture.asset(
-              'assets/images/new-svg/back.svg',
-              colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+            Spacer(),
+            RotatedBox(
+              quarterTurns: 2,
+              child: SvgPicture.asset(
+                'assets/images/new-svg/back.svg',
+                colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
