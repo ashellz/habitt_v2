@@ -1,6 +1,7 @@
 import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/pages/other_pages/paywall_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
@@ -28,7 +29,10 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.zero,
-        children: [ProfileTopPart(cp: cp), ProfileOptions(cp: cp)],
+        children: [
+          ProfileTopPart(cp: cp),
+          ProfileOptions(cp: cp),
+        ],
       ),
     );
   }
@@ -199,16 +203,15 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
     _isExitDialogOpen = true;
     await showDialogSheet(
       context: context,
-      builder:
-          (dialogContext) => NewDefaultDialog(
-            title: title,
-            desc: desc,
-            primaryButtonLabel: "Exit",
-            onPrimaryButtonPressed: () {
-              Navigator.of(dialogContext).pop();
-              _popSheet(result: closeResult);
-            },
-          ),
+      builder: (dialogContext) => NewDefaultDialog(
+        title: title,
+        desc: desc,
+        primaryButtonLabel: "Exit",
+        onPrimaryButtonPressed: () {
+          Navigator.of(dialogContext).pop();
+          _popSheet(result: closeResult);
+        },
+      ),
     );
     _isExitDialogOpen = false;
   }
@@ -335,62 +338,67 @@ class GetPremiumWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 92,
-      decoration: BoxDecoration(
-        color: cp.bg,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      clipBehavior: Clip.hardEdge,
-
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/widget-images/premium-widget.png',
-              fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const PaywallPage()),
+        );
+      },
+      child: Container(
+        height: 92,
+        decoration: BoxDecoration(
+          color: cp.bg,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/widget-images/premium-widget.png',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8,
-                  children: [
-                    Text(
-                      'Get Premium',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8,
+                    children: [
+                      Text(
+                        'Get Premium',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-
-                    Text(
-                      'Enjoy all the benefits of the app',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w500,
+                      Text(
+                        'Enjoy all the benefits of the app',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 56,
-                  width: 56,
-                  child: Image.asset(
-                    'assets/images/widget-images/gem.png',
-                    fit: BoxFit.cover,
+                    ],
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 56,
+                    width: 56,
+                    child: Image.asset(
+                      'assets/images/widget-images/gem.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
