@@ -3044,6 +3044,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Target'**
   String get target;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @uploadPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload photo'**
+  String get uploadPhoto;
+
+  /// No description provided for @profileDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile details'**
+  String get profileDetails;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @youDontHaveAnEmailYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have an email yet'**
+  String get youDontHaveAnEmailYet;
+
+  /// No description provided for @yourUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Your username'**
+  String get yourUsername;
 }
 
 class _AppLocalizationsDelegate

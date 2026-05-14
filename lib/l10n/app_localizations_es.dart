@@ -1882,4 +1882,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get target => 'Objetivo';
+
+  @override
+  String get name => 'Nombre';
+
+  @override
+  String get uploadPhoto => 'Subir foto';
+
+  @override
+  String get profileDetails => 'Detalles del perfil';
+
+  @override
+  String get email => 'Correo electrónico';
+
+  @override
+  String get youDontHaveAnEmailYet => 'Aún no tienes correo electrónico';
+
+  @override
+  String get yourUsername => 'Tu nombre de usuario';
 }

@@ -1876,4 +1876,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get target => 'Target';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get uploadPhoto => 'Upload photo';
+
+  @override
+  String get profileDetails => 'Profile details';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get youDontHaveAnEmailYet => 'You don\'t have an email yet';
+
+  @override
+  String get yourUsername => 'Your username';
 }

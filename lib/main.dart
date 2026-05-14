@@ -28,6 +28,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/profile_image_provider.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -90,6 +91,10 @@ Future<void> main() async {
   // Initialize NotificationsProvider
   final notificationsProvider = NotificationsProvider(prefs);
 
+  // Initialize ProfileImageProvider and load cached image once
+  final profileImageProvider = ProfileImageProvider();
+  await profileImageProvider.load();
+
   runApp(
     MultiProvider(
       providers: [
@@ -149,6 +154,11 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ChangeNotifierProvider<NotificationsProvider>.value(
           value: notificationsProvider,
+        ),
+
+        // Profile image provider (loads image once at startup)
+        ChangeNotifierProvider<ProfileImageProvider>.value(
+          value: profileImageProvider,
         ),
 
         // 5. BackupProvider: Depends on HabitProvider for post-merge refresh.
