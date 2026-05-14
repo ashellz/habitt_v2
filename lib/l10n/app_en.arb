@@ -723,5 +723,10 @@
   "monthly": "Monthly",
   "month": "month",
   "habitWillAppearWeekly": "This habit will appear {amount} {label} per week until completed",
-  "habitWillAppearMonthly": "This habit will appear {amount} {label} per month until completed"
+  "habitWillAppearMonthly": "This habit will appear {amount} {label} per month until completed",
+  "selectDaysForHabit": "Select days for this habit:",
+  "leaveUnselected": "Leave unselected if you want the habit too appear every day of the {period} until goals are met",
+  "month2": "month",
+  "week2": "week",
+  "target": "Target"
 }

@@ -1679,7 +1679,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get reportBug => 'Prijavi grešku';
 
   @override
-  String get leaveFeedback => 'Ostavite povratne informacije';
+  String get leaveFeedback => 'Ostavite dojam';
 
   @override
   String get termsOfService => 'Uslovi usluge';
@@ -1861,4 +1861,21 @@ class AppLocalizationsBs extends AppLocalizations {
   String habitWillAppearMonthly(Object amount, Object label) {
     return 'Ova navika će se pojavljivati $amount $label mjesečno dok se ne ispuni';
   }
+
+  @override
+  String get selectDaysForHabit => 'Odaberi dane za ovu naviku:';
+
+  @override
+  String leaveUnselected(Object period) {
+    return 'Ostavi neoznačeno da se navika pojavi svaki dan u $period dok se cilj ne ispuni';
+  }
+
+  @override
+  String get month2 => 'mjesecu';
+
+  @override
+  String get week2 => 'sedmici';
+
+  @override
+  String get target => 'Cilj';
 }

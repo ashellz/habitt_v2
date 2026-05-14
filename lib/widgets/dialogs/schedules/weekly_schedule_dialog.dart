@@ -265,7 +265,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                         children: [
                           const SelectDaysWeekly(),
                           Text(
-                            'Leave unselected if you want the habit too appear every day of the week until completed',
+                            loc.leaveUnselected(loc.week2),
                             style: TextStyle(
                               color: cp.greyText,
                               fontSize: 13,

@@ -1865,4 +1865,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String habitWillAppearMonthly(Object amount, Object label) {
     return 'Este hábito aparecerá $amount $label al mes hasta que se complete';
   }
+
+  @override
+  String get selectDaysForHabit => 'Selecciona los días para este hábito:';
+
+  @override
+  String leaveUnselected(Object period) {
+    return 'Deja sin seleccionar si quieres que el hábito aparezca todos los días del $period hasta que se cumplan los objetivos';
+  }
+
+  @override
+  String get month2 => 'mes';
+
+  @override
+  String get week2 => 'semana';
+
+  @override
+  String get target => 'Objetivo';
 }

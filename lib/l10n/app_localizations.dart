@@ -3014,6 +3014,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This habit will appear {amount} {label} per month until completed'**
   String habitWillAppearMonthly(Object amount, Object label);
+
+  /// No description provided for @selectDaysForHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Select days for this habit:'**
+  String get selectDaysForHabit;
+
+  /// No description provided for @leaveUnselected.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave unselected if you want the habit too appear every day of the {period} until goals are met'**
+  String leaveUnselected(Object period);
+
+  /// No description provided for @month2.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month2;
+
+  /// No description provided for @week2.
+  ///
+  /// In en, this message translates to:
+  /// **'week'**
+  String get week2;
+
+  /// No description provided for @target.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
 }
 
 class _AppLocalizationsDelegate

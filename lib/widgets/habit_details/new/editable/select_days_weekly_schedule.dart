@@ -53,7 +53,7 @@ class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
         spacing: 12,
         children: [
           Text(
-            'Select days for this habit:',
+            loc.selectDaysForHabit,
             style: TextStyle(color: cp.greyText, fontSize: 16),
           ),
           SelectableWeekdays(
