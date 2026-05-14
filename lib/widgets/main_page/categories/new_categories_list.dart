@@ -82,7 +82,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
   void _scheduleFallbackToAll(CategoryProvider categoryProvider) {
     if (_isSchedulingFallback) return; // Avoid multiple schedules
 
-    debugPrint("Scheduling fallback to 'All'");
+    debugPrint(AppLocalizations.of(context)!.schedulingFallbackToAll);
 
     _isSchedulingFallback = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -191,15 +191,15 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final selectedWidth = itemWidths[index];
     final itemCenterOffset = leading + (selectedWidth / 2);
     debugPrint(
-      "Leading: $leading, Selected width: $selectedWidth, Item center offset: $itemCenterOffset",
+      AppLocalizations.of(context)!.leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset,
     );
     final targetScroll = itemCenterOffset - ((viewportWidth + 32) / 2);
-    debugPrint("Calculated target scroll: $targetScroll");
+    debugPrint(AppLocalizations.of(context)!.calculatedTargetScrollTargetscroll);
 
     final maxScroll = _scrollController.position.maxScrollExtent;
 
     final clamped = targetScroll.clamp(0.0, maxScroll);
-    debugPrint("Clamped target scroll: $clamped (Max scroll: $maxScroll)");
+    debugPrint(AppLocalizations.of(context)!.clampedTargetScrollClampedMaxScrollMaxscroll);
     _scrollController.animateTo(
       clamped,
       duration: const Duration(milliseconds: 300),
@@ -225,7 +225,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final selectedId = categoryProvider.selectedCategoryId;
     final visibleIds = _visibleCategoryIds(habitsList);
     for (var id in visibleIds) {
-      debugPrint("Visible category ID: $id");
+      debugPrint(AppLocalizations.of(context)!.visibleCategoryIdId);
     }
     final index = visibleIds.indexOf(selectedId);
     if (index == -1) return;
@@ -240,11 +240,11 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
       if (listBox == null) return;
 
       final viewportWidth = _scrollController.position.viewportDimension;
-      debugPrint("Viewport width: $viewportWidth");
+      debugPrint(AppLocalizations.of(context)!.viewportWidthViewportwidth);
       final listWidth = listBox.size.width;
-      debugPrint("List width: $listWidth");
+      debugPrint(AppLocalizations.of(context)!.listWidthListwidth);
       final deviceWidth = MediaQuery.of(context).size.width;
-      debugPrint("Device width: $deviceWidth");
+      debugPrint(AppLocalizations.of(context)!.deviceWidthDevicewidth);
       if (viewportWidth == 0) return;
 
       final itemWidths = <double>[];
@@ -301,7 +301,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     debugPrint("Selected id: $selectedId | showAll=${widget.showAll}");
     final isSelectedVisible = visibleIds.contains(selectedId);
     debugPrint(
-      "Is selected visible: $isSelectedVisible | wasVisiblePreviously=$wasSelectedVisibleInPreviousFrame | ids=$visibleIds",
+      AppLocalizations.of(context)!.isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids,
     );
 
     if (!isSelectedVisible && wasSelectedVisibleInPreviousFrame) {

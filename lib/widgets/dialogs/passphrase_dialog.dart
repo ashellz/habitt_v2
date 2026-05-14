@@ -3,6 +3,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class PassphraseDialog extends StatefulWidget {
   const PassphraseDialog({
@@ -52,15 +53,15 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
 
     final desc =
         widget.dataExists
-            ? "Enter your existing backup passphrase to access your data."
-            : "This passphrase is used for your data encryption. Save it securely, you will use it again when getting your data on other devices.";
+            ? AppLocalizations.of(context)!.enterYourExistingBackupPassphraseToAccessYourData
+            : AppLocalizations.of(context)!.thisPassphraseIsUsedForYourDataEncryptionSaveItSecurelyYouWillUseItAgainWhenGettingYourDataOnOtherDevices;
 
     return OldDefaultDialog(
-      title: "Backup Passphrase",
+      title: AppLocalizations.of(context)!.backupPassphrase,
       desc: desc,
       content: DefaultTextField(
         controller: widget.controller,
-        title: "Passphrase",
+        title: AppLocalizations.of(context)!.passphrase,
         obscureText: true,
       ),
       leftButtonText: "Cancel",
@@ -78,7 +79,7 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
           );
 
           if (!isCorrectPassphrase && widget.displayAlert != null) {
-            widget.displayAlert!("Incorrect passphrase.");
+            widget.displayAlert!(AppLocalizations.of(context)!.incorrectPassphrase);
           } else {
             await backupProvider.setPassphrase(passphrase);
             await backupProvider.performSync(true);

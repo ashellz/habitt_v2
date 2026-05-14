@@ -48,6 +48,10 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/new-svg
   $AssetsImagesNewSvgGen get newSvg => const $AssetsImagesNewSvgGen();
 
+  /// File path: assets/images/paywall_background.png
+  AssetGenImage get paywallBackground =>
+      const AssetGenImage('assets/images/paywall_background.png');
+
   /// File path: assets/images/splash-dark.png
   AssetGenImage get splashDark =>
       const AssetGenImage('assets/images/splash-dark.png');
@@ -59,6 +63,10 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/svg
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 
+  /// Directory path: assets/images/widget-images
+  $AssetsImagesWidgetImagesGen get widgetImages =>
+      const $AssetsImagesWidgetImagesGen();
+
   /// List of all assets
   List<AssetGenImage> get values => [
     iconDarkAndroid,
@@ -68,6 +76,7 @@ class $AssetsImagesGen {
     iconBackground,
     iconLight,
     iconSplashAndroid,
+    paywallBackground,
     splashDark,
     splashLight,
   ];
@@ -540,6 +549,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/back.svg
   String get back => 'assets/images/new-svg/back.svg';
 
+  /// File path: assets/images/new-svg/backup.svg
+  String get backup => 'assets/images/new-svg/backup.svg';
+
   /// File path: assets/images/new-svg/calendar.svg
   String get calendar => 'assets/images/new-svg/calendar.svg';
 
@@ -696,6 +708,7 @@ class $AssetsImagesNewSvgGen {
     amount,
     arrowLeft,
     back,
+    backup,
     calendar,
     checkOffDark,
     checkOffInvertedDark,
@@ -808,6 +821,21 @@ class $AssetsImagesSvgGen {
     slider,
     stats,
   ];
+}
+
+class $AssetsImagesWidgetImagesGen {
+  const $AssetsImagesWidgetImagesGen();
+
+  /// File path: assets/images/widget-images/gem.png
+  AssetGenImage get gem =>
+      const AssetGenImage('assets/images/widget-images/gem.png');
+
+  /// File path: assets/images/widget-images/premium-widget.png
+  AssetGenImage get premiumWidget =>
+      const AssetGenImage('assets/images/widget-images/premium-widget.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [gem, premiumWidget];
 }
 
 class $AssetsImagesNewSvgLanguagesGen {

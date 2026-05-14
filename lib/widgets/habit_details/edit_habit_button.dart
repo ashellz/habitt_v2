@@ -8,6 +8,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class EditHabitButton extends StatelessWidget {
   const EditHabitButton({
@@ -106,7 +107,7 @@ class EditHabitButton extends StatelessWidget {
 
               Navigator.of(context).pop();
 
-              stateProvider.alertText = "Changes saved!";
+              stateProvider.alertText = AppLocalizations.of(context)!.changesSaved;
               stateProvider.toggleAlert(show: true);
             },
             label: localizations.saveChanges,

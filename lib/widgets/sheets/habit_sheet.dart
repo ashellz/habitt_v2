@@ -34,6 +34,7 @@ import 'package:habitt/widgets/notification/notification_time_row.dart';
 import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 enum HabitSheetCloseResult { saved, dismissed, reopenPremade }
 
@@ -369,11 +370,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       return;
     }
 
-    final title = _isEditMode ? "Exit without saving?" : "Leave setup?";
+    final title = _isEditMode ? AppLocalizations.of(context)!.exitWithoutSaving : AppLocalizations.of(context)!.leaveSetup;
     final desc =
         _isEditMode
-            ? "All changes you made will be discarded."
-            : "All habit configuration you have done will be discarded.";
+            ? AppLocalizations.of(context)!.allChangesYouMadeWillBeDiscarded
+            : AppLocalizations.of(context)!.allHabitConfigurationYouHaveDoneWillBeDiscarded;
 
     _isExitDialogOpen = true;
     await showDialogSheet(
@@ -382,7 +383,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           (dialogContext) => NewDefaultDialog(
             title: title,
             desc: desc,
-            primaryButtonLabel: "Exit",
+            primaryButtonLabel: AppLocalizations.of(context)!.exit,
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();
               _popSheet(result: closeResult);
@@ -430,11 +431,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: "Notifications are disabled",
+            title: AppLocalizations.of(context)!.notificationsAreDisabled,
             desc:
-                "To use habit reminders, enable notifications in your device settings.",
+                AppLocalizations.of(context)!.toUseHabitRemindersEnableNotificationsInYourDeviceSettings,
             primaryButtonLabel: "Settings",
-            secondaryButtonLabel: "Not now",
+            secondaryButtonLabel: AppLocalizations.of(context)!.notNow,
             onPrimaryButtonPressed: () async {
               Navigator.of(dialogContext).pop();
               await AwesomeNotifications().showNotificationConfigPage();
@@ -480,7 +481,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
     if (!mounted) {
       debugPrint(
-        "Not mounted after notification permission request, aborting save.",
+        AppLocalizations.of(context)!.notMountedAfterNotificationPermissionRequestAbortingSave,
       );
       return;
     }
@@ -525,7 +526,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.color = colorToHex(sp.getHabitColor(tp) ?? tp.primaryColor);
 
       habitProvider.updateHabit(habit);
-      sp.alertText = "Changes saved!";
+      sp.alertText = AppLocalizations.of(context)!.changesSaved;
       sp.toggleAlert(show: true);
       if (mounted) {
         _popSheet(result: HabitSheetCloseResult.saved);
@@ -540,7 +541,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         description: sp.descController.text,
         iconPath: sp.iconPath,
         categoryId: sp.habitCategoryId,
-        tag: "No tag",
+        tag: AppLocalizations.of(context)!.noTag,
         completed: false,
         skipped: false,
         amount: sp.habitAmount,
@@ -668,7 +669,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Optional habit",
+          AppLocalizations.of(context)!.optionalHabit,
           style: TextStyle(
             color: cp.text,
             fontSize: 18,
@@ -769,7 +770,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Notifications",
+                        AppLocalizations.of(context)!.notifications,
                         style: TextStyle(
                           color: cp.text,
                           fontSize: 18,
@@ -777,7 +778,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                         ),
                       ),
                       Text(
-                        "Get reminded about your habit",
+                        AppLocalizations.of(context)!.getRemindedAboutYourHabit,
                         style: TextStyle(color: cp.lightGreyText, fontSize: 13),
                       ),
                     ],
@@ -848,7 +849,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                                   _statusOverlay.show(
                                     context: context,
                                     cp: cp,
-                                    title: "This notification can't be deleted",
+                                    title: AppLocalizations.of(context)!.thisNotificationCantBeDeleted,
                                     isError: true,
                                   );
                                   setState(() {
@@ -876,7 +877,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                             child: NewDefaultButton.secondary(
                               width: double.infinity,
                               height: 40,
-                              label: "Add a notification",
+                              label: AppLocalizations.of(context)!.addANotification,
                               prefix: SvgPicture.asset(
                                 "assets/images/new-svg/add.svg",
                                 colorFilter: ColorFilter.mode(
@@ -1076,7 +1077,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                 }
                 await _saveHabit(sp);
               },
-              label: "Save",
+              label: AppLocalizations.of(context)!.save,
             ),
           ),
         ],

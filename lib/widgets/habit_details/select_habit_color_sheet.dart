@@ -4,6 +4,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectHabitColorSheet extends StatelessWidget {
   const SelectHabitColorSheet({
@@ -47,7 +48,7 @@ class SelectHabitColorSheet extends StatelessWidget {
             children: [
               const SizedBox(height: 8),
               Text(
-                "Select habit color",
+                AppLocalizations.of(context)!.selectHabitColor,
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 26,
@@ -58,7 +59,7 @@ class SelectHabitColorSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    "Only visible on Daily plan. Enable 'Colorful' mode in Settings to show on completion.",
+                    AppLocalizations.of(context)!.onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: tp.secondaryTextColor,

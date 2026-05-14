@@ -12,6 +12,7 @@ import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/clear_selected_days_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_days_weekly_schedule.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class WeeklyScheduleDialog extends StatefulWidget {
   const WeeklyScheduleDialog({super.key, required this.rootSnapshot});
@@ -86,8 +87,8 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: "Exit without saving?",
-            primaryButtonLabel: "Exit",
+            title: AppLocalizations.of(context)!.exitWithoutSaving,
+            primaryButtonLabel: AppLocalizations.of(context)!.exit,
             onPrimaryButtonPressed: () {
               sp.weeklyTarget = initialWeeklyTarget;
               sp.selectedDaysAWeek = initialWeeklyDays;
@@ -284,7 +285,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                           ),
                         ),
                         width: double.infinity,
-                        label: "Add more options",
+                        label: AppLocalizations.of(context)!.addMoreOptions,
                       ),
             ),
           ],

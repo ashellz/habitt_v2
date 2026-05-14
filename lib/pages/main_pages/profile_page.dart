@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/other_pages/paywall_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/rate_bug_report_service.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -11,6 +12,7 @@ import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -197,8 +199,8 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
       return;
     }
 
-    final title = "Exit without saving?";
-    final desc = "All changes you made will be discarded.";
+    final title = AppLocalizations.of(context)!.exitWithoutSaving;
+    final desc = AppLocalizations.of(context)!.allChangesYouMadeWillBeDiscarded;
 
     _isExitDialogOpen = true;
     await showDialogSheet(
@@ -206,7 +208,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
       builder: (dialogContext) => NewDefaultDialog(
         title: title,
         desc: desc,
-        primaryButtonLabel: "Exit",
+        primaryButtonLabel: AppLocalizations.of(context)!.exit,
         onPrimaryButtonPressed: () {
           Navigator.of(dialogContext).pop();
           _popSheet(result: closeResult);
@@ -305,7 +307,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
             ),
           ),
           Text(
-            "Edit profile",
+            AppLocalizations.of(context)!.editProfile,
             style: TextStyle(
               color: cp.text,
               fontSize: 22,
@@ -322,7 +324,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 }
                 // Save logic here
               },
-              label: "Save",
+              label: AppLocalizations.of(context)!.save,
             ),
           ),
         ],
@@ -395,6 +397,215 @@ class GetPremiumWidget extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RateReportSheet extends StatefulWidget {
+  const RateReportSheet({super.key});
+
+  @override
+  State<RateReportSheet> createState() => _RateReportSheetState();
+}
+
+class _RateReportSheetState extends State<RateReportSheet> {
+  bool _allowPop = false;
+
+  void _popSheet() {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _allowPop = true;
+    });
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final mediaQuery = MediaQuery.of(context);
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final maxSheetHeight = mediaQuery.size.height - 59 - 16;
+
+    return PopScope(
+      canPop: _allowPop,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) {
+          return;
+        }
+        _popSheet();
+      },
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxSheetHeight),
+        child: AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(bottom: keyboardInset),
+          child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _topSection(context, cp),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
+                        children: [
+                          _RateReportOption(
+                            cp: cp,
+                            text: 'Rate us',
+                            svgPath: 'assets/images/new-svg/rate.svg',
+                            onTap: () async {
+                              try {
+                                await RateBugReportService.rateUs();
+                              } catch (e) {
+                                if (mounted) {
+                                  // ignore: use_build_context_synchronously
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Unable to open rating. Please try again.'),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                          Divider(color: cp.border, height: 32),
+                          _RateReportOption(
+                            cp: cp,
+                            text: 'Report a bug',
+                            svgPath: 'assets/images/new-svg/rate.svg',
+                            onTap: () async {
+                              try {
+                                await RateBugReportService.sendBugReport();
+                              } catch (e) {
+                                if (mounted) {
+                                  // ignore: use_build_context_synchronously
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Unable to open email. Please try again.'),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _topSection(BuildContext context, ColorProvider cp) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              _popSheet();
+            },
+            child: Container(
+              padding: const EdgeInsets.only(left: 16),
+              color: Colors.transparent,
+              height: 36,
+              width: 66 + 16,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SvgPicture.asset(
+                  "assets/images/new-svg/back.svg",
+                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                ),
+              ),
+            ),
+          ),
+          Text(
+            "Rate & Report",
+            style: TextStyle(
+              color: cp.text,
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(width: 66 + 16),
+        ],
+      ),
+    );
+  }
+}
+
+class _RateReportOption extends StatelessWidget {
+  const _RateReportOption({
+    required this.cp,
+    required this.text,
+    required this.svgPath,
+    required this.onTap,
+  });
+
+  final ColorProvider cp;
+  final String text;
+  final String svgPath;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.transparent,
+        child: Row(
+          spacing: 12,
+          children: [
+            SizedBox(
+              height: 20,
+              width: 20,
+              child: SvgPicture.asset(
+                svgPath,
+                colorFilter: ColorFilter.mode(
+                  cp.lightGreyText,
+                  BlendMode.srcIn,
+                ),
+                fit: BoxFit.contain,
+              ),
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Spacer(),
+            RotatedBox(
+              quarterTurns: 2,
+              child: SvgPicture.asset(
+                'assets/images/new-svg/back.svg',
+                colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
               ),
             ),
           ],

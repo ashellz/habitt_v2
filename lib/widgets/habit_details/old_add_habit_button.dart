@@ -8,6 +8,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class OldAddHabitButton extends StatelessWidget {
   const OldAddHabitButton({
@@ -78,7 +79,7 @@ class OldAddHabitButton extends StatelessWidget {
                   description: descController.text,
                   iconPath: stateProvider.iconPath,
                   categoryId: stateProvider.habitCategoryId,
-                  tag: "No tag",
+                  tag: AppLocalizations.of(context)!.noTag,
                   completed: false,
                   skipped: false,
                   amount: stateProvider.habitAmount,
@@ -111,7 +112,7 @@ class OldAddHabitButton extends StatelessWidget {
               );
               Navigator.of(context).pop();
 
-              stateProvider.alertText = "Habit added!";
+              stateProvider.alertText = AppLocalizations.of(context)!.habitAdded;
               stateProvider.toggleAlert(show: true);
             },
             label: localizations.addHabit,

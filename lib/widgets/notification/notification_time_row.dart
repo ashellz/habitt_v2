@@ -5,6 +5,7 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NotificationTimeRow extends StatefulWidget {
   const NotificationTimeRow({
@@ -71,7 +72,7 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Time", style: TextStyle(color: cp.lightGreyText, fontSize: 16)),
+          Text(AppLocalizations.of(context)!.time, style: TextStyle(color: cp.lightGreyText, fontSize: 16)),
           GestureDetector(
             onTap: _handleOpenTimeDialog,
             child: Container(
@@ -175,9 +176,9 @@ Future<void> showNotificationTimeDialog({
           (dialogContext) => StatefulBuilder(
             builder: (dialogContext, setDialogState) {
               return NewDefaultDialog(
-                title: "Set notification time",
+                title: AppLocalizations.of(context)!.setNotificationTime,
                 desc:
-                    "This reminder will trigger only on scheduled habit days.",
+                    AppLocalizations.of(context)!.thisReminderWillTriggerOnlyOnScheduledHabitDays,
                 onPrimaryButtonPressed: () {
                   onTimeSelected((selectedHour * 60) + selectedMinute);
                   Navigator.of(dialogContext).pop();

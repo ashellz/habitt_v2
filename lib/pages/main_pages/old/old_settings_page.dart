@@ -18,6 +18,7 @@ import 'package:tinycolor2/tinycolor2.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:habitt/widgets/old_settings/setting_tile.dart';
 import 'package:habitt/widgets/old_settings/segmented_control.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class OldSettingsPage extends StatefulWidget {
   const OldSettingsPage({super.key});
@@ -139,10 +140,10 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
             return OldDefaultDialog(
               title: title,
               desc:
-                  "You will use this passphrase to decrypt your data when importing it.",
+                  AppLocalizations.of(context)!.youWillUseThisPassphraseToDecryptYourDataWhenImportingIt,
               content: DefaultTextField(
                 controller: controller,
-                title: "Passphrase",
+                title: AppLocalizations.of(context)!.passphrase,
                 obscureText: true,
               ),
               leftButtonText: "Cancel",
@@ -208,8 +209,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                       ],
                     ),
                     SettingTile(
-                      title: "Dark Mode",
-                      desc: "Change a color theme for your interface",
+                      title: AppLocalizations.of(context)!.darkMode,
+                      desc: AppLocalizations.of(context)!.changeAColorThemeForYourInterface,
                       icon: CustomSwitcherWrapper(
                         value: isTinted,
                         widget: Icon(
@@ -233,8 +234,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                       },
                     ),
                     SettingTile(
-                      title: "Accent Color",
-                      desc: "Select a color pallete for your interface",
+                      title: AppLocalizations.of(context)!.accentColor,
+                      desc: AppLocalizations.of(context)!.selectAColorPalleteForYourInterface,
                       trailing: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
@@ -303,7 +304,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Colorful Interface",
+                                  AppLocalizations.of(context)!.colorfulInterface,
                                   style: TextStyle(
                                     color: tp.primaryTextColor,
                                     fontWeight: FontWeight.bold,
@@ -311,7 +312,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                                   ),
                                 ),
                                 Text(
-                                  "Choose how colorful the UI should be",
+                                  AppLocalizations.of(context)!.chooseHowColorfulTheUiShouldBe,
                                   style: TextStyle(color: tp.primaryTextColor),
                                 ),
                                 const SizedBox(height: 8),
@@ -335,8 +336,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: "Glass Feel",
-                      desc: "Makes widgets look more glassy",
+                      title: AppLocalizations.of(context)!.glassFeel,
+                      desc: AppLocalizations.of(context)!.makesWidgetsLookMoreGlassy,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 300),
                         value: isTinted,
@@ -359,8 +360,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: "Notifications",
-                      desc: "Manage your notification preferences",
+                      title: AppLocalizations.of(context)!.notifications,
+                      desc: AppLocalizations.of(context)!.manageYourNotificationPreferences,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 400),
                         value: isTinted,
@@ -385,9 +386,9 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: "Subscriptions",
+                      title: AppLocalizations.of(context)!.subscriptions,
                       desc:
-                          "Manage your subscriptions and view premium benefits",
+                          AppLocalizations.of(context)!.manageYourSubscriptionsAndViewPremiumBenefits,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 500),
                         value: isTinted,
@@ -412,9 +413,9 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: "Backup Data",
+                      title: AppLocalizations.of(context)!.backupData,
                       desc:
-                          "Use your google drive to backup encrypted app data",
+                          AppLocalizations.of(context)!.useYourGoogleDriveToBackupEncryptedAppData,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 600),
                         value: isTinted,
