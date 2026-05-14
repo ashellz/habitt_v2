@@ -287,9 +287,6 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     );
     debugPrint("Selected id: $selectedId | showAll=${widget.showAll}");
     final isSelectedVisible = visibleIds.contains(selectedId);
-    debugPrint(
-      loc.isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids,
-    );
 
     if (!isSelectedVisible && wasSelectedVisibleInPreviousFrame) {
       // If selected category is not visible fallback to "All"

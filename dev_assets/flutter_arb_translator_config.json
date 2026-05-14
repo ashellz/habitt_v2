@@ -1,0 +1,10 @@
+{
+  "OpenAI": {
+    "Url": "https://api.openai.com",
+    "ApiKey": "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"
+  },
+   "DeepL": {
+    "Url": "https://api-free.deepl.com",
+    "ApiKey": "77b92ffa-fbda-4088-af5d-b49ec81d84d7:fx"
+  }
+}

@@ -164,11 +164,11 @@ abstract class AppLocalizations {
   /// **'All changes you\'ve made now will be reset.'**
   String get allChangesYouveMadeNowWillBeReset;
 
-  /// No description provided for @allHabitConfigurationYouHaveDoneWillBeDiscarded.
+  /// No description provided for @habitConfigDiscardDesc.
   ///
   /// In en, this message translates to:
   /// **'All habit configuration you have done will be discarded.'**
-  String get allHabitConfigurationYouHaveDoneWillBeDiscarded;
+  String get habitConfigDiscardDesc;
 
   /// No description provided for @amount.
   ///
@@ -188,18 +188,17 @@ abstract class AppLocalizations {
   /// **'Any time'**
   String get anyTime;
 
-  /// No description provided for @areYouSureYouWantToDeleteThisHabit.
+  /// No description provided for @deleteHabitDesc.
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this habit?'**
-  String get areYouSureYouWantToDeleteThisHabit;
+  String get deleteHabitDesc;
 
-  /// No description provided for @areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually.
+  /// No description provided for @optOutOfBackup.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.'**
-  String
-  get areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually;
+  /// **'Opt out of Backup?'**
+  String get optOutOfBackup;
 
   /// No description provided for @assigningStreaks.
   ///
@@ -237,18 +236,6 @@ abstract class AppLocalizations {
   /// **'Backup Passphrase'**
   String get backupPassphrase;
 
-  /// No description provided for @calculatedTargetScrollTargetscroll.
-  ///
-  /// In en, this message translates to:
-  /// **'Calculated target scroll: \$targetScroll'**
-  String get calculatedTargetScrollTargetscroll;
-
-  /// No description provided for @calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate.
-  ///
-  /// In en, this message translates to:
-  /// **'Calculating week progress. Start of week: \$startOfWeek, Anchor: \$baseDate'**
-  String get calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate;
-
   /// No description provided for @calendar.
   ///
   /// In en, this message translates to:
@@ -260,18 +247,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
-
-  /// No description provided for @categoryCatnameWithIdCatidIsNotReady.
-  ///
-  /// In en, this message translates to:
-  /// **'Category \$catName with id \$catId is not ready'**
-  String get categoryCatnameWithIdCatidIsNotReady;
-
-  /// No description provided for @categoryCatnameWithIdCatidIsReady.
-  ///
-  /// In en, this message translates to:
-  /// **'Category \$catName with id \$catId is ready'**
-  String get categoryCatnameWithIdCatidIsReady;
 
   /// No description provided for @changeAColorThemeForYourInterface.
   ///
@@ -285,30 +260,11 @@ abstract class AppLocalizations {
   /// **'Changes saved!'**
   String get changesSaved;
 
-  /// No description provided for @changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays.
-  ///
-  /// In en, this message translates to:
-  /// **'Changing the amount of times habit appears in a \$habitUnit will clear selected days'**
-  String
-  get changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays;
-
-  /// No description provided for @checkingIosVersionForLiquidGlassSupportIsIosTrue.
-  ///
-  /// In en, this message translates to:
-  /// **'Checking iOS version for Liquid Glass support... Is iOS: true'**
-  String get checkingIosVersionForLiquidGlassSupportIsIosTrue;
-
   /// No description provided for @chooseHowColorfulTheUiShouldBe.
   ///
   /// In en, this message translates to:
   /// **'Choose how colorful the UI should be'**
   String get chooseHowColorfulTheUiShouldBe;
-
-  /// No description provided for @clampedTargetScrollClampedMaxScrollMaxscroll.
-  ///
-  /// In en, this message translates to:
-  /// **'Clamped target scroll: \$clamped (Max scroll: \$maxScroll)'**
-  String get clampedTargetScrollClampedMaxScrollMaxscroll;
 
   /// No description provided for @clear.
   ///
@@ -351,12 +307,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Completed habits: '**
   String get completedHabits;
-
-  /// No description provided for @completingHabitIdDayDaysimple.
-  ///
-  /// In en, this message translates to:
-  /// **'Completing habit: \$id, day: \$daySimple'**
-  String get completingHabitIdDayDaysimple;
 
   /// No description provided for @confirm.
   ///
@@ -436,24 +386,6 @@ abstract class AppLocalizations {
   /// **'Date joined is null'**
   String get dateJoinedIsNull;
 
-  /// No description provided for @dateJoinedSetFromDaysboxDatejoined.
-  ///
-  /// In en, this message translates to:
-  /// **'Date joined set from daysBox: \$_dateJoined'**
-  String get dateJoinedSetFromDaysboxDatejoined;
-
-  /// No description provided for @dateJoinedSetFromSharedpreferencesDatejoined.
-  ///
-  /// In en, this message translates to:
-  /// **'Date joined set from SharedPreferences: \$_dateJoined'**
-  String get dateJoinedSetFromSharedpreferencesDatejoined;
-
-  /// No description provided for @dateJoinedSetToTodayDatejoined.
-  ///
-  /// In en, this message translates to:
-  /// **'Date joined set to today: \$_dateJoined'**
-  String get dateJoinedSetToTodayDatejoined;
-
   /// No description provided for @datejoined.
   ///
   /// In en, this message translates to:
@@ -487,32 +419,14 @@ abstract class AppLocalizations {
   /// No description provided for @deleteLabel.
   ///
   /// In en, this message translates to:
-  /// **'Delete \'\$label\'?'**
-  String get deleteLabel;
+  /// **'Delete \'{label}\'?'**
+  String deleteLabel(Object label);
 
   /// No description provided for @deleteNotification.
   ///
   /// In en, this message translates to:
   /// **'Delete notification?'**
   String get deleteNotification;
-
-  /// No description provided for @deletedAllFilesInFolderIdFolderid.
-  ///
-  /// In en, this message translates to:
-  /// **'Deleted all files in folder ID: \$folderId'**
-  String get deletedAllFilesInFolderIdFolderid;
-
-  /// No description provided for @deletedMetadataFilesInFolderIdFolderid.
-  ///
-  /// In en, this message translates to:
-  /// **'Deleted metadata files in folder ID: \$folderId'**
-  String get deletedMetadataFilesInFolderIdFolderid;
-
-  /// No description provided for @deviceWidthDevicewidth.
-  ///
-  /// In en, this message translates to:
-  /// **'Device width: \$deviceWidth'**
-  String get deviceWidthDevicewidth;
 
   /// No description provided for @discard.
   ///
@@ -604,18 +518,6 @@ abstract class AppLocalizations {
   /// **'Enter your existing backup passphrase to access your data.'**
   String get enterYourExistingBackupPassphraseToAccessYourData;
 
-  /// No description provided for @errorCheckingSubscriptionStatusE.
-  ///
-  /// In en, this message translates to:
-  /// **'Error checking subscription status: \$e'**
-  String get errorCheckingSubscriptionStatusE;
-
-  /// No description provided for @errorFetchingOfferingsE.
-  ///
-  /// In en, this message translates to:
-  /// **'Error fetching offerings: \$e'**
-  String get errorFetchingOfferingsE;
-
   /// No description provided for @evening.
   ///
   /// In en, this message translates to:
@@ -640,24 +542,6 @@ abstract class AppLocalizations {
   /// **'Fetch Offers'**
   String get fetchOffers;
 
-  /// No description provided for @fixedTimeFixedhourfixedminute.
-  ///
-  /// In en, this message translates to:
-  /// **'Fixed time: \$fixedHour:\$fixedMinute'**
-  String get fixedTimeFixedhourfixedminute;
-
-  /// No description provided for @folderNotFoundAndCreationNotAllowed.
-  ///
-  /// In en, this message translates to:
-  /// **'Folder not found and creation not allowed'**
-  String get folderNotFoundAndCreationNotAllowed;
-
-  /// No description provided for @folderidInParentsAndTrashedFalse.
-  ///
-  /// In en, this message translates to:
-  /// **'\'\$folderId\' in parents and trashed = false'**
-  String get folderidInParentsAndTrashedFalse;
-
   /// No description provided for @fri.
   ///
   /// In en, this message translates to:
@@ -675,12 +559,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get reminded about your habit'**
   String get getRemindedAboutYourHabit;
-
-  /// No description provided for @gettingHabitsForHabitsWidgetSelectedDaySelectedday.
-  ///
-  /// In en, this message translates to:
-  /// **'Getting habits for Habits widget ======================================== selected DAY: \$selectedDay '**
-  String get gettingHabitsForHabitsWidgetSelectedDaySelectedday;
 
   /// No description provided for @glassFeel.
   ///
@@ -765,12 +643,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'habits'**
   String get habits;
-
-  /// No description provided for @habitslistheightHabitslistheightContentheightContentheight.
-  ///
-  /// In en, this message translates to:
-  /// **'habitsListHeight: \$habitsListHeight, contentHeight: \$contentHeight'**
-  String get habitslistheightHabitslistheightContentheightContentheight;
 
   /// No description provided for @hello.
   ///
@@ -1372,19 +1244,6 @@ abstract class AppLocalizations {
   /// **'Invalid Time'**
   String get invalidTime;
 
-  /// No description provided for @iosMajorVersionMajorversion.
-  ///
-  /// In en, this message translates to:
-  /// **'iOS Major Version: \$majorVersion'**
-  String get iosMajorVersionMajorversion;
-
-  /// No description provided for @isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids.
-  ///
-  /// In en, this message translates to:
-  /// **'Is selected visible: \$isSelectedVisible | wasVisiblePreviously=\$wasSelectedVisibleInPreviousFrame | ids=\$visibleIds'**
-  String
-  get isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids;
-
   /// No description provided for @keepYourDataSafeByBackingItUpToGoogleDrive.
   ///
   /// In en, this message translates to:
@@ -1397,48 +1256,11 @@ abstract class AppLocalizations {
   /// **'Label'**
   String get label;
 
-  /// No description provided for @lastOpenedDateTemp.
-  ///
-  /// In en, this message translates to:
-  /// **'Last opened date: \$temp'**
-  String get lastOpenedDateTemp;
-
-  /// No description provided for @lastOpenedDateWasNullSettingItToToday.
-  ///
-  /// In en, this message translates to:
-  /// **'Last opened date was null, setting it to: \$today'**
-  String get lastOpenedDateWasNullSettingItToToday;
-
-  /// No description provided for @lastSyncedLastsynctext.
-  ///
-  /// In en, this message translates to:
-  /// **'Last synced: \$lastSyncText'**
-  String get lastSyncedLastsynctext;
-
-  /// No description provided for @lastopeneddate.
-  ///
-  /// In en, this message translates to:
-  /// **'lastOpenedDate'**
-  String get lastopeneddate;
-
-  /// No description provided for @leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset.
-  ///
-  /// In en, this message translates to:
-  /// **'Leading: \$leading, Selected width: \$selectedWidth, Item center offset: \$itemCenterOffset'**
-  String
-  get leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset;
-
   /// No description provided for @leaveSetup.
   ///
   /// In en, this message translates to:
   /// **'Leave setup?'**
   String get leaveSetup;
-
-  /// No description provided for @listWidthListwidth.
-  ///
-  /// In en, this message translates to:
-  /// **'List width: \$listWidth'**
-  String get listWidthListwidth;
 
   /// No description provided for @logDuration.
   ///
@@ -1488,12 +1310,6 @@ abstract class AppLocalizations {
   /// **'Mid-day check-in time for your habits'**
   String get middayCheckinTimeForYourHabits;
 
-  /// No description provided for @mimetypeMimetypeAndNameFoldernameAndTrashedFalseAndRootInParents.
-  ///
-  /// In en, this message translates to:
-  /// **'mimeType = \'\$mimeType\' and name = \'\$folderName\' and trashed = false and \'root\' in parents'**
-  String get mimetypeMimetypeAndNameFoldernameAndTrashedFalseAndRootInParents;
-
   /// No description provided for @minutes.
   ///
   /// In en, this message translates to:
@@ -1524,18 +1340,6 @@ abstract class AppLocalizations {
   /// **'Morning'**
   String get morning;
 
-  /// No description provided for @nameContainsHabittbackupAndFolderidInParentsAndTrashedFalse.
-  ///
-  /// In en, this message translates to:
-  /// **'name contains \'habitt-backup\' and \'\$folderId\' in parents and trashed = false'**
-  String get nameContainsHabittbackupAndFolderidInParentsAndTrashedFalse;
-
-  /// No description provided for @nameMetadatametaAndFolderidInParentsAndTrashedFalse.
-  ///
-  /// In en, this message translates to:
-  /// **'name = \'metadata.meta\' and \'\$folderId\' in parents and trashed = false'**
-  String get nameMetadatametaAndFolderidInParentsAndTrashedFalse;
-
   /// No description provided for @never.
   ///
   /// In en, this message translates to:
@@ -1553,12 +1357,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Habit'**
   String get newHabit;
-
-  /// No description provided for @noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime.
-  ///
-  /// In en, this message translates to:
-  /// **'No category is \'ready\'. Applying fallback logic for \$currentTimeSlotName time.'**
-  String get noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime;
 
   /// No description provided for @noHabitsFoundUsingDefaultCategoryOrder.
   ///
@@ -1589,12 +1387,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not completed'**
   String get notCompleted;
-
-  /// No description provided for @notMountedAfterNotificationPermissionRequestAbortingSave.
-  ///
-  /// In en, this message translates to:
-  /// **'Not mounted after notification permission request, aborting save.'**
-  String get notMountedAfterNotificationPermissionRequestAbortingSave;
 
   /// No description provided for @notNow.
   ///
@@ -2356,12 +2148,6 @@ abstract class AppLocalizations {
   /// **'Number of days in a row you have completed all your habits.'**
   String get numberOfDaysInARowYouHaveCompletedAllYourHabits;
 
-  /// No description provided for @numberOfHoursNumberofhours.
-  ///
-  /// In en, this message translates to:
-  /// **'Number of hours: \$numberOfHours'**
-  String get numberOfHoursNumberofhours;
-
   /// No description provided for @onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion.
   ///
   /// In en, this message translates to:
@@ -2374,12 +2160,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Opt out'**
   String get optOut;
-
-  /// No description provided for @optOutOfBackup.
-  ///
-  /// In en, this message translates to:
-  /// **'Opt out of Backup?'**
-  String get optOutOfBackup;
 
   /// No description provided for @optionalHabit.
   ///
@@ -2441,18 +2221,6 @@ abstract class AppLocalizations {
   /// **'Reset changes?'**
   String get resetChanges;
 
-  /// No description provided for @returningDaysProgressDaysprogress.
-  ///
-  /// In en, this message translates to:
-  /// **'Returning Days progress: \$daysProgress'**
-  String get returningDaysProgressDaysprogress;
-
-  /// No description provided for @runningUpdatelastopeneddate.
-  ///
-  /// In en, this message translates to:
-  /// **'Running _updateLastOpenedDate'**
-  String get runningUpdatelastopeneddate;
-
   /// No description provided for @sat.
   ///
   /// In en, this message translates to:
@@ -2477,18 +2245,6 @@ abstract class AppLocalizations {
   /// **'Save Changes'**
   String get saveChanges;
 
-  /// No description provided for @savingDayAtDaysimple.
-  ///
-  /// In en, this message translates to:
-  /// **'Saving day at: \$daySimple'**
-  String get savingDayAtDaysimple;
-
-  /// No description provided for @scheduledTodayToggledValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Scheduled Today toggled: \$value'**
-  String get scheduledTodayToggledValue;
-
   /// No description provided for @schedulingAndAlerts.
   ///
   /// In en, this message translates to:
@@ -2501,11 +2257,11 @@ abstract class AppLocalizations {
   /// **'Scheduling fallback to \'All\''**
   String get schedulingFallbackToAll;
 
-  /// No description provided for @selectAColorPalleteForYourInterface.
+  /// No description provided for @selectAColorPaletteForYourInterface.
   ///
   /// In en, this message translates to:
-  /// **'Select a color pallete for your interface'**
-  String get selectAColorPalleteForYourInterface;
+  /// **'Select a color palette for your interface'**
+  String get selectAColorPaletteForYourInterface;
 
   /// No description provided for @selectHabitColor.
   ///
@@ -2536,36 +2292,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Selected'**
   String get selected;
-
-  /// No description provided for @selectedCategoryIdInBuildSelectedcategoryid.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected category id in build: \$selectedCategoryId'**
-  String get selectedCategoryIdInBuildSelectedcategoryid;
-
-  /// No description provided for @selectedHourValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected hour: \$value'**
-  String get selectedHourValue;
-
-  /// No description provided for @selectedMinuteIndex.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected minute: \$index'**
-  String get selectedMinuteIndex;
-
-  /// No description provided for @selectedTypeRightBeforeNavigationSelectedtype.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected type right before navigation: \$selectedType'**
-  String get selectedTypeRightBeforeNavigationSelectedtype;
-
-  /// No description provided for @selectedTypeSelectedtype.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected type: \$selectedType'**
-  String get selectedTypeSelectedtype;
 
   /// No description provided for @setAmountLabel.
   ///
@@ -2621,12 +2347,6 @@ abstract class AppLocalizations {
   /// **'Skipped habit found, {habitsSkipped} total'**
   String skippedHabitFoundHabitsskippedTotal(Object habitsSkipped);
 
-  /// No description provided for @skippingHabitId.
-  ///
-  /// In en, this message translates to:
-  /// **'Skipping habit: \$id'**
-  String get skippingHabitId;
-
   /// No description provided for @skippingHabitNotAllowedHabitDayBeforeSkipped.
   ///
   /// In en, this message translates to:
@@ -2645,12 +2365,6 @@ abstract class AppLocalizations {
   /// **'Stats'**
   String get stats;
 
-  /// No description provided for @streakStreakLongestStreakLongeststreak.
-  ///
-  /// In en, this message translates to:
-  /// **'Streak: \$streak, Longest Streak: \$longestStreak'**
-  String get streakStreakLongestStreakLongeststreak;
-
   /// No description provided for @subscriptions.
   ///
   /// In en, this message translates to:
@@ -2666,8 +2380,8 @@ abstract class AppLocalizations {
   /// No description provided for @syncErrorErrormessage.
   ///
   /// In en, this message translates to:
-  /// **'Sync error: \$errorMessage'**
-  String get syncErrorErrormessage;
+  /// **'Sync error: {errorMessage}'**
+  String syncErrorErrormessage(Object errorMessage);
 
   /// No description provided for @syncNow.
   ///
@@ -2684,8 +2398,8 @@ abstract class AppLocalizations {
   /// No description provided for @syncingProgressmessage.
   ///
   /// In en, this message translates to:
-  /// **'Syncing: \$progressMessage'**
-  String get syncingProgressmessage;
+  /// **'Syncing: {progressMessage}'**
+  String syncingProgressmessage(Object progressMessage);
 
   /// No description provided for @tappedAmount.
   ///
@@ -2736,12 +2450,6 @@ abstract class AppLocalizations {
   /// **'This reminder will trigger only on scheduled habit days.'**
   String get thisReminderWillTriggerOnlyOnScheduledHabitDays;
 
-  /// No description provided for @thisWeekDaysThisweekdays.
-  ///
-  /// In en, this message translates to:
-  /// **'This week days: \$thisWeekDays'**
-  String get thisWeekDaysThisweekdays;
-
   /// No description provided for @thu.
   ///
   /// In en, this message translates to:
@@ -2753,12 +2461,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time'**
   String get time;
-
-  /// No description provided for @timeTypeTimetype.
-  ///
-  /// In en, this message translates to:
-  /// **'Time type: \$timeType'**
-  String get timeTypeTimetype;
 
   /// No description provided for @times.
   ///
@@ -2796,37 +2498,6 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get unknown;
 
-  /// No description provided for @unknownCatid.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown \$catId'**
-  String get unknownCatid;
-
-  /// No description provided for @unknownCurrenttimeslotfallbackid.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown \$currentTimeSlotFallbackId'**
-  String get unknownCurrenttimeslotfallbackid;
-
-  /// No description provided for @updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated selected date progress: \$newSelectedProgress (was: \$oldSelectedProgress)'**
-  String
-  get updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress;
-
-  /// No description provided for @updatedTodaysProgressNewtodayprogressWasOldtodayprogress.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated today\'s progress: \$newTodayProgress (was: \$oldTodayProgress)'**
-  String get updatedTodaysProgressNewtodayprogressWasOldtodayprogress;
-
-  /// No description provided for @updatingHabitInDbHabit.
-  ///
-  /// In en, this message translates to:
-  /// **'Updating habit in DB: \$habit'**
-  String get updatingHabitInDbHabit;
-
   /// No description provided for @uploadingBackupToCloud.
   ///
   /// In en, this message translates to:
@@ -2838,24 +2509,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use your google drive to backup encrypted app data'**
   String get useYourGoogleDriveToBackupEncryptedAppData;
-
-  /// No description provided for @usingCustomAndroidNavBar.
-  ///
-  /// In en, this message translates to:
-  /// **'Using custom Android nav bar'**
-  String get usingCustomAndroidNavBar;
-
-  /// No description provided for @viewportWidthViewportwidth.
-  ///
-  /// In en, this message translates to:
-  /// **'Viewport width: \$viewportWidth'**
-  String get viewportWidthViewportwidth;
-
-  /// No description provided for @visibleCategoryIdId.
-  ///
-  /// In en, this message translates to:
-  /// **'Visible category ID: \$id'**
-  String get visibleCategoryIdId;
 
   /// No description provided for @wed.
   ///
@@ -3001,6 +2654,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Backup & Sync'**
   String get backupAndSync;
+
+  /// No description provided for @lastSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced: {lastSynced}'**
+  String lastSynced(Object lastSynced);
+
+  /// No description provided for @changeHabitTimesInPeriodWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the amount of times habit appears in a {period} will clear selected days'**
+  String changeHabitTimesInPeriodWarning(Object period);
 }
 
 class _AppLocalizationsDelegate
