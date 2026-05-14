@@ -25,11 +25,12 @@ class DeleteNotificationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.read<ColorProvider>();
     final sp = context.read<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return NewDefaultDialog(
-      title: AppLocalizations.of(context)!.deleteNotification,
-      desc: AppLocalizations.of(context)!.thisNotificationTimeWillBeRemoved,
-      primaryButtonLabel: AppLocalizations.of(context)!.delete,
+      title: loc.deleteNotification,
+      desc: loc.thisNotificationTimeWillBeRemoved,
+      primaryButtonLabel: loc.delete,
       primaryButtonColor: cp.fail,
       onPrimaryButtonPressed: () {
         final removed = sp.removeHabitNotificationTime(slot.id);
@@ -45,7 +46,7 @@ class DeleteNotificationDialog extends StatelessWidget {
           title:
               removed
                   ? 'Notification deleted'
-                  : AppLocalizations.of(context)!.thisNotificationCantBeDeleted,
+                  : loc.thisNotificationCantBeDeleted,
           isError: !removed,
         );
       },

@@ -14,6 +14,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 250),
@@ -67,7 +68,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 12),
                       child: Text(
-                        AppLocalizations.of(context)!.selectHabitColor,
+                        loc.selectHabitColor,
                         style: TextStyle(
                           color: tp.primaryTextColor,
                           fontSize: 16,

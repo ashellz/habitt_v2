@@ -107,7 +107,9 @@ class EditHabitButton extends StatelessWidget {
 
               Navigator.of(context).pop();
 
-              stateProvider.alertText = AppLocalizations.of(context)!.changesSaved;
+              final loc = AppLocalizations.of(context)!;
+
+              stateProvider.alertText = loc.changesSaved;
               stateProvider.toggleAlert(show: true);
             },
             label: localizations.saveChanges,

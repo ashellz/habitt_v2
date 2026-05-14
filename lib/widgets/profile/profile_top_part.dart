@@ -1,0 +1,140 @@
+import 'package:cupertino_native_better/style/sf_symbol.dart';
+import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/new_circle_button.dart';
+import 'package:habitt/widgets/profile/edit_profile_sheet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinycolor2/tinycolor2.dart';
+
+class ProfileTopPart extends StatefulWidget {
+  const ProfileTopPart({super.key, required this.cp});
+
+  final ColorProvider cp;
+
+  @override
+  State<ProfileTopPart> createState() => _ProfileTopPartState();
+}
+
+class _ProfileTopPartState extends State<ProfileTopPart> {
+  String? name;
+  String? email;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Loading name
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        name = prefs.getString('name');
+        email = prefs.getString('backup_user_email');
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final name = this.name ?? loc.guest;
+    final email = this.email ?? '';
+
+    return Container(
+      color: widget.cp.bg,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 20 + MediaQuery.of(context).padding.top,
+          left: 16,
+          right: 16,
+        ),
+        child: Column(
+          spacing: 14,
+          children: [
+            _topBar(widget.cp),
+            Column(
+              spacing: 16,
+              children: [
+                Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.teal,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      name.substring(0, 1),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                Column(
+                  spacing: 8,
+                  children: [
+                    Text(
+                      name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: widget.cp.text,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (email.isNotEmpty)
+                      Text(
+                        email,
+                        style: TextStyle(
+                          color: widget.cp.lightGreyText,
+                          fontSize: 16,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row _topBar(ColorProvider cp) {
+    final loc = AppLocalizations.of(context)!;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          loc.profile,
+          style: TextStyle(
+            color: cp.text,
+            fontSize: 22,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+        NewCircleButton(
+          svgPath: 'assets/images/new-svg/edit.svg',
+          cnIcon: CNSymbol('pencil.line', size: 14),
+          width: 44,
+          height: 44,
+          color: cp.bg,
+          padding: const EdgeInsets.all(13),
+          onPressed: () async {
+            await showModalBottomSheet(
+              context: context,
+              backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+              barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+              isScrollControlled: true,
+              builder: (context) => EditProfileSheet(),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}

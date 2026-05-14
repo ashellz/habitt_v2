@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectHabitType extends StatefulWidget {
   const SelectHabitType({
@@ -129,7 +128,6 @@ class _TypeButton extends StatelessWidget {
           style: TextStyle(
             color: selected ? selectedTextColor : unselectedTextColor,
             fontSize: 14,
-            fontFamily: AppLocalizations.of(context)!.satoshi,
             fontWeight: FontWeight.w500,
           ),
           child: Text(label),

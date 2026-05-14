@@ -109,7 +109,7 @@ class _SelectHabitTimeBodyState extends State<SelectHabitTimeBody> {
             ? TimeType.overday
             : TimeType.regular;
 
-    debugPrint(AppLocalizations.of(context)!.timeTypeTimetype);
+    debugPrint("Time type: $timeType");
 
     double? startHour =
         sp.timeIntervalEnabled ? widget.timeIntervalStart / 60 : null;

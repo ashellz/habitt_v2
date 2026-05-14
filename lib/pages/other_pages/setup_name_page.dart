@@ -81,6 +81,7 @@ class _SetupNamePageState extends State<SetupNamePage>
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -103,7 +104,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.welcomeToHabitt,
+                        loc.welcomeToHabitt,
                         style: TextStyle(
                           color: tp.primaryTextColor,
                           fontSize: 24,
@@ -112,7 +113,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        AppLocalizations.of(context)!.whatShouldWeCallYou,
+                        loc.whatShouldWeCallYou,
                         style: TextStyle(color: tp.primaryTextColor),
                         textAlign: TextAlign.center,
                       ),
@@ -128,7 +129,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                           filled: true,
                           fillColor: tp.mutedTextColor.withAlpha(50),
 
-                          hintText: AppLocalizations.of(context)!.yourName,
+                          hintText: loc.yourName,
                           hintStyle: TextStyle(color: tp.mutedTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),

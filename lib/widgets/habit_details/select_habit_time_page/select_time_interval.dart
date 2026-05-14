@@ -34,7 +34,12 @@ class SelectTimeInterval extends StatelessWidget {
     );
   }
 
-  Row titleAndSwitch(BuildContext context, bool timeIntervalEnabled, StateProvider sp) {
+  Row titleAndSwitch(
+    BuildContext context,
+    bool timeIntervalEnabled,
+    StateProvider sp,
+  ) {
+    final loc = AppLocalizations.of(context)!;
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +56,7 @@ class SelectTimeInterval extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 12),
           child: Text(
-            AppLocalizations.of(context)!.selectTimeInterval,
+            loc.selectTimeInterval,
             style: TextStyle(
               color: tp.primaryTextColor,
               fontSize: 16,
@@ -77,10 +82,11 @@ class SelectTimeInterval extends StatelessWidget {
     int timeIntervalEnd,
     StateProvider sp,
   ) {
+    final loc = AppLocalizations.of(context)!;
     return Row(
       children: [
         _selectIntervalButton(
-          label: AppLocalizations.of(context)!.from,
+          label: loc.from,
           onPressed: () {
             showDialog(
               context: context,
@@ -96,7 +102,7 @@ class SelectTimeInterval extends StatelessWidget {
 
         SizedBox(width: 12),
         _selectIntervalButton(
-          label: AppLocalizations.of(context)!.to,
+          label: loc.to,
           onPressed: () {
             showDialog(
               context: context,

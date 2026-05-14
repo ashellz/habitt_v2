@@ -15,6 +15,7 @@ class PerfectDaysStreak extends StatelessWidget {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final statsProvider = context.watch<StatsProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return Stack(
       alignment: Alignment.bottomRight,
@@ -24,7 +25,7 @@ class PerfectDaysStreak extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                AppLocalizations.of(context)!.perfectDaysStreak,
+                loc.perfectDaysStreak,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -68,7 +69,7 @@ class PerfectDaysStreak extends StatelessWidget {
               controller: tooltipController,
               backgroundColor: tp.surfaceColor,
               content: Text(
-                AppLocalizations.of(context)!.numberOfDaysInARowYouHaveCompletedAllYourHabits,
+                loc.numberOfDaysInARowYouHaveCompletedAllYourHabits,
                 style: TextStyle(color: tp.primaryTextColor),
               ),
               showBarrier: false,

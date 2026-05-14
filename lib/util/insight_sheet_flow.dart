@@ -172,7 +172,7 @@ class InsightSheetFlow {
         candidate.insight == HabitStrengthInsight.pushHarder &&
         candidate.habit.optional;
 
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final fromValue =
         recommendation == null
             ? null
@@ -189,7 +189,7 @@ class InsightSheetFlow {
             );
 
     final insightCopy = HabitStrengthInsightTextService.buildDialogCopy(
-      localizations: localizations,
+      localizations: loc,
       habit: candidate.habit,
       insight: candidate.insight,
       isMotivationOnly: isMotivationOnly,

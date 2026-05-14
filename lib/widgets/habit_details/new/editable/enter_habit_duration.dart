@@ -16,6 +16,7 @@ class EnterHabitDuration extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap:
@@ -23,8 +24,8 @@ class EnterHabitDuration extends StatelessWidget {
             context: context,
             builder: (context) {
               return NewDefaultDialog(
-                title: AppLocalizations.of(context)!.setDuration,
-                desc: AppLocalizations.of(context)!.howLongWillThisHabitTake,
+                title: loc.setDuration,
+                desc: loc.howLongWillThisHabitTake,
                 child: DurationProgressInput(
                   duration: sp.habitDuration.inMinutes,
                 ),

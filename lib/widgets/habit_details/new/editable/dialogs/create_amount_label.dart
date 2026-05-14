@@ -40,13 +40,14 @@ class _CreateAmountLabelDialogState extends State<CreateAmountLabelDialog> {
   @override
   Widget build(BuildContext context) {
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, child) {
         return NewDefaultDialog(
-          title: AppLocalizations.of(context)!.createAmountLabel,
-          desc: AppLocalizations.of(context)!.addANewAmountLabelYouCanReuseLater,
+          title: loc.createAmountLabel,
+          desc: loc.addANewAmountLabelYouCanReuseLater,
           primaryButtonEnabled: value.text.trim().isNotEmpty,
           onSecondaryButtonPressed: widget.onCancel,
           onPrimaryButtonPressed: () {
@@ -63,9 +64,9 @@ class _CreateAmountLabelDialogState extends State<CreateAmountLabelDialog> {
           },
           child: NewDefaultTextField(
             controller: controller,
-            title: AppLocalizations.of(context)!.amountName,
+            title: loc.amountName,
             fontWeight: FontWeight.w500,
-            hint: AppLocalizations.of(context)!.amountName,
+            hint: loc.amountName,
           ),
         );
       },

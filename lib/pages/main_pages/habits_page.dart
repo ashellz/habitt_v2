@@ -51,6 +51,7 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 
   Container scheduledTodayToggle(ColorProvider cp) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -71,7 +72,7 @@ class _HabitsPageState extends State<HabitsPage> {
           NewDefaultSwitch(
             value: _isScheduledTodayOn,
             onChanged: (value) {
-              debugPrint(AppLocalizations.of(context)!.scheduledTodayToggledValue);
+              debugPrint(loc.scheduledTodayToggledValue);
               setState(() {
                 _isScheduledTodayOn = value;
               });

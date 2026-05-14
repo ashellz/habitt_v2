@@ -28,11 +28,12 @@ class DeleteLabelDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.read<ColorProvider>();
     final sp = context.read<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return NewDefaultDialog(
-      title: AppLocalizations.of(context)!.deleteLabel,
-      desc: AppLocalizations.of(context)!.thisAmountLabelWillBeRemoved,
-      primaryButtonLabel: AppLocalizations.of(context)!.delete,
+      title: loc.deleteLabel,
+      desc: loc.thisAmountLabelWillBeRemoved,
+      primaryButtonLabel: loc.delete,
       primaryButtonColor: cp.fail,
       onPrimaryButtonPressed: () {
         final removed = sp.removeCustomAmountLabel(label);
@@ -50,7 +51,7 @@ class DeleteLabelDialog extends StatelessWidget {
         _statusOverlay.show(
           context: context,
           cp: cp,
-          title: removed ? 'Amount label deleted' : AppLocalizations.of(context)!.thisLabelCantBeDeleted,
+          title: removed ? 'Amount label deleted' : loc.thisLabelCantBeDeleted,
           isError: !removed,
         );
       },
