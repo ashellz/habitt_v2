@@ -192,7 +192,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
 
     final platform = Theme.of(context).platform;
     final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
@@ -264,7 +264,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           ],
                         ),
                         Text(
-                          localizations.editHabit,
+                          loc.editHabit,
                           style: TextStyle(
                             fontSize: 38,
                             fontWeight: FontWeight.bold,
@@ -286,16 +286,16 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           habitsCount: false,
                         ),
                         DefaultTextField(
-                          title: localizations.habitName,
+                          title: loc.habitName,
                           controller: _nameController,
                         ),
                         DefaultTextField(
                           topPadding: 16,
-                          title: localizations.notes,
+                          title: loc.notes,
                           controller: _descController,
                           maxLines: 5,
                         ),
-                        MoreOptionsText(localizations: localizations),
+                        MoreOptionsText(localizations: loc),
                         SelectHabitTypeOptions(),
                         SchedulingAndAlerts(tp: tp),
                         OptionalHabitSwitch(
@@ -323,9 +323,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                       context: context,
                                       builder:
                                           (context) => OldDefaultDialog(
-                                            title: AppLocalizations.of(context)!.resetChanges,
+                                            title: loc.resetChanges,
                                             desc:
-                                                AppLocalizations.of(context)!.allChangesYouveMadeNowWillBeReset,
+                                                loc.allChangesYouveMadeNowWillBeReset,
                                             content: Row(
                                               children: [
                                                 Expanded(
@@ -341,7 +341,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                                 SizedBox(width: 16),
                                                 Expanded(
                                                   child: DefaultButton(
-                                                    label: AppLocalizations.of(context)!.reset,
+                                                    label: loc.reset,
                                                     onPressed: () {
                                                       setInitialValues();
                                                       Navigator.pop(context);
@@ -352,7 +352,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                             ),
                                           ),
                                     ),
-                                label: AppLocalizations.of(context)!.reset,
+                                label: loc.reset,
                                 outlined: true,
                                 color: tp.backgroundColor,
                                 borderColor: tp.primaryButtonBackground,
@@ -367,7 +367,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 widget: widget,
                                 initialDuration: initialDuration,
                                 descController: _descController,
-                                localizations: localizations,
+                                localizations: loc,
                               ),
                             ),
                           ],

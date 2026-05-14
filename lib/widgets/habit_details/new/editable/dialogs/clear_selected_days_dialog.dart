@@ -20,14 +20,14 @@ class ClearSelectedDaysDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sp = context.watch<StateProvider>();
-
+    final loc = AppLocalizations.of(context)!;
     final String habitUnit = type == ScheduleType.weekly ? 'week' : 'month';
 
     return NewDefaultDialog(
-      title: AppLocalizations.of(context)!.clearSelectedDays,
+      title: loc.clearSelectedDays,
       desc:
-          AppLocalizations.of(context)!.changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays,
-      primaryButtonLabel: AppLocalizations.of(context)!.clear,
+          loc.changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays,
+      primaryButtonLabel: loc.clear,
       onPrimaryButtonPressed: () {
         switch (type) {
           case ScheduleType.weekly:

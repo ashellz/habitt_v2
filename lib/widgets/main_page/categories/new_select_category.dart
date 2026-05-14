@@ -27,7 +27,7 @@ class NewSelectCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
 
@@ -48,7 +48,7 @@ class NewSelectCategoryWidget extends StatelessWidget {
                 ? cp.habitBg
                 : cp.bg,
         child: Text(
-          getLocalizedCategoryName(category, localizations),
+          getLocalizedCategoryName(category, loc),
           style: TextStyle(
             color: isSelected ? cp.bg : cp.lightGreyText,
             fontSize: 14,

@@ -16,6 +16,8 @@ class OptionalHabitSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,7 +25,7 @@ class OptionalHabitSwitch extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                AppLocalizations.of(context)!.optionalHabit,
+                loc.optionalHabit,
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 16,
@@ -42,7 +44,7 @@ class OptionalHabitSwitch extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 55),
             child: Text(
-              AppLocalizations.of(context)!.ifCheckedHabitWontCountForThePerfectDaysStreak,
+              loc.ifCheckedHabitWontCountForThePerfectDaysStreak,
               style: TextStyle(color: tp.primaryTextColor),
             ),
           ),

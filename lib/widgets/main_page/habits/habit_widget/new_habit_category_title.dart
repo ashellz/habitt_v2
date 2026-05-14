@@ -83,10 +83,12 @@ class _NewHabitCategoryTitleState extends State<NewHabitCategoryTitle>
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    
+
     // Show "Now" badge only if this is the first category AND it matches current time
     final shouldShowNow = widget.isFirst && _isCategoryInCurrentTimeRange();
-    
+
+    final loc = AppLocalizations.of(context)!;
+
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       child: Row(
@@ -113,7 +115,7 @@ class _NewHabitCategoryTitleState extends State<NewHabitCategoryTitle>
               ),
               child: Center(
                 child: Text(
-                  AppLocalizations.of(context)!.now,
+                  loc.now,
                   style: TextStyle(color: cp.text, fontSize: 13),
                 ),
               ),

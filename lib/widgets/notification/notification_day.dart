@@ -56,11 +56,13 @@ class NotificationDay extends StatelessWidget {
             ? '7:00 PM - 3:59 AM'
             : '$start:00 - ${end - 1}:59';
 
+    final loc = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder:
           (context) => OldDefaultDialog(
-            title: AppLocalizations.of(context)!.invalidTime,
+            title: loc.invalidTime,
             desc:
                 'Please select a time within the ${notificationPeriod.name} period ($rangeText)',
             rightButtonText: "Got it",

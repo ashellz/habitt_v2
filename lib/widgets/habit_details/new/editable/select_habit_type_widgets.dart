@@ -99,7 +99,7 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
 
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
-    debugPrint(AppLocalizations.of(context)!.tappedAmount);
+    debugPrint("Tapped amount");
 
     setState(() {
       alignDuration = Duration(milliseconds: 250);
@@ -142,13 +142,13 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
         stateProvider.habitDuration = Duration.zero;
       });
 
-      debugPrint(AppLocalizations.of(context)!.selectedTypeSelectedtype);
+      debugPrint("Selected type: $selectedType");
     }
   }
 
   // This toggles the duration type on tap, and navigates if selected
   void onTapDuration() {
-    debugPrint(AppLocalizations.of(context)!.tappedDuration);
+    debugPrint("Tapped duration");
     setState(() {
       alignDuration = Duration(milliseconds: 250);
     });

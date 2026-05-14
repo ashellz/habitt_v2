@@ -23,7 +23,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final tp = context.watch<ThemeProvider>();
     final bool isSelected = type == selectedType;
     final double screenWidth = MediaQuery.of(context).size.width - 40;
@@ -79,8 +79,8 @@ class SelectHabitTypeWidget extends StatelessWidget {
                         child: FittedBox(
                           child: Text(
                             type == OldHabitType.amount
-                                ? localizations.amount
-                                : localizations.duration,
+                                ? loc.amount
+                                : loc.duration,
                             style: TextStyle(
                               color: tp.primaryTextColor,
                               fontSize: 22,
@@ -97,7 +97,7 @@ class SelectHabitTypeWidget extends StatelessWidget {
                       child:
                           isSelected
                               ? Text(
-                                "${localizations.selected}: ${type == OldHabitType.amount ? habitAmount : habitDuration}",
+                                "${loc.selected}: ${type == OldHabitType.amount ? habitAmount : habitDuration}",
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: tp.primaryTextColor,

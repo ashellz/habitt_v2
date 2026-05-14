@@ -144,6 +144,8 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -285,7 +287,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                             BlendMode.srcIn,
                           ),
                         ),
-                        label: AppLocalizations.of(context)!.addMoreOptions,
+                        label: loc.addMoreOptions,
                       ),
             ),
           ],
@@ -302,9 +304,10 @@ class ExitWithoutSavingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return NewDefaultDialog(
-      title: AppLocalizations.of(context)!.exitWithoutSaving,
-      primaryButtonLabel: AppLocalizations.of(context)!.exit,
+      title: loc.exitWithoutSaving,
+      primaryButtonLabel: loc.exit,
       onPrimaryButtonPressed: () {},
     );
   }

@@ -2,11 +2,11 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RateBugReportService {
+class FeedbackService {
   static const String bugReportTemplate =
       'Name:\nDescription/summary:\nEnvironment/platform:\nVisual proof/screenshot/video:\nSteps to reproduce:\nExpected result vs. actual result:';
 
-  static const String supportEmail = 'support@miracoachingapp.com';
+  static const String supportEmail = 'ibrsboy32@proton.me';
 
   static Future<void> rateUs() async {
     final InAppReview inAppReview = InAppReview.instance;
@@ -27,10 +27,12 @@ class RateBugReportService {
   static Future<void> _launchStorePage() async {
     // Try to open the app store link
     // These URLs should be replaced with actual app store URLs
-    final Uri androidUrl =
-        Uri.parse('https://play.google.com/store/apps/details?id=com.miracoaching.habitt');
-    final Uri iosUrl =
-        Uri.parse('https://apps.apple.com/app/id1234567890'); // Replace with actual app ID
+    final Uri androidUrl = Uri.parse(
+      'https://play.google.com/store/apps/details?id=com.shellz.habitt&hl=en-US&ah=pOP1nFvk-kYT2fbDhv9cYBHNbG4',
+    );
+    final Uri iosUrl = Uri.parse(
+      'https://apps.apple.com/app/id6745617462',
+    ); // Replace with actual app ID
 
     try {
       if (await canLaunchUrl(androidUrl)) {

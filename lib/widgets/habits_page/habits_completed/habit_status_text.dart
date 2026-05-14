@@ -17,7 +17,7 @@ class HabitsStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final textColor = tp.primaryTextColor;
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,9 +35,7 @@ class HabitsStatus extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 12.0),
               child: Text(
-                isCompleted
-                    ? localizations.completed
-                    : localizations.notCompleted,
+                isCompleted ? loc.completed : loc.notCompleted,
                 style: TextStyle(
                   color: textColor,
                   fontWeight: FontWeight.bold,
@@ -48,7 +46,7 @@ class HabitsStatus extends StatelessWidget {
           ],
         ),
         Text(
-          "$numberOfHabits ${numberOfHabits == 1 ? localizations.habit : localizations.habits}",
+          "$numberOfHabits ${numberOfHabits == 1 ? loc.habit : loc.habits}",
           style: TextStyle(
             color: textColor,
             fontWeight: FontWeight.bold,

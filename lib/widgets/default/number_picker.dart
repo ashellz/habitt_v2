@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class NumberPicker extends StatefulWidget {
   const NumberPicker({
@@ -106,7 +105,7 @@ class _NumberPickerState extends State<NumberPicker> {
           onSelectedItemChanged: (int index) {
             final value = minHour + index;
             if (widget.onChangedHours != null) widget.onChangedHours!(value);
-            debugPrint(AppLocalizations.of(context)!.selectedHourValue);
+            debugPrint("Selected hour index: $index, value: $value");
           },
           children: List<Widget>.generate(
             hourItemCount,
@@ -153,7 +152,7 @@ class _NumberPickerState extends State<NumberPicker> {
             if (widget.onChangedMinutes != null) {
               widget.onChangedMinutes!(index);
             }
-            debugPrint(AppLocalizations.of(context)!.selectedMinuteIndex);
+            debugPrint("Selected minute index: $index");
           },
           children: List<Widget>.generate(
             widget.maxMinutes != null ? widget.maxMinutes! + 1 : 60,

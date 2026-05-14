@@ -20,6 +20,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final tp = context.watch<ThemeProvider>();
 
     return DefaultAnnotatedRegion(
@@ -32,7 +33,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                 children: [
                   NavBackButton(tp: tp),
                   Text(
-                    AppLocalizations.of(context)!.subscriptions,
+                    loc.subscriptions,
                     style: TextStyle(
                       fontSize: 38,
                       color: tp.primaryTextColor,
@@ -40,7 +41,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context)!.manageYourSubscriptionsAndBillingPlansHere,
+                    loc.manageYourSubscriptionsAndBillingPlansHere,
                     style: TextStyle(
                       fontSize: 16,
                       color: tp.secondaryTextColor,
@@ -51,7 +52,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                     onPressed: () {
                       fetchOffers();
                     },
-                    label: AppLocalizations.of(context)!.fetchOffers,
+                    label: loc.fetchOffers,
                   ),
                   const SizedBox(height: 24),
                   for (final offer in offers)
@@ -84,7 +85,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         offers = offerings;
       });
     } else {
-      print(AppLocalizations.of(context)!.noOfferingsAvailable);
+      print("No offerings available");
     }
   }
 }

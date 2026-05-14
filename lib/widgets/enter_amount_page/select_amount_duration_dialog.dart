@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_spinbox.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class SelectAmountDurationDialog extends StatelessWidget {
@@ -29,7 +29,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final stateProvider = context.watch<StateProvider>();
     final tp = context.watch<ThemeProvider>();
 
@@ -46,7 +46,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomSpinBox(
-                          labelText: localizations.amount,
+                          labelText: loc.amount,
                           min: 2,
                           max: 9999,
                           value: wheelValue.toDouble(),
@@ -55,7 +55,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                         DefaultTextField(
                           maxTextLength: 15,
                           topPadding: 12,
-                          title: localizations.label,
+                          title: loc.label,
                           controller: habitAmountLabelController,
                         ),
                       ],
@@ -64,7 +64,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomSpinBox(
-                          labelText: localizations.hours,
+                          labelText: loc.hours,
                           min: 0,
                           max: 23,
                           value: durationValue.inHours.toDouble(),
@@ -72,7 +72,7 @@ class SelectAmountDurationDialog extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         CustomSpinBox(
-                          labelText: localizations.minutes,
+                          labelText: loc.minutes,
                           min: 0,
                           max: 59,
                           value: durationValue.inMinutes % 60,

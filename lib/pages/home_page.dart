@@ -14,7 +14,6 @@ import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/new_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -64,20 +63,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     _checkLiquidGlassSupport();
 
-    final List<NavItemData> tempNavItemsForIndex = [
-      NavItemData(id: 'home', svgPath: "...", defaultLabel: AppLocalizations.of(context)!.home),
-      NavItemData(id: 'habits', svgPath: "...", defaultLabel: AppLocalizations.of(context)!.habits),
-      NavItemData(id: 'calendar', svgPath: "...", defaultLabel: AppLocalizations.of(context)!.calendar),
-      NavItemData(id: 'profile', svgPath: "...", defaultLabel: AppLocalizations.of(context)!.profile),
-    ];
-    int initialIndex = tempNavItemsForIndex.indexWhere(
-      (item) => item.id == 'home',
-    );
-    if (initialIndex != -1) {
-      _currentPageIndex = initialIndex;
-    } else {
-      _currentPageIndex = 0; // Fallback
-    }
+    // Set default to home page (index 0)
+    _currentPageIndex = 0;
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {

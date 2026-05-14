@@ -132,6 +132,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final step = _steps[_currentStep];
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: cp.main,
@@ -148,7 +149,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
               alignment: Alignment.centerRight,
               child: NewDefaultButton.secondarySmall(
                 onPressed: _skip,
-                label: AppLocalizations.of(context)!.skip,
+                label: loc.skip,
               ),
             ),
           ),

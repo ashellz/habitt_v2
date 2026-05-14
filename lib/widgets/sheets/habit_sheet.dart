@@ -370,11 +370,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       return;
     }
 
-    final title = _isEditMode ? AppLocalizations.of(context)!.exitWithoutSaving : AppLocalizations.of(context)!.leaveSetup;
+    final loc = AppLocalizations.of(context)!;
+
+    final title = _isEditMode ? loc.exitWithoutSaving : loc.leaveSetup;
     final desc =
         _isEditMode
-            ? AppLocalizations.of(context)!.allChangesYouMadeWillBeDiscarded
-            : AppLocalizations.of(context)!.allHabitConfigurationYouHaveDoneWillBeDiscarded;
+            ? loc.allChangesYouMadeWillBeDiscarded
+            : loc.allHabitConfigurationYouHaveDoneWillBeDiscarded;
 
     _isExitDialogOpen = true;
     await showDialogSheet(
@@ -383,7 +385,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           (dialogContext) => NewDefaultDialog(
             title: title,
             desc: desc,
-            primaryButtonLabel: AppLocalizations.of(context)!.exit,
+            primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();
               _popSheet(result: closeResult);
@@ -426,16 +428,16 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     if (!mounted) {
       return;
     }
-
+    final loc = AppLocalizations.of(context)!;
     await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: AppLocalizations.of(context)!.notificationsAreDisabled,
+            title: loc.notificationsAreDisabled,
             desc:
-                AppLocalizations.of(context)!.toUseHabitRemindersEnableNotificationsInYourDeviceSettings,
+                loc.toUseHabitRemindersEnableNotificationsInYourDeviceSettings,
             primaryButtonLabel: "Settings",
-            secondaryButtonLabel: AppLocalizations.of(context)!.notNow,
+            secondaryButtonLabel: loc.notNow,
             onPrimaryButtonPressed: () async {
               Navigator.of(dialogContext).pop();
               await AwesomeNotifications().showNotificationConfigPage();
@@ -480,9 +482,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _ensureNotificationPermissionForSave(sp);
 
     if (!mounted) {
-      debugPrint(
-        AppLocalizations.of(context)!.notMountedAfterNotificationPermissionRequestAbortingSave,
-      );
+      debugPrint("Not mounted, aborting save");
       return;
     }
 
@@ -526,13 +526,15 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.color = colorToHex(sp.getHabitColor(tp) ?? tp.primaryColor);
 
       habitProvider.updateHabit(habit);
-      sp.alertText = AppLocalizations.of(context)!.changesSaved;
+      sp.alertText = "Changes saved";
       sp.toggleAlert(show: true);
       if (mounted) {
         _popSheet(result: HabitSheetCloseResult.saved);
       }
       return;
     }
+
+    final loc = AppLocalizations.of(context)!;
 
     habitProvider.addHabit(
       Habit(
@@ -541,7 +543,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         description: sp.descController.text,
         iconPath: sp.iconPath,
         categoryId: sp.habitCategoryId,
-        tag: AppLocalizations.of(context)!.noTag,
+        tag: loc.noTag,
         completed: false,
         skipped: false,
         amount: sp.habitAmount,
@@ -665,11 +667,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   }
 
   Row optionalHabitCheck(ColorProvider cp, StateProvider sp) {
+    final loc = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          AppLocalizations.of(context)!.optionalHabit,
+          loc.optionalHabit,
           style: TextStyle(
             color: cp.text,
             fontSize: 18,
@@ -728,6 +731,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   }
 
   Widget notificationSection(ColorProvider cp, StateProvider sp) {
+    final loc = AppLocalizations.of(context)!;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       width: double.infinity,
@@ -770,7 +774,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.notifications,
+                        loc.notifications,
                         style: TextStyle(
                           color: cp.text,
                           fontSize: 18,
@@ -778,7 +782,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                         ),
                       ),
                       Text(
-                        AppLocalizations.of(context)!.getRemindedAboutYourHabit,
+                        loc.getRemindedAboutYourHabit,
                         style: TextStyle(color: cp.lightGreyText, fontSize: 13),
                       ),
                     ],
@@ -849,7 +853,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                                   _statusOverlay.show(
                                     context: context,
                                     cp: cp,
-                                    title: AppLocalizations.of(context)!.thisNotificationCantBeDeleted,
+                                    title: loc.thisNotificationCantBeDeleted,
                                     isError: true,
                                   );
                                   setState(() {
@@ -877,7 +881,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                             child: NewDefaultButton.secondary(
                               width: double.infinity,
                               height: 40,
-                              label: AppLocalizations.of(context)!.addANotification,
+                              label: loc.addANotification,
                               prefix: SvgPicture.asset(
                                 "assets/images/new-svg/add.svg",
                                 colorFilter: ColorFilter.mode(
@@ -1035,6 +1039,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     ThemeProvider tp,
     bool canSave,
   ) {
+    final loc = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: Row(
@@ -1077,7 +1083,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                 }
                 await _saveHabit(sp);
               },
-              label: AppLocalizations.of(context)!.save,
+              label: loc.save,
             ),
           ),
         ],

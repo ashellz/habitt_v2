@@ -39,6 +39,8 @@ class CompletedHabits extends StatelessWidget {
       }
     }
 
+    final loc = AppLocalizations.of(context)!;
+
     final statsProvider = context.watch<StatsProvider>();
     final tp = context.watch<ThemeProvider>();
 
@@ -52,7 +54,7 @@ class CompletedHabits extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ValueText(text: AppLocalizations.of(context)!.completedHabits, value: habitsCompleted),
+        ValueText(text: loc.completedHabits, value: habitsCompleted),
         SizedBox(height: 8),
         SizedBox(
           height: 200,
