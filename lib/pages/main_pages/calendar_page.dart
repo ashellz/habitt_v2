@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
@@ -25,13 +26,15 @@ class CalendarPage extends StatelessWidget {
     final streak = sp.perfectDaysStreak;
     final longestStreak = sp.longestPerfectDaysStreak;
 
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: ListView(
           children: [
             Text(
-              'Calendar',
+              loc.calendar,
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: cp.text,
@@ -231,6 +234,7 @@ class StreakCalendarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       spacing: 20,
       children: [
@@ -238,19 +242,23 @@ class StreakCalendarSection extends StatelessWidget {
           children: [
             Expanded(
               child: CounterStatCard(
-                title: 'Current streak',
+                title: loc.currentStreak,
                 iconPath: 'assets/images/new-svg/streak.svg',
                 value: streak,
-                formatter: (value) => value == 1 ? '1 day' : '$value days',
+                formatter:
+                    (value) =>
+                        value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: CounterStatCard(
-                title: 'Longest streak',
+                title: loc.longestStreak,
                 iconPath: 'assets/images/new-svg/longest-streak.svg',
                 value: longestStreak,
-                formatter: (value) => value == 1 ? '1 day' : '$value days',
+                formatter:
+                    (value) =>
+                        value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
               ),
             ),
           ],

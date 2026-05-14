@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -69,6 +70,14 @@ class _StreakCalendarState extends State<StreakCalendar> {
       return maxMonth;
     }
     return candidate;
+  }
+
+  String _capitalizeFirstLetter(String value) {
+    if (value.isEmpty) {
+      return value;
+    }
+
+    return value[0].toUpperCase() + value.substring(1);
   }
 
   void _invalidateStreakCaches() {
@@ -336,6 +345,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
         _calendarHeader(cp, calendarFirstDay, today, focusedDay),
         const SizedBox(height: 16),
         TableCalendar<void>(
+          locale: AppLocalizations.of(context)!.localeName,
           key: ValueKey(
             'habit-details-calendar-${calendarFirstDay.millisecondsSinceEpoch}-${today.millisecondsSinceEpoch}',
           ),
@@ -384,8 +394,9 @@ class _StreakCalendarState extends State<StreakCalendar> {
           daysOfWeekStyle: DaysOfWeekStyle(
             weekendStyle: TextStyle(color: cp.lightGreyText, fontSize: 13),
             weekdayStyle: TextStyle(color: cp.lightGreyText, fontSize: 13),
-            dowTextFormatter:
-                (date, locale) => DateFormat.E(locale).format(date),
+            dowTextFormatter: (date, locale) {
+              return _capitalizeFirstLetter(DateFormat.E(locale).format(date));
+            },
           ),
           onPageChanged: (focusedDay) {
             setState(() {
@@ -407,7 +418,10 @@ class _StreakCalendarState extends State<StreakCalendar> {
     DateTime today,
     DateTime focusedDay,
   ) {
-    final monthLabel = DateFormat('MMMM yyyy').format(focusedDay);
+    final locale = Localizations.localeOf(context);
+    final monthLabel = _capitalizeFirstLetter(
+      DateFormat('MMMM yyyy', locale.toString()).format(focusedDay),
+    );
 
     final previousMonth = DateTime(focusedDay.year, focusedDay.month - 1, 1);
     final nextMonth = DateTime(focusedDay.year, focusedDay.month + 1, 1);
