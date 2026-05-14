@@ -61,13 +61,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
       trackingType: fields[39] as HabitTrackingType?,
       isDeleted: fields[24] as bool?,
       timestamps: (fields[23] as Map?)?.cast<String, DateTime>(),
+      insightPopstonedUntil: fields[42] as DateTime?,
     )..color = fields[20] as String?;
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(39)
+      ..writeByte(40)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -145,7 +146,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(40)
       ..write(obj.notificationsEnabled)
       ..writeByte(41)
-      ..write(obj.notificationTimes);
+      ..write(obj.notificationTimes)
+      ..writeByte(42)
+      ..write(obj.insightPopstonedUntil);
   }
 
   @override
