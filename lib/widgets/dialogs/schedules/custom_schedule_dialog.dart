@@ -96,7 +96,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Repeat every:',
+              loc.repeatEvery,
               style: TextStyle(
                 color: cp.text,
                 fontSize: 18,
@@ -127,7 +127,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Text(
-                'This habit will appear every ${sp.customIntervalDays} day${sp.customIntervalDays == 1 ? '' : 's'} starting from today',
+                loc.habitWillAppear(loc.day, sp.customIntervalDays),
                 style: TextStyle(color: cp.greyText, fontSize: 13),
               ),
             ),

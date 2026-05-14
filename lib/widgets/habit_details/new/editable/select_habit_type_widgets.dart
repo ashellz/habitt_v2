@@ -5,7 +5,6 @@ import 'package:habitt/widgets/habit_details/new/editable/enter_habit_amount.dar
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 enum HabitType { none, amount, duration }
 

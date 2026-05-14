@@ -36,7 +36,7 @@ class EnterHabitDuration extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Time',
+            loc.time2,
             style: TextStyle(
               color: cp.lightGreyText,
               fontSize: 16,

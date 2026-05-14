@@ -76,8 +76,11 @@ class ScheduleOptionWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                scheduleOptionType.name[0].toUpperCase() +
-                    scheduleOptionType.name.substring(1),
+                scheduleOptionType
+                        .getLocalizedName(context)
+                        .substring(0, 1)
+                        .toUpperCase() +
+                    scheduleOptionType.getLocalizedName(context).substring(1),
                 style: TextStyle(
                   color: cp.text,
                   fontSize: 16,

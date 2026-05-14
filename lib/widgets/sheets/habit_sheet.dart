@@ -710,6 +710,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       onTimeSelected: (minutesOfDay) {
         sp.updateHabitNotificationTime(slot.id, minutesOfDay);
       },
+      isNew: false,
       context: context,
     );
   }
@@ -722,6 +723,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             : 9 * 60;
 
     await showNotificationTimeDialog(
+      isNew: true,
       initialMinutes: initialMinutes,
       onTimeSelected: (minutesOfDay) {
         sp.addHabitNotificationTime(minutesOfDay: minutesOfDay);
@@ -908,13 +910,14 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final selectedType = sp.selectedPremadeHabitType;
     final selectedTemplate =
         selectedType == null ? null : PremadeHabitCatalog.byType(selectedType);
-    final label = selectedTemplate?.name ?? 'Select';
+    final loc = AppLocalizations.of(context)!;
+    final label = selectedTemplate?.name ?? loc.select;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Habit type',
+          loc.habitType,
           style: TextStyle(
             color: cp.text,
             fontSize: 18,
@@ -945,6 +948,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   }
 
   Column habitScheduling(ColorProvider cp) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
@@ -952,7 +957,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            'Schedule',
+            loc.schedule,
             style: TextStyle(
               color: cp.text,
               fontSize: 18,
@@ -970,6 +975,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final sp = context.read<StateProvider>();
     final habitNameController = sp.nameController;
     final habitNotesController = sp.descController;
+    final loc = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -978,7 +984,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Text(
-            'Habit Details',
+            loc.habitDetails,
             style: TextStyle(
               color: cp.text,
               fontSize: 18,
@@ -987,12 +993,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           ),
         ),
         NewDefaultTextField(
-          title: "Habit Name",
-          hint: "Habit Name",
+          title: loc.habitName,
+          hint: loc.habitName,
           controller: habitNameController,
         ),
         NewDefaultTextField(
-          hint: "Notes",
+          title: loc.notes,
           maxLines: 4,
           controller: habitNotesController,
         ),
@@ -1003,12 +1009,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   }
 
   Column chooseIcon(ColorProvider cp, StateProvider sp, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       spacing: 20,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choose icon',
+          loc.chooseIcon,
           style: TextStyle(
             color: cp.text,
             fontSize: 18,
@@ -1043,47 +1050,55 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          GestureDetector(
-            onTap: () {
-              _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
-            },
-            child: Container(
-              padding: const EdgeInsets.only(left: 16),
-              color: Colors.transparent,
-              height: 36,
-              width: 66 + 16,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/images/new-svg/back.svg",
-                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(left: 16),
+                  color: Colors.transparent,
+                  height: 36,
+                  width: 66 + 16,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SvgPicture.asset(
+                      "assets/images/new-svg/back.svg",
+                      colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                    ),
+                  ),
                 ),
               ),
-            ),
+
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: NewDefaultButton.primarySmall(
+                  width: null,
+                  enabled: canSave,
+                  onPressed: () async {
+                    if (!canSave) {
+                      return;
+                    }
+                    await _saveHabit(sp);
+                  },
+                  label: loc.save,
+                ),
+              ),
+            ],
           ),
-          Text(
-            _isEditMode ? 'Edit Habit' : 'New Habit',
-            style: TextStyle(
-              color: cp.text,
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: NewDefaultButton.primarySmall(
-              enabled: canSave,
-              onPressed: () async {
-                if (!canSave) {
-                  return;
-                }
-                await _saveHabit(sp);
-              },
-              label: loc.save,
+          Center(
+            child: Text(
+              _isEditMode ? loc.editHabit : loc.newHabit,
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

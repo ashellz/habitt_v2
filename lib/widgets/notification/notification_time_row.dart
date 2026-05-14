@@ -47,6 +47,7 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
       initialMinutes: widget.minutesOfDay,
       onTimeSelected: widget.onTimeSelected ?? (_) {},
       context: context,
+      isNew: false,
     );
   }
 
@@ -74,7 +75,7 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            loc.time,
+            loc.time2,
             style: TextStyle(color: cp.lightGreyText, fontSize: 16),
           ),
           GestureDetector(
@@ -162,6 +163,7 @@ Future<void> showNotificationTimeDialog({
   required int initialMinutes,
   required ValueChanged<int> onTimeSelected,
   required BuildContext context,
+  bool isNew = false,
 }) async {
   int selectedHour = initialMinutes ~/ 60;
   int selectedMinute = initialMinutes % 60;
@@ -186,6 +188,8 @@ Future<void> showNotificationTimeDialog({
                   onTimeSelected((selectedHour * 60) + selectedMinute);
                   Navigator.of(dialogContext).pop();
                 },
+                primaryButtonLabel: isNew ? loc.add : loc.save,
+
                 child: NumberPicker(
                   hoursController: hoursController,
                   minutesController: minutesController,

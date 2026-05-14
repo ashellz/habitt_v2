@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -31,7 +32,7 @@ class SelectHabitScheduleType extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              sp.scheduleSummary,
+              sp.selectedScheduleOption.getLocalizedName(context),
               style: TextStyle(color: cp.text, fontSize: 16),
             ),
             SvgPicture.asset(

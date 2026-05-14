@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return Container(
       height: 46,
@@ -74,7 +76,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
                 children: [
                   Expanded(
                     child: _TypeButton(
-                      label: 'Amount',
+                      label: loc.amount,
                       type: HabitType.amount,
                       selected: widget.selectedType,
                       onTap: widget.onTapAmount,
@@ -82,7 +84,7 @@ class _SelectHabitTypeState extends State<SelectHabitType> {
                   ),
                   Expanded(
                     child: _TypeButton(
-                      label: 'Duration',
+                      label: loc.duration,
                       type: HabitType.duration,
                       selected: widget.selectedType,
                       onTap: widget.onTapDuration,
