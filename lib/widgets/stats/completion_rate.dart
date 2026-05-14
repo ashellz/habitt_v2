@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/stats/value_blur_cloud.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +62,7 @@ class _CompletionRateState extends State<CompletionRate>
       animation: _animation,
       builder: (context, _) {
         final animatedPercentage = _animation.value.round();
+        final loc = AppLocalizations.of(context)!;
 
         return Row(
           children: [
@@ -95,7 +97,7 @@ class _CompletionRateState extends State<CompletionRate>
                   ),
                 ),
                 Text(
-                  'Completion rate',
+                  loc.completionRate,
                   style: TextStyle(color: cp.lightGreyText, fontSize: 16),
                 ),
               ],

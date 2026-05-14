@@ -2468,6 +2468,66 @@ abstract class AppLocalizations {
   /// **'times'**
   String get times;
 
+  /// No description provided for @step.
+  ///
+  /// In en, this message translates to:
+  /// **'step'**
+  String get step;
+
+  /// No description provided for @steps.
+  ///
+  /// In en, this message translates to:
+  /// **'steps'**
+  String get steps;
+
+  /// No description provided for @glass.
+  ///
+  /// In en, this message translates to:
+  /// **'glass'**
+  String get glass;
+
+  /// No description provided for @glasses.
+  ///
+  /// In en, this message translates to:
+  /// **'glasses'**
+  String get glasses;
+
+  /// No description provided for @page.
+  ///
+  /// In en, this message translates to:
+  /// **'page'**
+  String get page;
+
+  /// No description provided for @pages.
+  ///
+  /// In en, this message translates to:
+  /// **'pages'**
+  String get pages;
+
+  /// No description provided for @dl.
+  ///
+  /// In en, this message translates to:
+  /// **'dl'**
+  String get dl;
+
+  /// No description provided for @km.
+  ///
+  /// In en, this message translates to:
+  /// **'km'**
+  String get km;
+
+  /// No description provided for @meal.
+  ///
+  /// In en, this message translates to:
+  /// **'meal'**
+  String get meal;
+
+  /// No description provided for @meals.
+  ///
+  /// In en, this message translates to:
+  /// **'meals'**
+  String get meals;
+
   /// No description provided for @to.
   ///
   /// In en, this message translates to:
@@ -2696,6 +2756,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Strength'**
   String get strength;
+
+  /// No description provided for @skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skipped;
+
+  /// No description provided for @streak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get streak;
+
+  /// No description provided for @currentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak'**
+  String get currentStreak;
+
+  /// No description provided for @longestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest streak'**
+  String get longestStreak;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @completionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion rate'**
+  String get completionRate;
+
+  /// No description provided for @completionRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion ratio'**
+  String get completionRatio;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get last7Days;
+
+  /// No description provided for @consistency.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get consistency;
+
+  /// No description provided for @yourActivityOverTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Activity Over Time'**
+  String get yourActivityOverTime;
+
+  /// No description provided for @less.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get less;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
 }
 
 class _AppLocalizationsDelegate

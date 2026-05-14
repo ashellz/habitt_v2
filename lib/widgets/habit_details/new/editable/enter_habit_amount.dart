@@ -27,6 +27,7 @@ class EnterHabitAmount extends StatelessWidget {
             : 'reps');
 
     if (!context.mounted) return;
+    final loc = AppLocalizations.of(context)!;
 
     await showDialogSheet(
       context: context,
@@ -42,7 +43,7 @@ class EnterHabitAmount extends StatelessWidget {
           },
           onConfirm: (label) {
             sp.habitAmountLabelController.text = sp.canonicalizeAmountLabel(
-              resolveAmountLabelForValue(label, sp.habitAmount),
+              resolveAmountLabelForValue(label, sp.habitAmount, loc),
             );
             Navigator.of(sheetContext).pop();
           },
@@ -82,11 +83,13 @@ class EnterHabitAmount extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     final currentLabel = sp.habitAmountLabelController.text;
     final resolvedLabel = resolveAmountLabelForValue(
       currentLabel,
       sp.habitAmount,
+      loc,
     );
     if (resolvedLabel != currentLabel) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -98,7 +101,6 @@ class EnterHabitAmount extends StatelessWidget {
         }
       });
     }
-    final loc = AppLocalizations.of(context)!;
 
     return Row(
       spacing: 10,

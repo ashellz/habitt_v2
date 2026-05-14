@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
@@ -79,13 +80,15 @@ class _StatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Row(
           children: [
             Expanded(
               child: CounterStatCard(
-                title: 'Completed',
+                title: loc.completed,
                 iconPath: 'assets/images/new-svg/completed.svg',
                 value: stats.completedCount,
                 formatter: (value) => '$value',
@@ -94,7 +97,7 @@ class _StatsGrid extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: CounterStatCard(
-                title: 'Skipped',
+                title: loc.skipped,
                 iconPath: 'assets/images/new-svg/skipped.svg',
                 value: stats.missedCount,
                 formatter: (value) => '$value',
@@ -107,19 +110,23 @@ class _StatsGrid extends StatelessWidget {
           children: [
             Expanded(
               child: CounterStatCard(
-                title: 'Current streak',
+                title: loc.currentStreak,
                 iconPath: 'assets/images/new-svg/streak.svg',
                 value: stats.currentStreak,
-                formatter: (value) => value == 1 ? '1 day' : '$value days',
+                formatter:
+                    (value) =>
+                        value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: CounterStatCard(
-                title: 'Longest streak',
+                title: loc.longestStreak,
                 iconPath: 'assets/images/new-svg/longest-streak.svg',
                 value: stats.longestStreak,
-                formatter: (value) => value == 1 ? '1 day' : '$value days',
+                formatter:
+                    (value) =>
+                        value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
               ),
             ),
           ],
@@ -199,7 +206,8 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
   @override
   Widget build(BuildContext context) {
     final habit = widget.habit;
-    final title = habit.tracksDuration ? 'Duration' : 'Amount';
+    final loc = AppLocalizations.of(context)!;
+    final title = habit.tracksDuration ? loc.duration : loc.amount;
     final iconPath =
         habit.tracksDuration
             ? 'assets/images/new-svg/clock.svg'
@@ -212,7 +220,7 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
         final value =
             habit.tracksDuration
                 ? getDurationString(animatedRaw)
-                : '$animatedRaw ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? 'times' : habit.amountLabel, animatedRaw)}';
+                : '$animatedRaw ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, animatedRaw, loc)}';
 
         return StatCard(
           title: title,
@@ -289,7 +297,7 @@ class _WeekdayRateRowState extends State<_WeekdayRateRow>
           spacing: 4,
           children: [
             Text(
-              widget.label,
+              "${widget.label[0].toUpperCase()}${widget.label.substring(1).toLowerCase()}",
               style: TextStyle(color: cp.lightGreyText, fontSize: 13),
             ),
             Text('-', style: TextStyle(color: cp.lightGreyText, fontSize: 13)),

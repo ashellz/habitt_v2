@@ -1574,6 +1574,36 @@ class AppLocalizationsDe extends AppLocalizations {
   String get times => 'mal';
 
   @override
+  String get step => 'Schritt';
+
+  @override
+  String get steps => 'Schritte';
+
+  @override
+  String get glass => 'Glas';
+
+  @override
+  String get glasses => 'Brille';
+
+  @override
+  String get page => 'Seite';
+
+  @override
+  String get pages => 'Seiten';
+
+  @override
+  String get dl => 'dl';
+
+  @override
+  String get km => 'km';
+
+  @override
+  String get meal => 'Mahlzeit';
+
+  @override
+  String get meals => 'Mahlzeiten';
+
+  @override
   String get to => 'An';
 
   @override
@@ -1703,4 +1733,43 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get strength => 'Stärke';
+
+  @override
+  String get skipped => 'Übersprungen';
+
+  @override
+  String get streak => 'Streak';
+
+  @override
+  String get currentStreak => 'Aktueller Streifzug';
+
+  @override
+  String get longestStreak => 'Längste Strähne';
+
+  @override
+  String get day => 'Tag';
+
+  @override
+  String get days => 'Tage';
+
+  @override
+  String get completionRate => 'Vollzugsquote';
+
+  @override
+  String get completionRatio => 'Vollzugsquote';
+
+  @override
+  String get last7Days => 'Letzte 7 Tage';
+
+  @override
+  String get consistency => 'Konsistenz';
+
+  @override
+  String get yourActivityOverTime => 'Ihre Aktivität im Laufe der Zeit';
+
+  @override
+  String get less => 'Weniger';
+
+  @override
+  String get more => 'Mehr';
 }

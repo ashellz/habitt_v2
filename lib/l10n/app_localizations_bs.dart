@@ -786,7 +786,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get logDuration => 'Dužina dnevnika';
 
   @override
-  String get logProgress => 'Prikaži napredak';
+  String get logProgress => 'Dodaj napredak';
 
   @override
   String get makesWidgetsLookMoreGlassy =>
@@ -1563,10 +1563,40 @@ class AppLocalizationsBs extends AppLocalizations {
   String get thu => 'Čet';
 
   @override
-  String get time => 'Vrijeme';
+  String get time => 'put';
 
   @override
-  String get times => 'puti';
+  String get times => 'puta';
+
+  @override
+  String get step => 'korak';
+
+  @override
+  String get steps => 'koraci';
+
+  @override
+  String get glass => 'staklo';
+
+  @override
+  String get glasses => 'naočale';
+
+  @override
+  String get page => 'stranica';
+
+  @override
+  String get pages => 'stranice';
+
+  @override
+  String get dl => 'dl';
+
+  @override
+  String get km => 'km';
+
+  @override
+  String get meal => 'obrok';
+
+  @override
+  String get meals => 'obroci';
 
   @override
   String get to => 'Da';
@@ -1696,4 +1726,43 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get strength => 'Čvrstoća';
+
+  @override
+  String get skipped => 'Preskočeno';
+
+  @override
+  String get streak => 'Pojas';
+
+  @override
+  String get currentStreak => 'Trenutni niz';
+
+  @override
+  String get longestStreak => 'Najduži niz';
+
+  @override
+  String get day => 'dan';
+
+  @override
+  String get days => 'dana';
+
+  @override
+  String get completionRate => 'Stopa ispunjavanja';
+
+  @override
+  String get completionRatio => 'Omjer ispunjavanja';
+
+  @override
+  String get last7Days => 'Zadnjih 7 dana';
+
+  @override
+  String get consistency => 'Dosljednost';
+
+  @override
+  String get yourActivityOverTime => 'Vaša aktivnost tokom vremena';
+
+  @override
+  String get less => 'Manje';
+
+  @override
+  String get more => 'Više';
 }

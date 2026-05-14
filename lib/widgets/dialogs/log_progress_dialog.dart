@@ -76,11 +76,11 @@ class LogProgressDialog extends StatelessWidget {
 
         Navigator.pop(context);
       },
-      child: progress(cp),
+      child: progress(cp, loc),
     );
   }
 
-  Widget progress(ColorProvider cp) {
+  Widget progress(ColorProvider cp, AppLocalizations loc) {
     return Column(
       spacing: 16,
       children: [
@@ -94,15 +94,15 @@ class LogProgressDialog extends StatelessWidget {
             duration: habit.duration,
             durationCompleted: habit.durationCompleted,
           ),
-        target(cp),
+        target(cp, loc),
       ],
     );
   }
 
-  Row target(ColorProvider cp) {
+  Row target(ColorProvider cp, AppLocalizations loc) {
     String getTargetText() {
       if (progressType == ProgressType.amount) {
-        return "${habit.amount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? 'times' : habit.amountLabel, habit.amount)}";
+        return "${habit.amount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, habit.amount, loc)}";
       } else {
         final hours = habit.duration ~/ 60;
         final minutes = habit.duration % 60;

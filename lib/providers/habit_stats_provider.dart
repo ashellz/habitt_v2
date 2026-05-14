@@ -68,11 +68,13 @@ class _HabitStatsCacheEntry {
     required this.fingerprint,
     required this.computedDay,
     required this.data,
+    required this.locale,
   });
 
   final String fingerprint;
   final DateTime computedDay;
   final HabitStatsData data;
+  final Locale locale;
 }
 
 class HabitStatsProvider extends ChangeNotifier {
@@ -104,24 +106,28 @@ class HabitStatsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  HabitStatsData statsForHabit(Habit habit) {
+  HabitStatsData statsForHabit(Habit habit, {Locale? locale}) {
     _refreshDayBoundaryIfNeeded();
 
     final fingerprint = _buildFingerprint(habit);
+    final resolvedLocale =
+        locale ?? WidgetsBinding.instance.platformDispatcher.locale;
     final cached = _cache[habit.id];
 
     if (cached != null &&
         !_dirtyHabitIds.contains(habit.id) &&
         cached.fingerprint == fingerprint &&
-        cached.computedDay == _cachedToday) {
+        cached.computedDay == _cachedToday &&
+        cached.locale.languageCode == resolvedLocale.languageCode) {
       return cached.data;
     }
 
-    final computed = _computeStats(habit);
+    final computed = _computeStats(habit, locale: resolvedLocale);
     _cache[habit.id] = _HabitStatsCacheEntry(
       fingerprint: fingerprint,
       computedDay: _cachedToday,
       data: computed,
+      locale: resolvedLocale,
     );
     _dirtyHabitIds.remove(habit.id);
 
@@ -140,10 +146,12 @@ class HabitStatsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  HabitStatsData _computeStats(Habit habit) {
+  HabitStatsData _computeStats(Habit habit, {Locale? locale}) {
     final today = _cachedToday;
     final sevenDayStart = today.subtract(const Duration(days: 6));
     final monthWindowStart = today.subtract(const Duration(days: 29));
+    final resolvedLocale =
+        locale ?? WidgetsBinding.instance.platformDispatcher.locale;
 
     final completedByWeekday = <int, int>{};
     final scheduledByWeekday = <int, int>{};
@@ -221,11 +229,13 @@ class HabitStatsProvider extends ChangeNotifier {
       completedByWeekday: completedByWeekday,
       scheduledByWeekday: scheduledByWeekday,
       pickBest: true,
+      locale: resolvedLocale,
     );
     final worst = _resolveWeekdayRate(
       completedByWeekday: completedByWeekday,
       scheduledByWeekday: scheduledByWeekday,
       pickBest: false,
+      locale: resolvedLocale,
     );
     final strengthResult = HabitStrengthCalculator.calculate(strengthEntries);
 
@@ -292,6 +302,7 @@ class HabitStatsProvider extends ChangeNotifier {
     required Map<int, int> completedByWeekday,
     required Map<int, int> scheduledByWeekday,
     required bool pickBest,
+    required Locale locale,
   }) {
     int? targetWeekday;
     double? targetRate;
@@ -341,7 +352,7 @@ class HabitStatsProvider extends ChangeNotifier {
 
     return HabitWeekdayRate(
       weekday: targetWeekday,
-      label: _weekdayName(targetWeekday),
+      label: _weekdayName(targetWeekday, locale),
       completed: completedByWeekday[targetWeekday] ?? 0,
       scheduled: scheduledByWeekday[targetWeekday] ?? 0,
     );
@@ -411,9 +422,9 @@ class HabitStatsProvider extends ChangeNotifier {
     return DateTime(date.year, date.month, date.day);
   }
 
-  static String _weekdayName(int weekday) {
+  static String _weekdayName(int weekday, Locale locale) {
     final day = DateTime.utc(2024, 1, weekday);
-    return DateFormat('EEEE').format(day);
+    return DateFormat.E(locale.languageCode).format(day);
   }
 
   static double _progressValue(Habit habit) {

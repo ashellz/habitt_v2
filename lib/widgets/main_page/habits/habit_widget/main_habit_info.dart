@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
@@ -22,13 +23,17 @@ class MainHabitInfo extends StatelessWidget {
     final bool isCompleted = habit.completed;
 
     String amountText() {
+      final loc = AppLocalizations.of(context)!;
       final int amountForLabel =
           hasProgress && !isCompleted
               ? habit.amount
               : (isCompleted ? habit.amountCompleted : habit.amount);
       final String amountLabel = resolveAmountLabelForValue(
-        habit.amountLabel.isEmpty ? AmountLabelPreset.times.plural : habit.amountLabel,
+        habit.amountLabel.isEmpty
+            ? AmountLabelPreset.times.plural
+            : habit.amountLabel,
         amountForLabel,
+        loc,
       );
 
       if (hasProgress && !isCompleted) {

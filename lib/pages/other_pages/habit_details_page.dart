@@ -180,7 +180,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
 
     _syncNotesFromHabit(habit);
 
-    final stats = context.watch<HabitStatsProvider>().statsForHabit(habit);
+    final stats = context.watch<HabitStatsProvider>().statsForHabit(
+      habit,
+      locale: Localizations.localeOf(context),
+    );
 
     return Scaffold(
       backgroundColor: cp.habitBg,
@@ -382,7 +385,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
         habit.amountLabel.trim().isEmpty
             ? AmountLabelPreset.times.plural
             : habit.amountLabel;
-
+    final loc = AppLocalizations.of(context)!;
     final label = resolveAmountLabelForValue(
       baseLabel,
       habit.completed
@@ -390,6 +393,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
           : habit.amountCompleted > 0
           ? habit.amount
           : habit.amount,
+      loc,
     );
     if (habit.completed) {
       return '${habit.amountCompleted} $label';
