@@ -1679,4 +1679,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String changeHabitTimesInPeriodWarning(Object period) {
     return 'Changing the amount of times habit appears in a $period will clear selected days';
   }
+
+  @override
+  String get habitDetails => 'Habit details';
+
+  @override
+  String get deleteHabit => 'Delete habit';
+
+  @override
+  String get markAsComplete => 'Mark as complete';
+
+  @override
+  String get habitNotFound => 'Habit not found';
+
+  @override
+  String get strength => 'Strength';
 }

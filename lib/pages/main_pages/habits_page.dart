@@ -15,7 +15,6 @@ import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dar
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class HabitsPage extends StatefulWidget {
   const HabitsPage({super.key});
@@ -51,7 +50,6 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 
   Container scheduledTodayToggle(ColorProvider cp) {
-    final loc = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
       margin: const EdgeInsets.symmetric(horizontal: 16),

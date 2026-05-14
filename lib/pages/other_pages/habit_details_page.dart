@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -159,13 +160,14 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     final cp = context.watch<ColorProvider>();
     final habitProvider = context.watch<HabitProvider>();
     final habit = _findHabit(habitProvider);
+    final loc = AppLocalizations.of(context)!;
 
     if (habit == null) {
       return Scaffold(
         backgroundColor: cp.habitBg,
         body: Center(
           child: Text(
-            'Habit not found',
+            loc.habitNotFound,
             style: TextStyle(
               color: cp.text,
               fontSize: 16,
@@ -227,7 +229,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                     height: 40,
                     color: cp.fail,
                     onPressed: () => showDeleteHabitFlow(habit, context),
-                    child: Text('Delete habit'),
+                    child: Text(loc.deleteHabit),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -240,6 +242,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   }
 
   Widget _topBar(ColorProvider cp, Habit habit) {
+    final loc = AppLocalizations.of(context)!;
+
     return SizedBox(
       height: 44,
       child: Row(
@@ -265,7 +269,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
           Expanded(
             child: Center(
               child: Text(
-                'Habit details',
+                loc.habitDetails,
                 style: TextStyle(
                   color: cp.text,
                   fontSize: 34 / 1.8,
@@ -407,8 +411,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   }
 
   Widget _notesSection(ColorProvider cp) {
+    final loc = AppLocalizations.of(context)!;
+
     return NewDefaultTextField(
-      title: 'Notes',
+      title: loc.notes,
       color: cp.isDark ? cp.field : cp.bg,
       titleFontSize: 16,
       focusNode: _notesFocusNode,
@@ -481,6 +487,8 @@ class _StrengthRingState extends State<_StrengthRing>
           final animatedStrength = _animation.value;
           final percent = (animatedStrength * 100).round();
 
+          final loc = AppLocalizations.of(context)!;
+
           return Stack(
             alignment: Alignment.center,
             children: [
@@ -517,7 +525,7 @@ class _StrengthRingState extends State<_StrengthRing>
                       ),
                     ),
                     Text(
-                      'Strength',
+                      loc.strength,
                       style: TextStyle(color: cp.lightGreyText, fontSize: 13),
                     ),
                   ],
@@ -630,14 +638,15 @@ class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
   }
 
   String _label() {
+    final loc = AppLocalizations.of(context)!;
     debugPrint('Completed: ${widget.habit.completed}');
     if (widget.habit.completed) {
-      return 'Completed';
+      return loc.completed;
     }
     if (widget.habit.hasTrackingType) {
-      return 'Log progress';
+      return loc.logProgress;
     }
-    return 'Mark as complete';
+    return loc.markAsComplete;
   }
 
   Future<void> _onMainTap() async {

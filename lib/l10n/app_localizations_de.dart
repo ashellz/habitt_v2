@@ -1688,4 +1688,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String changeHabitTimesInPeriodWarning(Object period) {
     return 'Das Ändern der Anzahl der Tage, an denen die Gewohnheit in $period erscheint, löscht ausgewählte Tage';
   }
+
+  @override
+  String get habitDetails => 'Details zur Gewohnheit';
+
+  @override
+  String get deleteHabit => 'Gewohnheit löschen';
+
+  @override
+  String get markAsComplete => 'Als vollständig markieren';
+
+  @override
+  String get habitNotFound => 'Gewohnheit nicht gefunden';
+
+  @override
+  String get strength => 'Stärke';
 }
