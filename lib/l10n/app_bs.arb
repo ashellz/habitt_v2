@@ -30,21 +30,21 @@
   "clear": "Jasno",
   "clearSelectedDays": "Očisti odabrane dane",
   "colorfulInterface": "Šarolik interfejs",
-  "areYouSureYouWantToDeleteThisHabit": "Jesi li siguran da želiš izbrisati ovu naviku?",
   "complete": "Kompletno",
   "completed": "Završeno",
   "completedHabitFoundHabitscompletedTotal": "Pronađen potpuni navik, {habitsCompleted} ukupno",
   "completedHabits": "Stečene navike: ",
+  "areYouSureYouWantToDeleteThisHabit": "Jesi li siguran da želiš izbrisati ovu naviku?",
   "confirm": "Potvrdi",
   "connectToGoogle": "Poveži se na Google",
   "controlWhenAndHowYouGetNotifiedAboutYourHabits": "Kontrolirajte kada i kako primate obavijesti o svojim navikama.",
   "couldNotGetOrCreateBackupFolder": "Nije moguće dobiti ili kreirati folder za sigurnosnu kopiju",
-  "areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually": "Jeste li sigurni da želite isključiti sigurnosno kopiranje podataka? Ovo će prekinuti vezu vašeg Google naloga i zaustaviti sva sigurnosna kopiranja. Vaša postojeća sigurnosna kopiranja na Google Driveu ostat će osim ako ih ručno ne izbrišete.",
   "createAmountLabel": "Kreirajte etiketu iznosa",
   "creatingNewDayEntry": "Kreiranje novog dnevnog unosa",
   "currentHourIsBetween12And19": "Trenutni sat je između 12 i 19.",
   "currentHourIsBetween19And4": "Trenutni sat je između 19 i 4.",
   "currentHourIsBetween4And12": "Trenutni sat je između 4 i 12.",
+  "areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually": "Jeste li sigurni da želite isključiti sigurnosno kopiranje podataka? Ovo će prekinuti vezu vašeg Google naloga i zaustaviti sva sigurnosna kopiranja. Vaša postojeća sigurnosna kopiranja na Google Driveu ostat će osim ako ih ručno ne izbrišete.",
   "custom": "Prilagođeno",
   "dailyPlan": "Dnevni plan",
   "darkMode": "Tamni način",
@@ -54,8 +54,6 @@
   "decrementingHabitAmount": "Smanjenje iznosa navike",
   "defaultlabel": ", podrazumijevanoOznaka: ",
   "delete": "Obriši",
-  "deleteLabel": "Izbriši '$label'?",
-  "calculatedTargetScrollTargetscroll": "Izračunati ciljani skrol: $targetScroll",
   "deleteNotification": "Obriši obavijest?",
   "discard": "Odbaciti",
   "discardChanges": "Odbaciti promjene?",
@@ -66,7 +64,6 @@
   "editHabit": "Uredi naviku",
   "editProfile": "Uredi profil",
   "enable": "Omogući",
-  "calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate": "Izračunavanje napretka sedmice. Početak sedmice: $startOfWeek, Oslonac: $baseDate",
   "endTime": "Kraj vremena",
   "enterHabitNameToConfirmDeletion": "Unesite naziv navike da potvrdite brisanje",
   "enterPassphrase": "Unesite sigurnosnu frazu",
@@ -79,7 +76,6 @@
   "fetchOffers": "Ponude za preuzimanje",
   "fri": "Pet",
   "from": "Od",
-  "categoryCatnameWithIdCatidIsNotReady": "Kategorija $catName s ID-om $catId nije spremna",
   "getRemindedAboutYourHabit": "Neka vas podsjeti na vašu naviku.",
   "glassFeel": "Osjećaj stakla",
   "goodAfternoon": "Dobro popodne",
@@ -87,7 +83,6 @@
   "goodMorning": "Dobro jutro",
   "goodMorningTimeToCheckYourHabits": "Dobro jutro! Vrijeme je da provjerite svoje navike.",
   "goodToSeeYou": "Drago mi je što te vidim",
-  "categoryCatnameWithIdCatidIsReady": "Kategorija $catName s ID-om $catId je spremna",
   "guest": "Gost",
   "habit": "navika",
   "habitAdded": "Navika dodana!",
@@ -99,7 +94,6 @@
   "hello": "Zdravo",
   "helloThere": "Zdravo",
   "hi": "Zdravo",
-  "changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays": "Promjena broja pojavljivanja navike u $habitUnit-u će očistiti odabrane dane",
   "hiThere": "Zdravo",
   "home": "Početna",
   "hours": "Sati",
@@ -111,12 +105,11 @@
   "ifCheckedHabitWontCountForThePerfectDaysStreak": "Ako je označeno, navika se neće uračunavati u 'Seriju savršenih dana'.",
   "incorrectPassphrase": "Pogrešna fraza za pristup.",
   "initialProgressValuesLoadedForAllDays": "Početne vrijednosti napretka su učitane za sve dane.",
-  "checkingIosVersionForLiquidGlassSupportIsIosTrue": "Provjera verzije iOS-a za podršku Liquid Glass... Je li iOS: true",
   "insightStrengthApplyDecrease": "Primijeni smanjenje",
   "insightStrengthApplyIncrease": "Primijeni povećanje",
   "insightStrengthGotItEven": "Razumijem",
   "insightStrengthGotItOdd": "Razumijem",
-  "insightStrengthIncreaseBrushTeeth": "Odlično se držite u četkanju zuba. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična dosljednost u četkanju zuba. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika četkanja zuba je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u četkanju zuba. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika četkanja zuba je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseBrushTeeth": "Odlično se držite u četkanju zuba. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična konzistentnost u četkanju zuba. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika četkanja zuba je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u četkanju zuba. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika četkanja zuba je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseBrushTeeth": {
     "placeholders": {
       "strength": {},
@@ -140,7 +133,6 @@
       "toValue": {}
     }
   },
-  "clampedTargetScrollClampedMaxScrollMaxscroll": "Zaklamani ciljni skrol: $clamped (Maksimalni skrol: $maxScroll)",
   "insightStrengthIncreaseGoToBedEarly": "You are doing great with go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on go to bed early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for go to bed early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "@insightStrengthIncreaseGoToBedEarly": {
     "placeholders": {
@@ -205,7 +197,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseRunning": "Odlično se držite sa svojom rutinom trčanja. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična dosljednost u vašoj rutini trčanja. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika trčanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano dolaziš na svoju rutinu trčanja. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika trčanja je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseRunning": "Odlično se držite sa svojom rutinom trčanja. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična konzistentnost u vašoj rutini trčanja. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika trčanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano dolaziš na svoju rutinu trčanja. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika trčanja je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseRunning": {
     "placeholders": {
       "strength": {},
@@ -213,7 +205,8 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseShower": "Odlično napreduješ sa tuširanjem. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična dosljednost u tuširanju. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se tuširaš. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "checkingIosVersionForLiquidGlassSupportIsIosTrue": "Provjera verzije iOS-a za podršku Liquid Glass... Je li iOS: true",
+  "insightStrengthIncreaseShower": "Odlično napreduješ sa tuširanjem. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična konzistentnost u tuširanju. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se tuširaš. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseShower": {
     "placeholders": {
       "strength": {},
@@ -221,7 +214,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseSkinCare": "Odlično se držite sa svojom rutinom njege kože. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična dosljednost u vašoj rutini njege kože. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika njege kože je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pridržavate svoje rutine njege kože. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika njege kože je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseSkinCare": "Odlično se držite sa svojom rutinom njege kože. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična konzistentnost u vašoj rutini njege kože. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika njege kože je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pridržavate svoje rutine njege kože. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika njege kože je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseSkinCare": {
     "placeholders": {
       "strength": {},
@@ -229,7 +222,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseStudying": "Odlično napreduješ sa svojom navikom učenja. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična dosljednost u tvojoj navici učenja. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj navici učenja. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseStudying": "Odlično napreduješ sa svojom navikom učenja. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična konzistentnost u tvojoj navici učenja. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj navici učenja. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseStudying": {
     "placeholders": {
       "strength": {},
@@ -243,7 +236,7 @@
       "habitName": {}
     }
   },
-  "insightStrengthIncreaseWakeUpEarly": "Odlično napreduješ s ranim ustajanjem. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična dosljednost u ranom ustajanju. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano dolaziš na ustajanje rano. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseWakeUpEarly": "Odlično napreduješ s ranim ustajanjem. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična konzistentnost u ranom ustajanju. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano dolaziš na ustajanje rano. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseWakeUpEarly": {
     "placeholders": {
       "strength": {},
@@ -251,7 +244,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseWalk": "Odlično se držite sa svojom rutinom hodanja. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična dosljednost u vašoj rutini hodanja. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika hodanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj rutini hodanja. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika rutine hodanja je trenutno jaka. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseWalk": "Odlično se držite sa svojom rutinom hodanja. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da biste nastavili rasti još više.||Odlična konzistentnost u vašoj rutini hodanja. Snaga je stabilna na {strength}%. Povećajte svoj cilj sa {fromValue} na {toValue} i održavajte visok zamah.||Vaša navika hodanja je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj rutini hodanja. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika rutine hodanja je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseWalk": {
     "placeholders": {
       "strength": {},
@@ -259,7 +252,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseWork": "Odlično napreduješ sa svojom radnom navikom. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična dosljednost u tvojoj radnoj navici. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja radna navika je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano dolaziš na svoj radni navik. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoj radni navik je trenutno jak. Snaga je stabilna na {strength}%.",
+  "insightStrengthIncreaseWork": "Odlično napreduješ sa svojom radnom navikom. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da nastaviš rasti još više.||Odlična konzistentnost u tvojoj radnoj navici. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi visok zamah.||Tvoja radna navika je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano dolaziš na svoj radni navik. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoj radni navik je trenutno jak. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseWork": {
     "placeholders": {
       "strength": {},
@@ -267,7 +260,6 @@
       "toValue": {}
     }
   },
-  "completingHabitIdDayDaysimple": "Dovršavanje navike: $id, dan: $daySimple",
   "insightStrengthKeepPushingTitle": "Nastavi gurati {habitName}",
   "@insightStrengthKeepPushingTitle": {
     "placeholders": {
@@ -298,8 +290,7 @@
   "insightStrengthStartSmallType1WakeUpEarly": "Tvoja navika ranog ustajanja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od ranog ustajanja. Prikaži se danas i zaštiti tu naviku.||Momentum za rano ustajanje slabi. Održi ga živim s jednom čvrstom ponavljanjem danas.||Nemoj dopustiti da rano ustajanje postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si rano ustajati iz nekog razloga. Ostan discipliniran i spriječi da posustane.",
   "insightStrengthStartSmallType1Walk": "Tvoja navika šetnje posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje rutine šetnje. Pojavi se danas i zaštiti tu naviku.||Momentum tvoje rutine šetnje slabi. Oživi ga jednim kvalitetnim ponavljanjem danas.||Nemoj dopustiti da tvoja rutina šetnje postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju rutinu šetnje s razlogom. Ostan discipliniran i spriječi da posustane.",
   "insightStrengthStartSmallType1Work": "Tvoja navika rada posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje radne navike. Prikaži se danas i zaštiti tu naviku.||Momentum tvoje radne navike slabi. Održi ga živim jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoja radna navika postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju radnu naviku s razlogom. Ostan discipliniran i spriječi da posustane.",
-  "dateJoinedSetFromDaysboxDatejoined": "Datum pridruživanja postavljen iz daysBox: $_dateJoined",
-  "insightStrengthStartSmallType2BrushTeeth": "Niste bili dosljedni u pranju zuba u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Pranje zuba je u posljednje vrijeme slabije. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||Nedavna dosljednost pranja zuba je smanjena. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku pranja zuba, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Pranje zuba treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2BrushTeeth": "Niste bili dosljedni u pranju zuba u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Pranje zuba je u posljednje vrijeme slabije. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost pranja zuba je smanjena. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku pranja zuba, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Pranje zuba treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2BrushTeeth": {
     "placeholders": {
       "drop": {},
@@ -307,7 +298,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2DrinkWater": "Niste bili dosljedni u pijenju dovoljno vode u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Navika pijenja dovoljno vode je nedavno oslabljena. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||Nedavna dosljednost u pijenju dovoljno vode je smanjena. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku pijenja dovoljno vode, za sada snizite cilj. Snažnost je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Pijenje dovoljno vode treba reset. Snažnost je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2DrinkWater": "Niste bili dosljedni u pijenju dovoljno vode u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Navika pijenja dovoljno vode je nedavno oslabljena. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost u pijenju dovoljno vode je smanjena. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku pijenja dovoljno vode, za sada snizite cilj. Snažnost je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Pijenje dovoljno vode treba reset. Snažnost je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2DrinkWater": {
     "placeholders": {
       "drop": {},
@@ -387,7 +378,6 @@
       "toValue": {}
     }
   },
-  "dateJoinedSetFromSharedpreferencesDatejoined": "Datum pridruživanja iz SharedPreferences: $_dateJoined",
   "insightStrengthStartSmallType2Running": "You have not been consistent with your running routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your running routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your running routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your running routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your running routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
   "@insightStrengthStartSmallType2Running": {
     "placeholders": {
@@ -396,7 +386,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2Shower": "Nisi bio dosljedan u tuširanju u posljednje vrijeme. Snaga ti je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da navika ostane živa.||Uzimanje tuša je nedavno bilo slabije. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||Nedavna dosljednost u uzimanju tuša je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku tuširanja, za sada snizite cilj. Snaga je opala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Navika tuširanja treba resetovanje. Snaga je opala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2Shower": "Nisi bio dosljedan u tuširanju u posljednje vrijeme. Snaga ti je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da navika ostane živa.||Uzimanje tuša je nedavno bilo slabije. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost u uzimanju tuša je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku tuširanja, za sada snizite cilj. Snaga je opala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Navika tuširanja treba resetovanje. Snaga je opala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2Shower": {
     "placeholders": {
       "drop": {},
@@ -404,7 +394,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2SkinCare": "Niste bili dosljedni svojoj rutini njege kože u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša rutina njege kože je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo uspostavili dosljednost.||U posljednje vrijeme je dosljednost vaše rutine njege kože opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku njege kože, privremeno snizite cilj. Snaga je opala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša rutina njege kože treba resetovanje. Snaga je opala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2SkinCare": "Niste bili dosljedni svojoj rutini njege kože u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša rutina njege kože je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo uspostavili konzistentnost.||U posljednje vrijeme je konzistentnost vaše rutine njege kože opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku njege kože, privremeno snizite cilj. Snaga je opala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša rutina njege kože treba resetovanje. Snaga je opala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2SkinCare": {
     "placeholders": {
       "drop": {},
@@ -412,7 +402,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2Studying": "Niste bili dosljedni u svojoj navici učenja u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša navika učenja je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||U posljednje vrijeme je dosljednost vaše navike učenja opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili svoju naviku učenja, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša navika učenja treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2Studying": "Niste bili dosljedni u svojoj navici učenja u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša navika učenja je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||U posljednje vrijeme je konzistentnost vaše navike učenja opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili svoju naviku učenja, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša navika učenja treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2Studying": {
     "placeholders": {
       "drop": {},
@@ -420,7 +410,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2WakeUpEarly": "U posljednje vrijeme nisi bio dosljedan u ranom ustajanju. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Rano buđenje je u posljednje vrijeme slabije. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||Nedavna dosljednost ranog buđenja je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku ranog ustajanja, za sada snizite cilj. Snaga je opala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Rano ustajanje treba resetovanje. Snaga je opala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2WakeUpEarly": "U posljednje vrijeme nisi bio dosljedan u ranom ustajanju. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Rano buđenje je u posljednje vrijeme slabije. Snaga je pala za {drop}%. Pomaknite svoj cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost ranog buđenja je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku ranog ustajanja, za sada snizite cilj. Snaga je opala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Rano ustajanje treba resetovanje. Snaga je opala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2WakeUpEarly": {
     "placeholders": {
       "drop": {},
@@ -428,7 +418,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2Walk": "U posljednje vrijeme nisi bio dosljedan svojoj rutini hodanja. Snaga ti je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša rutina hodanja je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||U posljednje vrijeme je dosljednost vaše rutine hodanja opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku šetnje, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša rutina šetnje treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2Walk": "U posljednje vrijeme nisi bio dosljedan svojoj rutini hodanja. Snaga ti je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša rutina hodanja je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||U posljednje vrijeme je konzistentnost vaše rutine hodanja opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili naviku šetnje, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša rutina šetnje treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2Walk": {
     "placeholders": {
       "drop": {},
@@ -436,7 +426,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthStartSmallType2Work": "U posljednje vrijeme nisi bio dosljedan u svojoj radnoj navici. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša radna navika je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili dosljednost.||Vaša nedavna dosljednost u radnoj navici je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili svoju naviku rada, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša navika rada treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
+  "insightStrengthStartSmallType2Work": "U posljednje vrijeme nisi bio dosljedan u svojoj radnoj navici. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da bi navika ostala živa.||Vaša radna navika je u posljednje vrijeme slabija. Snaga je pala za {drop}%. Pomaknite cilj sa {fromValue} na {toValue} da biste ponovo izgradili konzistentnost.||Vaša nedavna konzistentnost u radnoj navici je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da biste povratili zamah.||Da biste zaštitili svoju naviku rada, za sada snizite cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.||Vaša navika rada treba resetovanje. Snaga je pala za {drop}%. Pokušajte {fromValue} -> {toValue} kako bi ova navika ostala živa.",
   "@insightStrengthStartSmallType2Work": {
     "placeholders": {
       "drop": {},
@@ -444,7 +434,6 @@
       "toValue": {}
     }
   },
-  "dateJoinedSetToTodayDatejoined": "Datum pridruživanja postavljen na današnji datum: $_dateJoined",
   "invalidTime": "Neispravno vrijeme",
   "keepYourDataSafeByBackingItUpToGoogleDrive": "Sačuvajte svoje podatke sigurne tako što ćete ih rezervisati na Google Driveu.",
   "label": "Oznaka",
@@ -473,7 +462,6 @@
   "notNow": "Ne sada",
   "notes": "Bilješke",
   "notificationAmountLabelFocus": "Današnji cilj je {target} {label}.|Tvoj broj za danas: {target} {label}. Počni s jednim.|Današnja doza: {target} {label}. Jasni cilj, jednostavna izvedba.|Danas se traži {target} {label}. Znaš ritam.|Cilj za danas: {target} {label}. Precizan cilj je snažan poticaj.",
-  "deviceWidthDevicewidth": "Širina uređaja: $deviceWidth",
   "notificationCombinedAmountAlmostDone": "Preostalo je samo {remaining}, i {encouragement}.",
   "notificationCombinedAmountCompleted": "Cilj je već dostignut, i {encouragement}.",
   "notificationCombinedAmountInProgress": "Nalazite se na {progress}, i {encouragement}.",
@@ -487,18 +475,18 @@
   "notificationCombinedOneOff": "Ne propustite danas, to je vaša posljednja {period} prilika i {encouragement}.",
   "notificationEncourageBrushTeeth1": "Održavajte svoju higijensku seriju snažnom",
   "notificationEncourageBrushTeeth2": "Zaštita vaše rutine brzim uspjehom",
-  "notificationEncourageBrushTeeth3": "Održavanje dosljednosti u osnovnoj njezi",
+  "notificationEncourageBrushTeeth3": "Održavanje konzistentnosti u osnovnoj njezi",
   "notificationEncourageDrinkWater1": "Hidracija sada podržava vaš cijeli sistem",
   "notificationEncourageDrinkWater2": "Jedan čaša sada održava vašu energiju stabilnijom.",
   "notificationEncourageDrinkWater3": "Kratki treninzi poboljšavaju svakodnevnu izvedbu.",
   "notificationEncourageGeneric1": "Dolaskom danas održavamo naviku živom.",
   "notificationEncourageGeneric2": "Mala akcija sada štiti tvoj zamah.",
-  "notificationEncourageGeneric3": "Dosljednost danas olakšava sutra.",
+  "notificationEncourageGeneric3": "Konzistentnost danas olakšava sutra.",
   "notificationEncourageGoToBedEarly1": "Zaštita večeras pomaže da sutra bude lakše",
   "notificationEncourageGoToBedEarly10": "Ova večerašnja odluka pomaže da vam cijela sedmica protekne lakše.",
   "notificationEncourageGoToBedEarly2": "Raniji odlazak u krevet sada vašem umu omogućava čišći početak.",
   "notificationEncourageGoToBedEarly3": "Ovaj izbor večeras osigurava bolje jutro.",
-  "notificationEncourageGoToBedEarly4": "Dosljednost u spavanju se sada isplati cijeli sutrašnji dan.",
+  "notificationEncourageGoToBedEarly4": "Konzistentnost u spavanju se sada isplati cijeli sutrašnji dan.",
   "notificationEncourageGoToBedEarly5": "Rutina za mirnu noć štiti vašu energetsku krivu",
   "notificationEncourageGoToBedEarly6": "Završavanje dana na vrijeme održava vaš ritam stabilnim.",
   "notificationEncourageGoToBedEarly7": "Bolje vrijeme spavanja je tiha prednost u performansama.",
@@ -512,17 +500,16 @@
   "notificationEncourageMedications3": "Ovaj korak podržava vašu dugoročnu dobrobit.",
   "notificationEncourageNutrition1": "Jedan namjerni izbor sada podržava vašu osnovu.",
   "notificationEncourageNutrition2": "Male pobjede u ishrani se brzo zbrajaju.",
-  "notificationEncourageNutrition3": "Dosljednost ovdje poboljšava sve ostalo.",
+  "notificationEncourageNutrition3": "Konzistentnost ovdje poboljšava sve ostalo.",
   "notificationEncourageProductivitySession1": "Jedna fokusirana sesija štiti vrijeme za duboki rad.",
   "notificationEncourageProductivitySession2": "Čisti fokus blok sada može promijeniti vaš dan.",
-  "notificationEncourageProductivitySession3": "Dosljednost u fokusu dovodi do boljih rezultata.",
+  "notificationEncourageProductivitySession3": "Konzistentnost u fokusu dovodi do boljih rezultata.",
   "notificationEncourageRead1": "Nekoliko stranica sada održava vaš čitalački identitet jakim",
   "notificationEncourageRead2": "Malo svakodnevno čitanje donosi stvarni napredak.",
   "notificationEncourageRead3": "Dolaskom danas održavamo niz",
   "notificationEncourageResearch1": "Jedan uvid danas pomjera vaš rad naprijed.",
   "notificationEncourageResearch2": "Stalna istraživanja se pretvaraju u jasnoću.",
   "notificationEncourageResearch3": "Sada je uhvaćen jedan nalaz i zadržava zamah",
-  "folderNotFoundAndCreationNotAllowed": "Mapa nije pronađena i kreiranje nije dozvoljeno",
   "notificationEncourageRunning1": "Jedan današnji trening gradi izdržljivost",
   "notificationEncourageRunning2": "Sadašnje pojavljivanje jača tvoju osnovnu izdržljivost u trčanju.",
   "notificationEncourageRunning3": "ovaj napor održava tvoj fitnes zamah stvarnim",
@@ -530,9 +517,8 @@
   "notificationEncourageShower2": "ova rutina ti pomaže da se osjećaš pun energije",
   "notificationEncourageShower3": "Čisto resetiranje održava vaš dan u pokretu.",
   "notificationEncourageSkinCare1": "Zaštitite svoju kožu jednim sigurnim korakom",
-  "notificationEncourageSkinCare2": "Učinite dosljednost svojom prednošću u njezi kože",
+  "notificationEncourageSkinCare2": "Učinite konzistentnost svojom prednošću u njezi kože",
   "notificationEncourageSkinCare3": "Održavanje vaše rutine pouzdanom i jednostavnom",
-  "folderidInParentsAndTrashedFalse": "'$folderId' u roditeljima i otpadnicima = false",
   "notificationEncourageStudying1": "Jedan fokusirani blok sada gradi zamah u učenju.",
   "notificationEncourageStudying2": "Dolaskom danas znanje se umnožava.",
   "notificationEncourageStudying3": "Kratki treninzi dosljedno pobjeđuju učenje u zadnji čas.",
@@ -541,8 +527,7 @@
   "notificationEncourageWakeUpEarly3": "Omogućite sebi mirniji početak",
   "notificationEncourageWalk1": "Kratka šetnja je dovoljna da se održi zamah.",
   "notificationEncourageWalk2": "Pomičanje sada pomaže tvojoj energiji i fokusu.",
-  "notificationEncourageWalk3": "Ovo jednostavno ponavljanje podržava dugoročnu dosljednost.",
-  "gettingHabitsForHabitsWidgetSelectedDaySelectedday": "Stvaranje navika za widget Navike ======================================== odabrani DAN: $selectedDay ",
+  "notificationEncourageWalk3": "Ovo jednostavno ponavljanje podržava dugoročnu konzistentnost.",
   "notificationEncourageWork1": "Početak od sada stvara stvarnu zamah.",
   "notificationEncourageWork2": "Jedan značajan potez može otvoriti vaš dan.",
   "notificationEncourageWork3": "Dosljedna izvedba održava napredak vidljivim",
@@ -555,30 +540,30 @@
   "notificationPeriodMonthly": "mjesečno",
   "notificationPeriodWeekly": "sedmično",
   "notificationPremadeBrushTeeth": "Brza pobjeda u higijeni sada održava tvoju rutinu oštrom.",
+  "folderNotFoundAndCreationNotAllowed": "Mapa nije pronađena i kreiranje nije dozvoljeno",
   "notificationPremadeDrinkWater": "Unesite sada tečnost i održavajte svoje tijelo u dobroj formi.",
   "notificationPremadeGoToBedEarly": "Zaštiti večeras da sutra počne lakše.",
-  "notificationPremadeGym": "Pojavi se na solidnom treningu u teretani i izgradi dosljednost.",
+  "notificationPremadeGym": "Pojavi se na solidnom treningu u teretani i izgradi konzistentnost.",
   "notificationPremadeMedications": "Uzmi lijekove na vrijeme kako bi zaštitio svoju osnovu zdravlja.",
   "notificationPremadeNutrition": "Napravite jedan namjern izbor u ishrani upravo sada.",
   "notificationPremadePraying": "Uzmite sada trenutak mira i ponovo se povežite s namjerom.",
   "notificationPremadeProductivitySession": "Održite jednu fokusiranu sesiju i zaštitite vrijeme za duboki rad.",
-  "notificationPremadeRead": "Pročitaj malo sada i pusti dosljednost da uradi ostatak.",
+  "notificationPremadeRead": "Pročitaj malo sada i pusti konzistentnost da uradi ostatak.",
   "notificationPremadeResearch": "Zabilježite jedan koristan uvid i unaprijedite svoje istraživanje.",
   "notificationPremadeRunning": "Zaveži patike i danas odradi snažan trening.",
   "notificationPremadeShower": "Obnovite svoju energiju ovom jednostavnom rutinom.",
   "notificationPremadeSkinCare": "Brinite o svojoj koži sada kako biste bili dosljedni.",
   "notificationPremadeStudying": "Započnite blok fokusirane studije i izgradite zamah u učenju.",
   "notificationPremadeWakeUpEarly": "Snažan početak vašeg dana počinje ovim izborom.",
-  "habitslistheightHabitslistheightContentheightContentheight": "habitsListHeight: $habitsListHeight, contentHeight: $contentHeight",
   "notificationPremadeWalk": "Sada je dovoljna kratka šetnja da se zadržala dinamika.",
   "notificationPremadeWork": "Započnite svoj najvažniji zadatak i steknite zamah.",
   "notificationProgressAlmostDoneAmount": "Tako si blizu. Preostalo je samo {remaining} {label}.|Preostalo je samo {remaining} {label}. Ovo je tvoj ritam — prepusti mu se.|Preostalo je samo {remaining} {label}. Već si obavio većinu. Skoro si gotov — {remaining} {label} te dijeli od završetka. Si {remaining} {label} korak od cilja. Završi snažno. Ciljna linija je blizu. Samo {remaining} {label} da završiš.",
   "notificationProgressAlmostDoneDuration": "Preostalo je samo {remaining}. Pratite još malo i gotovo!|Preostalo je {remaining}. Uvijek možete učiniti još malo.|Preostalo je {remaining}. Završiti je sama nagrada.|Preostalo je {remaining}. Možete to učiniti!",
   "notificationProgressCompletedAmount": "Već si ostvario {completed} {label}. Jesi li spreman za još?|{completed} {label} gotovo. Momentum je sada na tvojoj strani.|{completed} {label} u banci. Tvoja navika djeluje.|Super — {completed} {label} završeno. Želiš li se malo ispružiti?",
-  "notificationProgressCompletedDuration": "Cilj ostvaren: {completed} je već završeno.|Vrijeme cilja ostvareno: {completed}. Pojavio si se i ostao.|{completed} fokusiranog vremena. Završeno. To je prava posvećenost.|Sesija završena: {completed}. Tvoja dosljednost je upravo porasla.|{completed} zabilježeno. Tvoje buduće ja će ti biti zahvalno.|Ciljano vrijeme postignuto: {completed}. Sjajna upotreba fokusiranog napora.",
+  "notificationProgressCompletedDuration": "Cilj ostvaren: {completed} je već završeno.|Vrijeme cilja ostvareno: {completed}. Pojavio si se i ostao.|{completed} fokusiranog vremena. Završeno. To je prava posvećenost.|Sesija završena: {completed}. Tvoja konzistentnost je upravo porasla.|{completed} zabilježeno. Tvoje buduće ja će ti biti zahvalno.|Ciljano vrijeme postignuto: {completed}. Sjajna upotreba fokusiranog napora.",
   "notificationProgressInProgressAmount": "{completed} od {target} {label}. Bacaj se na to!|Već si odradio {completed} {label}. Sjajan početak.|{completed}/{target} {label} do sada. Održi ravnomjeran tempo.|{completed} gotovo, {remaining} preostaje. Možeš ti to.|{completed} od {target}. Nastavi dalje.",
   "notificationProgressInProgressDuration": "{completed} do sada, tvoj cilj je {target}, pa nastavi tako!|Uradio si najteži dio — početak. Nastavi dalje.|Zabilježio si {completed} od {target}. Ostanak u zoni.|{completed} od {target} je završeno. To je dobro, nastavi tako!",
-  "notificationProgressNoTracking": "Mala akcija sada održava ovu naviku živom.|Ne dopusti da ova navika izblijedi, malo truda sada štiti tvoj zamah.|Dosljednost danas čini sutra lakšim. Hoćeš li probati?|Ne zaboravi danas na svoju naviku!|Mala akcija sada održava tvoju naviku snažnom.|Hej! Vrijeme je za tvoj naviiik!|Jedan mali korak održava niz živim.|Završeno je bolje od savršenog. Uradi to.|Dosljednost se uvećava. Još jedan dan je važan.|Tvoj navika je obećanje sebi. Održi ga.|Ista navika, jedan dan jača. Nastavi graditi.|Ne treba ti motivacija. Samo počni.|Smatraj ovo poklonom svom budućem ja. Kreni s tim!|Gradiš nešto važno. Nastavi dalje.|Praviš vrijeme za ono što je važno. To si ti.|Zanima li te šta se dešava kada nikada ne preskočiš?|Obavijest o navici; Šta ćeš sad?|Vrijeme je da djeluješ po svom planu.|Ne prekidaj lanac. Još jedan dan.|Ne moraš biti savršen. Samo moraš biti prisutan.|Male akcije danas = veliki rezultati sutra.",
+  "notificationProgressNoTracking": "Mala akcija sada održava ovu naviku živom.|Ne dopusti da ova navika izblijedi, malo truda sada štiti tvoj zamah.|Konzistentnost danas čini sutra lakšim. Hoćeš li probati?|Ne zaboravi danas na svoju naviku!|Mala akcija sada održava tvoju naviku snažnom.|Hej! Vrijeme je za tvoj naviiik!|Jedan mali korak održava niz živim.|Završeno je bolje od savršenog. Uradi to.|Konzistentnost se uvećava. Još jedan dan je važan.|Tvoj navika je obećanje sebi. Održi ga.|Ista navika, jedan dan jača. Nastavi graditi.|Ne treba ti motivacija. Samo počni.|Smatraj ovo poklonom svom budućem ja. Kreni s tim!|Gradiš nešto važno. Nastavi dalje.|Praviš vrijeme za ono što je važno. To si ti.|Zanima li te šta se dešava kada nikada ne preskočiš?|Obavijest o navici; Šta ćeš sad?|Vrijeme je da djeluješ po svom planu.|Ne prekidaj lanac. Još jedan dan.|Ne moraš biti savršen. Samo moraš biti prisutan.|Male akcije danas = veliki rezultati sutra.",
   "notificationProgressNotStartedAmount": "Počni samo s 1 {label} i stvori zamah. Lako je!|Ne treba ti motivacija. Samo počni.|Najteži dio je početak. Možeš to!",
   "notificationProgressNotStartedDuration": "Počni barem s kratkom sesijom!|Ne treba ti motivacija. Samo počni.|Najteži dio je započeti. Možeš to!|Za nekoliko minuta bit ćeš sretan što si počeo.",
   "notificationScheduleCustomEveryDays": "Prilagođena kadenca: svakih {days} dana. Danas je jedan od tvojih termina. | Ritam svakih {days} dana. Danas je planirani dan. | Tvoj {days}-dnevni ciklus se danas poklapa. Vrijeme je za djelovanje. | Prilagođeni raspored kaže: danas je dan ove navike. Iskoristi svoj termin! | Ova navika se odvija svakih {days} dana. Tvoj je red upravo sada. | Danas je dio ritma ove navike. Poštuj obrazac.",
@@ -586,12 +571,12 @@
   "notificationScheduleMonthlyAtRisk": "Trebate još {remaining} ovog mjeseca ({completed}/{target} je završeno). Preskakanje dana stavlja vaš cilj u opasnost.|Preostalo {remaining} ovog mjeseca ({completed}/{target}). Danas štiti vaš napredak.|Vaš mjesečni cilj ({completed}/{target}) je i dalje ostvariv. Danas je ključni korak.|{completed}/{target} za mjesec. Nemoj dopustiti da danas bude jaz.|{remaining} potrebno ovog mjeseca ({completed}/{target}). Jedna sesija odjednom drži te na pravom putu.|Mjesečni cilj je nadohvat ruke ({completed}/{target}). Danas drži vrata otvorenim.",
   "notificationScheduleMonthlyImpossible": "Mjesečni cilj neće biti ostvaren ({completed}/{target}). Iskoristi preostale dane za vježbu, a ne za pritisak.|Mjesečni broj je nedostižan ({completed}/{target}). Ali navike se grade u prazninama, ne samo u ciljevima.|Cilj je nedostižan ovog mjeseca ({completed}/{target}). Svaki pokušaj i dalje preoblikuje petlju.|{completed}/{target} ovog mjeseca. Cilj se neće uskladiti — ali navika se i dalje računa.|Ovomjesečni cilj je premašio broj dostupnih dana ({completed}/{target}). Prilagodite se i nastavite napred.",
   "notificationScheduleMonthlyOneLeft": "Još jedno dovršavanje ovog mjeseca i dostigneš svoj cilj ({completed}/{target}).|Još jedno ovog mjeseca i dostigneš {target} ({completed} dovršeno). Ovo je tvoj završni potez.|Jedna sesija te dijeli od tvog mjesečnog cilja ({completed}/{target}). Zapečati to.|Mjesečni cilj zahtijeva još jedno dovršavanje ({completed}/{target}). Danas može biti taj dan.|Još jedan i stižeš do {target} za mjesec ({completed} završeno). Završi što si započeo.|Tvoj mjesečni cilj je na dohvat ruke ({completed}/{target}). To je samo jedna sesija.",
-  "notificationScheduleMonthlyReached": "Mjesečni cilj već ostvaren ({completed}/{target}). Dodatni ponavljanja, dodatni zamah.|Odlično si ostvario svoj mjesečni cilj ({completed}/{target}). Ovo je elitna dosljednost.|Mjesečni cilj: gotovo ({completed}/{target}). Sada je sve eksponencijalni rast.|Mjesečni cilj već srušen ({completed}/{target}). Bonus ponavljanja produbljuju naviku.",
+  "notificationScheduleMonthlyReached": "Mjesečni cilj već ostvaren ({completed}/{target}). Dodatni ponavljanja, dodatni zamah.|Odlično si ostvario svoj mjesečni cilj ({completed}/{target}). Ovo je elitna konzistentnost.|Mjesečni cilj: gotovo ({completed}/{target}). Sada je sve eksponencijalni rast.|Mjesečni cilj već srušen ({completed}/{target}). Bonus ponavljanja produbljuju naviku.",
   "notificationScheduleMonthlyRemaining": "Potrebno vam je još {remaining} ovog mjeseca da dostignete {target}.|Preostalo vam je {remaining} sesija ovog mjeseca da dostignete {target}. Dosljedno tempiranje pobjeđuje.|Potrebno vam je još {remaining} za vaš mjesečni cilj od {target}. Svaki napor gradi.|Mjesečni cilj: ostalo vam je {remaining} od {target}. Imaš vremena — iskoristi ga mudro.|{remaining} do kraja ovog mjeseca za {target}. Male, postojane radnje premosti jaz.|Tvoj mjesečni cilj je {target}, ostalo je {remaining}. Danas pomjera cilj naprijed.",
   "notificationScheduleWeeklyAtRisk": "Trebate još {remaining} ove sedmice ({completed}/{target} je gotovo). Ako preskočite danas, vaš cilj postaje mnogo teži.|Trebate još {remaining} ove sedmice ({completed}/{target}). Danas je to podnošljivo.|Preostalo {remaining} za ovu sedmicu ({completed}/{target}). Preskakanje dana stvara pritisak.|Tvoj sedmični cilj ({completed}/{target}) je i dalje ostvariv. Danas je ključna tačka.|{completed}/{target} za sedmicu. Jedan danas drži tvoj cilj na pravom putu.|Preostalo {remaining} za ovu sedmicu ({completed}/{target}). Danas je tvoj najbolji potez.",
-  "notificationScheduleWeeklyImpossible": "Ovosedmični cilj je nedostižan ({completed}/{target}). Ipak, svaki pokušaj jača naviku za sljedeću sedmicu.|Cilj neće biti ostvaren ove sedmice ({completed}/{target}). Ali neostvarene sedmice nas uče šta treba prilagoditi.|Sedmični broj se neće poklopiti ({completed}/{target}). Uradite to ionako — dosljednost zanemaruje semafor.|Cilj promašen ove sedmice ({completed}/{target}). Svaki pokušaj i dalje jača krug navike.|{completed}/{target} ove sedmice. Cilj je izvan dosega — ali navika nije.",
+  "notificationScheduleWeeklyImpossible": "Ovosedmični cilj je nedostižan ({completed}/{target}). Ipak, svaki pokušaj jača naviku za sljedeću sedmicu.|Cilj neće biti ostvaren ove sedmice ({completed}/{target}). Ali neostvarene sedmice nas uče šta treba prilagoditi.|Sedmični broj se neće poklopiti ({completed}/{target}). Uradite to ionako — konzistentnost zanemaruje semafor.|Cilj promašen ove sedmice ({completed}/{target}). Svaki pokušaj i dalje jača krug navike.|{completed}/{target} ove sedmice. Cilj je izvan dosega — ali navika nije.",
   "notificationScheduleWeeklyOneLeft": "Još jedno dovršavanje ove sedmice i dostignut si svoj cilj ({completed}/{target}).|Još jedno ove sedmice i stižeš do {target} ({completed} završeno). Zatvori krug.|Jedna sesija te dijeli od tvojeg sedmičnog cilja ({completed}/{target}). Neka se računa.|Cilj ove sedmice treba još samo jedno ({completed}/{target}). Možeš to sada završiti.|Još jedno dovršavanje te dijeli od {target} ove sedmice ({completed} završeno).|Sedmični cilj je nadohvat ruke: još jedno ({completed}/{target}). To je samo danas.",
-  "notificationScheduleWeeklyReached": "Sedmični cilj je već ostvaren ({completed}/{target}). Ovo je bonus dosljednost.|Postigao si svoj sedmični cilj ({completed}/{target}). Sve što je viška je pobjeda.|Sedmični cilj: ostvaren ({completed}/{target}). Bonus ponavljanja grade elitne navike.|{completed}/{target} za sedmicu. Premašio si očekivanja.|Sedmični cilj već je ostvaren ({completed}/{target}). Radiš na višem nivou.|Ispunio si svoj sedmični cilj ({completed}/{target}). Dosljednost ti sada viška.",
+  "notificationScheduleWeeklyReached": "Sedmični cilj je već ostvaren ({completed}/{target}). Ovo je bonus konzistentnost.|Postigao si svoj sedmični cilj ({completed}/{target}). Sve što je viška je pobjeda.|Sedmični cilj: ostvaren ({completed}/{target}). Bonus ponavljanja grade elitne navike.|{completed}/{target} za sedmicu. Premašio si očekivanja.|Sedmični cilj već je ostvaren ({completed}/{target}). Radiš na višem nivou.|Ispunio si svoj sedmični cilj ({completed}/{target}). Konzistentnost ti sada viška.",
   "notificationScheduleWeeklyRemaining": "Trebate još {remaining} ove sedmice da biste dostigli {target}.|Preostalo je {remaining} do sedmičnog cilja od {target}. Stalno tempo djeluje.|Trebate još {remaining} ove sedmice. Danas je odlično vrijeme da započnete jedan.|Sedmični cilj: preostalo {remaining} od {target}. Raspodijelite napor.|Preostalo je {remaining} sesija da dosegnete {target} ove sedmice. Svaka je jednako važna.|Vaš sedmični cilj je {target}, preostalo je {remaining}. Korak po korak.",
   "notifications": "Obavijesti",
   "notificationsAreDisabled": "Obavijesti su onemogućene",
@@ -635,10 +620,8 @@
   "stats": "Statistika",
   "subscriptions": "Pretplate",
   "sun": "Ned",
-  "syncErrorErrormessage": "Greška sinhronizacije: $errorMessage",
   "syncNow": "Sinkronizuj sada",
   "syncing": "Sinhronizacija...",
-  "syncingProgressmessage": "Sinhronizacija: $progressMessage",
   "tappedAmount": "Iznos povučen",
   "tappedDuration": "Trajanje uzorkom",
   "thisAmountLabelWillBeRemoved": "Ova oznaka iznosa će biti uklonjena.",
@@ -679,7 +662,6 @@
   "youCanPressNumberAbove": "Također možete pritisnuti broj iznad da promijenite {type}",
   "youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem": "Imate neshčuvane promjene. Jeste li sigurni da želite vratiti se i odbaciti ih?",
   "youHaventAddedAnyHabitsYet": "Još niste dodali nijednu naviku.",
-  "lastSyncedLastsynctext": "Posljednja sinhronizacija: $lastSyncText",
   "youWillUseThisPassphraseToDecryptYourDataWhenImportingIt": "Koristit ćete ovu frazu za otključavanje podataka prilikom uvoza.",
   "yourName": "Tvoje ime",
   "youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow": "Postaješ zaista dosljedan u ovoj navici. Razmisli o tome da ne činiš obavezno guranje sebe malo više. Želiš li sada ažurirati ovu naviku?",
@@ -687,7 +669,6 @@
   "enjoyAllBenefits": "Uživajte u svim prednostima aplikacije",
   "rateUs": "Ocijenite nas",
   "reportBug": "Prijavi grešku",
-  "lastopeneddate": "posljednjiDatumotvaranja",
   "leaveFeedback": "Ostavite povratne informacije",
   "termsOfService": "Uslovi usluge",
   "privacyPolicy": "Politika privatnosti",
@@ -698,7 +679,6 @@
   "habitDetails": "Detalji navike",
   "deleteHabit": "Izbriši naviku",
   "markAsComplete": "Označi kao dovršeno",
-  "leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset": "Vođenje: $leading, Odabrana širina: $selectedWidth, Centrirani pomak stavke: $itemCenterOffset",
   "habitNotFound": "Navika nije pronađena",
   "strength": "Čvrstoća",
   "skipped": "Preskočeno",
@@ -710,34 +690,11 @@
   "completionRate": "Stopa ispunjavanja",
   "completionRatio": "Omjer ispunjavanja",
   "last7Days": "Zadnjih 7 dana",
-  "listWidthListwidth": "Širina liste: $listWidth",
-  "consistency": "Dosljednost",
+  "consistency": "Konzistentnost",
   "yourActivityOverTime": "Vaša aktivnost tokom vremena",
   "less": "Manje",
   "more": "Više",
-  "noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime": "Nijedna kategorija nije 'spremna'. Primjenjuje se rezervna logika za vrijeme $currentTimeSlotName.",
-  "notMountedAfterNotificationPermissionRequestAbortingSave": "Nije montirano nakon zahtjeva za dozvolu obavještavanja, prekida se spremanje.",
-  "numberOfHoursNumberofhours": "Broj sati: $numberOfHours",
-  "returningDaysProgressDaysprogress": "Napredak povrata dana: $daysProgress",
-  "runningUpdatelastopeneddate": "Pokretanje _updateLastOpenedDate",
-  "savingDayAtDaysimple": "Štednja dana na: $daySimple",
-  "scheduledTodayToggledValue": "Scheduled Today je prebaceno: $value",
-  "selectAColorPalleteForYourInterface": "Odaberite paletu boja za svoj interfejs",
-  "selectedCategoryIdInBuildSelectedcategoryid": "ID odabrane kategorije u izradi: $selectedCategoryId",
-  "selectedHourValue": "Odabrani sat: $value",
-  "selectedMinuteIndex": "Odabrana minuta: $index",
-  "selectedTypeRightBeforeNavigationSelectedtype": "Odabrana vrsta neposredno prije navigacije: $selectedType",
-  "selectedTypeSelectedtype": "Odabrana vrsta: $selectedType",
-  "skippingHabitId": "Navika preskakanja: $id",
-  "streakStreakLongestStreakLongeststreak": "Niz: $streak, Najduži niz: $longestStreak",
-  "thisWeekDaysThisweekdays": "Dani ovog tjedna: $thisWeekDays",
-  "timeTypeTimetype": "Vrsta vremena: $timeType",
-  "unknownCatid": "Nepoznati $catId",
-  "unknownCurrenttimeslotfallbackid": "Nepoznati $currentTimeSlotFallbackId",
-  "updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress": "Ažurirani napredak odabrane datume: $newSelectedProgress (bilo: $oldSelectedProgress)",
-  "updatedTodaysProgressNewtodayprogressWasOldtodayprogress": "Ažurirani današnji napredak: $newTodayProgress (bilo: $oldTodayProgress)",
-  "updatingHabitInDbHabit": "Ažuriranje navike u DB-u: $habit",
-  "usingCustomAndroidNavBar": "Korištenje prilagođene Android navigacijske trake",
-  "viewportWidthViewportwidth": "Širina prikaza: $viewportWidth",
-  "visibleCategoryIdId": "ID vidljive kategorije: $id"
+  "allHabits": "Sve navike",
+  "isScheduledToday": "Zakazano danas",
+  "selectAColorPalleteForYourInterface": "Odaberite paletu boja za svoj interfejs"
 }

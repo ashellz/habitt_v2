@@ -180,7 +180,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String deleteLabel(Object label) {
-    return 'Cancellare \'\$label\'?';
+    return 'Delete \'$label\'?';
   }
 
   @override
@@ -1517,7 +1517,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String syncErrorErrormessage(Object errorMessage) {
-    return 'Errore di sincronizzazione: \$errorMessage';
+    return 'Sync error: $errorMessage';
   }
 
   @override
@@ -1528,7 +1528,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String syncingProgressmessage(Object progressMessage) {
-    return 'Sincronizzazione: \$progressMessage';
+    return 'Syncing: $progressMessage';
   }
 
   @override
@@ -1770,4 +1770,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get more => 'Di più';
+
+  @override
+  String get allHabits => 'Tutte le abitudini';
+
+  @override
+  String get isScheduledToday => 'In programma oggi';
 }
