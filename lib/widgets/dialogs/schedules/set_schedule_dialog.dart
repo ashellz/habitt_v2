@@ -6,6 +6,7 @@ import 'package:habitt/widgets/dialogs/schedules/schedule_dialog_snapshot.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/schedule_option_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SetScheduleDialog extends StatefulWidget {
   const SetScheduleDialog({super.key, this.rootSnapshot});
@@ -41,8 +42,8 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
         }
       },
       child: NewDefaultDialog(
-        title: "Set Schedule",
-        desc: "How often would you like to do this habit?",
+        title: AppLocalizations.of(context)!.setSchedule,
+        desc: AppLocalizations.of(context)!.howOftenWouldYouLikeToDoThisHabit,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/other_pages/select_habit_time_page.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SchedulingAndAlerts extends StatelessWidget {
   const SchedulingAndAlerts({super.key, required this.tp});
@@ -29,7 +30,7 @@ class SchedulingAndAlerts extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                "Scheduling and Alerts",
+                AppLocalizations.of(context)!.schedulingAndAlerts,
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 16,

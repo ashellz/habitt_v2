@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/increment_decrement_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class AmountProgressInput extends StatefulWidget {
   const AmountProgressInput({
@@ -62,7 +63,7 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
       "Habit amount: ${stateProvider.habitAmount}, min: ${widget.minValue}",
     );
     if (stateProvider.habitAmount > widget.minValue) {
-      debugPrint("Decrementing habit amount");
+      debugPrint(AppLocalizations.of(context)!.decrementingHabitAmount);
       setState(() {
         stateProvider.habitAmount--;
         controller.text = stateProvider.habitAmount.toString();

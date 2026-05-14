@@ -7,6 +7,7 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/stats_page/value_text.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class CompletedHabits extends StatelessWidget {
   const CompletedHabits({super.key});
@@ -51,7 +52,7 @@ class CompletedHabits extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ValueText(text: "Completed habits: ", value: habitsCompleted),
+        ValueText(text: AppLocalizations.of(context)!.completedHabits, value: habitsCompleted),
         SizedBox(height: 8),
         SizedBox(
           height: 200,

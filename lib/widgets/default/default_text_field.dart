@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class DefaultTextField extends StatefulWidget {
   const DefaultTextField({
@@ -58,7 +59,7 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
       bool digitsOnly,
     ) {
       if (textOnly) {
-        return FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"));
+        return FilteringTextInputFormatter.allow(RegExp(AppLocalizations.of(context)!.azaz));
       } else if (digitsOnly) {
         return FilteringTextInputFormatter.allow(RegExp("[0-9]"));
       } else {

@@ -12,6 +12,7 @@ import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/widgets/notification/notification_day.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -60,10 +61,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context: context,
       builder:
           (context) => OldDefaultDialog(
-            title: "Missing Permissions",
+            title: AppLocalizations.of(context)!.missingPermissions,
             desc:
-                "To receive reminders, please enable notification permissions for Habitt.",
-            rightButtonText: "Enable",
+                AppLocalizations.of(context)!.toReceiveRemindersPleaseEnableNotificationPermissionsForHabitt,
+            rightButtonText: AppLocalizations.of(context)!.enable,
             rightButtonCallback: () {
               Navigator.of(context).pop(true);
             },
@@ -186,7 +187,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 children: [
                   NavBackButton(tp: tp),
                   Text(
-                    "Notifications",
+                    AppLocalizations.of(context)!.notifications,
                     style: TextStyle(
                       fontSize: 38,
                       color: tp.primaryTextColor,
@@ -194,7 +195,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                   ),
                   Text(
-                    "Control when and how you get notified about your habits.",
+                    AppLocalizations.of(context)!.controlWhenAndHowYouGetNotifiedAboutYourHabits,
                     style: TextStyle(
                       fontSize: 16,
                       color: tp.secondaryTextColor,
@@ -284,7 +285,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: DefaultButton(
-                          label: "Save",
+                          label: AppLocalizations.of(context)!.save,
                           onPressed: _saveChanges,
                         ),
                       ),

@@ -4,6 +4,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:habitt/pages/other_pages/enter_amount_page.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectHabitTypeOptions extends StatefulWidget {
   const SelectHabitTypeOptions({super.key});
@@ -105,7 +106,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
-    debugPrint("Tapped amount");
+    debugPrint(AppLocalizations.of(context)!.tappedAmount);
 
     final stateProvider = context.read<StateProvider>();
 
@@ -128,12 +129,12 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
       stateProvider.habitAmount =
           stateProvider.habitAmount < 1 ? 1 : stateProvider.habitAmount;
 
-      debugPrint("Selected type: $selectedType");
+      debugPrint(AppLocalizations.of(context)!.selectedTypeSelectedtype);
 
       // Navigates to input page after short delay
       Future.delayed(Duration(milliseconds: 150)).then((value) {
         if (mounted) {
-          debugPrint("Selected type right before navigation: $selectedType");
+          debugPrint(AppLocalizations.of(context)!.selectedTypeRightBeforeNavigationSelectedtype);
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => EnterAmountPage(type: selectedType),
@@ -146,7 +147,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   // This toggles the duration type on tap, and navigates if selected
   void onTapDuration() {
-    debugPrint("Tapped duration");
+    debugPrint(AppLocalizations.of(context)!.tappedDuration);
     final stateProvider = context.read<StateProvider>();
 
     setState(() {

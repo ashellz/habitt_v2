@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class DiscardChangesDialog extends StatelessWidget {
   const DiscardChangesDialog({super.key});
@@ -8,9 +9,9 @@ class DiscardChangesDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OldDefaultDialog(
-      title: "Discard changes?",
+      title: AppLocalizations.of(context)!.discardChanges,
       desc:
-          "You have unsaved changes. Are you sure you want to go back and discard them?",
+          AppLocalizations.of(context)!.youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem,
       content: Row(
         children: [
           Expanded(
@@ -23,7 +24,7 @@ class DiscardChangesDialog extends StatelessWidget {
           SizedBox(width: 16),
           Expanded(
             child: DefaultButton(
-              label: "Discard",
+              label: AppLocalizations.of(context)!.discard,
               onPressed: () {
                 Navigator.pop(context); // close dialog
                 Navigator.pop(context); // go back

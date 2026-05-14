@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class OptionalHabitSwitch extends StatelessWidget {
   const OptionalHabitSwitch({
@@ -22,7 +23,7 @@ class OptionalHabitSwitch extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                "Optional habit",
+                AppLocalizations.of(context)!.optionalHabit,
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 16,
@@ -41,7 +42,7 @@ class OptionalHabitSwitch extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 55),
             child: Text(
-              "If checked, habit won't count for the 'Perfect days streak'.",
+              AppLocalizations.of(context)!.ifCheckedHabitWontCountForThePerfectDaysStreak,
               style: TextStyle(color: tp.primaryTextColor),
             ),
           ),
