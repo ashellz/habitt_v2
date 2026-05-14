@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/settings/lanugage_option_widget.dart';
@@ -42,6 +43,7 @@ class AppLanguageSheet extends StatelessWidget {
   }
 
   Padding topSection(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
       child: Row(
@@ -65,7 +67,7 @@ class AppLanguageSheet extends StatelessWidget {
             ),
           ),
           Text(
-            'Choose app language',
+            loc.chooseLanguage,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: cp.text,

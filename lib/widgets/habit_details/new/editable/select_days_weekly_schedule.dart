@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/selectable_weekdays.dart';
@@ -12,18 +13,20 @@ class SelectDaysWeekly extends StatefulWidget {
 }
 
 class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
-  static const Map<String, int> _weekdayMap = {
-    'Mon': 1,
-    'Tue': 2,
-    'Wed': 3,
-    'Thu': 4,
-    'Fri': 5,
-    'Sat': 6,
-    'Sun': 7,
-  };
+  Map<String, int> _weekdayMap(AppLocalizations loc) {
+    return {
+      loc.mon: 1,
+      loc.tue: 2,
+      loc.wed: 3,
+      loc.thu: 4,
+      loc.fri: 5,
+      loc.sat: 6,
+      loc.sun: 7,
+    };
+  }
 
-  Set<String> _labelsFromIndices(Set<int> indices) {
-    return _weekdayMap.entries
+  Set<String> _labelsFromIndices(Set<int> indices, AppLocalizations loc) {
+    return _weekdayMap(loc).entries
         .where((entry) => indices.contains(entry.value))
         .map((entry) => entry.key)
         .toSet();
@@ -31,9 +34,11 @@ class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
-    final selectedDays = _labelsFromIndices(sp.selectedDaysAWeek);
+    final selectedDays = _labelsFromIndices(sp.selectedDaysAWeek, loc);
+    final weekdayMap = _weekdayMap(loc);
 
     return Container(
       width: double.infinity,
@@ -54,7 +59,7 @@ class _SelectDaysWeeklyState extends State<SelectDaysWeekly> {
           SelectableWeekdays(
             selectedDays: selectedDays,
             onDaySelected: (day) {
-              final dayValue = _weekdayMap[day];
+              final dayValue = weekdayMap[day];
               if (dayValue == null) return;
               sp.toggleWeeklyDay(dayValue);
             },

@@ -820,9 +820,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get never => 'Never';
 
   @override
-  String get newDayResettingCompletion => 'New day, resetting completion';
-
-  @override
   String get newHabit => 'New Habit';
 
   @override
@@ -1784,6 +1781,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String habitWillAppear(Object dayLabel, Object days) {
-    return 'This habit will appear every $days $dayLabel starting from today';
+    return 'This habit will appear every $days. $dayLabel starting from today';
   }
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get chooseAppLanguage => 'Choose app language';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get mode => 'Mode';
+
+  @override
+  String get light => 'Light';
+
+  @override
+  String get dark => 'Dark';
+
+  @override
+  String get system => 'System';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get allNotifications => 'All notifications';
+
+  @override
+  String get habitNotifications => 'Habit notifications';
+
+  @override
+  String get notificationSettings => 'Notification settings';
+
+  @override
+  String get dailyReminders => 'Daily reminders';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get findALanguage => 'Find a language';
+
+  @override
+  String get noLanguagesFound => 'No languages found';
+
+  @override
+  String get chooseLanguage => 'Choose language';
 }

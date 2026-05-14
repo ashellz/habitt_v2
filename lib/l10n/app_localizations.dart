@@ -1334,12 +1334,6 @@ abstract class AppLocalizations {
   /// **'Never'**
   String get never;
 
-  /// No description provided for @newDayResettingCompletion.
-  ///
-  /// In en, this message translates to:
-  /// **'New day, resetting completion'**
-  String get newDayResettingCompletion;
-
   /// No description provided for @newHabit.
   ///
   /// In en, this message translates to:
@@ -2874,8 +2868,104 @@ abstract class AppLocalizations {
   /// No description provided for @habitWillAppear.
   ///
   /// In en, this message translates to:
-  /// **'This habit will appear every {days} {dayLabel} starting from today'**
+  /// **'This habit will appear every {days}. {dayLabel} starting from today'**
   String habitWillAppear(Object dayLabel, Object days);
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @chooseAppLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose app language'**
+  String get chooseAppLanguage;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get mode;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// No description provided for @system.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get system;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @allNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications'**
+  String get allNotifications;
+
+  /// No description provided for @habitNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit notifications'**
+  String get habitNotifications;
+
+  /// No description provided for @notificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification settings'**
+  String get notificationSettings;
+
+  /// No description provided for @dailyReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminders'**
+  String get dailyReminders;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @findALanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a language'**
+  String get findALanguage;
+
+  /// No description provided for @noLanguagesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No languages found'**
+  String get noLanguagesFound;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose language'**
+  String get chooseLanguage;
 }
 
 class _AppLocalizationsDelegate

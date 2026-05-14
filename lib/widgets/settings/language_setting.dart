@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
@@ -24,12 +25,14 @@ class LanguageSetting extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
 
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Language',
+          loc.language,
           style: TextStyle(
             color: cp.lightGreyText,
             fontSize: 16,
@@ -51,7 +54,7 @@ class LanguageSetting extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Choose app language',
+                loc.chooseAppLanguage,
                 style: TextStyle(
                   color: cp.text,
                   fontSize: 16,

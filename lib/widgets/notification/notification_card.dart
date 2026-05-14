@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
@@ -26,25 +27,37 @@ class NotificationCard extends StatelessWidget {
   final ValueChanged<TimeOfDay>? onTimeChanged;
   final ValueChanged<int>? onWeekdayToggled;
 
-  static const Map<int, String> _indexToLabel = {
-    1: 'Mon',
-    2: 'Tue',
-    3: 'Wed',
-    4: 'Thu',
-    5: 'Fri',
-    6: 'Sat',
-    7: 'Sun',
-  };
+  Map<int, String> _indexToLabel(AppLocalizations loc) {
+    return {
+      1: loc.mon,
+      2: loc.tue,
+      3: loc.wed,
+      4: loc.thu,
+      5: loc.fri,
+      6: loc.sat,
+      7: loc.sun,
+    };
+  }
 
-  Set<String> _labelsFromIndices(Set<int> indices) {
-    return _indexToLabel.entries
+  Set<String> _labelsFromIndices(Set<int> indices, AppLocalizations loc) {
+    return _indexToLabel(loc).entries
         .where((entry) => indices.contains(entry.key))
         .map((entry) => entry.value)
         .toSet();
   }
 
+  int _indexFromLabel(String label, AppLocalizations loc) {
+    return _indexToLabel(loc).entries
+        .firstWhere(
+          (entry) => entry.value == label,
+          orElse: () => MapEntry(1, loc.mon),
+        )
+        .key;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
     final np = context.watch<NotificationsProvider>();
     final resolvedSettings = settings ?? np.getSettings(period);
@@ -83,7 +96,7 @@ class NotificationCard extends StatelessWidget {
 
                 Expanded(
                   child: Text(
-                    period.name,
+                    period.getLocalizedName(context),
                     style: TextStyle(
                       color: cp.text,
                       fontSize: 18,
@@ -143,16 +156,10 @@ class NotificationCard extends StatelessWidget {
                             isNotification: true,
                             selectedDays: _labelsFromIndices(
                               resolvedSettings.weekdays,
+                              loc,
                             ),
                             onDaySelected: (label) {
-                              // map back to integer and toggle via provider
-                              final idx =
-                                  _indexToLabel.entries
-                                      .firstWhere(
-                                        (e) => e.value == label,
-                                        orElse: () => const MapEntry(1, 'Mon'),
-                                      )
-                                      .key;
+                              final idx = _indexFromLabel(label, loc);
                               if (onWeekdayToggled != null) {
                                 onWeekdayToggled!(idx);
                                 return;
