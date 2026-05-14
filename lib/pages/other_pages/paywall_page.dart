@@ -173,6 +173,58 @@ class _PaywallPageState extends State<PaywallPage> {
                       ),
                     ),
                     SizedBox(height: 24),
+                    Column(
+                      spacing: 10,
+                      children: [
+                        PremiumBenefit(
+                          icon: Icon(
+                            Icons.calendar_month,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          text: 'Custom habit scheduling',
+                        ),
+                        PremiumBenefit(
+                          icon: Icon(
+                            Icons.notifications,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          text: 'Per habit notifications',
+                        ),
+                        PremiumBenefit(
+                          icon: Icon(
+                            Icons.bar_chart,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          text: 'Habit improvement suggestions',
+                        ),
+                        PremiumBenefit(
+                          icon: Icon(
+                            Icons.cloud,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+
+                          text: 'Cloud backup and sync',
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      width: double.infinity,
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 1,
+                            strokeAlign: BorderSide.strokeAlignCenter,
+                            color: Colors.white.withValues(alpha: 0.40),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 52),
                   ],
                 ),
               ),
@@ -180,6 +232,45 @@ class _PaywallPageState extends State<PaywallPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PremiumBenefit extends StatelessWidget {
+  const PremiumBenefit({super.key, required this.icon, required this.text});
+
+  final Widget icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 12,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: ShapeDecoration(
+            color: Colors.white.withValues(alpha: 0.16),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 1,
+                color: Colors.white.withValues(alpha: 0.20),
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+          child: icon,
+        ),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
