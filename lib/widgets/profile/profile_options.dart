@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/main_pages/profile_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileOptions extends StatelessWidget {
@@ -73,6 +74,15 @@ class ProfileOptions extends StatelessWidget {
                       cp: cp,
                       text: 'Rate us',
                       svgPath: 'assets/images/new-svg/rate.svg',
+                      onTap: () async {
+                        await showModalBottomSheet(
+                          context: context,
+                          backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                          barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+                          isScrollControlled: true,
+                          builder: (context) => RateReportSheet(),
+                        );
+                      },
                     ),
                     Divider(color: cp.border, height: 32),
                     ProfileOption(
