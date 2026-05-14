@@ -1681,4 +1681,19 @@ class AppLocalizationsBs extends AppLocalizations {
   String changeHabitTimesInPeriodWarning(Object period) {
     return 'Promjena broja pojavljivanja navike u $period će očistiti odabrane dane';
   }
+
+  @override
+  String get habitDetails => 'Detalji navike';
+
+  @override
+  String get deleteHabit => 'Izbriši naviku';
+
+  @override
+  String get markAsComplete => 'Označi kao dovršeno';
+
+  @override
+  String get habitNotFound => 'Navika nije pronađena';
+
+  @override
+  String get strength => 'Čvrstoća';
 }

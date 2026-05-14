@@ -665,5 +665,10 @@
   "logOut": "Log out",
   "backupAndSync": "Backup & Sync",
   "lastSynced": "Last synced: {lastSynced}",
-  "changeHabitTimesInPeriodWarning": "Changing the amount of times habit appears in a {period} will clear selected days"
+  "changeHabitTimesInPeriodWarning": "Changing the amount of times habit appears in a {period} will clear selected days",
+  "habitDetails": "Habit details",
+  "deleteHabit": "Delete habit",
+  "markAsComplete": "Mark as complete",
+  "habitNotFound": "Habit not found",
+  "strength": "Strength"
 }

@@ -1686,4 +1686,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String changeHabitTimesInPeriodWarning(Object period) {
     return 'Modificando il numero di volte in cui l\'abitudine appare in un $period si cancellano i giorni selezionati.';
   }
+
+  @override
+  String get habitDetails => 'Dettagli sull\'abitudine';
+
+  @override
+  String get deleteHabit => 'Cancellare l\'abitudine';
+
+  @override
+  String get markAsComplete => 'Contrassegnare come completo';
+
+  @override
+  String get habitNotFound => 'Abitudine non trovata';
+
+  @override
+  String get strength => 'La forza';
 }

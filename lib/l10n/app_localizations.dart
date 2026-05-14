@@ -2666,6 +2666,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Changing the amount of times habit appears in a {period} will clear selected days'**
   String changeHabitTimesInPeriodWarning(Object period);
+
+  /// No description provided for @habitDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit details'**
+  String get habitDetails;
+
+  /// No description provided for @deleteHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete habit'**
+  String get deleteHabit;
+
+  /// No description provided for @markAsComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as complete'**
+  String get markAsComplete;
+
+  /// No description provided for @habitNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit not found'**
+  String get habitNotFound;
+
+  /// No description provided for @strength.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get strength;
 }
 
 class _AppLocalizationsDelegate

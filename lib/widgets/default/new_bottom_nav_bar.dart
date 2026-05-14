@@ -194,12 +194,16 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
           tint: cp.main,
           height: widget.supportsLiquidGlass ? 100 : 88,
           iconSize: 20,
-          items: const [
-            CNTabBarItem(label: 'Home', icon: CNSymbol('house')),
-            CNTabBarItem(label: 'Habits', icon: CNSymbol('square.grid.2x2')),
-            CNTabBarItem(label: 'Calendar', icon: CNSymbol('calendar')),
+          items: [
+            CNTabBarItem(label: loc.home, icon: CNSymbol('house')),
             CNTabBarItem(
-              label: 'Profile',
+              label:
+                  "${loc.habits[0].toUpperCase()}${loc.habits.substring(1).toLowerCase()}",
+              icon: CNSymbol('square.grid.2x2'),
+            ),
+            CNTabBarItem(label: loc.calendar, icon: CNSymbol('calendar')),
+            CNTabBarItem(
+              label: loc.profile,
               icon: CNSymbol('person.crop.circle'),
             ),
           ],

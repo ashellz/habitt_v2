@@ -94,7 +94,10 @@ class _NewHabitCategoryTitleState extends State<NewHabitCategoryTitle>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(widget.category.name, style: TextStyle(color: cp.greyText)),
+          Text(
+            widget.category.getLocalizedName(context),
+            style: TextStyle(color: cp.greyText),
+          ),
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
