@@ -4,6 +4,7 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class PerfectDaysStreak extends StatelessWidget {
   const PerfectDaysStreak({super.key, required this.tooltipController});
@@ -23,7 +24,7 @@ class PerfectDaysStreak extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Perfect days streak",
+                AppLocalizations.of(context)!.perfectDaysStreak,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -67,7 +68,7 @@ class PerfectDaysStreak extends StatelessWidget {
               controller: tooltipController,
               backgroundColor: tp.surfaceColor,
               content: Text(
-                "Number of days in a row you have completed all your habits.",
+                AppLocalizations.of(context)!.numberOfDaysInARowYouHaveCompletedAllYourHabits,
                 style: TextStyle(color: tp.primaryTextColor),
               ),
               showBarrier: false,

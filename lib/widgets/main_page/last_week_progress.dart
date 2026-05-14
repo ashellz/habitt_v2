@@ -66,7 +66,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
         _progressValuesByDate[key] = progressValue;
         _previousProgressValuesByDate[key] = 0.0;
       }
-      debugPrint("Initial progress values loaded for all days");
+      debugPrint(AppLocalizations.of(context)!.initialProgressValuesLoadedForAllDays);
     });
   }
 
@@ -85,7 +85,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
         _progressValuesByDate[todayKey] = newTodayProgress;
       });
       debugPrint(
-        "Updated today's progress: $newTodayProgress (was: $oldTodayProgress)",
+        AppLocalizations.of(context)!.updatedTodaysProgressNewtodayprogressWasOldtodayprogress,
       );
       return;
     }
@@ -107,7 +107,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
         _progressValuesByDate[selectedKey] = newSelectedProgress;
       });
       debugPrint(
-        "Updated selected date progress: $newSelectedProgress (was: $oldSelectedProgress)",
+        AppLocalizations.of(context)!.updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress,
       );
     }
   }

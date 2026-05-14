@@ -9,6 +9,7 @@ import 'package:habitt/widgets/habit_details/new/editable/dialogs/create_amount_
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/set_amount_label_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class EnterHabitAmount extends StatelessWidget {
   const EnterHabitAmount({super.key});
@@ -107,9 +108,9 @@ class EnterHabitAmount extends StatelessWidget {
         Expanded(
           child: NewDefaultTextField(
             controller: sp.habitAmountLabelController,
-            title: "Amount name",
+            title: AppLocalizations.of(context)!.amountName,
             fontWeight: FontWeight.w500,
-            hint: "Amount name",
+            hint: AppLocalizations.of(context)!.amountName,
             suffix: GestureDetector(
               onTap: () => _showAmountLabelPicker(context),
               child: Padding(

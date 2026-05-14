@@ -11,6 +11,7 @@ import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -197,8 +198,8 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
       return;
     }
 
-    final title = "Exit without saving?";
-    final desc = "All changes you made will be discarded.";
+    final title = AppLocalizations.of(context)!.exitWithoutSaving;
+    final desc = AppLocalizations.of(context)!.allChangesYouMadeWillBeDiscarded;
 
     _isExitDialogOpen = true;
     await showDialogSheet(
@@ -206,7 +207,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
       builder: (dialogContext) => NewDefaultDialog(
         title: title,
         desc: desc,
-        primaryButtonLabel: "Exit",
+        primaryButtonLabel: AppLocalizations.of(context)!.exit,
         onPrimaryButtonPressed: () {
           Navigator.of(dialogContext).pop();
           _popSheet(result: closeResult);
@@ -305,7 +306,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
             ),
           ),
           Text(
-            "Edit profile",
+            AppLocalizations.of(context)!.editProfile,
             style: TextStyle(
               color: cp.text,
               fontSize: 22,
@@ -322,7 +323,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 }
                 // Save logic here
               },
-              label: "Save",
+              label: AppLocalizations.of(context)!.save,
             ),
           ),
         ],

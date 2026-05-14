@@ -9,6 +9,7 @@ import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 enum ProgressType { amount, duration }
 
@@ -29,16 +30,16 @@ class LogProgressDialog extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
 
     final title =
-        progressType == ProgressType.amount ? "Log progress" : "Log duration";
+        progressType == ProgressType.amount ? AppLocalizations.of(context)!.logProgress : AppLocalizations.of(context)!.logDuration;
     final desc =
         progressType == ProgressType.amount
-            ? "How much did you complete today?"
-            : "How much time did you spend on this habit today?";
+            ? AppLocalizations.of(context)!.howMuchDidYouCompleteToday
+            : AppLocalizations.of(context)!.howMuchTimeDidYouSpendOnThisHabitToday;
 
     return NewDefaultDialog(
       title: title,
       desc: desc,
-      primaryButtonLabel: "Save",
+      primaryButtonLabel: AppLocalizations.of(context)!.save,
       onPrimaryButtonPressed: () {
         final habitProvider = context.read<HabitProvider>();
         final stateProvider = context.read<StateProvider>();

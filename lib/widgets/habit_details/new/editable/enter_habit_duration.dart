@@ -7,6 +7,7 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class EnterHabitDuration extends StatelessWidget {
   const EnterHabitDuration({super.key});
@@ -22,8 +23,8 @@ class EnterHabitDuration extends StatelessWidget {
             context: context,
             builder: (context) {
               return NewDefaultDialog(
-                title: "Set duration",
-                desc: "How long will this habit take?",
+                title: AppLocalizations.of(context)!.setDuration,
+                desc: AppLocalizations.of(context)!.howLongWillThisHabitTake,
                 child: DurationProgressInput(
                   duration: sp.habitDuration.inMinutes,
                 ),

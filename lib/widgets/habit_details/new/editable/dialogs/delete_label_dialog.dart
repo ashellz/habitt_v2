@@ -4,6 +4,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class DeleteLabelDialog extends StatelessWidget {
   const DeleteLabelDialog({
@@ -29,9 +30,9 @@ class DeleteLabelDialog extends StatelessWidget {
     final sp = context.read<StateProvider>();
 
     return NewDefaultDialog(
-      title: "Delete '$label'?",
-      desc: "This amount label will be removed.",
-      primaryButtonLabel: "Delete",
+      title: AppLocalizations.of(context)!.deleteLabel,
+      desc: AppLocalizations.of(context)!.thisAmountLabelWillBeRemoved,
+      primaryButtonLabel: AppLocalizations.of(context)!.delete,
       primaryButtonColor: cp.fail,
       onPrimaryButtonPressed: () {
         final removed = sp.removeCustomAmountLabel(label);
@@ -49,7 +50,7 @@ class DeleteLabelDialog extends StatelessWidget {
         _statusOverlay.show(
           context: context,
           cp: cp,
-          title: removed ? 'Amount label deleted' : "This label can't be deleted",
+          title: removed ? 'Amount label deleted' : AppLocalizations.of(context)!.thisLabelCantBeDeleted,
           isError: !removed,
         );
       },

@@ -7,6 +7,7 @@ import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/schedules/schedule_dialog_snapshot.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class CustomScheduleDialog extends StatefulWidget {
   const CustomScheduleDialog({super.key, required this.rootSnapshot});
@@ -60,8 +61,8 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: "Exit without saving?",
-            primaryButtonLabel: "Exit",
+            title: AppLocalizations.of(context)!.exitWithoutSaving,
+            primaryButtonLabel: AppLocalizations.of(context)!.exit,
             onPrimaryButtonPressed: () {
               sp.customIntervalDays = initialCustomIntervalDays;
               Navigator.of(dialogContext).pop();
@@ -84,7 +85,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
         }
       },
       child: NewDefaultDialog(
-        title: "Custom",
+        title: AppLocalizations.of(context)!.custom,
         onPrimaryButtonPressed: () {
           Navigator.of(context).pop(true);
         },

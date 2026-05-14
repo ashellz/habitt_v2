@@ -12,6 +12,7 @@ import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/clear_selected_days_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_days_monthly_schedule.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class MonthlyScheduleDialog extends StatefulWidget {
   const MonthlyScheduleDialog({super.key, required this.rootSnapshot});
@@ -284,7 +285,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                             BlendMode.srcIn,
                           ),
                         ),
-                        label: "Add more options",
+                        label: AppLocalizations.of(context)!.addMoreOptions,
                       ),
             ),
           ],
@@ -302,8 +303,8 @@ class ExitWithoutSavingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NewDefaultDialog(
-      title: "Exit without saving?",
-      primaryButtonLabel: "Exit",
+      title: AppLocalizations.of(context)!.exitWithoutSaving,
+      primaryButtonLabel: AppLocalizations.of(context)!.exit,
       onPrimaryButtonPressed: () {},
     );
   }

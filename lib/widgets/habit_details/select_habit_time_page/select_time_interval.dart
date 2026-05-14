@@ -6,6 +6,7 @@ import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/dialogs/select_time_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectTimeInterval extends StatelessWidget {
   const SelectTimeInterval({super.key, required this.tp});
@@ -21,7 +22,7 @@ class SelectTimeInterval extends StatelessWidget {
 
     return Column(
       children: [
-        titleAndSwitch(timeIntervalEnabled, sp),
+        titleAndSwitch(context, timeIntervalEnabled, sp),
         timeIntervalButtons(
           context,
           timeIntervalEnabled,
@@ -33,7 +34,7 @@ class SelectTimeInterval extends StatelessWidget {
     );
   }
 
-  Row titleAndSwitch(bool timeIntervalEnabled, StateProvider sp) {
+  Row titleAndSwitch(BuildContext context, bool timeIntervalEnabled, StateProvider sp) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +51,7 @@ class SelectTimeInterval extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 12),
           child: Text(
-            "Select time interval",
+            AppLocalizations.of(context)!.selectTimeInterval,
             style: TextStyle(
               color: tp.primaryTextColor,
               fontSize: 16,
@@ -79,7 +80,7 @@ class SelectTimeInterval extends StatelessWidget {
     return Row(
       children: [
         _selectIntervalButton(
-          label: "From",
+          label: AppLocalizations.of(context)!.from,
           onPressed: () {
             showDialog(
               context: context,
@@ -95,7 +96,7 @@ class SelectTimeInterval extends StatelessWidget {
 
         SizedBox(width: 12),
         _selectIntervalButton(
-          label: "To",
+          label: AppLocalizations.of(context)!.to,
           onPressed: () {
             showDialog(
               context: context,
