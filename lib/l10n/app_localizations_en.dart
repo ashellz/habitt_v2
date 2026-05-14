@@ -61,12 +61,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get optOutOfBackup => 'Opt out of Backup?';
 
   @override
-  String get assigningStreaks => 'Assigning streaks';
-
-  @override
-  String get azaz => '[a-zA-Z]';
-
-  @override
   String get backupData => 'Backup Data';
 
   @override
@@ -153,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get custom => 'Custom';
 
   @override
-  String get dailyPlan => 'Daily plan';
+  String get daily => 'Daily';
 
   @override
   String get darkMode => 'Dark Mode';
@@ -1769,4 +1763,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get isScheduledToday => 'Scheduled today';
+
+  @override
+  String get time2 => 'Time';
+
+  @override
+  String get chooseIcon => 'Choose icon';
+
+  @override
+  String get schedule => 'Schedule';
+
+  @override
+  String get habitType => 'Habit type';
+
+  @override
+  String get select => 'Select';
+
+  @override
+  String get repeatEvery => 'Repeat every:';
+
+  @override
+  String habitWillAppear(Object dayLabel, Object days) {
+    return 'This habit will appear every $days $dayLabel starting from today';
+  }
 }

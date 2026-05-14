@@ -200,18 +200,6 @@ abstract class AppLocalizations {
   /// **'Opt out of Backup?'**
   String get optOutOfBackup;
 
-  /// No description provided for @assigningStreaks.
-  ///
-  /// In en, this message translates to:
-  /// **'Assigning streaks'**
-  String get assigningStreaks;
-
-  /// No description provided for @azaz.
-  ///
-  /// In en, this message translates to:
-  /// **'[a-zA-Z]'**
-  String get azaz;
-
   /// No description provided for @backupData.
   ///
   /// In en, this message translates to:
@@ -368,11 +356,11 @@ abstract class AppLocalizations {
   /// **'Custom'**
   String get custom;
 
-  /// No description provided for @dailyPlan.
+  /// No description provided for @daily.
   ///
   /// In en, this message translates to:
-  /// **'Daily plan'**
-  String get dailyPlan;
+  /// **'Daily'**
+  String get daily;
 
   /// No description provided for @darkMode.
   ///
@@ -2846,6 +2834,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scheduled today'**
   String get isScheduledToday;
+
+  /// No description provided for @time2.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time2;
+
+  /// No description provided for @chooseIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose icon'**
+  String get chooseIcon;
+
+  /// No description provided for @schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get schedule;
+
+  /// No description provided for @habitType.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit type'**
+  String get habitType;
+
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// No description provided for @repeatEvery.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat every:'**
+  String get repeatEvery;
+
+  /// No description provided for @habitWillAppear.
+  ///
+  /// In en, this message translates to:
+  /// **'This habit will appear every {days} {dayLabel} starting from today'**
+  String habitWillAppear(Object dayLabel, Object days);
 }
 
 class _AppLocalizationsDelegate

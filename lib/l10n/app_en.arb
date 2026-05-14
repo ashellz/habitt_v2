@@ -15,8 +15,6 @@
   "anyTime": "Any time",
   "deleteHabitDesc": "Are you sure you want to delete this habit?",
   "optOutOfBackup": "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
-  "assigningStreaks": "Assigning streaks",
-  "azaz": "[a-zA-Z]",
   "backupData": "Backup Data",
   "backupDataDownloadedFromCloud": "Backup data downloaded from cloud.",
   "backupDataFailedToDownloadFromCloud": "Backup data failed to download from cloud.",
@@ -43,7 +41,7 @@
   "currentHourIsBetween19And4": "Current hour is between 19 and 4",
   "currentHourIsBetween4And12": "Current hour is between 4 and 12",
   "custom": "Custom",
-  "dailyPlan": "Daily plan",
+  "daily": "Daily",
   "darkMode": "Dark Mode",
   "dateJoinedIsNull": "Date joined is null",
   
@@ -695,5 +693,12 @@
   "less":"Less",
   "more":"More",
   "allHabits": "All habits",
-  "isScheduledToday": "Scheduled today"
+  "isScheduledToday": "Scheduled today",
+  "time2": "Time",
+  "chooseIcon": "Choose icon",
+  "schedule": "Schedule",
+  "habitType": "Habit type",
+  "select": "Select",
+  "repeatEvery": "Repeat every:",
+  "habitWillAppear": "This habit will appear every {days}. {dayLabel} starting from today"
 }

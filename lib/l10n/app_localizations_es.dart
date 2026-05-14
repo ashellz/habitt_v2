@@ -62,12 +62,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get optOutOfBackup => '¿Excluirse de la copia de seguridad?';
 
   @override
-  String get assigningStreaks => 'Asignación de rayas';
-
-  @override
-  String get azaz => '[a-zA-Z]';
-
-  @override
   String get backupData => 'Copia de seguridad de datos';
 
   @override
@@ -157,7 +151,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get custom => 'A medida';
 
   @override
-  String get dailyPlan => 'Plan diario';
+  String get daily => 'Diario';
 
   @override
   String get darkMode => 'Modo oscuro';
@@ -182,7 +176,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String deleteLabel(Object label) {
-    return 'Delete \'$label\'?';
+    return '¿Borrar \'$label\'?';
   }
 
   @override
@@ -1518,7 +1512,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String syncErrorErrormessage(Object errorMessage) {
-    return 'Sync error: $errorMessage';
+    return 'Error de sincronización: $errorMessage';
   }
 
   @override
@@ -1529,7 +1523,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String syncingProgressmessage(Object progressMessage) {
-    return 'Syncing: $progressMessage';
+    return 'Sincronización: $progressMessage';
   }
 
   @override
@@ -1776,4 +1770,27 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get isScheduledToday => 'Programado para hoy';
+
+  @override
+  String get time2 => 'Tiempo';
+
+  @override
+  String get chooseIcon => 'Elegir icono';
+
+  @override
+  String get schedule => 'Horario';
+
+  @override
+  String get habitType => 'Tipo de hábito';
+
+  @override
+  String get select => 'Seleccione';
+
+  @override
+  String get repeatEvery => 'Repite cada:';
+
+  @override
+  String habitWillAppear(Object dayLabel, Object days) {
+    return 'Este hábito aparecerá cada $days $dayLabel a partir de hoy';
+  }
 }

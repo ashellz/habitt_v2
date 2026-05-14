@@ -62,12 +62,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get optOutOfBackup => 'Backup abbestellen?';
 
   @override
-  String get assigningStreaks => 'Streifen zuweisen';
-
-  @override
-  String get azaz => '[a-zA-Z]';
-
-  @override
   String get backupData => 'Daten sichern';
 
   @override
@@ -157,7 +151,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get custom => 'Benutzerdefiniert';
 
   @override
-  String get dailyPlan => 'Tagesplan';
+  String get daily => 'Täglich';
 
   @override
   String get darkMode => 'Dunkler Modus';
@@ -182,7 +176,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String deleteLabel(Object label) {
-    return 'Delete \'$label\'?';
+    return 'Löschen Sie \'$label\'?';
   }
 
   @override
@@ -1519,7 +1513,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String syncErrorErrormessage(Object errorMessage) {
-    return 'Sync error: $errorMessage';
+    return 'Sync-Fehler: $errorMessage';
   }
 
   @override
@@ -1530,7 +1524,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String syncingProgressmessage(Object progressMessage) {
-    return 'Syncing: $progressMessage';
+    return 'Synchronisierung: $progressMessage';
   }
 
   @override
@@ -1778,4 +1772,27 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get isScheduledToday => 'Heute terminiert';
+
+  @override
+  String get time2 => 'Zeit';
+
+  @override
+  String get chooseIcon => 'Symbol auswählen';
+
+  @override
+  String get schedule => 'Zeitplan';
+
+  @override
+  String get habitType => 'Gewohnheitstyp';
+
+  @override
+  String get select => 'Wählen Sie';
+
+  @override
+  String get repeatEvery => 'Wiederholen Sie alle:';
+
+  @override
+  String habitWillAppear(Object dayLabel, Object days) {
+    return 'Diese Gewohnheit wird ab heute alle $days $dayLabel erscheinen';
+  }
 }

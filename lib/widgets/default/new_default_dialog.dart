@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:provider/provider.dart';
@@ -8,10 +9,10 @@ class NewDefaultDialog extends StatelessWidget {
     super.key,
     this.child,
     required this.title,
-    this.primaryButtonLabel = "Done",
+    this.primaryButtonLabel,
     this.primaryButtonEnabled = true,
     this.showSecondaryButton = true,
-    this.secondaryButtonLabel = "Cancel",
+    this.secondaryButtonLabel,
     this.desc,
     this.onPrimaryButtonPressed,
     this.onSecondaryButtonPressed,
@@ -21,8 +22,8 @@ class NewDefaultDialog extends StatelessWidget {
   final Widget? child;
   final String title;
   final String? desc;
-  final String secondaryButtonLabel;
-  final String primaryButtonLabel;
+  final String? secondaryButtonLabel;
+  final String? primaryButtonLabel;
   final bool primaryButtonEnabled;
   final bool showSecondaryButton;
   final VoidCallback? onPrimaryButtonPressed;
@@ -33,6 +34,7 @@ class NewDefaultDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final loc = AppLocalizations.of(context)!;
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 200),
@@ -86,7 +88,7 @@ class NewDefaultDialog extends StatelessWidget {
                             Navigator.pop(context);
                           }
                         },
-                        label: secondaryButtonLabel,
+                        label: secondaryButtonLabel ?? loc.cancel,
                       ),
                     ),
                   Expanded(
@@ -100,7 +102,7 @@ class NewDefaultDialog extends StatelessWidget {
                           Navigator.pop(context);
                         }
                       },
-                      label: primaryButtonLabel,
+                      label: primaryButtonLabel ?? loc.done,
                     ),
                   ),
                 ],

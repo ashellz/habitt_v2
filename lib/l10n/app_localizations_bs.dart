@@ -16,7 +16,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get addANewAmountLabelYouCanReuseLater =>
-      'Dodajte novu oznaku iznosa koju možete ponovo upotrijebiti kasnije.';
+      'Dodaj novu oznaku iznosa koju možete ponovo upotrijebiti kasnije.';
 
   @override
   String get addANotification => 'Dodaj obavijest';
@@ -25,7 +25,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get addHabit => 'Dodaj naviku';
 
   @override
-  String get addMoreOptions => 'Dodajte više opcija';
+  String get addMoreOptions => 'Dodaj više opcija';
 
   @override
   String get afternoon => 'Poslijepodne';
@@ -46,7 +46,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Sve konfiguracije navika koje ste napravili bit će izbrisane.';
 
   @override
-  String get amount => 'Iznos';
+  String get amount => 'Količina';
 
   @override
   String get amountName => 'Naziv iznosa';
@@ -60,12 +60,6 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get optOutOfBackup => 'Odustati od sigurnosne kopije?';
-
-  @override
-  String get assigningStreaks => 'Dodjeljivanje serija';
-
-  @override
-  String get azaz => '[a-zA-Z]';
 
   @override
   String get backupData => 'Sigurnosna kopija podataka';
@@ -136,7 +130,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Nije moguće dobiti ili kreirati folder za sigurnosnu kopiju';
 
   @override
-  String get createAmountLabel => 'Kreirajte etiketu iznosa';
+  String get createAmountLabel => 'Kreirajte oznaku iznosa';
 
   @override
   String get creatingNewDayEntry => 'Kreiranje novog dnevnog unosa';
@@ -154,7 +148,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get custom => 'Prilagođeno';
 
   @override
-  String get dailyPlan => 'Dnevni plan';
+  String get daily => 'Dnevno';
 
   @override
   String get darkMode => 'Tamni način';
@@ -179,7 +173,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String deleteLabel(Object label) {
-    return 'Delete \'$label\'?';
+    return 'Izbriši \'$label\'?';
   }
 
   @override
@@ -252,7 +246,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get from => 'Od';
 
   @override
-  String get getRemindedAboutYourHabit => 'Neka vas podsjeti na vašu naviku.';
+  String get getRemindedAboutYourHabit => 'Neka vas podsjeti na vašu naviku';
 
   @override
   String get glassFeel => 'Osjećaj stakla';
@@ -1401,10 +1395,10 @@ class AppLocalizationsBs extends AppLocalizations {
   String get optOut => 'Odjavljivanje';
 
   @override
-  String get optionalHabit => 'Izborna navika';
+  String get optionalHabit => 'Opcionalna navika';
 
   @override
-  String get optionalHabits => 'Izborne navike';
+  String get optionalHabits => 'Opcionalne navike';
 
   @override
   String get orToChangeLabel => 'ili etiketa iznosa';
@@ -1469,7 +1463,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get selected => 'Odabrano';
 
   @override
-  String get setAmountLabel => 'Postavi etiketu iznosa';
+  String get setAmountLabel => 'Postavi oznaku iznosa';
 
   @override
   String get setDuration => 'Postavi trajanje';
@@ -1515,7 +1509,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String syncErrorErrormessage(Object errorMessage) {
-    return 'Sync error: $errorMessage';
+    return 'Greška sinhronizacije: $errorMessage';
   }
 
   @override
@@ -1526,7 +1520,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String syncingProgressmessage(Object progressMessage) {
-    return 'Syncing: $progressMessage';
+    return 'Sinkronizacija: $progressMessage';
   }
 
   @override
@@ -1771,4 +1765,27 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get isScheduledToday => 'Zakazano danas';
+
+  @override
+  String get time2 => 'Vrijeme';
+
+  @override
+  String get chooseIcon => 'Odaberite ikonu';
+
+  @override
+  String get schedule => 'Raspored';
+
+  @override
+  String get habitType => 'Tip navike';
+
+  @override
+  String get select => 'Odaberi';
+
+  @override
+  String get repeatEvery => 'Ponavljaj svaki:';
+
+  @override
+  String habitWillAppear(Object dayLabel, Object days) {
+    return 'Ova navika će se pojavljivati svaki $days. $dayLabel počevši od danas';
+  }
 }

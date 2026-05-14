@@ -93,12 +93,14 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return SizedBox(
       height: 72,
       width: double.infinity,
       child: IncrementDecrementTextField(
         fontWeight: FontWeight.w500,
-        title: "Amount",
+        title: loc.amount,
         controller: controller,
         minValue: widget.minValue,
         maxValue: 9999,

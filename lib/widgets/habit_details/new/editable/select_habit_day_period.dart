@@ -125,7 +125,7 @@ class _SelectHabitDayPeriodState extends State<SelectHabitDayPeriod>
                                     toggleExpansion();
                                   },
                                   child: Text(
-                                    category.name,
+                                    category.getLocalizedName(context),
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       color: cp.text,
@@ -163,7 +163,8 @@ class _SelectHabitDayPeriodState extends State<SelectHabitDayPeriod>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  chooseCategoriesList[stateProvider.habitCategoryId - 1].name,
+                  chooseCategoriesList[stateProvider.habitCategoryId - 1]
+                      .getLocalizedName(context),
                   style: TextStyle(fontSize: 16, color: cp.text),
                 ),
                 RotationTransition(
