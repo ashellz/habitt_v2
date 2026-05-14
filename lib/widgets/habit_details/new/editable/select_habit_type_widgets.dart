@@ -5,6 +5,7 @@ import 'package:habitt/widgets/habit_details/new/editable/enter_habit_amount.dar
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 enum HabitType { none, amount, duration }
 
@@ -98,7 +99,7 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
 
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
-    debugPrint("Tapped amount");
+    debugPrint(AppLocalizations.of(context)!.tappedAmount);
 
     setState(() {
       alignDuration = Duration(milliseconds: 250);
@@ -141,13 +142,13 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
         stateProvider.habitDuration = Duration.zero;
       });
 
-      debugPrint("Selected type: $selectedType");
+      debugPrint(AppLocalizations.of(context)!.selectedTypeSelectedtype);
     }
   }
 
   // This toggles the duration type on tap, and navigates if selected
   void onTapDuration() {
-    debugPrint("Tapped duration");
+    debugPrint(AppLocalizations.of(context)!.tappedDuration);
     setState(() {
       alignDuration = Duration(milliseconds: 250);
     });

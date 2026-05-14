@@ -7,6 +7,7 @@ import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class DailyPlanPage extends StatelessWidget {
   const DailyPlanPage({super.key});
@@ -41,7 +42,7 @@ class DailyPlanPage extends StatelessWidget {
                     spacing: 4,
                     children: [
                       Text(
-                        "Daily plan",
+                        AppLocalizations.of(context)!.dailyPlan,
                         style: TextStyle(
                           fontSize: 38,
                           color: tp.primaryTextColor,

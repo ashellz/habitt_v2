@@ -8,6 +8,7 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/delete_label_dialog.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SetAmountLabelDialog extends StatefulWidget {
   final String initialLabel;
@@ -93,7 +94,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
               child: NewDefaultButton.secondarySmall(
                 height: 40,
                 onPressed: widget.onAddPressed,
-                label: "Add",
+                label: AppLocalizations.of(context)!.add,
                 prefix: SvgPicture.asset(
                   "assets/images/new-svg/add.svg",
                   colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
@@ -135,7 +136,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                     _statusOverlay.show(
                       context: context,
                       cp: cp,
-                      title: "This label can't be deleted",
+                      title: AppLocalizations.of(context)!.thisLabelCantBeDeleted,
                       isError: true,
                     );
                     return;
@@ -215,8 +216,8 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
     final sp = context.watch<StateProvider>();
 
     return NewDefaultDialog(
-      title: "Set amount label",
-      desc: "What are you counting for this habit?",
+      title: AppLocalizations.of(context)!.setAmountLabel,
+      desc: AppLocalizations.of(context)!.whatAreYouCountingForThisHabit,
       onPrimaryButtonPressed: () {
         widget.onConfirm(selectedLabel);
       },

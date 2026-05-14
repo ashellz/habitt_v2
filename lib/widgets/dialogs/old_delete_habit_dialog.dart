@@ -18,17 +18,17 @@ class OldDeleteHabitDialog extends StatelessWidget {
     return OldDefaultDialog(
       danger: true,
       title: "Delete '${habit.name}'?",
-      desc: "Are you sure you want to delete this habit?",
+      desc: AppLocalizations.of(context)!.areYouSureYouWantToDeleteThisHabit,
       leftButtonOutlined: true,
       leftButtonText: localizations.cancel,
-      rightButtonText: "Delete",
+      rightButtonText: AppLocalizations.of(context)!.delete,
       rightButtonCallback: () {
         context.read<HabitProvider>().removeHabit(habit, context);
         while (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
         final stateProvider = context.read<StateProvider>();
-        stateProvider.alertText = "Habit deleted!";
+        stateProvider.alertText = AppLocalizations.of(context)!.habitDeleted;
         stateProvider.toggleAlert(show: true);
       },
     );

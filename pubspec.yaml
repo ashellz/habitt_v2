@@ -70,6 +70,8 @@ dependencies:
   purchases_ui_flutter: ^9.11.0
   reorderables: ^0.6.0
   url_launcher: ^6.3.0
+  flutter_email_sender: ^6.0.1
+  in_app_review: ^2.0.11
 
 
 dev_dependencies:

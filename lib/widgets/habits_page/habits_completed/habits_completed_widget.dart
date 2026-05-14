@@ -7,6 +7,7 @@ import 'package:habitt/widgets/default/animated_completion_checkmark.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/habits_page/habits_completed/habit_status_text.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class HabitsCompletedWidget extends StatefulWidget {
   const HabitsCompletedWidget({super.key});
@@ -138,7 +139,7 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "Complete",
+                                      AppLocalizations.of(context)!.complete,
                                       style: TextStyle(
                                         fontSize: 24,
                                         color: tp.primaryTextColor,

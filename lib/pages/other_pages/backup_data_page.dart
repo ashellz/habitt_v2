@@ -9,6 +9,7 @@ import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class BackupDataPage extends StatefulWidget {
   const BackupDataPage({super.key});
@@ -37,7 +38,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
 
   String getLastSyncText(BackupProvider backupProvider) {
     if (backupProvider.localMetadata == null) {
-      return "Never";
+      return AppLocalizations.of(context)!.never;
     } else {
       final date = backupProvider.localMetadata!.createdAt;
       // DD.MM.YYYY - HH:MM
@@ -75,7 +76,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                     NavBackButton(tp: tp),
 
                     Text(
-                      "Backup Data",
+                      AppLocalizations.of(context)!.backupData,
                       style: TextStyle(
                         fontSize: 38,
                         color: tp.primaryTextColor,
@@ -83,7 +84,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                       ),
                     ),
                     Text(
-                      "Keep your data safe by backing it up to Google Drive.",
+                      AppLocalizations.of(context)!.keepYourDataSafeByBackingItUpToGoogleDrive,
                       style: TextStyle(
                         fontSize: 16,
                         color: tp.secondaryTextColor,
@@ -92,7 +93,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                     Spacer(),
                     if (!isLoggedIn) ...[
                       Text(
-                        "You are currently not connected to your Google account.",
+                        AppLocalizations.of(context)!.youAreCurrentlyNotConnectedToYourGoogleAccount,
                         style: TextStyle(
                           fontSize: 16,
                           color: tp.secondaryTextColor,
@@ -114,7 +115,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                             }
                           }
                         },
-                        label: "Connect to Google",
+                        label: AppLocalizations.of(context)!.connectToGoogle,
                       ),
                     ] else ...[
                       Text(
@@ -143,19 +144,19 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                     context: context,
                                     builder:
                                         (context) => OldDefaultDialog(
-                                          title: "Opt out of Backup?",
+                                          title: AppLocalizations.of(context)!.optOutOfBackup,
                                           desc:
-                                              "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
+                                              AppLocalizations.of(context)!.areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually,
                                           rightButtonCallback: () async {
                                             backupProvider.signOut();
                                           },
-                                          rightButtonText: "Opt out",
+                                          rightButtonText: AppLocalizations.of(context)!.optOut,
                                           danger: true,
                                           leftButtonText: "Cancel",
                                         ),
                                   );
                                 },
-                                label: "Opt out",
+                                label: AppLocalizations.of(context)!.optOut,
                                 color: tp.backgroundColor,
                               ),
                             ),
@@ -190,10 +191,10 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                 },
                                 label:
                                     hasPassphraseSet
-                                        ? "Sync Now"
+                                        ? AppLocalizations.of(context)!.syncNow
                                         : dataExists
-                                        ? "Enter Passphrase"
-                                        : "Set Passphrase",
+                                        ? AppLocalizations.of(context)!.enterPassphrase
+                                        : AppLocalizations.of(context)!.setPassphrase,
                               ),
                             ),
                           ],
@@ -220,17 +221,17 @@ class _BackupDataPageState extends State<BackupDataPage> {
 
     switch (syncState) {
       case SyncState.idle:
-        return "Last synced: $lastSyncText";
+        return AppLocalizations.of(context)!.lastSyncedLastsynctext;
       case SyncState.syncing:
         return progressMessage != null && progressMessage.isNotEmpty
-            ? "Syncing: $progressMessage"
-            : "Syncing...";
+            ? AppLocalizations.of(context)!.syncingProgressmessage
+            : AppLocalizations.of(context)!.syncing;
       case SyncState.success:
-        return "Last synced: $lastSyncText";
+        return AppLocalizations.of(context)!.lastSyncedLastsynctext;
       case SyncState.error:
         return errorMessage != null && errorMessage.isNotEmpty
-            ? "Sync error: $errorMessage"
-            : "Last synced: $lastSyncText";
+            ? AppLocalizations.of(context)!.syncErrorErrormessage
+            : AppLocalizations.of(context)!.lastSyncedLastsynctext;
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NewBottomNavBar extends StatefulWidget {
   final ValueChanged<int>? onItemTapped;
@@ -33,7 +34,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       NavItemData(
         id: 'home',
         svgPath: "assets/images/new-svg/home.svg",
-        defaultLabel: "Home",
+        defaultLabel: AppLocalizations.of(context)!.home,
       ),
       NavItemData(
         id: 'habits',
@@ -48,7 +49,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       NavItemData(
         id: 'profile',
         svgPath: "assets/images/new-svg/profile.svg",
-        defaultLabel: "Profile",
+        defaultLabel: AppLocalizations.of(context)!.profile,
       ),
     ];
 
@@ -199,7 +200,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       );
     }
 
-    debugPrint("Using custom Android nav bar");
+    debugPrint(AppLocalizations.of(context)!.usingCustomAndroidNavBar);
 
     return Expanded(
       child: Container(

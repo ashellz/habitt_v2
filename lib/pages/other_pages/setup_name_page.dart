@@ -4,6 +4,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SetupNamePage extends StatefulWidget {
   const SetupNamePage({
@@ -102,7 +103,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Welcome to Habitt.",
+                        AppLocalizations.of(context)!.welcomeToHabitt,
                         style: TextStyle(
                           color: tp.primaryTextColor,
                           fontSize: 24,
@@ -111,7 +112,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        "What should we call you?",
+                        AppLocalizations.of(context)!.whatShouldWeCallYou,
                         style: TextStyle(color: tp.primaryTextColor),
                         textAlign: TextAlign.center,
                       ),
@@ -127,7 +128,7 @@ class _SetupNamePageState extends State<SetupNamePage>
                           filled: true,
                           fillColor: tp.mutedTextColor.withAlpha(50),
 
-                          hintText: "Your name",
+                          hintText: AppLocalizations.of(context)!.yourName,
                           hintStyle: TextStyle(color: tp.mutedTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),

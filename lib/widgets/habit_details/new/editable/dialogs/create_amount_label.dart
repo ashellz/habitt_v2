@@ -3,6 +3,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class CreateAmountLabelDialog extends StatefulWidget {
   final String previousSelection;
@@ -44,8 +45,8 @@ class _CreateAmountLabelDialogState extends State<CreateAmountLabelDialog> {
       valueListenable: controller,
       builder: (context, value, child) {
         return NewDefaultDialog(
-          title: "Create amount label",
-          desc: "Add a new amount label you can reuse later.",
+          title: AppLocalizations.of(context)!.createAmountLabel,
+          desc: AppLocalizations.of(context)!.addANewAmountLabelYouCanReuseLater,
           primaryButtonEnabled: value.text.trim().isNotEmpty,
           onSecondaryButtonPressed: widget.onCancel,
           onPrimaryButtonPressed: () {
@@ -62,9 +63,9 @@ class _CreateAmountLabelDialogState extends State<CreateAmountLabelDialog> {
           },
           child: NewDefaultTextField(
             controller: controller,
-            title: "Amount name",
+            title: AppLocalizations.of(context)!.amountName,
             fontWeight: FontWeight.w500,
-            hint: "Amount name",
+            hint: AppLocalizations.of(context)!.amountName,
           ),
         );
       },
