@@ -6,6 +6,7 @@ import 'package:habitt/widgets/default/circle_button.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectTimeDialog extends StatefulWidget {
   const SelectTimeDialog({
@@ -73,7 +74,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                 child: Column(
                   children: [
                     Text(
-                      widget.isStartTime ? "Start time" : "End time",
+                      widget.isStartTime ? AppLocalizations.of(context)!.startTime : AppLocalizations.of(context)!.endTime,
                       style: TextStyle(
                         color: tp.primaryTextColor,
                         fontSize: 18,

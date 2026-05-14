@@ -6,6 +6,7 @@ import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SubscriptionsPage extends StatefulWidget {
   const SubscriptionsPage({super.key});
@@ -31,7 +32,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                 children: [
                   NavBackButton(tp: tp),
                   Text(
-                    "Subscriptions",
+                    AppLocalizations.of(context)!.subscriptions,
                     style: TextStyle(
                       fontSize: 38,
                       color: tp.primaryTextColor,
@@ -39,7 +40,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                     ),
                   ),
                   Text(
-                    "Manage your subscriptions and billing plans here.",
+                    AppLocalizations.of(context)!.manageYourSubscriptionsAndBillingPlansHere,
                     style: TextStyle(
                       fontSize: 16,
                       color: tp.secondaryTextColor,
@@ -50,7 +51,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                     onPressed: () {
                       fetchOffers();
                     },
-                    label: "Fetch Offers",
+                    label: AppLocalizations.of(context)!.fetchOffers,
                   ),
                   const SizedBox(height: 24),
                   for (final offer in offers)
@@ -83,7 +84,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         offers = offerings;
       });
     } else {
-      print("No offerings available");
+      print(AppLocalizations.of(context)!.noOfferingsAvailable);
     }
   }
 }

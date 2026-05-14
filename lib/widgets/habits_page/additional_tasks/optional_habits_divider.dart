@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class ScrollTransformedHabitCategoryDivider extends StatefulWidget {
   const ScrollTransformedHabitCategoryDivider({
@@ -117,7 +118,7 @@ class _OriginalDividerContent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: isTitle ? 0 : 8.0, right: 8.0),
             child: Text(
-              "Optional habits",
+              AppLocalizations.of(context)!.optionalHabits,
               style: TextStyle(color: tp.mutedTextColor),
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NewDefaultTextField extends StatefulWidget {
   const NewDefaultTextField({
@@ -85,7 +86,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
         return FilteringTextInputFormatter.allow(widget.regex!);
       }
       if (textOnly) {
-        return FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"));
+        return FilteringTextInputFormatter.allow(RegExp(AppLocalizations.of(context)!.azaz));
       } else if (digitsOnly) {
         return FilteringTextInputFormatter.allow(RegExp("[0-9]"));
       } else {

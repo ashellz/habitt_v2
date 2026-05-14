@@ -5,6 +5,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class DeleteNotificationDialog extends StatelessWidget {
   const DeleteNotificationDialog({
@@ -26,9 +27,9 @@ class DeleteNotificationDialog extends StatelessWidget {
     final sp = context.read<StateProvider>();
 
     return NewDefaultDialog(
-      title: "Delete notification?",
-      desc: "This notification time will be removed.",
-      primaryButtonLabel: "Delete",
+      title: AppLocalizations.of(context)!.deleteNotification,
+      desc: AppLocalizations.of(context)!.thisNotificationTimeWillBeRemoved,
+      primaryButtonLabel: AppLocalizations.of(context)!.delete,
       primaryButtonColor: cp.fail,
       onPrimaryButtonPressed: () {
         final removed = sp.removeHabitNotificationTime(slot.id);
@@ -44,7 +45,7 @@ class DeleteNotificationDialog extends StatelessWidget {
           title:
               removed
                   ? 'Notification deleted'
-                  : "This notification can't be deleted",
+                  : AppLocalizations.of(context)!.thisNotificationCantBeDeleted,
           isError: !removed,
         );
       },

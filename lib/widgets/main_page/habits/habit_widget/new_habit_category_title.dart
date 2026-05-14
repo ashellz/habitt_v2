@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NewHabitCategoryTitle extends StatefulWidget {
   const NewHabitCategoryTitle({
@@ -112,7 +113,7 @@ class _NewHabitCategoryTitleState extends State<NewHabitCategoryTitle>
               ),
               child: Center(
                 child: Text(
-                  "Now",
+                  AppLocalizations.of(context)!.now,
                   style: TextStyle(color: cp.text, fontSize: 13),
                 ),
               ),

@@ -54,7 +54,7 @@ class _GreetingState extends State<Greeting> {
           ),
         ),
         Text(
-          name ?? "Guest",
+          name ?? AppLocalizations.of(context)!.guest,
           style: TextStyle(
             color: cp.text,
             fontSize: 32,

@@ -3,6 +3,7 @@ import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class ClearSelectedDaysDialog extends StatelessWidget {
   const ClearSelectedDaysDialog({
@@ -23,10 +24,10 @@ class ClearSelectedDaysDialog extends StatelessWidget {
     final String habitUnit = type == ScheduleType.weekly ? 'week' : 'month';
 
     return NewDefaultDialog(
-      title: "Clear selected days",
+      title: AppLocalizations.of(context)!.clearSelectedDays,
       desc:
-          "Changing the amount of times habit appears in a $habitUnit will clear selected days",
-      primaryButtonLabel: "Clear",
+          AppLocalizations.of(context)!.changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays,
+      primaryButtonLabel: AppLocalizations.of(context)!.clear,
       onPrimaryButtonPressed: () {
         switch (type) {
           case ScheduleType.weekly:

@@ -323,9 +323,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                       context: context,
                                       builder:
                                           (context) => OldDefaultDialog(
-                                            title: "Reset changes?",
+                                            title: AppLocalizations.of(context)!.resetChanges,
                                             desc:
-                                                "All changes you've made now will be reset.",
+                                                AppLocalizations.of(context)!.allChangesYouveMadeNowWillBeReset,
                                             content: Row(
                                               children: [
                                                 Expanded(
@@ -341,7 +341,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                                 SizedBox(width: 16),
                                                 Expanded(
                                                   child: DefaultButton(
-                                                    label: "Reset",
+                                                    label: AppLocalizations.of(context)!.reset,
                                                     onPressed: () {
                                                       setInitialValues();
                                                       Navigator.pop(context);
@@ -352,7 +352,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                             ),
                                           ),
                                     ),
-                                label: "Reset",
+                                label: AppLocalizations.of(context)!.reset,
                                 outlined: true,
                                 color: tp.backgroundColor,
                                 borderColor: tp.primaryButtonBackground,

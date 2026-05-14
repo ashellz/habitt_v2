@@ -11,6 +11,7 @@ import 'package:habitt/widgets/habits_page/additional_tasks/optional_habits.dart
 import 'package:habitt/widgets/habits_page/habit_category.dart';
 import 'package:habitt/widgets/habits_page/pulse_animation.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class Habits extends StatefulWidget {
   final ScrollController scrollController;
@@ -90,7 +91,7 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
       return Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
         child: Text(
-          "No habits yet.",
+          AppLocalizations.of(context)!.noHabitsYet,
           style: TextStyle(color: tp.mutedTextColor),
         ),
       );

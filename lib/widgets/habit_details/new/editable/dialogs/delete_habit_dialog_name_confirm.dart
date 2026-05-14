@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class DeleteHabitDialogNameConfirm extends StatefulWidget {
   const DeleteHabitDialogNameConfirm({
@@ -47,7 +48,7 @@ class _DeleteHabitNameDialogState extends State<DeleteHabitDialogNameConfirm> {
 
         return NewDefaultDialog(
           title: 'Confirm deletion',
-          desc: "Enter habit name to confirm deletion",
+          desc: AppLocalizations.of(context)!.enterHabitNameToConfirmDeletion,
           primaryButtonLabel: 'Delete',
           primaryButtonEnabled: isMatch,
           primaryButtonColor: widget.primaryButtonColor,

@@ -5,6 +5,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class OnboardingPages extends StatefulWidget {
   const OnboardingPages({super.key});
@@ -147,7 +148,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
               alignment: Alignment.centerRight,
               child: NewDefaultButton.secondarySmall(
                 onPressed: _skip,
-                label: "Skip",
+                label: AppLocalizations.of(context)!.skip,
               ),
             ),
           ),
