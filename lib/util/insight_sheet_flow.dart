@@ -78,7 +78,10 @@ class InsightSheetFlow {
       _InsightCandidate? bestCandidate;
 
       for (final habit in todaysHabits) {
-        final stats = statsProvider.statsForHabit(habit);
+        final stats = statsProvider.statsForHabit(
+          habit,
+          locale: Localizations.localeOf(context),
+        );
         final insight = stats.actionableInsight;
         if (insight == HabitStrengthInsight.stayConsistent) {
           continue;
@@ -179,6 +182,7 @@ class InsightSheetFlow {
             : _formatRecommendationValue(
               recommendation,
               recommendation.currentValue,
+              loc,
             );
     final toValue =
         recommendation == null
@@ -186,6 +190,7 @@ class InsightSheetFlow {
             : _formatRecommendationValue(
               recommendation,
               recommendation.recommendedValue,
+              loc,
             );
 
     final insightCopy = HabitStrengthInsightTextService.buildDialogCopy(
@@ -349,11 +354,13 @@ class InsightSheetFlow {
   String _formatRecommendationValue(
     _TargetRecommendation recommendation,
     int value,
+    AppLocalizations loc,
   ) {
     if (recommendation.kind == _TargetKind.duration) {
       return '$value min';
     }
-    return '$value ${resolveAmountLabelForValue(recommendation.unitLabel, value)}';
+
+    return '$value ${resolveAmountLabelForValue(recommendation.unitLabel, value, loc)}';
   }
 
   void _applyRecommendation(

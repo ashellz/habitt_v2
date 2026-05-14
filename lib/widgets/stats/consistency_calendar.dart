@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:intl/intl.dart';
@@ -62,6 +63,14 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
     return candidate;
   }
 
+  String _capitalizeFirstLetter(String value) {
+    if (value.isEmpty) {
+      return value;
+    }
+
+    return value[0].toUpperCase() + value.substring(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
@@ -85,11 +94,13 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
 
     final dots = cp.isDark ? _progressScaleDark : _progressScaleLight;
 
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Consistency',
+          loc.consistency,
           style: TextStyle(
             color: cp.text,
             fontSize: 22,
@@ -98,13 +109,14 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
         ),
         const SizedBox(height: 10),
         Text(
-          'Your activity over time',
+          loc.yourActivityOverTime,
           style: TextStyle(color: cp.lightGreyText, fontSize: 16),
         ),
         const SizedBox(height: 20),
         _calendarHeader(cp, calendarFirstDay, today, focusedDay),
         const SizedBox(height: 16),
         TableCalendar<void>(
+          locale: Localizations.localeOf(context).toString(),
           key: ValueKey(
             'habit-details-calendar-${calendarFirstDay.millisecondsSinceEpoch}-${today.millisecondsSinceEpoch}',
           ),
@@ -161,8 +173,9 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
           daysOfWeekStyle: DaysOfWeekStyle(
             weekendStyle: TextStyle(color: cp.lightGreyText, fontSize: 13),
             weekdayStyle: TextStyle(color: cp.lightGreyText, fontSize: 13),
-            dowTextFormatter:
-                (date, locale) => DateFormat.E(locale).format(date),
+            dowTextFormatter: (date, locale) {
+              return _capitalizeFirstLetter(DateFormat.E(locale).format(date));
+            },
           ),
           onPageChanged: (focusedDay) {
             setState(() {
@@ -179,7 +192,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Less',
+              loc.less,
               style: TextStyle(color: cp.lightGreyText, fontSize: 16),
             ),
             const SizedBox(width: 14),
@@ -196,7 +209,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
             ],
             const SizedBox(width: 6),
             Text(
-              'More',
+              loc.more,
               style: TextStyle(color: cp.lightGreyText, fontSize: 16),
             ),
           ],
@@ -211,7 +224,11 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
     DateTime today,
     DateTime focusedDay,
   ) {
-    final monthLabel = DateFormat('MMMM yyyy').format(focusedDay);
+    final locale = Localizations.localeOf(context);
+    final monthLabel = DateFormat(
+      'MMMM yyyy',
+      locale.toString(),
+    ).format(focusedDay);
 
     final previousMonth = DateTime(focusedDay.year, focusedDay.month - 1, 1);
     final nextMonth = DateTime(focusedDay.year, focusedDay.month + 1, 1);
@@ -249,7 +266,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
           Expanded(
             child: Center(
               child: Text(
-                monthLabel,
+                "${monthLabel[0].toUpperCase()}${monthLabel.substring(1).toLowerCase()}",
                 style: TextStyle(
                   color: cp.isDark ? cp.lightGreyText : cp.greyText,
                   fontSize: 16,

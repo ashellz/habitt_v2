@@ -277,7 +277,11 @@ class HabitNotificationTextBuilder {
       }
 
       if (progressResult.state == HabitNotificationProgressState.almostDone) {
-        final label = resolveAmountLabelForValue(habit.amountLabel, remaining);
+        final label = resolveAmountLabelForValue(
+          habit.amountLabel,
+          remaining,
+          l,
+        );
         final remainingText = '$remaining $label';
         return l.notificationCombinedAmountAlmostDone(
           encouragement,
@@ -289,6 +293,7 @@ class HabitNotificationTextBuilder {
         final label = resolveAmountLabelForValue(
           habit.amountLabel,
           habit.amount,
+          l,
         );
         final progressText = '$completed/${habit.amount} $label';
         return l.notificationCombinedAmountInProgress(

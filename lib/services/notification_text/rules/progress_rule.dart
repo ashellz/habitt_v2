@@ -16,6 +16,7 @@ class ProgressNotificationRule {
     HabitNotificationContext context,
     List<String> evaluatedChecks,
   ) {
+    final l = context.localizations;
     evaluatedChecks.add('progress');
 
     final habit = context.habit;
@@ -23,7 +24,7 @@ class ProgressNotificationRule {
     if (habit.tracksAmount && habit.amount > 0) {
       final completed = habit.amountCompleted.clamp(0, habit.amount);
       final remaining = math.max(0, habit.amount - completed);
-      final label = resolveAmountLabelForValue(habit.amountLabel, remaining);
+      final label = resolveAmountLabelForValue(habit.amountLabel, remaining, l);
 
       if (completed <= 0) {
         return ProgressRuleResult(
@@ -53,6 +54,7 @@ class ProgressNotificationRule {
                 'label': resolveAmountLabelForValue(
                   habit.amountLabel,
                   completed,
+                  l,
                 ),
               },
             ),
@@ -89,6 +91,7 @@ class ProgressNotificationRule {
               'label': resolveAmountLabelForValue(
                 habit.amountLabel,
                 habit.amount,
+                l,
               ),
             },
           ),

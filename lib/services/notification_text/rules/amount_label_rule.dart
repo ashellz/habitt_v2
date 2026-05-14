@@ -7,6 +7,7 @@ class AmountLabelNotificationRule {
     HabitNotificationContext context,
     List<String> evaluatedChecks,
   ) {
+    final l = context.localizations;
     evaluatedChecks.add('amountLabel');
 
     final habit = context.habit;
@@ -14,7 +15,11 @@ class AmountLabelNotificationRule {
       return null;
     }
 
-    final label = resolveAmountLabelForValue(habit.amountLabel, habit.amount);
+    final label = resolveAmountLabelForValue(
+      habit.amountLabel,
+      habit.amount,
+      l,
+    );
     final normalized = label.trim().toLowerCase();
     if (normalized.isEmpty || normalized == 'time' || normalized == 'times') {
       return null;
