@@ -1,1 +1,25 @@
-{}
+{
+  "bs": [
+    "deleteLabel",
+    "syncErrorErrormessage",
+    "syncingProgressmessage"
+  ],
+
+  "de": [
+    "deleteLabel",
+    "syncErrorErrormessage",
+    "syncingProgressmessage"
+  ],
+
+  "es": [
+    "deleteLabel",
+    "syncErrorErrormessage",
+    "syncingProgressmessage"
+  ],
+
+  "it": [
+    "deleteLabel",
+    "syncErrorErrormessage",
+    "syncingProgressmessage"
+  ]
+}

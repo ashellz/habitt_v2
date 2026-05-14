@@ -693,5 +693,7 @@
   "consistency":"Consistency",
   "yourActivityOverTime":"Your Activity Over Time",
   "less":"Less",
-  "more":"More"
+  "more":"More",
+  "allHabits": "All habits",
+  "isScheduledToday": "Scheduled today"
 }

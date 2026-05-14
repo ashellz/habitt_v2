@@ -2834,6 +2834,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get more;
+
+  /// No description provided for @allHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'All habits'**
+  String get allHabits;
+
+  /// No description provided for @isScheduledToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled today'**
+  String get isScheduledToday;
 }
 
 class _AppLocalizationsDelegate

@@ -1763,4 +1763,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get more => 'More';
+
+  @override
+  String get allHabits => 'All habits';
+
+  @override
+  String get isScheduledToday => 'Scheduled today';
 }

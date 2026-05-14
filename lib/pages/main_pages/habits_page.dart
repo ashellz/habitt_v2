@@ -1,6 +1,7 @@
 import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -50,6 +51,7 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 
   Container scheduledTodayToggle(ColorProvider cp) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -60,7 +62,7 @@ class _HabitsPageState extends State<HabitsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Scheduled today',
+            loc.isScheduledToday,
             style: TextStyle(
               color: cp.text,
               fontSize: 16,
@@ -81,13 +83,14 @@ class _HabitsPageState extends State<HabitsPage> {
   }
 
   Padding topSection(BuildContext context, ColorProvider cp) {
+    final loc = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0, left: 16.0, right: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Habits List',
+            loc.allHabits,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: cp.text,
@@ -163,7 +166,7 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
             if (sectionIndex > 0) const SizedBox(height: 18),
             if (showCategoryTitles)
               Text(
-                visibleCategories[sectionIndex].name,
+                visibleCategories[sectionIndex].getLocalizedName(context),
                 style: TextStyle(
                   color: cp.lightGreyText,
                   fontSize: 14,
