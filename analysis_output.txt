@@ -1,0 +1,85 @@
+Analyzing habitt_v2...                                          
+
+   info • Unnecessary 'this.' qualifier • lib/models/habit.dart:115:15 • unnecessary_this
+   info • Unnecessary 'this.' qualifier • lib/models/habit.dart:116:17 • unnecessary_this
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/models/habit.dart:517:26 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/models/habit.dart:518:38 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/models/habit.dart:520:26 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/models/habit.dart:521:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/pages/main_pages/old/old_settings_page.dart:252:46 • deprecated_member_use
+warning • Unused import: 'package:flutter_svg/svg.dart' • lib/pages/main_pages/profile_page.dart:2:8 • unused_import
+warning • Unused import: 'package:habitt/services/feedback_service.dart' • lib/pages/main_pages/profile_page.dart:4:8 • unused_import
+warning • Unused import: 'package:habitt/l10n/app_localizations.dart' • lib/pages/main_pages/profile_page.dart:8:8 • unused_import
+warning • Unused import: 'package:habitt/widgets/default/new_default_button.dart' • lib/pages/other_pages/paywall_page.dart:6:8 • unused_import
+warning • The value of the field '_isRefreshing' isn't used • lib/pages/other_pages/paywall_page.dart:18:8 • unused_field
+warning • The value of the field '_isPresenting' isn't used • lib/pages/other_pages/paywall_page.dart:19:8 • unused_field
+warning • The declaration '_handleUpgradeTap' isn't referenced • lib/pages/other_pages/paywall_page.dart:39:16 • unused_element
+warning • The value of the local variable 'cp' isn't used • lib/pages/other_pages/paywall_page.dart:63:11 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/pages/other_pages/subscriptions_page.dart:83:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/pages/other_pages/subscriptions_page.dart:88:7 • avoid_print
+warning • The declaration '_uploadMetadataToCloud' isn't referenced • lib/providers/backup_provider.dart:866:16 • unused_element
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/providers/color_provider.dart:107:30 • deprecated_member_use
+   info • The local variable '_selectedDate' starts with an underscore • lib/providers/habit_provider.dart:771:11 • no_leading_underscores_for_local_identifiers
+   info • The local variable '_selectedDate' starts with an underscore • lib/providers/habit_provider.dart:935:11 • no_leading_underscores_for_local_identifiers
+   info • The local variable '_selectedDate' starts with an underscore • lib/providers/habit_provider.dart:974:11 • no_leading_underscores_for_local_identifiers
+   info • 'setDebugLogsEnabled' is deprecated and shouldn't be used. Use setLogLevel • lib/services/billing_service.dart:26:21 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/services/billing_service.dart:44:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/services/billing_service.dart:66:7 • avoid_print
+   info • The variable name 'L1' isn't a lowerCamelCase identifier • lib/util/color_contrast.dart:20:11 • non_constant_identifier_names
+   info • The variable name 'L2' isn't a lowerCamelCase identifier • lib/util/color_contrast.dart:21:11 • non_constant_identifier_names
+   info • 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion • lib/util/color_converting.dart:4:21 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/util/insight_sheet_flow.dart:83:42 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/util/insight_sheet_flow.dart:136:49 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/util/insight_sheet_flow.dart:141:9 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/util/insight_sheet_flow.dart:167:22 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/util/insight_sheet_flow.dart:178:37 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/util/insight_sheet_flow.dart:224:9 • use_build_context_synchronously
+   info • Don't invoke 'print' in production code • lib/util/profile_image_util.dart:24:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/util/profile_image_util.dart:35:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/util/profile_image_util.dart:49:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/util/profile_image_util.dart:71:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/util/profile_image_util.dart:91:5 • avoid_print
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/util/show_dialog_sheet.dart:13:40 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/util/show_emoji_dialog.dart:16:40 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/daily_plan_page/daily_plan_body.dart:163:66 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/default/bottom_nav_bar.dart:101:34 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion • lib/widgets/default/bottom_nav_bar.dart:186:55 • deprecated_member_use
+warning • Unused import: 'package:habitt/l10n/app_localizations.dart' • lib/widgets/default/circle_button.dart:12:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/default/glass_feel_container.dart:101:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/default/glass_feel_container.dart:102:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/default/glass_feel_container.dart:103:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/default/new_bottom_nav_bar.dart:94:24 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion • lib/widgets/default/new_bottom_nav_bar.dart:192:47 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/widgets/dialogs/passphrase_dialog.dart:95:23 • use_build_context_synchronously
+warning • Duplicate import • lib/widgets/habit_details/edit_habit_button.dart:11:8 • duplicate_import
+   info • The type of the right operand ('Color') isn't a subtype or a supertype of the left operand ('Color? Function(ThemeProvider)') • lib/widgets/habit_details/select_habit_color_sheet.dart:97:71 • unrelated_type_equality_checks
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_details/select_habit_color_sheet.dart:108:55 • deprecated_member_use
+   info • The import of 'package:flutter/rendering.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' • lib/widgets/habit_details/select_habit_time_page/all_habits_on_time_line_stack.dart:2:8 • unnecessary_import
+warning • Unused import: 'package:habitt/l10n/app_localizations.dart' • lib/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart:9:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart:190:66 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart:225:46 • deprecated_member_use
+warning • Unused import: 'package:habitt/l10n/app_localizations.dart' • lib/widgets/habit_details/select_habit_type_options.dart:7:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/duration_completion_dialog.dart:50:50 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/duration_completion_dialog.dart:112:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/duration_completion_dialog.dart:114:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/duration_completion_dialog.dart:116:58 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/duration_completion_dialog_slider.dart:43:31 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/enter_amount_slider.dart:62:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/enter_amount_slider.dart:64:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/enter_amount_slider.dart:66:50 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/enter_amount_slider.dart:80:29 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/enter_amount_slider.dart:95:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habit_widget/progress_inputs/old/enter_amount_slider_dialog.dart:46:50 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habits_page/habits_completed/habits_completed_widget.dart:135:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habits_page/pulse_animation.dart:20:25 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/habits_page/pulse_animation.dart:21:25 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/main_page/habits/habit_widget/new_habit_widget.dart:103:55 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/main_page/habits/habit_widget/new_habit_widget.dart:118:35 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/main_page/new_perfect_days_streak.dart:89:31 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/main_page/new_perfect_days_streak.dart:90:31 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/widgets/old_settings/select_color_sheet.dart:55:36 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/old_settings/select_color_sheet.dart:77:56 • deprecated_member_use
+warning • The receiver can't be null, so the null-aware operator '?.' is unnecessary • lib/widgets/profile/profile_top_part.dart:84:37 • invalid_null_aware_operator
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/widgets/settings/language_setting.dart:90:56 • deprecated_member_use
+   info • The local variable '_progressScale' starts with an underscore • lib/widgets/stats/consistency_calendar.dart:408:57 • no_leading_underscores_for_local_identifiers
+

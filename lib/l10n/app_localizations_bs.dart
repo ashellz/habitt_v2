@@ -1878,4 +1878,22 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get target => 'Cilj';
+
+  @override
+  String get name => 'Ime';
+
+  @override
+  String get uploadPhoto => 'Dodaj profilnu sliku';
+
+  @override
+  String get profileDetails => 'Detalji profila';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get youDontHaveAnEmailYet => 'Još nemaš email';
+
+  @override
+  String get yourUsername => 'Tvoje korisničko ime';
 }

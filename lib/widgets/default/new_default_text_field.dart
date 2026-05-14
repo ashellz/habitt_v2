@@ -29,6 +29,7 @@ class NewDefaultTextField extends StatefulWidget {
     this.regex,
     this.showBorder = false,
     this.color,
+    this.enabled = true,
   });
 
   final String? title;
@@ -53,6 +54,7 @@ class NewDefaultTextField extends StatefulWidget {
   final RegExp? regex;
   final bool showBorder;
   final Color? color;
+  final bool enabled;
 
   @override
   State<NewDefaultTextField> createState() => _NewDefaultTextFieldState();
@@ -115,6 +117,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
             ),
 
           TextFormField(
+            enabled: widget.enabled,
             focusNode: widget.focusNode,
             controller: widget.controller,
             onTap: widget.onTap,

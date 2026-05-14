@@ -728,5 +728,11 @@
   "leaveUnselected": "Leave unselected if you want the habit too appear every day of the {period} until goals are met",
   "month2": "month",
   "week2": "week",
-  "target": "Target"
+  "target": "Target",
+  "name": "Name",
+  "uploadPhoto": "Upload photo",
+  "profileDetails": "Profile details",
+  "email": "Email",
+  "youDontHaveAnEmailYet": "You don't have an email yet",
+  "yourUsername": "Your username"
 }

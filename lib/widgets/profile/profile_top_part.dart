@@ -2,6 +2,8 @@ import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/profile_image_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/profile/edit_profile_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,12 +21,11 @@ class ProfileTopPart extends StatefulWidget {
 class _ProfileTopPartState extends State<ProfileTopPart> {
   String? name;
   String? email;
-
   @override
   void initState() {
     super.initState();
 
-    // Loading name
+    // Loading name and email
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         name = prefs.getString('name');
@@ -54,23 +55,37 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
             Column(
               spacing: 16,
               children: [
-                Container(
-                  height: 80,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.teal,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      name.substring(0, 1),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500,
+                Consumer<ProfileImageProvider>(
+                  builder: (context, pip, _) {
+                    final file = pip.imageFile;
+                    return Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.teal,
+                        shape: BoxShape.circle,
                       ),
-                    ),
-                  ),
+                      child: ClipOval(
+                        child:
+                            file != null
+                                ? Image.file(
+                                  file,
+                                  fit: BoxFit.cover,
+                                  key: Key('profile_image_${pip.version}'),
+                                )
+                                : Center(
+                                  child: Text(
+                                    name.substring(0, 1),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                      ),
+                    );
+                  },
                 ),
                 Column(
                   spacing: 8,
@@ -132,6 +147,14 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
               isScrollControlled: true,
               builder: (context) => EditProfileSheet(),
             );
+
+            // Reload profile data after sheet closes
+            final prefs = await SharedPreferences.getInstance();
+            setState(() {
+              name = prefs.getString('name');
+              email = prefs.getString('backup_user_email');
+            });
+            await context.read<ProfileImageProvider>().load();
           },
         ),
       ],
