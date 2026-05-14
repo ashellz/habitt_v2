@@ -237,7 +237,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
                     SettingTile(
                       title: loc.accentColor,
-                      desc: loc.selectAColorPalleteForYourInterface,
+                      desc: loc.selectAColorPaletteForYourInterface,
                       trailing: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(

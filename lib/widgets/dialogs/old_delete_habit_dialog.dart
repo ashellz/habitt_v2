@@ -18,7 +18,7 @@ class OldDeleteHabitDialog extends StatelessWidget {
     return OldDefaultDialog(
       danger: true,
       title: "Delete '${habit.name}'?",
-      desc: loc.areYouSureYouWantToDeleteThisHabit,
+      desc: loc.deleteHabitDesc,
       leftButtonOutlined: true,
       leftButtonText: loc.cancel,
       rightButtonText: loc.delete,

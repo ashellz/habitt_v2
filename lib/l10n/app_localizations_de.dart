@@ -9,435 +9,358 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get accentColor => 'Accent Color';
+  String get accentColor => 'Akzentfarbe';
 
   @override
-  String get add => 'Add';
+  String get add => 'hinzufügen';
 
   @override
   String get addANewAmountLabelYouCanReuseLater =>
-      'Add a new amount label you can reuse later.';
+      'Fügen Sie ein neues Mengenetikett hinzu, das Sie später wiederverwenden können.';
 
   @override
-  String get addANotification => 'Add a notification';
+  String get addANotification => 'Hinzufügen einer Meldung';
 
   @override
-  String get addHabit => 'Add Habit';
+  String get addHabit => 'Gewohnheit hinzufügen';
 
   @override
-  String get addMoreOptions => 'Add more options';
+  String get addMoreOptions => 'Mehr Optionen hinzufügen';
 
   @override
-  String get afternoon => 'Afternoon';
+  String get afternoon => 'Nachmittag';
 
   @override
-  String get all => 'All';
+  String get all => 'Alle';
 
   @override
   String get allChangesYouMadeWillBeDiscarded =>
-      'All changes you made will be discarded.';
+      'Alle Änderungen, die Sie vorgenommen haben, werden verworfen.';
 
   @override
   String get allChangesYouveMadeNowWillBeReset =>
-      'All changes you\'ve made now will be reset.';
+      'Alle Änderungen, die Sie jetzt vorgenommen haben, werden zurückgesetzt.';
 
   @override
-  String get allHabitConfigurationYouHaveDoneWillBeDiscarded =>
-      'All habit configuration you have done will be discarded.';
+  String get habitConfigDiscardDesc =>
+      'Alle von Ihnen vorgenommenen Einstellungen werden verworfen.';
 
   @override
-  String get amount => 'Amount';
+  String get amount => 'Betrag';
 
   @override
-  String get amountName => 'Amount name';
+  String get amountName => 'Name des Betrages';
 
   @override
-  String get anyTime => 'Any time';
+  String get anyTime => 'Jederzeit';
 
   @override
-  String get areYouSureYouWantToDeleteThisHabit =>
-      'Are you sure you want to delete this habit?';
+  String get deleteHabitDesc =>
+      'Sind Sie sicher, dass Sie diese Gewohnheit löschen wollen?';
 
   @override
-  String
-  get areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually =>
-      'Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.';
+  String get optOutOfBackup => 'Backup abbestellen?';
 
   @override
-  String get assigningStreaks => 'Assigning streaks';
+  String get assigningStreaks => 'Streifen zuweisen';
 
   @override
   String get azaz => '[a-zA-Z]';
 
   @override
-  String get backupData => 'Backup Data';
+  String get backupData => 'Daten sichern';
 
   @override
   String get backupDataDownloadedFromCloud =>
-      'Backup data downloaded from cloud.';
+      'Backup-Daten aus der Cloud heruntergeladen.';
 
   @override
   String get backupDataFailedToDownloadFromCloud =>
-      'Backup data failed to download from cloud.';
+      'Sicherungsdaten konnten nicht aus der Cloud heruntergeladen werden.';
 
   @override
-  String get backupPassphrase => 'Backup Passphrase';
+  String get backupPassphrase => 'Passphrase sichern';
 
   @override
-  String get calculatedTargetScrollTargetscroll =>
-      'Calculated target scroll: \$targetScroll';
+  String get calendar => 'Kalender';
 
   @override
-  String get calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate =>
-      'Calculating week progress. Start of week: \$startOfWeek, Anchor: \$baseDate';
-
-  @override
-  String get calendar => 'Calendar';
-
-  @override
-  String get cancel => 'Cancel';
-
-  @override
-  String get categoryCatnameWithIdCatidIsNotReady =>
-      'Category \$catName with id \$catId is not ready';
-
-  @override
-  String get categoryCatnameWithIdCatidIsReady =>
-      'Category \$catName with id \$catId is ready';
+  String get cancel => 'Abbrechen';
 
   @override
   String get changeAColorThemeForYourInterface =>
-      'Change a color theme for your interface';
+      'Ändern Sie ein Farbthema für Ihre Benutzeroberfläche';
 
   @override
-  String get changesSaved => 'Changes saved!';
-
-  @override
-  String
-  get changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays =>
-      'Changing the amount of times habit appears in a \$habitUnit will clear selected days';
-
-  @override
-  String get checkingIosVersionForLiquidGlassSupportIsIosTrue =>
-      'Checking iOS version for Liquid Glass support... Is iOS: true';
+  String get changesSaved => 'Änderungen gespeichert!';
 
   @override
   String get chooseHowColorfulTheUiShouldBe =>
-      'Choose how colorful the UI should be';
+      'Wählen Sie, wie bunt die UI sein soll';
 
   @override
-  String get clampedTargetScrollClampedMaxScrollMaxscroll =>
-      'Clamped target scroll: \$clamped (Max scroll: \$maxScroll)';
+  String get clear => 'Klar';
 
   @override
-  String get clear => 'Clear';
+  String get clearSelectedDays => 'Ausgewählte Tage löschen';
 
   @override
-  String get clearSelectedDays => 'Clear selected days';
+  String get colorfulInterface => 'Bunte Schnittstelle';
 
   @override
-  String get colorfulInterface => 'Colorful Interface';
+  String get complete => 'Vollständig';
 
   @override
-  String get complete => 'Complete';
-
-  @override
-  String get completed => 'Completed';
+  String get completed => 'Abgeschlossen';
 
   @override
   String completedHabitFoundHabitscompletedTotal(Object habitsCompleted) {
-    return 'Completed habit found, $habitsCompleted total';
+    return 'Abgeschlossene Gewohnheit gefunden, $habitsCompleted insgesamt';
   }
 
   @override
-  String get completedHabits => 'Completed habits: ';
+  String get completedHabits => 'Abgeschlossene Gewohnheiten:';
 
   @override
-  String get completingHabitIdDayDaysimple =>
-      'Completing habit: \$id, day: \$daySimple';
+  String get confirm => 'Bestätigen Sie';
 
   @override
-  String get confirm => 'Confirm';
-
-  @override
-  String get connectToGoogle => 'Connect to Google';
+  String get connectToGoogle => 'Mit Google verbinden';
 
   @override
   String get controlWhenAndHowYouGetNotifiedAboutYourHabits =>
-      'Control when and how you get notified about your habits.';
+      'Bestimmen Sie, wann und wie Sie über Ihre Gewohnheiten informiert werden.';
 
   @override
   String get couldNotGetOrCreateBackupFolder =>
-      'Could not get or create backup folder';
+      'Sicherungsordner konnte nicht abgerufen oder erstellt werden';
 
   @override
-  String get createAmountLabel => 'Create amount label';
+  String get createAmountLabel => 'Betragsetikett erstellen';
 
   @override
-  String get creatingNewDayEntry => 'Creating new day entry';
+  String get creatingNewDayEntry => 'Neuen Tageseintrag erstellen';
 
   @override
-  String get currentHourIsBetween12And19 => 'Current hour is between 12 and 19';
+  String get currentHourIsBetween12And19 =>
+      'Die aktuelle Uhrzeit liegt zwischen 12 und 19 Uhr.';
 
   @override
-  String get currentHourIsBetween19And4 => 'Current hour is between 19 and 4';
+  String get currentHourIsBetween19And4 =>
+      'Die aktuelle Uhrzeit liegt zwischen 19 und 4 Uhr.';
 
   @override
-  String get currentHourIsBetween4And12 => 'Current hour is between 4 and 12';
+  String get currentHourIsBetween4And12 =>
+      'Die aktuelle Uhrzeit liegt zwischen 4 und 12 Uhr.';
 
   @override
-  String get custom => 'Custom';
+  String get custom => 'Benutzerdefiniert';
 
   @override
-  String get dailyPlan => 'Daily plan';
+  String get dailyPlan => 'Tagesplan';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => 'Dunkler Modus';
 
   @override
-  String get dateJoinedIsNull => 'Date joined is null';
-
-  @override
-  String get dateJoinedSetFromDaysboxDatejoined =>
-      'Date joined set from daysBox: \$_dateJoined';
-
-  @override
-  String get dateJoinedSetFromSharedpreferencesDatejoined =>
-      'Date joined set from SharedPreferences: \$_dateJoined';
-
-  @override
-  String get dateJoinedSetToTodayDatejoined =>
-      'Date joined set to today: \$_dateJoined';
+  String get dateJoinedIsNull => 'Datum verbunden ist null';
 
   @override
   String get datejoined => 'dateJoined';
 
   @override
-  String get dayEntryIsNull => 'Day entry is null';
+  String get dayEntryIsNull => 'Tageseintrag ist null';
 
   @override
-  String get decrementingHabitAmount => 'Decrementing habit amount';
+  String get decrementingHabitAmount => 'Verringern der Gewohnheitsmenge';
 
   @override
-  String get defaultlabel => ', defaultLabel: ';
+  String get defaultlabel => ', defaultLabel:';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Löschen';
 
   @override
-  String get deleteLabel => 'Delete \'\$label\'?';
+  String deleteLabel(Object label) {
+    return 'Löschen Sie \'\$label\'?';
+  }
 
   @override
-  String get deleteNotification => 'Delete notification?';
+  String get deleteNotification => 'Benachrichtigung löschen?';
 
   @override
-  String get deletedAllFilesInFolderIdFolderid =>
-      'Deleted all files in folder ID: \$folderId';
+  String get discard => 'Ablegen';
 
   @override
-  String get deletedMetadataFilesInFolderIdFolderid =>
-      'Deleted metadata files in folder ID: \$folderId';
+  String get discardChanges => 'Änderungen verwerfen?';
 
   @override
-  String get deviceWidthDevicewidth => 'Device width: \$deviceWidth';
-
-  @override
-  String get discard => 'Discard';
-
-  @override
-  String get discardChanges => 'Discard changes?';
-
-  @override
-  String get done => 'Done';
+  String get done => 'Erledigt';
 
   @override
   String get driveApiReturnedNullFilesList =>
-      'Drive API returned null files list';
+      'Die Laufwerk-API hat eine Liste mit Null-Dateien zurückgegeben';
 
   @override
-  String get duration => 'Duration';
+  String get duration => 'Dauer';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'bearbeiten';
 
   @override
-  String get editHabit => 'Edit Habit';
+  String get editHabit => 'Gewohnheit bearbeiten';
 
   @override
-  String get editProfile => 'Edit profile';
+  String get editProfile => 'Profil bearbeiten';
 
   @override
-  String get enable => 'Enable';
+  String get enable => 'Aktivieren Sie';
 
   @override
-  String get endTime => 'End time';
+  String get endTime => 'Endzeit';
 
   @override
   String get enterHabitNameToConfirmDeletion =>
-      'Enter habit name to confirm deletion';
+      'Gewohnheitsname zur Bestätigung der Löschung eingeben';
 
   @override
-  String get enterPassphrase => 'Enter Passphrase';
+  String get enterPassphrase => 'Passphrase eingeben';
 
   @override
-  String get enterYourAmount => 'Enter your amount';
+  String get enterYourAmount => 'Geben Sie Ihren Betrag ein';
 
   @override
-  String get enterYourDuration => 'Enter your duration';
+  String get enterYourDuration => 'Geben Sie Ihre Dauer ein';
 
   @override
   String get enterYourExistingBackupPassphraseToAccessYourData =>
-      'Enter your existing backup passphrase to access your data.';
+      'Geben Sie Ihre bestehende Passphrase für die Sicherung ein, um auf Ihre Daten zuzugreifen.';
 
   @override
-  String get errorCheckingSubscriptionStatusE =>
-      'Error checking subscription status: \$e';
+  String get evening => 'Abend';
 
   @override
-  String get errorFetchingOfferingsE => 'Error fetching offerings: \$e';
+  String get exit => 'Ausfahrt';
 
   @override
-  String get evening => 'Evening';
+  String get exitWithoutSaving => 'Beenden ohne zu speichern?';
 
   @override
-  String get exit => 'Exit';
+  String get fetchOffers => 'Angebote abrufen';
 
   @override
-  String get exitWithoutSaving => 'Exit without saving?';
+  String get fri => 'Fr';
 
   @override
-  String get fetchOffers => 'Fetch Offers';
+  String get from => 'Von';
 
   @override
-  String get fixedTimeFixedhourfixedminute =>
-      'Fixed time: \$fixedHour:\$fixedMinute';
+  String get getRemindedAboutYourHabit =>
+      'Erinnern Sie sich an Ihre Gewohnheit';
 
   @override
-  String get folderNotFoundAndCreationNotAllowed =>
-      'Folder not found and creation not allowed';
+  String get glassFeel => 'Glas Gefühl';
 
   @override
-  String get folderidInParentsAndTrashedFalse =>
-      '\'\$folderId\' in parents and trashed = false';
+  String get goodAfternoon => 'Guten Tag';
 
   @override
-  String get fri => 'Fri';
+  String get goodEvening => 'Guten Abend';
 
   @override
-  String get from => 'From';
-
-  @override
-  String get getRemindedAboutYourHabit => 'Get reminded about your habit';
-
-  @override
-  String get gettingHabitsForHabitsWidgetSelectedDaySelectedday =>
-      'Getting habits for Habits widget ======================================== selected DAY: \$selectedDay ';
-
-  @override
-  String get glassFeel => 'Glass Feel';
-
-  @override
-  String get goodAfternoon => 'Good afternoon';
-
-  @override
-  String get goodEvening => 'Good evening';
-
-  @override
-  String get goodMorning => 'Good morning';
+  String get goodMorning => 'Guten Morgen!';
 
   @override
   String get goodMorningTimeToCheckYourHabits =>
-      'Good morning! Time to check your habits';
+      'Guten Morgen! Zeit, Ihre Gewohnheiten zu überprüfen';
 
   @override
-  String get goodToSeeYou => 'Good to see you';
+  String get goodToSeeYou => 'Schön, Sie zu sehen';
 
   @override
-  String get guest => 'Guest';
+  String get guest => 'Gast';
 
   @override
-  String get habit => 'habit';
+  String get habit => 'Gewohnheit';
 
   @override
-  String get habitAdded => 'Habit added!';
+  String get habitAdded => 'Gewohnheit hinzugefügt!';
 
   @override
-  String get habitDeleted => 'Habit deleted!';
+  String get habitDeleted => 'Gewohnheit gelöscht!';
 
   @override
   String get habitIsNotInABoxSkippingSave =>
-      'Habit is not in a box, skipping save()';
+      'Gewohnheit ist nicht in einer Box, überspringt save()';
 
   @override
-  String get habitName => 'Habit Name';
+  String get habitName => 'Gewohnheit Name';
 
   @override
-  String get habitNotFoundInDayEntry => 'Habit not found in day entry';
+  String get habitNotFoundInDayEntry =>
+      'Gewohnheit nicht im Tageseintrag gefunden';
 
   @override
-  String get habits => 'habits';
+  String get habits => 'Gewohnheiten';
 
   @override
-  String get habitslistheightHabitslistheightContentheightContentheight =>
-      'habitsListHeight: \$habitsListHeight, contentHeight: \$contentHeight';
+  String get hello => 'Hallo';
 
   @override
-  String get hello => 'Hello';
+  String get helloThere => 'Hallo zusammen';
 
   @override
-  String get helloThere => 'Hello there';
+  String get hi => 'Hallo';
 
   @override
-  String get hi => 'Hi';
+  String get hiThere => 'Hallo zusammen';
 
   @override
-  String get hiThere => 'Hi there';
+  String get home => 'Startseite';
 
   @override
-  String get home => 'Home';
+  String get hours => 'Stunden';
 
   @override
-  String get hours => 'Hours';
+  String get howAreYou => 'Wie sind Sie';
 
   @override
-  String get howAreYou => 'How are you';
+  String get howLongWillThisHabitTake =>
+      'Wie lange wird diese Gewohnheit dauern?';
 
   @override
-  String get howLongWillThisHabitTake => 'How long will this habit take?';
-
-  @override
-  String get howMuchDidYouCompleteToday => 'How much did you complete today?';
+  String get howMuchDidYouCompleteToday => 'Wie viel haben Sie heute erledigt?';
 
   @override
   String get howMuchTimeDidYouSpendOnThisHabitToday =>
-      'How much time did you spend on this habit today?';
+      'Wie viel Zeit haben Sie heute mit dieser Gewohnheit verbracht?';
 
   @override
   String get howOftenWouldYouLikeToDoThisHabit =>
-      'How often would you like to do this habit?';
+      'Wie oft würden Sie diese Gewohnheit gerne ausüben?';
 
   @override
   String get ifCheckedHabitWontCountForThePerfectDaysStreak =>
-      'If checked, habit won\'t count for the \'Perfect days streak\'.';
+      'Wenn diese Option aktiviert ist, zählt die Gewohnheit nicht für die \"Perfekte-Tage-Strähne\".';
 
   @override
-  String get incorrectPassphrase => 'Incorrect passphrase.';
+  String get incorrectPassphrase => 'Falsche Passphrase.';
 
   @override
   String get initialProgressValuesLoadedForAllDays =>
-      'Initial progress values loaded for all days';
+      'Anfangsfortschrittswerte für alle Tage geladen';
 
   @override
-  String get insightStrengthApplyDecrease => 'Apply decrease';
+  String get insightStrengthApplyDecrease => 'Abnehmen';
 
   @override
-  String get insightStrengthApplyIncrease => 'Apply increase';
+  String get insightStrengthApplyIncrease => 'Erhöhung anwenden';
 
   @override
-  String get insightStrengthGotItEven => 'Got it';
+  String get insightStrengthGotItEven => 'Verstanden';
 
   @override
-  String get insightStrengthGotItOdd => 'Got it';
+  String get insightStrengthGotItOdd => 'Verstanden';
 
   @override
   String insightStrengthIncreaseBrushTeeth(
@@ -445,7 +368,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with brush your teeth. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on brush your teeth. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your brush your teeth habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for brush your teeth. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on brush your teeth. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Du machst dich gut beim Zähneputzen. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um noch mehr zu wachsen.||Große Beständigkeit beim Zähneputzen. Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Zahnputzgewohnheit ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zum Zähneputzen. Die Stärke ist stabil bei $strength%. Gehen Sie von $fromValue auf $toValue, um sich weiter zu verbessern.||Exzellenter Rhythmus beim Zähneputzen. Die Stärke ist stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter voranzukommen.';
   }
 
   @override
@@ -544,7 +467,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your running routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your running routine. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your running routine habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your running routine. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your running routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Sie kommen mit Ihrer Laufroutine gut zurecht. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter zu wachsen.||Große Beständigkeit bei deiner Laufroutine. Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Laufroutine ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zu Ihrer Laufroutine. Die Stärke ist stabil bei $strength%. Wechseln Sie von $fromValue zu $toValue, um sich weiter zu verbessern.||Exzellenter Rhythmus bei Ihrem Lauftraining. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weitere Fortschritte zu erzielen.';
   }
 
   @override
@@ -553,7 +476,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with take your shower. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on take your shower. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your take your shower habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for take your shower. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on take your shower. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Sie machen sich gut beim Duschen. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter zu wachsen.||Große Beständigkeit bei \"Nimm deine Dusche\". Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Gewohnheit zu duschen ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Du erscheinst zuverlässig zum Duschen. Die Stärke ist stabil bei $strength%. Gehen Sie von $fromValue auf $toValue, um sich weiter zu verbessern.||Exzellenter Rhythmus beim Duschen. Die Stärke ist stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter voranzukommen.';
   }
 
   @override
@@ -562,7 +485,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your skin care routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your skin care routine. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your skin care routine habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your skin care routine. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your skin care routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Sie machen sich gut mit Ihrer Hautpflegeroutine. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter zu wachsen.||Große Beständigkeit bei Ihrer Hautpflegeroutine. Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Hautpflegeroutine ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zu Ihrer Hautpflegeroutine. Die Stärke liegt stabil bei $strength%. Gehen Sie von $fromValue auf $toValue, um sich weiter zu verbessern.||Sie haben einen ausgezeichneten Rhythmus bei Ihrer Hautpflegeroutine. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weitere Fortschritte zu erzielen.';
   }
 
   @override
@@ -571,12 +494,12 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your studying habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your studying habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your studying habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your studying habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your studying habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Du machst dich gut mit deiner Lerngewohnheit. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter zu wachsen. Du bist sehr beständig in deiner Lerngewohnheit. Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Lerngewohnheit ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zu Ihrer Lerngewohnheit. Die Stärke ist stabil bei $strength%. Wechseln Sie von $fromValue zu $toValue, um sich weiter zu verbessern.||Ein ausgezeichneter Rhythmus für Ihr Lernverhalten. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter voranzukommen.';
   }
 
   @override
   String insightStrengthIncreaseTargetTitle(Object habitName) {
-    return 'Increase target for $habitName';
+    return 'Ziel für $habitName erhöhen';
   }
 
   @override
@@ -585,7 +508,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with wake up early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on wake up early. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your wake up early habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for wake up early. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on wake up early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Sie machen sich gut mit dem frühen Aufwachen. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um noch mehr zu wachsen.||Große Beständigkeit beim frühen Aufwachen. Die Stärke liegt stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Gewohnheit, früh aufzuwachen, ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zum frühen Aufwachen. Die Stärke ist stabil bei $strength%. Wechseln Sie von $fromValue zu $toValue, um sich weiter zu verbessern.||Exzellenter Rhythmus beim frühen Aufwachen. Die Stärke ist stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter voranzukommen.';
   }
 
   @override
@@ -594,7 +517,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your walking routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your walking routine. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your walking routine habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your walking routine. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your walking routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Sie machen sich gut mit Ihrer Walking-Routine. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter zu wachsen.||Große Beständigkeit bei Ihrer Laufroutine. Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Laufroutine ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zu Ihrer Gehroutine. Die Stärke ist stabil bei $strength%. Wechseln Sie von $fromValue zu $toValue, um sich weiter zu verbessern.||Exzellenter Rhythmus bei Ihrem Lauftraining. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weitere Fortschritte zu erzielen.';
   }
 
   @override
@@ -603,90 +526,90 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your work habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your work habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your work habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your work habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your work habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Du machst dich gut mit deiner Arbeitsgewohnheit. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um noch mehr zu wachsen.||Große Beständigkeit bei Ihrer Arbeitsgewohnheit. Die Stärke ist stabil bei $strength%. Erhöhen Sie Ihr Ziel von $fromValue auf $toValue und halten Sie den Schwung hoch.||Ihre Arbeitsgewohnheit ist im Moment stark. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue für die nächste Stufe.||Sie erscheinen zuverlässig zu Ihrer Arbeitsgewohnheit. Die Stärke liegt stabil bei $strength%. Wechseln Sie von $fromValue zu $toValue, um sich weiter zu verbessern.||Sehr guter Rhythmus bei Ihrer Arbeitsgewohnheit. Die Stärke liegt stabil bei $strength%. Empfohlenes Ziel: $fromValue -> $toValue, um weiter voranzukommen.';
   }
 
   @override
   String insightStrengthKeepPushingTitle(Object habitName) {
-    return 'Keep pushing $habitName';
+    return 'Weiter schieben $habitName';
   }
 
   @override
   String insightStrengthLowerTargetTitle(Object habitName) {
-    return 'Lower target for $habitName';
+    return 'Unteres Ziel für $habitName';
   }
 
   @override
   String get insightStrengthStartSmallType1BrushTeeth =>
-      'Your brush your teeth habit is slipping. Do not let this routine fall off now.||You have been off track with brush your teeth. Show up today and protect the habit.||Momentum on brush your teeth is fading. Keep it alive with one solid rep today.||Do not let brush your teeth become inconsistent. Lock in and do your part today.||You started to brush your teeth for a reason. Stay disciplined and keep it from slipping.';
+      'Die Gewohnheit des Zähneputzens ist in Vergessenheit geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind beim Zähneputzen vom Weg abgekommen. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung beim Zähneputzen lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie das Zähneputzen nicht inkonsequent werden. Bleiben Sie dran und tun Sie Ihren Teil heute.||Sie haben nicht ohne Grund mit dem Zähneputzen begonnen. Bleiben Sie diszipliniert und lassen Sie es nicht schleifen.';
 
   @override
   String get insightStrengthStartSmallType1DrinkWater =>
-      'Your drink enough water habit is slipping. Do not let this routine fall off now.||You have been off track with drink enough water. Show up today and protect the habit.||Momentum on drink enough water is fading. Keep it alive with one solid rep today.||Do not let drink enough water become inconsistent. Lock in and do your part today.||You started to drink enough water for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Gewohnheit, ausreichend Wasser zu trinken, ist ins Stocken geraten. Lassen Sie nicht zu, dass diese Gewohnheit jetzt abfällt.||Sie sind vom Weg abgekommen, genug Wasser zu trinken. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung, genug Wasser zu trinken, lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass das ausreichende Trinken von Wasser inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben nicht ohne Grund angefangen, genug Wasser zu trinken. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Generic =>
-      'You added this habit for a reason. Do not let it slip now.||Momentum is fading on this habit. Show up today and keep it alive.||You are falling behind on this habit. Lock in and get your rep done.||Do not negotiate with laziness here. Protect this habit today.||You came too far to let this habit drift. Stay consistent today.';
+      'Sie haben diese Gewohnheit aus einem bestimmten Grund eingeführt. Lassen Sie sie jetzt nicht fallen.||Die Dynamik dieser Gewohnheit lässt nach. Zeigen Sie sich heute und halten Sie sie am Leben.||Sie sind mit dieser Gewohnheit im Rückstand. Schließen Sie ab und erledigen Sie Ihren Auftrag. Verhandeln Sie hier nicht mit Faulheit. Schützen Sie diese Gewohnheit heute.||Sie sind zu weit gekommen, um diese Gewohnheit fallen zu lassen. Bleiben Sie heute konsequent.';
 
   @override
   String get insightStrengthStartSmallType1GoToBedEarly =>
-      'Your go to bed early habit is slipping. Do not let this routine fall off now.||You have been off track with go to bed early. Show up today and protect the habit.||Momentum on go to bed early is fading. Keep it alive with one solid rep today.||Do not let go to bed early become inconsistent. Lock in and do your part today.||You started to go to bed early for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Gewohnheit, früh ins Bett zu gehen, ist ins Rutschen geraten. Lassen Sie nicht zu, dass diese Gewohnheit jetzt abfällt.||Sie sind vom Weg abgekommen, früh ins Bett zu gehen. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung, früh ins Bett zu gehen, lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass das frühe zu Bett gehen inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben nicht ohne Grund angefangen, früh ins Bett zu gehen. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Gym =>
-      'Your your gym routine habit is slipping. Do not let this routine fall off now.||You have been off track with your gym routine. Show up today and protect the habit.||Momentum on your gym routine is fading. Keep it alive with one solid rep today.||Do not let your gym routine become inconsistent. Lock in and do your part today.||You started to your gym routine for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Fitness-Studio-Routine ist ins Stocken geraten. Lassen Sie nicht zu, dass diese Gewohnheit jetzt abfällt.||Sie sind mit Ihrer Fitnessstudio-Routine aus der Spur geraten. Erscheinen Sie heute und schützen Sie die Gewohnheit.||Die Dynamik Ihrer Fitnessstudio-Routine lässt nach. Halten Sie sie mit einer soliden Wiederholung am Leben.||Lassen Sie nicht zu, dass Ihre Fitnessroutine inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben Ihr Fitnessprogramm aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Medications =>
-      'Your take your medications on time habit is slipping. Do not let this routine fall off now.||You have been off track with take your medications on time. Show up today and protect the habit.||Momentum on take your medications on time is fading. Keep it alive with one solid rep today.||Do not let take your medications on time become inconsistent. Lock in and do your part today.||You started to take your medications on time for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Gewohnheit, Ihre Medikamente pünktlich einzunehmen, ist ins Wanken geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit der pünktlichen Einnahme Ihrer Medikamente aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung bei der pünktlichen Einnahme Ihrer Medikamente lässt nach. Halten Sie es mit einem soliden Wiederholungsversuch heute am Leben.||Lassen Sie nicht zu, dass die rechtzeitige Einnahme Ihrer Medikamente inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben nicht ohne Grund begonnen, Ihre Medikamente pünktlich einzunehmen. Bleiben Sie diszipliniert und verhindern Sie, dass es Ihnen entgleitet.';
 
   @override
   String get insightStrengthStartSmallType1Nutrition =>
-      'Your your nutrition plan habit is slipping. Do not let this routine fall off now.||You have been off track with your nutrition plan. Show up today and protect the habit.||Momentum on your nutrition plan is fading. Keep it alive with one solid rep today.||Do not let your nutrition plan become inconsistent. Lock in and do your part today.||You started to your nutrition plan for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Ernährungsplan-Gewohnheit ist ins Rutschen geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihrem Ernährungsplan vom Weg abgekommen. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung Ihres Ernährungsplans lässt nach. Halten Sie ihn mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihr Ernährungsplan inkonsequent wird. Halten Sie sich fest und erfüllen Sie heute Ihren Teil.||Sie haben Ihren Ernährungsplan aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass er abrutscht.';
 
   @override
   String get insightStrengthStartSmallType1Praying =>
-      'Your pray consistently habit is slipping. Do not let this routine fall off now.||You have been off track with pray consistently. Show up today and protect the habit.||Momentum on pray consistently is fading. Keep it alive with one solid rep today.||Do not let pray consistently become inconsistent. Lock in and do your part today.||You started to pray consistently for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Gewohnheit, konsequent zu beten, ist ins Stocken geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit dem konsequenten Beten vom Weg abgekommen. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung des konsequenten Betens lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass konsequentes Beten inkonsequent wird. Bleiben Sie dran und tun Sie heute Ihren Teil.||Sie haben aus einem bestimmten Grund angefangen, konsequent zu beten. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1ProductivitySession =>
-      'Your your productivity sessions habit is slipping. Do not let this routine fall off now.||You have been off track with your productivity sessions. Show up today and protect the habit.||Momentum on your productivity sessions is fading. Keep it alive with one solid rep today.||Do not let your productivity sessions become inconsistent. Lock in and do your part today.||You started to your productivity sessions for a reason. Stay disciplined and keep it from slipping.';
+      'Die Gewohnheit Ihrer Produktivitätssitzungen ist ins Stocken geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihren Produktivitätssitzungen aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Das Momentum Ihrer Produktivitätssitzungen lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Produktivitätssitzungen inkonsistent werden. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben Ihre Produktivitätssitzungen aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass sie nachlassen.';
 
   @override
   String get insightStrengthStartSmallType1Read =>
-      'Your your reading habit habit is slipping. Do not let this routine fall off now.||You have been off track with your reading habit. Show up today and protect the habit.||Momentum on your reading habit is fading. Keep it alive with one solid rep today.||Do not let your reading habit become inconsistent. Lock in and do your part today.||You started to your reading habit for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Lesegewohnheit ist ins Stocken geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihrer Lesegewohnheit vom Weg abgekommen. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Das Momentum Ihrer Lesegewohnheit lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Lesegewohnheit inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben Ihre Lesegewohnheit aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass sie nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Research =>
-      'Your your research habit habit is slipping. Do not let this routine fall off now.||You have been off track with your research habit. Show up today and protect the habit.||Momentum on your research habit is fading. Keep it alive with one solid rep today.||Do not let your research habit become inconsistent. Lock in and do your part today.||You started to your research habit for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Forschungsgewohnheit ist ins Stocken geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihrer Forschungsgewohnheit aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Das Momentum Ihrer Forschungsgewohnheit lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Forschungsgewohnheit inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben Ihre Forschungsgewohnheit aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass sie nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Running =>
-      'Your your running routine habit is slipping. Do not let this routine fall off now.||You have been off track with your running routine. Show up today and protect the habit.||Momentum on your running routine is fading. Keep it alive with one solid rep today.||Do not let your running routine become inconsistent. Lock in and do your part today.||You started to your running routine for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Laufroutine ist ins Stocken geraten. Lassen Sie diese Gewohnheit jetzt nicht fallen.||Sie sind mit Ihrer Laufroutine aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung Ihrer Laufroutine lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben. Lassen Sie nicht zu, dass Ihre Laufroutine inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben Ihre Laufroutine aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Shower =>
-      'Your take your shower habit is slipping. Do not let this routine fall off now.||You have been off track with take your shower. Show up today and protect the habit.||Momentum on take your shower is fading. Keep it alive with one solid rep today.||Do not let take your shower become inconsistent. Lock in and do your part today.||You started to take your shower for a reason. Stay disciplined and keep it from slipping.';
+      'Die Gewohnheit zu duschen ist in Vergessenheit geraten. Lassen Sie diese Gewohnheit jetzt nicht fallen.||Sie sind mit dem Duschen aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung des Duschens lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass \"take your shower\" inkonsequent wird. Bleiben Sie dran und tun Sie Ihren Teil heute.||Sie haben nicht ohne Grund mit dem Duschen begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass es Ihnen entgleitet.';
 
   @override
   String get insightStrengthStartSmallType1SkinCare =>
-      'Your your skin care routine habit is slipping. Do not let this routine fall off now.||You have been off track with your skin care routine. Show up today and protect the habit.||Momentum on your skin care routine is fading. Keep it alive with one solid rep today.||Do not let your skin care routine become inconsistent. Lock in and do your part today.||You started to your skin care routine for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Hautpflege Routine Gewohnheit ist rutscht. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihrer Hautpflegeroutine aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Das Momentum Ihrer Hautpflege-Routine lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Hautpflegeroutine inkonsequent wird. Halten Sie sich fest und tun Sie Ihren Teil heute.||Sie haben Ihre Hautpflege-Routine aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass sie nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Studying =>
-      'Your your studying habit habit is slipping. Do not let this routine fall off now.||You have been off track with your studying habit. Show up today and protect the habit.||Momentum on your studying habit is fading. Keep it alive with one solid rep today.||Do not let your studying habit become inconsistent. Lock in and do your part today.||You started to your studying habit for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Lerngewohnheit ist ins Rutschen geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihrer Lerngewohnheit aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Das Momentum Ihrer Lerngewohnheit lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Lerngewohnheit inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben mit Ihrer Lerngewohnheit aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass sie nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1WakeUpEarly =>
-      'Your wake up early habit is slipping. Do not let this routine fall off now.||You have been off track with wake up early. Show up today and protect the habit.||Momentum on wake up early is fading. Keep it alive with one solid rep today.||Do not let wake up early become inconsistent. Lock in and do your part today.||You started to wake up early for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Gewohnheit, früh aufzustehen, ist ins Wanken geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit dem frühen Aufstehen aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung des frühen Aufstehens lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie das frühe Aufstehen nicht inkonsequent werden. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben aus einem bestimmten Grund angefangen, früh aufzustehen. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Walk =>
-      'Your your walking routine habit is slipping. Do not let this routine fall off now.||You have been off track with your walking routine. Show up today and protect the habit.||Momentum on your walking routine is fading. Keep it alive with one solid rep today.||Do not let your walking routine become inconsistent. Lock in and do your part today.||You started to your walking routine for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Gehroutine ist ins Stocken geraten. Lassen Sie diese Gewohnheit jetzt nicht fallen.||Sie sind mit Ihrer Gehroutine aus der Spur geraten. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Der Schwung Ihrer Gehroutine lässt nach. Halten Sie es mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Laufroutine inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben Ihre Laufroutine aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass es nachlässt.';
 
   @override
   String get insightStrengthStartSmallType1Work =>
-      'Your your work habit habit is slipping. Do not let this routine fall off now.||You have been off track with your work habit. Show up today and protect the habit.||Momentum on your work habit is fading. Keep it alive with one solid rep today.||Do not let your work habit become inconsistent. Lock in and do your part today.||You started to your work habit for a reason. Stay disciplined and keep it from slipping.';
+      'Ihre Arbeitsgewohnheit ist ins Rutschen geraten. Lassen Sie nicht zu, dass diese Routine jetzt abfällt.||Sie sind mit Ihrer Arbeitsgewohnheit vom Weg abgekommen. Zeigen Sie sich heute und schützen Sie die Gewohnheit.||Das Momentum Ihrer Arbeitsgewohnheit lässt nach. Halten Sie sie mit einer soliden Wiederholung heute am Leben.||Lassen Sie nicht zu, dass Ihre Arbeitsgewohnheit inkonsequent wird. Bleiben Sie dran und leisten Sie heute Ihren Beitrag.||Sie haben mit Ihrer Arbeitsgewohnheit aus einem bestimmten Grund begonnen. Bleiben Sie diszipliniert und verhindern Sie, dass sie nachlässt.';
 
   @override
   String insightStrengthStartSmallType2BrushTeeth(
@@ -694,7 +617,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with brush your teeth lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Brush your teeth has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent brush your teeth consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your brush your teeth habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Brush your teeth needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Du warst in letzter Zeit nicht konsequent beim Zähneputzen. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Das Zähneputzen ist in letzter Zeit schwächer geworden. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||Die Konsistenz des Zähneputzens ist in letzter Zeit gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um wieder in Schwung zu kommen.||Um Ihre Zahnputzgewohnheit zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Zähneputzen braucht einen Reset. Stärke um $drop% gesunken. Versuche $fromValue -> $toValue, damit diese Gewohnheit erhalten bleibt.';
   }
 
   @override
@@ -703,7 +626,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with drink enough water lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Drink enough water has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent drink enough water consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your drink enough water habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Drink enough water needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Du hast in letzter Zeit nicht konsequent genug Wasser getrunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Das ausreichende Trinken von Wasser war in letzter Zeit schwächer. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||In letzter Zeit ist die Konsistenz, genug Wasser zu trinken, gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um den Schwung wiederzuerlangen.||Um Ihre Gewohnheit, genug Wasser zu trinken, zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Genug Wasser trinken braucht einen Reset. Stärke um $drop% gesunken. Versuche $fromValue -> $toValue, damit diese Gewohnheit am Leben bleibt.';
   }
 
   @override
@@ -802,7 +725,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with take your shower lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Take your shower has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent take your shower consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your take your shower habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Take your shower needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Sie waren in letzter Zeit nicht konsequent beim Duschen. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Das Duschen war in letzter Zeit schwächer. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||Die Konsistenz des Duschens ist in letzter Zeit gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um wieder in Schwung zu kommen.||Um Ihre Duschgewohnheit zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Die Dusche braucht einen Reset. Stärke um $drop% gesunken. Versuchen Sie $fromValue -> $toValue, damit diese Gewohnheit erhalten bleibt.';
   }
 
   @override
@@ -811,7 +734,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your skin care routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your skin care routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your skin care routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your skin care routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your skin care routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Sie haben sich in letzter Zeit nicht konsequent an Ihre Hautpflege gehalten. Die Stärke hat in den letzten Tagen um $drop% abgenommen. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Ihre Hautpflegeroutine ist in letzter Zeit schwächer geworden. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||Die Konsistenz Ihrer Hautpflegeroutine ist in letzter Zeit gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um den Schwung wiederzuerlangen.||Um Ihre Hautpflegegewohnheiten zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Ihre Hautpflegeroutine braucht einen Reset. Stärke um $drop% gesunken. Versuche $fromValue -> $toValue, damit diese Gewohnheit erhalten bleibt.';
   }
 
   @override
@@ -820,7 +743,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your studying habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your studying habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your studying habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your studying habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your studying habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Du warst in letzter Zeit nicht sehr konsequent beim Lernen. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Ihre Lerngewohnheit ist in letzter Zeit schwächer geworden. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||In letzter Zeit ist die Konsistenz Ihrer Lerngewohnheit gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um den Schwung wiederherzustellen.||Um Ihre Lerngewohnheit zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Ihre Lerngewohnheit braucht einen Reset. Stärke um $drop% gesunken. Versuche $fromValue -> $toValue, damit diese Gewohnheit am Leben bleibt.';
   }
 
   @override
@@ -829,7 +752,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with wake up early lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Wake up early has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent wake up early consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your wake up early habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Wake up early needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Sie sind in letzter Zeit nicht konsequent früh aufgewacht. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Das frühe Aufstehen ist in letzter Zeit schwächer geworden. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||Die Konsistenz des frühen Aufwachens ist in letzter Zeit gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um den Schwung wiederzuerlangen.||Um Ihre Gewohnheit, früh aufzuwachen, zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Das frühe Aufwachen braucht einen Reset. Stärke um $drop% gesunken. Versuchen Sie $fromValue -> $toValue, damit diese Gewohnheit am Leben bleibt.';
   }
 
   @override
@@ -838,7 +761,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your walking routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your walking routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your walking routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your walking routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your walking routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Sie sind in letzter Zeit nicht mehr regelmäßig gelaufen. Die Kraft ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit beizubehalten.||Ihre Laufroutine war in letzter Zeit schwächer. Die Kraft ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||In letzter Zeit ist die Konsistenz Ihrer Laufroutine gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um den Schwung wiederzuerlangen.||Um Ihre Gehgewohnheit zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Ihre Laufroutine braucht einen Reset. Stärke um $drop% gesunken. Versuche $fromValue -> $toValue, damit diese Gewohnheit am Leben bleibt.';
   }
 
   @override
@@ -847,148 +770,99 @@ class AppLocalizationsDe extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your work habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your work habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your work habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your work habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your work habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Sie haben in letzter Zeit Ihre Arbeitsgewohnheiten nicht konsequent eingehalten. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um die Gewohnheit aufrechtzuerhalten.||Ihre Arbeitsgewohnheit war in letzter Zeit schwächer. Die Stärke ist um $drop% gesunken. Verschieben Sie Ihr Ziel von $fromValue auf $toValue, um die Konsistenz wiederherzustellen.||In letzter Zeit ist die Konsistenz Ihrer Arbeitsgewohnheit gesunken. Die Stärke ist in den letzten Tagen um $drop% gesunken. Empfohlenes Ziel: $fromValue -> $toValue, um wieder in Schwung zu kommen.||Um Ihre Arbeitsgewohnheit zu schützen, senken Sie das Ziel vorerst. Stärke um $drop% gesunken. Empfohlen: $fromValue -> $toValue.||Ihre Arbeitsgewohnheit braucht einen Reset. Stärke um $drop% gesunken. Versuche $fromValue -> $toValue, damit diese Gewohnheit lebendig bleibt.';
   }
 
   @override
-  String get invalidTime => 'Invalid Time';
-
-  @override
-  String get iosMajorVersionMajorversion => 'iOS Major Version: \$majorVersion';
-
-  @override
-  String
-  get isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids =>
-      'Is selected visible: \$isSelectedVisible | wasVisiblePreviously=\$wasSelectedVisibleInPreviousFrame | ids=\$visibleIds';
+  String get invalidTime => 'Ungültige Zeit';
 
   @override
   String get keepYourDataSafeByBackingItUpToGoogleDrive =>
-      'Keep your data safe by backing it up to Google Drive.';
+      'Schützen Sie Ihre Daten, indem Sie sie in Google Drive sichern.';
 
   @override
-  String get label => 'Label';
+  String get label => 'Etikett';
 
   @override
-  String get lastOpenedDateTemp => 'Last opened date: \$temp';
+  String get leaveSetup => 'Einstellung verlassen?';
 
   @override
-  String get lastOpenedDateWasNullSettingItToToday =>
-      'Last opened date was null, setting it to: \$today';
+  String get logDuration => 'Dauer des Protokolls';
 
   @override
-  String get lastSyncedLastsynctext => 'Last synced: \$lastSyncText';
+  String get logProgress => 'Fortschritt protokollieren';
 
   @override
-  String get lastopeneddate => 'lastOpenedDate';
-
-  @override
-  String
-  get leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset =>
-      'Leading: \$leading, Selected width: \$selectedWidth, Item center offset: \$itemCenterOffset';
-
-  @override
-  String get leaveSetup => 'Leave setup?';
-
-  @override
-  String get listWidthListwidth => 'List width: \$listWidth';
-
-  @override
-  String get logDuration => 'Log duration';
-
-  @override
-  String get logProgress => 'Log progress';
-
-  @override
-  String get makesWidgetsLookMoreGlassy => 'Makes widgets look more glassy';
+  String get makesWidgetsLookMoreGlassy => 'Lässt Widgets glasiger aussehen';
 
   @override
   String get manageYourNotificationPreferences =>
-      'Manage your notification preferences';
+      'Verwalten Sie Ihre Benachrichtigungseinstellungen';
 
   @override
   String get manageYourSubscriptionsAndBillingPlansHere =>
-      'Manage your subscriptions and billing plans here.';
+      'Verwalten Sie hier Ihre Abonnements und Abrechnungspläne.';
 
   @override
   String get manageYourSubscriptionsAndViewPremiumBenefits =>
-      'Manage your subscriptions and view premium benefits';
+      'Verwalten Sie Ihre Abonnements und sehen Sie sich Prämienvorteile an';
 
   @override
-  String get midday => 'Mid-day';
+  String get midday => 'Mittagspause';
 
   @override
   String get middayCheckinTimeForYourHabits =>
-      'Mid-day check-in time for your habits';
+      'Mittags-Check-in-Zeit für Ihre Gewohnheiten';
 
   @override
-  String get mimetypeMimetypeAndNameFoldernameAndTrashedFalseAndRootInParents =>
-      'mimeType = \'\$mimeType\' and name = \'\$folderName\' and trashed = false and \'root\' in parents';
+  String get minutes => 'Protokoll';
 
   @override
-  String get minutes => 'Minutes';
+  String get missingPermissions => 'Fehlende Berechtigungen';
 
   @override
-  String get missingPermissions => 'Missing Permissions';
+  String get mon => 'Mo';
 
   @override
-  String get mon => 'Mon';
+  String get moreOptions => 'Mehr Optionen';
 
   @override
-  String get moreOptions => 'More options';
+  String get morning => 'Morgen';
 
   @override
-  String get morning => 'Morning';
+  String get never => 'Niemals';
 
   @override
-  String get nameContainsHabittbackupAndFolderidInParentsAndTrashedFalse =>
-      'name contains \'habitt-backup\' and \'\$folderId\' in parents and trashed = false';
+  String get newDayResettingCompletion => 'Neuer Tag, neuer Abschluss';
 
   @override
-  String get nameMetadatametaAndFolderidInParentsAndTrashedFalse =>
-      'name = \'metadata.meta\' and \'\$folderId\' in parents and trashed = false';
-
-  @override
-  String get never => 'Never';
-
-  @override
-  String get newDayResettingCompletion => 'New day, resetting completion';
-
-  @override
-  String get newHabit => 'New Habit';
-
-  @override
-  String get noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime =>
-      'No category is \'ready\'. Applying fallback logic for \$currentTimeSlotName time.';
+  String get newHabit => 'Neue Gewohnheit';
 
   @override
   String get noHabitsFoundUsingDefaultCategoryOrder =>
-      'No habits found, using default category order.';
+      'Keine Gewohnheiten gefunden, Standardreihenfolge der Kategorien verwendet.';
 
   @override
-  String get noHabitsYet => 'No habits yet.';
+  String get noHabitsYet => 'Noch keine Gewohnheiten.';
 
   @override
-  String get noOfferingsAvailable => 'No offerings available';
+  String get noOfferingsAvailable => 'Keine Angebote verfügbar';
 
   @override
-  String get noTag => 'No tag';
+  String get noTag => 'Keine Markierung';
 
   @override
-  String get notCompleted => 'Not completed';
+  String get notCompleted => 'Nicht abgeschlossen';
 
   @override
-  String get notMountedAfterNotificationPermissionRequestAbortingSave =>
-      'Not mounted after notification permission request, aborting save.';
+  String get notNow => 'Nicht jetzt';
 
   @override
-  String get notNow => 'Not now';
-
-  @override
-  String get notes => 'Notes';
+  String get notes => 'Anmerkungen';
 
   @override
   String notificationAmountLabelFocus(Object label, Object target) {
-    return 'Today\'s target is $target $label.|Your number for today: $target $label. Start with one.|Today\'s dose: $target $label. Clear target, simple execution.|Today asks for $target $label. You know the rhythm.|Target for today: $target $label. A precise goal is a powerful cue.';
+    return 'Das heutige Ziel ist $target $label.|Ihre Zahl für heute: $target $label. Beginnen Sie mit Eins.|Die heutige Dosis: $target $label. Klares Ziel, einfache Ausführung.|Heute wird $target $label verlangt. Du kennst den Rhythmus.|Ziel für heute: $target $label. Ein präzises Ziel ist ein starker Hinweis.';
   }
 
   @override
@@ -996,12 +870,12 @@ class AppLocalizationsDe extends AppLocalizations {
     Object encouragement,
     Object remaining,
   ) {
-    return 'Only $remaining left, and $encouragement.';
+    return 'Nur $remaining übrig, und $encouragement.';
   }
 
   @override
   String notificationCombinedAmountCompleted(Object encouragement) {
-    return 'Target reached already, and $encouragement.';
+    return 'Ziel bereits erreicht, und $encouragement.';
   }
 
   @override
@@ -1009,12 +883,12 @@ class AppLocalizationsDe extends AppLocalizations {
     Object encouragement,
     Object progress,
   ) {
-    return 'You are at $progress, and $encouragement.';
+    return 'Sie sind bei $progress und $encouragement.';
   }
 
   @override
   String notificationCombinedAmountNotStarted(Object encouragement) {
-    return 'Start now, even one step counts, and $encouragement.';
+    return 'Beginnen Sie jetzt, auch ein Schritt zählt, und $encouragement.';
   }
 
   @override
@@ -1022,12 +896,12 @@ class AppLocalizationsDe extends AppLocalizations {
     Object encouragement,
     Object remaining,
   ) {
-    return 'Only $remaining left, and $encouragement.';
+    return 'Nur $remaining übrig, und $encouragement.';
   }
 
   @override
   String notificationCombinedDurationCompleted(Object encouragement) {
-    return 'Target reached already, and $encouragement.';
+    return 'Ziel bereits erreicht, und $encouragement.';
   }
 
   @override
@@ -1035,17 +909,17 @@ class AppLocalizationsDe extends AppLocalizations {
     Object encouragement,
     Object progress,
   ) {
-    return 'You are at $progress, and $encouragement.';
+    return 'Sie sind bei $progress, und $encouragement.';
   }
 
   @override
   String notificationCombinedDurationNotStarted(Object encouragement) {
-    return 'Start a short session now, and $encouragement.';
+    return 'Starten Sie jetzt eine kurze Sitzung, und $encouragement.';
   }
 
   @override
   String notificationCombinedFresh(Object days, Object encouragement) {
-    return 'You started this habit $days days ago, and $encouragement.';
+    return 'Du hast diese Gewohnheit vor $days Tagen begonnen, und $encouragement.';
   }
 
   @override
@@ -1055,357 +929,357 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String notificationCombinedOneOff(Object encouragement, Object period) {
-    return 'Don\'t miss today, it\'s your last $period chance and $encouragement.';
+    return 'Verpassen Sie heute nicht, es ist Ihre letzte $period Chance und $encouragement.';
   }
 
   @override
-  String get notificationEncourageBrushTeeth1 =>
-      'keeping your hygiene streak strong';
+  String get notificationEncourageBrushTeeth1 => 'Hygiene auf hohem Niveau';
 
   @override
   String get notificationEncourageBrushTeeth2 =>
-      'protecting your routine with a quick win';
+      'Schutz Ihrer Routine durch einen schnellen Gewinn';
 
   @override
   String get notificationEncourageBrushTeeth3 =>
-      'staying consistent with basic care';
+      'konsequente Einhaltung der Grundversorgung';
 
   @override
   String get notificationEncourageDrinkWater1 =>
-      'hydration now supports your whole system';
+      'Flüssigkeitszufuhr unterstützt jetzt Ihr gesamtes System';
 
   @override
   String get notificationEncourageDrinkWater2 =>
-      'one glass now keeps your energy steadier';
+      'ein Glas hält jetzt Ihre Energie stabiler';
 
   @override
   String get notificationEncourageDrinkWater3 =>
-      'small hydration reps improve daily performance';
+      'kleine Trinkpausen verbessern die tägliche Leistung';
 
   @override
   String get notificationEncourageGeneric1 =>
-      'showing up today keeps the habit alive';
+      'Heute zu erscheinen, hält die Gewohnheit am Leben';
 
   @override
   String get notificationEncourageGeneric2 =>
-      'a small action now protects your momentum';
+      'eine kleine Aktion jetzt schützt Ihr Momentum';
 
   @override
   String get notificationEncourageGeneric3 =>
-      'consistency today makes tomorrow easier';
+      'Konsequenz heute macht morgen leichter';
 
   @override
   String get notificationEncourageGoToBedEarly1 =>
-      'protecting tonight helps tomorrow feel lighter';
+      'Der Schutz von heute Abend hilft, sich morgen leichter zu fühlen.';
 
   @override
   String get notificationEncourageGoToBedEarly10 =>
-      'this evening decision helps your whole week run smoother';
+      'diese Entscheidung am Abend trägt dazu bei, dass Ihre ganze Woche reibungsloser verläuft';
 
   @override
   String get notificationEncourageGoToBedEarly2 =>
-      'an earlier bedtime now gives your mind a cleaner start';
+      'eine frühere Schlafenszeit verschafft Ihrem Geist einen sauberen Start';
 
   @override
   String get notificationEncourageGoToBedEarly3 =>
-      'this choice tonight sets up a better morning';
+      'diese Entscheidung heute Abend sorgt für einen besseren Morgen';
 
   @override
   String get notificationEncourageGoToBedEarly4 =>
-      'sleep consistency now pays off all day tomorrow';
+      'Konsequenter Schlaf zahlt sich morgen den ganzen Tag aus';
 
   @override
   String get notificationEncourageGoToBedEarly5 =>
-      'one calm night routine protects your energy curve';
+      'eine ruhige Nachtroutine schützt Ihre Energiekurve';
 
   @override
   String get notificationEncourageGoToBedEarly6 =>
-      'ending the day on time keeps your rhythm stable';
+      'ein pünktlicher Tagesabschluss hält den Rhythmus stabil';
 
   @override
   String get notificationEncourageGoToBedEarly7 =>
-      'better sleep timing is a quiet performance advantage';
+      'ein besseres Schlaf-Timing ist ein stiller Leistungsvorteil';
 
   @override
   String get notificationEncourageGoToBedEarly8 =>
-      'an earlier lights-out keeps your recovery on track';
+      'ein früheres Ausgehen sorgt dafür, dass Ihre Erholung auf dem richtigen Weg ist';
 
   @override
   String get notificationEncourageGoToBedEarly9 =>
-      'small bedtime discipline creates stronger mornings';
+      'Kleine Disziplin vor dem Schlafengehen sorgt für einen stärkeren Morgen';
 
   @override
   String get notificationEncourageGym1 =>
-      'one gym rep today keeps your standard high';
+      'eine Wiederholung im Fitnessstudio heute hält Ihren Standard hoch';
 
   @override
   String get notificationEncourageGym2 =>
-      'showing up now protects your strength momentum';
+      'Jetzt aufzutauchen schützt Ihre Kraftanstrengung';
 
   @override
   String get notificationEncourageGym3 =>
-      'today\'s session compounds over time';
+      'die heutige Sitzung verdichtet sich im Laufe der Zeit';
 
   @override
   String get notificationEncourageMedications1 =>
-      'timing this right protects your health routine';
+      'Das richtige Timing schützt Ihre Gesundheitsroutine';
 
   @override
   String get notificationEncourageMedications2 =>
-      'staying on schedule keeps your baseline stable';
+      'Durch die Einhaltung des Zeitplans bleibt Ihre Ausgangsbasis stabil.';
 
   @override
   String get notificationEncourageMedications3 =>
-      'this step supports your long-term wellbeing';
+      'dieser Schritt unterstützt Ihr langfristiges Wohlbefinden';
 
   @override
   String get notificationEncourageNutrition1 =>
-      'one intentional choice now supports your baseline';
+      'eine bewusste Entscheidung unterstützt jetzt Ihre Ausgangssituation';
 
   @override
   String get notificationEncourageNutrition2 =>
-      'small nutrition wins add up fast';
+      'kleine Ernährungserfolge summieren sich schnell';
 
   @override
   String get notificationEncourageNutrition3 =>
-      'consistency here improves everything else';
+      'Konsistenz in diesem Bereich verbessert alles andere';
 
   @override
   String get notificationEncourageProductivitySession1 =>
-      'one focused session protects deep work time';
+      'eine konzentrierte Sitzung schützt die Zeit für intensive Arbeit';
 
   @override
   String get notificationEncourageProductivitySession2 =>
-      'a clean focus block now can change your day';
+      'ein sauberer Fokusblock kann Ihren Tag verändern';
 
   @override
   String get notificationEncourageProductivitySession3 =>
-      'consistency in focus drives better output';
+      'Konsistenz in der Ausrichtung führt zu besseren Ergebnissen';
 
   @override
   String get notificationEncourageRead1 =>
-      'a few pages now keep your reading identity strong';
+      'ein paar Seiten jetzt halten Ihre Leseidentität stark';
 
   @override
   String get notificationEncourageRead2 =>
-      'small daily reading compounds into real progress';
+      'Tägliches Lesen in kleinen Mengen führt zu echten Fortschritten';
 
   @override
   String get notificationEncourageRead3 =>
-      'showing up today keeps the streak alive';
+      'heute aufzutauchen hält die Serie am Leben';
 
   @override
   String get notificationEncourageResearch1 =>
-      'one insight today moves your work forward';
+      'eine Einsicht bringt Ihre Arbeit heute voran';
 
   @override
   String get notificationEncourageResearch2 =>
-      'steady exploration compounds into clarity';
+      'Stetiges Erforschen führt zu Klarheit';
 
   @override
   String get notificationEncourageResearch3 =>
-      'capturing one finding now keeps momentum';
+      'die Erfassung eines Ergebnisses hält die Dynamik aufrecht';
 
   @override
   String get notificationEncourageRunning1 =>
-      'one training rep today builds endurance';
+      'eine Trainingswiederholung heute baut die Ausdauer auf';
 
   @override
   String get notificationEncourageRunning2 =>
-      'showing up now strengthens your running baseline';
+      'jetzt aufzutauchen, stärkt die Ausgangsposition beim Laufen';
 
   @override
   String get notificationEncourageRunning3 =>
-      'this effort keeps your fitness momentum real';
+      'diese Anstrengung hält Ihren Fitnessimpuls aufrecht';
 
   @override
   String get notificationEncourageShower1 =>
-      'a quick reset can lift your focus';
+      'ein schneller Reset kann Ihre Konzentration verbessern';
 
   @override
   String get notificationEncourageShower2 =>
-      'this routine helps you feel switched on';
+      'diese Routine hilft Ihnen, sich eingeschaltet zu fühlen';
 
   @override
   String get notificationEncourageShower3 =>
-      'a clean reset keeps your day moving';
+      'ein sauberer Reset hält den Tag in Schwung';
 
   @override
   String get notificationEncourageSkinCare1 =>
-      'protecting your skin with one steady step';
+      'Schutz für Ihre Haut mit einem einzigen, gleichmäßigen Schritt';
 
   @override
   String get notificationEncourageSkinCare2 =>
-      'making consistency your skincare advantage';
+      'Konsistenz als Vorteil für die Hautpflege';
 
   @override
   String get notificationEncourageSkinCare3 =>
-      'keeping your routine reliable and simple';
+      'Ihre Routine zuverlässig und einfach halten';
 
   @override
   String get notificationEncourageStudying1 =>
-      'one focused block now builds learning momentum';
+      'ein konzentrierter Block baut jetzt eine Lerndynamik auf';
 
   @override
   String get notificationEncourageStudying2 =>
-      'showing up today keeps knowledge compounding';
+      'Heute auftauchen, damit das Wissen weiter wächst';
 
   @override
   String get notificationEncourageStudying3 =>
-      'small sessions consistently beat cramming';
+      'kleine Sitzungen schlagen konsequent das Pauken';
 
   @override
   String get notificationEncourageWakeUpEarly1 =>
-      'starting your day with intention';
+      'den Tag mit Absicht beginnen';
 
   @override
   String get notificationEncourageWakeUpEarly2 =>
-      'keeping your morning rhythm consistent';
+      'den morgendlichen Rhythmus beibehalten';
 
   @override
   String get notificationEncourageWakeUpEarly3 =>
-      'giving yourself a calmer start';
+      'sich selbst einen ruhigeren Start verschaffen';
 
   @override
   String get notificationEncourageWalk1 =>
-      'a short walk is enough to keep momentum';
+      'ein kurzer Spaziergang genügt, um den Schwung aufrechtzuerhalten';
 
   @override
   String get notificationEncourageWalk2 =>
-      'moving now helps your energy and focus';
+      'sich jetzt zu bewegen hilft Ihrer Energie und Konzentration';
 
   @override
   String get notificationEncourageWalk3 =>
-      'this simple rep supports long-term consistency';
+      'dieser einfache Vertreter unterstützt die langfristige Beständigkeit';
 
   @override
-  String get notificationEncourageWork1 => 'starting now creates real traction';
+  String get notificationEncourageWork1 =>
+      'Jetzt anfangen schafft echte Zugkraft';
 
   @override
   String get notificationEncourageWork2 =>
-      'one meaningful push can unlock your day';
+      'ein sinnvoller Anstoß kann den Tag retten';
 
   @override
   String get notificationEncourageWork3 =>
-      'consistent execution keeps progress visible';
+      'konsequente Durchführung macht Fortschritte sichtbar';
 
   @override
   String get notificationFallbackGeneric =>
-      'Small actions today create long-term momentum.';
+      'Kleine Aktionen heute schaffen eine langfristige Dynamik.';
 
   @override
-  String get notificationFallbackTitle => 'Habit reminder';
+  String get notificationFallbackTitle => 'Erinnerung an Gewohnheiten';
 
   @override
   String get notificationFreshnessBrandNew =>
-      'Time for this brand new habit to shine!';
+      'Zeit, dass diese brandneue Gewohnheit zum Vorschein kommt!';
 
   @override
   String notificationFreshnessEstablishedDays(Object days) {
-    return 'You have been building this for $days days so far. Keep compounding wins.';
+    return 'Sie haben dies bisher $days Tage lang aufgebaut. Sammeln Sie weiter Gewinne.';
   }
 
   @override
   String notificationFreshnessNewDays(Object days) {
-    return 'You started $days ago. Keep it up!|Day $days. The early days are the foundation — solid work.|You started $days days ago. Each one matters equally.';
+    return 'Du hast vor $days angefangen. Weiter so!|Tag $days. Die ersten Tage sind das Fundament - solide Arbeit.|Sie haben vor $days Tagen begonnen. Jeder Tag ist gleich wichtig.';
   }
 
   @override
   String get notificationOptional =>
-      'This one is optional today, but still mind giving it a try?|You got some extra time?';
+      'Das ist heute freiwillig, aber probieren Sie es doch einfach mal aus... Haben Sie etwas Zeit?';
 
   @override
-  String get notificationPeriodMonthly => 'monthly';
+  String get notificationPeriodMonthly => 'monatlich';
 
   @override
-  String get notificationPeriodWeekly => 'weekly';
+  String get notificationPeriodWeekly => 'wöchentlich';
 
   @override
   String get notificationPremadeBrushTeeth =>
-      'Quick hygiene win now keeps your routine sharp.';
+      'Ein schneller Hygienesieg hält Ihre Routine fit.';
 
   @override
   String get notificationPremadeDrinkWater =>
-      'Hydrate now and keep your body performing well.';
+      'Trinken Sie jetzt und halten Sie Ihren Körper leistungsfähig.';
 
   @override
   String get notificationPremadeGoToBedEarly =>
-      'Protect tonight so tomorrow starts easier.';
+      'Schützen Sie sich heute Abend, damit der morgige Tag leichter beginnt.';
 
   @override
   String get notificationPremadeGym =>
-      'Show up for a solid gym rep and build consistency.';
+      'Kommen Sie zu einer soliden Wiederholung im Fitnessstudio und bauen Sie Beständigkeit auf.';
 
   @override
   String get notificationPremadeMedications =>
-      'Take your meds on time to protect your health baseline.';
+      'Nehmen Sie Ihre Medikamente rechtzeitig ein, um Ihre Gesundheitsgrundlage zu schützen.';
 
   @override
   String get notificationPremadeNutrition =>
-      'Make one intentional nutrition choice right now.';
+      'Treffen Sie jetzt eine bewusste Ernährungsentscheidung.';
 
   @override
   String get notificationPremadePraying =>
-      'Take a calm moment now and reconnect with intention.';
+      'Nehmen Sie sich jetzt einen ruhigen Moment und verbinden Sie sich wieder mit Ihrer Absicht.';
 
   @override
   String get notificationPremadeProductivitySession =>
-      'Run one focused session and protect deep work time.';
+      'Führen Sie eine konzentrierte Sitzung durch und schützen Sie die Zeit für intensive Arbeit.';
 
   @override
   String get notificationPremadeRead =>
-      'Read a little now and let consistency do the rest.';
+      'Lesen Sie jetzt ein wenig und lassen Sie die Konsistenz den Rest erledigen.';
 
   @override
   String get notificationPremadeResearch =>
-      'Capture one useful insight and move your research forward.';
+      'Erfassen Sie eine nützliche Erkenntnis und bringen Sie Ihre Forschung voran.';
 
   @override
   String get notificationPremadeRunning =>
-      'Lace up and collect a strong training rep today.';
+      'Schnüren Sie sich die Schuhe und legen Sie heute eine starke Trainingseinheit hin.';
 
   @override
   String get notificationPremadeShower =>
-      'Reset your energy with this simple routine.';
+      'Bringen Sie Ihre Energie mit dieser einfachen Übung wieder in Schwung.';
 
   @override
   String get notificationPremadeSkinCare =>
-      'Take care of your skin now to stay consistent.';
+      'Pflegen Sie Ihre Haut jetzt, um beständig zu bleiben.';
 
   @override
   String get notificationPremadeStudying =>
-      'Start a focused study block and build learning momentum.';
+      'Beginnen Sie einen gezielten Lernblock und bauen Sie eine Lerndynamik auf.';
 
   @override
   String get notificationPremadeWakeUpEarly =>
-      'A strong start to your day begins with this choice.';
+      'Ein starker Start in den Tag beginnt mit dieser Wahl.';
 
   @override
   String get notificationPremadeWalk =>
-      'A short walk now is enough to keep momentum alive.';
+      'Ein kurzer Spaziergang reicht jetzt aus, um den Schwung aufrechtzuerhalten.';
 
   @override
   String get notificationPremadeWork =>
-      'Start your most important task and gain traction.';
+      'Beginnen Sie mit Ihrer wichtigsten Aufgabe und gewinnen Sie an Bodenhaftung.';
 
   @override
   String notificationProgressAlmostDoneAmount(Object label, Object remaining) {
-    return 'You are so close. Just $remaining $label left.|$remaining $label left. This is your rhythm — lean into it.|$remaining $label to go. You\'ve already done the majority.|Almost there — $remaining $label separates you from done.|You\'re $remaining $label away from your target. Finish strong.|The finish line is close. Just $remaining $label to wrap up.';
+    return 'Du bist so nah dran. Nur noch $remaining $label links.|$remaining $label links. Das ist Ihr Rhythmus - lehnen Sie sich hinein.|$remaining $label noch. Den Großteil hast du schon geschafft. Fast geschafft - $remaining $label trennt dich noch vom Ziel. Sei stark im Ziel. Die Ziellinie ist nah. Nur noch $remaining $label zum Einpacken.';
   }
 
   @override
   String notificationProgressAlmostDoneDuration(Object remaining) {
-    return 'Only $remaining left. Tune in for a little bit more and you\'re done!|$remaining to go. You can always do just a little more.|$remaining remaining. Finishing is its own reward.|$remaining to go. You can do this!';
+    return 'Nur noch $remaining übrig. Noch ein bisschen mehr und Sie sind fertig!|$remaining zu gehen. Du kannst immer noch ein bisschen mehr machen.|$remaining übrig. Der Abschluss ist schon eine Belohnung. Noch $remaining. Du schaffst das!';
   }
 
   @override
   String notificationProgressCompletedAmount(Object completed, Object label) {
-    return 'You already hit $completed $label. Ready for more?|$completed $label done. Momentum is on your side now.|$completed $label in the bank. Your habit is working.|Nice — $completed $label completed. Want to stretch a little?';
+    return 'Du hast bereits $completed $label getroffen. Bereit für mehr?|$completed $label erledigt. Das Momentum ist jetzt auf Ihrer Seite.|$completed $label auf der Bank. Deine Gewohnheit funktioniert. Gut - $completed $label erledigt. Willst du dich ein wenig strecken?';
   }
 
   @override
   String notificationProgressCompletedDuration(Object completed) {
-    return 'Target done: $completed done already.|Time target hit: $completed. You showed up and stayed.|$completed of focused time. Done. That\'s real commitment.|Session complete: $completed. Your consistency just grew.|$completed logged. Your future self will thank you.|Target time reached: $completed. Great use of focused effort.';
+    return 'Ziel erledigt: $completed bereits erledigt.|Zeitziel getroffen: $completed. Du bist aufgetaucht und geblieben.|$completed der konzentrierten Zeit. Erledigt. Das ist echtes Engagement. Sitzung beendet: $completed. Deine Beständigkeit ist gerade gewachsen.|$completed protokolliert. Dein zukünftiges Ich wird dir danken.|Zielzeit erreicht: $completed. Großartiger Einsatz von konzentrierten Bemühungen.';
   }
 
   @override
@@ -1415,7 +1289,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object remaining,
     Object target,
   ) {
-    return '$completed out of $target $label. Get on it!.|You\'ve already logged $completed $label. Great start.|$completed/$target $label so far. Keep the pace steady.|$completed done, $remaining to go. You\'ve got this.|$completed out of $target. Keep going.';
+    return '$completed aus $target $label. Du hast bereits $completed $label protokolliert. Toller Start. $completed/$target $label bis jetzt. Halten Sie das Tempo konstant. $completed erledigt, $remaining noch zu erledigen. Du schaffst das. $completed aus $target. Mach weiter.';
   }
 
   @override
@@ -1423,30 +1297,30 @@ class AppLocalizationsDe extends AppLocalizations {
     Object completed,
     Object target,
   ) {
-    return '$completed so far, your goal is $target so keep it up!|You\'ve done the hard part — starting. Keep rolling.|You\'ve logged $completed of $target. Stay in the zone.|$completed of $target completed. That\'s good, keep it up!';
+    return 'Bis jetzt haben Sie $completed geschafft, Ihr Ziel ist $target, also machen Sie weiter so!|Das Schwierigste ist der Anfang. Bleib dran. $completed von $target hast du geschafft. Bleiben Sie bei der Stange. $completed von $target abgeschlossen. Das ist gut, mach weiter so!';
   }
 
   @override
   String get notificationProgressNoTracking =>
-      'Small action now keeps this habit alive.|Don\'t let this habit fade, a little effort now protects your momentum.|Consistency today makes tomorrow easier. Mind giving it a try?|Don\'t forget about your habit today!|A small action now keeps your habit strong.|Hey there! Time for your habiiit!|One small step keeps the streak alive.|Done is better than perfect. Get it done.|Consistency compounds. One more day matters.|Your habit is a promise to yourself. Keep it.|Same habit, one day stronger. Keep building.|You don\'t need motivation. Just start.|Think of this as a gift to your future self. Get on it!|You\'re building something important. Keep going.|Making time for what matters. That\'s you.|Curious what happens when you never skip?|Habit used notification; What\'s your move?|Time to act on your plan.|Don\'t break the chain. One more day.|No need to be perfect. Just need to be present.|Small actions today = big results tomorrow.';
+      'Eine kleine Aktion jetzt hält diese Gewohnheit am Leben.|Lassen Sie diese Gewohnheit nicht verblassen, eine kleine Anstrengung jetzt schützt Ihren Schwung.|Konsistenz heute macht morgen einfacher. Vergiss deine Gewohnheit heute nicht!|Eine kleine Aktion jetzt hält deine Gewohnheit stark.|Hey there! Zeit für deine Gewohnheit!|Ein kleiner Schritt hält die Strähne am Leben.|Erledigt ist besser als perfekt. Erledigen Sie es.|Konsistenz verbindet. Ein weiterer Tag ist wichtig. Deine Gewohnheit ist ein Versprechen an dich selbst. Halte es ein. Dieselbe Gewohnheit, einen Tag stärker. Bauen Sie weiter auf. Sie brauchen keine Motivation. Fangen Sie einfach an. Betrachten Sie dies als ein Geschenk an Ihr zukünftiges Ich. Legen Sie los! Sie bauen etwas Wichtiges auf. Mach weiter. Nimm dir Zeit für das, was wichtig ist. Das bist du.|Neugierig, was passiert, wenn du nie etwas auslässt?|Gewohnte Benachrichtigung';
 
   @override
   String notificationProgressNotStartedAmount(Object label) {
-    return 'Begin with 1 $label only and build momentum. It\'s easy!|You don\'t need motivation. Just start.|The hardest part is starting. You can do it!';
+    return 'Beginnen Sie mit nur 1 $label und bauen Sie eine Dynamik auf. Es ist ganz einfach! Du brauchst keine Motivation. Fangen Sie einfach an. Das Schwierigste ist der Anfang. Du kannst es schaffen!';
   }
 
   @override
   String get notificationProgressNotStartedDuration =>
-      'Start with a short session at least!|You don\'t need motivation. Just start.|The hardest part is starting. You can do it!|Few minutes from now, you\'ll be glad you started.';
+      'Fangen Sie zumindest mit einer kurzen Sitzung an! Sie brauchen keine Motivation. Fangen Sie einfach an. Das Schwierigste ist der Anfang. In ein paar Minuten werden Sie froh sein, dass Sie angefangen haben.';
 
   @override
   String notificationScheduleCustomEveryDays(Object days) {
-    return 'Custom cadence: every $days days. Today is one of your slots.|Every $days days rhythm. Today is a scheduled day.|Your $days-day cycle aligns today. Time to act.|Custom schedule says: today is this habit\'s day. Use your slot!|This habit runs every $days days. You\'re due right now.|Today is part of this habit\'s rhythm. Honor the pattern.';
+    return 'Benutzerdefinierter Rhythmus: alle $days Tage. Heute ist einer Ihrer Slots.|Alle $days Tage Rhythmus. Heute ist ein geplanter Tag.|Ihr $days-Tage-Zyklus richtet sich heute aus. Zeit zum Handeln.|Benutzerdefinierter Zeitplan sagt: Heute ist der Tag dieser Gewohnheit. Nutze deinen Slot!|Diese Gewohnheit läuft alle $days Tage. Du bist jetzt fällig.|Heute ist Teil des Rhythmus dieser Gewohnheit. Halte das Muster ein.';
   }
 
   @override
   String get notificationScheduleDaily =>
-      'Your daily anchor awaits. Lock it in.|Daily window is open. Step through it.|Your daily practice builds quietly. But it builds.|This is your daily habit call. Respond to it!';
+      'Ihr täglicher Anker erwartet Sie. Schließe ihn ein.|Das tägliche Fenster ist offen. Tritt hindurch.|Deine tägliche Praxis baut sich leise auf. Aber sie baut sich auf.|Dies ist der Ruf deiner täglichen Gewohnheit. Reagiere darauf!';
 
   @override
   String notificationScheduleMonthlyAtRisk(
@@ -1454,7 +1328,7 @@ class AppLocalizationsDe extends AppLocalizations {
     Object remaining,
     Object target,
   ) {
-    return 'You need $remaining more this month ($completed/$target done). Skipping today puts your target at risk.|$remaining to go this month ($completed/$target). Today protects your progress.|Your monthly goal ($completed/$target) is still possible. Today is a key move.|$completed/$target for the month. Don\'t let today be the gap.|$remaining needed this month ($completed/$target). One session at a time stays on track.|Monthly target within reach ($completed/$target). Today keeps the door open.';
+    return 'Sie brauchen $remaining mehr in diesem Monat ($completed/$target erledigt). Wenn Sie heute auslassen, gefährden Sie Ihr Ziel.|$remaining noch in diesem Monat ($completed/$target). Der heutige Tag schützt Ihren Fortschritt.|Ihr Monatsziel ($completed/$target) ist noch möglich. Heute ist ein entscheidender Schritt.|$completed/$target für den Monat. Lassen Sie nicht zu, dass heute eine Lücke entsteht.|$remaining für diesen Monat ($completed/$target). Eine Sitzung nach der anderen bleibt auf Kurs.|Monatsziel in Reichweite ($completed/$target). Heute bleibt die Tür offen.';
   }
 
   @override
@@ -1462,22 +1336,22 @@ class AppLocalizationsDe extends AppLocalizations {
     Object completed,
     Object target,
   ) {
-    return 'This month\'s target won\'t be met ($completed/$target). Use the remaining days for practice, not pressure.|The monthly number is out of reach ($completed/$target). But habits are built in the gaps, not just the goals.|Target unreachable this month ($completed/$target). Every attempt still rewires the loop.|$completed/$target this month. The goal won\'t align — but the habit still counts.|This month\'s target exceeded your available days ($completed/$target). Adjust and keep moving.';
+    return 'Das Ziel für diesen Monat wird nicht erreicht ($completed/$target). Nutzen Sie die verbleibenden Tage zum Üben, nicht als Druckmittel.|Das Monatsziel ist unerreichbar ($completed/$target). Aber Gewohnheiten werden in den Lücken aufgebaut, nicht nur in den Zielen.|Ziel unerreichbar in diesem Monat ($completed/$target). Bei jedem Versuch wird die Schleife immer wieder neu aufgebaut.|$completed/$target diesen Monat. Das Ziel wird nicht erreicht - aber die Gewohnheit zählt trotzdem.|Das Ziel für diesen Monat übersteigt Ihre verfügbaren Tage ($completed/$target). Passen Sie sich an und bleiben Sie in Bewegung.';
   }
 
   @override
   String notificationScheduleMonthlyOneLeft(Object completed, Object target) {
-    return 'One more completion this month and you hit your target ($completed/$target).|One more this month hits $target ($completed done). This is your closing move.|You\'re one session from your monthly goal ($completed/$target). Seal it.|Monthly target needs one final completion ($completed/$target). Today can be that day.|One more and you\'re at $target for the month ($completed done). Finish what you started.|Your monthly goal is one away ($completed/$target). That\'s a single session.';
+    return 'Ein weiterer Abschluss in diesem Monat und Sie haben Ihr Ziel erreicht ($completed/$target).|Ein weiterer Abschluss in diesem Monat bringt $target ($completed erledigt). Dies ist Ihr abschließender Schritt.|Sie sind eine Sitzung von Ihrem Monatsziel entfernt ($completed/$target). Schließe es ab.|Das Monatsziel braucht einen letzten Abschluss ($completed/$target). Heute kann dieser Tag sein.|Eine weitere Sitzung und Sie sind bei $target für den Monat ($completed erledigt). Bringen Sie zu Ende, was Sie angefangen haben. Ihr Monatsziel ist noch ein Stück entfernt ($completed/$target). Das ist eine einzige Sitzung.';
   }
 
   @override
   String notificationScheduleMonthlyReached(Object completed, Object target) {
-    return 'Monthly target already reached ($completed/$target). Extra rep, extra momentum.|You\'ve nailed your monthly goal ($completed/$target). This is elite consistency.|Monthly target: done ($completed/$target). Everything now is exponential growth.|Monthly goal already crushed ($completed/$target). Bonus reps deepen the groove.';
+    return 'Monatsziel bereits erreicht ($completed/$target). Mehr Wiederholungen, mehr Schwung.|Sie haben Ihr Monatsziel erreicht ($completed/$target). Das ist Elitenkonsistenz.|Monatsziel: erreicht ($completed/$target). Alles, was jetzt kommt, ist exponentielles Wachstum.|Monatsziel bereits erreicht ($completed/$target). Bonus-Wiederholungen vertiefen die Rille.';
   }
 
   @override
   String notificationScheduleMonthlyRemaining(Object remaining, Object target) {
-    return 'You need $remaining more this month to reach $target.|$remaining sessions left this month to hit $target. Consistent pacing wins.|You need $remaining more for your monthly goal of $target. Each one builds.|Monthly target: $remaining of $target remaining. You have time — use it wisely.|$remaining to go this month for $target. Small, steady actions close the gap.|Your monthly number is $target with $remaining left. Today moves the goal forward.';
+    return 'Sie brauchen diesen Monat $remaining mehr, um $target zu erreichen.|$remaining Sitzungen bleiben diesen Monat übrig, um $target zu erreichen. Konsequentes Tempo gewinnt.|Sie brauchen $remaining mehr für Ihr Monatsziel von $target. Jede einzelne baut auf.|Monatsziel: $remaining von $target übrig. Sie haben Zeit - nutzen Sie sie weise.|$remaining noch diesen Monat für $target. Kleine, stetige Aktionen schließen die Lücke.|Ihre Monatszahl ist $target und $remaining bleibt übrig. Der heutige Tag bringt das Ziel voran.';
   }
 
   @override
@@ -1486,93 +1360,80 @@ class AppLocalizationsDe extends AppLocalizations {
     Object remaining,
     Object target,
   ) {
-    return 'You need $remaining more this week ($completed/$target done). If you skip today, your goal gets much harder.|You need $remaining more this week ($completed/$target). Today keeps it manageable.|$remaining to go this week ($completed/$target). Skipping today adds pressure.|Your weekly target ($completed/$target) is still reachable. Today is a leverage point.|$completed/$target for the week. One today keeps your goal on track.|$remaining remaining this week ($completed/$target). Today is your best move.';
+    return 'Sie brauchen $remaining mehr in dieser Woche ($completed/$target erledigt). Wenn Sie heute auslassen, wird Ihr Ziel viel schwieriger.|Sie brauchen $remaining mehr in dieser Woche ($completed/$target). Heute bleibt es überschaubar.|$remaining in dieser Woche ($completed/$target) zu schaffen. Heute auszulassen erhöht den Druck.|Ihr Wochenziel ($completed/$target) ist noch erreichbar. Heute ist ein Hebelpunkt.|$completed/$target für die Woche. Eine heute hält Ihr Ziel auf Kurs.|$remaining verbleibt diese Woche ($completed/$target). Heute ist Ihr bester Zug.';
   }
 
   @override
   String notificationScheduleWeeklyImpossible(Object completed, Object target) {
-    return 'This week\'s target is out of reach ($completed/$target). Still, every rep builds for next week.|Goal won\'t be met this week ($completed/$target). But unfinished weeks teach us what to adjust.|The weekly number won\'t align ($completed/$target). Do it anyway — consistency ignores the scoreboard.|Target missed this week ($completed/$target). Each attempt still strengthens the habit loop.|$completed/$target this week. The goal is out of range — but the habit isn\'t.';
+    return 'Das Ziel für diese Woche ist unerreichbar ($completed/$target). Trotzdem baut jede Wiederholung für die nächste Woche auf.|Ziel wird diese Woche nicht erreicht ($completed/$target). Aber unvollendete Wochen lehren uns, was wir anpassen müssen.|Die Wochenzahl wird nicht übereinstimmen ($completed/$target). Tu es trotzdem - Beständigkeit ignoriert die Anzeigetafel.|Ziel diese Woche verfehlt ($completed/$target). Jeder Versuch stärkt die Gewohnheitsschleife weiter.|$completed/$target diese Woche. Das Ziel ist außer Reichweite - aber die Gewohnheit ist es nicht.';
   }
 
   @override
   String notificationScheduleWeeklyOneLeft(Object completed, Object target) {
-    return 'One more completion this week and you hit your target ($completed/$target).|One more this week and you\'re at $target ($completed done). Close the loop.|You\'re one session away from your weekly goal ($completed/$target). Make it count.|This week\'s target needs just one more ($completed/$target). You can close it now.|One more completion stands between you and $target this week ($completed done).|Weekly goal within reach: one more ($completed/$target). That\'s just today.';
+    return 'Noch ein Abschluss in dieser Woche und Sie haben Ihr Ziel erreicht ($completed/$target).|Noch einer in dieser Woche und Sie sind bei $target ($completed erledigt). Schließen Sie den Kreis.|Sie sind nur noch eine Sitzung von Ihrem Wochenziel entfernt ($completed/$target). Machen Sie es richtig.|Das Ziel dieser Woche braucht nur noch eine weitere ($completed/$target). Sie können es jetzt abschließen.|Ein weiterer Abschluss steht zwischen Ihnen und $target in dieser Woche ($completed erledigt).|Wochenziel in Reichweite: ein weiterer ($completed/$target). Das ist nur heute.';
   }
 
   @override
   String notificationScheduleWeeklyReached(Object completed, Object target) {
-    return 'Weekly target already reached ($completed/$target). This is bonus consistency.|You hit your weekly goal ($completed/$target). Everything extra is a win.|Weekly target: achieved ($completed/$target). Bonus reps build elite habits.|$completed/$target for the week. You\'re above and beyond.|Weekly goal already met ($completed/$target). You\'re operating at a higher level.|You\'ve done your weekly target ($completed/$target). Consistency is now surplus.';
+    return 'Wöchentliches Ziel bereits erreicht ($completed/$target). Dies ist ein Bonus für die Beständigkeit.|Sie haben Ihr Wochenziel erreicht ($completed/$target). Alles, was darüber hinausgeht, ist ein Gewinn.|Wochenziel: erreicht ($completed/$target). Bonus-Wiederholungen schaffen Elite-Gewohnheiten.|$completed/$target für die Woche. Sie gehen über sich hinaus.|Wochenziel bereits erreicht ($completed/$target). Sie arbeiten auf einem höheren Niveau.|Sie haben Ihr Wochenziel erreicht ($completed/$target). Konsistenz ist jetzt überflüssig.';
   }
 
   @override
   String notificationScheduleWeeklyRemaining(Object remaining, Object target) {
-    return 'You need $remaining more this week to reach $target.|$remaining to go for weekly target of $target. Steady pacing works.|You need $remaining more this week. Today is a great time to start one.|Weekly goal: $remaining remaining of $target. Spread the effort.|$remaining sessions left to hit $target this week. Each one matters equally.|Your weekly target is $target, with $remaining to go. One step at a time.';
+    return 'Sie brauchen $remaining mehr in dieser Woche, um $target zu erreichen.|$remaining, um das Wochenziel von $target zu erreichen. Ein gleichmäßiges Tempo funktioniert.|Sie brauchen $remaining mehr in dieser Woche. Heute ist ein guter Zeitpunkt, um damit anzufangen.|Wochenziel: $remaining übrig von $target. Verteilen Sie die Anstrengung.|$remaining Sitzungen bleiben übrig, um $target diese Woche zu erreichen. Jede Sitzung ist gleich wichtig.|Ihr Wochenziel ist $target, und Sie haben noch $remaining vor sich. Ein Schritt nach dem anderen.';
   }
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'Benachrichtigungen';
 
   @override
-  String get notificationsAreDisabled => 'Notifications are disabled';
+  String get notificationsAreDisabled => 'Benachrichtigungen sind deaktiviert';
 
   @override
-  String get now => 'Now';
+  String get now => 'Jetzt';
 
   @override
   String get numberOfDaysInARowYouHaveCompletedAllYourHabits =>
-      'Number of days in a row you have completed all your habits.';
-
-  @override
-  String get numberOfHoursNumberofhours => 'Number of hours: \$numberOfHours';
+      'Anzahl der Tage in Folge, an denen Sie alle Ihre Gewohnheiten erledigt haben.';
 
   @override
   String
   get onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion =>
-      'Only visible on Daily plan. Enable \'Colorful\' mode in Settings to show on completion.';
+      'Nur im Tagesplan sichtbar. Aktivieren Sie den Modus \"Bunt\" in den Einstellungen, damit er bei Abschluss angezeigt wird.';
 
   @override
-  String get optOut => 'Opt out';
+  String get optOut => 'Abmelden';
 
   @override
-  String get optOutOfBackup => 'Opt out of Backup?';
+  String get optionalHabit => 'Fakultative Angewohnheit';
 
   @override
-  String get optionalHabit => 'Optional habit';
+  String get optionalHabits => 'Optionale Gewohnheiten';
 
   @override
-  String get optionalHabits => 'Optional habits';
-
-  @override
-  String get orToChangeLabel => 'or the amount label';
+  String get orToChangeLabel => 'oder das Etikett mit dem Betrag';
 
   @override
   String get passphrase => 'Passphrase';
 
   @override
-  String get perfectDaysStreak => 'Perfect days streak';
+  String get perfectDaysStreak => 'Perfekte Tage - Serie';
 
   @override
-  String get preparingBackupName => 'Preparing backup name...';
+  String get preparingBackupName => 'Name der Sicherung vorbereiten...';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'Profil';
 
   @override
   String get reorderingCategoriesBasedOnTime =>
-      'Reordering categories based on time';
+      'Neuordnung der Kategorien nach der Zeit';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Zurücksetzen';
 
   @override
-  String get resetChanges => 'Reset changes?';
-
-  @override
-  String get returningDaysProgressDaysprogress =>
-      'Returning Days progress: \$daysProgress';
-
-  @override
-  String get runningUpdatelastopeneddate => 'Running _updateLastOpenedDate';
+  String get resetChanges => 'Änderungen zurücksetzen?';
 
   @override
   String get sat => 'Sat';
@@ -1581,298 +1442,250 @@ class AppLocalizationsDe extends AppLocalizations {
   String get satoshi => 'Satoshi';
 
   @override
-  String get save => 'Save';
+  String get save => 'Speichern Sie';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => 'Änderungen speichern';
 
   @override
-  String get savingDayAtDaysimple => 'Saving day at: \$daySimple';
+  String get schedulingAndAlerts => 'Zeitplanung und Warnungen';
 
   @override
-  String get scheduledTodayToggledValue => 'Scheduled Today toggled: \$value';
+  String get schedulingFallbackToAll => 'Rückfall auf \'Alle\' einplanen';
 
   @override
-  String get schedulingAndAlerts => 'Scheduling and Alerts';
+  String get selectAColorPaletteForYourInterface =>
+      'Wählen Sie eine Farbpalette für Ihre Schnittstelle';
 
   @override
-  String get schedulingFallbackToAll => 'Scheduling fallback to \'All\'';
+  String get selectHabitColor => 'Farbe der Gewohnheit wählen';
 
   @override
-  String get selectAColorPalleteForYourInterface =>
-      'Select a color pallete for your interface';
+  String get selectHabitTime => 'GEWOHNHEITSZEIT AUSWÄHLEN:';
 
   @override
-  String get selectHabitColor => 'Select habit color';
+  String get selectTime => 'Zeit auswählen';
 
   @override
-  String get selectHabitTime => 'SELECT HABIT TIME:';
+  String get selectTimeInterval => 'Zeitintervall wählen';
 
   @override
-  String get selectTime => 'Select Time';
+  String get selected => 'Ausgewählte';
 
   @override
-  String get selectTimeInterval => 'Select time interval';
+  String get setAmountLabel => 'Betragsetikett einstellen';
 
   @override
-  String get selected => 'Selected';
+  String get setDuration => 'Dauer festlegen';
 
   @override
-  String get selectedCategoryIdInBuildSelectedcategoryid =>
-      'Selected category id in build: \$selectedCategoryId';
+  String get setNotificationTime => 'Benachrichtigungszeit einstellen';
 
   @override
-  String get selectedHourValue => 'Selected hour: \$value';
+  String get setPassphrase => 'Passphrase festlegen';
 
   @override
-  String get selectedMinuteIndex => 'Selected minute: \$index';
+  String get setSchedule => 'Zeitplan festlegen';
 
   @override
-  String get selectedTypeRightBeforeNavigationSelectedtype =>
-      'Selected type right before navigation: \$selectedType';
+  String get settings => 'Einstellungen';
 
   @override
-  String get selectedTypeSelectedtype => 'Selected type: \$selectedType';
+  String get signinFirstError => 'Erste Anmeldung Fehler';
 
   @override
-  String get setAmountLabel => 'Set amount label';
-
-  @override
-  String get setDuration => 'Set duration';
-
-  @override
-  String get setNotificationTime => 'Set notification time';
-
-  @override
-  String get setPassphrase => 'Set Passphrase';
-
-  @override
-  String get setSchedule => 'Set Schedule';
-
-  @override
-  String get settings => 'Settings';
-
-  @override
-  String get signinFirstError => 'Sign-in first Error';
-
-  @override
-  String get skip => 'Skip';
+  String get skip => 'Überspringen';
 
   @override
   String skippedHabitFoundHabitsskippedTotal(Object habitsSkipped) {
-    return 'Skipped habit found, $habitsSkipped total';
+    return 'Übersprungene Gewohnheit gefunden, $habitsSkipped insgesamt';
   }
 
   @override
-  String get skippingHabitId => 'Skipping habit: \$id';
-
-  @override
   String get skippingHabitNotAllowedHabitDayBeforeSkipped =>
-      'Skipping habit not allowed, habit day before skipped';
+      'Überspringen der Gewohnheit nicht erlaubt, Gewohnheit am Vortag übersprungen';
 
   @override
-  String get startTime => 'Start time';
+  String get startTime => 'Startzeit';
 
   @override
-  String get stats => 'Stats';
+  String get stats => 'Statistiken';
 
   @override
-  String get streakStreakLongestStreakLongeststreak =>
-      'Streak: \$streak, Longest Streak: \$longestStreak';
+  String get subscriptions => 'Abonnements';
 
   @override
-  String get subscriptions => 'Subscriptions';
+  String get sun => 'Son';
 
   @override
-  String get sun => 'Sun';
+  String syncErrorErrormessage(Object errorMessage) {
+    return 'Synchronisationsfehler: \$errorMessage';
+  }
 
   @override
-  String get syncErrorErrormessage => 'Sync error: \$errorMessage';
+  String get syncNow => 'Jetzt synchronisieren';
 
   @override
-  String get syncNow => 'Sync Now';
+  String get syncing => 'Synchronisieren...';
 
   @override
-  String get syncing => 'Syncing...';
+  String syncingProgressmessage(Object progressMessage) {
+    return 'Synchronisierung: \$progressMessage';
+  }
 
   @override
-  String get syncingProgressmessage => 'Syncing: \$progressMessage';
+  String get tappedAmount => 'Erschlossener Betrag';
 
   @override
-  String get tappedAmount => 'Tapped amount';
-
-  @override
-  String get tappedDuration => 'Tapped duration';
+  String get tappedDuration => 'Abgegriffene Dauer';
 
   @override
   String get thisAmountLabelWillBeRemoved =>
-      'This amount label will be removed.';
+      'Dieser Betragsaufkleber wird entfernt.';
 
   @override
-  String get thisLabelCantBeDeleted => 'This label can\'t be deleted';
+  String get thisLabelCantBeDeleted =>
+      'Dieses Etikett kann nicht gelöscht werden';
 
   @override
   String get thisNotificationCantBeDeleted =>
-      'This notification can\'t be deleted';
+      'Diese Benachrichtigung kann nicht gelöscht werden';
 
   @override
   String get thisNotificationTimeWillBeRemoved =>
-      'This notification time will be removed.';
+      'Diese Meldezeit wird gestrichen.';
 
   @override
   String
   get thisPassphraseIsUsedForYourDataEncryptionSaveItSecurelyYouWillUseItAgainWhenGettingYourDataOnOtherDevices =>
-      'This passphrase is used for your data encryption. Save it securely, you will use it again when getting your data on other devices.';
+      'Diese Passphrase wird für die Verschlüsselung Ihrer Daten verwendet. Speichern Sie es sicher, Sie werden es wieder verwenden, wenn Sie Ihre Daten auf anderen Geräten abrufen.';
 
   @override
   String get thisReminderWillTriggerOnlyOnScheduledHabitDays =>
-      'This reminder will trigger only on scheduled habit days.';
-
-  @override
-  String get thisWeekDaysThisweekdays => 'This week days: \$thisWeekDays';
+      'Diese Erinnerung wird nur an geplanten Gewohnheitstagen ausgelöst.';
 
   @override
   String get thu => 'Thu';
 
   @override
-  String get time => 'Time';
+  String get time => 'Zeit';
 
   @override
-  String get timeTypeTimetype => 'Time type: \$timeType';
+  String get times => 'mal';
 
   @override
-  String get times => 'times';
-
-  @override
-  String get to => 'To';
+  String get to => 'An';
 
   @override
   String get toReceiveRemindersPleaseEnableNotificationPermissionsForHabitt =>
-      'To receive reminders, please enable notification permissions for Habitt.';
+      'Um Erinnerungen zu erhalten, aktivieren Sie bitte die Benachrichtigungsberechtigung für Habitt.';
 
   @override
   String get toUseHabitRemindersEnableNotificationsInYourDeviceSettings =>
-      'To use habit reminders, enable notifications in your device settings.';
+      'Um die Erinnerungsfunktion zu nutzen, müssen Sie in den Einstellungen Ihres Geräts Benachrichtigungen aktivieren.';
 
   @override
-  String get tue => 'Tue';
+  String get tue => 'Di';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'Unbekannt';
 
   @override
-  String get unknownCatid => 'Unknown \$catId';
-
-  @override
-  String get unknownCurrenttimeslotfallbackid =>
-      'Unknown \$currentTimeSlotFallbackId';
-
-  @override
-  String
-  get updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress =>
-      'Updated selected date progress: \$newSelectedProgress (was: \$oldSelectedProgress)';
-
-  @override
-  String get updatedTodaysProgressNewtodayprogressWasOldtodayprogress =>
-      'Updated today\'s progress: \$newTodayProgress (was: \$oldTodayProgress)';
-
-  @override
-  String get updatingHabitInDbHabit => 'Updating habit in DB: \$habit';
-
-  @override
-  String get uploadingBackupToCloud => 'Uploading backup to cloud!';
+  String get uploadingBackupToCloud => 'Backup in die Cloud hochladen!';
 
   @override
   String get useYourGoogleDriveToBackupEncryptedAppData =>
-      'Use your google drive to backup encrypted app data';
+      'Verwenden Sie Ihr Google Drive zur Sicherung verschlüsselter Anwendungsdaten';
 
   @override
-  String get usingCustomAndroidNavBar => 'Using custom Android nav bar';
+  String get wed => 'Mi';
 
   @override
-  String get viewportWidthViewportwidth => 'Viewport width: \$viewportWidth';
+  String get welcomeBack => 'Willkommen zurück';
 
   @override
-  String get visibleCategoryIdId => 'Visible category ID: \$id';
-
-  @override
-  String get wed => 'Wed';
-
-  @override
-  String get welcomeBack => 'Welcome back';
-
-  @override
-  String get welcomeToHabitt => 'Welcome to Habitt.';
+  String get welcomeToHabitt => 'Willkommen bei Habitt.';
 
   @override
   String get whatAreYouCountingForThisHabit =>
-      'What are you counting for this habit?';
+      'Was zählen Sie für diese Gewohnheit?';
 
   @override
-  String get whatShouldWeCallYou => 'What should we call you?';
+  String get whatShouldWeCallYou => 'Wie sollen wir Sie nennen?';
 
   @override
-  String get whatsUp => 'What\'s up';
+  String get whatsUp => 'Was gibt\'s Neues?';
 
   @override
-  String get wrapUp => 'Wrap up';
+  String get wrapUp => 'Einpacken';
 
   @override
   String get wrapUpReflectionHowDidYourHabitsGoToday =>
-      'Wrap up reflection: How did your habits go today?';
+      'Abschließende Reflexion: Wie haben sich Ihre Gewohnheiten heute entwickelt?';
 
   @override
   String get youAreCurrentlyNotConnectedToYourGoogleAccount =>
-      'You are currently not connected to your Google account.';
+      'Sie sind derzeit nicht mit Ihrem Google-Konto verbunden.';
 
   @override
   String youCanPressNumberAbove(Object type) {
-    return 'You can also press the number above to change $type';
+    return 'Sie können auch die Nummer oben drücken, um $type zu ändern.';
   }
 
   @override
   String get youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem =>
-      'You have unsaved changes. Are you sure you want to go back and discard them?';
+      'Sie haben ungespeicherte Änderungen. Sind Sie sicher, dass Sie zurückgehen und sie verwerfen wollen?';
 
   @override
-  String get youHaventAddedAnyHabitsYet => 'You haven’t added any habits yet';
+  String get youHaventAddedAnyHabitsYet =>
+      'Sie haben noch keine Gewohnheiten hinzugefügt';
 
   @override
   String get youWillUseThisPassphraseToDecryptYourDataWhenImportingIt =>
-      'You will use this passphrase to decrypt your data when importing it.';
+      'Sie verwenden diese Passphrase, um Ihre Daten beim Import zu entschlüsseln.';
 
   @override
-  String get yourName => 'Your name';
+  String get yourName => 'Ihr Name';
 
   @override
   String
   get youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow =>
-      'You\'re getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?';
+      'Sie werden mit dieser Gewohnheit sehr konsequent. Überlege dir, ob du sie nicht optional machen solltest, um dich ein bisschen mehr anzustacheln. Willst du diese Gewohnheit jetzt aktualisieren?';
 
   @override
-  String get getPremium => 'Get Premium';
+  String get getPremium => 'Prämie erhalten';
 
   @override
-  String get enjoyAllBenefits => 'Enjoy all the benefits of the app';
+  String get enjoyAllBenefits => 'Genießen Sie alle Vorteile der App';
 
   @override
-  String get rateUs => 'Rate us';
+  String get rateUs => 'Bewerten Sie uns';
 
   @override
-  String get reportBug => 'Report a bug';
+  String get reportBug => 'Einen Fehler melden';
 
   @override
-  String get leaveFeedback => 'Leave feedback';
+  String get leaveFeedback => 'Feedback hinterlassen';
 
   @override
-  String get termsOfService => 'Terms of Service';
+  String get termsOfService => 'Bedingungen der Dienstleistung';
 
   @override
-  String get privacyPolicy => 'Privacy Policy';
+  String get privacyPolicy => 'Datenschutzbestimmungen';
 
   @override
-  String get logOut => 'Log out';
+  String get logOut => 'Abmelden';
 
   @override
-  String get backupAndSync => 'Backup & Sync';
+  String get backupAndSync => 'Sicherung und Synchronisierung';
+
+  @override
+  String lastSynced(Object lastSynced) {
+    return 'Zuletzt synchronisiert: $lastSynced';
+  }
+
+  @override
+  String changeHabitTimesInPeriodWarning(Object period) {
+    return 'Das Ändern der Anzahl der Tage, an denen die Gewohnheit in $period erscheint, löscht ausgewählte Tage';
+  }
 }

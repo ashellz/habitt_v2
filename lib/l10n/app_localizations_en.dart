@@ -42,7 +42,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'All changes you\'ve made now will be reset.';
 
   @override
-  String get allHabitConfigurationYouHaveDoneWillBeDiscarded =>
+  String get habitConfigDiscardDesc =>
       'All habit configuration you have done will be discarded.';
 
   @override
@@ -55,13 +55,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get anyTime => 'Any time';
 
   @override
-  String get areYouSureYouWantToDeleteThisHabit =>
-      'Are you sure you want to delete this habit?';
+  String get deleteHabitDesc => 'Are you sure you want to delete this habit?';
 
   @override
-  String
-  get areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually =>
-      'Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.';
+  String get optOutOfBackup => 'Opt out of Backup?';
 
   @override
   String get assigningStreaks => 'Assigning streaks';
@@ -84,26 +81,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backupPassphrase => 'Backup Passphrase';
 
   @override
-  String get calculatedTargetScrollTargetscroll =>
-      'Calculated target scroll: \$targetScroll';
-
-  @override
-  String get calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate =>
-      'Calculating week progress. Start of week: \$startOfWeek, Anchor: \$baseDate';
-
-  @override
   String get calendar => 'Calendar';
 
   @override
   String get cancel => 'Cancel';
-
-  @override
-  String get categoryCatnameWithIdCatidIsNotReady =>
-      'Category \$catName with id \$catId is not ready';
-
-  @override
-  String get categoryCatnameWithIdCatidIsReady =>
-      'Category \$catName with id \$catId is ready';
 
   @override
   String get changeAColorThemeForYourInterface =>
@@ -113,21 +94,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changesSaved => 'Changes saved!';
 
   @override
-  String
-  get changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays =>
-      'Changing the amount of times habit appears in a \$habitUnit will clear selected days';
-
-  @override
-  String get checkingIosVersionForLiquidGlassSupportIsIosTrue =>
-      'Checking iOS version for Liquid Glass support... Is iOS: true';
-
-  @override
   String get chooseHowColorfulTheUiShouldBe =>
       'Choose how colorful the UI should be';
-
-  @override
-  String get clampedTargetScrollClampedMaxScrollMaxscroll =>
-      'Clamped target scroll: \$clamped (Max scroll: \$maxScroll)';
 
   @override
   String get clear => 'Clear';
@@ -151,10 +119,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completedHabits => 'Completed habits: ';
-
-  @override
-  String get completingHabitIdDayDaysimple =>
-      'Completing habit: \$id, day: \$daySimple';
 
   @override
   String get confirm => 'Confirm';
@@ -198,18 +162,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dateJoinedIsNull => 'Date joined is null';
 
   @override
-  String get dateJoinedSetFromDaysboxDatejoined =>
-      'Date joined set from daysBox: \$_dateJoined';
-
-  @override
-  String get dateJoinedSetFromSharedpreferencesDatejoined =>
-      'Date joined set from SharedPreferences: \$_dateJoined';
-
-  @override
-  String get dateJoinedSetToTodayDatejoined =>
-      'Date joined set to today: \$_dateJoined';
-
-  @override
   String get datejoined => 'dateJoined';
 
   @override
@@ -225,21 +177,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get deleteLabel => 'Delete \'\$label\'?';
+  String deleteLabel(Object label) {
+    return 'Delete \'$label\'?';
+  }
 
   @override
   String get deleteNotification => 'Delete notification?';
-
-  @override
-  String get deletedAllFilesInFolderIdFolderid =>
-      'Deleted all files in folder ID: \$folderId';
-
-  @override
-  String get deletedMetadataFilesInFolderIdFolderid =>
-      'Deleted metadata files in folder ID: \$folderId';
-
-  @override
-  String get deviceWidthDevicewidth => 'Device width: \$deviceWidth';
 
   @override
   String get discard => 'Discard';
@@ -290,13 +233,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter your existing backup passphrase to access your data.';
 
   @override
-  String get errorCheckingSubscriptionStatusE =>
-      'Error checking subscription status: \$e';
-
-  @override
-  String get errorFetchingOfferingsE => 'Error fetching offerings: \$e';
-
-  @override
   String get evening => 'Evening';
 
   @override
@@ -309,18 +245,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fetchOffers => 'Fetch Offers';
 
   @override
-  String get fixedTimeFixedhourfixedminute =>
-      'Fixed time: \$fixedHour:\$fixedMinute';
-
-  @override
-  String get folderNotFoundAndCreationNotAllowed =>
-      'Folder not found and creation not allowed';
-
-  @override
-  String get folderidInParentsAndTrashedFalse =>
-      '\'\$folderId\' in parents and trashed = false';
-
-  @override
   String get fri => 'Fri';
 
   @override
@@ -328,10 +252,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get getRemindedAboutYourHabit => 'Get reminded about your habit';
-
-  @override
-  String get gettingHabitsForHabitsWidgetSelectedDaySelectedday =>
-      'Getting habits for Habits widget ======================================== selected DAY: \$selectedDay ';
 
   @override
   String get glassFeel => 'Glass Feel';
@@ -376,10 +296,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habits => 'habits';
-
-  @override
-  String get habitslistheightHabitslistheightContentheightContentheight =>
-      'habitsListHeight: \$habitsListHeight, contentHeight: \$contentHeight';
 
   @override
   String get hello => 'Hello';
@@ -854,14 +770,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidTime => 'Invalid Time';
 
   @override
-  String get iosMajorVersionMajorversion => 'iOS Major Version: \$majorVersion';
-
-  @override
-  String
-  get isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids =>
-      'Is selected visible: \$isSelectedVisible | wasVisiblePreviously=\$wasSelectedVisibleInPreviousFrame | ids=\$visibleIds';
-
-  @override
   String get keepYourDataSafeByBackingItUpToGoogleDrive =>
       'Keep your data safe by backing it up to Google Drive.';
 
@@ -869,28 +777,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get label => 'Label';
 
   @override
-  String get lastOpenedDateTemp => 'Last opened date: \$temp';
-
-  @override
-  String get lastOpenedDateWasNullSettingItToToday =>
-      'Last opened date was null, setting it to: \$today';
-
-  @override
-  String get lastSyncedLastsynctext => 'Last synced: \$lastSyncText';
-
-  @override
-  String get lastopeneddate => 'lastOpenedDate';
-
-  @override
-  String
-  get leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset =>
-      'Leading: \$leading, Selected width: \$selectedWidth, Item center offset: \$itemCenterOffset';
-
-  @override
   String get leaveSetup => 'Leave setup?';
-
-  @override
-  String get listWidthListwidth => 'List width: \$listWidth';
 
   @override
   String get logDuration => 'Log duration';
@@ -921,10 +808,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Mid-day check-in time for your habits';
 
   @override
-  String get mimetypeMimetypeAndNameFoldernameAndTrashedFalseAndRootInParents =>
-      'mimeType = \'\$mimeType\' and name = \'\$folderName\' and trashed = false and \'root\' in parents';
-
-  @override
   String get minutes => 'Minutes';
 
   @override
@@ -940,14 +823,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get morning => 'Morning';
 
   @override
-  String get nameContainsHabittbackupAndFolderidInParentsAndTrashedFalse =>
-      'name contains \'habitt-backup\' and \'\$folderId\' in parents and trashed = false';
-
-  @override
-  String get nameMetadatametaAndFolderidInParentsAndTrashedFalse =>
-      'name = \'metadata.meta\' and \'\$folderId\' in parents and trashed = false';
-
-  @override
   String get never => 'Never';
 
   @override
@@ -955,10 +830,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newHabit => 'New Habit';
-
-  @override
-  String get noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime =>
-      'No category is \'ready\'. Applying fallback logic for \$currentTimeSlotName time.';
 
   @override
   String get noHabitsFoundUsingDefaultCategoryOrder =>
@@ -975,10 +846,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notCompleted => 'Not completed';
-
-  @override
-  String get notMountedAfterNotificationPermissionRequestAbortingSave =>
-      'Not mounted after notification permission request, aborting save.';
 
   @override
   String get notNow => 'Not now';
@@ -1523,18 +1390,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Number of days in a row you have completed all your habits.';
 
   @override
-  String get numberOfHoursNumberofhours => 'Number of hours: \$numberOfHours';
-
-  @override
   String
   get onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion =>
       'Only visible on Daily plan. Enable \'Colorful\' mode in Settings to show on completion.';
 
   @override
   String get optOut => 'Opt out';
-
-  @override
-  String get optOutOfBackup => 'Opt out of Backup?';
 
   @override
   String get optionalHabit => 'Optional habit';
@@ -1568,13 +1429,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetChanges => 'Reset changes?';
 
   @override
-  String get returningDaysProgressDaysprogress =>
-      'Returning Days progress: \$daysProgress';
-
-  @override
-  String get runningUpdatelastopeneddate => 'Running _updateLastOpenedDate';
-
-  @override
   String get sat => 'Sat';
 
   @override
@@ -1587,20 +1441,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveChanges => 'Save Changes';
 
   @override
-  String get savingDayAtDaysimple => 'Saving day at: \$daySimple';
-
-  @override
-  String get scheduledTodayToggledValue => 'Scheduled Today toggled: \$value';
-
-  @override
   String get schedulingAndAlerts => 'Scheduling and Alerts';
 
   @override
   String get schedulingFallbackToAll => 'Scheduling fallback to \'All\'';
 
   @override
-  String get selectAColorPalleteForYourInterface =>
-      'Select a color pallete for your interface';
+  String get selectAColorPaletteForYourInterface =>
+      'Select a color palette for your interface';
 
   @override
   String get selectHabitColor => 'Select habit color';
@@ -1616,23 +1464,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selected => 'Selected';
-
-  @override
-  String get selectedCategoryIdInBuildSelectedcategoryid =>
-      'Selected category id in build: \$selectedCategoryId';
-
-  @override
-  String get selectedHourValue => 'Selected hour: \$value';
-
-  @override
-  String get selectedMinuteIndex => 'Selected minute: \$index';
-
-  @override
-  String get selectedTypeRightBeforeNavigationSelectedtype =>
-      'Selected type right before navigation: \$selectedType';
-
-  @override
-  String get selectedTypeSelectedtype => 'Selected type: \$selectedType';
 
   @override
   String get setAmountLabel => 'Set amount label';
@@ -1664,9 +1495,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get skippingHabitId => 'Skipping habit: \$id';
-
-  @override
   String get skippingHabitNotAllowedHabitDayBeforeSkipped =>
       'Skipping habit not allowed, habit day before skipped';
 
@@ -1677,17 +1505,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stats => 'Stats';
 
   @override
-  String get streakStreakLongestStreakLongeststreak =>
-      'Streak: \$streak, Longest Streak: \$longestStreak';
-
-  @override
   String get subscriptions => 'Subscriptions';
 
   @override
   String get sun => 'Sun';
 
   @override
-  String get syncErrorErrormessage => 'Sync error: \$errorMessage';
+  String syncErrorErrormessage(Object errorMessage) {
+    return 'Sync error: $errorMessage';
+  }
 
   @override
   String get syncNow => 'Sync Now';
@@ -1696,7 +1522,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncing => 'Syncing...';
 
   @override
-  String get syncingProgressmessage => 'Syncing: \$progressMessage';
+  String syncingProgressmessage(Object progressMessage) {
+    return 'Syncing: $progressMessage';
+  }
 
   @override
   String get tappedAmount => 'Tapped amount';
@@ -1729,16 +1557,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'This reminder will trigger only on scheduled habit days.';
 
   @override
-  String get thisWeekDaysThisweekdays => 'This week days: \$thisWeekDays';
-
-  @override
   String get thu => 'Thu';
 
   @override
   String get time => 'Time';
-
-  @override
-  String get timeTypeTimetype => 'Time type: \$timeType';
 
   @override
   String get times => 'times';
@@ -1761,39 +1583,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unknown => 'Unknown';
 
   @override
-  String get unknownCatid => 'Unknown \$catId';
-
-  @override
-  String get unknownCurrenttimeslotfallbackid =>
-      'Unknown \$currentTimeSlotFallbackId';
-
-  @override
-  String
-  get updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress =>
-      'Updated selected date progress: \$newSelectedProgress (was: \$oldSelectedProgress)';
-
-  @override
-  String get updatedTodaysProgressNewtodayprogressWasOldtodayprogress =>
-      'Updated today\'s progress: \$newTodayProgress (was: \$oldTodayProgress)';
-
-  @override
-  String get updatingHabitInDbHabit => 'Updating habit in DB: \$habit';
-
-  @override
   String get uploadingBackupToCloud => 'Uploading backup to cloud!';
 
   @override
   String get useYourGoogleDriveToBackupEncryptedAppData =>
       'Use your google drive to backup encrypted app data';
-
-  @override
-  String get usingCustomAndroidNavBar => 'Using custom Android nav bar';
-
-  @override
-  String get viewportWidthViewportwidth => 'Viewport width: \$viewportWidth';
-
-  @override
-  String get visibleCategoryIdId => 'Visible category ID: \$id';
 
   @override
   String get wed => 'Wed';
@@ -1875,4 +1669,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupAndSync => 'Backup & Sync';
+
+  @override
+  String lastSynced(Object lastSynced) {
+    return 'Last synced: $lastSynced';
+  }
+
+  @override
+  String changeHabitTimesInPeriodWarning(Object period) {
+    return 'Changing the amount of times habit appears in a $period will clear selected days';
+  }
 }

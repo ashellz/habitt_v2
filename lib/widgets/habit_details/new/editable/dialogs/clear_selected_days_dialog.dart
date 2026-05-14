@@ -25,8 +25,7 @@ class ClearSelectedDaysDialog extends StatelessWidget {
 
     return NewDefaultDialog(
       title: loc.clearSelectedDays,
-      desc:
-          loc.changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays,
+      desc: loc.changeHabitTimesInPeriodWarning(habitUnit),
       primaryButtonLabel: loc.clear,
       onPrimaryButtonPressed: () {
         switch (type) {

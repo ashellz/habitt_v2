@@ -376,7 +376,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final desc =
         _isEditMode
             ? loc.allChangesYouMadeWillBeDiscarded
-            : loc.allHabitConfigurationYouHaveDoneWillBeDiscarded;
+            : loc.habitConfigDiscardDesc;
 
     _isExitDialogOpen = true;
     await showDialogSheet(

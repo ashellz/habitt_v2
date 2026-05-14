@@ -1,498 +1,132 @@
 {
-  "accentColor": "Accent Color",
-  "add": "Add",
-  "addANewAmountLabelYouCanReuseLater": "Add a new amount label you can reuse later.",
-  "addANotification": "Add a notification",
-  "addHabit": "Add Habit",
-  "addMoreOptions": "Add more options",
-  "afternoon": "Afternoon",
-  "all": "All",
-  "allChangesYouMadeWillBeDiscarded": "All changes you made will be discarded.",
-  "allChangesYouveMadeNowWillBeReset": "All changes you've made now will be reset.",
-  "allHabitConfigurationYouHaveDoneWillBeDiscarded": "All habit configuration you have done will be discarded.",
-  "amount": "Amount",
-  "amountName": "Amount name",
-  "anyTime": "Any time",
-  "areYouSureYouWantToDeleteThisHabit": "Are you sure you want to delete this habit?",
-  "areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually": "Are you sure you want to opt out of data backup? This will disconnect your Google account and stop all backups. Your existing backups on Google Drive will remain unless you delete them manually.",
-  "assigningStreaks": "Assigning streaks",
+  "accentColor": "Colore d'accento",
+  "add": "Aggiungi",
+  "addANewAmountLabelYouCanReuseLater": "Aggiungere una nuova etichetta di importo da riutilizzare in seguito.",
+  "addANotification": "Aggiungere una notifica",
+  "addHabit": "Aggiungi abitudine",
+  "addMoreOptions": "Aggiungere altre opzioni",
+  "afternoon": "Pomeriggio",
+  "all": "Tutti",
+  "allChangesYouMadeWillBeDiscarded": "Tutte le modifiche apportate saranno eliminate.",
+  "allChangesYouveMadeNowWillBeReset": "Tutte le modifiche apportate verranno ripristinate.",
+  "allHabitConfigurationYouHaveDoneWillBeDiscarded": "Tutte le configurazioni abituali effettuate verranno scartate.",
+  "habitConfigDiscardDesc": "Tutte le configurazioni abituali effettuate verranno scartate.",
+  "amount": "Importo",
+  "amountName": "Nome dell'importo",
+  "anyTime": "In qualsiasi momento",
+  "deleteHabitDesc": "Sei sicuro di voler cancellare questa abitudine?",
+  "optOutOfBackup": "Rinunciare al backup?",
+  "areYouSureYouWantToDeleteThisHabit": "Sei sicuro di voler cancellare questa abitudine?",
+  "assigningStreaks": "Assegnazione di strisce",
   "azaz": "[a-zA-Z]",
-  "backupData": "Backup Data",
-  "backupDataDownloadedFromCloud": "Backup data downloaded from cloud.",
-  "backupDataFailedToDownloadFromCloud": "Backup data failed to download from cloud.",
-  "backupPassphrase": "Backup Passphrase",
-  "calculatedTargetScrollTargetscroll": "Calculated target scroll: $targetScroll",
-  "calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate": "Calculating week progress. Start of week: $startOfWeek, Anchor: $baseDate",
-  "calendar": "Calendar",
-  "cancel": "Cancel",
-  "categoryCatnameWithIdCatidIsNotReady": "Category $catName with id $catId is not ready",
-  "categoryCatnameWithIdCatidIsReady": "Category $catName with id $catId is ready",
-  "changeAColorThemeForYourInterface": "Change a color theme for your interface",
-  "changesSaved": "Changes saved!",
-  "changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays": "Changing the amount of times habit appears in a $habitUnit will clear selected days",
-  "checkingIosVersionForLiquidGlassSupportIsIosTrue": "Checking iOS version for Liquid Glass support... Is iOS: true",
-  "chooseHowColorfulTheUiShouldBe": "Choose how colorful the UI should be",
-  "clampedTargetScrollClampedMaxScrollMaxscroll": "Clamped target scroll: $clamped (Max scroll: $maxScroll)",
-  "clear": "Clear",
-  "clearSelectedDays": "Clear selected days",
-  "colorfulInterface": "Colorful Interface",
-  "complete": "Complete",
-  "completed": "Completed",
-  "completedHabitFoundHabitscompletedTotal": "Completed habit found, {habitsCompleted} total",
-  "completedHabits": "Completed habits: ",
-  "completingHabitIdDayDaysimple": "Completing habit: $id, day: $daySimple",
-  "confirm": "Confirm",
-  "connectToGoogle": "Connect to Google",
-  "controlWhenAndHowYouGetNotifiedAboutYourHabits": "Control when and how you get notified about your habits.",
-  "couldNotGetOrCreateBackupFolder": "Could not get or create backup folder",
-  "createAmountLabel": "Create amount label",
-  "creatingNewDayEntry": "Creating new day entry",
-  "currentHourIsBetween12And19": "Current hour is between 12 and 19",
-  "currentHourIsBetween19And4": "Current hour is between 19 and 4",
-  "currentHourIsBetween4And12": "Current hour is between 4 and 12",
-  "custom": "Custom",
-  "dailyPlan": "Daily plan",
-  "darkMode": "Dark Mode",
-  "dateJoinedIsNull": "Date joined is null",
-  "dateJoinedSetFromDaysboxDatejoined": "Date joined set from daysBox: $_dateJoined",
-  "dateJoinedSetFromSharedpreferencesDatejoined": "Date joined set from SharedPreferences: $_dateJoined",
-  "dateJoinedSetToTodayDatejoined": "Date joined set to today: $_dateJoined",
-  "datejoined": "dateJoined",
-  "dayEntryIsNull": "Day entry is null",
-  "decrementingHabitAmount": "Decrementing habit amount",
-  "defaultlabel": ", defaultLabel: ",
-  "delete": "Delete",
-  "deleteLabel": "Delete '$label'?",
-  "deleteNotification": "Delete notification?",
-  "deletedAllFilesInFolderIdFolderid": "Deleted all files in folder ID: $folderId",
-  "deletedMetadataFilesInFolderIdFolderid": "Deleted metadata files in folder ID: $folderId",
-  "deviceWidthDevicewidth": "Device width: $deviceWidth",
-  "discard": "Discard",
-  "discardChanges": "Discard changes?",
-  "done": "Done",
-  "driveApiReturnedNullFilesList": "Drive API returned null files list",
-  "duration": "Duration",
-  "edit": "Edit",
-  "editHabit": "Edit Habit",
-  "editProfile": "Edit profile",
-  "enable": "Enable",
-  "endTime": "End time",
-  "enterHabitNameToConfirmDeletion": "Enter habit name to confirm deletion",
-  "enterPassphrase": "Enter Passphrase",
-  "enterYourAmount": "Enter your amount",
-  "enterYourDuration": "Enter your duration",
-  "enterYourExistingBackupPassphraseToAccessYourData": "Enter your existing backup passphrase to access your data.",
-  "errorCheckingSubscriptionStatusE": "Error checking subscription status: $e",
-  "errorFetchingOfferingsE": "Error fetching offerings: $e",
-  "evening": "Evening",
-  "exit": "Exit",
-  "exitWithoutSaving": "Exit without saving?",
-  "fetchOffers": "Fetch Offers",
-  "fixedTimeFixedhourfixedminute": "Fixed time: $fixedHour:$fixedMinute",
-  "folderNotFoundAndCreationNotAllowed": "Folder not found and creation not allowed",
-  "folderidInParentsAndTrashedFalse": "'$folderId' in parents and trashed = false",
-  "fri": "Fri",
-  "from": "From",
-  "getRemindedAboutYourHabit": "Get reminded about your habit",
-  "gettingHabitsForHabitsWidgetSelectedDaySelectedday": "Getting habits for Habits widget ======================================== selected DAY: $selectedDay ",
-  "glassFeel": "Glass Feel",
-  "goodAfternoon": "Good afternoon",
-  "goodEvening": "Good evening",
-  "goodMorning": "Good morning",
-  "goodMorningTimeToCheckYourHabits": "Good morning! Time to check your habits",
-  "goodToSeeYou": "Good to see you",
-  "guest": "Guest",
-  "habit": "habit",
-  "habitAdded": "Habit added!",
-  "habitDeleted": "Habit deleted!",
-  "habitIsNotInABoxSkippingSave": "Habit is not in a box, skipping save()",
-  "habitName": "Habit Name",
-  "habitNotFoundInDayEntry": "Habit not found in day entry",
-  "habits": "habits",
-  "habitslistheightHabitslistheightContentheightContentheight": "habitsListHeight: $habitsListHeight, contentHeight: $contentHeight",
-  "hello": "Hello",
-  "helloThere": "Hello there",
-  "hi": "Hi",
-  "hiThere": "Hi there",
-  "home": "Home",
-  "hours": "Hours",
-  "howAreYou": "How are you",
-  "howLongWillThisHabitTake": "How long will this habit take?",
-  "howMuchDidYouCompleteToday": "How much did you complete today?",
-  "howMuchTimeDidYouSpendOnThisHabitToday": "How much time did you spend on this habit today?",
-  "howOftenWouldYouLikeToDoThisHabit": "How often would you like to do this habit?",
-  "ifCheckedHabitWontCountForThePerfectDaysStreak": "If checked, habit won't count for the 'Perfect days streak'.",
-  "incorrectPassphrase": "Incorrect passphrase.",
-  "initialProgressValuesLoadedForAllDays": "Initial progress values loaded for all days",
-  "insightStrengthApplyDecrease": "Apply decrease",
-  "insightStrengthApplyIncrease": "Apply increase",
-  "insightStrengthGotItEven": "Got it",
-  "insightStrengthGotItOdd": "Got it",
-  "insightStrengthIncreaseBrushTeeth": "You are doing great with brush your teeth. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on brush your teeth. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your brush your teeth habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for brush your teeth. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on brush your teeth. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseDrinkWater": "You are doing great with drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on drink enough water. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your drink enough water habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for drink enough water. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseGeneric": "Your consistency is strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.||You are handling this habit well. Strength is stable at {strength}%. Push the target from {fromValue} to {toValue} for more growth.||Momentum is solid here. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to level up.||You built a reliable baseline. Strength is stable at {strength}%. Move from {fromValue} to {toValue} and keep improving.||Great consistency lately. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep your progress rising.",
-  "insightStrengthIncreaseGoToBedEarly": "You are doing great with go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on go to bed early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for go to bed early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseGym": "You are doing great with your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your gym routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your gym routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your gym routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseMedications": "You are doing great with take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on take your medications on time. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your take your medications on time habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for take your medications on time. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseNutrition": "You are doing great with your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your nutrition plan. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your nutrition plan habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your nutrition plan. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreasePraying": "You are doing great with pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on pray consistently. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your pray consistently habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for pray consistently. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseProductivitySession": "You are doing great with your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your productivity sessions. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your productivity sessions habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your productivity sessions. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseRead": "You are doing great with your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your reading habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your reading habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your reading habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseResearch": "You are doing great with your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your research habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your research habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your research habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseRunning": "You are doing great with your running routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your running routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your running routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your running routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your running routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseShower": "You are doing great with take your shower. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on take your shower. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your take your shower habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for take your shower. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on take your shower. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseSkinCare": "You are doing great with your skin care routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your skin care routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your skin care routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your skin care routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your skin care routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseStudying": "You are doing great with your studying habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your studying habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your studying habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your studying habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your studying habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseTargetTitle": "Increase target for {habitName}",
-  "insightStrengthIncreaseWakeUpEarly": "You are doing great with wake up early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on wake up early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your wake up early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for wake up early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on wake up early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseWalk": "You are doing great with your walking routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your walking routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your walking routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your walking routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your walking routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthIncreaseWork": "You are doing great with your work habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your work habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your work habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your work habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your work habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthKeepPushingTitle": "Keep pushing {habitName}",
-  "insightStrengthLowerTargetTitle": "Lower target for {habitName}",
-  "insightStrengthStartSmallType1BrushTeeth": "Your brush your teeth habit is slipping. Do not let this routine fall off now.||You have been off track with brush your teeth. Show up today and protect the habit.||Momentum on brush your teeth is fading. Keep it alive with one solid rep today.||Do not let brush your teeth become inconsistent. Lock in and do your part today.||You started to brush your teeth for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1DrinkWater": "Your drink enough water habit is slipping. Do not let this routine fall off now.||You have been off track with drink enough water. Show up today and protect the habit.||Momentum on drink enough water is fading. Keep it alive with one solid rep today.||Do not let drink enough water become inconsistent. Lock in and do your part today.||You started to drink enough water for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Generic": "You added this habit for a reason. Do not let it slip now.||Momentum is fading on this habit. Show up today and keep it alive.||You are falling behind on this habit. Lock in and get your rep done.||Do not negotiate with laziness here. Protect this habit today.||You came too far to let this habit drift. Stay consistent today.",
-  "insightStrengthStartSmallType1GoToBedEarly": "Your go to bed early habit is slipping. Do not let this routine fall off now.||You have been off track with go to bed early. Show up today and protect the habit.||Momentum on go to bed early is fading. Keep it alive with one solid rep today.||Do not let go to bed early become inconsistent. Lock in and do your part today.||You started to go to bed early for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Gym": "Your your gym routine habit is slipping. Do not let this routine fall off now.||You have been off track with your gym routine. Show up today and protect the habit.||Momentum on your gym routine is fading. Keep it alive with one solid rep today.||Do not let your gym routine become inconsistent. Lock in and do your part today.||You started to your gym routine for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Medications": "Your take your medications on time habit is slipping. Do not let this routine fall off now.||You have been off track with take your medications on time. Show up today and protect the habit.||Momentum on take your medications on time is fading. Keep it alive with one solid rep today.||Do not let take your medications on time become inconsistent. Lock in and do your part today.||You started to take your medications on time for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Nutrition": "Your your nutrition plan habit is slipping. Do not let this routine fall off now.||You have been off track with your nutrition plan. Show up today and protect the habit.||Momentum on your nutrition plan is fading. Keep it alive with one solid rep today.||Do not let your nutrition plan become inconsistent. Lock in and do your part today.||You started to your nutrition plan for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Praying": "Your pray consistently habit is slipping. Do not let this routine fall off now.||You have been off track with pray consistently. Show up today and protect the habit.||Momentum on pray consistently is fading. Keep it alive with one solid rep today.||Do not let pray consistently become inconsistent. Lock in and do your part today.||You started to pray consistently for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1ProductivitySession": "Your your productivity sessions habit is slipping. Do not let this routine fall off now.||You have been off track with your productivity sessions. Show up today and protect the habit.||Momentum on your productivity sessions is fading. Keep it alive with one solid rep today.||Do not let your productivity sessions become inconsistent. Lock in and do your part today.||You started to your productivity sessions for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Read": "Your your reading habit habit is slipping. Do not let this routine fall off now.||You have been off track with your reading habit. Show up today and protect the habit.||Momentum on your reading habit is fading. Keep it alive with one solid rep today.||Do not let your reading habit become inconsistent. Lock in and do your part today.||You started to your reading habit for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Research": "Your your research habit habit is slipping. Do not let this routine fall off now.||You have been off track with your research habit. Show up today and protect the habit.||Momentum on your research habit is fading. Keep it alive with one solid rep today.||Do not let your research habit become inconsistent. Lock in and do your part today.||You started to your research habit for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Running": "Your your running routine habit is slipping. Do not let this routine fall off now.||You have been off track with your running routine. Show up today and protect the habit.||Momentum on your running routine is fading. Keep it alive with one solid rep today.||Do not let your running routine become inconsistent. Lock in and do your part today.||You started to your running routine for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Shower": "Your take your shower habit is slipping. Do not let this routine fall off now.||You have been off track with take your shower. Show up today and protect the habit.||Momentum on take your shower is fading. Keep it alive with one solid rep today.||Do not let take your shower become inconsistent. Lock in and do your part today.||You started to take your shower for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1SkinCare": "Your your skin care routine habit is slipping. Do not let this routine fall off now.||You have been off track with your skin care routine. Show up today and protect the habit.||Momentum on your skin care routine is fading. Keep it alive with one solid rep today.||Do not let your skin care routine become inconsistent. Lock in and do your part today.||You started to your skin care routine for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Studying": "Your your studying habit habit is slipping. Do not let this routine fall off now.||You have been off track with your studying habit. Show up today and protect the habit.||Momentum on your studying habit is fading. Keep it alive with one solid rep today.||Do not let your studying habit become inconsistent. Lock in and do your part today.||You started to your studying habit for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1WakeUpEarly": "Your wake up early habit is slipping. Do not let this routine fall off now.||You have been off track with wake up early. Show up today and protect the habit.||Momentum on wake up early is fading. Keep it alive with one solid rep today.||Do not let wake up early become inconsistent. Lock in and do your part today.||You started to wake up early for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Walk": "Your your walking routine habit is slipping. Do not let this routine fall off now.||You have been off track with your walking routine. Show up today and protect the habit.||Momentum on your walking routine is fading. Keep it alive with one solid rep today.||Do not let your walking routine become inconsistent. Lock in and do your part today.||You started to your walking routine for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType1Work": "Your your work habit habit is slipping. Do not let this routine fall off now.||You have been off track with your work habit. Show up today and protect the habit.||Momentum on your work habit is fading. Keep it alive with one solid rep today.||Do not let your work habit become inconsistent. Lock in and do your part today.||You started to your work habit for a reason. Stay disciplined and keep it from slipping.",
-  "insightStrengthStartSmallType2BrushTeeth": "You have not been consistent with brush your teeth lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Brush your teeth has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent brush your teeth consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your brush your teeth habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Brush your teeth needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2DrinkWater": "You have not been consistent with drink enough water lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Drink enough water has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent drink enough water consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your drink enough water habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Drink enough water needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Generic": "Consistency dropped on this habit. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to stabilize again.||You have been off track lately. Strength dropped by {drop}%. Try this target shift: {fromValue} -> {toValue} to rebuild rhythm.||Recent performance is slipping. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to get back on track.||This habit needs a lighter target for now. Strength dropped by {drop}%. Move from {fromValue} to {toValue} to improve consistency.||Your habit signal weakened recently. Strength dropped by {drop}%. Recommended target: {fromValue} -> {toValue} so you can stay consistent.",
-  "insightStrengthStartSmallType2GoToBedEarly": "You have not been consistent with go to bed early lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Go to bed early has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent go to bed early consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your go to bed early habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Go to bed early needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Gym": "You have not been consistent with your gym routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your gym routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your gym routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your gym routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your gym routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Medications": "You have not been consistent with take your medications on time lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Take your medications on time has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent take your medications on time consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your take your medications on time habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Take your medications on time needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Nutrition": "You have not been consistent with your nutrition plan lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your nutrition plan has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your nutrition plan consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your nutrition plan habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your nutrition plan needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Praying": "You have not been consistent with pray consistently lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Pray consistently has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent pray consistently consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your pray consistently habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Pray consistently needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2ProductivitySession": "You have not been consistent with your productivity sessions lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your productivity sessions has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your productivity sessions consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your productivity sessions habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your productivity sessions needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Read": "You have not been consistent with your reading habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your reading habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your reading habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your reading habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your reading habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Research": "You have not been consistent with your research habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your research habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your research habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your research habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your research habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Running": "You have not been consistent with your running routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your running routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your running routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your running routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your running routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Shower": "You have not been consistent with take your shower lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Take your shower has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent take your shower consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your take your shower habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Take your shower needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2SkinCare": "You have not been consistent with your skin care routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your skin care routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your skin care routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your skin care routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your skin care routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Studying": "You have not been consistent with your studying habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your studying habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your studying habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your studying habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your studying habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2WakeUpEarly": "You have not been consistent with wake up early lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Wake up early has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent wake up early consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your wake up early habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Wake up early needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Walk": "You have not been consistent with your walking routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your walking routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your walking routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your walking routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your walking routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "insightStrengthStartSmallType2Work": "You have not been consistent with your work habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your work habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your work habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your work habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your work habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
-  "invalidTime": "Invalid Time",
-  "iosMajorVersionMajorversion": "iOS Major Version: $majorVersion",
-  "isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids": "Is selected visible: $isSelectedVisible | wasVisiblePreviously=$wasSelectedVisibleInPreviousFrame | ids=$visibleIds",
-  "keepYourDataSafeByBackingItUpToGoogleDrive": "Keep your data safe by backing it up to Google Drive.",
-  "label": "Label",
-  "lastOpenedDateTemp": "Last opened date: $temp",
-  "lastOpenedDateWasNullSettingItToToday": "Last opened date was null, setting it to: $today",
-  "lastSyncedLastsynctext": "Last synced: $lastSyncText",
-  "lastopeneddate": "lastOpenedDate",
-  "leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset": "Leading: $leading, Selected width: $selectedWidth, Item center offset: $itemCenterOffset",
-  "leaveSetup": "Leave setup?",
-  "listWidthListwidth": "List width: $listWidth",
-  "logDuration": "Log duration",
-  "logProgress": "Log progress",
-  "makesWidgetsLookMoreGlassy": "Makes widgets look more glassy",
-  "manageYourNotificationPreferences": "Manage your notification preferences",
-  "manageYourSubscriptionsAndBillingPlansHere": "Manage your subscriptions and billing plans here.",
-  "manageYourSubscriptionsAndViewPremiumBenefits": "Manage your subscriptions and view premium benefits",
-  "midday": "Mid-day",
-  "middayCheckinTimeForYourHabits": "Mid-day check-in time for your habits",
-  "mimetypeMimetypeAndNameFoldernameAndTrashedFalseAndRootInParents": "mimeType = '$mimeType' and name = '$folderName' and trashed = false and 'root' in parents",
-  "minutes": "Minutes",
-  "missingPermissions": "Missing Permissions",
-  "mon": "Mon",
-  "moreOptions": "More options",
-  "morning": "Morning",
-  "nameContainsHabittbackupAndFolderidInParentsAndTrashedFalse": "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
-  "nameMetadatametaAndFolderidInParentsAndTrashedFalse": "name = 'metadata.meta' and '$folderId' in parents and trashed = false",
-  "never": "Never",
-  "newDayResettingCompletion": "New day, resetting completion",
-  "newHabit": "New Habit",
-  "noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime": "No category is 'ready'. Applying fallback logic for $currentTimeSlotName time.",
-  "noHabitsFoundUsingDefaultCategoryOrder": "No habits found, using default category order.",
-  "noHabitsYet": "No habits yet.",
-  "noOfferingsAvailable": "No offerings available",
-  "noTag": "No tag",
-  "notCompleted": "Not completed",
-  "notMountedAfterNotificationPermissionRequestAbortingSave": "Not mounted after notification permission request, aborting save.",
-  "notNow": "Not now",
-  "notes": "Notes",
-  "notificationAmountLabelFocus": "Today's target is {target} {label}.|Your number for today: {target} {label}. Start with one.|Today's dose: {target} {label}. Clear target, simple execution.|Today asks for {target} {label}. You know the rhythm.|Target for today: {target} {label}. A precise goal is a powerful cue.",
-  "notificationCombinedAmountAlmostDone": "Only {remaining} left, and {encouragement}.",
-  "notificationCombinedAmountCompleted": "Target reached already, and {encouragement}.",
-  "notificationCombinedAmountInProgress": "You are at {progress}, and {encouragement}.",
-  "notificationCombinedAmountNotStarted": "Start now, even one step counts, and {encouragement}.",
-  "notificationCombinedDurationAlmostDone": "Only {remaining} left, and {encouragement}.",
-  "notificationCombinedDurationCompleted": "Target reached already, and {encouragement}.",
-  "notificationCombinedDurationInProgress": "You are at {progress}, and {encouragement}.",
-  "notificationCombinedDurationNotStarted": "Start a short session now, and {encouragement}.",
-  "notificationCombinedFresh": "You started this habit {days} days ago, and {encouragement}.",
-  "notificationCombinedGeneral": "{encouragement}.",
-  "notificationCombinedOneOff": "Don't miss today, it's your last {period} chance and {encouragement}.",
-  "notificationEncourageBrushTeeth1": "keeping your hygiene streak strong",
-  "notificationEncourageBrushTeeth2": "protecting your routine with a quick win",
-  "notificationEncourageBrushTeeth3": "staying consistent with basic care",
-  "notificationEncourageDrinkWater1": "hydration now supports your whole system",
-  "notificationEncourageDrinkWater2": "one glass now keeps your energy steadier",
-  "notificationEncourageDrinkWater3": "small hydration reps improve daily performance",
-  "notificationEncourageGeneric1": "showing up today keeps the habit alive",
-  "notificationEncourageGeneric2": "a small action now protects your momentum",
-  "notificationEncourageGeneric3": "consistency today makes tomorrow easier",
-  "notificationEncourageGoToBedEarly1": "protecting tonight helps tomorrow feel lighter",
-  "notificationEncourageGoToBedEarly10": "this evening decision helps your whole week run smoother",
-  "notificationEncourageGoToBedEarly2": "an earlier bedtime now gives your mind a cleaner start",
-  "notificationEncourageGoToBedEarly3": "this choice tonight sets up a better morning",
-  "notificationEncourageGoToBedEarly4": "sleep consistency now pays off all day tomorrow",
-  "notificationEncourageGoToBedEarly5": "one calm night routine protects your energy curve",
-  "notificationEncourageGoToBedEarly6": "ending the day on time keeps your rhythm stable",
-  "notificationEncourageGoToBedEarly7": "better sleep timing is a quiet performance advantage",
-  "notificationEncourageGoToBedEarly8": "an earlier lights-out keeps your recovery on track",
-  "notificationEncourageGoToBedEarly9": "small bedtime discipline creates stronger mornings",
-  "notificationEncourageGym1": "one gym rep today keeps your standard high",
-  "notificationEncourageGym2": "showing up now protects your strength momentum",
-  "notificationEncourageGym3": "today's session compounds over time",
-  "notificationEncourageMedications1": "timing this right protects your health routine",
-  "notificationEncourageMedications2": "staying on schedule keeps your baseline stable",
-  "notificationEncourageMedications3": "this step supports your long-term wellbeing",
-  "notificationEncourageNutrition1": "one intentional choice now supports your baseline",
-  "notificationEncourageNutrition2": "small nutrition wins add up fast",
-  "notificationEncourageNutrition3": "consistency here improves everything else",
-  "notificationEncourageProductivitySession1": "one focused session protects deep work time",
-  "notificationEncourageProductivitySession2": "a clean focus block now can change your day",
-  "notificationEncourageProductivitySession3": "consistency in focus drives better output",
-  "notificationEncourageRead1": "a few pages now keep your reading identity strong",
-  "notificationEncourageRead2": "small daily reading compounds into real progress",
-  "notificationEncourageRead3": "showing up today keeps the streak alive",
-  "notificationEncourageResearch1": "one insight today moves your work forward",
-  "notificationEncourageResearch2": "steady exploration compounds into clarity",
-  "notificationEncourageResearch3": "capturing one finding now keeps momentum",
-  "notificationEncourageRunning1": "one training rep today builds endurance",
-  "notificationEncourageRunning2": "showing up now strengthens your running baseline",
-  "notificationEncourageRunning3": "this effort keeps your fitness momentum real",
-  "notificationEncourageShower1": "a quick reset can lift your focus",
-  "notificationEncourageShower2": "this routine helps you feel switched on",
-  "notificationEncourageShower3": "a clean reset keeps your day moving",
-  "notificationEncourageSkinCare1": "protecting your skin with one steady step",
-  "notificationEncourageSkinCare2": "making consistency your skincare advantage",
-  "notificationEncourageSkinCare3": "keeping your routine reliable and simple",
-  "notificationEncourageStudying1": "one focused block now builds learning momentum",
-  "notificationEncourageStudying2": "showing up today keeps knowledge compounding",
-  "notificationEncourageStudying3": "small sessions consistently beat cramming",
-  "notificationEncourageWakeUpEarly1": "starting your day with intention",
-  "notificationEncourageWakeUpEarly2": "keeping your morning rhythm consistent",
-  "notificationEncourageWakeUpEarly3": "giving yourself a calmer start",
-  "notificationEncourageWalk1": "a short walk is enough to keep momentum",
-  "notificationEncourageWalk2": "moving now helps your energy and focus",
-  "notificationEncourageWalk3": "this simple rep supports long-term consistency",
-  "notificationEncourageWork1": "starting now creates real traction",
-  "notificationEncourageWork2": "one meaningful push can unlock your day",
-  "notificationEncourageWork3": "consistent execution keeps progress visible",
-  "notificationFallbackGeneric": "Small actions today create long-term momentum.",
-  "notificationFallbackTitle": "Habit reminder",
-  "notificationFreshnessBrandNew": "Time for this brand new habit to shine!",
-  "notificationFreshnessEstablishedDays": "You have been building this for {days} days so far. Keep compounding wins.",
-  "notificationFreshnessNewDays": "You started {days} ago. Keep it up!|Day {days}. The early days are the foundation — solid work.|You started {days} days ago. Each one matters equally.",
-  "notificationOptional": "This one is optional today, but still mind giving it a try?|You got some extra time?",
-  "notificationPeriodMonthly": "monthly",
-  "notificationPeriodWeekly": "weekly",
-  "notificationPremadeBrushTeeth": "Quick hygiene win now keeps your routine sharp.",
-  "notificationPremadeDrinkWater": "Hydrate now and keep your body performing well.",
-  "notificationPremadeGoToBedEarly": "Protect tonight so tomorrow starts easier.",
-  "notificationPremadeGym": "Show up for a solid gym rep and build consistency.",
-  "notificationPremadeMedications": "Take your meds on time to protect your health baseline.",
-  "notificationPremadeNutrition": "Make one intentional nutrition choice right now.",
-  "notificationPremadePraying": "Take a calm moment now and reconnect with intention.",
-  "notificationPremadeProductivitySession": "Run one focused session and protect deep work time.",
-  "notificationPremadeRead": "Read a little now and let consistency do the rest.",
-  "notificationPremadeResearch": "Capture one useful insight and move your research forward.",
-  "notificationPremadeRunning": "Lace up and collect a strong training rep today.",
-  "notificationPremadeShower": "Reset your energy with this simple routine.",
-  "notificationPremadeSkinCare": "Take care of your skin now to stay consistent.",
-  "notificationPremadeStudying": "Start a focused study block and build learning momentum.",
-  "notificationPremadeWakeUpEarly": "A strong start to your day begins with this choice.",
-  "notificationPremadeWalk": "A short walk now is enough to keep momentum alive.",
-  "notificationPremadeWork": "Start your most important task and gain traction.",
-  "notificationProgressAlmostDoneAmount": "You are so close. Just {remaining} {label} left.|{remaining} {label} left. This is your rhythm — lean into it.|{remaining} {label} to go. You've already done the majority.|Almost there — {remaining} {label} separates you from done.|You're {remaining} {label} away from your target. Finish strong.|The finish line is close. Just {remaining} {label} to wrap up.",
-  "notificationProgressAlmostDoneDuration": "Only {remaining} left. Tune in for a little bit more and you're done!|{remaining} to go. You can always do just a little more.|{remaining} remaining. Finishing is its own reward.|{remaining} to go. You can do this!",
-  "notificationProgressCompletedAmount": "You already hit {completed} {label}. Ready for more?|{completed} {label} done. Momentum is on your side now.|{completed} {label} in the bank. Your habit is working.|Nice — {completed} {label} completed. Want to stretch a little?",
-  "notificationProgressCompletedDuration": "Target done: {completed} done already.|Time target hit: {completed}. You showed up and stayed.|{completed} of focused time. Done. That's real commitment.|Session complete: {completed}. Your consistency just grew.|{completed} logged. Your future self will thank you.|Target time reached: {completed}. Great use of focused effort.",
-  "notificationProgressInProgressAmount": "{completed} out of {target} {label}. Get on it!.|You've already logged {completed} {label}. Great start.|{completed}/{target} {label} so far. Keep the pace steady.|{completed} done, {remaining} to go. You've got this.|{completed} out of {target}. Keep going.",
-  "notificationProgressInProgressDuration": "{completed} so far, your goal is {target} so keep it up!|You've done the hard part — starting. Keep rolling.|You've logged {completed} of {target}. Stay in the zone.|{completed} of {target} completed. That's good, keep it up!",
-  "notificationProgressNoTracking": "Small action now keeps this habit alive.|Don't let this habit fade, a little effort now protects your momentum.|Consistency today makes tomorrow easier. Mind giving it a try?|Don't forget about your habit today!|A small action now keeps your habit strong.|Hey there! Time for your habiiit!|One small step keeps the streak alive.|Done is better than perfect. Get it done.|Consistency compounds. One more day matters.|Your habit is a promise to yourself. Keep it.|Same habit, one day stronger. Keep building.|You don't need motivation. Just start.|Think of this as a gift to your future self. Get on it!|You're building something important. Keep going.|Making time for what matters. That's you.|Curious what happens when you never skip?|Habit used notification; What's your move?|Time to act on your plan.|Don't break the chain. One more day.|No need to be perfect. Just need to be present.|Small actions today = big results tomorrow.",
-  "notificationProgressNotStartedAmount": "Begin with 1 {label} only and build momentum. It's easy!|You don't need motivation. Just start.|The hardest part is starting. You can do it!",
-  "notificationProgressNotStartedDuration": "Start with a short session at least!|You don't need motivation. Just start.|The hardest part is starting. You can do it!|Few minutes from now, you'll be glad you started.",
-  "notificationScheduleCustomEveryDays": "Custom cadence: every {days} days. Today is one of your slots.|Every {days} days rhythm. Today is a scheduled day.|Your {days}-day cycle aligns today. Time to act.|Custom schedule says: today is this habit's day. Use your slot!|This habit runs every {days} days. You're due right now.|Today is part of this habit's rhythm. Honor the pattern.",
-  "notificationScheduleDaily": "Your daily anchor awaits. Lock it in.|Daily window is open. Step through it.|Your daily practice builds quietly. But it builds.|This is your daily habit call. Respond to it!",
-  "notificationScheduleMonthlyAtRisk": "You need {remaining} more this month ({completed}/{target} done). Skipping today puts your target at risk.|{remaining} to go this month ({completed}/{target}). Today protects your progress.|Your monthly goal ({completed}/{target}) is still possible. Today is a key move.|{completed}/{target} for the month. Don't let today be the gap.|{remaining} needed this month ({completed}/{target}). One session at a time stays on track.|Monthly target within reach ({completed}/{target}). Today keeps the door open.",
-  "notificationScheduleMonthlyImpossible": "This month's target won't be met ({completed}/{target}). Use the remaining days for practice, not pressure.|The monthly number is out of reach ({completed}/{target}). But habits are built in the gaps, not just the goals.|Target unreachable this month ({completed}/{target}). Every attempt still rewires the loop.|{completed}/{target} this month. The goal won't align — but the habit still counts.|This month's target exceeded your available days ({completed}/{target}). Adjust and keep moving.",
-  "notificationScheduleMonthlyOneLeft": "One more completion this month and you hit your target ({completed}/{target}).|One more this month hits {target} ({completed} done). This is your closing move.|You're one session from your monthly goal ({completed}/{target}). Seal it.|Monthly target needs one final completion ({completed}/{target}). Today can be that day.|One more and you're at {target} for the month ({completed} done). Finish what you started.|Your monthly goal is one away ({completed}/{target}). That's a single session.",
-  "notificationScheduleMonthlyReached": "Monthly target already reached ({completed}/{target}). Extra rep, extra momentum.|You've nailed your monthly goal ({completed}/{target}). This is elite consistency.|Monthly target: done ({completed}/{target}). Everything now is exponential growth.|Monthly goal already crushed ({completed}/{target}). Bonus reps deepen the groove.",
-  "notificationScheduleMonthlyRemaining": "You need {remaining} more this month to reach {target}.|{remaining} sessions left this month to hit {target}. Consistent pacing wins.|You need {remaining} more for your monthly goal of {target}. Each one builds.|Monthly target: {remaining} of {target} remaining. You have time — use it wisely.|{remaining} to go this month for {target}. Small, steady actions close the gap.|Your monthly number is {target} with {remaining} left. Today moves the goal forward.",
-  "notificationScheduleWeeklyAtRisk": "You need {remaining} more this week ({completed}/{target} done). If you skip today, your goal gets much harder.|You need {remaining} more this week ({completed}/{target}). Today keeps it manageable.|{remaining} to go this week ({completed}/{target}). Skipping today adds pressure.|Your weekly target ({completed}/{target}) is still reachable. Today is a leverage point.|{completed}/{target} for the week. One today keeps your goal on track.|{remaining} remaining this week ({completed}/{target}). Today is your best move.",
-  "notificationScheduleWeeklyImpossible": "This week's target is out of reach ({completed}/{target}). Still, every rep builds for next week.|Goal won't be met this week ({completed}/{target}). But unfinished weeks teach us what to adjust.|The weekly number won't align ({completed}/{target}). Do it anyway — consistency ignores the scoreboard.|Target missed this week ({completed}/{target}). Each attempt still strengthens the habit loop.|{completed}/{target} this week. The goal is out of range — but the habit isn't.",
-  "notificationScheduleWeeklyOneLeft": "One more completion this week and you hit your target ({completed}/{target}).|One more this week and you're at {target} ({completed} done). Close the loop.|You're one session away from your weekly goal ({completed}/{target}). Make it count.|This week's target needs just one more ({completed}/{target}). You can close it now.|One more completion stands between you and {target} this week ({completed} done).|Weekly goal within reach: one more ({completed}/{target}). That's just today.",
-  "notificationScheduleWeeklyReached": "Weekly target already reached ({completed}/{target}). This is bonus consistency.|You hit your weekly goal ({completed}/{target}). Everything extra is a win.|Weekly target: achieved ({completed}/{target}). Bonus reps build elite habits.|{completed}/{target} for the week. You're above and beyond.|Weekly goal already met ({completed}/{target}). You're operating at a higher level.|You've done your weekly target ({completed}/{target}). Consistency is now surplus.",
-  "notificationScheduleWeeklyRemaining": "You need {remaining} more this week to reach {target}.|{remaining} to go for weekly target of {target}. Steady pacing works.|You need {remaining} more this week. Today is a great time to start one.|Weekly goal: {remaining} remaining of {target}. Spread the effort.|{remaining} sessions left to hit {target} this week. Each one matters equally.|Your weekly target is {target}, with {remaining} to go. One step at a time.",
-  "notifications": "Notifications",
-  "notificationsAreDisabled": "Notifications are disabled",
-  "now": "Now",
-  "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Number of days in a row you have completed all your habits.",
-  "numberOfHoursNumberofhours": "Number of hours: $numberOfHours",
-  "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Only visible on Daily plan. Enable 'Colorful' mode in Settings to show on completion.",
-  "optOut": "Opt out",
-  "optOutOfBackup": "Opt out of Backup?",
-  "optionalHabit": "Optional habit",
-  "optionalHabits": "Optional habits",
-  "orToChangeLabel": "or the amount label",
-  "passphrase": "Passphrase",
-  "perfectDaysStreak": "Perfect days streak",
-  "preparingBackupName": "Preparing backup name...",
-  "profile": "Profile",
-  "reorderingCategoriesBasedOnTime": "Reordering categories based on time",
-  "reset": "Reset",
-  "resetChanges": "Reset changes?",
-  "returningDaysProgressDaysprogress": "Returning Days progress: $daysProgress",
-  "runningUpdatelastopeneddate": "Running _updateLastOpenedDate",
-  "sat": "Sat",
-  "satoshi": "Satoshi",
-  "save": "Save",
-  "saveChanges": "Save Changes",
-  "savingDayAtDaysimple": "Saving day at: $daySimple",
-  "scheduledTodayToggledValue": "Scheduled Today toggled: $value",
-  "schedulingAndAlerts": "Scheduling and Alerts",
-  "schedulingFallbackToAll": "Scheduling fallback to 'All'",
-  "selectAColorPalleteForYourInterface": "Select a color pallete for your interface",
-  "selectHabitColor": "Select habit color",
-  "selectHabitTime": "SELECT HABIT TIME:",
-  "selectTime": "Select Time",
-  "selectTimeInterval": "Select time interval",
-  "selected": "Selected",
-  "selectedCategoryIdInBuildSelectedcategoryid": "Selected category id in build: $selectedCategoryId",
-  "selectedHourValue": "Selected hour: $value",
-  "selectedMinuteIndex": "Selected minute: $index",
-  "selectedTypeRightBeforeNavigationSelectedtype": "Selected type right before navigation: $selectedType",
-  "selectedTypeSelectedtype": "Selected type: $selectedType",
-  "setAmountLabel": "Set amount label",
-  "setDuration": "Set duration",
-  "setNotificationTime": "Set notification time",
-  "setPassphrase": "Set Passphrase",
-  "setSchedule": "Set Schedule",
-  "settings": "Settings",
-  "signinFirstError": "Sign-in first Error",
-  "skip": "Skip",
-  "skippedHabitFoundHabitsskippedTotal": "Skipped habit found, {habitsSkipped} total",
-  "skippingHabitId": "Skipping habit: $id",
-  "skippingHabitNotAllowedHabitDayBeforeSkipped": "Skipping habit not allowed, habit day before skipped",
-  "startTime": "Start time",
-  "stats": "Stats",
-  "streakStreakLongestStreakLongeststreak": "Streak: $streak, Longest Streak: $longestStreak",
-  "subscriptions": "Subscriptions",
-  "sun": "Sun",
-  "syncErrorErrormessage": "Sync error: $errorMessage",
-  "syncNow": "Sync Now",
-  "syncing": "Syncing...",
-  "syncingProgressmessage": "Syncing: $progressMessage",
-  "tappedAmount": "Tapped amount",
-  "tappedDuration": "Tapped duration",
-  "thisAmountLabelWillBeRemoved": "This amount label will be removed.",
-  "thisLabelCantBeDeleted": "This label can't be deleted",
-  "thisNotificationCantBeDeleted": "This notification can't be deleted",
-  "thisNotificationTimeWillBeRemoved": "This notification time will be removed.",
-  "thisPassphraseIsUsedForYourDataEncryptionSaveItSecurelyYouWillUseItAgainWhenGettingYourDataOnOtherDevices": "This passphrase is used for your data encryption. Save it securely, you will use it again when getting your data on other devices.",
-  "thisReminderWillTriggerOnlyOnScheduledHabitDays": "This reminder will trigger only on scheduled habit days.",
-  "thisWeekDaysThisweekdays": "This week days: $thisWeekDays",
-  "thu": "Thu",
-  "time": "Time",
-  "timeTypeTimetype": "Time type: $timeType",
-  "times": "times",
-  "to": "To",
-  "toReceiveRemindersPleaseEnableNotificationPermissionsForHabitt": "To receive reminders, please enable notification permissions for Habitt.",
-  "toUseHabitRemindersEnableNotificationsInYourDeviceSettings": "To use habit reminders, enable notifications in your device settings.",
-  "tue": "Tue",
-  "unknown": "Unknown",
-  "unknownCatid": "Unknown $catId",
-  "unknownCurrenttimeslotfallbackid": "Unknown $currentTimeSlotFallbackId",
-  "updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress": "Updated selected date progress: $newSelectedProgress (was: $oldSelectedProgress)",
-  "updatedTodaysProgressNewtodayprogressWasOldtodayprogress": "Updated today's progress: $newTodayProgress (was: $oldTodayProgress)",
-  "updatingHabitInDbHabit": "Updating habit in DB: $habit",
-  "uploadingBackupToCloud": "Uploading backup to cloud!",
-  "useYourGoogleDriveToBackupEncryptedAppData": "Use your google drive to backup encrypted app data",
-  "usingCustomAndroidNavBar": "Using custom Android nav bar",
-  "viewportWidthViewportwidth": "Viewport width: $viewportWidth",
-  "visibleCategoryIdId": "Visible category ID: $id",
-  "wed": "Wed",
-  "welcomeBack": "Welcome back",
-  "welcomeToHabitt": "Welcome to Habitt.",
-  "whatAreYouCountingForThisHabit": "What are you counting for this habit?",
-  "whatShouldWeCallYou": "What should we call you?",
-  "whatsUp": "What's up",
-  "wrapUp": "Wrap up",
-  "wrapUpReflectionHowDidYourHabitsGoToday": "Wrap up reflection: How did your habits go today?",
-  "youAreCurrentlyNotConnectedToYourGoogleAccount": "You are currently not connected to your Google account.",
-  "youCanPressNumberAbove": "You can also press the number above to change {type}",
-  "youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem": "You have unsaved changes. Are you sure you want to go back and discard them?",
-  "youHaventAddedAnyHabitsYet": "You haven’t added any habits yet",
-  "youWillUseThisPassphraseToDecryptYourDataWhenImportingIt": "You will use this passphrase to decrypt your data when importing it.",
-  "yourName": "Your name",
-  "youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow": "You're getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?",
-  "@insightStrengthKeepPushingTitle": {
-    "placeholders": {
-      "habitName": {}
-    }
-  },
-  "@insightStrengthLowerTargetTitle": {
-    "placeholders": {
-      "habitName": {}
-    }
-  },
-  "@insightStrengthIncreaseTargetTitle": {
-    "placeholders": {
-      "habitName": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Generic": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseGeneric": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2GoToBedEarly": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseGoToBedEarly": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2BrushTeeth": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
+  "areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually": "Siete sicuri di voler rinunciare al backup dei dati? In questo modo il vostro account Google verrà disconnesso e tutti i backup verranno interrotti. I backup esistenti su Google Drive rimarranno, a meno che non vengano eliminati manualmente.",
+  "backupData": "Dati di backup",
+  "backupDataDownloadedFromCloud": "Backup dei dati scaricati dal cloud.",
+  "backupDataFailedToDownloadFromCloud": "Il download dei dati di backup dal cloud non è riuscito.",
+  "backupPassphrase": "Passphrase di backup",
+  "calendar": "Calendario",
+  "cancel": "Annullamento",
+  "changeAColorThemeForYourInterface": "Cambiare un tema di colore per l'interfaccia",
+  "changesSaved": "Modifiche salvate!",
+  "calculatedTargetScrollTargetscroll": "Scorrimento target calcolato: $targetScroll",
+  "chooseHowColorfulTheUiShouldBe": "Scegliere il colore dell'interfaccia utente",
+  "clear": "Libero",
+  "clearSelectedDays": "Cancella i giorni selezionati",
+  "calculatingWeekProgressStartOfWeekStartofweekAnchorBasedate": "Calcolo dell'avanzamento della settimana. Inizio settimana: $startOfWeek, Ancora: $baseDate",
+  "colorfulInterface": "Interfaccia colorata",
+  "complete": "Completo",
+  "completed": "Completato",
+  "completedHabitFoundHabitscompletedTotal": "Abitudine completata trovata, {habitsCompleted} totale",
+  "categoryCatnameWithIdCatidIsNotReady": "La categoria $catName con id $catId non è pronta",
+  "completedHabits": "Abitudini completate:",
+  "confirm": "Confermare",
+  "categoryCatnameWithIdCatidIsReady": "La categoria $catName con id $catId è pronta",
+  "connectToGoogle": "Collegarsi a Google",
+  "controlWhenAndHowYouGetNotifiedAboutYourHabits": "Controllate quando e come ricevere le notifiche sulle vostre abitudini.",
+  "couldNotGetOrCreateBackupFolder": "Impossibile ottenere o creare una cartella di backup",
+  "createAmountLabel": "Creare l'etichetta dell'importo",
+  "changingTheAmountOfTimesHabitAppearsInAHabitunitWillClearSelectedDays": "La modifica della quantità di volte in cui l'abitudine appare in una $habitUnit cancellerà i giorni selezionati.",
+  "creatingNewDayEntry": "Creazione di una nuova voce giornaliera",
+  "currentHourIsBetween12And19": "L'ora corrente è tra le 12 e le 19",
+  "checkingIosVersionForLiquidGlassSupportIsIosTrue": "Controllo della versione di iOS per il supporto di Liquid Glass... È iOS: vero",
+  "currentHourIsBetween19And4": "L'ora attuale è tra le 19 e le 4",
+  "currentHourIsBetween4And12": "L'ora corrente è tra le 4 e le 12",
+  "custom": "Personalizzato",
+  "clampedTargetScrollClampedMaxScrollMaxscroll": "Scorrimento target bloccato: $clamped (scorrimento massimo: $maxScroll)",
+  "dailyPlan": "Piano giornaliero",
+  "darkMode": "Modalità scura",
+  "dateJoinedIsNull": "La data unita è nulla",
+  "datejoined": "dataAggiungi un appuntamento",
+  "dayEntryIsNull": "La voce giorno è nulla",
+  "decrementingHabitAmount": "Diminuire la quantità di abitudini",
+  "defaultlabel": ", defaultLabel:",
+  "delete": "Cancellare",
+  "deleteLabel": "Cancellare '$label'?",
+  "completingHabitIdDayDaysimple": "Abitudine di completamento: $id, giorno: $giornoSemplice",
+  "deleteNotification": "Cancellare la notifica?",
+  "discard": "Scartare",
+  "discardChanges": "Scartare le modifiche?",
+  "done": "Fatto",
+  "driveApiReturnedNullFilesList": "L'API dell'unità ha restituito un elenco di file nullo",
+  "duration": "Durata",
+  "edit": "Modifica",
+  "editHabit": "Modifica abitudine",
+  "editProfile": "Modifica profilo",
+  "enable": "Abilitazione",
+  "endTime": "Ora di fine",
+  "enterHabitNameToConfirmDeletion": "Inserire il nome dell'abitudine per confermare l'eliminazione",
+  "enterPassphrase": "Inserire la passphrase",
+  "enterYourAmount": "Inserire l'importo",
+  "dateJoinedSetFromDaysboxDatejoined": "Data unita impostata da daysBox: $_dateJoined",
+  "enterYourDuration": "Inserire la durata",
+  "enterYourExistingBackupPassphraseToAccessYourData": "Immettere la passphrase di backup esistente per accedere ai dati.",
+  "dateJoinedSetFromSharedpreferencesDatejoined": "Data unita impostata da SharedPreferences: $_dateJoined",
+  "evening": "Sera",
+  "exit": "Uscita",
+  "dateJoinedSetToTodayDatejoined": "Data di adesione impostata su oggi: $_dateJoined",
+  "exitWithoutSaving": "Uscire senza salvare?",
+  "fetchOffers": "Offerte di ricerca",
+  "fri": "Ven",
+  "from": "Da",
+  "getRemindedAboutYourHabit": "Ricordatevi della vostra abitudine",
+  "glassFeel": "Sensazione di vetro",
+  "goodAfternoon": "Buon pomeriggio",
+  "goodEvening": "Buona sera",
+  "goodMorning": "Buongiorno",
+  "deletedAllFilesInFolderIdFolderid": "Eliminati tutti i file nella cartella ID: $folderId",
+  "goodMorningTimeToCheckYourHabits": "Buongiorno! È ora di controllare le vostre abitudini",
+  "goodToSeeYou": "È un piacere vederti",
+  "deletedMetadataFilesInFolderIdFolderid": "File di metadati eliminati nella cartella ID: $folderId",
+  "guest": "Ospite",
+  "deviceWidthDevicewidth": "Larghezza del dispositivo: $deviceWidth",
+  "habit": "abitudine",
+  "habitAdded": "Abitudine aggiunta!",
+  "habitDeleted": "Abitudine cancellata!",
+  "habitIsNotInABoxSkippingSave": "L'abitudine non è in una scatola, saltando save()",
+  "habitName": "Nome dell'abitudine",
+  "habitNotFoundInDayEntry": "Abitudine non trovata nella voce del giorno",
+  "habits": "abitudini",
+  "hello": "Ciao",
+  "helloThere": "Ciao a tutti",
+  "hi": "Ciao",
+  "hiThere": "Ciao a tutti",
+  "home": "Casa",
+  "hours": "Ore",
+  "howAreYou": "Come stai",
+  "howLongWillThisHabitTake": "Quanto durerà questa abitudine?",
+  "howMuchDidYouCompleteToday": "Quanto avete completato oggi?",
+  "howMuchTimeDidYouSpendOnThisHabitToday": "Quanto tempo avete dedicato a questa abitudine oggi?",
+  "howOftenWouldYouLikeToDoThisHabit": "Con quale frequenza vorreste praticare questa abitudine?",
+  "errorCheckingSubscriptionStatusE": "Errore nella verifica dello stato dell'abbonamento: $e",
+  "ifCheckedHabitWontCountForThePerfectDaysStreak": "Se è selezionata, l'abitudine non verrà conteggiata per la \"striscia di giorni perfetti\".",
+  "incorrectPassphrase": "Passphrase errata.",
+  "errorFetchingOfferingsE": "Errore nel recuperare le offerte: $e",
+  "initialProgressValuesLoadedForAllDays": "Valori di avanzamento iniziali caricati per tutti i giorni",
+  "insightStrengthApplyDecrease": "Applicare la riduzione",
+  "insightStrengthApplyIncrease": "Applicare l'aumento",
+  "insightStrengthGotItEven": "Capito",
+  "insightStrengthGotItOdd": "Capito",
+  "insightStrengthIncreaseBrushTeeth": "State andando alla grande con il lavaggio dei denti. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nel lavarsi i denti. La forza è stabile al {strength}%. Aumenta l'obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine di lavarti i denti è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} Per il prossimo livello, l'obiettivo consigliato è {fromValue} -> {toValue}. La forza è stabile a {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare.||Eccellente ritmo di lavaggio dei denti. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a migliorare.",
   "@insightStrengthIncreaseBrushTeeth": {
     "placeholders": {
       "strength": {},
@@ -500,139 +134,7 @@
       "toValue": {}
     }
   },
-  "@insightStrengthStartSmallType2SkinCare": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseSkinCare": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2WakeUpEarly": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseWakeUpEarly": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Shower": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseShower": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Praying": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreasePraying": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Running": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseRunning": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Walk": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseWalk": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Gym": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseGym": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Nutrition": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseNutrition": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2Medications": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseMedications": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthStartSmallType2DrinkWater": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
+  "insightStrengthIncreaseDrinkWater": "You are doing great with drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on drink enough water. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your drink enough water habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for drink enough water. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "@insightStrengthIncreaseDrinkWater": {
     "placeholders": {
       "strength": {},
@@ -640,55 +142,58 @@
       "toValue": {}
     }
   },
-  "@insightStrengthStartSmallType2Studying": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseStudying": {
+  "fixedTimeFixedhourfixedminute": "Ora fissa: $fissoOra:$fissoMinuto",
+  "insightStrengthIncreaseGeneric": "Your consistency is strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.||You are handling this habit well. Strength is stable at {strength}%. Push the target from {fromValue} to {toValue} for more growth.||Momentum is solid here. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to level up.||You built a reliable baseline. Strength is stable at {strength}%. Move from {fromValue} to {toValue} and keep improving.||Great consistency lately. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep your progress rising.",
+  "@insightStrengthIncreaseGeneric": {
     "placeholders": {
       "strength": {},
       "fromValue": {},
       "toValue": {}
     }
   },
-  "@insightStrengthStartSmallType2Work": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseWork": {
+  "insightStrengthIncreaseGoToBedEarly": "You are doing great with go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on go to bed early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for go to bed early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseGoToBedEarly": {
     "placeholders": {
       "strength": {},
       "fromValue": {},
       "toValue": {}
     }
   },
-  "@insightStrengthStartSmallType2Research": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "@insightStrengthIncreaseResearch": {
+  "folderNotFoundAndCreationNotAllowed": "Cartella non trovata e creazione non consentita",
+  "insightStrengthIncreaseGym": "You are doing great with your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your gym routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your gym routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your gym routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseGym": {
     "placeholders": {
       "strength": {},
       "fromValue": {},
       "toValue": {}
     }
   },
-  "@insightStrengthStartSmallType2ProductivitySession": {
+  "insightStrengthIncreaseMedications": "You are doing great with take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on take your medications on time. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your take your medications on time habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for take your medications on time. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseMedications": {
     "placeholders": {
-      "drop": {},
+      "strength": {},
       "fromValue": {},
       "toValue": {}
     }
   },
+  "folderidInParentsAndTrashedFalse": "'$folderId' nei genitori e cestinato = false",
+  "insightStrengthIncreaseNutrition": "You are doing great with your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your nutrition plan. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your nutrition plan habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your nutrition plan. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseNutrition": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreasePraying": "You are doing great with pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on pray consistently. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your pray consistently habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for pray consistently. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreasePraying": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseProductivitySession": "You are doing great with your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your productivity sessions. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your productivity sessions habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your productivity sessions. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "@insightStrengthIncreaseProductivitySession": {
     "placeholders": {
       "strength": {},
@@ -696,6 +201,189 @@
       "toValue": {}
     }
   },
+  "insightStrengthIncreaseRead": "You are doing great with your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your reading habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your reading habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your reading habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseRead": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "gettingHabitsForHabitsWidgetSelectedDaySelectedday": "Ottenere le abitudini per il widget Abitudini ======================================== GIORNO selezionato: $giorno selezionato",
+  "insightStrengthIncreaseResearch": "You are doing great with your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your research habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your research habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your research habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseResearch": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseRunning": "Stai andando alla grande con la tua routine di corsa. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nella tua routine di corsa. La forza è stabile al {strength}%. Aumenta l'obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine alla routine di corsa è forte in questo momento. La forza è stabile a {strength}%. Obiettivo consigliato: {fromValue} Per il livello successivo, l'obiettivo consigliato è {fromValue} -> {toValue}. La forza è stabile a {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a progredire.",
+  "@insightStrengthIncreaseRunning": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseShower": "Stai andando alla grande con la doccia. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza con la doccia. La forza è stabile al {strength}%. Aumenta il tuo obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine di fare la doccia è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} Per il prossimo livello, l'obiettivo consigliato è {fromValue} -> {toValue}. La forza è stabile a {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a migliorare.",
+  "@insightStrengthIncreaseShower": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseSkinCare": "La vostra routine di cura della pelle va benissimo. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nella tua routine di cura della pelle. La forza è stabile al {strength}%. Aumenta il tuo obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine alla cura della pelle è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> Per il livello successivo, l'obiettivo consigliato è {toValue}. La forza è stabile al {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare. La forza è stabile a {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a progredire.",
+  "@insightStrengthIncreaseSkinCare": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseStudying": "Stai andando alla grande con la tua abitudine allo studio. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nella tua abitudine allo studio. La forza è stabile al {strength}%. Aumenta il tuo obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine allo studio è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> Per il prossimo livello, l'obiettivo raccomandato è {toValue}. La forza è stabile a {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare.||Eccellente ritmo di studio. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a progredire.",
+  "@insightStrengthIncreaseStudying": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseTargetTitle": "Aumenta l'obiettivo per {habitName}",
+  "@insightStrengthIncreaseTargetTitle": {
+    "placeholders": {
+      "habitName": {}
+    }
+  },
+  "insightStrengthIncreaseWakeUpEarly": "Stai andando alla grande con il risveglio anticipato. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nel risveglio anticipato. La forza è stabile al {strength}%. Aumenta l'obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine a svegliarti presto è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} Per il prossimo livello, l'obiettivo raccomandato è {fromValue} -> {toValue}. La forza è stabile al {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare.||Eccellente ritmo al risveglio anticipato. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a migliorare.",
+  "@insightStrengthIncreaseWakeUpEarly": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseWalk": "La tua routine di camminata va benissimo. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nella tua routine di camminata. La forza è stabile al {strength}%. Aumenta l'obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine alla camminata è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> Per il livello successivo, l'obiettivo consigliato è {toValue}. La forza è stabile a {strength}%. Passare da {fromValue} a {toValue} per continuare a migliorare. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a progredire.",
+  "@insightStrengthIncreaseWalk": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseWork": "La vostra abitudine al lavoro sta andando alla grande. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.||Grande costanza nella tua abitudine al lavoro. La forza è stabile al {strength}%. Aumenta il tuo obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.||La tua abitudine al lavoro è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> Per il prossimo livello, l'obiettivo consigliato è {toValue}. La forza è stabile a {strength}%. Passare da {fromValue} a {toValue} per continuare a migliorare. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a progredire.",
+  "@insightStrengthIncreaseWork": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthKeepPushingTitle": "Continua a spingere {habitName}",
+  "@insightStrengthKeepPushingTitle": {
+    "placeholders": {
+      "habitName": {}
+    }
+  },
+  "insightStrengthLowerTargetTitle": "Obiettivo inferiore per {habitName}",
+  "@insightStrengthLowerTargetTitle": {
+    "placeholders": {
+      "habitName": {}
+    }
+  },
+  "insightStrengthStartSmallType1BrushTeeth": "L'abitudine di lavarsi i denti sta venendo meno. Non lasciate che questa routine venga meno proprio ora.||Siete stati fuori strada con il lavaggio dei denti. Oggi, fatevi vedere e proteggete l'abitudine.||Il sentimento di lavarsi i denti si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che il lavaggio dei denti diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato a lavarvi i denti per un motivo. Rimanete disciplinati e impedite che vi sfugga.",
+  "insightStrengthStartSmallType1DrinkWater": "L'abitudine di bere acqua a sufficienza sta venendo meno. Non lasciate che questa abitudine venga meno proprio ora. Oggi, fatevi vedere e proteggete l'abitudine.||Lo slancio nel bere acqua a sufficienza sta svanendo. Mantenetelo vivo con una ripetizione solida oggi.Non lasciate che bere abbastanza acqua diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a bere abbastanza acqua per un motivo. Rimanete disciplinati e impedite che si sciolga.",
+  "insightStrengthStartSmallType1Generic": "Avete aggiunto questa abitudine per un motivo. Non lasciatela sfuggire ora. Presentatevi oggi e mantenetela viva.||Stai rimanendo indietro con questa abitudine. Bloccatevi e portate a termine il vostro lavoro.||Non negoziate con la pigrizia. Proteggete questa abitudine oggi. Siete arrivati troppo lontano per lasciare che questa abitudine vada alla deriva. Rimanete coerenti oggi.",
+  "insightStrengthStartSmallType1GoToBedEarly": "L'abitudine di andare a letto presto sta venendo meno. Non lasciate che questa routine venga meno proprio ora.||Siete stati fuori strada con l'andare a letto presto. Oggi, presentatevi e proteggete l'abitudine.||Il sentimento di andare a letto presto si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.||Non lasciate che andare a letto presto diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato ad andare a letto presto per un motivo. Rimanete disciplinati e impedite che la cosa si affievolisca.",
+  "insightStrengthStartSmallType1Gym": "L'abitudine alla palestra sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||Lo slancio della vostra routine in palestra si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la vostra routine in palestra diventi incoerente. Non permettete che la vostra routine in palestra diventi incoerente. Rimanete disciplinati e impedite che si interrompa.",
+  "habitslistheightHabitslistheightContentheightContentheight": "habitsListHeight: $habitsListHeight, contentHeight: $contentHeight",
+  "insightStrengthStartSmallType1Medications": "L'abitudine di prendere i farmaci in tempo sta venendo meno. Non lasciate che questa routine cada ora.||Siete stati fuori strada con l'assunzione dei farmaci in orario. Presentatevi oggi e proteggete l'abitudine.||Il sentimento di prendere i farmaci in tempo si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.||Non permettete che l'assunzione dei farmaci in orario diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a prendere i farmaci in tempo per un motivo. Rimanete disciplinati e impedite che si sciolga.",
+  "insightStrengthStartSmallType1Nutrition": "L'abitudine al vostro piano nutrizionale sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||Lo slancio del vostro piano nutrizionale si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che il vostro piano nutrizionale diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato il vostro piano nutrizionale per un motivo. Rimanete disciplinati e impedite che scivoli via.",
+  "insightStrengthStartSmallType1Praying": "La vostra abitudine di pregare con costanza sta scivolando. Non lasciate che questa routine cada ora.||Siete stati fuori strada con il pregare con costanza. Presentatevi oggi e proteggete l'abitudine.||Il sentimento di pregare con costanza si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.Non lasciate che pregare con costanza diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a pregare con costanza per un motivo. Rimanete disciplinati e impedite che si sciolga.",
+  "insightStrengthStartSmallType1ProductivitySession": "L'abitudine alle sessioni di produttività sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||Lo slancio per le vostre sessioni di produttività sta svanendo. Mantenetelo vivo con una solida ripetizione oggi.||Non lasciate che le vostre sessioni di produttività diventino incoerenti. Bloccatevi e fate la vostra parte oggi. Avete iniziato le vostre sessioni di produttività per un motivo. Rimanete disciplinati e impedite che si perdano.",
+  "insightStrengthStartSmallType1Read": "La vostra abitudine alla lettura sta scivolando. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||La vostra abitudine alla lettura si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine alla lettura diventi incoerente. Non permettete che la vostra abitudine alla lettura diventi incoerente. Rimanete disciplinati e impedite che si affievolisca.",
+  "insightStrengthStartSmallType1Research": "La vostra abitudine alla ricerca sta venendo meno. Non lasciate che questa routine si interrompa ora.||Siete stati fuori strada con la vostra abitudine alla ricerca. Presentatevi oggi e proteggete l'abitudine.||La vostra abitudine alla ricerca si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine alla ricerca diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra abitudine alla ricerca per un motivo. Rimanete disciplinati e impedite che si affievolisca.",
+  "insightStrengthStartSmallType1Running": "L'abitudine alla corsa sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||Lo slancio della vostra routine di corsa si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la vostra routine di corsa diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra routine di corsa per un motivo. Rimanete disciplinati e impedite che si interrompa.",
+  "insightStrengthStartSmallType1Shower": "L'abitudine di fare la doccia sta venendo meno. Non lasciate che questa routine cada ora.||Siete stati fuori strada con la doccia. Presentatevi oggi e proteggete l'abitudine.||Il sentimento di fare la doccia si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la doccia diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato a fare la doccia per un motivo. Rimanete disciplinati e impedite che si sciolga.",
+  "insightStrengthStartSmallType1SkinCare": "L'abitudine alla cura della pelle sta venendo meno. Non lasciate che questa routine cada ora.||Siete stati fuori strada con la vostra routine di cura della pelle. Presentatevi oggi e proteggete l'abitudine.||Lo slancio della vostra routine di cura della pelle si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.||Non lasciate che la vostra routine di cura della pelle diventi incoerente. Bloccatevi e fate la vostra parte oggi stesso.||Avete iniziato la vostra routine di cura della pelle per un motivo. Rimanete disciplinati e impedite che scivoli via.",
+  "insightStrengthStartSmallType1Studying": "La vostra abitudine allo studio sta venendo meno. Non lasciate che questa routine si interrompa ora.||Siete stati fuori strada con la vostra abitudine allo studio. Presentatevi oggi e proteggete l'abitudine.||La vostra abitudine allo studio si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine allo studio diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra abitudine allo studio per un motivo. Rimanete disciplinati e impedite che si affievolisca.",
+  "insightStrengthStartSmallType1WakeUpEarly": "L'abitudine di svegliarsi presto sta venendo meno. Non lasciate che questa routine venga meno ora. Presentatevi oggi e proteggete l'abitudine.||Lo slancio verso la sveglia presto si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la sveglia presto diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato a svegliarvi presto per un motivo. Rimanete disciplinati e impedite che la cosa scivoli via.",
+  "insightStrengthStartSmallType1Walk": "La vostra abitudine di camminare sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||Lo slancio della vostra routine di camminata si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la vostra routine di camminata diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra routine di camminata per un motivo. Rimanete disciplinati e impedite che si interrompa.",
+  "insightStrengthStartSmallType1Work": "La vostra abitudine al lavoro sta scivolando. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l'abitudine.||La vostra abitudine al lavoro si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine al lavoro diventi incoerente. Non permettete che la vostra abitudine al lavoro diventi incoerente. Rimanete disciplinati e impedite che si affievolisca.",
+  "insightStrengthStartSmallType2BrushTeeth": "Ultimamente non siete stati costanti nel lavarvi i denti. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||Lavarsi i denti è stato più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ripristinare la costanza.||La costanza nel lavarsi i denti è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere l'abitudine di lavarsi i denti, abbassare l'obiettivo per ora. La forza è calata del {drop}%. Consigliato: {fromValue} -> {toValue}.||Lavarsi i denti ha bisogno di un reset. Forza diminuita del {drop}%. Provate con {fromValue} -> {toValue} per mantenere questa abitudine.",
+  "@insightStrengthStartSmallType2BrushTeeth": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2DrinkWater": "Ultimamente non siete stati costanti nel bere abbastanza acqua. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||Bere abbastanza acqua è stato più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ripristinare la costanza.||La costanza nel bere acqua a sufficienza è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere l'abitudine di bere abbastanza acqua, abbassare l'obiettivo per ora. La forza è calata del {drop}%. Obiettivo consigliato: {fromValue} -> {toValue} per recuperare lo slancio: {fromValue} -> Bevi abbastanza acqua ha bisogno di un reset. La forza è diminuita del {drop}%. Provare con {fromValue} -> {toValue} per mantenere questa abitudine.",
+  "@insightStrengthStartSmallType2DrinkWater": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Generic": "Consistency dropped on this habit. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to stabilize again.||You have been off track lately. Strength dropped by {drop}%. Try this target shift: {fromValue} -> {toValue} to rebuild rhythm.||Recent performance is slipping. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to get back on track.||This habit needs a lighter target for now. Strength dropped by {drop}%. Move from {fromValue} to {toValue} to improve consistency.||Your habit signal weakened recently. Strength dropped by {drop}%. Recommended target: {fromValue} -> {toValue} so you can stay consistent.",
+  "@insightStrengthStartSmallType2Generic": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2GoToBedEarly": "You have not been consistent with go to bed early lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Go to bed early has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent go to bed early consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your go to bed early habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Go to bed early needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2GoToBedEarly": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Gym": "You have not been consistent with your gym routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your gym routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your gym routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your gym routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your gym routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2Gym": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Medications": "You have not been consistent with take your medications on time lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Take your medications on time has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent take your medications on time consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your take your medications on time habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Take your medications on time needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2Medications": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Nutrition": "You have not been consistent with your nutrition plan lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your nutrition plan has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your nutrition plan consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your nutrition plan habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your nutrition plan needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2Nutrition": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Praying": "You have not been consistent with pray consistently lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Pray consistently has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent pray consistently consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your pray consistently habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Pray consistently needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2Praying": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2ProductivitySession": "You have not been consistent with your productivity sessions lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your productivity sessions has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your productivity sessions consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your productivity sessions habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your productivity sessions needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2ProductivitySession": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Read": "You have not been consistent with your reading habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your reading habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your reading habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your reading habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your reading habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
   "@insightStrengthStartSmallType2Read": {
     "placeholders": {
       "drop": {},
@@ -703,11 +391,337 @@
       "toValue": {}
     }
   },
-  "@insightStrengthIncreaseRead": {
+  "insightStrengthStartSmallType2Research": "You have not been consistent with your research habit lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your research habit has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your research habit consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your research habit habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your research habit needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2Research": {
     "placeholders": {
-      "strength": {},
+      "drop": {},
       "fromValue": {},
       "toValue": {}
     }
-  }
+  },
+  "insightStrengthStartSmallType2Running": "You have not been consistent with your running routine lately. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to keep the habit alive.||Your running routine has been weaker recently. Strength dropped by {drop}%. Move your target from {fromValue} to {toValue} to rebuild consistency.||Recent your running routine consistency is down. Strength dropped by {drop}% in the last few days. Recommended target: {fromValue} -> {toValue} to recover momentum.||To protect your your running routine habit, lower the target for now. Strength dropped by {drop}%. Recommended: {fromValue} -> {toValue}.||Your running routine needs a reset. Strength dropped by {drop}%. Try {fromValue} -> {toValue} so this habit stays alive.",
+  "@insightStrengthStartSmallType2Running": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Shower": "Ultimamente non siete stati costanti nel fare la doccia. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||Fare la doccia è stato più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ripristinare la costanza.||La costanza nel fare la doccia è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere l'abitudine alla doccia, abbassare l'obiettivo per ora. La forza è calata del {drop}%. Consigliato: {fromValue} -> {toValue}.||Fare la doccia ha bisogno di un reset. La forza è calata del {drop}%. Provate con {fromValue} -> {toValue} per mantenere questa abitudine.",
+  "@insightStrengthStartSmallType2Shower": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2SkinCare": "Ultimamente non siete stati coerenti con la vostra routine di cura della pelle. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||La tua routine di cura della pelle è stata più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ripristinare la costanza.||La costanza della tua routine di cura della pelle è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere l'abitudine alla cura della pelle, abbassare l'obiettivo per ora. La forza è calata del {drop}%. Consigliato: {fromValue} -> {toValue}.||La vostra routine di cura della pelle ha bisogno di un reset. La forza è diminuita del {drop}%. Provate con {fromValue} -> {toValue} per mantenere questa abitudine.",
+  "@insightStrengthStartSmallType2SkinCare": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Studying": "Ultimamente non siete coerenti con le vostre abitudini di studio. La forza è scesa del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||La tua abitudine allo studio è stata più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ricostruire l'abitudine.||La tua abitudine allo studio è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere la vostra abitudine allo studio, abbassate l'obiettivo per ora. La forza è calata del {drop}%. Consigliato: {fromValue} -> La tua abitudine allo studio ha bisogno di essere ripristinata. La forza è calata del {drop}%. Provate con {fromValue} -> {toValue} in modo che questa abitudine rimanga viva.",
+  "@insightStrengthStartSmallType2Studying": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2WakeUpEarly": "Ultimamente non sei stato costante nello svegliarti presto. La forza è scesa del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||La sveglia presto è stata più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ricostruire la costanza.||La costanza negli ultimi tempi è diminuita. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere l'abitudine di svegliarsi presto, abbassare l'obiettivo per ora. La forza è calata del {drop}%. Consigliato: {fromValue} -> {toValue}.||Il risveglio anticipato ha bisogno di un reset. La forza è diminuita del {drop}%. Provate con {fromValue} -> {toValue} per mantenere questa abitudine.",
+  "@insightStrengthStartSmallType2WakeUpEarly": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Walk": "Ultimamente non è stato coerente con la sua routine di camminata. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||La tua routine di camminata è stata più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ripristinare la costanza.||La costanza della tua routine di camminata è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere l'abitudine alla camminata, abbassare l'obiettivo per ora. La forza è calata del {drop}%. Obiettivo consigliato: {fromValue} -> {toValue} per recuperare lo slancio: {fromValue} -> {toValue}.||La tua routine di camminata ha bisogno di un reset. La forza è calata del {drop}%. Provare con {fromValue} -> {toValue} per mantenere questa abitudine.",
+  "@insightStrengthStartSmallType2Walk": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthStartSmallType2Work": "Ultimamente non siete coerenti con le vostre abitudini di lavoro. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> {toValue} per mantenere l'abitudine.||La tua abitudine al lavoro è stata più debole di recente. La forza è diminuita del {drop}%. Spostare l'obiettivo da {fromValue} a {toValue} per ricostruire l'abitudine.||La tua abitudine al lavoro è diminuita di recente. La forza è diminuita del {drop}% negli ultimi giorni. Obiettivo consigliato: {fromValue} -> Per proteggere la vostra abitudine al lavoro, abbassate l'obiettivo per ora. La forza è calata del {drop}%. Consigliato: {fromValue} -> {toValue}.||La vostra abitudine al lavoro ha bisogno di un reset. La forza è calata del {drop}%. Provate con {fromValue} -> {toValue} per mantenere viva questa abitudine.",
+  "@insightStrengthStartSmallType2Work": {
+    "placeholders": {
+      "drop": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "invalidTime": "Tempo non valido",
+  "keepYourDataSafeByBackingItUpToGoogleDrive": "Mantenete i vostri dati al sicuro eseguendo il backup su Google Drive.",
+  "label": "Etichetta",
+  "leaveSetup": "Lasciare la configurazione?",
+  "logDuration": "Durata del registro",
+  "logProgress": "Registro dei progressi",
+  "makesWidgetsLookMoreGlassy": "I widget hanno un aspetto più luminoso",
+  "manageYourNotificationPreferences": "Gestire le preferenze di notifica",
+  "manageYourSubscriptionsAndBillingPlansHere": "Gestite qui i vostri abbonamenti e piani di fatturazione.",
+  "manageYourSubscriptionsAndViewPremiumBenefits": "Gestione degli abbonamenti e visualizzazione dei vantaggi premium",
+  "midday": "A metà giornata",
+  "middayCheckinTimeForYourHabits": "Orario di check-in a metà giornata per le vostre abitudini",
+  "minutes": "Verbale",
+  "missingPermissions": "Autorizzazioni mancanti",
+  "mon": "Lun",
+  "moreOptions": "Altre opzioni",
+  "morning": "Mattina",
+  "never": "Mai",
+  "newDayResettingCompletion": "Nuovo giorno, completamento dell'azzeramento",
+  "newHabit": "Nuova abitudine",
+  "noHabitsFoundUsingDefaultCategoryOrder": "Non sono state trovate abitudini, si utilizza l'ordine di categoria predefinito.",
+  "noHabitsYet": "Non ci sono ancora abitudini.",
+  "noOfferingsAvailable": "Nessuna offerta disponibile",
+  "noTag": "Nessuna etichetta",
+  "notCompleted": "Non completato",
+  "notNow": "Non ora",
+  "notes": "Note",
+  "notificationAmountLabelFocus": "L'obiettivo di oggi è {target} {label}.|Il tuo numero per oggi: {target} {label}. Inizia con uno.|La dose di oggi: {target} {label}. Obiettivo chiaro, esecuzione semplice.|Oggi chiede {target} {label}. Conoscete il ritmo.|Obiettivo per oggi: {target} {label}. Un obiettivo preciso è uno spunto potente.",
+  "notificationCombinedAmountAlmostDone": "Sono rimasti solo {remaining} e {encouragement}.",
+  "notificationCombinedAmountCompleted": "Obiettivo già raggiunto e {encouragement}.",
+  "notificationCombinedAmountInProgress": "Siete a {progress} e {encouragement}.",
+  "notificationCombinedAmountNotStarted": "Iniziare ora, anche un solo passo conta, e {encouragement}.",
+  "notificationCombinedDurationAlmostDone": "Sono rimasti solo {remaining} e {encouragement}.",
+  "notificationCombinedDurationCompleted": "Obiettivo già raggiunto e {encouragement}.",
+  "notificationCombinedDurationInProgress": "Siete a {progress} e {encouragement}.",
+  "notificationCombinedDurationNotStarted": "Avviare subito una breve sessione e {encouragement}.",
+  "notificationCombinedFresh": "Hai iniziato questa abitudine {days} giorni fa e {encouragement}.",
+  "notificationCombinedGeneral": "{encouragement}.",
+  "notificationCombinedOneOff": "Non perdete la giornata di oggi, è la vostra ultima possibilità {period} e {encouragement}.",
+  "notificationEncourageBrushTeeth1": "Mantenere la vena igienica",
+  "notificationEncourageBrushTeeth2": "proteggere la vostra routine con una vittoria rapida",
+  "notificationEncourageBrushTeeth3": "mantenere la coerenza con le cure di base",
+  "notificationEncourageDrinkWater1": "l'idratazione ora supporta l'intero sistema",
+  "notificationEncourageDrinkWater2": "un bicchiere ora mantiene più stabile l'energia",
+  "notificationEncourageDrinkWater3": "Le piccole ripetizioni di idratazione migliorano le prestazioni quotidiane",
+  "notificationEncourageGeneric1": "presentarsi oggi mantiene viva l'abitudine",
+  "notificationEncourageGeneric2": "una piccola azione ora protegge il vostro slancio",
+  "notificationEncourageGeneric3": "la coerenza di oggi rende più facile il domani",
+  "iosMajorVersionMajorversion": "Versione principale di iOS: $majorVersion",
+  "notificationEncourageGoToBedEarly1": "proteggere questa notte aiuta a rendere più leggero il domani",
+  "notificationEncourageGoToBedEarly10": "questa decisione serale aiuta l'intera settimana a scorrere in modo più fluido",
+  "isSelectedVisibleIsselectedvisibleWasvisiblepreviouslywasselectedvisibleinpreviousframeIdsvisibleids": "Il selezionato è visibile: $isSelectedVisible | wasVisiblePreviously=$wasSelectedVisibleInPreviousFrame | ids=$visibleIds",
+  "notificationEncourageGoToBedEarly2": "andare a letto prima permette alla mente di avere un inizio più pulito",
+  "notificationEncourageGoToBedEarly3": "questa scelta di stasera prepara una mattinata migliore",
+  "notificationEncourageGoToBedEarly4": "la costanza del sonno ora ripaga per tutta la giornata di domani",
+  "notificationEncourageGoToBedEarly5": "una routine notturna tranquilla protegge la vostra curva energetica",
+  "lastOpenedDateTemp": "Data dell'ultima apertura: $temp",
+  "notificationEncourageGoToBedEarly6": "concludere la giornata in orario mantiene il ritmo stabile",
+  "lastOpenedDateWasNullSettingItToToday": "La data dell'ultima apertura era nulla, impostarla su: $oggi",
+  "notificationEncourageGoToBedEarly7": "Una migliore tempistica del sonno è un vantaggio silenzioso per le prestazioni",
+  "notificationEncourageGoToBedEarly8": "uno spegnimento anticipato delle luci mantiene il recupero in carreggiata",
+  "lastSyncedLastsynctext": "Ultima sincronizzazione: $lastSyncText",
+  "notificationEncourageGoToBedEarly9": "Una piccola disciplina a letto crea mattinate più forti",
+  "notificationEncourageGym1": "una ripetizione in palestra oggi mantiene alto il vostro standard",
+  "lastopeneddate": "data ultimaapertura",
+  "notificationEncourageGym2": "presentarsi ora protegge il vostro slancio di forza",
+  "notificationEncourageGym3": "La sessione di oggi si compone nel tempo",
+  "leadingLeadingSelectedWidthSelectedwidthItemCenterOffsetItemcenteroffset": "Leading: $leading, larghezza selezionata: $selectedWidth, offset del centro dell'elemento: $itemCenterOffset",
+  "notificationEncourageMedications1": "Il giusto tempismo protegge la vostra routine di salute",
+  "notificationEncourageMedications2": "Il rispetto delle scadenze mantiene stabile la vostra linea di base",
+  "notificationEncourageMedications3": "questo passo favorisce il vostro benessere a lungo termine",
+  "notificationEncourageNutrition1": "una scelta intenzionale sostiene ora la vostra linea di base",
+  "listWidthListwidth": "Larghezza dell'elenco: $listWidth",
+  "notificationEncourageNutrition2": "Le piccole vittorie della nutrizione si sommano velocemente",
+  "notificationEncourageNutrition3": "la coerenza qui migliora tutto il resto",
+  "notificationEncourageProductivitySession1": "una sessione mirata protegge il tempo di lavoro profondo",
+  "notificationEncourageProductivitySession2": "un blocco di concentrazione pulito ora può cambiare la vostra giornata",
+  "notificationEncourageProductivitySession3": "La costanza nella concentrazione porta a risultati migliori",
+  "notificationEncourageRead1": "qualche pagina per mantenere salda la tua identità di lettore",
+  "notificationEncourageRead2": "piccoli composti di lettura giornaliera in progressi reali",
+  "notificationEncourageRead3": "presentarsi oggi mantiene viva la striscia",
+  "mimetypeMimetypeAndNameFoldernameAndTrashedFalseAndRootInParents": "mimeType = '$mimeType' e name = '$folderName' e trashed = false e 'root' in parents",
+  "notificationEncourageResearch1": "un'intuizione oggi fa progredire il vostro lavoro",
+  "notificationEncourageResearch2": "l'esplorazione costante si compone in chiarezza",
+  "notificationEncourageResearch3": "catturare una scoperta ora mantiene lo slancio",
+  "notificationEncourageRunning1": "una ripetizione di allenamento oggi costruisce la resistenza",
+  "notificationEncourageRunning2": "presentarsi ora rafforza la vostra base di corsa",
+  "notificationEncourageRunning3": "questo sforzo mantiene lo slancio del fitness",
+  "notificationEncourageShower1": "un rapido reset può migliorare la concentrazione",
+  "notificationEncourageShower2": "questa routine vi aiuta a sentirvi accesi",
+  "nameContainsHabittbackupAndFolderidInParentsAndTrashedFalse": "name contiene 'habitt-backup' e '$folderId' nei genitori e trashed = false",
+  "notificationEncourageShower3": "un reset pulito per movimentare la giornata",
+  "notificationEncourageSkinCare1": "proteggere la pelle con un solo gesto costante",
+  "nameMetadatametaAndFolderidInParentsAndTrashedFalse": "name = 'metadata.meta' e '$folderId' nei genitori e trashed = false",
+  "notificationEncourageSkinCare2": "La coerenza come vantaggio per la cura della pelle",
+  "notificationEncourageSkinCare3": "mantenere la routine affidabile e semplice",
+  "notificationEncourageStudying1": "un blocco mirato ora costruisce lo slancio dell'apprendimento",
+  "notificationEncourageStudying2": "presentarsi oggi fa sì che la conoscenza continui ad accumularsi",
+  "noCategoryIsReadyApplyingFallbackLogicForCurrenttimeslotnameTime": "Nessuna categoria è \"pronta\". Applicazione della logica di fallback per l'ora $currentTimeSlotName.",
+  "notificationEncourageStudying3": "le piccole sessioni battono costantemente il crampo",
+  "notificationEncourageWakeUpEarly1": "iniziare la giornata con intenzione",
+  "notificationEncourageWakeUpEarly2": "mantenere il ritmo mattutino costante",
+  "notificationEncourageWakeUpEarly3": "iniziare in modo più sereno",
+  "notificationEncourageWalk1": "una breve passeggiata è sufficiente per mantenere lo slancio",
+  "notificationEncourageWalk2": "muoversi ora aiuta l'energia e la concentrazione",
+  "notificationEncourageWalk3": "questa semplice ripetizione favorisce la coerenza a lungo termine",
+  "notificationEncourageWork1": "iniziare ora crea una trazione reale",
+  "notMountedAfterNotificationPermissionRequestAbortingSave": "Non montato dopo la richiesta di autorizzazione alla notifica, interrompe il salvataggio.",
+  "notificationEncourageWork2": "una spinta significativa può sbloccare la vostra giornata",
+  "notificationEncourageWork3": "l'esecuzione coerente rende visibili i progressi",
+  "notificationFallbackGeneric": "Le piccole azioni di oggi creano uno slancio a lungo termine.",
+  "notificationFallbackTitle": "Promemoria delle abitudini",
+  "notificationFreshnessBrandNew": "È tempo di far brillare questa nuova abitudine!",
+  "notificationFreshnessEstablishedDays": "Finora l'avete costruito per {days} giorni. Continuate ad accumulare vittorie.",
+  "notificationFreshnessNewDays": "Hai iniziato {days} fa. Continuate così! Giorno {days}. I primi giorni sono le fondamenta - un lavoro solido.|Hai iniziato {days} giorni fa. Ognuno di essi ha la stessa importanza.",
+  "notificationOptional": "Questo oggi è facoltativo, ma ti dispiace comunque fare una prova? Hai un po' di tempo in più?",
+  "notificationPeriodMonthly": "mensile",
+  "notificationPeriodWeekly": "settimanale",
+  "notificationPremadeBrushTeeth": "Una rapida vittoria dell'igiene mantiene la vostra routine.",
+  "notificationPremadeDrinkWater": "Idratatevi subito e mantenete il vostro corpo in buona salute.",
+  "notificationPremadeGoToBedEarly": "Proteggere questa notte in modo che domani sia più facile.",
+  "notificationPremadeGym": "Presentatevi per una solida ripetizione in palestra e costruite la vostra costanza.",
+  "notificationPremadeMedications": "Prendete i vostri farmaci in tempo per proteggere la vostra salute di base.",
+  "notificationPremadeNutrition": "Fate subito una scelta nutrizionale intenzionale.",
+  "notificationPremadePraying": "Prendetevi un momento di calma e riconnettetevi con l'intenzione.",
+  "notificationPremadeProductivitySession": "Eseguire una sessione mirata e proteggere il tempo di lavoro profondo.",
+  "notificationPremadeRead": "Leggete un po' adesso e lasciate che la coerenza faccia il resto.",
+  "notificationPremadeResearch": "Catturate un'intuizione utile e fate avanzare la vostra ricerca.",
+  "notificationPremadeRunning": "Allacciate le scarpe e raccogliete una forte ripetizione di allenamento oggi.",
+  "notificationPremadeShower": "Ripristinate la vostra energia con questa semplice routine.",
+  "notificationPremadeSkinCare": "Prendetevi cura della vostra pelle ora per rimanere coerenti.",
+  "notificationPremadeStudying": "Avviate un blocco di studio mirato e create uno slancio di apprendimento.",
+  "notificationPremadeWakeUpEarly": "Un forte inizio di giornata inizia con questa scelta.",
+  "notificationPremadeWalk": "Una breve passeggiata è sufficiente per mantenere vivo lo slancio.",
+  "notificationPremadeWork": "Iniziate il vostro compito più importante e guadagnate terreno.",
+  "notificationProgressAlmostDoneAmount": "Siete così vicini. Manca solo {remaining} {label} a sinistra. Questo è il vostro ritmo - appoggiatevi ad esso.|{remaining} {label} da fare. Hai già fatto la maggior parte del lavoro.|Ci sei quasi - {remaining} {label} ti separa dalla fine.|Sei a {remaining} {label} dal tuo obiettivo. Finisci forte.|Il traguardo è vicino. Manca solo {remaining} {label} per concludere.",
+  "notificationProgressAlmostDoneDuration": "Manca solo lo 0. Sintonizzatevi ancora un po' e avrete finito! Manca poco. Si può sempre fare solo un po' di più. Finire è già una ricompensa.|{remaining} da fare. Puoi farcela!",
+  "notificationProgressCompletedAmount": "Hai già colpito {completed} {label}. Sei pronto per altri? Fatto. Lo slancio è dalla vostra parte, ora. La tua abitudine sta funzionando. Bene - {completed} {label} completato. Volete allungare un po'?",
+  "notificationProgressCompletedDuration": "Obiettivo raggiunto: {completed} già fatto.|Tempo obiettivo colpito: {completed}. Ti sei presentato e sei rimasto.|{completed} di tempo concentrato. Fatto. È un vero impegno. Sessione completata: {completed}. La vostra coerenza è appena cresciuta. Il vostro io futuro vi ringrazierà: {completed}. Grande uso di sforzi mirati.",
+  "notificationProgressInProgressAmount": "{completed} su {target} {label}. Hai già registrato {completed} {label}. Ottimo inizio.|{completed}/{target} {label} per ora. Mantieni il ritmo costante.|{completed} fatto, ne mancano 9. Ce l'hai fatta.|{completed} su {target}. Continuate così.",
+  "notificationProgressInProgressDuration": "{completed} finora, il vostro obiettivo è {target} quindi continuate così! Avete fatto la parte più difficile: iniziare. Continuate a correre.|Avete registrato {completed} di {target}. Rimanete in zona.|{completed} di {target} completati. Bene, continua così!",
+  "notificationProgressNoTracking": "Una piccola azione ora mantiene viva questa abitudine.Non lasciate che questa abitudine svanisca, un piccolo sforzo ora protegge il vostro slancio.La costanza oggi rende più facile il domani. Ti dispiace fare una prova? Non dimenticarti della tua abitudine oggi! Una piccola azione ora mantiene forte la tua abitudine. È ora di fare la tua abitudine! Un piccolo passo mantiene viva la striscia. Fallo.|La costanza si unisce. Un giorno in più è importante. La vostra abitudine è una promessa a voi stessi. Mantenetela.|Stessa abitudine, un giorno più forte. Continua a costruire.Non hai bisogno di motivazione. Pensa a questo come a un regalo per il tuo futuro. Continua! Stai costruendo qualcosa di importante. Continua. Trova il tempo per ciò che conta. Siete voi. Siete curiosi di sapere cosa succede quando non saltate mai?",
+  "notificationProgressNotStartedAmount": "Iniziate con 1 solo {label} e prendete slancio. È facile! Non serve la motivazione. Basta iniziare. La parte più difficile è iniziare. Potete farcela!",
+  "notificationProgressNotStartedDuration": "Iniziate almeno con una breve sessione! Non avete bisogno di motivazione. La parte più difficile è iniziare. Potete farcela! Tra pochi minuti sarete contenti di aver iniziato.",
+  "notificationScheduleCustomEveryDays": "Cadenza personalizzata: ogni {days} giorni. Oggi è uno dei vostri slot.|Ogni {days} giorni ritmo. Oggi è un giorno programmato.|Il vostro ciclo di {days} giorni si allinea oggi. È ora di agire.|Il programma personalizzato dice: oggi è il giorno di questa abitudine. Usate il vostro slot! Questa abitudine ha luogo ogni {days} giorni. Oggi fa parte del ritmo di questa abitudine. Rispettate lo schema.",
+  "notificationScheduleDaily": "La vostra ancora giornaliera vi aspetta. Chiudetela dentro.|La finestra quotidiana è aperta. Attraversatela. La vostra pratica quotidiana si costruisce in silenzio. Ma si costruisce. Questo è il richiamo della vostra abitudine quotidiana. Rispondete!",
+  "notificationScheduleMonthlyAtRisk": "Questo mese vi serve {remaining} in più ({completed}/{target} fatto). Saltare la giornata di oggi mette a rischio l'obiettivo.|{remaining} da raggiungere questo mese ({completed}/{target}). Oggi protegge i vostri progressi.|Il vostro obiettivo mensile ({completed}/{target}) è ancora possibile. Oggi è una mossa chiave.|{completed}/{target} per il mese. Non lasciate che la giornata di oggi rappresenti una lacuna.|{remaining} necessari per questo mese ({completed}/{target}). Una sessione alla volta rimane in pista.|Obiettivo mensile a portata di mano ({completed}/{target}). La giornata di oggi mantiene la porta aperta.",
+  "notificationScheduleMonthlyImpossible": "L'obiettivo di questo mese non sarà raggiunto ({completed}/{target}). Utilizzate i giorni rimanenti per esercitarvi, non per mettervi sotto pressione.|Il numero mensile è fuori portata ({completed}/{target}). Ma le abitudini si costruiscono nelle lacune, non solo negli obiettivi.|Obiettivo irraggiungibile questo mese ({completed}/{target}). Ogni tentativo ricrea comunque il ciclo.|{completed}/{target} questo mese. L'obiettivo non si allineerà, ma l'abitudine conta ancora.|L'obiettivo di questo mese ha superato i giorni disponibili ({completed}/{target}). Adattatevi e continuate a muovervi.",
+  "notificationScheduleMonthlyOneLeft": "Un altro completamento questo mese e avrete raggiunto il vostro obiettivo ({completed}/{target}).|Un altro questo mese raggiunge {target} ({completed} fatto). Questa è la mossa conclusiva.|Si è a una sessione dall'obiettivo mensile ({completed}/{target}). Sigillatelo.|L'obiettivo mensile ha bisogno di un completamento finale ({completed}/{target}). Oggi può essere quel giorno.|Un'altra e siete a {target} per il mese ({completed} fatto). Finite quello che avete iniziato.|Il vostro obiettivo mensile è a una distanza ({completed}/{target}). È una singola sessione.",
+  "notificationScheduleMonthlyReached": "Obiettivo mensile già raggiunto ({completed}/{target}). Hai centrato l'obiettivo mensile ({completed}/{target}). Questa è coerenza d'élite.|Obiettivo mensile: raggiunto ({completed}/{target}). Ora tutto è crescita esponenziale.|Obiettivo mensile già superato ({completed}/{target}). Le ripetizioni bonus approfondiscono il solco.",
+  "notificationScheduleMonthlyRemaining": "Hai bisogno di {remaining} in più questo mese per raggiungere {target}.|{remaining} sessioni rimaste questo mese per raggiungere {target}. La costanza vince.Hai bisogno di altre {remaining} per il tuo obiettivo mensile di {target}. Ognuno costruisce.|Obiettivo mensile: {remaining} di {target} rimanenti. Avete tempo, usatelo con saggezza.|{remaining} da raggiungere questo mese per {target}. Piccole azioni costanti colmano il divario.|Il vostro numero mensile è {target} con {remaining} rimanenti. La giornata di oggi fa avanzare l'obiettivo.",
+  "notificationScheduleWeeklyAtRisk": "Hai bisogno di {remaining} in più questa settimana ({completed}/{target} fatto). Se saltate la giornata di oggi, il vostro obiettivo diventerà molto più difficile.|Avete bisogno di {remaining} in più questa settimana ({completed}/{target}). La giornata di oggi mantiene la situazione gestibile.|{remaining} da raggiungere questa settimana ({completed}/{target}). Saltare oggi aggiunge pressione.|Il vostro obiettivo settimanale ({completed}/{target}) è ancora raggiungibile. Oggi è un punto di leva.|{completed}/{target} per la settimana. Una giornata di oggi mantiene il vostro obiettivo sulla buona strada.|{remaining} rimanenti questa settimana ({completed}/{target}). Oggi è la mossa migliore.",
+  "notificationScheduleWeeklyImpossible": "L'obiettivo di questa settimana non è raggiungibile ({completed}/{target}). Tuttavia, ogni ripetizione è utile per la prossima settimana. Ma le settimane incompiute ci insegnano cosa aggiustare.|Il numero settimanale non si allineerà ({completed}/{target}). Fatelo lo stesso - la costanza ignora il tabellone.|L'obiettivo non è stato raggiunto questa settimana ({completed}/{target}). Ogni tentativo rafforza comunque il ciclo dell'abitudine.|{completed}/{target} questa settimana. L'obiettivo è fuori portata, ma l'abitudine no.",
+  "notificationScheduleWeeklyOneLeft": "Un altro completamento questa settimana e avrete raggiunto il vostro obiettivo ({completed}/{target}).|Un altro questa settimana e sarete a {target} ({completed} fatto). Chiudere il cerchio.|Si è a una sessione dal proprio obiettivo settimanale ({completed}/{target}). Fallo fruttare.|All'obiettivo di questa settimana ne manca solo una ({completed}/{target}). Un altro completamento si frappone tra voi e {target} questa settimana ({completed} fatto).|L'obiettivo settimanale è a portata di mano: un altro ({completed}/{target}). Questo è solo per oggi.",
+  "notificationScheduleWeeklyReached": "Obiettivo settimanale già raggiunto ({completed}/{target}). Questo è un bonus di costanza.|Hai raggiunto l'obiettivo settimanale ({completed}/{target}). Ogni extra è una vittoria.|Obiettivo settimanale: raggiunto ({completed}/{target}). Le ripetizioni bonus creano abitudini d'élite.|{completed}/{target} per la settimana. Siete al di sopra e oltre.|Obiettivo settimanale già raggiunto ({completed}/{target}). Stai operando a un livello superiore.|Hai raggiunto il tuo obiettivo settimanale ({completed}/{target}). La costanza è ora un surplus.",
+  "notificationScheduleWeeklyRemaining": "Hai bisogno di {remaining} in più questa settimana per raggiungere {target}.|{remaining} per raggiungere l'obiettivo settimanale di {target}. Il ritmo costante funziona.|Avete bisogno di {remaining} in più questa settimana. Oggi è un ottimo momento per iniziare.|Obiettivo settimanale: {remaining} rimanenti di {target}. Distribuite lo sforzo.|{remaining} sessioni rimaste per raggiungere {target} questa settimana. Ognuna conta allo stesso modo.|Il vostro obiettivo settimanale è {target}, con {remaining} da raggiungere. Un passo alla volta.",
+  "notifications": "Notifiche",
+  "notificationsAreDisabled": "Le notifiche sono disattivate",
+  "now": "Ora",
+  "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Numero di giorni consecutivi in cui avete completato tutte le vostre abitudini.",
+  "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Visibile solo sul piano giornaliero. Attivare la modalità \"colorata\" nelle Impostazioni per visualizzarla al completamento.",
+  "optOut": "Rinuncia",
+  "optionalHabit": "Abitudine facoltativa",
+  "optionalHabits": "Abitudini facoltative",
+  "orToChangeLabel": "o l'etichetta della quantità",
+  "passphrase": "Passphrase",
+  "perfectDaysStreak": "La striscia dei giorni perfetti",
+  "preparingBackupName": "Preparazione del nome del backup...",
+  "profile": "Profilo",
+  "reorderingCategoriesBasedOnTime": "Riordino delle categorie in base al tempo",
+  "reset": "Reset",
+  "resetChanges": "Modifiche al reset?",
+  "sat": "Sab",
+  "satoshi": "Satoshi",
+  "save": "Risparmiare",
+  "saveChanges": "Salva le modifiche",
+  "schedulingAndAlerts": "Pianificazione e avvisi",
+  "schedulingFallbackToAll": "Ripristino della programmazione su \"Tutti\".",
+  "selectAColorPaletteForYourInterface": "Selezionare una tavolozza di colori per l'interfaccia",
+  "selectHabitColor": "Selezionare il colore dell'abito",
+  "selectHabitTime": "SELEZIONARE L'ORA DELL'ABITUDINE:",
+  "selectTime": "Selezionare l'ora",
+  "selectTimeInterval": "Selezionare l'intervallo di tempo",
+  "selected": "Selezionato",
+  "setAmountLabel": "Impostare l'etichetta dell'importo",
+  "setDuration": "Durata impostata",
+  "setNotificationTime": "Impostare l'orario di notifica",
+  "setPassphrase": "Imposta passphrase",
+  "setSchedule": "Impostare il programma",
+  "settings": "Impostazioni",
+  "signinFirstError": "Accedi per primo Errore",
+  "skip": "Salto",
+  "skippedHabitFoundHabitsskippedTotal": "Abitudine saltata trovata, {habitsSkipped} totale",
+  "skippingHabitNotAllowedHabitDayBeforeSkipped": "L'abitudine di saltare non è consentita, l'abitudine del giorno precedente è saltata.",
+  "startTime": "Ora di inizio",
+  "stats": "Statistiche",
+  "subscriptions": "Abbonamenti",
+  "sun": "Dom",
+  "syncErrorErrormessage": "Errore di sincronizzazione: $errorMessage",
+  "syncNow": "Sincronizza ora",
+  "syncing": "Sincronizzazione...",
+  "syncingProgressmessage": "Sincronizzazione: $progressMessage",
+  "tappedAmount": "Quantità spillata",
+  "tappedDuration": "Durata del tappo",
+  "thisAmountLabelWillBeRemoved": "L'etichetta dell'importo verrà rimossa.",
+  "thisLabelCantBeDeleted": "Questa etichetta non può essere cancellata",
+  "thisNotificationCantBeDeleted": "Questa notifica non può essere cancellata",
+  "thisNotificationTimeWillBeRemoved": "Questo tempo di notifica verrà rimosso.",
+  "thisPassphraseIsUsedForYourDataEncryptionSaveItSecurelyYouWillUseItAgainWhenGettingYourDataOnOtherDevices": "Questa passphrase viene utilizzata per la crittografia dei dati. Salvatela in modo sicuro, la userete di nuovo per ottenere i vostri dati su altri dispositivi.",
+  "thisReminderWillTriggerOnlyOnScheduledHabitDays": "Questo promemoria si attiva solo nei giorni di abitudine programmati.",
+  "thu": "Gio",
+  "time": "Tempo",
+  "times": "tempi",
+  "to": "A",
+  "toReceiveRemindersPleaseEnableNotificationPermissionsForHabitt": "Per ricevere i promemoria, attivare i permessi di notifica per Habitt.",
+  "toUseHabitRemindersEnableNotificationsInYourDeviceSettings": "Per utilizzare i promemoria delle abitudini, attivate le notifiche nelle impostazioni del dispositivo.",
+  "tue": "Mar",
+  "unknown": "Sconosciuto",
+  "uploadingBackupToCloud": "Caricamento del backup su cloud!",
+  "useYourGoogleDriveToBackupEncryptedAppData": "Utilizzate il vostro google drive per il backup dei dati crittografati delle app",
+  "wed": "Mer",
+  "welcomeBack": "Bentornato",
+  "welcomeToHabitt": "Benvenuti in Habitt.",
+  "whatAreYouCountingForThisHabit": "Che cosa conta per questa abitudine?",
+  "whatShouldWeCallYou": "Come dovremmo chiamarla?",
+  "whatsUp": "Cosa succede",
+  "wrapUp": "Avvolte",
+  "wrapUpReflectionHowDidYourHabitsGoToday": "Riflessione finale: Come sono andate le vostre abitudini oggi?",
+  "youAreCurrentlyNotConnectedToYourGoogleAccount": "Al momento non siete connessi al vostro account Google.",
+  "youCanPressNumberAbove": "È anche possibile premere il numero in alto per cambiare {type}",
+  "youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem": "Le modifiche non sono state salvate. Siete sicuri di voler tornare indietro e scartarle?",
+  "numberOfHoursNumberofhours": "Numero di ore: $numberOfHours",
+  "youHaventAddedAnyHabitsYet": "Non hai ancora aggiunto nessuna abitudine",
+  "youWillUseThisPassphraseToDecryptYourDataWhenImportingIt": "Questa passphrase verrà utilizzata per decifrare i dati al momento dell'importazione.",
+  "yourName": "Il tuo nome",
+  "youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow": "State diventando molto costanti con questa abitudine. Considerate la possibilità di non renderla facoltativa per spingervi un po' di più. Volete aggiornare questa abitudine adesso?",
+  "getPremium": "Ottenere il premio",
+  "enjoyAllBenefits": "Usufruite di tutti i vantaggi dell'app",
+  "rateUs": "Valutateci",
+  "reportBug": "Segnala un bug",
+  "leaveFeedback": "Lascia un feedback",
+  "termsOfService": "Termini di servizio",
+  "privacyPolicy": "Informativa sulla privacy",
+  "logOut": "Disconnettersi",
+  "backupAndSync": "Backup e sincronizzazione",
+  "lastSynced": "Ultima sincronizzazione: {lastSynced}",
+  "changeHabitTimesInPeriodWarning": "Modificando il numero di volte in cui l'abitudine appare in un {period} si cancellano i giorni selezionati.",
+  "returningDaysProgressDaysprogress": "Restituzione dei giorni di progresso: $giorniProgresso",
+  "runningUpdatelastopeneddate": "Esecuzione di _updateLastOpenedDate",
+  "savingDayAtDaysimple": "Salvataggio del giorno a: $giornoSemplice",
+  "scheduledTodayToggledValue": "Programmato oggi attivato: $valore",
+  "selectAColorPalleteForYourInterface": "Selezionare una tavolozza di colori per l'interfaccia",
+  "selectedCategoryIdInBuildSelectedcategoryid": "Id della categoria selezionata nella build: $selectedCategoryId",
+  "selectedHourValue": "Ora selezionata: $valore",
+  "selectedMinuteIndex": "Minuti selezionati: $index",
+  "selectedTypeRightBeforeNavigationSelectedtype": "Tipo selezionato prima della navigazione: $selectedType",
+  "selectedTypeSelectedtype": "Tipo selezionato: $selectedType",
+  "skippingHabitId": "Abitudine di salto: $id",
+  "streakStreakLongestStreakLongeststreak": "Striscia: $streak, Striscia più lunga: $longestStreak",
+  "thisWeekDaysThisweekdays": "Giorni della settimana: $thisWeekDays",
+  "timeTypeTimetype": "Tipo di tempo: $timeType",
+  "unknownCatid": "Sconosciuto $catId",
+  "unknownCurrenttimeslotfallbackid": "Sconosciuto $currentTimeSlotFallbackId",
+  "updatedSelectedDateProgressNewselectedprogressWasOldselectedprogress": "Aggiornamento dell'avanzamento della data selezionata: $newSelectedProgress (era: $oldSelectedProgress)",
+  "updatedTodaysProgressNewtodayprogressWasOldtodayprogress": "Aggiornamento dei progressi di oggi: $newTodayProgress (era: $oldTodayProgress)",
+  "updatingHabitInDbHabit": "Aggiornamento dell'abitudine nel DB: $abitudine",
+  "usingCustomAndroidNavBar": "Utilizzo della barra navale personalizzata di Android",
+  "viewportWidthViewportwidth": "Larghezza della finestra: $viewportWidth",
+  "visibleCategoryIdId": "ID categoria visibile: $id"
 }

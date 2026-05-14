@@ -72,7 +72,6 @@ class _HabitsPageState extends State<HabitsPage> {
           NewDefaultSwitch(
             value: _isScheduledTodayOn,
             onChanged: (value) {
-              debugPrint(loc.scheduledTodayToggledValue);
               setState(() {
                 _isScheduledTodayOn = value;
               });

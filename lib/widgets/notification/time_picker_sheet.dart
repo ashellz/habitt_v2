@@ -107,8 +107,6 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                     widget.notificationPeriod.hourRange.$2 -
                                     widget.notificationPeriod.hourRange.$1;
 
-                                debugPrint(loc.numberOfHoursNumberofhours);
-
                                 final fixedHour =
                                     widget.notificationPeriod.hourRange.$1 +
                                     (hoursController.selectedItem %
@@ -116,8 +114,6 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
 
                                 final fixedMinute =
                                     minutesController.selectedItem % 60;
-
-                                debugPrint(loc.fixedTimeFixedhourfixedminute);
 
                                 Navigator.pop(
                                   context,

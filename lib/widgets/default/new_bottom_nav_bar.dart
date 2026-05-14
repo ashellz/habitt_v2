@@ -216,8 +216,6 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       );
     }
 
-    debugPrint(loc.usingCustomAndroidNavBar);
-
     return Expanded(
       child: Container(
         height: 95,

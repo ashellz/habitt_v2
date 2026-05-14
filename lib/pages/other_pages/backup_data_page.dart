@@ -147,8 +147,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                     builder:
                                         (context) => OldDefaultDialog(
                                           title: loc.optOutOfBackup,
-                                          desc:
-                                              loc.areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually,
+                                          desc: loc.optOutOfBackup,
                                           rightButtonCallback: () async {
                                             backupProvider.signOut();
                                           },
@@ -224,17 +223,17 @@ class _BackupDataPageState extends State<BackupDataPage> {
 
     switch (syncState) {
       case SyncState.idle:
-        return loc.lastSyncedLastsynctext;
+        return loc.lastSynced(lastSyncText);
       case SyncState.syncing:
         return progressMessage != null && progressMessage.isNotEmpty
-            ? loc.syncingProgressmessage
+            ? loc.syncingProgressmessage(progressMessage)
             : loc.syncing;
       case SyncState.success:
-        return loc.lastSyncedLastsynctext;
+        return loc.lastSynced(lastSyncText);
       case SyncState.error:
         return errorMessage != null && errorMessage.isNotEmpty
-            ? loc.syncErrorErrormessage
-            : loc.lastSyncedLastsynctext;
+            ? loc.syncErrorErrormessage(errorMessage)
+            : loc.lastSynced(lastSyncText);
     }
   }
 }

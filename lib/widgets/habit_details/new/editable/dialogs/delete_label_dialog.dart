@@ -31,7 +31,7 @@ class DeleteLabelDialog extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return NewDefaultDialog(
-      title: loc.deleteLabel,
+      title: loc.deleteLabel(label),
       desc: loc.thisAmountLabelWillBeRemoved,
       primaryButtonLabel: loc.delete,
       primaryButtonColor: cp.fail,
