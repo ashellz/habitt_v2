@@ -265,7 +265,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                         children: [
                           const SelectDaysMonthly(),
                           Text(
-                            'Leave unselected if you want the habit too appear every day of the month until completed',
+                            loc.leaveUnselected(loc.month2),
                             style: TextStyle(
                               color: cp.greyText,
                               fontSize: 13,

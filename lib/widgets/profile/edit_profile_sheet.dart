@@ -124,47 +124,55 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
     final loc = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(bottom: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          GestureDetector(
-            onTap: () {
-              _handleCloseAttempt();
-            },
-            child: Container(
-              padding: const EdgeInsets.only(left: 16),
-              color: Colors.transparent,
-              height: 36,
-              width: 66 + 16,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/images/new-svg/back.svg",
-                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _handleCloseAttempt();
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(left: 16),
+                  color: Colors.transparent,
+                  height: 36,
+                  width: 66 + 16,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SvgPicture.asset(
+                      "assets/images/new-svg/back.svg",
+                      colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                    ),
+                  ),
                 ),
               ),
-            ),
+
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: NewDefaultButton.primarySmall(
+                  width: null,
+                  enabled: canSave,
+                  onPressed: () async {
+                    if (!canSave) {
+                      return;
+                    }
+                    // Save logic here
+                  },
+                  label: loc.save,
+                ),
+              ),
+            ],
           ),
-          Text(
-            loc.editProfile,
-            style: TextStyle(
-              color: cp.text,
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: NewDefaultButton.primarySmall(
-              enabled: canSave,
-              onPressed: () async {
-                if (!canSave) {
-                  return;
-                }
-                // Save logic here
-              },
-              label: loc.save,
+          Center(
+            child: Text(
+              loc.editProfile,
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

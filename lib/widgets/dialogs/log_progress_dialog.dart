@@ -115,7 +115,7 @@ class LogProgressDialog extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Target:',
+          loc.target,
           style: TextStyle(
             color: cp.text,
             fontSize: 16,
