@@ -4,6 +4,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_color_sheet.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_time_interval.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class HabitTimeBottomOptions extends StatelessWidget {
   const HabitTimeBottomOptions({super.key, required this.tp});
@@ -66,7 +67,7 @@ class HabitTimeBottomOptions extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 12),
                       child: Text(
-                        "Select habit color",
+                        AppLocalizations.of(context)!.selectHabitColor,
                         style: TextStyle(
                           color: tp.primaryTextColor,
                           fontSize: 16,

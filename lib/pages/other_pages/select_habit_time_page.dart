@@ -9,6 +9,7 @@ import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/habit_time_bottom_options.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectHabitTimePage extends StatefulWidget {
   const SelectHabitTimePage({super.key});
@@ -91,7 +92,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    "SELECT HABIT TIME:",
+                    AppLocalizations.of(context)!.selectHabitTime,
                     style: TextStyle(
                       letterSpacing: 2,
                       fontSize: 48,

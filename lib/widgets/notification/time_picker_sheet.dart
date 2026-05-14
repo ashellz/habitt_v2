@@ -5,6 +5,7 @@ import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class TimePickerSheet extends StatefulWidget {
   const TimePickerSheet({
@@ -64,7 +65,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                 child: Column(
                   children: [
                     Text(
-                      "Select Time",
+                      AppLocalizations.of(context)!.selectTime,
                       style: TextStyle(
                         color: tp.primaryTextColor,
                         fontSize: 18,
@@ -105,7 +106,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                     widget.notificationPeriod.hourRange.$2 -
                                     widget.notificationPeriod.hourRange.$1;
 
-                                debugPrint("Number of hours: $numberOfHours");
+                                debugPrint(AppLocalizations.of(context)!.numberOfHoursNumberofhours);
 
                                 final fixedHour =
                                     widget.notificationPeriod.hourRange.$1 +
@@ -116,7 +117,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                     minutesController.selectedItem % 60;
 
                                 debugPrint(
-                                  "Fixed time: $fixedHour:$fixedMinute",
+                                  AppLocalizations.of(context)!.fixedTimeFixedhourfixedminute,
                                 );
 
                                 Navigator.pop(
@@ -127,7 +128,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                   ),
                                 );
                               },
-                              label: "Confirm",
+                              label: AppLocalizations.of(context)!.confirm,
                             ),
                           ),
                         ],

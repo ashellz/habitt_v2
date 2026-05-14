@@ -10,6 +10,7 @@ import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/notification/notification_card.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
@@ -185,9 +186,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: "Exit without saving?",
-            desc: "All changes you made will be discarded.",
-            primaryButtonLabel: "Exit",
+            title: AppLocalizations.of(context)!.exitWithoutSaving,
+            desc: AppLocalizations.of(context)!.allChangesYouMadeWillBeDiscarded,
+            primaryButtonLabel: AppLocalizations.of(context)!.exit,
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();
               Navigator.of(context).pop();

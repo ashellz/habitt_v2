@@ -11,6 +11,7 @@ import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/widgets/main_page/add_habit_button.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
 import 'package:provider/provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 class NewHabits extends StatefulWidget {
   final DateTime? daySelected;
@@ -419,7 +420,7 @@ class _NewHabitsState extends State<NewHabits>
     final selectedDay = _effectiveSelectedDay(habitProvider);
 
     debugPrint(
-      "Getting habits for Habits widget ======================================== selected DAY: $selectedDay ",
+      AppLocalizations.of(context)!.gettingHabitsForHabitsWidgetSelectedDaySelectedday,
     );
     final todayShort = _normalizeDate(DateTime.now());
     if (selectedDay == null || selectedDay == todayShort) {
@@ -445,7 +446,7 @@ class _NewHabitsState extends State<NewHabits>
     final dayKey = _dateIdentityKey(selectedDay);
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
-    debugPrint("Selected category id in build: $selectedCategoryId");
+    debugPrint(AppLocalizations.of(context)!.selectedCategoryIdInBuildSelectedcategoryid);
 
     final optionalHabitsCount = habits.where((habit) => habit.optional).length;
 
@@ -502,7 +503,7 @@ class _NewHabitsState extends State<NewHabits>
       selectedCategoryId,
     );
     debugPrint(
-      "habitsListHeight: $habitsListHeight, contentHeight: $contentHeight",
+      AppLocalizations.of(context)!.habitslistheightHabitslistheightContentheightContentheight,
     );
     final bottomSpacing = (habitsListHeight - contentHeight).clamp(
       0.0,
@@ -588,7 +589,7 @@ class EmptyHabitsWidget extends StatelessWidget {
       children: [
         SvgPicture.asset("assets/images/new-svg/empty-box.svg"),
         Text(
-          "You haven’t added any habits yet",
+          AppLocalizations.of(context)!.youHaventAddedAnyHabitsYet,
           style: TextStyle(color: cp.lightGreyText, fontSize: 16),
         ),
       ],
