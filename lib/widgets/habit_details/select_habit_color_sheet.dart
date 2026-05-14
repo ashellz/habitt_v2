@@ -18,6 +18,7 @@ class SelectHabitColorSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final stateProvider = context.watch<StateProvider>();
     final colorOptions = tp.habitColorOptions;
     final isColorful =
@@ -48,7 +49,7 @@ class SelectHabitColorSheet extends StatelessWidget {
             children: [
               const SizedBox(height: 8),
               Text(
-                AppLocalizations.of(context)!.selectHabitColor,
+                loc.selectHabitColor,
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 26,
@@ -59,7 +60,7 @@ class SelectHabitColorSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    AppLocalizations.of(context)!.onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion,
+                    loc.onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: tp.secondaryTextColor,

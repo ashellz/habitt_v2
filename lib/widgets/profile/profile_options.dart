@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habitt/pages/main_pages/profile_page.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/profile/get_premium_widget.dart';
+import 'package:habitt/widgets/profile/leave_feedback_sheet.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,6 +14,8 @@ class ProfileOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       color: cp.habitBg,
@@ -37,7 +41,7 @@ class ProfileOptions extends StatelessWidget {
                   children: [
                     ProfileOption(
                       cp: cp,
-                      text: 'Privacy policy',
+                      text: loc.privacyPolicy,
                       svgPath: 'assets/images/new-svg/privacy-policy.svg',
                       onTap: () async {
                         final privacyUrl = Uri.parse(
@@ -55,7 +59,7 @@ class ProfileOptions extends StatelessWidget {
                     Divider(color: cp.border, height: 32),
                     ProfileOption(
                       cp: cp,
-                      text: 'Terms of service',
+                      text: loc.termsOfService,
                       svgPath: 'assets/images/new-svg/terms.svg',
                       onTap: () async {
                         final tosUrl = Uri.parse(
@@ -72,22 +76,24 @@ class ProfileOptions extends StatelessWidget {
                     Divider(color: cp.border, height: 32),
                     ProfileOption(
                       cp: cp,
-                      text: 'Rate us',
+                      text: loc.leaveFeedback,
                       svgPath: 'assets/images/new-svg/rate.svg',
                       onTap: () async {
                         await showModalBottomSheet(
                           context: context,
                           backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                          barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+                          barrierColor: cp.greyText.darken().withValues(
+                            alpha: 0.3,
+                          ),
                           isScrollControlled: true,
-                          builder: (context) => RateReportSheet(),
+                          builder: (context) => LeaveFeedbackSheet(),
                         );
                       },
                     ),
                     Divider(color: cp.border, height: 32),
                     ProfileOption(
                       cp: cp,
-                      text: 'Backup & Sync',
+                      text: loc.backupAndSync,
                       svgPath: 'assets/images/new-svg/backup.svg',
                     ),
                   ],
@@ -106,7 +112,7 @@ class ProfileOptions extends StatelessWidget {
                   spacing: 12,
                   children: [
                     Text(
-                      'Log out',
+                      loc.logOut,
                       style: TextStyle(
                         color: cp.error,
                         fontSize: 16,

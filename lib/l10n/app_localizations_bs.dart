@@ -1848,4 +1848,31 @@ class AppLocalizationsBs extends AppLocalizations {
   String
   get youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow =>
       'You\'re getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?';
+
+  @override
+  String get getPremium => 'Get Premium';
+
+  @override
+  String get enjoyAllBenefits => 'Enjoy all the benefits of the app';
+
+  @override
+  String get rateUs => 'Rate us';
+
+  @override
+  String get reportBug => 'Report a bug';
+
+  @override
+  String get leaveFeedback => 'Leave feedback';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get logOut => 'Log out';
+
+  @override
+  String get backupAndSync => 'Backup & Sync';
 }

@@ -419,9 +419,6 @@ class _NewHabitsState extends State<NewHabits>
     final habitProvider = context.read<HabitProvider>();
     final selectedDay = _effectiveSelectedDay(habitProvider);
 
-    debugPrint(
-      AppLocalizations.of(context)!.gettingHabitsForHabitsWidgetSelectedDaySelectedday,
-    );
     final todayShort = _normalizeDate(DateTime.now());
     if (selectedDay == null || selectedDay == todayShort) {
       return habitProvider.todaysHabits;
@@ -446,7 +443,6 @@ class _NewHabitsState extends State<NewHabits>
     final dayKey = _dateIdentityKey(selectedDay);
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
-    debugPrint(AppLocalizations.of(context)!.selectedCategoryIdInBuildSelectedcategoryid);
 
     final optionalHabitsCount = habits.where((habit) => habit.optional).length;
 
@@ -501,9 +497,6 @@ class _NewHabitsState extends State<NewHabits>
       displayedCategories,
       context,
       selectedCategoryId,
-    );
-    debugPrint(
-      AppLocalizations.of(context)!.habitslistheightHabitslistheightContentheightContentheight,
     );
     final bottomSpacing = (habitsListHeight - contentHeight).clamp(
       0.0,
@@ -583,13 +576,14 @@ class EmptyHabitsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
+    final loc = AppLocalizations.of(context)!;
     return Column(
       spacing: 16,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset("assets/images/new-svg/empty-box.svg"),
         Text(
-          AppLocalizations.of(context)!.youHaventAddedAnyHabitsYet,
+          loc.youHaventAddedAnyHabitsYet,
           style: TextStyle(color: cp.lightGreyText, fontSize: 16),
         ),
       ],

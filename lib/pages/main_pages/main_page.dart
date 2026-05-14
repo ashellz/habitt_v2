@@ -108,8 +108,8 @@ class _MainPageState extends State<MainPage> {
     final requiredHabits = habits.where((habit) => !habit.optional);
 
     final bool allCompleted =
-      requiredHabits.isNotEmpty &&
-      requiredHabits.every((habit) => habit.completed);
+        requiredHabits.isNotEmpty &&
+        requiredHabits.every((habit) => habit.completed);
     if (!_initializedCompletionState) {
       _wasAllCompleted = allCompleted;
       _initializedCompletionState = true;

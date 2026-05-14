@@ -10,7 +10,6 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class BottomNavBar extends StatefulWidget {
   final ValueChanged<int>? onItemTapped;
@@ -70,14 +69,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   Future<void> _checkIOSVersion() async {
     if (Platform.isIOS) {
-      debugPrint(
-        AppLocalizations.of(context)!.checkingIosVersionForLiquidGlassSupportIsIosTrue,
-      );
+      debugPrint("Checking iOS version for Liquid Glass support");
       final deviceInfo = DeviceInfoPlugin();
       final iosInfo = await deviceInfo.iosInfo;
       final version = iosInfo.systemVersion;
       final majorVersion = int.tryParse(version.split('.').first) ?? 0;
-      debugPrint(AppLocalizations.of(context)!.iosMajorVersionMajorversion);
+      debugPrint("iOS Major Version: $majorVersion");
       setState(() {
         _supportsLiquidGlass = majorVersion >= 26;
       });

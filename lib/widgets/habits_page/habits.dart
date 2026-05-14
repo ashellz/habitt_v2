@@ -86,12 +86,13 @@ class _HabitsState extends State<Habits> with SingleTickerProviderStateMixin {
 
     final optionalHabitsCount = habits.where((habit) => habit.optional).length;
     final tp = context.watch<ThemeProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     if (habits.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
         child: Text(
-          AppLocalizations.of(context)!.noHabitsYet,
+          loc.noHabitsYet,
           style: TextStyle(color: tp.mutedTextColor),
         ),
       );

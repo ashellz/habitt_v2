@@ -106,7 +106,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   // This toggles the amount type on tap, and navigates if selected
   void onTapAmount() {
-    debugPrint(AppLocalizations.of(context)!.tappedAmount);
+    debugPrint("Tapped amount");
 
     final stateProvider = context.read<StateProvider>();
 
@@ -129,12 +129,12 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
       stateProvider.habitAmount =
           stateProvider.habitAmount < 1 ? 1 : stateProvider.habitAmount;
 
-      debugPrint(AppLocalizations.of(context)!.selectedTypeSelectedtype);
+      debugPrint("Selected type: $selectedType");
 
       // Navigates to input page after short delay
       Future.delayed(Duration(milliseconds: 150)).then((value) {
         if (mounted) {
-          debugPrint(AppLocalizations.of(context)!.selectedTypeRightBeforeNavigationSelectedtype);
+          debugPrint("Right before navigation - Selected type: $selectedType");
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => EnterAmountPage(type: selectedType),
@@ -147,7 +147,7 @@ class _SelectHabitTypeOptionsState extends State<SelectHabitTypeOptions> {
 
   // This toggles the duration type on tap, and navigates if selected
   void onTapDuration() {
-    debugPrint(AppLocalizations.of(context)!.tappedDuration);
+    debugPrint("Tapped duration");
     final stateProvider = context.read<StateProvider>();
 
     setState(() {

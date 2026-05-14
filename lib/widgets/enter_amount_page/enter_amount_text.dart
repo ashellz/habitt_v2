@@ -16,9 +16,9 @@ class EnterAmountDurationText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final text =
-        "${type == OldHabitType.duration ? localizations.enterYourDuration : localizations.enterYourAmount}:"
+        "${type == OldHabitType.duration ? loc.enterYourDuration : loc.enterYourAmount}:"
             .toUpperCase();
 
     return Text.rich(

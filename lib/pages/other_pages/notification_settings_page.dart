@@ -181,14 +181,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       return;
     }
 
+    final loc = AppLocalizations.of(context)!;
+
     _isExitDialogOpen = true;
     await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: AppLocalizations.of(context)!.exitWithoutSaving,
-            desc: AppLocalizations.of(context)!.allChangesYouMadeWillBeDiscarded,
-            primaryButtonLabel: AppLocalizations.of(context)!.exit,
+            title: loc.exitWithoutSaving,
+            desc: loc.allChangesYouMadeWillBeDiscarded,
+            primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();
               Navigator.of(context).pop();

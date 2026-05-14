@@ -100,6 +100,7 @@ class _OriginalDividerContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final bool isTitle = hasHabits != null && !hasHabits!;
+    final loc = AppLocalizations.of(context)!;
 
     return Padding(
       padding:
@@ -118,7 +119,7 @@ class _OriginalDividerContent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: isTitle ? 0 : 8.0, right: 8.0),
             child: Text(
-              AppLocalizations.of(context)!.optionalHabits,
+              loc.optionalHabits,
               style: TextStyle(color: tp.mutedTextColor),
             ),
           ),

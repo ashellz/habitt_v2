@@ -11,6 +11,8 @@ class SchedulingAndAlerts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap:
           () => Navigator.of(context).push(
@@ -30,7 +32,7 @@ class SchedulingAndAlerts extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                AppLocalizations.of(context)!.schedulingAndAlerts,
+                loc.schedulingAndAlerts,
                 style: TextStyle(
                   color: tp.primaryTextColor,
                   fontSize: 16,

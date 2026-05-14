@@ -53,6 +53,7 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     final content = Container(
       padding: const EdgeInsets.only(top: 4, left: 12, right: 4, bottom: 4),
@@ -72,7 +73,10 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(AppLocalizations.of(context)!.time, style: TextStyle(color: cp.lightGreyText, fontSize: 16)),
+          Text(
+            loc.time,
+            style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+          ),
           GestureDetector(
             onTap: _handleOpenTimeDialog,
             child: Container(
@@ -168,7 +172,7 @@ Future<void> showNotificationTimeDialog({
   final minutesController = FixedExtentScrollController(
     initialItem: selectedMinute,
   );
-
+  final loc = AppLocalizations.of(context)!;
   try {
     await showDialogSheet(
       context: context,
@@ -176,9 +180,8 @@ Future<void> showNotificationTimeDialog({
           (dialogContext) => StatefulBuilder(
             builder: (dialogContext, setDialogState) {
               return NewDefaultDialog(
-                title: AppLocalizations.of(context)!.setNotificationTime,
-                desc:
-                    AppLocalizations.of(context)!.thisReminderWillTriggerOnlyOnScheduledHabitDays,
+                title: loc.setNotificationTime,
+                desc: loc.thisReminderWillTriggerOnlyOnScheduledHabitDays,
                 onPrimaryButtonPressed: () {
                   onTimeSelected((selectedHour * 60) + selectedMinute);
                   Navigator.of(dialogContext).pop();

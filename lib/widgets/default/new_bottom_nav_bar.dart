@@ -30,34 +30,49 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
   void initState() {
     super.initState();
 
-    _navItems = [
-      NavItemData(
-        id: 'home',
-        svgPath: "assets/images/new-svg/home.svg",
-        defaultLabel: AppLocalizations.of(context)!.home,
-      ),
-      NavItemData(
-        id: 'habits',
-        svgPath: "assets/images/new-svg/all-habits.svg",
-        defaultLabel: "Habits",
-      ),
-      NavItemData(
-        id: 'calendar',
-        svgPath: "assets/images/new-svg/calendar.svg",
-        defaultLabel: "Calendar",
-      ),
-      NavItemData(
-        id: 'profile',
-        svgPath: "assets/images/new-svg/profile.svg",
-        defaultLabel: AppLocalizations.of(context)!.profile,
-      ),
-    ];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      _initializeNavItems();
+    });
 
-    _selectedIndex = _navItems.indexWhere((item) => item.id == "home");
+    _selectedIndex = 0;
+  }
 
-    if (_selectedIndex == -1) {
-      _selectedIndex = 0;
-    }
+  void _initializeNavItems() {
+    final loc = AppLocalizations.of(context)!;
+
+    setState(() {
+      _navItems = [
+        NavItemData(
+          id: 'home',
+          svgPath: "assets/images/new-svg/home.svg",
+          defaultLabel: loc.home,
+        ),
+        NavItemData(
+          id: 'habits',
+          svgPath: "assets/images/new-svg/all-habits.svg",
+          defaultLabel: loc.habits,
+        ),
+        NavItemData(
+          id: 'calendar',
+          svgPath: "assets/images/new-svg/calendar.svg",
+          defaultLabel: loc.calendar,
+        ),
+        NavItemData(
+          id: 'profile',
+          svgPath: "assets/images/new-svg/profile.svg",
+          defaultLabel: loc.profile,
+        ),
+      ];
+
+      _selectedIndex = _navItems.indexWhere((item) => item.id == "home");
+
+      if (_selectedIndex == -1) {
+        _selectedIndex = 0;
+      }
+    });
   }
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
@@ -162,6 +177,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     final platform = Theme.of(context).platform;
 
@@ -200,7 +216,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       );
     }
 
-    debugPrint(AppLocalizations.of(context)!.usingCustomAndroidNavBar);
+    debugPrint(loc.usingCustomAndroidNavBar);
 
     return Expanded(
       child: Container(

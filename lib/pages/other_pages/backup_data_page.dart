@@ -37,8 +37,9 @@ class _BackupDataPageState extends State<BackupDataPage> {
   }
 
   String getLastSyncText(BackupProvider backupProvider) {
+    final loc = AppLocalizations.of(context)!;
     if (backupProvider.localMetadata == null) {
-      return AppLocalizations.of(context)!.never;
+      return loc.never;
     } else {
       final date = backupProvider.localMetadata!.createdAt;
       // DD.MM.YYYY - HH:MM
@@ -61,6 +62,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
 
     final platform = Theme.of(context).platform;
     final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
+    final loc = AppLocalizations.of(context)!;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -76,7 +78,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                     NavBackButton(tp: tp),
 
                     Text(
-                      AppLocalizations.of(context)!.backupData,
+                      loc.backupData,
                       style: TextStyle(
                         fontSize: 38,
                         color: tp.primaryTextColor,
@@ -84,7 +86,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                       ),
                     ),
                     Text(
-                      AppLocalizations.of(context)!.keepYourDataSafeByBackingItUpToGoogleDrive,
+                      loc.keepYourDataSafeByBackingItUpToGoogleDrive,
                       style: TextStyle(
                         fontSize: 16,
                         color: tp.secondaryTextColor,
@@ -93,7 +95,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                     Spacer(),
                     if (!isLoggedIn) ...[
                       Text(
-                        AppLocalizations.of(context)!.youAreCurrentlyNotConnectedToYourGoogleAccount,
+                        loc.youAreCurrentlyNotConnectedToYourGoogleAccount,
                         style: TextStyle(
                           fontSize: 16,
                           color: tp.secondaryTextColor,
@@ -115,7 +117,7 @@ class _BackupDataPageState extends State<BackupDataPage> {
                             }
                           }
                         },
-                        label: AppLocalizations.of(context)!.connectToGoogle,
+                        label: loc.connectToGoogle,
                       ),
                     ] else ...[
                       Text(
@@ -144,19 +146,19 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                     context: context,
                                     builder:
                                         (context) => OldDefaultDialog(
-                                          title: AppLocalizations.of(context)!.optOutOfBackup,
+                                          title: loc.optOutOfBackup,
                                           desc:
-                                              AppLocalizations.of(context)!.areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually,
+                                              loc.areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually,
                                           rightButtonCallback: () async {
                                             backupProvider.signOut();
                                           },
-                                          rightButtonText: AppLocalizations.of(context)!.optOut,
+                                          rightButtonText: loc.optOut,
                                           danger: true,
                                           leftButtonText: "Cancel",
                                         ),
                                   );
                                 },
-                                label: AppLocalizations.of(context)!.optOut,
+                                label: loc.optOut,
                                 color: tp.backgroundColor,
                               ),
                             ),
@@ -191,10 +193,10 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                 },
                                 label:
                                     hasPassphraseSet
-                                        ? AppLocalizations.of(context)!.syncNow
+                                        ? loc.syncNow
                                         : dataExists
-                                        ? AppLocalizations.of(context)!.enterPassphrase
-                                        : AppLocalizations.of(context)!.setPassphrase,
+                                        ? loc.enterPassphrase
+                                        : loc.setPassphrase,
                               ),
                             ),
                           ],
@@ -218,20 +220,21 @@ class _BackupDataPageState extends State<BackupDataPage> {
     final lastSyncText = getLastSyncText(backupProvider);
     final progressMessage = backupProvider.progressMessage;
     final errorMessage = backupProvider.lastError;
+    final loc = AppLocalizations.of(context)!;
 
     switch (syncState) {
       case SyncState.idle:
-        return AppLocalizations.of(context)!.lastSyncedLastsynctext;
+        return loc.lastSyncedLastsynctext;
       case SyncState.syncing:
         return progressMessage != null && progressMessage.isNotEmpty
-            ? AppLocalizations.of(context)!.syncingProgressmessage
-            : AppLocalizations.of(context)!.syncing;
+            ? loc.syncingProgressmessage
+            : loc.syncing;
       case SyncState.success:
-        return AppLocalizations.of(context)!.lastSyncedLastsynctext;
+        return loc.lastSyncedLastsynctext;
       case SyncState.error:
         return errorMessage != null && errorMessage.isNotEmpty
-            ? AppLocalizations.of(context)!.syncErrorErrormessage
-            : AppLocalizations.of(context)!.lastSyncedLastsynctext;
+            ? loc.syncErrorErrormessage
+            : loc.lastSyncedLastsynctext;
     }
   }
 }

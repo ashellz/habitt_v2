@@ -98,6 +98,7 @@ class EnterHabitAmount extends StatelessWidget {
         }
       });
     }
+    final loc = AppLocalizations.of(context)!;
 
     return Row(
       spacing: 10,
@@ -108,9 +109,9 @@ class EnterHabitAmount extends StatelessWidget {
         Expanded(
           child: NewDefaultTextField(
             controller: sp.habitAmountLabelController,
-            title: AppLocalizations.of(context)!.amountName,
+            title: loc.amountName,
             fontWeight: FontWeight.w500,
-            hint: AppLocalizations.of(context)!.amountName,
+            hint: loc.amountName,
             suffix: GestureDetector(
               onTap: () => _showAmountLabelPicker(context),
               child: Padding(
