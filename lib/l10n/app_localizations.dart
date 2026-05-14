@@ -2966,6 +2966,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose language'**
   String get chooseLanguage;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'week'**
+  String get week;
+
+  /// No description provided for @timesPerWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Times per week:'**
+  String get timesPerWeek;
+
+  /// No description provided for @timesPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Times per month:'**
+  String get timesPerMonth;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month;
+
+  /// No description provided for @habitWillAppearWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'This habit will appear {amount} {label} per week until completed'**
+  String habitWillAppearWeekly(Object amount, Object label);
+
+  /// No description provided for @habitWillAppearMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'This habit will appear {amount} {label} per month until completed'**
+  String habitWillAppearMonthly(Object amount, Object label);
 }
 
 class _AppLocalizationsDelegate

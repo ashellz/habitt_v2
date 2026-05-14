@@ -157,7 +157,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
         }
       },
       child: NewDefaultDialog(
-        title: "Weekly",
+        title: loc.weekly,
         onPrimaryButtonPressed: () {
           Navigator.of(context).pop(true);
         },
@@ -172,7 +172,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Times per week:',
+                  loc.timesPerWeek,
                   style: TextStyle(
                     color: cp.text,
                     fontSize: 18,
@@ -217,7 +217,10 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                             padding: const EdgeInsets.only(top: 12),
                             child: Text(
                               key: const ValueKey('weekly-helper-text'),
-                              'This habit will appear ${sp.weeklyTarget} time${sp.weeklyTarget == 1 ? '' : 's'} per week until completed',
+                              loc.habitWillAppearWeekly(
+                                sp.weeklyTarget.toString(),
+                                sp.weeklyTarget == 1 ? loc.time : loc.times,
+                              ),
                               style: TextStyle(
                                 color: cp.greyText,
                                 fontSize: 13,

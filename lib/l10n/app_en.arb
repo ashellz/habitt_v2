@@ -715,5 +715,13 @@
   "next": "Next",
   "findALanguage": "Find a language",
   "noLanguagesFound": "No languages found",
-  "chooseLanguage": "Choose language"
+  "chooseLanguage": "Choose language",
+  "weekly": "Weekly",
+  "week": "week",
+  "timesPerWeek": "Times per week:",
+  "timesPerMonth": "Times per month:",
+  "monthly": "Monthly",
+  "month": "month",
+  "habitWillAppearWeekly": "This habit will appear {amount} {label} per week until completed",
+  "habitWillAppearMonthly": "This habit will appear {amount} {label} per month until completed"
 }
