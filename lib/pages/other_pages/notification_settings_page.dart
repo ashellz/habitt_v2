@@ -214,6 +214,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     final cp = context.watch<ColorProvider>();
     final np = context.watch<NotificationsProvider>();
     final hasUnsavedChanges = _hasUnsavedChanges(np);
+    final loc = AppLocalizations.of(context)!;
 
     return PopScope(
       canPop: !hasUnsavedChanges,
@@ -226,7 +227,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       child: Scaffold(
         body: ListView(
           children: [
-            _topBar(cp, np, hasUnsavedChanges),
+            _topBar(cp, np, hasUnsavedChanges, loc),
             SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -240,7 +241,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     spacing: 10,
                     children: [
                       Text(
-                        'Notifications',
+                        loc.notifications,
                         textAlign: TextAlign.start,
                         style: TextStyle(color: cp.lightGreyText, fontSize: 16),
                       ),
@@ -265,7 +266,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'All notifications',
+                                    loc.allNotifications,
                                     style: TextStyle(
                                       color: cp.text,
                                       fontSize: 16,
@@ -309,7 +310,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Habit notifications',
+                                    loc.habitNotifications,
                                     style: TextStyle(
                                       color: cp.text,
                                       fontSize: 16,
@@ -342,7 +343,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Daily reminders',
+                                    loc.dailyReminders,
                                     style: TextStyle(
                                       color: cp.text,
                                       fontSize: 16,
@@ -505,6 +506,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     ColorProvider cp,
     NotificationsProvider np,
     bool hasUnsavedChanges,
+    AppLocalizations loc,
   ) {
     return SizedBox(
       height: 44,
@@ -531,7 +533,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           Expanded(
             child: Center(
               child: Text(
-                'Notification Settings',
+                loc.notificationSettings,
                 style: TextStyle(
                   color: cp.text,
                   fontSize: 34 / 1.8,

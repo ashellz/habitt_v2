@@ -827,9 +827,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get never => 'Niemals';
 
   @override
-  String get newDayResettingCompletion => 'Neuer Tag, neuer Abschluss';
-
-  @override
   String get newHabit => 'Neue Gewohnheit';
 
   @override
@@ -1793,6 +1790,54 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String habitWillAppear(Object dayLabel, Object days) {
-    return 'Diese Gewohnheit wird ab heute alle $days $dayLabel erscheinen';
+    return 'Diese Gewohnheit wird ab heute alle $days. $dayLabel erscheinen';
   }
+
+  @override
+  String get language => 'Sprache';
+
+  @override
+  String get chooseAppLanguage => 'Sprache der App wählen';
+
+  @override
+  String get appearance => 'Erscheinungsbild';
+
+  @override
+  String get mode => 'Modus';
+
+  @override
+  String get light => 'Licht';
+
+  @override
+  String get dark => 'Dunkelheit';
+
+  @override
+  String get system => 'System';
+
+  @override
+  String get preferences => 'Präferenzen';
+
+  @override
+  String get allNotifications => 'Alle Benachrichtigungen';
+
+  @override
+  String get habitNotifications => 'Benachrichtigungen über Gewohnheiten';
+
+  @override
+  String get notificationSettings => 'Einstellungen für Benachrichtigungen';
+
+  @override
+  String get dailyReminders => 'Tägliche Mahnungen';
+
+  @override
+  String get next => 'Weiter';
+
+  @override
+  String get findALanguage => 'Eine Sprache finden';
+
+  @override
+  String get noLanguagesFound => 'Keine Sprachen gefunden';
+
+  @override
+  String get chooseLanguage => 'Sprache wählen';
 }

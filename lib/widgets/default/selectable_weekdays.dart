@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,14 +12,14 @@ class SelectableWeekdays extends StatelessWidget {
     this.selectionDuration = const Duration(milliseconds: 200),
   });
 
-  static const List<String> _weekDays = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
+  static List<String> _weekDays(AppLocalizations loc) => [
+    loc.mon,
+    loc.tue,
+    loc.wed,
+    loc.thu,
+    loc.fri,
+    loc.sat,
+    loc.sun,
   ];
 
   final Set<String> selectedDays;
@@ -28,10 +29,12 @@ class SelectableWeekdays extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children:
-          _weekDays.map((day) {
+          _weekDays(loc).map((day) {
             return _SelectableWeekDayButton(
               label: day,
               isNotification: isNotification,

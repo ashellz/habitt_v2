@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/color_service.dart';
 import 'package:provider/provider.dart';
@@ -397,13 +398,14 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return Column(
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Appearance',
+          loc.appearance,
           style: TextStyle(
             color: cp.lightGreyText,
             fontSize: 16,
@@ -426,7 +428,7 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Mode',
+                loc.mode,
                 style: TextStyle(
                   color: cp.lightGreyText,
                   fontSize: 16,
@@ -437,17 +439,17 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
                 spacing: 8,
                 children: [
                   modeOption(
-                    label: 'Light',
+                    label: loc.light,
                     mode: ColorMode.light,
                     preview: previewCard(dark: false, split: false),
                   ),
                   modeOption(
-                    label: 'Dark',
+                    label: loc.dark,
                     mode: ColorMode.dark,
                     preview: previewCard(dark: true, split: false),
                   ),
                   modeOption(
-                    label: 'System',
+                    label: loc.system,
                     mode: ColorMode.system,
                     preview: previewCard(dark: true, split: true),
                   ),

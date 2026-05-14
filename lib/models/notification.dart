@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 
 enum NotificationPeriod {
   morning,
   midday,
   wrapUp;
+
+  String getLocalizedName(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
+    switch (this) {
+      case NotificationPeriod.morning:
+        return loc.morning;
+      case NotificationPeriod.midday:
+        return loc.midday;
+      case NotificationPeriod.wrapUp:
+        return loc.wrapUp;
+    }
+  }
 
   String get name {
     switch (this) {

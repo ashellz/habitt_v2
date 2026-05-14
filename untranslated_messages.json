@@ -1,1 +1,14 @@
-{}
+{
+  "bs": [
+    "insightStrengthIncreaseDrinkWater",
+    "insightStrengthIncreaseGeneric",
+    "insightStrengthIncreaseGoToBedEarly",
+    "insightStrengthIncreaseGym",
+    "insightStrengthIncreaseMedications",
+    "insightStrengthIncreaseNutrition",
+    "insightStrengthIncreasePraying",
+    "insightStrengthIncreaseProductivitySession",
+    "insightStrengthIncreaseRead",
+    "insightStrengthIncreaseResearch"
+  ]
+}

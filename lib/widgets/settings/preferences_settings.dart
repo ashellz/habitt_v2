@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/notification_settings_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ class Preferences extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -17,7 +19,7 @@ class Preferences extends StatelessWidget {
       spacing: 10,
       children: [
         Text(
-          'Preferences',
+          loc.preferences,
           textAlign: TextAlign.start,
           style: TextStyle(color: cp.lightGreyText, fontSize: 16),
         ),
@@ -47,7 +49,7 @@ class Preferences extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Notifications',
+                        loc.notifications,
                         style: TextStyle(
                           color: cp.text,
                           fontSize: 16,

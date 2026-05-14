@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
@@ -43,6 +44,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
   }
 
   List<Widget> _buildLanguageRows({required ColorProvider cp}) {
+    final loc = AppLocalizations.of(context)!;
     final query = searchController.text.trim().toLowerCase();
     final items =
         LanguageOption.values.where((option) {
@@ -56,7 +58,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
         Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Text(
-            'No languages found',
+            loc.noLanguagesFound,
             style: TextStyle(
               color: cp.lightGreyText,
               fontSize: 14,
@@ -101,6 +103,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Padding(
@@ -112,7 +115,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 35),
                   child: Text(
-                    'Choose app language',
+                    loc.chooseAppLanguage,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: cp.text,
@@ -126,7 +129,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
                   child: NewDefaultTextField(
                     controller: searchController,
                     onChanged: (_) => setState(() {}),
-                    hint: 'Find a language',
+                    hint: loc.findALanguage,
                     suffix: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -158,7 +161,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: NewDefaultButton.primary(
-                  label: 'Next',
+                  label: loc.next,
                   onPressed: () {
                     widget.onNext?.call();
                   },
