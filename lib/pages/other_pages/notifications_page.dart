@@ -57,14 +57,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _showPermissionDialog() async {
+    final loc = AppLocalizations.of(context)!;
     final shouldRequest = await showDialog<bool>(
       context: context,
       builder:
           (context) => OldDefaultDialog(
-            title: AppLocalizations.of(context)!.missingPermissions,
+            title: loc.missingPermissions,
             desc:
-                AppLocalizations.of(context)!.toReceiveRemindersPleaseEnableNotificationPermissionsForHabitt,
-            rightButtonText: AppLocalizations.of(context)!.enable,
+                loc.toReceiveRemindersPleaseEnableNotificationPermissionsForHabitt,
+            rightButtonText: loc.enable,
             rightButtonCallback: () {
               Navigator.of(context).pop(true);
             },
@@ -175,6 +176,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final extraPadding = Platform.isAndroid ? 12.0 : 0.0;
+    final loc = AppLocalizations.of(context)!;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -187,7 +189,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 children: [
                   NavBackButton(tp: tp),
                   Text(
-                    AppLocalizations.of(context)!.notifications,
+                    loc.notifications,
                     style: TextStyle(
                       fontSize: 38,
                       color: tp.primaryTextColor,
@@ -195,7 +197,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context)!.controlWhenAndHowYouGetNotifiedAboutYourHabits,
+                    loc.controlWhenAndHowYouGetNotifiedAboutYourHabits,
                     style: TextStyle(
                       fontSize: 16,
                       color: tp.secondaryTextColor,
@@ -285,7 +287,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: DefaultButton(
-                          label: AppLocalizations.of(context)!.save,
+                          label: loc.save,
                           onPressed: _saveChanges,
                         ),
                       ),

@@ -29,7 +29,7 @@ class SelectCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final tp = context.watch<ThemeProvider>();
     final StateProvider stateProvider = context.watch<StateProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
@@ -90,7 +90,7 @@ class SelectCategoryWidget extends StatelessWidget {
                   duration: const Duration(milliseconds: 150),
                   opacity: isSelected ? 1.0 : 0.5,
                   child: Text(
-                    getLocalizedCategoryName(category, localizations),
+                    getLocalizedCategoryName(category, loc),
                     style: TextStyle(
                       color: tp.primaryTextColor,
                       fontSize: 22,
@@ -107,8 +107,8 @@ class SelectCategoryWidget extends StatelessWidget {
                     isSelected
                         ? Text(
                           habitsCount
-                              ? "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}"
-                              : localizations.selected,
+                              ? "$categoryHabits ${categoryHabits == 1 ? loc.habit : loc.habits}"
+                              : loc.selected,
                           style: TextStyle(
                             fontSize: 10,
                             color: tp.secondaryTextColor,

@@ -139,7 +139,7 @@ class _CategoriesListState extends State<CategoriesList> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final categoryProvider = context.watch<CategoryProvider>();
     final habitProvider = context.watch<HabitProvider>();
     final stateProvider = context.watch<StateProvider>();
@@ -211,7 +211,7 @@ class _CategoriesListState extends State<CategoriesList> {
                             selectedDay: widget.selectedDay,
                             standardColor: widget.standardColor,
                             habitsCount: widget.habitsCount,
-                            category: Category(id: 0, name: localizations.all),
+                            category: Category(id: 0, name: loc.all),
                             onTap: () {
                               if (widget.selectedDay != null) {
                                 calendarProvider.selectCategory(0);

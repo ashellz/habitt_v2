@@ -32,6 +32,8 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
 
     final listViewHeight = MediaQuery.of(context).size.height - 293;
 
+    final loc = AppLocalizations.of(context)!;
+
     return DefaultAnnotatedRegion(
       child: Scaffold(
         backgroundColor: tp.backgroundColor,
@@ -92,7 +94,7 @@ class _SelectHabitTimePageState extends State<SelectHabitTimePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    AppLocalizations.of(context)!.selectHabitTime,
+                    loc.selectHabitTime,
                     style: TextStyle(
                       letterSpacing: 2,
                       fontSize: 48,

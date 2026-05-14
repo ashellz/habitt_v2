@@ -50,18 +50,20 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
   @override
   Widget build(BuildContext context) {
     final backupProvider = context.watch<BackupProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     final desc =
         widget.dataExists
-            ? AppLocalizations.of(context)!.enterYourExistingBackupPassphraseToAccessYourData
-            : AppLocalizations.of(context)!.thisPassphraseIsUsedForYourDataEncryptionSaveItSecurelyYouWillUseItAgainWhenGettingYourDataOnOtherDevices;
+            ? loc.enterYourExistingBackupPassphraseToAccessYourData
+            : loc
+                .thisPassphraseIsUsedForYourDataEncryptionSaveItSecurelyYouWillUseItAgainWhenGettingYourDataOnOtherDevices;
 
     return OldDefaultDialog(
-      title: AppLocalizations.of(context)!.backupPassphrase,
+      title: loc.backupPassphrase,
       desc: desc,
       content: DefaultTextField(
         controller: widget.controller,
-        title: AppLocalizations.of(context)!.passphrase,
+        title: loc.passphrase,
         obscureText: true,
       ),
       leftButtonText: "Cancel",
@@ -79,7 +81,7 @@ class _PassphraseDialogState extends State<PassphraseDialog> {
           );
 
           if (!isCorrectPassphrase && widget.displayAlert != null) {
-            widget.displayAlert!(AppLocalizations.of(context)!.incorrectPassphrase);
+            widget.displayAlert!(loc.incorrectPassphrase);
           } else {
             await backupProvider.setPassphrase(passphrase);
             await backupProvider.performSync(true);

@@ -56,13 +56,13 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
       _returnToSetSchedule(cp);
       return;
     }
-
+    final loc = AppLocalizations.of(context)!;
     await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: AppLocalizations.of(context)!.exitWithoutSaving,
-            primaryButtonLabel: AppLocalizations.of(context)!.exit,
+            title: loc.exitWithoutSaving,
+            primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
               sp.customIntervalDays = initialCustomIntervalDays;
               Navigator.of(dialogContext).pop();
@@ -76,7 +76,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
-
+    final loc = AppLocalizations.of(context)!;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -85,7 +85,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
         }
       },
       child: NewDefaultDialog(
-        title: AppLocalizations.of(context)!.custom,
+        title: loc.custom,
         onPrimaryButtonPressed: () {
           Navigator.of(context).pop(true);
         },

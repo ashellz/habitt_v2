@@ -709,5 +709,14 @@
       "fromValue": {},
       "toValue": {}
     }
-  }
+  },
+  "getPremium": "Get Premium",
+  "enjoyAllBenefits": "Enjoy all the benefits of the app",
+  "rateUs": "Rate us",
+  "reportBug": "Report a bug",
+  "leaveFeedback": "Leave feedback",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "logOut": "Log out",
+  "backupAndSync": "Backup & Sync"
 }

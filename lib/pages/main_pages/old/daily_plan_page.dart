@@ -15,6 +15,7 @@ class DailyPlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     // bottom and top safe area
     final double safeArea = kToolbarHeight + kBottomNavigationBarHeight;
@@ -42,7 +43,7 @@ class DailyPlanPage extends StatelessWidget {
                     spacing: 4,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.dailyPlan,
+                        loc.dailyPlan,
                         style: TextStyle(
                           fontSize: 38,
                           color: tp.primaryTextColor,

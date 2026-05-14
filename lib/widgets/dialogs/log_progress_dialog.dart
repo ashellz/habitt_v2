@@ -28,18 +28,19 @@ class LogProgressDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     final title =
-        progressType == ProgressType.amount ? AppLocalizations.of(context)!.logProgress : AppLocalizations.of(context)!.logDuration;
+        progressType == ProgressType.amount ? loc.logProgress : loc.logDuration;
     final desc =
         progressType == ProgressType.amount
-            ? AppLocalizations.of(context)!.howMuchDidYouCompleteToday
-            : AppLocalizations.of(context)!.howMuchTimeDidYouSpendOnThisHabitToday;
+            ? loc.howMuchDidYouCompleteToday
+            : loc.howMuchTimeDidYouSpendOnThisHabitToday;
 
     return NewDefaultDialog(
       title: title,
       desc: desc,
-      primaryButtonLabel: AppLocalizations.of(context)!.save,
+      primaryButtonLabel: loc.save,
       onPrimaryButtonPressed: () {
         final habitProvider = context.read<HabitProvider>();
         final stateProvider = context.read<StateProvider>();

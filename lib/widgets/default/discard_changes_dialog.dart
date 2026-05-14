@@ -8,10 +8,10 @@ class DiscardChangesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return OldDefaultDialog(
-      title: AppLocalizations.of(context)!.discardChanges,
-      desc:
-          AppLocalizations.of(context)!.youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem,
+      title: loc.discardChanges,
+      desc: loc.youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem,
       content: Row(
         children: [
           Expanded(
@@ -24,7 +24,7 @@ class DiscardChangesDialog extends StatelessWidget {
           SizedBox(width: 16),
           Expanded(
             child: DefaultButton(
-              label: AppLocalizations.of(context)!.discard,
+              label: loc.discard,
               onPressed: () {
                 Navigator.pop(context); // close dialog
                 Navigator.pop(context); // go back

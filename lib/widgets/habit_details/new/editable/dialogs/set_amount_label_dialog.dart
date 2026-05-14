@@ -72,6 +72,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
     required StateProvider sp,
     required ColorProvider cp,
   }) {
+    final loc = AppLocalizations.of(context)!;
     final labels = sp.allAmountLabels;
     final customLabels = sp.customAmountLabels.toSet();
     final rows = <Widget>[];
@@ -94,7 +95,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
               child: NewDefaultButton.secondarySmall(
                 height: 40,
                 onPressed: widget.onAddPressed,
-                label: AppLocalizations.of(context)!.add,
+                label: loc.add,
                 prefix: SvgPicture.asset(
                   "assets/images/new-svg/add.svg",
                   colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
@@ -136,7 +137,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                     _statusOverlay.show(
                       context: context,
                       cp: cp,
-                      title: AppLocalizations.of(context)!.thisLabelCantBeDeleted,
+                      title: loc.thisLabelCantBeDeleted,
                       isError: true,
                     );
                     return;
@@ -214,10 +215,11 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return NewDefaultDialog(
-      title: AppLocalizations.of(context)!.setAmountLabel,
-      desc: AppLocalizations.of(context)!.whatAreYouCountingForThisHabit,
+      title: loc.setAmountLabel,
+      desc: loc.whatAreYouCountingForThisHabit,
       onPrimaryButtonPressed: () {
         widget.onConfirm(selectedLabel);
       },

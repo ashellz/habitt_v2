@@ -99,6 +99,7 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
 
     final completedCount = getCompletedHabits(category, context);
     final notCompletedCount = getNotCompletedHabits(category, context);
+    final loc = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.only(top: 8),
@@ -139,7 +140,7 @@ class _HabitsCompletedWidgetState extends State<HabitsCompletedWidget>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context)!.complete,
+                                      loc.complete,
                                       style: TextStyle(
                                         fontSize: 24,
                                         color: tp.primaryTextColor,

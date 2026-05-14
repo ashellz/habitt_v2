@@ -45,10 +45,11 @@ class _DeleteHabitNameDialogState extends State<DeleteHabitDialogNameConfirm> {
       valueListenable: _nameController,
       builder: (context, value, _) {
         final isMatch = _isMatch(value.text);
+        final loc = AppLocalizations.of(context)!;
 
         return NewDefaultDialog(
           title: 'Confirm deletion',
-          desc: AppLocalizations.of(context)!.enterHabitNameToConfirmDeletion,
+          desc: loc.enterHabitNameToConfirmDeletion,
           primaryButtonLabel: 'Delete',
           primaryButtonEnabled: isMatch,
           primaryButtonColor: widget.primaryButtonColor,

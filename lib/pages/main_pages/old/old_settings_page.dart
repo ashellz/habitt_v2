@@ -130,6 +130,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
       barrierDismissible: false,
       builder: (dialogContext) {
         bool isLoading = false;
+        final loc = AppLocalizations.of(context)!;
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -140,10 +141,10 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
             return OldDefaultDialog(
               title: title,
               desc:
-                  AppLocalizations.of(context)!.youWillUseThisPassphraseToDecryptYourDataWhenImportingIt,
+                  loc.youWillUseThisPassphraseToDecryptYourDataWhenImportingIt,
               content: DefaultTextField(
                 controller: controller,
-                title: AppLocalizations.of(context)!.passphrase,
+                title: loc.passphrase,
                 obscureText: true,
               ),
               leftButtonText: "Cancel",
@@ -175,6 +176,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
     final cp = context.watch<ColorProvider>();
     bool isTinted = prefsProvider.colorfulness == Colorfulness.tinted;
     final Color primary = tp.primaryColor;
+    final loc = AppLocalizations.of(context)!;
 
     return DefaultAnnotatedRegion(
       child: Scaffold(
@@ -209,8 +211,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                       ],
                     ),
                     SettingTile(
-                      title: AppLocalizations.of(context)!.darkMode,
-                      desc: AppLocalizations.of(context)!.changeAColorThemeForYourInterface,
+                      title: loc.darkMode,
+                      desc: loc.changeAColorThemeForYourInterface,
                       icon: CustomSwitcherWrapper(
                         value: isTinted,
                         widget: Icon(
@@ -234,8 +236,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                       },
                     ),
                     SettingTile(
-                      title: AppLocalizations.of(context)!.accentColor,
-                      desc: AppLocalizations.of(context)!.selectAColorPalleteForYourInterface,
+                      title: loc.accentColor,
+                      desc: loc.selectAColorPalleteForYourInterface,
                       trailing: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
@@ -304,7 +306,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context)!.colorfulInterface,
+                                  loc.colorfulInterface,
                                   style: TextStyle(
                                     color: tp.primaryTextColor,
                                     fontWeight: FontWeight.bold,
@@ -312,7 +314,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                                   ),
                                 ),
                                 Text(
-                                  AppLocalizations.of(context)!.chooseHowColorfulTheUiShouldBe,
+                                  loc.chooseHowColorfulTheUiShouldBe,
                                   style: TextStyle(color: tp.primaryTextColor),
                                 ),
                                 const SizedBox(height: 8),
@@ -336,8 +338,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: AppLocalizations.of(context)!.glassFeel,
-                      desc: AppLocalizations.of(context)!.makesWidgetsLookMoreGlassy,
+                      title: loc.glassFeel,
+                      desc: loc.makesWidgetsLookMoreGlassy,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 300),
                         value: isTinted,
@@ -360,8 +362,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: AppLocalizations.of(context)!.notifications,
-                      desc: AppLocalizations.of(context)!.manageYourNotificationPreferences,
+                      title: loc.notifications,
+                      desc: loc.manageYourNotificationPreferences,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 400),
                         value: isTinted,
@@ -386,9 +388,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: AppLocalizations.of(context)!.subscriptions,
-                      desc:
-                          AppLocalizations.of(context)!.manageYourSubscriptionsAndViewPremiumBenefits,
+                      title: loc.subscriptions,
+                      desc: loc.manageYourSubscriptionsAndViewPremiumBenefits,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 500),
                         value: isTinted,
@@ -413,9 +414,8 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                     ),
 
                     SettingTile(
-                      title: AppLocalizations.of(context)!.backupData,
-                      desc:
-                          AppLocalizations.of(context)!.useYourGoogleDriveToBackupEncryptedAppData,
+                      title: loc.backupData,
+                      desc: loc.useYourGoogleDriveToBackupEncryptedAppData,
                       icon: CustomSwitcherWrapper(
                         delay: Duration(milliseconds: 600),
                         value: isTinted,

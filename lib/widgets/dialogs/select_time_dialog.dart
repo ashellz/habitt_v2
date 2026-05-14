@@ -59,6 +59,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
     final sp = context.watch<StateProvider>();
     final tp = context.watch<ThemeProvider>();
     final width = MediaQuery.of(context).size.width - 200;
+    final loc = AppLocalizations.of(context)!;
 
     return Dialog(
       backgroundColor:
@@ -74,7 +75,7 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                 child: Column(
                   children: [
                     Text(
-                      widget.isStartTime ? AppLocalizations.of(context)!.startTime : AppLocalizations.of(context)!.endTime,
+                      widget.isStartTime ? loc.startTime : loc.endTime,
                       style: TextStyle(
                         color: tp.primaryTextColor,
                         fontSize: 18,

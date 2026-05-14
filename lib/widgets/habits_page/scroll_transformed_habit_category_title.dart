@@ -20,7 +20,7 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final int categoryHabits = getCategoryLength(
       category,
       context,
@@ -45,7 +45,7 @@ class _OriginalHabitCategoryTitleContent extends StatelessWidget {
             ),
           ),
           Text(
-            "$categoryHabits ${categoryHabits == 1 ? localizations.habit : localizations.habits}",
+            "$categoryHabits ${categoryHabits == 1 ? loc.habit : loc.habits}",
             style: TextStyle(
               color: isFirst ? tp.primaryTextColor : tp.secondaryTextColor,
             ),

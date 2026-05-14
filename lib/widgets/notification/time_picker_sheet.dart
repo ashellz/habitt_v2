@@ -52,6 +52,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
   Widget build(BuildContext context) {
     final tp = context.watch<ThemeProvider>();
     final width = MediaQuery.of(context).size.width;
+    final loc = AppLocalizations.of(context)!;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -65,7 +66,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                 child: Column(
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.selectTime,
+                      loc.selectTime,
                       style: TextStyle(
                         color: tp.primaryTextColor,
                         fontSize: 18,
@@ -106,7 +107,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                     widget.notificationPeriod.hourRange.$2 -
                                     widget.notificationPeriod.hourRange.$1;
 
-                                debugPrint(AppLocalizations.of(context)!.numberOfHoursNumberofhours);
+                                debugPrint(loc.numberOfHoursNumberofhours);
 
                                 final fixedHour =
                                     widget.notificationPeriod.hourRange.$1 +
@@ -116,9 +117,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                 final fixedMinute =
                                     minutesController.selectedItem % 60;
 
-                                debugPrint(
-                                  AppLocalizations.of(context)!.fixedTimeFixedhourfixedminute,
-                                );
+                                debugPrint(loc.fixedTimeFixedhourfixedminute);
 
                                 Navigator.pop(
                                   context,
@@ -128,7 +127,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                                   ),
                                 );
                               },
-                              label: AppLocalizations.of(context)!.confirm,
+                              label: loc.confirm,
                             ),
                           ),
                         ],

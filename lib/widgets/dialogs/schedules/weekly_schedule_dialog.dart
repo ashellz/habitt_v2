@@ -82,13 +82,14 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
       _returnToSetSchedule(cp);
       return;
     }
+    final loc = AppLocalizations.of(context)!;
 
     await showDialogSheet(
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: AppLocalizations.of(context)!.exitWithoutSaving,
-            primaryButtonLabel: AppLocalizations.of(context)!.exit,
+            title: loc.exitWithoutSaving,
+            primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
               sp.weeklyTarget = initialWeeklyTarget;
               sp.selectedDaysAWeek = initialWeeklyDays;
@@ -146,6 +147,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     return PopScope(
       canPop: false,
@@ -285,7 +287,7 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
                           ),
                         ),
                         width: double.infinity,
-                        label: AppLocalizations.of(context)!.addMoreOptions,
+                        label: loc.addMoreOptions,
                       ),
             ),
           ],

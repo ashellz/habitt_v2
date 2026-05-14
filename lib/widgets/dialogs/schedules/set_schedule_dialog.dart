@@ -35,6 +35,8 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop && result == null) {
@@ -42,8 +44,8 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
         }
       },
       child: NewDefaultDialog(
-        title: AppLocalizations.of(context)!.setSchedule,
-        desc: AppLocalizations.of(context)!.howOftenWouldYouLikeToDoThisHabit,
+        title: loc.setSchedule,
+        desc: loc.howOftenWouldYouLikeToDoThisHabit,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

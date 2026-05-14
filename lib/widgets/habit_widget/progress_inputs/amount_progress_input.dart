@@ -63,7 +63,6 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
       "Habit amount: ${stateProvider.habitAmount}, min: ${widget.minValue}",
     );
     if (stateProvider.habitAmount > widget.minValue) {
-      debugPrint(AppLocalizations.of(context)!.decrementingHabitAmount);
       setState(() {
         stateProvider.habitAmount--;
         controller.text = stateProvider.habitAmount.toString();

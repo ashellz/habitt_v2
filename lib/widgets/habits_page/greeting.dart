@@ -38,7 +38,7 @@ class _GreetingState extends State<Greeting> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
 
     return Column(
@@ -46,7 +46,7 @@ class _GreetingState extends State<Greeting> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _greeting != null ? "$_greeting," : "${localizations.hello},",
+          _greeting != null ? "$_greeting," : "${loc.hello},",
           style: TextStyle(
             color: cp.greyText,
             fontSize: 18,
@@ -54,7 +54,7 @@ class _GreetingState extends State<Greeting> {
           ),
         ),
         Text(
-          name ?? AppLocalizations.of(context)!.guest,
+          name ?? loc.guest,
           style: TextStyle(
             color: cp.text,
             fontSize: 32,
@@ -66,8 +66,8 @@ class _GreetingState extends State<Greeting> {
   }
 
   void _ensureGreeting() {
+    final loc = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context);
-    final l = AppLocalizations.of(context)!;
     final dayPeriod = _dayPeriodFromHour(DateTime.now().hour);
 
     final needsUpdate =
@@ -76,7 +76,7 @@ class _GreetingState extends State<Greeting> {
         _lastDayPeriod != dayPeriod;
     if (!needsUpdate) return;
 
-    final options = _greetingOptions(l, dayPeriod);
+    final options = _greetingOptions(loc, dayPeriod);
     setState(() {
       _lastLocale = locale;
       _lastDayPeriod = dayPeriod;
