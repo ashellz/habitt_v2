@@ -154,7 +154,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
         }
       },
       child: NewDefaultDialog(
-        title: "Monthly",
+        title: loc.monthly,
         onPrimaryButtonPressed: () {
           Navigator.of(context).pop(true);
         },
@@ -169,7 +169,7 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Times per month:',
+                  loc.timesPerMonth,
                   style: TextStyle(
                     color: cp.text,
                     fontSize: 18,
@@ -217,7 +217,10 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
                             padding: const EdgeInsets.only(top: 12),
                             child: Text(
                               key: const ValueKey('monthly-helper-text'),
-                              'This habit will appear ${sp.monthlyTarget} time${sp.monthlyTarget == 1 ? '' : 's'} per month until completed',
+                              loc.habitWillAppearMonthly(
+                                sp.monthlyTarget.toString(),
+                                sp.monthlyTarget == 1 ? loc.time : loc.times,
+                              ),
                               style: TextStyle(
                                 color: cp.greyText,
                                 fontSize: 13,

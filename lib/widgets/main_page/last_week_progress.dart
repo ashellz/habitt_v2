@@ -248,6 +248,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    _checkLocale();
     final habitProvider = context.read<HabitProvider>();
     final selectedDate = _normalizeDate(
       habitProvider.selectedDate ?? DateTime.now(),

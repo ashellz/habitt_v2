@@ -46,11 +46,11 @@
   "darkMode": "Tamni način",
   "dateJoinedIsNull": "Datum pridruživanja je null",
   "datejoined": "datum pridruživanja",
-  "areYouSureYouWantToDeleteThisHabit": "Jesi li siguran da želiš izbrisati ovu naviku?",
   "dayEntryIsNull": "Ulazak tokom dana je nevažeći",
   "decrementingHabitAmount": "Smanjenje iznosa navike",
   "defaultlabel": ", podrazumijevanoOznaka: ",
   "delete": "Obriši",
+  "areYouSureYouWantToDeleteThisHabit": "Jesi li siguran da želiš izbrisati ovu naviku?",
   "deleteLabel": "Izbriši '{label}'?",
   "deleteNotification": "Obriši obavijest?",
   "discard": "Odbaciti",
@@ -66,13 +66,13 @@
   "enterHabitNameToConfirmDeletion": "Unesi naziv navike da potvrdi brisanje",
   "enterPassphrase": "Unesi sigurnosnu frazu",
   "enterYourAmount": "Unesi svoj iznos",
-  "areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually": "Jesi li siguran da želiš isključiti sigurnosno kopiranje podataka? Ovo će prekinuti vezu vašeg Google naloga i zaustaviti sva sigurnosna kopiranja. Postojeća sigurnosna kopiranja na Google Driveu ostat će osim ako se ručno ne obrišu.",
   "enterYourDuration": "Unesi svoje trajanje",
   "enterYourExistingBackupPassphraseToAccessYourData": "Unesi svoju postojeću lozinku za rezervnu kopiju da bi pristupio svojim podacima.",
   "evening": "Veče",
   "exit": "Izlaz",
   "exitWithoutSaving": "Izlazak bez spremanja?",
   "fetchOffers": "Ponude za preuzimanje",
+  "areYouSureYouWantToOptOutOfDataBackupThisWillDisconnectYourGoogleAccountAndStopAllBackupsYourExistingBackupsOnGoogleDriveWillRemainUnlessYouDeleteThemManually": "Jesi li siguran da želiš isključiti sigurnosno kopiranje podataka? Ovo će prekinuti vezu vašeg Google naloga i zaustaviti sva sigurnosna kopiranja. Postojeća sigurnosna kopiranja na Google Driveu ostat će osim ako se ručno ne obrišu.",
   "fri": "Pet",
   "from": "Od",
   "getRemindedAboutYourHabit": "Neka te podsjeti na tvoju naviku",
@@ -110,6 +110,86 @@
   "insightStrengthGotItOdd": "Razumijem",
   "insightStrengthIncreaseBrushTeeth": "Odlično se držiš u ribanju zuba. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} da bi nastavio rasti još više.||Odlična konzistentnost u ribanju zuba. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održavaj visok zamah.||Tvoja navika ribanja zuba je trenutno jaka. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.||Pouzdano se pojavljuješ u četkanju zuba. Snaga je stabilna na {strength}%. Povećaj svoj cilj sa {fromValue} na {toValue} i održi zamah visokim.||Tvoja navika četkanja zuba je trenutno jaka. Snaga je stabilna na {strength}%.",
   "@insightStrengthIncreaseBrushTeeth": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseDrinkWater": "You are doing great with drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on drink enough water. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your drink enough water habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for drink enough water. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on drink enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseDrinkWater": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseGeneric": "Your consistency is strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.||You are handling this habit well. Strength is stable at {strength}%. Push the target from {fromValue} to {toValue} for more growth.||Momentum is solid here. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to level up.||You built a reliable baseline. Strength is stable at {strength}%. Move from {fromValue} to {toValue} and keep improving.||Great consistency lately. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep your progress rising.",
+  "@insightStrengthIncreaseGeneric": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseGoToBedEarly": "You are doing great with go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on go to bed early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for go to bed early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on go to bed early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseGoToBedEarly": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseGym": "You are doing great with your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your gym routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your gym routine habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your gym routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your gym routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseGym": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseMedications": "You are doing great with take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on take your medications on time. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your take your medications on time habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for take your medications on time. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on take your medications on time. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseMedications": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseNutrition": "You are doing great with your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your nutrition plan. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your nutrition plan habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your nutrition plan. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your nutrition plan. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseNutrition": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreasePraying": "You are doing great with pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on pray consistently. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your pray consistently habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for pray consistently. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on pray consistently. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreasePraying": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseProductivitySession": "You are doing great with your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your productivity sessions. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your productivity sessions habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your productivity sessions. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your productivity sessions. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseProductivitySession": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseRead": "You are doing great with your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your reading habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your reading habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your reading habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your reading habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseRead": {
+    "placeholders": {
+      "strength": {},
+      "fromValue": {},
+      "toValue": {}
+    }
+  },
+  "insightStrengthIncreaseResearch": "You are doing great with your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing even more.||Great consistency on your research habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.||Your your research habit habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.||You are reliably showing up for your research habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.||Excellent rhythm on your research habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
+  "@insightStrengthIncreaseResearch": {
     "placeholders": {
       "strength": {},
       "fromValue": {},
@@ -490,9 +570,9 @@
   "notificationScheduleMonthlyReached": "Mjesečni cilj već ostvaren ({completed}/{target}). Dodatni ponavljanja, dodatni zamah.|Odlično si ostvario svoj mjesečni cilj ({completed}/{target}). Ovo je elitna konzistentnost.|Mjesečni cilj: gotovo ({completed}/{target}). Sada je sve eksponencijalni rast.|Mjesečni cilj već srušen ({completed}/{target}). Bonus ponavljanja produbljuju naviku.",
   "notificationScheduleMonthlyRemaining": "Potrebno vam je još {remaining} ovog mjeseca da dostignete {target}.|Preostalo vam je {remaining} sesija ovog mjeseca da dostignete {target}. Dosljedno tempiranje pobjeđuje.|Potrebno vam je još {remaining} za vaš mjesečni cilj od {target}. Svaki napor gradi.|Mjesečni cilj: ostalo vam je {remaining} od {target}. Imaš vremena — iskoristi ga mudro.|{remaining} do kraja ovog mjeseca za {target}. Male, postojane radnje premosti jaz.|Tvoj mjesečni cilj je {target}, ostalo je {remaining}. Danas pomjera cilj naprijed.",
   "notificationScheduleWeeklyAtRisk": "Trebate još {remaining} ove sedmice ({completed}/{target} je gotovo). Ako preskoči danas, vaš cilj postaje mnogo teži.|Trebate još {remaining} ove sedmice ({completed}/{target}). Danas je to podnošljivo.|Preostalo {remaining} za ovu sedmicu ({completed}/{target}). Preskakanje dana stvara pritisak.|Tvoj sedmični cilj ({completed}/{target}) je i dalje ostvariv. Danas je ključna tačka.|{completed}/{target} za sedmicu. Jedan danas drži tvoj cilj na pravom putu.|Preostalo {remaining} za ovu sedmicu ({completed}/{target}). Danas je tvoj najbolji potez.",
+  "folderNotFoundAndCreationNotAllowed": "Mapa nije pronađena i kreiranje nije dozvoljeno",
   "notificationScheduleWeeklyImpossible": "Ovosedmični cilj je nedostižan ({completed}/{target}). Ipak, svaki pokušaj jača naviku za sljedeću sedmicu.|Cilj neće biti ostvaren ove sedmice ({completed}/{target}). Ali neostvarene sedmice nas uče šta treba prilagoditi.|Sedmični broj se neće poklopiti ({completed}/{target}). Uradi to ionako — konzistentnost zanemaruje semafor.|Cilj promašen ove sedmice ({completed}/{target}). Svaki pokušaj i dalje jača krug navike.|{completed}/{target} ove sedmice. Cilj je izvan dosega — ali navika nije.",
   "notificationScheduleWeeklyOneLeft": "Još jedno dovršavanje ove sedmice i dostignut si svoj cilj ({completed}/{target}).|Još jedno ove sedmice i stižeš do {target} ({completed} završeno). Zatvori krug.|Jedna sesija te dijeli od tvojeg sedmičnog cilja ({completed}/{target}). Neka se računa.|Cilj ove sedmice treba još samo jedno ({completed}/{target}). Možeš to sada završiti.|Još jedno dovršavanje te dijeli od {target} ove sedmice ({completed} završeno).|Sedmični cilj je nadohvat ruke: još jedno ({completed}/{target}). To je samo danas.",
-  "folderNotFoundAndCreationNotAllowed": "Mapa nije pronađena i kreiranje nije dozvoljeno",
   "notificationScheduleWeeklyReached": "Sedmični cilj je već ostvaren ({completed}/{target}). Ovo je bonus konzistentnost.|Postigao si svoj sedmični cilj ({completed}/{target}). Sve što je viška je pobjeda.|Sedmični cilj: ostvaren ({completed}/{target}). Bonus ponavljanja grade elitne navike.|{completed}/{target} za sedmicu. Premašio si očekivanja.|Sedmični cilj već je ostvaren ({completed}/{target}). Radiš na višem nivou.|Ispunio si svoj sedmični cilj ({completed}/{target}). Konzistentnost ti sada viška.",
   "notificationScheduleWeeklyRemaining": "Trebate još {remaining} ove sedmice da biste dostigli {target}.|Preostalo je {remaining} do sedmičnog cilja od {target}. Stalno tempo djeluje.|Trebate još {remaining} ove sedmice. Danas je odlično vrijeme da započnete jedan.|Sedmični cilj: preostalo {remaining} od {target}. Raspodijeli napor.|Preostalo je {remaining} sesija da dosegnete {target} ove sedmice. Svaka je jednako važna.|Vaš sedmični cilj je {target}, preostalo je {remaining}. Korak po korak.",
   "notifications": "Obavijesti",
@@ -637,6 +717,14 @@
   "next": "Sljedeće",
   "findALanguage": "Pronađi jezik",
   "noLanguagesFound": "Nijedan jezik nije pronađen",
+  "selectAColorPalleteForYourInterface": "Odaberi paletu boja za svoj interfejs",
   "chooseLanguage": "Odaberi jezik",
-  "selectAColorPalleteForYourInterface": "Odaberi paletu boja za svoj interfejs"
+  "weekly": "Sedmično",
+  "week": "sedmica",
+  "timesPerWeek": "Koliko puta sedmično:",
+  "timesPerMonth": "Koliko puta mjesečno:",
+  "monthly": "Mjesečno",
+  "month": "mjesec",
+  "habitWillAppearWeekly": "Ova navika će se pojavljivati {amount} {label} sedmično dok se ne ispuni",
+  "habitWillAppearMonthly": "Ova navika će se pojavljivati {amount} {label} mjesečno dok se ne ispuni"
 }

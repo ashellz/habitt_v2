@@ -1833,4 +1833,32 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get chooseLanguage => 'Odaberi jezik';
+
+  @override
+  String get weekly => 'Sedmično';
+
+  @override
+  String get week => 'sedmica';
+
+  @override
+  String get timesPerWeek => 'Koliko puta sedmično:';
+
+  @override
+  String get timesPerMonth => 'Koliko puta mjesečno:';
+
+  @override
+  String get monthly => 'Mjesečno';
+
+  @override
+  String get month => 'mjesec';
+
+  @override
+  String habitWillAppearWeekly(Object amount, Object label) {
+    return 'Ova navika će se pojavljivati $amount $label sedmično dok se ne ispuni';
+  }
+
+  @override
+  String habitWillAppearMonthly(Object amount, Object label) {
+    return 'Ova navika će se pojavljivati $amount $label mjesečno dok se ne ispuni';
+  }
 }

@@ -14,11 +14,9 @@ class Greeting extends StatefulWidget {
 }
 
 class _GreetingState extends State<Greeting> {
+  static String? _sessionGreeting;
+  static final _random = Random();
   String? name;
-  String? _greeting;
-  Locale? _lastLocale;
-  _DayPeriod? _lastDayPeriod;
-  final _random = Random();
 
   @override
   void initState() {
@@ -46,7 +44,7 @@ class _GreetingState extends State<Greeting> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _greeting != null ? "$_greeting," : "${loc.hello},",
+          _sessionGreeting != null ? "$_sessionGreeting," : "${loc.hello},",
           style: TextStyle(
             color: cp.greyText,
             fontSize: 18,
@@ -66,21 +64,14 @@ class _GreetingState extends State<Greeting> {
   }
 
   void _ensureGreeting() {
-    final loc = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context);
-    final dayPeriod = _dayPeriodFromHour(DateTime.now().hour);
+    if (_sessionGreeting != null) return;
 
-    final needsUpdate =
-        _greeting == null ||
-        _lastLocale != locale ||
-        _lastDayPeriod != dayPeriod;
-    if (!needsUpdate) return;
+    final loc = AppLocalizations.of(context)!;
+    final dayPeriod = _dayPeriodFromHour(DateTime.now().hour);
 
     final options = _greetingOptions(loc, dayPeriod);
     setState(() {
-      _lastLocale = locale;
-      _lastDayPeriod = dayPeriod;
-      _greeting = options[_random.nextInt(options.length)];
+      _sessionGreeting = options[_random.nextInt(options.length)];
     });
   }
 

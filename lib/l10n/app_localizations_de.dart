@@ -1840,4 +1840,32 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get chooseLanguage => 'Sprache wählen';
+
+  @override
+  String get weekly => 'Wöchentlich';
+
+  @override
+  String get week => 'Woche';
+
+  @override
+  String get timesPerWeek => 'Zeiten pro Woche:';
+
+  @override
+  String get timesPerMonth => 'Mal pro Monat:';
+
+  @override
+  String get monthly => 'Monatlich';
+
+  @override
+  String get month => 'Monat';
+
+  @override
+  String habitWillAppearWeekly(Object amount, Object label) {
+    return 'Diese Gewohnheit wird $amount $label pro Woche erscheinen, bis sie abgeschlossen ist';
+  }
+
+  @override
+  String habitWillAppearMonthly(Object amount, Object label) {
+    return 'Diese Gewohnheit wird $amount $label pro Monat erscheinen, bis sie abgeschlossen ist';
+  }
 }

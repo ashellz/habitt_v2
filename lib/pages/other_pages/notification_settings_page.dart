@@ -392,7 +392,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     spacing: 10,
                     children: [
                       Text(
-                        'Daily reminders',
+                        loc.dailyReminders,
                         textAlign: TextAlign.start,
                         style: TextStyle(color: cp.lightGreyText, fontSize: 16),
                       ),
