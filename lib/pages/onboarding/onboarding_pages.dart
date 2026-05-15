@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/pages/onboarding/choose_app_language.dart';
@@ -170,7 +172,6 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
     final steps = _buildSteps(loc);
-    final step = steps[_currentStep];
 
     return Scaffold(
       backgroundColor: cp.main,
@@ -239,67 +240,97 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
                       topRight: Radius.circular(32),
                     ),
                   ),
-                  child: AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 240),
-                      switchInCurve: Curves.easeOut,
-                      switchOutCurve: Curves.easeIn,
-                      child: Column(
-                        key: ValueKey(_currentStep),
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            step.title,
-                            style: TextStyle(
-                              color: cp.text,
-                              fontSize: 32,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Text(
-                            step.subtitle,
-                            style: TextStyle(
-                              color: cp.greyText,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          Row(
-                            children: [
-                              Row(
-                                children: List.generate(
-                                  _stepCount,
-                                  (index) => Container(
-                                    margin: EdgeInsets.only(
-                                      right: index == _stepCount - 1 ? 0 : 6,
-                                    ),
-                                    width: index == _currentStep ? 20 : 7,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          index == _currentStep
-                                              ? cp.text
-                                              : cp.border,
-                                      borderRadius: BorderRadius.circular(999),
-                                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 480),
+                        tween: Tween<double>(
+                          begin: 0,
+                          end: _currentStep.toDouble(),
+                        ),
+                        curve: Curves.easeInOut,
+                        builder: (context, value, _) {
+                          final animStep = steps[value.round()];
+                          final screenWidth = MediaQuery.of(context).size.width;
+                          return ClipRect(
+                            child: Stack(
+                              children: [
+                                Transform.translate(
+                                  offset: Offset(
+                                    -((value + 0.5).remainder(1) - 0.5) *
+                                        screenWidth *
+                                        2,
+                                    0,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        animStep.title,
+                                        style: TextStyle(
+                                          color: cp.text,
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 14),
+                                      Text(
+                                        animStep.subtitle,
+                                        style: TextStyle(
+                                          color: cp.greyText,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: (value - value.round()).abs() * 30,
+                                    sigmaY: 0,
+                                  ),
+                                  child: Container(color: Colors.transparent),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 18),
+                      Row(
+                        children: [
+                          Row(
+                            children: List.generate(
+                              _stepCount,
+                              (index) => Container(
+                                margin: EdgeInsets.only(
+                                  right: index == _stepCount - 1 ? 0 : 6,
+                                ),
+                                width: index == _currentStep ? 20 : 7,
+                                height: 5,
+                                decoration: BoxDecoration(
+                                  color:
+                                      index == _currentStep
+                                          ? cp.text
+                                          : cp.border,
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
                               ),
-                              const Spacer(),
-                              NewDefaultButton.primarySmall(
-                                label: _isLastStep ? loc.getStarted : loc.next,
-                                width: null,
-                                onPressed: _goNext,
-                              ),
-                            ],
+                            ),
+                          ),
+                          const Spacer(),
+                          NewDefaultButton.primarySmall(
+                            label: _isLastStep ? loc.getStarted : loc.next,
+                            width: null,
+                            onPressed: _goNext,
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
