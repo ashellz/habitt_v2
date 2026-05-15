@@ -358,15 +358,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                       setState(() {
                                         _draftPeriodEnabled = value;
 
-                                        // If the user disables daily reminders, reflect
-                                        // that immediately in the local draft state
-                                        // by disabling all period drafts so the UI
-                                        // matches the toggle.
                                         if (value) {
-                                          setState(() {
-                                            _draftMasterEnabled = true;
-                                          });
-                                        } else if (!value) {
+                                          _draftMasterEnabled = true;
+                                          final allOff = _draftSettings.values
+                                              .every((s) => !s.enabled);
+                                          if (allOff) {
+                                            for (final p
+                                                in NotificationPeriod.values) {
+                                              final cur = _draftSettings[p];
+                                              if (cur != null) {
+                                                _draftSettings[p] = cur
+                                                    .copyWith(enabled: true);
+                                              }
+                                            }
+                                          }
+                                        } else {
                                           for (final p
                                               in NotificationPeriod.values) {
                                             final cur = _draftSettings[p];

@@ -123,25 +123,27 @@ class _OnboardingStep1State extends State<OnboardingStep1>
             ),
             _animCalendar,
           ),
-          _slide(
-            Transform.translate(
-              offset: const Offset(0, 160),
-              child: Container(
+          Positioned(
+            top: 160,
+            left: 12,
+            right: 12,
+            child: _slide(
+              Container(
                 height: 86,
-                margin: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: cp.habitBg,
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: NewHabitWidget(habit: _demoHabit),
               ),
+              _animHabit,
             ),
-            _animHabit,
           ),
-          _slide(
-            Transform.translate(
-              offset: const Offset(20, 95),
-              child: Transform.rotate(
+          Positioned(
+            top: 95,
+            left: 20,
+            child: _slide(
+              Transform.rotate(
                 angle: -0.2,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -161,8 +163,8 @@ class _OnboardingStep1State extends State<OnboardingStep1>
                   ),
                 ),
               ),
+              _animButton,
             ),
-            _animButton,
           ),
           Align(
             alignment: Alignment.bottomCenter,

@@ -99,6 +99,16 @@ class NotificationsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _enableAllPeriodReminders() async {
+    for (final period in NotificationPeriod.values) {
+      final current = _settings[period]!;
+      if (current.enabled) continue;
+
+      _settings[period] = current.copyWith(enabled: true);
+      await _saveSettings(period);
+    }
+  }
+
   /// Load settings from SharedPreferences
   void _loadSettings() {
     // Load global toggles first
@@ -327,7 +337,12 @@ class NotificationsProvider extends ChangeNotifier {
 
       await NotificationService.cancelAllNotifications();
     } else {
-      await NotificationService.scheduleAllNotifications(this);
+      final allOff = _settings.values.every((s) => !s.enabled);
+      if (allOff) {
+        await _enableAllPeriodReminders();
+      } else {
+        await NotificationService.scheduleAllNotifications(this);
+      }
     }
 
     notifyListeners();
@@ -438,7 +453,12 @@ class NotificationsProvider extends ChangeNotifier {
         await NotificationService.cancelAllHabitNotifications();
       } else {
         if (currentEffectivePeriods) {
-          await NotificationService.scheduleAllNotifications(this);
+          final allOff = _settings.values.every((s) => !s.enabled);
+          if (allOff) {
+            await _enableAllPeriodReminders();
+          } else {
+            await NotificationService.scheduleAllNotifications(this);
+          }
         }
 
         if (currentEffectiveHabits && habits != null && appearsOnDay != null) {
@@ -456,7 +476,12 @@ class NotificationsProvider extends ChangeNotifier {
     } else {
       if (previousEffectivePeriods != currentEffectivePeriods) {
         if (currentEffectivePeriods) {
-          await NotificationService.scheduleAllNotifications(this);
+          final allOff = _settings.values.every((s) => !s.enabled);
+          if (allOff) {
+            await _enableAllPeriodReminders();
+          } else {
+            await NotificationService.scheduleAllNotifications(this);
+          }
         } else {
           await _disableAllPeriodReminders();
           await NotificationService.cancelAllNotifications();

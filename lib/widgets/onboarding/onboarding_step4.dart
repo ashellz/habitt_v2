@@ -4,7 +4,6 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/notification_settings_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
-import 'package:habitt/services/color_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:provider/provider.dart';
@@ -106,27 +105,25 @@ class _OnboardingStep4State extends State<OnboardingStep4>
             alignment: const FractionalOffset(0.94, 0.25),
             child: _slide(const _NotificationGradientCircle(), _animBell),
           ),
-          _slide(
-            Transform.translate(
-              offset: const Offset(0, 220),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-                child: const _NotificationTogglesCard(),
-              ),
-            ),
-            _animToggles,
+          Positioned(
+            top: 220,
+            left: 12,
+            right: 12,
+            child: _slide(const _NotificationTogglesCard(), _animToggles),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: FractionallySizedBox(
-              heightFactor: 0.2,
-              widthFactor: 1.0,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [cp.main, cp.main.withValues(alpha: 0)],
+          IgnorePointer(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: FractionallySizedBox(
+                heightFactor: 0.2,
+                widthFactor: 1.0,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [cp.main, cp.main.withValues(alpha: 0)],
+                    ),
                   ),
                 ),
               ),

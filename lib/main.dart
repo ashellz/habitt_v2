@@ -40,6 +40,8 @@ Future<void> main() async {
   final tp = await ThemeProvider.initFromPrefs(prefs);
   final languageProvider = LanguageProvider.fromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await BillingService.init();
+
   await Hive.initFlutter();
   Hive.registerAdapters();
   if (!Hive.isAdapterRegistered(2)) {
@@ -80,20 +82,18 @@ Future<void> main() async {
     debug: kDebugMode,
   );
 
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize BackupProvider to restore persisted sign-in state
+  final backupProvider = BackupProvider();
+  await backupProvider.initialize();
+
   // Initialize NotificationsProvider
   final notificationsProvider = NotificationsProvider(prefs);
 
-  // Run independent startup tasks in parallel
+  // Initialize ProfileImageProvider and load cached image once
   final profileImageProvider = ProfileImageProvider();
-  await Future.wait([
-    BillingService.init(),
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-    profileImageProvider.load(),
-  ]);
-
-  // BackupProvider requires Firebase Auth — must run after Firebase init
-  final backupProvider = BackupProvider();
-  await backupProvider.initialize();
+  await profileImageProvider.load();
 
   runApp(
     MultiProvider(
@@ -271,12 +271,11 @@ class _MyAppState extends State<MyApp> {
     );
 
     Widget getHomePage() {
-      final didOnboard = widget.prefs.getBool('didOnboard');
+      final didOnboard = widget.prefs.getBool('didOnboardDebug1');
       if (didOnboard == null || !didOnboard) {
         return const OnboardingPages();
       } else {
-        return const OnboardingPages();
-        //return const HomePage();
+        return const HomePage();
       }
     }
 
