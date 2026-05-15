@@ -13,11 +13,13 @@ class ConsistencyCalendar extends StatefulWidget {
     this.habitStats,
     this.allStats,
     this.today,
+    this.isDemo = false,
   });
 
   final HabitStatsData? habitStats;
   final Map<DateTime, double>? allStats;
   final DateTime? today;
+  final bool isDemo;
 
   @override
   State<ConsistencyCalendar> createState() => _ConsistencyCalendarState();
@@ -105,20 +107,23 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          loc.consistency,
-          style: TextStyle(
-            color: cp.text,
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
+        if (!widget.isDemo) ...[
+          Text(
+            loc.consistency,
+            style: TextStyle(
+              color: cp.text,
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          loc.yourActivityOverTime,
-          style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-        ),
-        const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          Text(
+            loc.yourActivityOverTime,
+            style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+          ),
+          const SizedBox(height: 20),
+        ],
+
         _calendarHeader(cp, calendarFirstDay, today, focusedDay),
         const SizedBox(height: 16),
         TableCalendar<void>(
@@ -251,7 +256,10 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
       decoration: ShapeDecoration(
         color: cp.field,
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: cp.border),
+          side: BorderSide(
+            width: 1,
+            color: widget.isDemo ? Colors.transparent : cp.border,
+          ),
           borderRadius: BorderRadius.circular(24),
         ),
       ),

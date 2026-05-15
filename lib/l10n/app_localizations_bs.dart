@@ -1919,7 +1919,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get onboardingStep3Subtitle =>
-      'Streakovi, snaga nabike, sedmični prikaz i uvidi u napredak na jednom mjestu.';
+      'Streakovi, snaga navike, sedmični prikaz i uvidi u napredak na jednom mjestu.';
 
   @override
   String get onboardingStep4Title => 'Ne brini o zaboravljanju';

@@ -113,7 +113,8 @@ class CompletionRatio extends StatelessWidget {
     }
 
     final percentage =
-        overridePercentage ?? context.watch<StatsProvider>().completionRateLastWeek;
+        overridePercentage ??
+        context.watch<StatsProvider>().completionRateLastWeek;
 
     return Column(
       spacing: 20,
