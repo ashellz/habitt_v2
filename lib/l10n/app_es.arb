@@ -703,7 +703,7 @@
   "repeatEvery": "Repite cada:",
   "habitWillAppear": "Este hábito aparecerá cada {days} {dayLabel} a partir de hoy",
   "language": "Idioma",
-  "chooseAppLanguage": "Elige el idioma de la aplicación",
+  "chooseAppLanguage": "Elige el idioma",
   "appearance": "Apariencia",
   "mode": "Modo",
   "light": "Luz",
@@ -739,5 +739,14 @@
   "yourUsername": "Tu nombre de usuario",
   "youreDoingGreat": "¡Lo estás haciendo muy bien!",
   "timesPer": "Veces por {period}:",
-  "habitWillAppearPeriod": "Este hábito aparecerá {amount} {label} por {period} hasta que se complete"
+  "habitWillAppearPeriod": "Este hábito aparecerá {amount} {label} por {period} hasta que se complete",
+  "onboardingStep1Title": "Crea hábitos que realmente se mantengan",
+  "onboardingStep1Subtitle": "Sigue tu progreso. Mantén la constancia. Ve tu crecimiento.",
+  "onboardingStep2Title": "Rastrea tus hábitos a tu manera",
+  "onboardingStep2Subtitle": "Cuenta repeticiones, mide la duración o simplemente marca tu hábito como completado.",
+  "onboardingStep3Title": "Mira tu consistencia real",
+  "onboardingStep3Subtitle": "Rachas, fuerza, ratio semanal e información de progreso en un solo lugar.",
+  "onboardingStep4Title": "Mantente en el camino",
+  "onboardingStep4Subtitle": "Recordatorios de mañana, mediodía y cierre con control total.",
+  "getStarted": "Comenzar"
 }

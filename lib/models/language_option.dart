@@ -1,6 +1,6 @@
 enum LanguageOption {
   english('en', 'English', 'assets/images/new-svg/languages/en.svg'),
-  bosnian('bs', 'Bosnian', 'assets/images/new-svg/languages/ba.svg'),
+  bosnian('bs', 'Bosanski', 'assets/images/new-svg/languages/ba.svg'),
   german('de', 'Deutsch', 'assets/images/new-svg/languages/de.svg'),
   spanish('es', 'Español', 'assets/images/new-svg/languages/es.svg'),
   italian('it', 'Italiano', 'assets/images/new-svg/languages/it.svg');

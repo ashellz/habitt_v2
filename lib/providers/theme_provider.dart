@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/services/old_color_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// DEPRECATED - no longer used, ignore, will delete later
+
 class ThemeProvider extends ChangeNotifier {
   static const _kThemePrefKey = 'theme_mode'; // 'light' | 'dark' | 'system'
   static const _kAccentPrefKey = 'accent_name'; // 'blue' | 'cherry' | ...

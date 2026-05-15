@@ -275,7 +275,8 @@ class _MyAppState extends State<MyApp> {
       if (didOnboard == null || !didOnboard) {
         return const OnboardingPages();
       } else {
-        return const HomePage();
+        return const OnboardingPages();
+        //return const HomePage();
       }
     }
 

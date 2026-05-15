@@ -3086,6 +3086,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'re doing really great!'**
   String get youreDoingGreat;
+
+  /// No description provided for @onboardingStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Build habits that actually stick'**
+  String get onboardingStep1Title;
+
+  /// No description provided for @onboardingStep1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your progress. Stay consistent. See your growth over time.'**
+  String get onboardingStep1Subtitle;
+
+  /// No description provided for @onboardingStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Track habits your way'**
+  String get onboardingStep2Title;
+
+  /// No description provided for @onboardingStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Count reps, measure duration, or simply mark your habit complete.'**
+  String get onboardingStep2Subtitle;
+
+  /// No description provided for @onboardingStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'See your real consistency'**
+  String get onboardingStep3Title;
+
+  /// No description provided for @onboardingStep3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks, strength, weekly ratio and progress insights in one place.'**
+  String get onboardingStep3Subtitle;
+
+  /// No description provided for @onboardingStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay on track'**
+  String get onboardingStep4Title;
+
+  /// No description provided for @onboardingStep4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning, mid-day and wrap-up reminders with full control.'**
+  String get onboardingStep4Subtitle;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get getStarted;
 }
 
 class _AppLocalizationsDelegate

@@ -703,7 +703,7 @@
   "repeatEvery": "Ripetere ogni:",
   "habitWillAppear": "Questa abitudine apparirà ogni {days}. {dayLabel} a partire da oggi",
   "language": "Lingua",
-  "chooseAppLanguage": "Scegliere la lingua dell'applicazione",
+  "chooseAppLanguage": "Scegliere la lingua",
   "appearance": "Aspetto",
   "mode": "Modalità",
   "light": "Luce",
@@ -739,5 +739,14 @@
   "yourUsername": "Il tuo nome utente",
   "youreDoingGreat": "Stai andando alla grande!",
   "timesPer": "Volte per {period}:",
-  "habitWillAppearPeriod": "Questa abitudine apparirà {amount} {label} per {period} fino al completamento."
+  "habitWillAppearPeriod": "Questa abitudine apparirà {amount} {label} per {period} fino al completamento.",
+  "onboardingStep1Title": "Crea abitudini che durano davvero",
+  "onboardingStep1Subtitle": "Monitora i tuoi progressi. Rimani costante. Guarda la tua crescita.",
+  "onboardingStep2Title": "Traccia le abitudini a modo tuo",
+  "onboardingStep2Subtitle": "Conta le ripetizioni, misura la durata o segna semplicemente la tua abitudine come completata.",
+  "onboardingStep3Title": "Vedi la tua vera costanza",
+  "onboardingStep3Subtitle": "Streak, forza, rapporto settimanale e approfondimenti sui progressi in un unico posto.",
+  "onboardingStep4Title": "Rimani in pista",
+  "onboardingStep4Subtitle": "Promemoria mattutini, di mezzogiorno e serali con pieno controllo.",
+  "getStarted": "Inizia"
 }

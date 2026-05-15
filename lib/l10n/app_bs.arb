@@ -738,5 +738,14 @@
   "youDontHaveAnEmailYet": "Još nemaš email",
   "yourUsername": "Tvoje korisničko ime",
   "youreDoingGreat": "Odlično ti ide!",
-  "selectAColorPalleteForYourInterface": "Odaberi paletu boja za svoj interfejs"
+  "selectAColorPalleteForYourInterface": "Odaberi paletu boja za svoj interfejs",
+  "onboardingStep1Title": "Izgradi navike koje zaista traju",
+  "onboardingStep1Subtitle": "Prati napredak. Ostani dosljedan. Vidi svoj rast.",
+  "onboardingStep2Title": "Gradi navike na svoj način",
+  "onboardingStep2Subtitle": "Broji ponavljanja, mjeri trajanje ili jednostavno označi naviku kao završenu.",
+  "onboardingStep3Title": "Vidi svoju konzistentnost",
+  "onboardingStep3Subtitle": "Streakovi, snaga nabike, sedmični prikaz i uvidi u napredak na jednom mjestu.",
+  "onboardingStep4Title": "Ne brini o zaboravljanju",
+  "onboardingStep4Subtitle": "Jutarnji, podnevni i večernji podsjetnici s punom kontrolom.",
+  "getStarted": "Počni"
 }

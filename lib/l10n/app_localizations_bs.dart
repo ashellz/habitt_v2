@@ -1899,4 +1899,35 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get youreDoingGreat => 'Odlično ti ide!';
+
+  @override
+  String get onboardingStep1Title => 'Izgradi navike koje zaista traju';
+
+  @override
+  String get onboardingStep1Subtitle =>
+      'Prati napredak. Ostani dosljedan. Vidi svoj rast.';
+
+  @override
+  String get onboardingStep2Title => 'Gradi navike na svoj način';
+
+  @override
+  String get onboardingStep2Subtitle =>
+      'Broji ponavljanja, mjeri trajanje ili jednostavno označi naviku kao završenu.';
+
+  @override
+  String get onboardingStep3Title => 'Vidi svoju konzistentnost';
+
+  @override
+  String get onboardingStep3Subtitle =>
+      'Streakovi, snaga nabike, sedmični prikaz i uvidi u napredak na jednom mjestu.';
+
+  @override
+  String get onboardingStep4Title => 'Ne brini o zaboravljanju';
+
+  @override
+  String get onboardingStep4Subtitle =>
+      'Jutarnji, podnevni i večernji podsjetnici s punom kontrolom.';
+
+  @override
+  String get getStarted => 'Počni';
 }

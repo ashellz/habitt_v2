@@ -1794,7 +1794,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get language => 'Lingua';
 
   @override
-  String get chooseAppLanguage => 'Scegliere la lingua dell\'applicazione';
+  String get chooseAppLanguage => 'Scegliere la lingua';
 
   @override
   String get appearance => 'Aspetto';
@@ -1903,4 +1903,35 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get youreDoingGreat => 'Stai andando alla grande!';
+
+  @override
+  String get onboardingStep1Title => 'Crea abitudini che durano davvero';
+
+  @override
+  String get onboardingStep1Subtitle =>
+      'Monitora i tuoi progressi. Rimani costante. Guarda la tua crescita.';
+
+  @override
+  String get onboardingStep2Title => 'Traccia le abitudini a modo tuo';
+
+  @override
+  String get onboardingStep2Subtitle =>
+      'Conta le ripetizioni, misura la durata o segna semplicemente la tua abitudine come completata.';
+
+  @override
+  String get onboardingStep3Title => 'Vedi la tua vera costanza';
+
+  @override
+  String get onboardingStep3Subtitle =>
+      'Streak, forza, rapporto settimanale e approfondimenti sui progressi in un unico posto.';
+
+  @override
+  String get onboardingStep4Title => 'Rimani in pista';
+
+  @override
+  String get onboardingStep4Subtitle =>
+      'Promemoria mattutini, di mezzogiorno e serali con pieno controllo.';
+
+  @override
+  String get getStarted => 'Inizia';
 }

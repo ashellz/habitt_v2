@@ -1794,7 +1794,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get language => 'Idioma';
 
   @override
-  String get chooseAppLanguage => 'Elige el idioma de la aplicación';
+  String get chooseAppLanguage => 'Elige el idioma';
 
   @override
   String get appearance => 'Apariencia';
@@ -1903,4 +1903,35 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get youreDoingGreat => '¡Lo estás haciendo muy bien!';
+
+  @override
+  String get onboardingStep1Title => 'Crea hábitos que realmente se mantengan';
+
+  @override
+  String get onboardingStep1Subtitle =>
+      'Sigue tu progreso. Mantén la constancia. Ve tu crecimiento.';
+
+  @override
+  String get onboardingStep2Title => 'Rastrea tus hábitos a tu manera';
+
+  @override
+  String get onboardingStep2Subtitle =>
+      'Cuenta repeticiones, mide la duración o simplemente marca tu hábito como completado.';
+
+  @override
+  String get onboardingStep3Title => 'Mira tu consistencia real';
+
+  @override
+  String get onboardingStep3Subtitle =>
+      'Rachas, fuerza, ratio semanal e información de progreso en un solo lugar.';
+
+  @override
+  String get onboardingStep4Title => 'Mantente en el camino';
+
+  @override
+  String get onboardingStep4Subtitle =>
+      'Recordatorios de mañana, mediodía y cierre con control total.';
+
+  @override
+  String get getStarted => 'Comenzar';
 }

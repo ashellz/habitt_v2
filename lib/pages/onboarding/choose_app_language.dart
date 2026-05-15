@@ -106,69 +106,97 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 35),
-                  child: Text(
-                    loc.chooseAppLanguage,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: cp.text,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 24),
-                  child: NewDefaultTextField(
-                    controller: searchController,
-                    onChanged: (_) => setState(() {}),
-                    hint: loc.findALanguage,
-                    suffix: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+      body: Container(
+        color: cp.bg,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 35),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            loc.chooseAppLanguage,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: cp.text,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Transform.translate(
+                            offset: const Offset(0, 2),
+                            child: IconButton(
+                              icon: Icon(
+                                cp.isDark ? Icons.dark_mode : Icons.sunny,
+                              ),
+                              color: cp.text,
+                              onPressed: () {
+                                cp.setMode(
+                                  cp.isDark ? ColorMode.light : ColorMode.dark,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      child: SvgPicture.asset(
-                        'assets/images/new-svg/search.svg',
-                        width: 20,
-                        height: 20,
-                        colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: NewDefaultTextField(
+                        controller: searchController,
+                        onChanged: (_) => setState(() {}),
+                        hint: loc.findALanguage,
+                        suffix: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/images/new-svg/search.svg',
+                            width: 20,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              cp.text,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 10,
-                    children: _buildLanguageRows(cp: cp),
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: MediaQuery.of(context).padding.bottom,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: NewDefaultButton.primary(
-                  label: loc.next,
-                  onPressed: () {
-                    widget.onNext?.call();
-                  },
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
+                        children: _buildLanguageRows(cp: cp),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                bottom: MediaQuery.of(context).padding.bottom,
+                left: 0,
+                right: 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: NewDefaultButton.primary(
+                    label: loc.next,
+                    onPressed: () {
+                      widget.onNext?.call();
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

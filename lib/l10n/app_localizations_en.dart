@@ -1897,4 +1897,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get youreDoingGreat => 'You\'re doing really great!';
+
+  @override
+  String get onboardingStep1Title => 'Build habits that actually stick';
+
+  @override
+  String get onboardingStep1Subtitle =>
+      'Track your progress. Stay consistent. See your growth over time.';
+
+  @override
+  String get onboardingStep2Title => 'Track habits your way';
+
+  @override
+  String get onboardingStep2Subtitle =>
+      'Count reps, measure duration, or simply mark your habit complete.';
+
+  @override
+  String get onboardingStep3Title => 'See your real consistency';
+
+  @override
+  String get onboardingStep3Subtitle =>
+      'Streaks, strength, weekly ratio and progress insights in one place.';
+
+  @override
+  String get onboardingStep4Title => 'Stay on track';
+
+  @override
+  String get onboardingStep4Subtitle =>
+      'Morning, mid-day and wrap-up reminders with full control.';
+
+  @override
+  String get getStarted => 'Get started';
 }

@@ -735,5 +735,14 @@
   "email": "Email",
   "youDontHaveAnEmailYet": "You don't have an email yet",
   "yourUsername": "Your username",
-  "youreDoingGreat": "You're doing really great!"
+  "youreDoingGreat": "You're doing really great!",
+  "onboardingStep1Title": "Build habits that actually stick",
+  "onboardingStep1Subtitle": "Track your progress. Stay consistent. See your growth over time.",
+  "onboardingStep2Title": "Track habits your way",
+  "onboardingStep2Subtitle": "Count reps, measure duration, or simply mark your habit complete.",
+  "onboardingStep3Title": "See your real consistency",
+  "onboardingStep3Subtitle": "Streaks, strength, weekly ratio and progress insights in one place.",
+  "onboardingStep4Title": "Stay on track",
+  "onboardingStep4Subtitle": "Morning, mid-day and wrap-up reminders with full control.",
+  "getStarted": "Get started"
 }

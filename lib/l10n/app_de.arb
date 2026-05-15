@@ -739,5 +739,14 @@
   "yourUsername": "Dein Nutzername",
   "youreDoingGreat": "Du machst das wirklich toll!",
   "timesPer": "Zeiten pro {period}:",
-  "habitWillAppearPeriod": "Diese Gewohnheit erscheint {amount} {label} pro {period} bis zum Abschluss"
+  "habitWillAppearPeriod": "Diese Gewohnheit erscheint {amount} {label} pro {period} bis zum Abschluss",
+  "onboardingStep1Title": "Gewohnheiten aufbauen, die wirklich halten",
+  "onboardingStep1Subtitle": "Verfolge deinen Fortschritt. Bleib konsequent. Sieh dein Wachstum.",
+  "onboardingStep2Title": "Gewohnheiten nach deinem Tempo",
+  "onboardingStep2Subtitle": "Zähle Wiederholungen, messe Zeit oder markiere deine Gewohnheit einfach als erledigt.",
+  "onboardingStep3Title": "Sieh deine echte Konstanz",
+  "onboardingStep3Subtitle": "Serien, Stärke, Wochenquote und Fortschrittseinblicke auf einen Blick.",
+  "onboardingStep4Title": "Bleib auf Kurs",
+  "onboardingStep4Subtitle": "Morgen-, Mittags- und Abenderinnerungen mit voller Kontrolle.",
+  "getStarted": "Loslegen"
 }

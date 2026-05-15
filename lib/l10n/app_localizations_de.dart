@@ -1906,4 +1906,36 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get youreDoingGreat => 'Du machst das wirklich toll!';
+
+  @override
+  String get onboardingStep1Title =>
+      'Gewohnheiten aufbauen, die wirklich halten';
+
+  @override
+  String get onboardingStep1Subtitle =>
+      'Verfolge deinen Fortschritt. Bleib konsequent. Sieh dein Wachstum.';
+
+  @override
+  String get onboardingStep2Title => 'Gewohnheiten nach deinem Tempo';
+
+  @override
+  String get onboardingStep2Subtitle =>
+      'Zähle Wiederholungen, messe Zeit oder markiere deine Gewohnheit einfach als erledigt.';
+
+  @override
+  String get onboardingStep3Title => 'Sieh deine echte Konstanz';
+
+  @override
+  String get onboardingStep3Subtitle =>
+      'Serien, Stärke, Wochenquote und Fortschrittseinblicke auf einen Blick.';
+
+  @override
+  String get onboardingStep4Title => 'Bleib auf Kurs';
+
+  @override
+  String get onboardingStep4Subtitle =>
+      'Morgen-, Mittags- und Abenderinnerungen mit voller Kontrolle.';
+
+  @override
+  String get getStarted => 'Loslegen';
 }

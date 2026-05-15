@@ -15,7 +15,19 @@ class OnboardingPages extends StatefulWidget {
 }
 
 class _OnboardingPagesState extends State<OnboardingPages> {
-  bool _showIntroFlow = false;
+  late PageController _outerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _outerController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _outerController.dispose();
+    super.dispose();
+  }
 
   Future<void> _finishOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
@@ -30,19 +42,33 @@ class _OnboardingPagesState extends State<OnboardingPages> {
     ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
   }
 
+  void _goToIntro() {
+    _outerController.nextPage(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _backToLanguage() {
+    _outerController.previousPage(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!_showIntroFlow) {
-      return ChooseAppLanguage(
-        onNext: () {
-          setState(() {
-            _showIntroFlow = true;
-          });
-        },
-      );
-    }
-
-    return _OnboardingIntroTemplate(onDone: _finishOnboarding);
+    return PageView(
+      controller: _outerController,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        ChooseAppLanguage(onNext: _goToIntro),
+        _OnboardingIntroTemplate(
+          onDone: _finishOnboarding,
+          onBack: _backToLanguage,
+        ),
+      ],
+    );
   }
 }
 
@@ -59,9 +85,10 @@ class _OnboardingStepData {
 }
 
 class _OnboardingIntroTemplate extends StatefulWidget {
-  const _OnboardingIntroTemplate({required this.onDone});
+  const _OnboardingIntroTemplate({required this.onDone, required this.onBack});
 
   final Future<void> Function() onDone;
+  final VoidCallback onBack;
 
   @override
   State<_OnboardingIntroTemplate> createState() =>
@@ -69,28 +96,27 @@ class _OnboardingIntroTemplate extends StatefulWidget {
 }
 
 class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
-  static const List<_OnboardingStepData> _steps = [
+  static const int _stepCount = 4;
+
+  List<_OnboardingStepData> _buildSteps(AppLocalizations loc) => [
     _OnboardingStepData(
-      title: 'Build habits that actually stick',
-      subtitle:
-          'Track your progress. Stay consistent. See your growth over time.',
+      title: loc.onboardingStep1Title,
+      subtitle: loc.onboardingStep1Subtitle,
       accent: Icons.check_circle_rounded,
     ),
     _OnboardingStepData(
-      title: 'Track habits your way',
-      subtitle:
-          'Count reps, measure duration, or simply mark your habit complete.',
+      title: loc.onboardingStep2Title,
+      subtitle: loc.onboardingStep2Subtitle,
       accent: Icons.track_changes_rounded,
     ),
     _OnboardingStepData(
-      title: 'See your real consistency',
-      subtitle:
-          'Streaks, strength, weekly ratio and progress insights in one place.',
+      title: loc.onboardingStep3Title,
+      subtitle: loc.onboardingStep3Subtitle,
       accent: Icons.local_fire_department_rounded,
     ),
     _OnboardingStepData(
-      title: 'Stay on track',
-      subtitle: 'Morning, mid-day and wrap-up reminders with full control.',
+      title: loc.onboardingStep4Title,
+      subtitle: loc.onboardingStep4Subtitle,
       accent: Icons.notifications_active_rounded,
     ),
   ];
@@ -110,7 +136,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
     super.dispose();
   }
 
-  bool get _isLastStep => _currentStep == _steps.length - 1;
+  bool get _isLastStep => _currentStep == _stepCount - 1;
 
   Future<void> _goNext() async {
     if (_isLastStep) {
@@ -128,11 +154,23 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
     await widget.onDone();
   }
 
+  void _goBack() {
+    if (_currentStep > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      widget.onBack();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final step = _steps[_currentStep];
     final loc = AppLocalizations.of(context)!;
+    final steps = _buildSteps(loc);
+    final step = steps[_currentStep];
 
     return Scaffold(
       backgroundColor: cp.main,
@@ -145,12 +183,24 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
               16,
               12,
             ),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: NewDefaultButton.secondarySmall(
-                onPressed: _skip,
-                label: loc.skip,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                NewDefaultButton.secondarySmall(
+                  width: null,
+                  onPressed: _goBack,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 14,
+                    color: cp.text,
+                  ),
+                ),
+                NewDefaultButton.secondarySmall(
+                  width: null,
+                  onPressed: _skip,
+                  label: loc.skip,
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -164,12 +214,12 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
                         _currentStep = index;
                       });
                     },
-                    itemCount: _steps.length,
+                    itemCount: _stepCount,
                     itemBuilder: (context, index) {
                       return _OnboardingVisualTemplate(
                         key: ValueKey(index),
                         stepIndex: index,
-                        accentIcon: _steps[index].accent,
+                        accentIcon: steps[index].accent,
                       );
                     },
                   ),
@@ -222,10 +272,10 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
                             children: [
                               Row(
                                 children: List.generate(
-                                  _steps.length,
+                                  _stepCount,
                                   (index) => Container(
                                     margin: EdgeInsets.only(
-                                      right: index == _steps.length - 1 ? 0 : 6,
+                                      right: index == _stepCount - 1 ? 0 : 6,
                                     ),
                                     width: index == _currentStep ? 20 : 7,
                                     height: 5,
@@ -241,7 +291,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
                               ),
                               const Spacer(),
                               NewDefaultButton.primarySmall(
-                                label: _isLastStep ? 'Get started' : 'Next',
+                                label: _isLastStep ? loc.getStarted : loc.next,
                                 width: null,
                                 onPressed: _goNext,
                               ),
