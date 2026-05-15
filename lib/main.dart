@@ -40,8 +40,6 @@ Future<void> main() async {
   final tp = await ThemeProvider.initFromPrefs(prefs);
   final languageProvider = LanguageProvider.fromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await BillingService.init();
-
   await Hive.initFlutter();
   Hive.registerAdapters();
   if (!Hive.isAdapterRegistered(2)) {
@@ -82,18 +80,20 @@ Future<void> main() async {
     debug: kDebugMode,
   );
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // Initialize BackupProvider to restore persisted sign-in state
-  final backupProvider = BackupProvider();
-  await backupProvider.initialize();
-
   // Initialize NotificationsProvider
   final notificationsProvider = NotificationsProvider(prefs);
 
-  // Initialize ProfileImageProvider and load cached image once
+  // Run independent startup tasks in parallel
   final profileImageProvider = ProfileImageProvider();
-  await profileImageProvider.load();
+  await Future.wait([
+    BillingService.init(),
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    profileImageProvider.load(),
+  ]);
+
+  // BackupProvider requires Firebase Auth — must run after Firebase init
+  final backupProvider = BackupProvider();
+  await backupProvider.initialize();
 
   runApp(
     MultiProvider(

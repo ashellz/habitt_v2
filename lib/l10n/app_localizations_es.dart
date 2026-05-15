@@ -1900,4 +1900,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get yourUsername => 'Tu nombre de usuario';
+
+  @override
+  String get youreDoingGreat => '¡Lo estás haciendo muy bien!';
 }

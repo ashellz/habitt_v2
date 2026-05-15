@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,8 @@ class NewPerfectDaysStreak extends StatelessWidget {
     if (statsProvider.perfectDaysStreak == 0) {
       return SizedBox.shrink();
     }
+
+    final loc = AppLocalizations.of(context)!;
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -58,7 +61,7 @@ class NewPerfectDaysStreak extends StatelessWidget {
                   spacing: 4,
                   children: [
                     Text(
-                      '${statsProvider.perfectDaysStreak == 1 ? 'Day' : 'Days'} Streak',
+                      '${statsProvider.perfectDaysStreak == 1 ? loc.day : loc.days} ${loc.streak}',
                       style: TextStyle(
                         color: cp.text,
                         fontSize: 16,
@@ -66,7 +69,7 @@ class NewPerfectDaysStreak extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'You are doing really great!',
+                      loc.youreDoingGreat,
                       style: TextStyle(
                         color: cp.text.withValues(alpha: 0.7),
                         fontSize: 13,

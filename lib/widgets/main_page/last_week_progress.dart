@@ -53,20 +53,38 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     habitProvider.addListener(_habitProviderListener);
   }
 
-  void _initializeAllProgressValues() {
+  Future<void> _initializeAllProgressValues() async {
     final habitProvider = context.read<HabitProvider>();
     final allDates = _allDates;
 
-    if (allDates.isEmpty) return;
+    if (allDates.isEmpty || !mounted) return;
 
+    // Load only the visible 7 days immediately so the first frame renders fast
+    final visibleStart = (allDates.length - _visibleDays).clamp(0, allDates.length);
     setState(() {
-      for (final date in allDates) {
+      for (final date in allDates.sublist(visibleStart)) {
         final key = _dateKey(date);
-        final progressValue = _progressForDate(habitProvider, date);
-        _progressValuesByDate[key] = progressValue;
+        _progressValuesByDate[key] = _progressForDate(habitProvider, date);
         _previousProgressValuesByDate[key] = 0.0;
       }
     });
+
+    // Load remaining past days in background micro-batches
+    for (int i = 0; i < visibleStart; i += 7) {
+      if (!mounted) return;
+      await Future.microtask(() {});
+      if (!mounted) return;
+      final batchEnd = (i + 7).clamp(0, visibleStart);
+      setState(() {
+        for (final date in allDates.sublist(i, batchEnd)) {
+          final key = _dateKey(date);
+          if (!_progressValuesByDate.containsKey(key)) {
+            _progressValuesByDate[key] = _progressForDate(habitProvider, date);
+            _previousProgressValuesByDate[key] = 0.0;
+          }
+        }
+      });
+    }
   }
 
   void _updateChangedDayProgress() {

@@ -1617,7 +1617,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get wed => 'Sri';
 
   @override
-  String get welcomeBack => 'Dobrodošli nazad';
+  String get welcomeBack => 'Dobrodošao nazad';
 
   @override
   String get welcomeToHabitt => 'Dobrodošli u Habitt.';
@@ -1722,13 +1722,13 @@ class AppLocalizationsBs extends AppLocalizations {
   String get skipped => 'Preskočeno';
 
   @override
-  String get streak => 'Pojas';
+  String get streak => 'streak';
 
   @override
-  String get currentStreak => 'Trenutni niz';
+  String get currentStreak => 'Trenutni streak';
 
   @override
-  String get longestStreak => 'Najduži niz';
+  String get longestStreak => 'Najduži streak';
 
   @override
   String get day => 'dan';
@@ -1896,4 +1896,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get yourUsername => 'Tvoje korisničko ime';
+
+  @override
+  String get youreDoingGreat => 'Odlično ti ide!';
 }

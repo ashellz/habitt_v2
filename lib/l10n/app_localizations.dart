@@ -3080,6 +3080,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your username'**
   String get yourUsername;
+
+  /// No description provided for @youreDoingGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing really great!'**
+  String get youreDoingGreat;
 }
 
 class _AppLocalizationsDelegate

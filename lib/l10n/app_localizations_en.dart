@@ -1894,4 +1894,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yourUsername => 'Your username';
+
+  @override
+  String get youreDoingGreat => 'You\'re doing really great!';
 }

@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class StreakCalendar extends StatefulWidget {
@@ -31,6 +32,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   Map<DateTime, bool>? _cachedPerfectDayCompletionReference;
   int? _activeMonthKey;
   bool _isMonthMetadataReady = false;
+  bool _streakCacheReady = false;
   int _monthLoadToken = 0;
   int? _scheduledMonthKey;
 
@@ -39,7 +41,9 @@ class _StreakCalendarState extends State<StreakCalendar> {
     super.initState();
     final now = DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
-    debugPrint('StreakCalendar initialized with focused day: $_focusedDay');
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _computeAndScheduleStreakCache(),
+    );
   }
 
   @override
@@ -51,7 +55,34 @@ class _StreakCalendarState extends State<StreakCalendar> {
           widget.perfectDayCompletion,
         )) {
       _invalidateStreakCaches();
+      _computeAndScheduleStreakCache();
     }
+  }
+
+  void _computeAndScheduleStreakCache() {
+    if (!mounted) return;
+    setState(() => _streakCacheReady = false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final today = _normalize(DateTime.now());
+      _ensureStreakCachesUpToDate(today);
+
+      final selectableFirstDay = _cachedSelectableFirstDay ?? today;
+      final focusedDay = _clampFocusedDay(
+        _focusedDay,
+        _monthStart(selectableFirstDay),
+        today,
+      );
+
+      _scheduleMonthMetadataLoad(
+        focusedDay: focusedDay,
+        selectableFirstDay: selectableFirstDay,
+        today: today,
+      );
+
+      if (mounted) setState(() => _streakCacheReady = true);
+    });
   }
 
   DateTime _monthStart(DateTime date) {
@@ -274,8 +305,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
     final cp = context.watch<ColorProvider>();
     final today = _normalize(DateTime.now());
 
-    _ensureStreakCachesUpToDate(today);
-
     final selectableFirstDay = _cachedSelectableFirstDay ?? today;
     final calendarFirstDay = _monthStart(selectableFirstDay);
     final focusedDay = _clampFocusedDay(_focusedDay, calendarFirstDay, today);
@@ -291,15 +320,13 @@ class _StreakCalendarState extends State<StreakCalendar> {
       });
     }
 
-    debugPrint(
-      'build: _focusedDay=$_focusedDay, focusedDay=$focusedDay, calendarFirstDay=$calendarFirstDay',
-    );
-
-    _scheduleMonthMetadataLoad(
-      focusedDay: focusedDay,
-      selectableFirstDay: selectableFirstDay,
-      today: today,
-    );
+    if (_streakCacheReady) {
+      _scheduleMonthMetadataLoad(
+        focusedDay: focusedDay,
+        selectableFirstDay: selectableFirstDay,
+        today: today,
+      );
+    }
     final currentMonthKey = _monthKey(focusedDay);
     final streakVisualMetadata =
         _monthMetadataCache[currentMonthKey] ??
@@ -339,7 +366,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
       );
     }
 
-    return Column(
+    final calendarWidget = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _calendarHeader(cp, calendarFirstDay, today, focusedDay),
@@ -409,6 +436,29 @@ class _StreakCalendarState extends State<StreakCalendar> {
           },
         ),
       ],
+    );
+
+    final shimmerWidget = Shimmer.fromColors(
+      baseColor: cp.bg,
+      highlightColor: cp.field,
+      child: Container(
+        height: 320,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
+
+    return AnimatedCrossFade(
+      duration: const Duration(milliseconds: 350),
+      crossFadeState:
+          _streakCacheReady
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+      firstChild: shimmerWidget,
+      secondChild: calendarWidget,
+      sizeCurve: Curves.easeInOut,
     );
   }
 

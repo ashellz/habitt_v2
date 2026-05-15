@@ -24,55 +24,53 @@ class NewBottomNavBar extends StatefulWidget {
 class _NewBottomNavBarState extends State<NewBottomNavBar> {
   int _selectedIndex = 0;
 
-  late final List<NavItemData> _navItems;
+  List<NavItemData> _navItems = const [];
 
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
-      }
-      _initializeNavItems();
-    });
-
     _selectedIndex = 0;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_navItems.isEmpty) {
+      _initializeNavItems();
+    }
   }
 
   void _initializeNavItems() {
     final loc = AppLocalizations.of(context)!;
 
-    setState(() {
-      _navItems = [
-        NavItemData(
-          id: 'home',
-          svgPath: "assets/images/new-svg/home.svg",
-          defaultLabel: loc.home,
-        ),
-        NavItemData(
-          id: 'habits',
-          svgPath: "assets/images/new-svg/all-habits.svg",
-          defaultLabel: loc.habits,
-        ),
-        NavItemData(
-          id: 'calendar',
-          svgPath: "assets/images/new-svg/calendar.svg",
-          defaultLabel: loc.calendar,
-        ),
-        NavItemData(
-          id: 'profile',
-          svgPath: "assets/images/new-svg/profile.svg",
-          defaultLabel: loc.profile,
-        ),
-      ];
+    _navItems = [
+      NavItemData(
+        id: 'home',
+        svgPath: "assets/images/new-svg/home.svg",
+        defaultLabel: loc.home,
+      ),
+      NavItemData(
+        id: 'habits',
+        svgPath: "assets/images/new-svg/all-habits.svg",
+        defaultLabel: loc.habits,
+      ),
+      NavItemData(
+        id: 'calendar',
+        svgPath: "assets/images/new-svg/calendar.svg",
+        defaultLabel: loc.calendar,
+      ),
+      NavItemData(
+        id: 'profile',
+        svgPath: "assets/images/new-svg/profile.svg",
+        defaultLabel: loc.profile,
+      ),
+    ];
 
-      _selectedIndex = _navItems.indexWhere((item) => item.id == "home");
+    _selectedIndex = _navItems.indexWhere((item) => item.id == "home");
 
-      if (_selectedIndex == -1) {
-        _selectedIndex = 0;
-      }
-    });
+    if (_selectedIndex == -1) {
+      _selectedIndex = 0;
+    }
   }
 
   Widget _buildNavItem(int index, bool isGlassFeel) {
@@ -159,7 +157,9 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
                           padding: const EdgeInsets.only(top: 4),
                           child: Align(
                             alignment: Alignment.center,
-                            child: Text(item.defaultLabel),
+                            child: Text(
+                              "${item.defaultLabel[0].toUpperCase()}${item.defaultLabel.substring(1).toLowerCase()}",
+                            ),
                           ),
                         ),
                       ),
