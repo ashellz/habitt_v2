@@ -12,10 +12,12 @@ class StreakCalendar extends StatefulWidget {
     super.key,
     required this.allStats,
     required this.perfectDayCompletion,
+    this.today,
   });
 
   final Map<DateTime, double> allStats;
   final Map<DateTime, bool> perfectDayCompletion;
+  final DateTime? today;
 
   @override
   State<StreakCalendar> createState() => _StreakCalendarState();
@@ -39,7 +41,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
+    final now = widget.today ?? DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _computeAndScheduleStreakCache(),
@@ -65,7 +67,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final today = _normalize(DateTime.now());
+      final today = _normalize(widget.today ?? DateTime.now());
       _ensureStreakCachesUpToDate(today);
 
       final selectableFirstDay = _cachedSelectableFirstDay ?? today;
@@ -303,7 +305,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final today = _normalize(DateTime.now());
+    final today = _normalize(widget.today ?? DateTime.now());
 
     final selectableFirstDay = _cachedSelectableFirstDay ?? today;
     final calendarFirstDay = _monthStart(selectableFirstDay);
@@ -392,14 +394,14 @@ class _StreakCalendarState extends State<StreakCalendar> {
                   context: context,
                   day: day,
                   isOutside: _isOutsideMonth(day, focusedDay),
-                  isToday: false,
+                  isToday: _normalize(day) == today,
                 ),
             todayBuilder:
                 (context, day, _) => buildDayCell(
                   context: context,
                   day: day,
                   isOutside: _isOutsideMonth(day, focusedDay),
-                  isToday: true,
+                  isToday: _normalize(day) == today,
                 ),
             outsideBuilder:
                 (context, day, _) => buildDayCell(
@@ -714,6 +716,10 @@ class _StreakCalendarState extends State<StreakCalendar> {
             _isOutsideMonth(rightDay, focusedDay);
 
         if (segmentTouchesOutside && !run.includesToday) {
+          continue;
+        }
+
+        if (rightDay.isAfter(today)) {
           continue;
         }
 

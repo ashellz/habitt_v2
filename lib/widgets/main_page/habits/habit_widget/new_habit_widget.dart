@@ -8,9 +8,10 @@ import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.
 import 'package:provider/provider.dart';
 
 class NewHabitWidget extends StatefulWidget {
-  const NewHabitWidget({super.key, required this.habit});
+  const NewHabitWidget({super.key, required this.habit, this.isDemo = false});
 
   final Habit habit;
+  final bool isDemo;
 
   @override
   State<NewHabitWidget> createState() => _NewHabitWidgetState();
@@ -132,7 +133,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
             isCompleted: widget.habit.completed,
           ),
           Expanded(child: MainHabitInfo(habit: widget.habit, cp: cp)),
-          NewHabitProgress(habit: widget.habit),
+          NewHabitProgress(habit: widget.habit, isDemo: widget.isDemo),
         ],
       ),
     );

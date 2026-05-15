@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -13,6 +15,8 @@ import 'package:provider/provider.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
+
+  static Widget demo() => const _DemoCalendarBody();
 
   @override
   Widget build(BuildContext context) {
@@ -69,39 +73,47 @@ class CompletionRatio extends StatelessWidget {
     super.key,
     required this.cp,
     required this.completionRateLastWeek,
+    this.today,
+    this.overridePercentage,
   });
 
   final ColorProvider cp;
   final List<double> completionRateLastWeek;
+  final DateTime? today;
+  final int? overridePercentage;
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     String getDay(int day) {
-      final DateTime now = DateTime.now();
+      final DateTime now = today ?? DateTime.now();
       final DateTime targetDay = now.subtract(Duration(days: 6 - day));
 
-      // Get weekday name
+      String raw;
       switch (targetDay.weekday) {
         case DateTime.monday:
-          return "Mon";
+          raw = loc.mon;
         case DateTime.tuesday:
-          return "Tue";
+          raw = loc.tue;
         case DateTime.wednesday:
-          return "Wed";
+          raw = loc.wed;
         case DateTime.thursday:
-          return "Thu";
+          raw = loc.thu;
         case DateTime.friday:
-          return "Fri";
+          raw = loc.fri;
         case DateTime.saturday:
-          return "Sat";
+          raw = loc.sat;
         case DateTime.sunday:
-          return "Sun";
+          raw = loc.sun;
         default:
           return "";
       }
+      return raw.isEmpty ? raw : '${raw[0].toUpperCase()}${raw.substring(1)}';
     }
 
-    final sp = context.watch<StatsProvider>();
+    final percentage =
+        overridePercentage ?? context.watch<StatsProvider>().completionRateLastWeek;
 
     return Column(
       spacing: 20,
@@ -118,7 +130,7 @@ class CompletionRatio extends StatelessWidget {
           child: Column(
             spacing: 20,
             children: [
-              CompletionRate(percentage: sp.completionRateLastWeek),
+              CompletionRate(percentage: percentage),
               SizedBox(
                 height: 132,
                 child: BarChart(
@@ -225,12 +237,14 @@ class StreakCalendarSection extends StatelessWidget {
     required this.longestStreak,
     required this.allStats,
     required this.perfectDayCompletion,
+    this.today,
   });
 
   final int streak;
   final int longestStreak;
   final Map<DateTime, double> allStats;
   final Map<DateTime, bool> perfectDayCompletion;
+  final DateTime? today;
 
   @override
   Widget build(BuildContext context) {
@@ -238,36 +252,120 @@ class StreakCalendarSection extends StatelessWidget {
     return Column(
       spacing: 20,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: CounterStatCard(
-                title: loc.currentStreak,
-                iconPath: 'assets/images/new-svg/streak.svg',
-                value: streak,
-                formatter:
-                    (value) =>
-                        value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CounterStatCard(
+                  title: loc.currentStreak,
+                  iconPath: 'assets/images/new-svg/streak.svg',
+                  value: streak,
+                  formatter:
+                      (value) =>
+                          value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: CounterStatCard(
-                title: loc.longestStreak,
-                iconPath: 'assets/images/new-svg/longest-streak.svg',
-                value: longestStreak,
-                formatter:
-                    (value) =>
-                        value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
+              const SizedBox(width: 10),
+              Expanded(
+                child: CounterStatCard(
+                  title: loc.longestStreak,
+                  iconPath: 'assets/images/new-svg/longest-streak.svg',
+                  value: longestStreak,
+                  formatter:
+                      (value) =>
+                          value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         StreakCalendar(
           allStats: allStats,
           perfectDayCompletion: perfectDayCompletion,
+          today: today,
         ),
       ],
+    );
+  }
+}
+
+class _DemoCalendarBody extends StatelessWidget {
+  const _DemoCalendarBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
+
+    final realNow = DateTime.now();
+    final demoToday = DateTime(realNow.year, realNow.month, 9);
+    final seeded = Random(realNow.year * 100 + realNow.month);
+
+    const completedDays = {2, 5, 7, 8, 9};
+
+    final allStats = <DateTime, double>{};
+    for (int d = 1; d <= 9; d++) {
+      final date = DateTime(realNow.year, realNow.month, d);
+      if (completedDays.contains(d)) {
+        allStats[date] = 1.0;
+      } else {
+        allStats[date] = 0.15 + seeded.nextDouble() * 0.7;
+      }
+    }
+
+    final perfectDayCompletion = <DateTime, bool>{
+      for (final d in completedDays)
+        DateTime(realNow.year, realNow.month, d): true,
+    };
+
+    final completionRateLastWeek = List<double>.generate(7, (index) {
+      final dayOfMonth = 3 + index;
+      if (completedDays.contains(dayOfMonth)) {
+        return 100.0;
+      }
+      return 20.0 + seeded.nextDouble() * 50.0;
+    });
+
+    const streak = 3;
+    const longestStreak = 10;
+    const completionPercentage = 71;
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: ListView(
+          children: [
+            Text(
+              loc.calendar,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 24),
+            StreakCalendarSection(
+              streak: streak,
+              longestStreak: longestStreak,
+              allStats: allStats,
+              perfectDayCompletion: perfectDayCompletion,
+              today: demoToday,
+            ),
+            const SizedBox(height: 32),
+            CompletionRatio(
+              cp: cp,
+              completionRateLastWeek: completionRateLastWeek,
+              today: demoToday,
+              overridePercentage: completionPercentage,
+            ),
+            const SizedBox(height: 32),
+            ConsistencyCalendar(allStats: allStats, today: demoToday),
+            const SizedBox(height: 145),
+          ],
+        ),
+      ),
     );
   }
 }

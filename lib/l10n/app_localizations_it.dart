@@ -1934,4 +1934,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get getStarted => 'Inizia';
+
+  @override
+  String get onboardingDemoHabitStudying => 'Studio';
+
+  @override
+  String get onboardingDemoHabitBrushTeeth => 'Lavarsi i denti';
+
+  @override
+  String get onboardingDemoHabitReadBook => 'Leggere un libro';
+
+  @override
+  String get onboardingDemoHabitPushUps => 'Flessioni';
 }

@@ -744,5 +744,9 @@
   "onboardingStep3Subtitle": "Streaks, strength, weekly ratio and progress insights in one place.",
   "onboardingStep4Title": "Stay on track",
   "onboardingStep4Subtitle": "Morning, mid-day and wrap-up reminders with full control.",
-  "getStarted": "Get started"
+  "getStarted": "Get started",
+  "onboardingDemoHabitStudying": "Studying",
+  "onboardingDemoHabitBrushTeeth": "Brush teeth",
+  "onboardingDemoHabitReadBook": "Read a book",
+  "onboardingDemoHabitPushUps": "Push ups"
 }

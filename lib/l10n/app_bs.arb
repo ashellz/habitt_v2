@@ -747,5 +747,9 @@
   "onboardingStep3Subtitle": "Streakovi, snaga nabike, sedmični prikaz i uvidi u napredak na jednom mjestu.",
   "onboardingStep4Title": "Ne brini o zaboravljanju",
   "onboardingStep4Subtitle": "Jutarnji, podnevni i večernji podsjetnici s punom kontrolom.",
-  "getStarted": "Počni"
+  "getStarted": "Počni",
+  "onboardingDemoHabitStudying": "Učenje",
+  "onboardingDemoHabitBrushTeeth": "Pranje zuba",
+  "onboardingDemoHabitReadBook": "Čitanje knjige",
+  "onboardingDemoHabitPushUps": "Sklekovi"
 }

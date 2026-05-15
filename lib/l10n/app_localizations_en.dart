@@ -1928,4 +1928,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get getStarted => 'Get started';
+
+  @override
+  String get onboardingDemoHabitStudying => 'Studying';
+
+  @override
+  String get onboardingDemoHabitBrushTeeth => 'Brush teeth';
+
+  @override
+  String get onboardingDemoHabitReadBook => 'Read a book';
+
+  @override
+  String get onboardingDemoHabitPushUps => 'Push ups';
 }

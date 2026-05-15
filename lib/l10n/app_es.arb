@@ -748,5 +748,9 @@
   "onboardingStep3Subtitle": "Rachas, fuerza, ratio semanal e información de progreso en un solo lugar.",
   "onboardingStep4Title": "Mantente en el camino",
   "onboardingStep4Subtitle": "Recordatorios de mañana, mediodía y cierre con control total.",
-  "getStarted": "Comenzar"
+  "getStarted": "Comenzar",
+  "onboardingDemoHabitStudying": "Estudio",
+  "onboardingDemoHabitBrushTeeth": "Cepillarse los dientes",
+  "onboardingDemoHabitReadBook": "Leer un libro",
+  "onboardingDemoHabitPushUps": "Flexiones"
 }

@@ -1930,4 +1930,16 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get getStarted => 'Počni';
+
+  @override
+  String get onboardingDemoHabitStudying => 'Učenje';
+
+  @override
+  String get onboardingDemoHabitBrushTeeth => 'Pranje zuba';
+
+  @override
+  String get onboardingDemoHabitReadBook => 'Čitanje knjige';
+
+  @override
+  String get onboardingDemoHabitPushUps => 'Sklekovi';
 }

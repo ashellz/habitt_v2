@@ -13,15 +13,13 @@ import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_delete_habit_flow.dart';
-import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
-import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
+import 'package:habitt/widgets/habit_details/habit_primary_action_button.dart';
 import 'package:habitt/widgets/habit_details/new/habit_detail_stats_sections.dart';
 import 'package:habitt/widgets/stats/consistency_calendar.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
-import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -344,7 +342,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                 ),
 
                 const SizedBox(height: 16),
-                _HabitPrimaryActionButton(habit: habit),
+                HabitPrimaryActionButton(habit: habit),
               ],
             ),
           ),
@@ -598,153 +596,6 @@ class _RingValueBlurCloud extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class _HabitPrimaryActionButton extends StatefulWidget {
-  const _HabitPrimaryActionButton({required this.habit});
-
-  final Habit habit;
-
-  @override
-  State<_HabitPrimaryActionButton> createState() =>
-      _HabitPrimaryActionButtonState();
-}
-
-class _HabitPrimaryActionButtonState extends State<_HabitPrimaryActionButton> {
-  double _progressValue() {
-    if (widget.habit.completed || widget.habit.skipped) {
-      return 1;
-    }
-
-    if (widget.habit.tracksAmount) {
-      if (widget.habit.amount <= 0) {
-        return 0;
-      }
-      return (widget.habit.amountCompleted / widget.habit.amount).clamp(
-        0.0,
-        1.0,
-      );
-    }
-
-    if (widget.habit.tracksDuration) {
-      if (widget.habit.duration <= 0) {
-        return 0;
-      }
-      return (widget.habit.durationCompleted / widget.habit.duration).clamp(
-        0.0,
-        1.0,
-      );
-    }
-
-    return 0;
-  }
-
-  String _label() {
-    final loc = AppLocalizations.of(context)!;
-    debugPrint('Completed: ${widget.habit.completed}');
-    if (widget.habit.completed) {
-      return loc.completed;
-    }
-    if (widget.habit.hasTrackingType) {
-      return loc.logProgress;
-    }
-    return loc.markAsComplete;
-  }
-
-  Future<void> _onMainTap() async {
-    final habitProvider = context.read<HabitProvider>();
-    final stateProvider = context.read<StateProvider>();
-    final dayOverride = DateTime.now();
-
-    if (!widget.habit.hasTrackingType) {
-      habitProvider.completeHabit(
-        widget.habit.id,
-        context,
-        stateProvider,
-        dayOverride: dayOverride,
-      );
-      return;
-    }
-
-    await showDialogSheet(
-      context: context,
-      builder: (context) {
-        return LogProgressDialog(
-          progressType:
-              widget.habit.tracksAmount
-                  ? ProgressType.amount
-                  : ProgressType.duration,
-          habit: widget.habit,
-          dayOverride: dayOverride,
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return GestureDetector(
-      onTap: _onMainTap,
-
-      onLongPress: () {
-        final habitProvider = context.read<HabitProvider>();
-        final stateProvider = context.read<StateProvider>();
-        habitProvider.completeHabit(
-          widget.habit.id,
-          context,
-          stateProvider,
-          dayOverride: DateTime.now(),
-        );
-      },
-      child: NewDefaultButton(
-        color: widget.habit.completed ? cp.habitBg : cp.main,
-        height: 41,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onPressed: () => _onMainTap(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IgnorePointer(
-              child: _ActionProgressIcon(
-                progress: _progressValue(),
-                habit: widget.habit,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              _label(),
-              style: TextStyle(
-                color: widget.habit.completed ? cp.lightGreyText : cp.bg,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActionProgressIcon extends StatelessWidget {
-  const _ActionProgressIcon({required this.progress, required this.habit});
-
-  final double progress;
-  final Habit habit;
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return NewHabitProgress(
-      habit: habit,
-      color: cp.bg,
-      extraTapArea: false,
-      secondaryCheckmarks: true,
     );
   }
 }

@@ -19,6 +19,7 @@ class NewHabitProgress extends StatefulWidget {
     this.color,
     this.extraTapArea = true,
     this.secondaryCheckmarks = false,
+    this.isDemo = false,
   });
 
   final Habit habit;
@@ -26,6 +27,7 @@ class NewHabitProgress extends StatefulWidget {
   final Color? color;
   final bool extraTapArea;
   final bool secondaryCheckmarks;
+  final bool isDemo;
 
   @override
   State<NewHabitProgress> createState() => _NewHabitProgressState();
@@ -64,55 +66,63 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
     final cp = context.watch<ColorProvider>();
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _scale = 0.9;
-        });
-        Future.delayed(const Duration(milliseconds: 150), () {
-          setState(() {
-            _scale = 1.0;
-          });
-        });
+      onTap: widget.isDemo
+          ? null
+          : () {
+              setState(() {
+                _scale = 0.9;
+              });
+              Future.delayed(const Duration(milliseconds: 150), () {
+                setState(() {
+                  _scale = 1.0;
+                });
+              });
 
-        // If no amount or duration, toggle completion
-        if (!widget.habit.hasTrackingType) {
-          habitProvider.completeHabit(widget.habit.id, context, stateProvider);
-        } else {
-          // Opens a dialog for selecting amount/duration completion
-          showDialogSheet(
-            context: context,
-            builder: (context) {
-              return LogProgressDialog(
-                progressType:
-                    widget.habit.tracksAmount
-                        ? ProgressType.amount
-                        : ProgressType.duration,
-                habit: widget.habit,
-              );
+              if (!widget.habit.hasTrackingType) {
+                habitProvider.completeHabit(widget.habit.id, context, stateProvider);
+              } else {
+                showDialogSheet(
+                  context: context,
+                  builder: (context) {
+                    return LogProgressDialog(
+                      progressType:
+                          widget.habit.tracksAmount
+                              ? ProgressType.amount
+                              : ProgressType.duration,
+                      habit: widget.habit,
+                    );
+                  },
+                );
+              }
             },
-          );
-        }
-      },
-      onTapDown: (context) {
-        HapticFeedback.selectionClick();
-        setState(() {
-          _scale = 0.9;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          _scale = 1.0;
-        });
-      },
-      onTapUp: (context) {
-        HapticFeedback.selectionClick();
-        setState(() {
-          _scale = 1.0;
-        });
-      },
-      onLongPress: () {
-        habitProvider.completeHabit(widget.habit.id, context, stateProvider);
-      },
+      onTapDown: widget.isDemo
+          ? null
+          : (context) {
+              HapticFeedback.selectionClick();
+              setState(() {
+                _scale = 0.9;
+              });
+            },
+      onTapCancel: widget.isDemo
+          ? null
+          : () {
+              setState(() {
+                _scale = 1.0;
+              });
+            },
+      onTapUp: widget.isDemo
+          ? null
+          : (context) {
+              HapticFeedback.selectionClick();
+              setState(() {
+                _scale = 1.0;
+              });
+            },
+      onLongPress: widget.isDemo
+          ? null
+          : () {
+              habitProvider.completeHabit(widget.habit.id, context, stateProvider);
+            },
       child: Container(
         color: Colors.transparent,
         width: 24 + (widget.extraTapArea ? 32 : 0),

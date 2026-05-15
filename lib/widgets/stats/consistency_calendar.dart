@@ -8,10 +8,16 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ConsistencyCalendar extends StatefulWidget {
-  const ConsistencyCalendar({super.key, this.habitStats, this.allStats});
+  const ConsistencyCalendar({
+    super.key,
+    this.habitStats,
+    this.allStats,
+    this.today,
+  });
 
   final HabitStatsData? habitStats;
   final Map<DateTime, double>? allStats;
+  final DateTime? today;
 
   @override
   State<ConsistencyCalendar> createState() => _ConsistencyCalendarState();
@@ -41,7 +47,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
+    final now = widget.today ?? DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
   }
 
@@ -74,7 +80,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final today = _normalize(DateTime.now());
+    final today = _normalize(widget.today ?? DateTime.now());
 
     DateTime getCreatedAt() {
       if (widget.habitStats != null) {

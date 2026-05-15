@@ -748,5 +748,9 @@
   "onboardingStep3Subtitle": "Serien, Stärke, Wochenquote und Fortschrittseinblicke auf einen Blick.",
   "onboardingStep4Title": "Bleib auf Kurs",
   "onboardingStep4Subtitle": "Morgen-, Mittags- und Abenderinnerungen mit voller Kontrolle.",
-  "getStarted": "Loslegen"
+  "getStarted": "Loslegen",
+  "onboardingDemoHabitStudying": "Lernen",
+  "onboardingDemoHabitBrushTeeth": "Zähne putzen",
+  "onboardingDemoHabitReadBook": "Ein Buch lesen",
+  "onboardingDemoHabitPushUps": "Liegestütze"
 }

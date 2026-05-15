@@ -55,6 +55,7 @@ class MainHabitInfo extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       spacing: 10,
       children: [
         Text(

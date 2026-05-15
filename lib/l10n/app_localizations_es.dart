@@ -1934,4 +1934,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get getStarted => 'Comenzar';
+
+  @override
+  String get onboardingDemoHabitStudying => 'Estudio';
+
+  @override
+  String get onboardingDemoHabitBrushTeeth => 'Cepillarse los dientes';
+
+  @override
+  String get onboardingDemoHabitReadBook => 'Leer un libro';
+
+  @override
+  String get onboardingDemoHabitPushUps => 'Flexiones';
 }

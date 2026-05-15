@@ -5,6 +5,10 @@ import 'package:habitt/pages/home_page.dart';
 import 'package:habitt/pages/onboarding/choose_app_language.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/onboarding/onboarding_step1.dart';
+import 'package:habitt/widgets/onboarding/onboarding_step2.dart';
+import 'package:habitt/widgets/onboarding/onboarding_step3.dart';
+import 'package:habitt/widgets/onboarding/onboarding_step4.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -182,7 +186,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
               16,
               MediaQuery.of(context).viewPadding.top,
               16,
-              12,
+              0,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,21 +212,25 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
             child: Column(
               children: [
                 Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentStep = index;
-                      });
-                    },
-                    itemCount: _stepCount,
-                    itemBuilder: (context, index) {
-                      return _OnboardingVisualTemplate(
-                        key: ValueKey(index),
-                        stepIndex: index,
-                        accentIcon: steps[index].accent,
-                      );
-                    },
+                  child: Transform.translate(
+                    offset: Offset(0, 30),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentStep = index;
+                        });
+                      },
+                      itemCount: _stepCount,
+                      itemBuilder: (context, index) {
+                        return switch (index) {
+                          0 => const OnboardingStep1(key: ValueKey(0)),
+                          1 => const OnboardingStep2(key: ValueKey(1)),
+                          2 => const OnboardingStep3(key: ValueKey(2)),
+                          _ => const OnboardingStep4(key: ValueKey(3)),
+                        };
+                      },
+                    ),
                   ),
                 ),
                 Container(
@@ -337,103 +345,6 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _OnboardingVisualTemplate extends StatelessWidget {
-  const _OnboardingVisualTemplate({
-    super.key,
-    required this.stepIndex,
-    required this.accentIcon,
-  });
-
-  final int stepIndex;
-  final IconData accentIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 10, right: 16, left: 16),
-      decoration: BoxDecoration(
-        color: cp.bg.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: Center(
-        child: Container(
-          width: 250,
-          height: 360,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: cp.bg,
-            borderRadius: BorderRadius.circular(26),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 24,
-                offset: const Offset(0, 14),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 2),
-              Container(
-                width: 95,
-                height: 26,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-              const SizedBox(height: 26),
-              Icon(accentIcon, size: 58, color: cp.main),
-              const SizedBox(height: 16),
-              _TemplateStatRow(cp: cp, widthFactor: 0.85),
-              const SizedBox(height: 10),
-              _TemplateStatRow(cp: cp, widthFactor: 1),
-              const SizedBox(height: 10),
-              _TemplateStatRow(cp: cp, widthFactor: 0.7),
-              const Spacer(),
-              Container(
-                width: 120,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TemplateStatRow extends StatelessWidget {
-  const _TemplateStatRow({required this.cp, required this.widthFactor});
-
-  final ColorProvider cp;
-  final double widthFactor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: FractionallySizedBox(
-        widthFactor: widthFactor,
-        child: Container(
-          height: 42,
-          decoration: BoxDecoration(
-            color: cp.secondaryButton,
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
       ),
     );
   }

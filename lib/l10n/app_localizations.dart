@@ -3140,6 +3140,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get started'**
   String get getStarted;
+
+  /// No description provided for @onboardingDemoHabitStudying.
+  ///
+  /// In en, this message translates to:
+  /// **'Studying'**
+  String get onboardingDemoHabitStudying;
+
+  /// No description provided for @onboardingDemoHabitBrushTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'Brush teeth'**
+  String get onboardingDemoHabitBrushTeeth;
+
+  /// No description provided for @onboardingDemoHabitReadBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a book'**
+  String get onboardingDemoHabitReadBook;
+
+  /// No description provided for @onboardingDemoHabitPushUps.
+  ///
+  /// In en, this message translates to:
+  /// **'Push ups'**
+  String get onboardingDemoHabitPushUps;
 }
 
 class _AppLocalizationsDelegate

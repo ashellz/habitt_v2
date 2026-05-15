@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/edit_habit_page.dart';
@@ -29,6 +30,8 @@ class HabitWidget extends StatefulWidget {
   final bool editable;
   final bool isFirstCategory;
   final bool isToday;
+
+  static Widget demo() => const _DemoHabitDisplay();
 
   @override
   State<HabitWidget> createState() => _HabitWidgetState();
@@ -302,6 +305,31 @@ class _HabitWidgetState extends State<HabitWidget>
           },
         );
       },
+    );
+  }
+}
+
+class _DemoHabitDisplay extends StatelessWidget {
+  const _DemoHabitDisplay();
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final habit = Habit(
+      id: -1,
+      name: loc.onboardingDemoHabitStudying,
+      iconPath: '📚',
+      categoryId: 1,
+      duration: 30,
+      durationCompleted: 30,
+      completed: true,
+      trackingType: HabitTrackingType.duration,
+    );
+    return HabitWidget(
+      habit: habit,
+      editable: false,
+      isFirstCategory: true,
+      isToday: false,
     );
   }
 }
