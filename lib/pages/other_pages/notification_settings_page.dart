@@ -15,6 +15,8 @@ import 'package:habitt/l10n/app_localizations.dart';
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
 
+  static Widget demo() => const _DemoNotificationBody();
+
   @override
   State<NotificationSettingsPage> createState() =>
       _NotificationSettingsPageState();
@@ -570,6 +572,160 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                       ),
                     )
                     : SizedBox(key: ValueKey('save-hidden'), width: 76),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DemoNotificationBody extends StatelessWidget {
+  const _DemoNotificationBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final np = context.watch<NotificationsProvider>();
+    final loc = AppLocalizations.of(context)!;
+
+    return ColoredBox(
+      color: cp.bg,
+      child: ListView(
+        children: [
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 10,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 10,
+                  children: [
+                    Text(
+                      loc.notifications,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                    ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: ShapeDecoration(
+                        color: cp.isDark ? cp.habitBg : cp.bg,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(width: 1, color: cp.border),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 32,
+                            color: Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  loc.allNotifications,
+                                  style: TextStyle(
+                                    color: cp.text,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                NewDefaultSwitch(
+                                  value: np.isMasterEnabled,
+                                  onChanged: (_) {},
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(color: cp.border, height: 32),
+                          Container(
+                            height: 32,
+                            color: Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  loc.habitNotifications,
+                                  style: TextStyle(
+                                    color: cp.text,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                NewDefaultSwitch(
+                                  value: np.areHabitNotificationsEnabled,
+                                  onChanged: (_) {},
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(color: cp.border, height: 32),
+                          Container(
+                            height: 32,
+                            color: Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  loc.dailyReminders,
+                                  style: TextStyle(
+                                    color: cp.text,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                NewDefaultSwitch(
+                                  value: np.arePeriodNotificationsEnabled,
+                                  onChanged: (_) {},
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 10,
+                  children: [
+                    Text(
+                      loc.dailyReminders,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                    ),
+                    Column(
+                      spacing: 12,
+                      children: [
+                        NotificationCard(
+                          period: NotificationPeriod.morning,
+                          settings: np.getSettings(NotificationPeriod.morning),
+                          enabled: np.isEnabled(NotificationPeriod.morning),
+                        ),
+                        NotificationCard(
+                          period: NotificationPeriod.midday,
+                          settings: np.getSettings(NotificationPeriod.midday),
+                          enabled: np.isEnabled(NotificationPeriod.midday),
+                        ),
+                        NotificationCard(
+                          period: NotificationPeriod.wrapUp,
+                          settings: np.getSettings(NotificationPeriod.wrapUp),
+                          enabled: np.isEnabled(NotificationPeriod.wrapUp),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
