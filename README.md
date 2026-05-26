@@ -42,6 +42,7 @@ Quick-start habits: wake up early, go to bed early, brush teeth, skin care, show
 English, German, Spanish, Italian, Bosnian
 
 **Future features**
+
 Habit goals:
 - Add habit amount/duration goal, improvement sheets will show until goal is reached and no more
 
