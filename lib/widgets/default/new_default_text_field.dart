@@ -10,6 +10,7 @@ class NewDefaultTextField extends StatefulWidget {
     this.title,
     required this.controller,
     this.focusNode,
+    this.autofocus = false,
     this.titleFontSize = 13,
     this.maxTextLength,
     this.minLines,
@@ -24,23 +25,38 @@ class NewDefaultTextField extends StatefulWidget {
     this.suffix,
     this.centerValue = false,
     this.hint,
+    this.errorText,
     this.fontWeight = FontWeight.w400,
     this.textStyle,
+    this.hintStyle,
     this.regex,
     this.showBorder = false,
     this.color,
     this.enabled = true,
+    this.borderRadius = 24.0,
+    this.contentPadding = const EdgeInsets.symmetric(
+      vertical: 12,
+      horizontal: 16,
+    ),
+    this.borderColor,
+    this.focusedBorderColor,
+    this.errorBorderColor,
+    this.focusedErrorBorderColor,
+    this.counterText,
+    this.onSubmitted,
   });
 
   final String? title;
   final TextEditingController controller;
   final double titleFontSize;
   final FocusNode? focusNode;
+  final bool autofocus;
   final int? maxTextLength;
   final int? minLines;
   final int maxLines;
   final double? topPadding;
   final VoidCallback? onTap;
+  final ValueChanged<String>? onSubmitted;
   final ValueChanged<String>? onChanged;
   final bool digitsOnly;
   final bool textOnly;
@@ -49,12 +65,21 @@ class NewDefaultTextField extends StatefulWidget {
   final Widget? suffix;
   final bool centerValue;
   final String? hint;
+  final String? errorText;
   final FontWeight fontWeight;
   final TextStyle? textStyle;
+  final TextStyle? hintStyle;
   final RegExp? regex;
   final bool showBorder;
   final Color? color;
   final bool enabled;
+  final double borderRadius;
+  final EdgeInsetsGeometry contentPadding;
+  final Color? borderColor;
+  final Color? focusedBorderColor;
+  final Color? errorBorderColor;
+  final Color? focusedErrorBorderColor;
+  final String? counterText;
 
   @override
   State<NewDefaultTextField> createState() => _NewDefaultTextFieldState();
@@ -118,9 +143,11 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
 
           TextFormField(
             enabled: widget.enabled,
+            autofocus: widget.autofocus,
             focusNode: widget.focusNode,
             controller: widget.controller,
             onTap: widget.onTap,
+            onFieldSubmitted: widget.onSubmitted,
             onChanged: widget.onChanged,
             textAlign: widget.centerValue ? TextAlign.center : TextAlign.start,
             keyboardAppearance: cp.isDark ? Brightness.dark : Brightness.light,
@@ -150,39 +177,85 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
 
             // Decoration
             decoration: InputDecoration(
+              errorText: widget.errorText,
               hint:
                   widget.hint != null
                       ? Text(
                         widget.hint!,
-                        style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+                        style:
+                            widget.hintStyle ??
+                            TextStyle(color: cp.lightGreyText, fontSize: 16),
                       )
                       : null,
 
               prefixIcon: widget.prefix,
               suffixIcon: widget.suffix ?? getSuffixIcon(cp),
+              counterText: widget.counterText,
               alignLabelWithHint: true,
 
               // Borders
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(widget.borderRadius),
+                ),
                 borderSide:
                     widget.showBorder
-                        ? BorderSide(width: 1, color: cp.border)
+                        ? BorderSide(
+                          width: 1,
+                          color: widget.borderColor ?? cp.border,
+                        )
                         : BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24.0),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
                 borderSide:
                     widget.showBorder
-                        ? BorderSide(width: 1, color: cp.border)
+                        ? BorderSide(
+                          width: 1,
+                          color: widget.focusedBorderColor ?? cp.border,
+                        )
                         : BorderSide.none,
               ),
 
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(widget.borderRadius),
+                ),
                 borderSide:
                     widget.showBorder
-                        ? BorderSide(width: 1, color: cp.border)
+                        ? BorderSide(
+                          width: 1,
+                          color: widget.borderColor ?? cp.border,
+                        )
+                        : BorderSide.none,
+              ),
+
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(widget.borderRadius),
+                ),
+                borderSide:
+                    widget.showBorder
+                        ? BorderSide(
+                          width: 1,
+                          color: widget.errorBorderColor ?? cp.error,
+                        )
+                        : BorderSide.none,
+              ),
+
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(widget.borderRadius),
+                ),
+                borderSide:
+                    widget.showBorder
+                        ? BorderSide(
+                          width: 1,
+                          color:
+                              widget.focusedErrorBorderColor ??
+                              widget.errorBorderColor ??
+                              cp.error,
+                        )
                         : BorderSide.none,
               ),
 
@@ -191,10 +264,7 @@ class _NewDefaultTextFieldState extends State<NewDefaultTextField> {
               fillColor: widget.color ?? cp.field,
 
               // Content padding
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 16,
-              ),
+              contentPadding: widget.contentPadding,
               floatingLabelBehavior: FloatingLabelBehavior.always,
             ),
           ),

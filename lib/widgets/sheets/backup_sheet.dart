@@ -3,8 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
+import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -49,11 +52,24 @@ class _BackupSheetState extends State<BackupSheet> {
     if (syncDay == yesterday) return loc.backupDateYesterday(time);
 
     final months = [
-      loc.monthJan, loc.monthFeb, loc.monthMar, loc.monthApr,
-      loc.monthMay, loc.monthJun, loc.monthJul, loc.monthAug,
-      loc.monthSep, loc.monthOct, loc.monthNov, loc.monthDec,
+      loc.monthJan,
+      loc.monthFeb,
+      loc.monthMar,
+      loc.monthApr,
+      loc.monthMay,
+      loc.monthJun,
+      loc.monthJul,
+      loc.monthAug,
+      loc.monthSep,
+      loc.monthOct,
+      loc.monthNov,
+      loc.monthDec,
     ];
-    return loc.backupDateOther(months[lastSync.month - 1], '${lastSync.day}', time);
+    return loc.backupDateOther(
+      months[lastSync.month - 1],
+      '${lastSync.day}',
+      time,
+    );
   }
 
   Future<void> _handleMigrate(BackupProvider bp) async {
@@ -87,6 +103,27 @@ class _BackupSheetState extends State<BackupSheet> {
       builder: (context) => const BackupHistorySheet(),
     );
   }
+  /*
+  void _showPinDialog(
+    BuildContext context, {
+    required String title,
+    required String desc,
+    required String buttonLabel,
+    Color? buttonColor,
+    required Future<bool> Function(String pin) onConfirm,
+  }) {
+    showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => _PinDialog(
+            title: title,
+            desc: desc,
+            buttonLabel: buttonLabel,
+            buttonColor: buttonColor,
+            onConfirm: onConfirm,
+          ),
+    );
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +196,7 @@ class _BackupSheetState extends State<BackupSheet> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: NewDefaultButton.primary(
+        width: double.infinity,
         onPressed: () => bp.signIn(context),
         label: loc.signInWithGoogle,
         isLoading: bp.syncState == SyncState.syncing,
@@ -209,35 +247,14 @@ class _BackupSheetState extends State<BackupSheet> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                TextField(
+                NewDefaultTextField(
                   controller: _passphraseController,
                   obscureText: true,
-                  style: TextStyle(color: cp.text, fontSize: 15),
-                  decoration: InputDecoration(
-                    hintText: loc.enterOldPassphrase,
-                    hintStyle: TextStyle(color: cp.greyText),
-                    filled: true,
-                    fillColor: cp.bg,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: cp.border),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: cp.border),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: cp.main),
-                    ),
-                  ),
+                  color: cp.habitBg,
                 ),
                 const SizedBox(height: 16),
                 NewDefaultButton.primary(
+                  width: double.infinity,
                   onPressed: () => _handleMigrate(bp),
                   label: loc.migrate,
                   isLoading: _migrationLoading,
@@ -246,6 +263,20 @@ class _BackupSheetState extends State<BackupSheet> {
             ),
           ),
           const SizedBox(height: 16),
+          Center(
+            child: GestureDetector(
+              onTap: () => _confirmDiscardLegacy(context, bp, loc),
+              child: Text(
+                loc.forgotPassphrase,
+                style: TextStyle(
+                  color: cp.greyText,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           Center(
             child: GestureDetector(
               onTap: () => bp.signOut(),
@@ -262,6 +293,30 @@ class _BackupSheetState extends State<BackupSheet> {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDiscardLegacy(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+  ) async {
+    final cp = context.read<ColorProvider>();
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.discardOldBackupTitle,
+            desc: loc.discardOldBackupDesc,
+            primaryButtonLabel: loc.discardOldBackupConfirm,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      await bp.discardLegacyBackup();
+    }
   }
 
   // --- Signed-in state ---------------------------------------------------
@@ -307,6 +362,54 @@ class _BackupSheetState extends State<BackupSheet> {
               ],
             ),
           ),
+          /*
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: ShapeDecoration(
+              color: cp.habitBg,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(width: 1, color: cp.border),
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  loc.pinProtection,
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                NewDefaultSwitch(
+                  value: bp.isPinEnabled,
+                  onChanged: (v) {
+                    if (v) {
+                      _showPinDialog(
+                        context,
+                        title: loc.setPinTitle,
+                        desc: loc.setPinDesc,
+                        buttonLabel: loc.enable,
+                        onConfirm: (pin) => bp.enablePin(pin),
+                      );
+                    } else {
+                      _showPinDialog(
+                        context,
+                        title: loc.disablePinTitle,
+                        desc: loc.disablePinDesc,
+                        buttonLabel: loc.disable,
+                        buttonColor: cp.error,
+                        onConfirm: (pin) => bp.disablePin(pin),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ), */
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.only(left: 4),
@@ -339,9 +442,8 @@ class _BackupSheetState extends State<BackupSheet> {
           ),
           const SizedBox(height: 10),
           NewDefaultButton.secondary(
-            onPressed: isSyncing
-                ? () {}
-                : () => _openBackupHistory(context, cp),
+            onPressed:
+                isSyncing ? () {} : () => _openBackupHistory(context, cp),
             label: loc.restoreFromBackup,
           ),
           const SizedBox(height: 24),
@@ -405,6 +507,132 @@ class _BackupSheetState extends State<BackupSheet> {
           ),
           const SizedBox(width: 66 + 16),
         ],
+      ),
+    );
+  }
+}
+
+class _PinDialog extends StatefulWidget {
+  const _PinDialog({
+    required this.title,
+    required this.desc,
+    required this.buttonLabel,
+    required this.onConfirm,
+  }) : buttonColor = null;
+
+  final String title;
+  final String desc;
+  final String buttonLabel;
+  final Color? buttonColor;
+  final Future<bool> Function(String pin) onConfirm;
+
+  @override
+  State<_PinDialog> createState() => _PinDialogState();
+}
+
+class _PinDialogState extends State<_PinDialog> {
+  final _ctrl = TextEditingController();
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final pin = _ctrl.text.trim();
+    final loc = AppLocalizations.of(context)!;
+    if (pin.length < 4) {
+      setState(() => _error = loc.pinTooShort);
+      return;
+    }
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    final ok = await widget.onConfirm(pin);
+    if (!mounted) return;
+    if (ok) {
+      Navigator.of(context).pop(true);
+    } else {
+      setState(() {
+        _loading = false;
+        _error = loc.pinIncorrect;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 40 + keyboardInset),
+      child: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: cp.isDark ? cp.habitBg : cp.bg,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style: TextStyle(
+                  color: cp.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                widget.desc,
+                style: TextStyle(color: cp.greyText, fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              NewDefaultTextField(
+                controller: _ctrl,
+                obscureText: true,
+                autofocus: true,
+                hint: loc.pinHint,
+                errorText: _error,
+                color: cp.isDark ? cp.bg : cp.field,
+                showBorder: true,
+                onSubmitted: (_) => _submit(),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: NewDefaultButton.secondary(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      label: loc.cancel,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: NewDefaultButton.primary(
+                      onPressed: _submit,
+                      label: widget.buttonLabel,
+                      isLoading: _loading,
+                      color: widget.buttonColor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

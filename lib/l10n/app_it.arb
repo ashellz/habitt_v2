@@ -803,5 +803,21 @@
   "monthOct": "Ott",
   "monthNov": "Nov",
   "monthDec": "Dic",
-  "migrationFailed": "Migrazione fallita. Controlla la tua passphrase."
+  "migrationFailed": "Migrazione fallita. Controlla la tua passphrase.",
+  "pinProtection": "Protezione PIN",
+  "setPinTitle": "Imposta PIN",
+  "setPinDesc": "Crea una passphrase o PIN (almeno 4 caratteri) per aggiungere protezione extra alla chiave di backup.",
+  "disablePinTitle": "Disabilita PIN",
+  "disablePinDesc": "Inserisci il tuo PIN attuale per rimuovere la protezione PIN.",
+  "unlockForSyncTitle": "Sblocca backup",
+  "unlockForSyncDesc": "Inserisci il tuo PIN per sbloccare l'accesso al backup per questa sessione.",
+  "pinHint": "Passphrase o PIN",
+  "pinTooShort": "Deve avere almeno 4 caratteri",
+  "pinIncorrect": "Passphrase o PIN errati",
+  "unlockAction": "Sblocca",
+  "disable": "Disabilita",
+  "forgotPassphrase": "Hai dimenticato la passphrase? Elimina il vecchio backup",
+  "discardOldBackupTitle": "Eliminare il vecchio backup?",
+  "discardOldBackupDesc": "Il tuo vecchio backup cifrato verrà eliminato definitivamente da Google Drive e sostituito con uno nuovo. I tuoi dati locali sono al sicuro.",
+  "discardOldBackupConfirm": "Elimina"
 }

@@ -31,6 +31,8 @@ class BackupService {
   static final _aes = AesGcm.with256bits();
 
   static const _kBackupKeyStorageKey = 'habitt_backup_key';
+  static const _kPinDataStorageKey = 'habitt_backup_pin_data';
+  static const _kPinValueStorageKey = 'habitt_backup_pin_value';
 
   // --- Keychain key management -------------------------------------------
 
@@ -60,6 +62,121 @@ class BackupService {
       aOptions: androidOpts,
     );
     return SecretKey(bytes);
+  }
+
+  // --- PIN key wrapping --------------------------------------------------
+
+  /// Wraps [key] with a PBKDF2-derived key from [pin]. Returns a JSON-ready map.
+  static Future<Map<String, String>> wrapKeyWithPin(
+    SecretKey key,
+    String pin,
+  ) async {
+    final keyBytes = await key.extractBytes();
+    final salt = _randomBytes(16);
+    final nonce = _randomBytes(12);
+    final pinKey = await _deriveKey(pin, salt);
+    final box = await _aes.encrypt(keyBytes, secretKey: pinKey, nonce: nonce);
+    return {
+      'salt': base64Encode(salt),
+      'nonce': base64Encode(nonce),
+      'ciphertext': base64Encode(box.cipherText),
+      'tag': base64Encode(box.mac.bytes),
+    };
+  }
+
+  /// Reads the stored PIN-wrapped key and decrypts it using [pin].
+  /// Returns null if PIN is wrong or no data is stored.
+  static Future<SecretKey?> unwrapKeyWithPin(
+    FlutterSecureStorage storage,
+    String pin,
+  ) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+
+    final storedJson = await storage.read(
+      key: _kPinDataStorageKey,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+    if (storedJson == null) return null;
+
+    try {
+      final w = jsonDecode(storedJson) as Map<String, dynamic>;
+      final pinKey = await _deriveKey(pin, base64Decode(w['salt'] as String));
+      final decrypted = await _aes.decrypt(
+        SecretBox(
+          base64Decode(w['ciphertext'] as String),
+          nonce: base64Decode(w['nonce'] as String),
+          mac: Mac(base64Decode(w['tag'] as String)),
+        ),
+        secretKey: pinKey,
+      );
+      return SecretKey(decrypted);
+    } on SecretBoxAuthenticationError {
+      return null;
+    } catch (e) {
+      debugPrint('PIN unwrap error: $e');
+      return null;
+    }
+  }
+
+  static Future<void> storePinData(
+    FlutterSecureStorage storage,
+    Map<String, String> wrapped,
+  ) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.write(
+      key: _kPinDataStorageKey,
+      value: jsonEncode(wrapped),
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+  }
+
+  static Future<void> clearPinData(FlutterSecureStorage storage) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.delete(
+      key: _kPinDataStorageKey,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+  }
+
+  /// Persists the raw PIN string so it can be used automatically on next launch.
+  static Future<void> storePin(
+    FlutterSecureStorage storage,
+    String pin,
+  ) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.write(
+      key: _kPinValueStorageKey,
+      value: pin,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+  }
+
+  static Future<String?> readStoredPin(FlutterSecureStorage storage) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    return storage.read(
+      key: _kPinValueStorageKey,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+  }
+
+  static Future<void> clearStoredPin(FlutterSecureStorage storage) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.delete(
+      key: _kPinValueStorageKey,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
   }
 
   // --- Key-based encryption (v2 format, no PBKDF2) -----------------------

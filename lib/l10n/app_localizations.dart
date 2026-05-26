@@ -3368,6 +3368,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Migration failed. Check your passphrase.'**
   String get migrationFailed;
+
+  /// No description provided for @pinProtection.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN protection'**
+  String get pinProtection;
+
+  /// No description provided for @setPinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a PIN'**
+  String get setPinTitle;
+
+  /// No description provided for @setPinDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a passphrase or PIN (at least 4 characters) to add extra protection to your backup key.'**
+  String get setPinDesc;
+
+  /// No description provided for @disablePinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable PIN'**
+  String get disablePinTitle;
+
+  /// No description provided for @disablePinDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current PIN to remove PIN protection.'**
+  String get disablePinDesc;
+
+  /// No description provided for @unlockForSyncTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock backup'**
+  String get unlockForSyncTitle;
+
+  /// No description provided for @unlockForSyncDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN to unlock backup access for this session.'**
+  String get unlockForSyncDesc;
+
+  /// No description provided for @pinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Passphrase or PIN'**
+  String get pinHint;
+
+  /// No description provided for @pinTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be at least 4 characters'**
+  String get pinTooShort;
+
+  /// No description provided for @pinIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect passphrase or PIN'**
+  String get pinIncorrect;
+
+  /// No description provided for @unlockAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get unlockAction;
+
+  /// No description provided for @disable.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get disable;
+
+  /// No description provided for @forgotPassphrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your passphrase? Discard old backup'**
+  String get forgotPassphrase;
+
+  /// No description provided for @discardOldBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard old backup?'**
+  String get discardOldBackupTitle;
+
+  /// No description provided for @discardOldBackupDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your old encrypted backup will be permanently deleted from Google Drive and replaced with a fresh one. Your current local data is safe.'**
+  String get discardOldBackupDesc;
+
+  /// No description provided for @discardOldBackupConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardOldBackupConfirm;
 }
 
 class _AppLocalizationsDelegate

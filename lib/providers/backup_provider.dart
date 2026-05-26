@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:cryptography/cryptography.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class BackupProvider extends ChangeNotifier {
   static const String _kAutoSyncEnabledKey = 'backup_auto_sync_enabled';
   static const String _kLastSyncTimeKey = 'backup_last_sync_time';
   static const String _kLegacyPassphraseKey = 'habitt_backup_passphrase';
+  static const String _kPinEnabledKey = 'backup_pin_enabled';
 
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
@@ -63,6 +65,10 @@ class BackupProvider extends ChangeNotifier {
 
   bool _dataExists = false;
 
+  bool _isPinEnabled = false;
+  // Decrypted keychain key cached in memory after PIN entry. Cleared on restart.
+  SecretKey? _cachedKey;
+
   String? _progressMessage;
 
   // --- Getters -----------------------------------------------------------
@@ -78,6 +84,7 @@ class BackupProvider extends ChangeNotifier {
   bool get isAutoSyncEnabled => _isAutoSyncEnabled;
   DateTime? get lastSyncTime => _lastSyncTime;
   bool get needsMigration => _needsMigration;
+  bool get isPinEnabled => _isPinEnabled;
 
   set syncState(SyncState state) {
     _syncState = state;
@@ -119,6 +126,58 @@ class BackupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // --- PIN protection ----------------------------------------------------
+
+  /// Returns the backup key. When PIN is enabled the stored PIN is read from
+  /// the keychain automatically — no user prompt needed after first setup.
+  /// Returns null only if PIN is enabled but no stored PIN is available yet
+  /// (e.g. iCloud Keychain hasn't synced to this device yet).
+  Future<SecretKey?> _getKey() async {
+    if (_cachedKey != null) return _cachedKey!;
+    if (!_isPinEnabled) return BackupService.getOrCreateKey(_secureStorage);
+
+    final pin = await BackupService.readStoredPin(_secureStorage);
+    if (pin == null) return null;
+    final key = await BackupService.unwrapKeyWithPin(_secureStorage, pin);
+    if (key != null) _cachedKey = key;
+    return key;
+  }
+
+  /// Wraps the keychain key with [pin], stores both the wrapped key and the
+  /// raw PIN (so auto-sync works on future app launches without re-entry).
+  Future<bool> enablePin(String pin) async {
+    try {
+      final key = await BackupService.getOrCreateKey(_secureStorage);
+      final wrapped = await BackupService.wrapKeyWithPin(key, pin);
+      await BackupService.storePinData(_secureStorage, wrapped);
+      await BackupService.storePin(_secureStorage, pin);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_kPinEnabledKey, true);
+      _isPinEnabled = true;
+      _cachedKey = key;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint('Enable PIN failed: $e');
+      return false;
+    }
+  }
+
+  /// Verifies [pin] against the stored wrapped key, then clears all PIN data.
+  /// Returns false if [pin] is wrong.
+  Future<bool> disablePin(String pin) async {
+    final key = await BackupService.unwrapKeyWithPin(_secureStorage, pin);
+    if (key == null) return false;
+    await BackupService.clearPinData(_secureStorage);
+    await BackupService.clearStoredPin(_secureStorage);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kPinEnabledKey, false);
+    _isPinEnabled = false;
+    _cachedKey = null;
+    notifyListeners();
+    return true;
+  }
+
   // --- Initialization ----------------------------------------------------
 
   Future<void> initialize() async {
@@ -140,6 +199,15 @@ class BackupProvider extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       _isAutoSyncEnabled = prefs.getBool(_kAutoSyncEnabledKey) ?? true;
+      _isPinEnabled = prefs.getBool(_kPinEnabledKey) ?? false;
+
+      // Pre-load key from stored PIN so auto-sync works immediately on startup.
+      if (_isPinEnabled) {
+        final pin = await BackupService.readStoredPin(_secureStorage);
+        if (pin != null) {
+          _cachedKey = await BackupService.unwrapKeyWithPin(_secureStorage, pin);
+        }
+      }
 
       final lastSyncMs = prefs.getInt(_kLastSyncTimeKey);
       if (lastSyncMs != null) {
@@ -293,7 +361,8 @@ class BackupProvider extends ChangeNotifier {
       }
 
       // Re-encrypt and upload with new keychain key
-      await _uploadBackupToCloud();
+      final newKey = await BackupService.getOrCreateKey(_secureStorage);
+      await _uploadBackupToCloud(newKey);
 
       // Clear legacy passphrase from keychain
       await _secureStorage.delete(key: _kLegacyPassphraseKey);
@@ -313,10 +382,60 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
+  // --- Legacy discard ----------------------------------------------------
+
+  /// Deletes the old passphrase-encrypted Drive backup, clears the local
+  /// migration flag, and uploads a fresh backup with the keychain key.
+  /// Safe to call when the user has forgotten their old passphrase.
+  Future<void> discardLegacyBackup() async {
+    if (!isLoggedIn) return;
+
+    syncState = SyncState.syncing;
+    lastError = null;
+
+    try {
+      // Clear local legacy passphrase so _needsMigration won't re-trigger
+      await _secureStorage.delete(key: _kLegacyPassphraseKey);
+      _legacyPassphrase = null;
+      _needsMigration = false;
+
+      // Delete all existing Drive files (old encrypted backups + metadata)
+      final drive = await _getDriveService();
+      if (drive != null) {
+        final folderId = await _getFolderId(drive, create: false);
+        if (folderId != null) {
+          final found = await drive.files.list(
+            q: "'$folderId' in parents and trashed = false",
+            $fields: 'files(id)',
+          );
+          if (found.files != null) {
+            for (final f in found.files!) {
+              if (f.id != null) await drive.files.delete(f.id!);
+            }
+          }
+        }
+      }
+
+      // Upload fresh backup with the new keychain key
+      final key = await BackupService.getOrCreateKey(_secureStorage);
+      await _uploadBackupToCloud(key);
+      await _onSyncSuccess();
+    } catch (e) {
+      debugPrint('Discard legacy backup failed: $e');
+      // Clear migration state even if Drive cleanup partially failed
+      _needsMigration = false;
+      syncState = SyncState.idle;
+      notifyListeners();
+    }
+  }
+
   // --- Sync --------------------------------------------------------------
 
   Future<void> performSync([bool force = false]) async {
     if (_syncState == SyncState.syncing) return;
+
+    final key = await _getKey();
+    if (key == null) return; // PIN locked — caller must call unlockWithPin first
 
     progressMessage = 'Starting sync...';
     syncState = SyncState.syncing;
@@ -338,14 +457,14 @@ class BackupProvider extends ChangeNotifier {
 
     try {
       progressMessage = 'Fetching cloud metadata...';
-      final metadata = await _fetchCloudMetadata();
+      final metadata = await _fetchCloudMetadata(key);
 
       if (_localMetadata?.deviceId == metadata?.deviceId &&
           metadata != null &&
           _localMetadata != null) {
         if (force) {
           progressMessage = 'Uploading local backup...';
-          await _uploadBackupToCloud();
+          await _uploadBackupToCloud(key);
         }
         // else: same device, nothing new to pull
         await _onSyncSuccess();
@@ -354,20 +473,29 @@ class BackupProvider extends ChangeNotifier {
 
       if (metadata != null) {
         progressMessage = 'New data detected. Downloading...';
-        final backupData = await _downloadBackupFromCloud();
+        final backupData = await _downloadBackupFromCloud(key);
         if (backupData != null) {
           progressMessage = 'Merging...';
           await _mergeBackupData(backupData);
         }
         progressMessage = 'Uploading merged backup...';
-        await _uploadBackupToCloud();
+        await _uploadBackupToCloud(key);
       } else {
         progressMessage = 'No cloud data. Uploading local backup...';
-        await _uploadBackupToCloud();
+        await _uploadBackupToCloud(key);
       }
 
       await _onSyncSuccess();
     } catch (e) {
+      if (e is FormatException && e.message == 'legacy_v1') {
+        // Cloud backup was encrypted with the old passphrase system.
+        // Surface the migration UI instead of a generic error.
+        _needsMigration = true;
+        syncState = SyncState.idle;
+        lastError = null;
+        notifyListeners();
+        return;
+      }
       syncState = SyncState.error;
       lastError = 'Sync failed: $e';
       debugPrint(lastError);
@@ -383,12 +511,15 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
+    final key = await _getKey();
+    if (key == null) return;
+
     progressMessage = 'Downloading backup...';
     syncState = SyncState.syncing;
     lastError = null;
 
     try {
-      final backupData = await _downloadBackupFromCloud();
+      final backupData = await _downloadBackupFromCloud(key);
       if (backupData != null) {
         progressMessage = 'Merging...';
         await _mergeBackupData(backupData);
@@ -539,7 +670,7 @@ class BackupProvider extends ChangeNotifier {
     return false;
   }
 
-  Future<BackupMetadata?> _fetchCloudMetadata() async {
+  Future<BackupMetadata?> _fetchCloudMetadata(SecretKey key) async {
     final drive = await _getDriveService();
     if (drive == null) throw Exception('Drive service unavailable.');
 
@@ -549,14 +680,13 @@ class BackupProvider extends ChangeNotifier {
     final metadataBytes = await _downloadFileBytes(drive, folderId, 'metadata.meta');
     if (metadataBytes == null) return null;
 
-    final key = await BackupService.getOrCreateKey(_secureStorage);
     return BackupService.importMetadata(
       encryptedBytes: metadataBytes,
       secretKey: key,
     );
   }
 
-  Future<BackupData?> _downloadBackupFromCloud() async {
+  Future<BackupData?> _downloadBackupFromCloud(SecretKey key) async {
     final drive = await _getDriveService();
     if (drive == null) return null;
 
@@ -566,15 +696,13 @@ class BackupProvider extends ChangeNotifier {
     final backupBytes = await _downloadLatestBackupBytes(drive, folderId);
     if (backupBytes == null) return null;
 
-    final key = await BackupService.getOrCreateKey(_secureStorage);
     return BackupService.importDataFromGoogleDrive(
       encryptedBytes: backupBytes,
       secretKey: key,
     );
   }
 
-  Future<void> _uploadBackupToCloud() async {
-    final key = await BackupService.getOrCreateKey(_secureStorage);
+  Future<void> _uploadBackupToCloud(SecretKey key) async {
 
     final encryptedDatabase = await BackupService.exportDataForGoogleDrive(
       secretKey: key,
@@ -799,12 +927,15 @@ class BackupProvider extends ChangeNotifier {
   Future<void> restoreFromBackupFile(String fileId) async {
     if (_syncState == SyncState.syncing) return;
 
+    final key = await _getKey();
+    if (key == null) return;
+
     progressMessage = 'Downloading backup...';
     syncState = SyncState.syncing;
     lastError = null;
 
     try {
-      final backupData = await _downloadBackupById(fileId);
+      final backupData = await _downloadBackupById(fileId, key);
       if (backupData != null) {
         progressMessage = 'Merging...';
         await _mergeBackupData(backupData);
@@ -820,7 +951,7 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  Future<BackupData?> _downloadBackupById(String fileId) async {
+  Future<BackupData?> _downloadBackupById(String fileId, SecretKey key) async {
     final drive = await _getDriveService();
     if (drive == null) return null;
 
@@ -836,7 +967,6 @@ class BackupProvider extends ChangeNotifier {
       bytes.addAll(chunk);
     }
 
-    final key = await BackupService.getOrCreateKey(_secureStorage);
     return BackupService.importDataFromGoogleDrive(
       encryptedBytes: Uint8List.fromList(bytes),
       secretKey: key,

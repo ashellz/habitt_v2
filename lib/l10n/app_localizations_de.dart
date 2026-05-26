@@ -2063,4 +2063,56 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get migrationFailed =>
       'Migration fehlgeschlagen. Überprüfe deine Passphrase.';
+
+  @override
+  String get pinProtection => 'PIN-Schutz';
+
+  @override
+  String get setPinTitle => 'PIN festlegen';
+
+  @override
+  String get setPinDesc =>
+      'Erstelle eine Passphrase oder PIN (mindestens 4 Zeichen) als zusätzlichen Schutz für deinen Backup-Schlüssel.';
+
+  @override
+  String get disablePinTitle => 'PIN deaktivieren';
+
+  @override
+  String get disablePinDesc =>
+      'Gib deine aktuelle PIN ein, um den PIN-Schutz zu entfernen.';
+
+  @override
+  String get unlockForSyncTitle => 'Backup entsperren';
+
+  @override
+  String get unlockForSyncDesc =>
+      'Gib deine PIN ein, um das Backup für diese Sitzung zu entsperren.';
+
+  @override
+  String get pinHint => 'Passphrase oder PIN';
+
+  @override
+  String get pinTooShort => 'Muss mindestens 4 Zeichen haben';
+
+  @override
+  String get pinIncorrect => 'Falsche Passphrase oder PIN';
+
+  @override
+  String get unlockAction => 'Entsperren';
+
+  @override
+  String get disable => 'Deaktivieren';
+
+  @override
+  String get forgotPassphrase => 'Passphrase vergessen? Altes Backup verwerfen';
+
+  @override
+  String get discardOldBackupTitle => 'Altes Backup verwerfen?';
+
+  @override
+  String get discardOldBackupDesc =>
+      'Dein altes verschlüsseltes Backup wird dauerhaft von Google Drive gelöscht und durch ein neues ersetzt. Deine lokalen Daten sind sicher.';
+
+  @override
+  String get discardOldBackupConfirm => 'Verwerfen';
 }

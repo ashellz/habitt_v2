@@ -799,5 +799,21 @@
   "monthOct": "Oct",
   "monthNov": "Nov",
   "monthDec": "Dec",
-  "migrationFailed": "Migration failed. Check your passphrase."
+  "migrationFailed": "Migration failed. Check your passphrase.",
+  "pinProtection": "PIN protection",
+  "setPinTitle": "Set a PIN",
+  "setPinDesc": "Create a passphrase or PIN (at least 4 characters) to add extra protection to your backup key.",
+  "disablePinTitle": "Disable PIN",
+  "disablePinDesc": "Enter your current PIN to remove PIN protection.",
+  "unlockForSyncTitle": "Unlock backup",
+  "unlockForSyncDesc": "Enter your PIN to unlock backup access for this session.",
+  "pinHint": "Passphrase or PIN",
+  "pinTooShort": "Must be at least 4 characters",
+  "pinIncorrect": "Incorrect passphrase or PIN",
+  "unlockAction": "Unlock",
+  "disable": "Disable",
+  "forgotPassphrase": "Forgot your passphrase? Discard old backup",
+  "discardOldBackupTitle": "Discard old backup?",
+  "discardOldBackupDesc": "Your old encrypted backup will be permanently deleted from Google Drive and replaced with a fresh one. Your current local data is safe.",
+  "discardOldBackupConfirm": "Discard"
 }

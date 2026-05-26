@@ -803,5 +803,21 @@
   "monthOct": "Okt",
   "monthNov": "Nov",
   "monthDec": "Dez",
-  "migrationFailed": "Migration fehlgeschlagen. Überprüfe deine Passphrase."
+  "migrationFailed": "Migration fehlgeschlagen. Überprüfe deine Passphrase.",
+  "pinProtection": "PIN-Schutz",
+  "setPinTitle": "PIN festlegen",
+  "setPinDesc": "Erstelle eine Passphrase oder PIN (mindestens 4 Zeichen) als zusätzlichen Schutz für deinen Backup-Schlüssel.",
+  "disablePinTitle": "PIN deaktivieren",
+  "disablePinDesc": "Gib deine aktuelle PIN ein, um den PIN-Schutz zu entfernen.",
+  "unlockForSyncTitle": "Backup entsperren",
+  "unlockForSyncDesc": "Gib deine PIN ein, um das Backup für diese Sitzung zu entsperren.",
+  "pinHint": "Passphrase oder PIN",
+  "pinTooShort": "Muss mindestens 4 Zeichen haben",
+  "pinIncorrect": "Falsche Passphrase oder PIN",
+  "unlockAction": "Entsperren",
+  "disable": "Deaktivieren",
+  "forgotPassphrase": "Passphrase vergessen? Altes Backup verwerfen",
+  "discardOldBackupTitle": "Altes Backup verwerfen?",
+  "discardOldBackupDesc": "Dein altes verschlüsseltes Backup wird dauerhaft von Google Drive gelöscht und durch ein neues ersetzt. Deine lokalen Daten sind sicher.",
+  "discardOldBackupConfirm": "Verwerfen"
 }

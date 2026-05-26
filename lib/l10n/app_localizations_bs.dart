@@ -2052,6 +2052,56 @@ class AppLocalizationsBs extends AppLocalizations {
   String get monthDec => 'Dec';
 
   @override
-  String get migrationFailed =>
-      'Migracija nije uspjela. Provjeri svoju lozinku.';
+  String get migrationFailed => 'Migracija nije uspjela. Provjeri svoju šifru.';
+
+  @override
+  String get pinProtection => 'PIN zaštita';
+
+  @override
+  String get setPinTitle => 'Postavi PIN';
+
+  @override
+  String get setPinDesc =>
+      'Kreiraj šifru ili PIN (najmanje 4 znaka) za dodatnu zaštitu ključa sigurnosne kopije.';
+
+  @override
+  String get disablePinTitle => 'Deaktiviraj PIN';
+
+  @override
+  String get disablePinDesc => 'Upiši trenutni PIN da ukloniš PIN zaštitu.';
+
+  @override
+  String get unlockForSyncTitle => 'Otključaj kopiju';
+
+  @override
+  String get unlockForSyncDesc =>
+      'Upiši PIN da otključaš pristup sigurnosnoj kopiji za ovu sesiju.';
+
+  @override
+  String get pinHint => 'Šifra ili PIN';
+
+  @override
+  String get pinTooShort => 'Mora imati najmanje 4 znaka';
+
+  @override
+  String get pinIncorrect => 'Pogrešna šifra ili PIN';
+
+  @override
+  String get unlockAction => 'Otključaj';
+
+  @override
+  String get disable => 'Deaktiviraj';
+
+  @override
+  String get forgotPassphrase => 'Zaboravio/la si lozinku? Odbaci staru kopiju';
+
+  @override
+  String get discardOldBackupTitle => 'Odbaciti staru sigurnosnu kopiju?';
+
+  @override
+  String get discardOldBackupDesc =>
+      'Stara šifrirana kopija bit će trajno izbrisana s Google Drivea i zamijenjena novom. Tvoji lokalni podaci su sigurni.';
+
+  @override
+  String get discardOldBackupConfirm => 'Odbaci';
 }

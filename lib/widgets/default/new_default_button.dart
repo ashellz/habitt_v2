@@ -40,8 +40,8 @@ class NewDefaultButton extends StatelessWidget {
     this.padding = const EdgeInsets.only(),
     this.textColor,
     this.color,
-  }) : width = null,
-       isGradient = true,
+    this.width,
+  }) : isGradient = true,
        _variant = _ButtonVariant.primary;
 
   const NewDefaultButton.secondary({
