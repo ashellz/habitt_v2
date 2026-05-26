@@ -1,13 +1,13 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
+import 'package:habitt/config/app_secrets.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class BillingService {
-  // RevenueCat public SDK keys baked into the app for all runs/builds.
-  static const _iosApiKey = 'YOUR_REVENUECAT_IOS_SDK_KEY';
-  static const _androidApiKey = 'YOUR_REVENUECAT_ANDROID_SDK_KEY';
+  static const _iosApiKey = AppSecrets.revenueCatIosApiKey;
+  static const _androidApiKey = AppSecrets.revenueCatAndroidApiKey;
 
   static bool hasPro = false;
 
@@ -41,7 +41,7 @@ class BillingService {
       final hasPro = customerInfo.entitlements.active.containsKey('Habitt Pro');
       return hasPro;
     } catch (e) {
-      print("Error checking subscription status: $e");
+      debugPrint("Error checking subscription status: $e");
       return false;
     }
   }
@@ -63,7 +63,7 @@ class BillingService {
 
       return current != null ? [current] : [];
     } catch (e) {
-      print("Error fetching offerings: $e");
+      debugPrint("Error fetching offerings: $e");
       return [];
     }
   }
