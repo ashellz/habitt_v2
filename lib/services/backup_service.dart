@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
@@ -28,6 +29,104 @@ class BackupService {
 
   static final _rng = Random.secure();
   static final _aes = AesGcm.with256bits();
+
+  static const _kBackupKeyStorageKey = 'habitt_backup_key';
+
+  // --- Keychain key management -------------------------------------------
+
+  /// Returns the 256-bit device key for Drive encryption.
+  /// Creates one on first call and persists it in the platform keychain.
+  /// On iOS, synchronizable=true syncs the key via iCloud Keychain so a new
+  /// device with the same Apple ID can decrypt existing Drive backups.
+  static Future<SecretKey> getOrCreateKey(FlutterSecureStorage storage) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+
+    final stored = await storage.read(
+      key: _kBackupKeyStorageKey,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+
+    if (stored != null) {
+      return SecretKey(base64Decode(stored));
+    }
+
+    final bytes = List<int>.generate(32, (_) => _rng.nextInt(256));
+    await storage.write(
+      key: _kBackupKeyStorageKey,
+      value: base64Encode(bytes),
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+    return SecretKey(bytes);
+  }
+
+  // --- Key-based encryption (v2 format, no PBKDF2) -----------------------
+
+  static Future<Map<String, dynamic>> _encryptWithKey(
+    Map<String, dynamic> payload,
+    SecretKey secretKey,
+  ) async {
+    final plainBytes = utf8.encode(jsonEncode(payload));
+    final nonce = _randomBytes(12);
+
+    final secretBox = await _aes.encrypt(
+      plainBytes,
+      secretKey: secretKey,
+      nonce: nonce,
+    );
+
+    return {
+      'version': 2,
+      'nonce': base64Encode(nonce),
+      'ciphertext': base64Encode(secretBox.cipherText),
+      'tag': base64Encode(secretBox.mac.bytes),
+    };
+  }
+
+  static Future<BackupData> _decryptWithKey(
+    Map<String, dynamic> wrapper,
+    SecretKey secretKey,
+  ) async {
+    final version = wrapper['version'] as int? ?? 1;
+    if (version == 1) {
+      throw const FormatException('legacy_v1');
+    }
+
+    final nonce = base64Decode(wrapper['nonce'] as String);
+    final cipher = base64Decode(wrapper['ciphertext'] as String);
+    final tag = base64Decode(wrapper['tag'] as String);
+
+    final clear = await _aes.decrypt(
+      SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+      secretKey: secretKey,
+    );
+
+    return BackupData.fromMap(jsonDecode(utf8.decode(clear)));
+  }
+
+  static Future<BackupMetadata?> _decryptMetadataWithKey(
+    Map<String, dynamic> wrapper,
+    SecretKey secretKey,
+  ) async {
+    final version = wrapper['version'] as int? ?? 1;
+    if (version == 1) {
+      throw const FormatException('legacy_v1');
+    }
+
+    final nonce = base64Decode(wrapper['nonce'] as String);
+    final cipher = base64Decode(wrapper['ciphertext'] as String);
+    final tag = base64Decode(wrapper['tag'] as String);
+
+    final clear = await _aes.decrypt(
+      SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+      secretKey: secretKey,
+    );
+
+    final map = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+    return BackupMetadata.fromMap(map['metadata']);
+  }
 
   /// Export all Hive data (habits + days) as a single encrypted JSON file.
   /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
@@ -325,9 +424,9 @@ class BackupService {
   // --- Google Drive Backup Functions -----------------------------------
 
   /// Export all Hive data as encrypted bytes for uploading to Google Drive.
-  /// Returns encrypted bytes on success, or null on failure.
+  /// Uses the device keychain key (v2 format — no passphrase required).
   static Future<Uint8List?> exportDataForGoogleDrive({
-    required String passphrase,
+    required SecretKey secretKey,
     required HabitProvider habitProvider,
   }) async {
     try {
@@ -337,14 +436,14 @@ class BackupService {
       final metadata = await buildMetadata();
 
       final payload = <String, dynamic>{
-        'version': 1,
+        'version': 2,
         'metadata': metadata.toMap(),
         'habits': habitsBox.values.map((h) => h.toMap()).toList(),
         'days': daysBox.values.map((d) => d.toMap()).toList(),
         'dateJoined': dateJoined.toIso8601String(),
       };
 
-      final backupWrapper = await _encryptPayload(payload, passphrase);
+      final backupWrapper = await _encryptWithKey(payload, secretKey);
       return Uint8List.fromList(utf8.encode(jsonEncode(backupWrapper)));
     } catch (e, st) {
       debugPrint('Google Drive export failed: $e\n$st');
@@ -352,25 +451,23 @@ class BackupService {
     }
   }
 
+  /// Decrypt Drive backup bytes using the device keychain key.
+  /// Throws [FormatException] with message 'legacy_v1' if the file was
+  /// encrypted with the old passphrase system — caller should handle migration.
   static Future<BackupData?> importDataFromGoogleDrive({
     required Uint8List encryptedBytes,
-    required String passphrase,
+    required SecretKey secretKey,
   }) async {
     try {
       final content = utf8.decode(encryptedBytes);
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
-
-      try {
-        final BackupData payload = await _decryptPayload(wrapper, passphrase);
-        if ((payload.version) != 1) {
-          throw Exception('Unsupported backup version');
-        }
-
-        return payload;
-      } on SecretBoxAuthenticationError {
-        debugPrint('Decryption failed: invalid passphrase or corrupted file');
-        return null;
-      }
+      final BackupData payload = await _decryptWithKey(wrapper, secretKey);
+      return payload;
+    } on FormatException {
+      rethrow; // 'legacy_v1' — let provider handle migration
+    } on SecretBoxAuthenticationError {
+      debugPrint('Decryption failed: wrong key or corrupted file');
+      return null;
     } catch (e, st) {
       debugPrint('Google Drive import failed: $e\n$st');
       return null;
@@ -379,21 +476,20 @@ class BackupService {
 
   // --- Google Drive Metadata Functions ---------------------------------
 
-  /// Export metadata as encrypted bytes for uploading to Google Drive.
-  /// Returns encrypted metadata bytes on success, or null on failure.
+  /// Export metadata as encrypted bytes using the device keychain key.
   static Future<Uint8List?> exportEncryptedMetadata({
-    required String passphrase,
+    required SecretKey secretKey,
     BackupMetadata? metadata,
   }) async {
     try {
       metadata ??= await buildMetadata();
 
       final payload = <String, dynamic>{
-        'version': 1,
+        'version': 2,
         'metadata': metadata.toMap(),
       };
 
-      final metadataWrapper = await _encryptPayload(payload, passphrase);
+      final metadataWrapper = await _encryptWithKey(payload, secretKey);
       return Uint8List.fromList(utf8.encode(jsonEncode(metadataWrapper)));
     } catch (e, st) {
       debugPrint('Google Drive metadata export failed: $e\n$st');
@@ -401,58 +497,73 @@ class BackupService {
     }
   }
 
-  static Future<BackupMetadata?> _decryptMetadata({
-    required Map<String, dynamic> wrapper,
-    required String passphrase,
+  /// Decrypt Drive metadata bytes using the device keychain key.
+  /// Throws [FormatException] with message 'legacy_v1' if old passphrase format.
+  static Future<BackupMetadata?> importMetadata({
+    required Uint8List encryptedBytes,
+    required SecretKey secretKey,
   }) async {
-    final salt = base64Decode(wrapper['salt'] as String);
-    final nonce = base64Decode(wrapper['nonce'] as String);
-    final cipher = base64Decode(wrapper['ciphertext'] as String);
-    final tag = base64Decode(wrapper['tag'] as String);
-
-    final secretKey = await _deriveKey(passphrase, salt);
-    final clear = await _aes.decrypt(
-      SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
-      secretKey: secretKey,
-    );
-
-    final map = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
-    return BackupMetadata.fromMap(map['metadata']);
+    try {
+      final content = utf8.decode(encryptedBytes);
+      final wrapper = jsonDecode(content) as Map<String, dynamic>;
+      final metadata = await _decryptMetadataWithKey(wrapper, secretKey);
+      _logMetadata(metadata);
+      return metadata;
+    } on FormatException {
+      rethrow; // 'legacy_v1' — let provider handle migration
+    } on SecretBoxAuthenticationError {
+      debugPrint('Metadata decryption failed: wrong key or corrupted file');
+      return null;
+    } catch (e, st) {
+      debugPrint('Google Drive metadata import failed: $e\n$st');
+      return null;
+    }
   }
 
-  /// Import encrypted metadata from Google Drive.
-  /// Returns [BackupMetadata] on success, or null on failure or wrong passphrase.
-  static Future<BackupMetadata?> importMetadata({
+  // --- Legacy passphrase helpers (kept for migration only) --------------
+
+  static Future<BackupData?> importDataFromGoogleDriveLegacy({
     required Uint8List encryptedBytes,
     required String passphrase,
   }) async {
     try {
-      debugPrint('Importing metadata: ${encryptedBytes.length} bytes');
       final content = utf8.decode(encryptedBytes);
-      debugPrint('Decoded metadata content');
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
-      debugPrint('Parsed metadata wrapper: ${wrapper.keys}');
+      final BackupData payload = await _decryptPayload(wrapper, passphrase);
+      return payload;
+    } on SecretBoxAuthenticationError {
+      return null;
+    } catch (e) {
+      debugPrint('Legacy import failed: $e');
+      return null;
+    }
+  }
 
-      try {
-        debugPrint(
-          'Attempting to decrypt metadata with passphrase length: ${passphrase.length}',
-        );
-        final BackupMetadata? metadata = await _decryptMetadata(
-          wrapper: wrapper,
-          passphrase: passphrase,
-        );
-        debugPrint('Metadata decryption successful');
+  static Future<BackupMetadata?> importMetadataLegacy({
+    required Uint8List encryptedBytes,
+    required String passphrase,
+  }) async {
+    try {
+      final content = utf8.decode(encryptedBytes);
+      final wrapper = jsonDecode(content) as Map<String, dynamic>;
 
-        _logMetadata(metadata);
-        return metadata;
-      } on SecretBoxAuthenticationError {
-        debugPrint(
-          'Metadata decryption failed: invalid passphrase or corrupted file',
-        );
-        return null;
-      }
-    } catch (e, st) {
-      debugPrint('Google Drive metadata import failed: $e\n$st');
+      final salt = base64Decode(wrapper['salt'] as String);
+      final nonce = base64Decode(wrapper['nonce'] as String);
+      final cipher = base64Decode(wrapper['ciphertext'] as String);
+      final tag = base64Decode(wrapper['tag'] as String);
+
+      final secretKey = await _deriveKey(passphrase, salt);
+      final clear = await _aes.decrypt(
+        SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+        secretKey: secretKey,
+      );
+
+      final map = jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+      return BackupMetadata.fromMap(map['metadata']);
+    } on SecretBoxAuthenticationError {
+      return null;
+    } catch (e) {
+      debugPrint('Legacy metadata import failed: $e');
       return null;
     }
   }

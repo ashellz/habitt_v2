@@ -1946,4 +1946,54 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingDemoHabitPushUps => 'Flexiones';
+
+  @override
+  String get supportDeveloper => 'Comprar Premium apoya al desarrollador.';
+
+  @override
+  String get autoBackup => 'Copia de seguridad automática';
+
+  @override
+  String get backUpNow => 'Hacer copia ahora';
+
+  @override
+  String get restoreFromBackup => 'Restaurar desde copia';
+
+  @override
+  String get signInWithGoogle => 'Iniciar sesión con Google';
+
+  @override
+  String get keepHabitsSafe => 'Mantén tus hábitos y progreso seguros';
+
+  @override
+  String get neverBackedUp => 'Nunca';
+
+  @override
+  String get migrateToSeamlessSync => 'Migrar a sincronización perfecta';
+
+  @override
+  String get legacyBackupDescription =>
+      'Tu copia usa una contraseña antigua. Ingrésala una vez para cambiar a sincronización sin contraseña.';
+
+  @override
+  String get migrate => 'Migrar';
+
+  @override
+  String get enterOldPassphrase => 'Ingresar contraseña antigua';
+
+  @override
+  String get syncFailed => 'Error de sincronización';
+
+  @override
+  String get disconnectGoogle => 'Desconectar Google';
+
+  @override
+  String get restoreConfirmTitle => '¿Restaurar desde copia?';
+
+  @override
+  String get restoreConfirmDescription =>
+      'Esto combinará la copia en la nube con tus datos locales. Los conflictos se resolverán con los cambios más recientes.';
+
+  @override
+  String get restore => 'Restaurar';
 }

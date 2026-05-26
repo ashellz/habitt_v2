@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
@@ -9,13 +12,11 @@ import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:habitt/services/backup_service.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
@@ -29,74 +30,63 @@ class _GoogleAuthClient extends http.BaseClient {
   }
 }
 
-/// Enum to track sync state.
 enum SyncState { idle, syncing, success, error }
 
-/// Provider managing backup/sync operations with Google Drive.
-///
-/// Responsibilities:
-/// - Track Google Sign-In authentication state (persists across sessions)
-/// - Manage backup metadata (device ID, last sync info)
-/// - Coordinate sync operations (upload/download)
-/// - Detect device conflicts (backup from different device)
 class BackupProvider extends ChangeNotifier {
   BackupProvider();
 
   static const String _kBackupUserEmailKey = 'backup_user_email';
   static const String _kBackupUserIdKey = 'backup_user_id';
+  static const String _kAutoSyncEnabledKey = 'backup_auto_sync_enabled';
+  static const String _kLastSyncTimeKey = 'backup_last_sync_time';
+  static const String _kLegacyPassphraseKey = 'habitt_backup_passphrase';
 
-  // Google Sign-In state
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
   late final GoogleSignIn _googleSignIn;
   late final FlutterSecureStorage _secureStorage;
   HabitProvider? _habitProvider;
 
-  // Encryption state
-  /// Passphrase stored securely in device keystore/keychain
-  String? _passphrase;
-  static const String _kSecurePassphraseKey = 'habitt_backup_passphrase';
-
-  // Sync state
   SyncState _syncState = SyncState.idle;
   String? _lastError;
-
   BackupMetadata? _localMetadata;
-  String? _currentSessionPassphrase;
-
-  // Auto-sync debounce timer
   Timer? _autoSyncTimer;
 
-  // Getters
+  bool _isAutoSyncEnabled = true;
+  DateTime? _lastSyncTime;
+
+  // Set to true when the Drive has data encrypted with the old passphrase
+  // system. The UI surfaces a migration prompt in this state.
+  bool _needsMigration = false;
+  String? _legacyPassphrase;
+
+  bool _dataExists = false;
+
+  String? _progressMessage;
+
+  // --- Getters -----------------------------------------------------------
+
   GoogleSignInAccount? get currentUser => _currentUser;
   User? get firebaseUser => _firebaseUser;
   bool get isLoggedIn => _currentUser != null && _firebaseUser != null;
-
   BackupMetadata? get localMetadata => _localMetadata;
-
   SyncState get syncState => _syncState;
+  String? get lastError => _lastError;
+  bool get dataExists => _dataExists;
+  String? get progressMessage => _progressMessage;
+  bool get isAutoSyncEnabled => _isAutoSyncEnabled;
+  DateTime? get lastSyncTime => _lastSyncTime;
+  bool get needsMigration => _needsMigration;
 
   set syncState(SyncState state) {
     _syncState = state;
     notifyListeners();
   }
 
-  String? get lastError => _lastError;
-
   set lastError(String? error) {
     _lastError = error;
     notifyListeners();
   }
-
-  // Whether user has set up a passphrase
-  bool get hasPassphraseSet => _passphrase != null;
-  bool get isPassphraseLoaded => _currentSessionPassphrase != null;
-
-  bool _dataExists = false;
-  bool get dataExists => _dataExists;
-
-  String? _progressMessage;
-  String? get progressMessage => _progressMessage;
 
   set progressMessage(String? message) {
     _progressMessage = message;
@@ -108,28 +98,28 @@ class BackupProvider extends ChangeNotifier {
     _habitProvider = provider;
   }
 
-  /// Schedule an auto-sync after 15 seconds of inactivity.
-  /// Each call resets the timer. When timer completes, performs force sync.
+  // --- Auto-sync ---------------------------------------------------------
+
   void scheduleAutoSync() {
-    if (!isLoggedIn || !hasPassphraseSet) {
-      return; // Can't sync without authentication
-    }
+    if (!isLoggedIn || !_isAutoSyncEnabled) return;
 
-    // Cancel existing timer
     _autoSyncTimer?.cancel();
-
-    // Start new 15-second timer
     _autoSyncTimer = Timer(const Duration(seconds: 15), () {
-      debugPrint('Auto-sync timer triggered - performing force sync');
       performSync(true).catchError((e) {
         debugPrint('Auto-sync failed: $e');
       });
     });
-
-    debugPrint('Auto-sync scheduled in 15 seconds');
   }
 
-  /// Initialize provider: restore persisted sign-in state and passphrase.
+  Future<void> setAutoSyncEnabled(bool value) async {
+    _isAutoSyncEnabled = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kAutoSyncEnabledKey, value);
+    notifyListeners();
+  }
+
+  // --- Initialization ----------------------------------------------------
+
   Future<void> initialize() async {
     _googleSignIn = GoogleSignIn(
       scopes: [drive_api.DriveApi.driveFileScope],
@@ -138,7 +128,6 @@ class BackupProvider extends ChangeNotifier {
           '752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com',
     );
 
-    // Initializing secure storage
     _secureStorage = const FlutterSecureStorage(
       aOptions: AndroidOptions(
         keyCipherAlgorithm:
@@ -147,34 +136,31 @@ class BackupProvider extends ChangeNotifier {
       ),
     );
 
-    // Restoring previous sign-in and passphrase
-    debugPrint('Restoring persisted sign-in state...');
     try {
       final prefs = await SharedPreferences.getInstance();
-      final savedEmail = prefs.getString(_kBackupUserEmailKey);
+      _isAutoSyncEnabled = prefs.getBool(_kAutoSyncEnabledKey) ?? true;
 
+      final lastSyncMs = prefs.getInt(_kLastSyncTimeKey);
+      if (lastSyncMs != null) {
+        _lastSyncTime = DateTime.fromMillisecondsSinceEpoch(lastSyncMs);
+      }
+
+      final savedEmail = prefs.getString(_kBackupUserEmailKey);
       _localMetadata = await BackupService.buildMetadata();
 
       if (savedEmail != null) {
-        debugPrint('Signing in the user in the background...');
         final user = await _googleSignIn.signInSilently();
-
         if (user != null) {
           _currentUser = user;
           _firebaseUser = FirebaseAuth.instance.currentUser;
 
-          // Loading passphrase from secure storage (but don't load into session yet)
-          debugPrint('Loading passphrase...');
-          try {
-            _passphrase = await _secureStorage.read(key: _kSecurePassphraseKey);
-          } catch (e) {
-            debugPrint('Failed to load passphrase: $e');
-          } finally {
-            _dataExists = await _checkDataExists();
-            debugPrint('Data exists: $_dataExists');
-            debugPrint('Passphrase length: ${_passphrase?.length ?? 0} ');
-          }
+          // Check for legacy passphrase (old system) to surface migration UI
+          _legacyPassphrase = await _secureStorage.read(
+            key: _kLegacyPassphraseKey,
+          );
+          _needsMigration = _legacyPassphrase != null;
 
+          _dataExists = await _checkDataExists();
           notifyListeners();
         }
       }
@@ -183,149 +169,48 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
+  // --- Sign-in / Sign-out ------------------------------------------------
+
   Future<void> signIn(BuildContext context) async {
-    debugPrint('Starting Google sign-in...');
-
     try {
-      debugPrint('Calling _googleSignIn.signIn()...');
       final user = await _googleSignIn.signIn();
-      debugPrint('Sign-in returned: ${user?.email ?? "null"}');
+      if (user == null) return;
 
-      if (user == null) {
-        debugPrint('Sign-in cancelled');
-        return; // user cancelled
-      }
-
-      debugPrint('Getting authentication...');
       final auth = await user.authentication.timeout(
         const Duration(seconds: 10),
-        onTimeout: () {
-          debugPrint('Authentication timeout! Check OAuth configuration.');
-          throw TimeoutException('Google authentication timed out');
-        },
+        onTimeout: () => throw TimeoutException('Google auth timed out'),
       );
-      debugPrint('Got authentication tokens');
-      debugPrint(
-        'AccessToken: ${auth.accessToken != null ? "present" : "null"}',
-      );
-      debugPrint('IdToken: ${auth.idToken != null ? "present" : "null"}');
 
-      debugPrint('Creating Firebase credential...');
       final credential = GoogleAuthProvider.credential(
         accessToken: auth.accessToken,
         idToken: auth.idToken,
       );
-
-      debugPrint('Signing in to Firebase...');
       await FirebaseAuth.instance.signInWithCredential(credential);
-      debugPrint('Firebase sign-in successful');
 
       _currentUser = user;
       _firebaseUser = FirebaseAuth.instance.currentUser;
 
-      // Persist sign-in state
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_kBackupUserEmailKey, user.email);
       await prefs.setString(_kBackupUserIdKey, user.id);
 
+      // Check for legacy passphrase
+      _legacyPassphrase = await _secureStorage.read(key: _kLegacyPassphraseKey);
+      _needsMigration = _legacyPassphrase != null;
+
+      _dataExists = await _checkDataExists();
       notifyListeners();
 
-      // Checking if user has existing passphrase
-      if (await _secureStorage.containsKey(key: _kSecurePassphraseKey)) {
-        await loadPassphraseToSession();
-      } else {
-        _dataExists = await _checkDataExists();
-        debugPrint('Data exists: $_dataExists');
-
-        // Else:
-        // New user, prompt to set passphrase
-        _passphrase = null;
-        _currentSessionPassphrase = null;
-
-        if (!context.mounted) return;
-
-        final String? passphrase = await showDialog(
-          context: context,
-          builder: (context) {
-            final TextEditingController controller = TextEditingController();
-            return PassphraseDialog(
-              controller: controller,
-              dataExists: _dataExists,
-            );
-          },
-        );
-
-        if (passphrase != null && passphrase.isNotEmpty) {
-          await setPassphrase(passphrase);
-        }
-
-        notifyListeners();
+      if (!_needsMigration) {
+        await performSync();
       }
-
-      await performSync();
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
       debugPrint(_lastError);
       notifyListeners();
-    } finally {
-      debugPrint('Google sign-in process completed.');
     }
   }
 
-  Future<bool> checkPassphrase(String passphrase) async {
-    // This function is used to verify if the provided passphrase can decrypt
-    // the current backup file metadata.
-
-    _passphrase = passphrase.trim();
-
-    try {
-      final metadata = await _fetchCloudMetadata();
-      _passphrase = null; // Clear temporary passphrase
-      notifyListeners();
-      return metadata != null;
-    } catch (e) {
-      _passphrase = null; // Clear temporary passphrase
-      notifyListeners();
-      debugPrint('Passphrase check failed: $e');
-      return false;
-    }
-  }
-
-  Future<bool> _checkDataExists() async {
-    // Check if there is the habit_backups folder in Drive
-    final drive = await _getDriveService();
-    if (drive == null) {
-      debugPrint('Drive service not available for checking data');
-      return false;
-    }
-
-    final folderId = await _getFolderId(drive, create: false);
-    if (folderId != null) {
-      // If there is, check if it has any files
-      final found = await drive.files.list(
-        q: "'$folderId' in parents and trashed = false",
-        $fields: 'files(id,name)',
-      );
-
-      if (found.files != null && found.files!.isNotEmpty) {
-        // If any of those files are metadata or habit backup files, then
-        // We need to prompt a user to enter their existing passphrase
-        final metadataName = 'metadata.meta';
-        final backupName = '.habitt';
-        for (final file in found.files!) {
-          final name = file.name;
-          if (name == null) continue;
-          if (name == metadataName || name.endsWith(backupName)) {
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
-  }
-
-  /// Clears persisted sign-in state, passphrase, and provider data.
   Future<void> signOut() async {
     try {
       await GoogleSignIn().signOut();
@@ -334,18 +219,13 @@ class BackupProvider extends ChangeNotifier {
       _currentUser = null;
       _firebaseUser = null;
       _syncState = SyncState.idle;
-      _passphrase = null;
-      _currentSessionPassphrase = null;
+      _needsMigration = false;
+      _legacyPassphrase = null;
 
-      // Clear persisted sign-in state
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_kBackupUserEmailKey);
       await prefs.remove(_kBackupUserIdKey);
 
-      // Clear passphrase from secure storage
-      await _secureStorage.delete(key: _kSecurePassphraseKey);
-
-      // Cancel any pending auto-sync
       _autoSyncTimer?.cancel();
       _autoSyncTimer = null;
 
@@ -357,83 +237,98 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Set or update user's backup passphrase.
-  ///
-  /// Passphrase is stored securely in device keystore (Android) or keychain (iOS).
-  /// Automatically loaded into session for immediate use.
-  Future<void> setPassphrase(String passphrase) async {
-    if (passphrase.isEmpty) {
-      _lastError = 'Passphrase cannot be empty';
-      notifyListeners();
-      return;
-    }
+  // --- Migration ---------------------------------------------------------
+
+  /// Migrate a passphrase-encrypted Drive backup to the device keychain key.
+  /// Returns true on success.
+  Future<bool> migrateFromLegacy(String oldPassphrase) async {
+    if (!isLoggedIn) return false;
+    syncState = SyncState.syncing;
 
     try {
-      // Store in secure storage
-      await _secureStorage.write(key: _kSecurePassphraseKey, value: passphrase);
-
-      _passphrase = passphrase;
-      _currentSessionPassphrase = passphrase;
-      _lastError = null;
-
-      notifyListeners();
-    } catch (e) {
-      _lastError = 'Failed to set passphrase: $e';
-      debugPrint(_lastError);
-      notifyListeners();
-    }
-  }
-
-  /// Load passphrase into current session for encryption/decryption.
-  ///
-  /// Call this if passphrase is set but not currently loaded in session.
-  /// Returns true if successful.
-  Future<bool> loadPassphraseToSession() async {
-    try {
-      if (_passphrase == null) {
-        _lastError = 'No passphrase stored';
-        notifyListeners();
+      final drive = await _getDriveService();
+      if (drive == null) {
+        lastError = 'Drive service unavailable';
+        syncState = SyncState.error;
         return false;
       }
 
-      _currentSessionPassphrase = _passphrase;
-      _lastError = null;
-      notifyListeners();
+      final folderId = await _getFolderId(drive);
+      if (folderId == null) {
+        lastError = 'Could not access backup folder';
+        syncState = SyncState.error;
+        return false;
+      }
+
+      // Verify passphrase by trying to decrypt metadata
+      final metadataBytes = await _downloadFileBytes(
+        drive,
+        folderId,
+        'metadata.meta',
+      );
+      if (metadataBytes != null) {
+        final meta = await BackupService.importMetadataLegacy(
+          encryptedBytes: metadataBytes,
+          passphrase: oldPassphrase,
+        );
+        if (meta == null) {
+          lastError = 'Wrong passphrase';
+          syncState = SyncState.error;
+          return false;
+        }
+      }
+
+      // Download and decrypt legacy backup
+      final backupBytes = await _downloadLatestBackupBytes(drive, folderId);
+      BackupData? backupData;
+      if (backupBytes != null) {
+        backupData = await BackupService.importDataFromGoogleDriveLegacy(
+          encryptedBytes: backupBytes,
+          passphrase: oldPassphrase,
+        );
+        if (backupData != null) {
+          await _mergeBackupData(backupData);
+        }
+      }
+
+      // Re-encrypt and upload with new keychain key
+      await _uploadBackupToCloud();
+
+      // Clear legacy passphrase from keychain
+      await _secureStorage.delete(key: _kLegacyPassphraseKey);
+      _legacyPassphrase = null;
+      _needsMigration = false;
+
+      _lastSyncTime = DateTime.now();
+      await _persistLastSyncTime();
+
+      syncState = SyncState.success;
       return true;
     } catch (e) {
-      _lastError = 'Failed to load passphrase: $e';
-      debugPrint(_lastError);
-      notifyListeners();
+      lastError = 'Migration failed: $e';
+      syncState = SyncState.error;
+      debugPrint(lastError);
       return false;
     }
   }
 
-  /// Clear in-memory passphrase without signing out.
-  void clearSessionPassphrase() {
-    _currentSessionPassphrase = null;
-    notifyListeners();
-  }
+  // --- Sync --------------------------------------------------------------
 
   Future<void> performSync([bool force = false]) async {
-    if (_syncState == SyncState.syncing) {
-      debugPrint('Sync already in progress, skipping new sync request.');
-      return;
-    }
+    if (_syncState == SyncState.syncing) return;
 
-    progressMessage = 'Starting backup sync operation...';
+    progressMessage = 'Starting sync...';
     syncState = SyncState.syncing;
 
     if (!isLoggedIn) {
-      lastError = 'Not signed in. Cannot sync.';
+      lastError = 'Not signed in.';
       progressMessage = null;
       syncState = SyncState.error;
-      debugPrint(_lastError);
       return;
     }
 
-    if (!hasPassphraseSet && !isPassphraseLoaded) {
-      lastError = 'Passphrase required to sync. Please unlock backup.';
-      debugPrint(_lastError);
+    if (_needsMigration) {
+      lastError = 'Migration required before syncing.';
       syncState = SyncState.error;
       return;
     }
@@ -448,496 +343,356 @@ class BackupProvider extends ChangeNotifier {
           metadata != null &&
           _localMetadata != null) {
         if (force) {
-          // 1/x
-          progressMessage = 'Uploading local backup to cloud...';
+          progressMessage = 'Uploading local backup...';
           await _uploadBackupToCloud();
-          syncState = SyncState.success;
-          return;
-        } else {
-          // Not from different device, no need to download anything
-          debugPrint('No device conflict detected, skipping download.');
-          syncState = SyncState.success;
-          return;
         }
+        // else: same device, nothing new to pull
+        await _onSyncSuccess();
+        return;
       }
 
       if (metadata != null) {
-        syncState = SyncState.syncing;
-
-        debugPrint('Cloud metadata found: ${metadata.deviceId}');
-        debugPrint(
-          'Device conflict detected (cloud device: ${metadata.deviceId}, local device: ${_localMetadata?.deviceId}). Downloading backup from cloud...',
-        );
-
-        progressMessage = 'New data detected. Downloading backup from cloud...';
+        progressMessage = 'New data detected. Downloading...';
         final backupData = await _downloadBackupFromCloud();
-
-        debugPrint("Backup data downloaded from cloud.");
-        // 1/x
         if (backupData != null) {
-          progressMessage = 'Merging downloaded backup data with local data...';
+          progressMessage = 'Merging...';
           await _mergeBackupData(backupData);
-          // 2/x
-          progressMessage = 'Uploading merged backup to cloud...';
-          await _uploadBackupToCloud();
-
-          // 3/x
-        } else {
-          debugPrint("Backup data failed to download from cloud.");
         }
+        progressMessage = 'Uploading merged backup...';
+        await _uploadBackupToCloud();
       } else {
-        progressMessage = 'No cloud metadata found. Uploading local backup...';
+        progressMessage = 'No cloud data. Uploading local backup...';
         await _uploadBackupToCloud();
       }
 
-      syncState = SyncState.success;
+      await _onSyncSuccess();
     } catch (e) {
       syncState = SyncState.error;
       lastError = 'Sync failed: $e';
-      _passphrase = null;
-      _currentSessionPassphrase = null;
       debugPrint(lastError);
       notifyListeners();
     }
   }
 
+  /// Download the latest Drive backup and merge it into local data.
+  Future<void> restoreFromCloud() async {
+    if (_syncState == SyncState.syncing) return;
+    if (!isLoggedIn) {
+      lastError = 'Not signed in.';
+      return;
+    }
+
+    progressMessage = 'Downloading backup...';
+    syncState = SyncState.syncing;
+    lastError = null;
+
+    try {
+      final backupData = await _downloadBackupFromCloud();
+      if (backupData != null) {
+        progressMessage = 'Merging...';
+        await _mergeBackupData(backupData);
+        await _onSyncSuccess();
+      } else {
+        lastError = 'No backup found in cloud.';
+        syncState = SyncState.error;
+      }
+    } catch (e) {
+      lastError = 'Restore failed: $e';
+      syncState = SyncState.error;
+      debugPrint(lastError);
+    }
+  }
+
+  Future<void> _onSyncSuccess() async {
+    _lastSyncTime = DateTime.now();
+    await _persistLastSyncTime();
+    syncState = SyncState.success;
+    progressMessage = null;
+  }
+
+  Future<void> _persistLastSyncTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_lastSyncTime != null) {
+      await prefs.setInt(
+        _kLastSyncTimeKey,
+        _lastSyncTime!.millisecondsSinceEpoch,
+      );
+    }
+  }
+
+  // --- Drive helpers -----------------------------------------------------
+
   Future<drive_api.DriveApi?> _getDriveService() async {
     final user = _currentUser;
     if (user == null) return null;
     final headers = await user.authHeaders;
-    final client = _GoogleAuthClient(headers);
-    return drive_api.DriveApi(client);
+    return drive_api.DriveApi(_GoogleAuthClient(headers));
   }
 
   Future<String?> _getFolderId(
     drive_api.DriveApi driveApi, {
     bool create = true,
   }) async {
-    final mimeType = "application/vnd.google-apps.folder";
-    String folderName = "habitt_backups";
+    const mimeType = 'application/vnd.google-apps.folder';
+    const folderName = 'habitt_backups';
 
     try {
       final found = await driveApi.files.list(
         q: "mimeType = '$mimeType' and name = '$folderName' and trashed = false and 'root' in parents",
-        $fields: "files(id,name)",
+        $fields: 'files(id,name)',
         spaces: 'drive',
       );
 
       final files = found.files;
-      if (files == null) {
-        debugPrint("Drive API returned null files list");
-        return null;
-      }
+      if (files == null) return null;
+      if (files.isNotEmpty) return files.first.id;
 
-      // The folder already exists
-      if (files.isNotEmpty) {
-        return files.first.id;
-      }
+      if (!create) return null;
 
-      if (!create) {
-        debugPrint("Folder not found and creation not allowed");
-        return null;
-      }
-
-      // Create the folder in the root
       final folder =
           drive_api.File()
             ..name = folderName
             ..mimeType = mimeType
             ..parents = ['root'];
-      final folderCreation = await driveApi.files.create(folder, $fields: 'id');
-      debugPrint("Folder ID: ${folderCreation.id}");
-
-      return folderCreation.id;
+      final created = await driveApi.files.create(folder, $fields: 'id');
+      return created.id;
     } catch (e) {
       debugPrint('Failed to get/create folder: $e');
       return null;
     }
   }
 
-  /// Fetch metadata about the backup stored in Google Drive.
-  /// Returns BackupMetadata if found
-  Future<BackupMetadata?> _fetchCloudMetadata() async {
-    try {
-      // Checking for passphrase
-      if (_passphrase == null) {
-        lastError = 'Passphrase not set. Cannot upload backup.';
-        debugPrint(_lastError);
-        notifyListeners();
-        throw Exception('Passphrase not set.');
-      }
+  Future<Uint8List?> _downloadFileBytes(
+    drive_api.DriveApi drive,
+    String folderId,
+    String name,
+  ) async {
+    final found = await drive.files.list(
+      q: "name = '$name' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id)',
+    );
+    if (found.files == null || found.files!.isEmpty) return null;
+    final fileId = found.files!.first.id;
+    if (fileId == null) return null;
 
-      // Preparing google drive
-      final drive = await _getDriveService();
-      if (drive == null) {
-        lastError = 'Unable to access google drive service.';
+    final response =
+        await drive.files.get(
+              fileId,
+              downloadOptions: drive_api.DownloadOptions.fullMedia,
+            )
+            as drive_api.Media;
 
-        throw Exception(lastError);
-      }
-
-      final folderId = await _getFolderId(drive);
-      if (folderId == null) {
-        lastError = 'Could not get or create backup folder';
-        throw Exception(lastError);
-      }
-
-      // Looking for metadata.meta file
-
-      final found = await drive.files.list(
-        q: "name = 'metadata.meta' and '$folderId' in parents and trashed = false",
-        $fields: 'files(id)',
-      );
-
-      if (found.files == null || found.files!.isEmpty) {
-        debugPrint('No metadata file found in cloud');
-        return null;
-      }
-
-      final metadataFileId = found.files!.first.id;
-      if (metadataFileId == null) {
-        debugPrint('Metadata file ID is null');
-        return null;
-      }
-
-      // Download metadata file
-      final response =
-          await drive.files.get(
-                metadataFileId,
-                downloadOptions: drive_api.DownloadOptions.fullMedia,
-              )
-              as drive_api.Media;
-
-      // Read bytes from stream
-      final bytes = <int>[];
-      await for (final chunk in response.stream) {
-        bytes.addAll(chunk);
-      }
-
-      // Decrypt metadata
-      final metadata = await BackupService.importMetadata(
-        encryptedBytes: Uint8List.fromList(bytes),
-        passphrase: _passphrase!,
-      );
-
-      if (metadata != null) {
-        debugPrint('Cloud metadata loaded: ${metadata.deviceId}');
-        return metadata;
-      }
-
-      debugPrint('Failed to decrypt metadata');
-      debugPrint(
-        'Passphrase was: ${_passphrase?.length} chars, bytes downloaded: ${bytes.length}',
-      );
-      throw Exception('Failed to decrypt metadata');
-    } catch (e) {
-      debugPrint('Failed to fetch cloud metadata: $e');
-      throw Exception('Failed to fetch or decrypt cloud metadata: $e');
+    final bytes = <int>[];
+    await for (final chunk in response.stream) {
+      bytes.addAll(chunk);
     }
+    return Uint8List.fromList(bytes);
   }
 
-  /// Download encrypted backup file from Google Drive and decrypt/merge.
-  ///
-  /// Steps:
-  /// 1. Download encrypted file from Drive
-  /// 2. Decrypt using device key
-  /// 3. Compare with local data (timestamps, checksums)
-  /// 4. Merge or ask user for resolution
-  Future<BackupData?> _downloadBackupFromCloud() async {
-    // Checking for passphrase
-    if (_passphrase == null) {
-      _lastError = 'Passphrase not set. Cannot upload backup.';
-      notifyListeners();
-      return null;
-    }
+  Future<Uint8List?> _downloadLatestBackupBytes(
+    drive_api.DriveApi drive,
+    String folderId,
+  ) async {
+    final found = await drive.files.list(
+      q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id)',
+      orderBy: 'modifiedTime desc',
+    );
+    if (found.files == null || found.files!.isEmpty) return null;
+    final fileId = found.files!.first.id;
+    if (fileId == null) return null;
 
-    // Preparing google drive
-    final drive = await _getDriveService();
-    if (drive == null) {
-      debugPrint("Sign-in first Error");
-      return null;
+    final response =
+        await drive.files.get(
+              fileId,
+              downloadOptions: drive_api.DownloadOptions.fullMedia,
+            )
+            as drive_api.Media;
+
+    final bytes = <int>[];
+    await for (final chunk in response.stream) {
+      bytes.addAll(chunk);
     }
+    return Uint8List.fromList(bytes);
+  }
+
+  Future<bool> _checkDataExists() async {
+    final drive = await _getDriveService();
+    if (drive == null) return false;
+
+    final folderId = await _getFolderId(drive, create: false);
+    if (folderId == null) return false;
+
+    final found = await drive.files.list(
+      q: "'$folderId' in parents and trashed = false",
+      $fields: 'files(id,name)',
+    );
+
+    if (found.files == null || found.files!.isEmpty) return false;
+
+    for (final file in found.files!) {
+      final name = file.name;
+      if (name == null) continue;
+      if (name == 'metadata.meta' || name.endsWith('.habitt')) return true;
+    }
+    return false;
+  }
+
+  Future<BackupMetadata?> _fetchCloudMetadata() async {
+    final drive = await _getDriveService();
+    if (drive == null) throw Exception('Drive service unavailable.');
 
     final folderId = await _getFolderId(drive);
-    if (folderId == null) {
-      debugPrint("Could not get or create backup folder");
-      return null;
-    }
+    if (folderId == null) throw Exception('Could not get backup folder.');
 
-    // Looking for habitt backup file
-    try {
-      final found = await drive.files.list(
-        q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
-        $fields: 'files(id)',
-        orderBy: 'modifiedTime desc',
-      );
+    final metadataBytes = await _downloadFileBytes(drive, folderId, 'metadata.meta');
+    if (metadataBytes == null) return null;
 
-      if (found.files == null || found.files!.isEmpty) {
-        debugPrint('No habit backup file found in cloud');
-        return null;
-      }
-
-      final backupFileId = found.files!.first.id;
-      if (backupFileId == null) {
-        debugPrint('Backup file ID is null');
-        return null;
-      }
-
-      // Download backup file
-      final response =
-          await drive.files.get(
-                backupFileId,
-                downloadOptions: drive_api.DownloadOptions.fullMedia,
-              )
-              as drive_api.Media;
-
-      final bytes = <int>[];
-      await for (final chunk in response.stream) {
-        bytes.addAll(chunk);
-      }
-
-      // Decrypt backup data
-      final BackupData? backupData =
-          await BackupService.importDataFromGoogleDrive(
-            encryptedBytes: Uint8List.fromList(bytes),
-            passphrase: _passphrase!,
-          );
-
-      if (backupData != null) {
-        debugPrint('Downloaded and decrypted habit backup from cloud');
-        return backupData;
-      } else {
-        debugPrint('Failed to decrypt habit backup data');
-        return null;
-      }
-    } catch (e) {
-      debugPrint('Failed to fetch cloud metadata: $e');
-      return null;
-    }
+    final key = await BackupService.getOrCreateKey(_secureStorage);
+    return BackupService.importMetadata(
+      encryptedBytes: metadataBytes,
+      secretKey: key,
+    );
   }
 
-  Future<void> _deleteAllFilesInFolder(String folderId) async {
-    final client = _GoogleAuthClient(await _currentUser!.authHeaders);
-    final driveApi = drive_api.DriveApi(client);
+  Future<BackupData?> _downloadBackupFromCloud() async {
+    final drive = await _getDriveService();
+    if (drive == null) return null;
 
-    final found = await driveApi.files.list(
-      q: "'$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
+    final folderId = await _getFolderId(drive);
+    if (folderId == null) return null;
+
+    final backupBytes = await _downloadLatestBackupBytes(drive, folderId);
+    if (backupBytes == null) return null;
+
+    final key = await BackupService.getOrCreateKey(_secureStorage);
+    return BackupService.importDataFromGoogleDrive(
+      encryptedBytes: backupBytes,
+      secretKey: key,
     );
-
-    if (found.files != null) {
-      for (final file in found.files!) {
-        await driveApi.files.delete(file.id!);
-      }
-    }
-
-    debugPrint("Deleted all files in folder ID: $folderId");
-  }
-
-  Future<void> _deleteMetadataInFolder(String folderId) async {
-    final client = _GoogleAuthClient(await _currentUser!.authHeaders);
-    final driveApi = drive_api.DriveApi(client);
-
-    final found = await driveApi.files.list(
-      q: "'$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
-    );
-
-    if (found.files != null) {
-      for (final file in found.files!) {
-        if (file.name == 'metadata.meta') await driveApi.files.delete(file.id!);
-      }
-    }
-
-    debugPrint("Deleted metadata files in folder ID: $folderId");
   }
 
   Future<void> _uploadBackupToCloud() async {
-    // Checking for passphrase
-    if (_passphrase == null) {
-      _lastError = 'Passphrase not set. Cannot upload backup.';
-      notifyListeners();
-      return;
-    }
+    final key = await BackupService.getOrCreateKey(_secureStorage);
 
-    // Preparing encrypted backup data
-    final ecnryptedDatabase = await BackupService.exportDataForGoogleDrive(
-      passphrase: _passphrase!,
+    final encryptedDatabase = await BackupService.exportDataForGoogleDrive(
+      secretKey: key,
       habitProvider: _habitProvider!,
     );
-
-    if (ecnryptedDatabase == null) {
-      _lastError = 'Failed to export database. Cannot upload backup.';
+    if (encryptedDatabase == null) {
+      _lastError = 'Failed to export database.';
       notifyListeners();
       return;
     }
 
-    // Preparing encrypted metadata
     final metadata = await BackupService.buildMetadata();
     final encryptedMetadata = await BackupService.exportEncryptedMetadata(
-      passphrase: _passphrase!,
+      secretKey: key,
       metadata: metadata,
     );
 
-    // Preparing google drive
     final drive = await _getDriveService();
-    if (drive == null) {
-      debugPrint("Sign-in first Error");
-      return;
-    }
-
-    debugPrint("Uploading backup to cloud!");
+    if (drive == null) return;
 
     final folderId = await _getFolderId(drive);
-    if (folderId == null) {
-      debugPrint("Could not get or create backup folder");
-      return;
-    }
+    if (folderId == null) return;
 
-    // Deleting all existing files in backup folder
-    await _deleteAllFilesInFolder(folderId);
-
-    debugPrint("Preparing backup name...");
-    // Generating filename
+    // Upload new backup file first (versioned — keep up to 3 on Drive)
     final now = DateTime.now();
     final day = now.day.toString().padLeft(2, '0');
     final month = now.month.toString().padLeft(2, '0');
     final year = now.year.toString().substring(2);
-    final backupFileName = '$day-$month-$year-habitt-backup.habitt';
-    final metadataFileName = 'metadata.meta';
+    final hour = now.hour.toString().padLeft(2, '0');
+    final minute = now.minute.toString().padLeft(2, '0');
+    final backupFileName = '$day-$month-$year-$hour$minute-habitt-backup.habitt';
 
-    // Uploading database backup file
-    final databaseMedia = drive_api.Media(
-      Stream.value(ecnryptedDatabase.toList()),
-      ecnryptedDatabase.length,
+    final dbMedia = drive_api.Media(
+      Stream.value(encryptedDatabase.toList()),
+      encryptedDatabase.length,
     );
-
-    final databaseFile =
+    final dbFile =
         drive_api.File()
           ..name = backupFileName
           ..parents = [folderId];
+    final dbCreation = await drive.files.create(dbFile, uploadMedia: dbMedia);
 
-    final databaseCreation = await drive.files.create(
-      databaseFile,
-      uploadMedia: databaseMedia,
-    );
-
-    if (databaseCreation.id != null) {
-      debugPrint('Uploaded database backup: ${databaseCreation.id}');
-    } else {
-      _lastError = 'Failed to upload database backup';
+    if (dbCreation.id == null) {
+      _lastError = 'Failed to upload backup file.';
       notifyListeners();
       return;
     }
+    debugPrint('Uploaded backup: ${dbCreation.id}');
 
-    // Upload metadata file if available
-    if (encryptedMetadata != null) {
-      final metadataMedia = drive_api.Media(
-        Stream.value(encryptedMetadata.toList()),
-        encryptedMetadata.length,
-      );
+    // Rotate old backups — keep only the 3 most recent .habitt files
+    await _rotateOldBackups(drive, folderId);
 
-      final metadataFile =
-          drive_api.File()
-            ..name = metadataFileName
-            ..parents = [folderId];
+    // Overwrite metadata file
+    await _replaceMetadataFile(drive, folderId, encryptedMetadata);
 
-      final metadataCreation = await drive.files.create(
-        metadataFile,
-        uploadMedia: metadataMedia,
-      );
-
-      if (metadataCreation.id != null) {
-        debugPrint('Uploaded metadata: ${metadataCreation.id}');
-      } else {
-        _lastError = 'Failed to upload metadata';
-        notifyListeners();
-        return;
-      }
-    }
-
-    debugPrint('Successfully uploaded backup files to Google Drive');
-
-    if (encryptedMetadata != null) {
-      _localMetadata = metadata;
-    }
+    _localMetadata = metadata;
     notifyListeners();
   }
 
-  Future<void> _uploadMetadataToCloud(BackupMetadata metadata) async {
-    // Checking for passphrase
-    if (_passphrase == null) {
-      _lastError = 'Passphrase not set. Cannot upload backup.';
-      notifyListeners();
-      return;
-    }
-
-    final encryptedMetadata = await BackupService.exportEncryptedMetadata(
-      passphrase: _passphrase!,
-      metadata: metadata,
+  Future<void> _rotateOldBackups(
+    drive_api.DriveApi drive,
+    String folderId,
+  ) async {
+    final found = await drive.files.list(
+      q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id,createdTime)',
+      orderBy: 'createdTime desc',
     );
 
-    // Preparing google drive
-    final drive = await _getDriveService();
-    if (drive == null) {
-      debugPrint("Sign-in first Error");
-      return;
+    final files = found.files;
+    if (files == null || files.length <= 3) return;
+
+    for (final file in files.skip(3)) {
+      if (file.id != null) {
+        await drive.files.delete(file.id!);
+        debugPrint('Deleted old backup: ${file.id}');
+      }
     }
+  }
 
-    final folderId = await _getFolderId(drive);
-    if (folderId == null) {
-      debugPrint("Could not get or create backup folder");
-      return;
-    }
+  Future<void> _replaceMetadataFile(
+    drive_api.DriveApi drive,
+    String folderId,
+    Uint8List? encryptedMetadata,
+  ) async {
+    if (encryptedMetadata == null) return;
 
-    // Deleting all existing files in backup folder
-    await _deleteMetadataInFolder(folderId);
-
-    // Generating filename
-    final metadataFileName = 'metadata.meta';
-
-    if (encryptedMetadata != null) {
-      final metadataMedia = drive_api.Media(
-        Stream.value(encryptedMetadata.toList()),
-        encryptedMetadata.length,
-      );
-
-      final metadataFile =
-          drive_api.File()
-            ..name = metadataFileName
-            ..parents = [folderId];
-
-      final metadataCreation = await drive.files.create(
-        metadataFile,
-        uploadMedia: metadataMedia,
-      );
-
-      if (metadataCreation.id != null) {
-        debugPrint('Uploaded metadata: ${metadataCreation.id}');
-      } else {
-        _lastError = 'Failed to upload metadata';
-        notifyListeners();
-        return;
+    // Delete existing metadata
+    final existing = await drive.files.list(
+      q: "name = 'metadata.meta' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id)',
+    );
+    if (existing.files != null) {
+      for (final f in existing.files!) {
+        if (f.id != null) await drive.files.delete(f.id!);
       }
     }
 
-    debugPrint('Successfully uploaded backup files to Google Drive');
-
-    if (encryptedMetadata != null) {
-      _localMetadata = metadata;
-    }
-    notifyListeners();
+    final metadataMedia = drive_api.Media(
+      Stream.value(encryptedMetadata.toList()),
+      encryptedMetadata.length,
+    );
+    final metadataFile =
+        drive_api.File()
+          ..name = 'metadata.meta'
+          ..parents = [folderId];
+    await drive.files.create(metadataFile, uploadMedia: metadataMedia);
+    debugPrint('Uploaded metadata.meta');
   }
+
+  // --- Merge -------------------------------------------------------------
 
   Future<void> _mergeBackupData(BackupData backupData) async {
     final habitsBox = Hive.box<Habit>('habits');
     final daysBox = Hive.box<Day>('days');
 
-    // Merge habits using timestamp-aware resolution
-    // For each habit in the backup:
     for (final incoming in backupData.habits) {
       Habit? existing;
       for (final h in habitsBox.values) {
-        // For each habit in the local database, check if IDs match
         if (h.id == incoming.id) {
           existing = h;
           break;
@@ -954,25 +709,21 @@ class BackupProvider extends ChangeNotifier {
       }
     }
 
-    // Build map of final habits for day references
-    // Used so that days reference the correct habit instances and not copies
     final habitById = {for (final h in habitsBox.values) h.id: h};
 
     for (final day in backupData.days) {
       final dayKey =
-          DateTime(
-            day.date.year,
-            day.date.month,
-            day.date.day,
-          ).toIso8601String().split('T').first;
+          DateTime(day.date.year, day.date.month, day.date.day)
+              .toIso8601String()
+              .split('T')
+              .first;
 
       final existingDay = daysBox.get(dayKey);
       if (existingDay != null) {
         final localTs = existingDay.timestamp;
         final incomingTs = day.timestamp;
-        if ((localTs == incomingTs) ||
-            (localTs == null && incomingTs == null)) {
-          continue; // No change
+        if ((localTs == incomingTs) || (localTs == null && incomingTs == null)) {
+          continue;
         }
       }
 
@@ -985,24 +736,19 @@ class BackupProvider extends ChangeNotifier {
       }
 
       final mergedDayHabits = <Habit>[];
-
       for (final incomingHabit in day.habits) {
         final local = existingById.remove(incomingHabit.id);
         if (local != null) {
-          final merged = local.merge(incomingHabit);
-          mergedDayHabits.add(merged);
+          mergedDayHabits.add(local.merge(incomingHabit));
         } else {
           if (incomingHabit.isDeleted ?? false) continue;
           mergedDayHabits.add(incomingHabit);
         }
       }
-
-      // Preserve any local-only habits for that day
       mergedDayHabits.addAll(existingById.values);
 
       final normalizedHabits =
           mergedDayHabits.map((h) => habitById[h.id] ?? h).toList();
-
       await daysBox.put(
         dayKey,
         Day(date: day.date, habits: normalizedHabits, timestamp: day.timestamp),
@@ -1010,40 +756,38 @@ class BackupProvider extends ChangeNotifier {
     }
 
     _habitProvider?.importDateJoined(backupData.dateJoined);
-
-    // Refresh dependent providers
     await _habitProvider?.init();
-
     notifyListeners();
   }
 
-  /// Delete backup from Google Drive.
+  // --- Delete ------------------------------------------------------------
+
   Future<void> deleteCloudBackup() async {
     if (!isLoggedIn) {
-      _lastError = 'Not signed in. Cannot delete cloud backup.';
+      _lastError = 'Not signed in.';
       notifyListeners();
       return;
     }
 
     try {
-      // Deleting all files in backup folder
       final drive = await _getDriveService();
-      if (drive == null) {
-        _lastError = 'Sign-in first';
-        notifyListeners();
-        return;
-      }
+      if (drive == null) return;
+
       final folderId = await _getFolderId(drive);
-      if (folderId == null) {
-        _lastError = 'Could not get or create backup folder';
-        notifyListeners();
-        return;
+      if (folderId == null) return;
+
+      final found = await drive.files.list(
+        q: "'$folderId' in parents and trashed = false",
+        $fields: 'files(id)',
+      );
+      if (found.files != null) {
+        for (final f in found.files!) {
+          await drive.files.delete(f.id!);
+        }
       }
-      await _deleteAllFilesInFolder(folderId);
-      _lastError = 'Deleted cloud backup';
       notifyListeners();
     } catch (e) {
-      _lastError = 'Failed to delete cloud backup: $e';
+      _lastError = 'Failed to delete backup: $e';
       debugPrint(_lastError);
       notifyListeners();
     }

@@ -7,7 +7,6 @@ import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
-import 'package:habitt/widgets/dialogs/passphrase_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
@@ -21,20 +20,6 @@ class BackupDataPage extends StatefulWidget {
 class _BackupDataPageState extends State<BackupDataPage> {
   String? _alertMessage;
   bool _showAlert = false;
-
-  void _displayAlert(String message) {
-    setState(() {
-      _alertMessage = message;
-      _showAlert = true;
-    });
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        setState(() {
-          _showAlert = false;
-        });
-      }
-    });
-  }
 
   String getLastSyncText(BackupProvider backupProvider) {
     final loc = AppLocalizations.of(context)!;
@@ -57,8 +42,6 @@ class _BackupDataPageState extends State<BackupDataPage> {
     final tp = context.watch<ThemeProvider>();
     final backupProvider = context.watch<BackupProvider>();
     final bool isLoggedIn = backupProvider.isLoggedIn;
-    final bool hasPassphraseSet = backupProvider.hasPassphraseSet;
-    final bool dataExists = backupProvider.dataExists;
 
     final platform = Theme.of(context).platform;
     final double extraPadding = platform == TargetPlatform.android ? 12 : 0;
@@ -167,35 +150,15 @@ class _BackupDataPageState extends State<BackupDataPage> {
                                     backupProvider.syncState ==
                                     SyncState.syncing,
                                 prefix: Icon(
-                                  hasPassphraseSet ? Icons.sync : Icons.lock,
+                                  Icons.sync,
                                   color: bestContrastingOn(
                                     tp.primaryButtonBackground,
                                   ),
                                 ),
                                 onPressed: () async {
-                                  if (!hasPassphraseSet) {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        final TextEditingController controller =
-                                            TextEditingController();
-                                        return PassphraseDialog(
-                                          controller: controller,
-                                          dataExists: dataExists,
-                                          displayAlert: _displayAlert,
-                                        );
-                                      },
-                                    );
-                                  } else {
-                                    await backupProvider.performSync(true);
-                                  }
+                                  await backupProvider.performSync(true);
                                 },
-                                label:
-                                    hasPassphraseSet
-                                        ? loc.syncNow
-                                        : dataExists
-                                        ? loc.enterPassphrase
-                                        : loc.setPassphrase,
+                                label: loc.syncNow,
                               ),
                             ),
                           ],

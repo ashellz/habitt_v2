@@ -130,7 +130,7 @@ class NotificationService {
   static Future<void> rescheduleHabitNotifications({
     required Habit habit,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
-    int horizonDays = 90,
+    int horizonDays = 7,
   }) async {
     final allowed = await areNotificationsAllowed();
     if (!allowed) {
@@ -151,7 +151,7 @@ class NotificationService {
   static Future<void> scheduleAllHabitNotifications({
     required Iterable<Habit> habits,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
-    int horizonDays = 90,
+    int horizonDays = 7,
   }) async {
     final allowed = await areNotificationsAllowed();
     if (!allowed) {

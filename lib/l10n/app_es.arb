@@ -752,5 +752,21 @@
   "onboardingDemoHabitStudying": "Estudio",
   "onboardingDemoHabitBrushTeeth": "Cepillarse los dientes",
   "onboardingDemoHabitReadBook": "Leer un libro",
-  "onboardingDemoHabitPushUps": "Flexiones"
+  "onboardingDemoHabitPushUps": "Flexiones",
+  "supportDeveloper": "Comprar Premium apoya al desarrollador.",
+  "autoBackup": "Copia de seguridad automática",
+  "backUpNow": "Hacer copia ahora",
+  "restoreFromBackup": "Restaurar desde copia",
+  "signInWithGoogle": "Iniciar sesión con Google",
+  "keepHabitsSafe": "Mantén tus hábitos y progreso seguros",
+  "neverBackedUp": "Nunca",
+  "migrateToSeamlessSync": "Migrar a sincronización perfecta",
+  "legacyBackupDescription": "Tu copia usa una contraseña antigua. Ingrésala una vez para cambiar a sincronización sin contraseña.",
+  "migrate": "Migrar",
+  "enterOldPassphrase": "Ingresar contraseña antigua",
+  "syncFailed": "Error de sincronización",
+  "disconnectGoogle": "Desconectar Google",
+  "restoreConfirmTitle": "¿Restaurar desde copia?",
+  "restoreConfirmDescription": "Esto combinará la copia en la nube con tus datos locales. Los conflictos se resolverán con los cambios más recientes.",
+  "restore": "Restaurar"
 }

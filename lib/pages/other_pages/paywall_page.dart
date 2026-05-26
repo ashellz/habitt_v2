@@ -162,7 +162,7 @@ class _PaywallPageState extends State<PaywallPage> {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
                         child: Text(
-                          'Enjoy premium features and support the team',
+                          'These features are available for free - support us by upgrading anyway',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -224,7 +224,78 @@ class _PaywallPageState extends State<PaywallPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 52),
+                    SizedBox(height: 37),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          height: 124,
+                          width: 245,
+                          padding: const EdgeInsets.all(16),
+                          decoration: ShapeDecoration(
+                            color: Colors.white.withValues(alpha: 0.16),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(width: 1, color: Colors.white),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Yearly',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SvgPicture.asset(
+                                    'assets/images/new-svg/check-on-light.svg',
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          left: 16,
+                          top: -15,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 4,
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  width: 1,
+                                  color: Colors.white.withValues(alpha: 0.20),
+                                ),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                            child: Text(
+                              'Best value',
+                              style: TextStyle(
+                                color: const Color(0xFF02D382),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

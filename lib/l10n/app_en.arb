@@ -748,5 +748,21 @@
   "onboardingDemoHabitStudying": "Studying",
   "onboardingDemoHabitBrushTeeth": "Brush teeth",
   "onboardingDemoHabitReadBook": "Read a book",
-  "onboardingDemoHabitPushUps": "Push ups"
+  "onboardingDemoHabitPushUps": "Push ups",
+  "supportDeveloper": "Buying Premium supports the developer.",
+  "autoBackup": "Auto backup",
+  "backUpNow": "Back up now",
+  "restoreFromBackup": "Restore from backup",
+  "signInWithGoogle": "Sign in with Google",
+  "keepHabitsSafe": "Keep your habits and progress safe",
+  "neverBackedUp": "Never",
+  "migrateToSeamlessSync": "Migrate to seamless sync",
+  "legacyBackupDescription": "Your backup uses an old passphrase. Enter it once to switch to seamless, password-free sync — you won't need it again.",
+  "migrate": "Migrate",
+  "enterOldPassphrase": "Enter old passphrase",
+  "syncFailed": "Sync failed",
+  "disconnectGoogle": "Disconnect Google",
+  "restoreConfirmTitle": "Restore from backup?",
+  "restoreConfirmDescription": "This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.",
+  "restore": "Restore"
 }

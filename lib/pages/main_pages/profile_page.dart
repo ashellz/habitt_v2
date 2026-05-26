@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:habitt/widgets/profile/profile_top_part.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

@@ -258,7 +258,7 @@
       "toValue": {}
     }
   },
-  "insightStrengthKeepPushingTitle": "Nastavi gurati {habitName}",
+  "insightStrengthKeepPushingTitle": "Potrudi se za {habitName}",
   "@insightStrengthKeepPushingTitle": {
     "placeholders": {
       "habitName": {}
@@ -272,7 +272,7 @@
   },
   "insightStrengthStartSmallType1BrushTeeth": "Tvoja navika pranja zuba slabi. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od pranja zuba. Prikaži se danas i zaštiti tu naviku.||Momentum u pranju zuba slabi. Oživi ga jednim dobrim ponavljanjem danas.||Nemoj dopustiti da pranje zuba postane nedosljedno. Fokusiraj se i odradi svoj dio danas.||Počeo si prati zube iz nekog razloga. Ostan discipliniran i spriječi da navika otpadne.",
   "insightStrengthStartSmallType1DrinkWater": "Tvoja navika pijenja dovoljno vode slabi. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od pijenja dovoljno vode. Pojavi se danas i zaštiti tu naviku.||Momentum u pijenju dovoljno vode slabi. Oživi ga jednim čvrstim ponavljanjem danas.||Nemoj dopustiti da pijenje dovoljno vode postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si piti dovoljno vode iz nekog razloga. Ostan discipliniran i ne dopusti da navika otklizi.",
-  "insightStrengthStartSmallType1Generic": "Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.||Momentum ove navike slabi. Pojavi se danas i održi je živom.||Zadaješ se u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.||Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.||Prešao si predaleko da bi dopustio da ova navika odumre. Ostan dosljedan danas.",
+  "insightStrengthStartSmallType1Generic": "Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.||Momentum ove navike slabi. Pojavi se danas i održi je živom.||Zadaješ se u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.||Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.||Nemoj dopustiti da ova navika odumre. Ostani dosljedan danas.",
   "insightStrengthStartSmallType1GoToBedEarly": "Tvoja navika ranog odlaska u krevet popušta. Nemoj dopustiti da ova rutina sada propadne.||Odskakao si od navike ranog odlaska u krevet. Pojavi se danas i zaštiti tu naviku.||Momentum za rani odlazak u krevet slabi. Održi ga živim s jednom čvrstom ponavljanjem danas.||Nemoj dopustiti da rani odlazak u krevet postane nekonzistentan. Zacementiraj ga i odradi svoj dio danas.||Počeo si rano odlaziti u krevet s razlogom. Ostan discipliniran i spriječi da navika popusti.",
   "insightStrengthStartSmallType1Gym": "Tvoja navika vježbanja u teretani posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje rutine u teretani. Dođi danas i zaštiti tu naviku.||Momentum tvoje rutine u teretani slabi. Oživi ga jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoja rutina u teretani postane nekonzistentna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju rutinu u teretani s razlogom. Ostan discipliniran i spriječi da posustane.",
   "insightStrengthStartSmallType1Medications": "Tvoja navika da uzimaš lijekove na vrijeme posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od uzimanja lijekova na vrijeme. Pojavi se danas i zaštiti tu naviku.||Momentum u uzimanju lijekova na vrijeme slabi. Oživi ga jednim čvrstim ponavljanjem danas.||Nemoj dopustiti da uzimanje lijekova na vrijeme postane nekonzistentno. Fokusiraj se i odradi svoj dio danas.||Počeo si uzimati lijekove na vrijeme s razlogom! Ostani discipliniran i spriječi da ti navika propane.",
@@ -751,5 +751,21 @@
   "onboardingDemoHabitStudying": "Učenje",
   "onboardingDemoHabitBrushTeeth": "Pranje zuba",
   "onboardingDemoHabitReadBook": "Čitanje knjige",
-  "onboardingDemoHabitPushUps": "Sklekovi"
+  "onboardingDemoHabitPushUps": "Sklekovi",
+  "supportDeveloper": "Kupovinom premiuma podržavate programera.",
+  "autoBackup": "Automatski backup",
+  "backUpNow": "Backup-aj sada",
+  "restoreFromBackup": "Vrati backup",
+  "signInWithGoogle": "Prijavi se s Googleom",
+  "keepHabitsSafe": "Čuvaj svoje navike i napredak sigurnim",
+  "neverBackedUp": "Nikad",
+  "migrateToSeamlessSync": "Migracija na besprijekornu sinkronizaciju",
+  "legacyBackupDescription": "Tvoja rezerva koristi staru lozinku. Unesi je jednom za prebacivanje na sinkronizaciju bez lozinke.",
+  "migrate": "Migriraj",
+  "enterOldPassphrase": "Unesi staru lozinku",
+  "syncFailed": "Greška pri sinkronizaciji",
+  "disconnectGoogle": "Prekini vezu s Googleom",
+  "restoreConfirmTitle": "Vratiti backup?",
+  "restoreConfirmDescription": "Ovo će spojiti cloud backup s tvojim lokalnim podacima. Konflikti će biti riješeni koristeći najnovije izmjene.",
+  "restore": "Vrati" 
 }

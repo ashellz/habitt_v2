@@ -521,7 +521,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String insightStrengthKeepPushingTitle(Object habitName) {
-    return 'Nastavi gurati $habitName';
+    return 'Potrudi se za $habitName';
   }
 
   @override
@@ -539,7 +539,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get insightStrengthStartSmallType1Generic =>
-      'Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.||Momentum ove navike slabi. Pojavi se danas i održi je živom.||Zadaješ se u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.||Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.||Prešao si predaleko da bi dopustio da ova navika odumre. Ostan dosljedan danas.';
+      'Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.||Momentum ove navike slabi. Pojavi se danas i održi je živom.||Zadaješ se u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.||Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.||Nemoj dopustiti da ova navika odumre. Ostani dosljedan danas.';
 
   @override
   String get insightStrengthStartSmallType1GoToBedEarly =>
@@ -1942,4 +1942,55 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get onboardingDemoHabitPushUps => 'Sklekovi';
+
+  @override
+  String get supportDeveloper => 'Kupovinom premiuma podržavate programera.';
+
+  @override
+  String get autoBackup => 'Automatski backup';
+
+  @override
+  String get backUpNow => 'Backup-aj sada';
+
+  @override
+  String get restoreFromBackup => 'Vrati backup';
+
+  @override
+  String get signInWithGoogle => 'Prijavi se s Googleom';
+
+  @override
+  String get keepHabitsSafe => 'Čuvaj svoje navike i napredak sigurnim';
+
+  @override
+  String get neverBackedUp => 'Nikad';
+
+  @override
+  String get migrateToSeamlessSync =>
+      'Migracija na besprijekornu sinkronizaciju';
+
+  @override
+  String get legacyBackupDescription =>
+      'Tvoja rezerva koristi staru lozinku. Unesi je jednom za prebacivanje na sinkronizaciju bez lozinke.';
+
+  @override
+  String get migrate => 'Migriraj';
+
+  @override
+  String get enterOldPassphrase => 'Unesi staru lozinku';
+
+  @override
+  String get syncFailed => 'Greška pri sinkronizaciji';
+
+  @override
+  String get disconnectGoogle => 'Prekini vezu s Googleom';
+
+  @override
+  String get restoreConfirmTitle => 'Vratiti backup?';
+
+  @override
+  String get restoreConfirmDescription =>
+      'Ovo će spojiti cloud backup s tvojim lokalnim podacima. Konflikti će biti riješeni koristeći najnovije izmjene.';
+
+  @override
+  String get restore => 'Vrati';
 }

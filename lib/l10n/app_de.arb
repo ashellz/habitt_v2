@@ -752,5 +752,21 @@
   "onboardingDemoHabitStudying": "Lernen",
   "onboardingDemoHabitBrushTeeth": "Zähne putzen",
   "onboardingDemoHabitReadBook": "Ein Buch lesen",
-  "onboardingDemoHabitPushUps": "Liegestütze"
+  "onboardingDemoHabitPushUps": "Liegestütze",
+  "supportDeveloper": "Der Kauf von Premium unterstützt den Entwickler.",
+  "autoBackup": "Automatische Sicherung",
+  "backUpNow": "Jetzt sichern",
+  "restoreFromBackup": "Aus Sicherung wiederherstellen",
+  "signInWithGoogle": "Mit Google anmelden",
+  "keepHabitsSafe": "Halte deine Gewohnheiten und Fortschritte sicher",
+  "neverBackedUp": "Nie",
+  "migrateToSeamlessSync": "Zu nahtloser Synchronisation migrieren",
+  "legacyBackupDescription": "Deine Sicherung verwendet ein altes Passwort. Gib es einmal ein, um auf nahtlose, passwortfreie Synchronisation umzustellen.",
+  "migrate": "Migrieren",
+  "enterOldPassphrase": "Altes Passwort eingeben",
+  "syncFailed": "Synchronisation fehlgeschlagen",
+  "disconnectGoogle": "Google trennen",
+  "restoreConfirmTitle": "Aus Sicherung wiederherstellen?",
+  "restoreConfirmDescription": "Dabei wird die Cloud-Sicherung mit deinen lokalen Daten zusammengeführt. Konflikte werden anhand der neuesten Änderungen aufgelöst.",
+  "restore": "Wiederherstellen"
 }

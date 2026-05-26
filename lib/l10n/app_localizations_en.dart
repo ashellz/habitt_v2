@@ -1940,4 +1940,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDemoHabitPushUps => 'Push ups';
+
+  @override
+  String get supportDeveloper => 'Buying Premium supports the developer.';
+
+  @override
+  String get autoBackup => 'Auto backup';
+
+  @override
+  String get backUpNow => 'Back up now';
+
+  @override
+  String get restoreFromBackup => 'Restore from backup';
+
+  @override
+  String get signInWithGoogle => 'Sign in with Google';
+
+  @override
+  String get keepHabitsSafe => 'Keep your habits and progress safe';
+
+  @override
+  String get neverBackedUp => 'Never';
+
+  @override
+  String get migrateToSeamlessSync => 'Migrate to seamless sync';
+
+  @override
+  String get legacyBackupDescription =>
+      'Your backup uses an old passphrase. Enter it once to switch to seamless, password-free sync — you won\'t need it again.';
+
+  @override
+  String get migrate => 'Migrate';
+
+  @override
+  String get enterOldPassphrase => 'Enter old passphrase';
+
+  @override
+  String get syncFailed => 'Sync failed';
+
+  @override
+  String get disconnectGoogle => 'Disconnect Google';
+
+  @override
+  String get restoreConfirmTitle => 'Restore from backup?';
+
+  @override
+  String get restoreConfirmDescription =>
+      'This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.';
+
+  @override
+  String get restore => 'Restore';
 }

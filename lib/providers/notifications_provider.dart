@@ -355,7 +355,7 @@ class NotificationsProvider extends ChangeNotifier {
     required BuildContext context,
     Iterable<Habit>? habits,
     bool Function(Habit, DateTime)? appearsOnDay,
-    int horizonDays = 90,
+    int horizonDays = 7,
   }) async {
     final enabling = !_habitsEnabled;
 
@@ -404,7 +404,7 @@ class NotificationsProvider extends ChangeNotifier {
     required bool habitsEnabled,
     Iterable<Habit>? habits,
     bool Function(Habit, DateTime)? appearsOnDay,
-    int horizonDays = 90,
+    int horizonDays = 7,
   }) async {
     final previousMasterEnabled = _masterEnabled;
     final previousPeriodsEnabled = _periodsEnabled;

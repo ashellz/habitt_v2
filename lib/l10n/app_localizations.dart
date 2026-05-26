@@ -3164,6 +3164,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Push ups'**
   String get onboardingDemoHabitPushUps;
+
+  /// No description provided for @supportDeveloper.
+  ///
+  /// In en, this message translates to:
+  /// **'Buying Premium supports the developer.'**
+  String get supportDeveloper;
+
+  /// No description provided for @autoBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto backup'**
+  String get autoBackup;
+
+  /// No description provided for @backUpNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get backUpNow;
+
+  /// No description provided for @restoreFromBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from backup'**
+  String get restoreFromBackup;
+
+  /// No description provided for @signInWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get signInWithGoogle;
+
+  /// No description provided for @keepHabitsSafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your habits and progress safe'**
+  String get keepHabitsSafe;
+
+  /// No description provided for @neverBackedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get neverBackedUp;
+
+  /// No description provided for @migrateToSeamlessSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Migrate to seamless sync'**
+  String get migrateToSeamlessSync;
+
+  /// No description provided for @legacyBackupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your backup uses an old passphrase. Enter it once to switch to seamless, password-free sync — you won\'t need it again.'**
+  String get legacyBackupDescription;
+
+  /// No description provided for @migrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Migrate'**
+  String get migrate;
+
+  /// No description provided for @enterOldPassphrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter old passphrase'**
+  String get enterOldPassphrase;
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get syncFailed;
+
+  /// No description provided for @disconnectGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect Google'**
+  String get disconnectGoogle;
+
+  /// No description provided for @restoreConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from backup?'**
+  String get restoreConfirmTitle;
+
+  /// No description provided for @restoreConfirmDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.'**
+  String get restoreConfirmDescription;
+
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
 }
 
 class _AppLocalizationsDelegate

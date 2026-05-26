@@ -65,14 +65,11 @@ class PerfectDaysStreak extends StatelessWidget {
               await tooltipController.showTooltip();
             },
             child: SuperTooltip(
-              hasShadow: false,
               controller: tooltipController,
-              backgroundColor: tp.surfaceColor,
               content: Text(
                 loc.numberOfDaysInARowYouHaveCompletedAllYourHabits,
                 style: TextStyle(color: tp.primaryTextColor),
               ),
-              showBarrier: false,
 
               child: Icon(
                 Icons.info_outline,
