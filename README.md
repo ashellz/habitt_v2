@@ -27,6 +27,7 @@ Quick-start habits: wake up early, go to bed early, brush teeth, skin care, show
 
 **Reminders**
 - Per-habit push notifications with configurable times and personalized texts
+- Morning, Mid-day, Wrap up notifications
 
 **Appearance**
 - Dark and light mode
@@ -39,6 +40,34 @@ Quick-start habits: wake up early, go to bed early, brush teeth, skin care, show
 
 **Localization**
 English, German, Spanish, Italian, Bosnian
+
+**Future features**
+Habit goals:
+- Add habit amount/duration goal, improvement sheets will show until goal is reached and no more
+
+Show habit next day if missed
+- For weekly, monthly and custom habit intervals, add toggle option: if habit is missed show it the next day and the next day until the next schedule. Why? You may want to eat omega 3 food every 3 days but you miss it once, instead of waiting 3 days again, just do it tomorrow
+
+Daily planner:
+- Adjust time range for habits, this existed before new design, logic is there but it just needs to be added to new design
+
+More notification personalizations:
+- Personalize day period notifications based on habit period completion progress, personalize premade habit template notifications more than they are now
+
+Premade habit benefits:
+- Add new UI elements to match premade habits better: such as importing glasses when adding amount of water drank to Drink water habit. Also customizable button presets user can make to add +10 or +50 / +10m or +1h by one press
+
+Habits from onboarding:
+- Upgrade onboarding to ask you questions and add premade habits based on your answers
+
+Other features:
+- Time counter telling you how long you're working on this habit, maybe show a strength graph over time as well
+- Pausing a habit -> completely stops tracking that habit until unpausing, streaks and days missed are paused (in case of injury, sickness, travel...)
+- Urgent habits (like medicine) get an alarm option for notification
+- Widgets
+- Live notifications like duolingo before habits reset if not all are completed
+- Complete and add progress through notifications
+- Previously deleted habits list - deletes after 30 days
 
 ---
 
