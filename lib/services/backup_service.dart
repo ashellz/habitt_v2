@@ -67,6 +67,7 @@ class BackupService {
   // --- PIN key wrapping --------------------------------------------------
 
   /// Wraps [key] with a PBKDF2-derived key from [pin]. Returns a JSON-ready map.
+  /// Not used, will be removed later
   static Future<Map<String, String>> wrapKeyWithPin(
     SecretKey key,
     String pin,
@@ -86,6 +87,7 @@ class BackupService {
 
   /// Reads the stored PIN-wrapped key and decrypts it using [pin].
   /// Returns null if PIN is wrong or no data is stored.
+  /// Not used, will be removed later, used for migration only
   static Future<SecretKey?> unwrapKeyWithPin(
     FlutterSecureStorage storage,
     String pin,
@@ -145,10 +147,7 @@ class BackupService {
   }
 
   /// Persists the raw PIN string so it can be used automatically on next launch.
-  static Future<void> storePin(
-    FlutterSecureStorage storage,
-    String pin,
-  ) async {
+  static Future<void> storePin(FlutterSecureStorage storage, String pin) async {
     const iOSOpts = IOSOptions(synchronizable: true);
     const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
     await storage.write(
@@ -179,7 +178,7 @@ class BackupService {
     );
   }
 
-  // --- Key-based encryption (v2 format, no PBKDF2) -----------------------
+  // --- Key-based encryption ---
 
   static Future<Map<String, dynamic>> _encryptWithKey(
     Map<String, dynamic> payload,
@@ -564,6 +563,57 @@ class BackupService {
       return Uint8List.fromList(utf8.encode(jsonEncode(backupWrapper)));
     } catch (e, st) {
       debugPrint('Google Drive export failed: $e\n$st');
+      return null;
+    }
+  }
+
+  /// Export only the habits and days that have changed since [fromTime].
+
+  /// Returns null when there are no changes — skips the
+  /// upload step, not writing an empty delta file to Drive.
+  static Future<Uint8List?> exportDeltaForGoogleDrive({
+    required SecretKey secretKey,
+    required HabitProvider habitProvider,
+    required DateTime fromTime,
+  }) async {
+    try {
+      final habits = habitProvider.habitBox.values.toList();
+      final days = habitProvider.daysBox.values.toList();
+
+      // A habit is changed if it was created after fromTime, or if any
+      // per-field timestamp is newer than fromTime (covers edits, completes,
+      // deletes, reorders, etc.).
+      final changedHabits =
+          habits.where((h) {
+            if (h.createdAt.isAfter(fromTime)) return true;
+            return h.timestamps.values.any((t) => t.isAfter(fromTime));
+          }).toList();
+
+      // A day is changed if its single modification timestamp is after fromTime.
+      final changedDays =
+          days
+              .where(
+                (d) => d.timestamp != null && d.timestamp!.isAfter(fromTime),
+              )
+              .toList();
+
+      if (changedHabits.isEmpty && changedDays.isEmpty) return null;
+
+      final metadata = await buildMetadata();
+      final payload = <String, dynamic>{
+        'version': 3,
+        'type': 'delta',
+        'fromTime': fromTime.toIso8601String(),
+        'metadata': metadata.toMap(),
+        'habits': changedHabits.map((h) => h.toMap()).toList(),
+        'days': changedDays.map((d) => d.toMap()).toList(),
+        'dateJoined': habitProvider.dateJoined.toIso8601String(),
+      };
+
+      final backupWrapper = await _encryptWithKey(payload, secretKey);
+      return Uint8List.fromList(utf8.encode(jsonEncode(backupWrapper)));
+    } catch (e, st) {
+      debugPrint('Google Drive delta export failed: $e\n$st');
       return null;
     }
   }

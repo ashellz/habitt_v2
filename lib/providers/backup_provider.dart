@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:typed_data';
-
+import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -34,6 +33,18 @@ class _GoogleAuthClient extends http.BaseClient {
 
 enum SyncState { idle, syncing, success, error }
 
+/// Controls which parts of the sync cycle run
+enum SyncMode {
+  /// full cycle: checks for remote changes from other devices (checks deltas), then uploads own
+  /// delta (or full backup on first sync if forced)
+  /// Used on app launch and app resume from background
+  full,
+
+  /// upload only: skips checking for remote changes, just uploads own delta
+  /// used by the 15 second timer after changes - auto sync
+  uploadOnly,
+}
+
 class BackupProvider extends ChangeNotifier {
   BackupProvider();
 
@@ -43,6 +54,13 @@ class BackupProvider extends ChangeNotifier {
   static const String _kLastSyncTimeKey = 'backup_last_sync_time';
   static const String _kLegacyPassphraseKey = 'habitt_backup_passphrase';
   static const String _kPinEnabledKey = 'backup_pin_enabled';
+
+  /// id of JSON-encoded List<String> of Drive file IDs for deltas already applied to
+  /// this device. Cleared when a full sync runs.
+  static const String _kAppliedDeltaIdsKey = 'backup_applied_delta_ids';
+
+  /// start a full compaction sync when this many delta files accumulate:
+  static const int _kDeltaCompactionThreshold = 20;
 
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
@@ -113,7 +131,9 @@ class BackupProvider extends ChangeNotifier {
 
     _autoSyncTimer?.cancel();
     _autoSyncTimer = Timer(const Duration(seconds: 15), () {
-      performSync(true).catchError((e) {
+      // Upload-only: just push local changes as a delta — no remote check.
+      // Remote checks happen on app launch and resume (SyncMode.full).
+      performSync(false, SyncMode.uploadOnly).catchError((e) {
         debugPrint('Auto-sync failed: $e');
       });
     });
@@ -205,7 +225,10 @@ class BackupProvider extends ChangeNotifier {
       if (_isPinEnabled) {
         final pin = await BackupService.readStoredPin(_secureStorage);
         if (pin != null) {
-          _cachedKey = await BackupService.unwrapKeyWithPin(_secureStorage, pin);
+          _cachedKey = await BackupService.unwrapKeyWithPin(
+            _secureStorage,
+            pin,
+          );
         }
       }
 
@@ -382,10 +405,10 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  // --- Legacy discard ----------------------------------------------------
+  // --- Legacy discard --------------
 
-  /// Deletes the old passphrase-encrypted Drive backup, clears the local
-  /// migration flag, and uploads a fresh backup with the keychain key.
+  /// Deletes old passphrase-encrypted Drive backup, clears the local
+  /// migration flag, and uploads a fresh backup with the new keychain key
   /// Safe to call when the user has forgotten their old passphrase.
   Future<void> discardLegacyBackup() async {
     if (!isLoggedIn) return;
@@ -431,18 +454,23 @@ class BackupProvider extends ChangeNotifier {
 
   // --- Sync --------------------------------------------------------------
 
-  Future<void> performSync([bool force = false]) async {
+  /// Main sync entry point.
+  ///
+  /// [force] — when true and [mode] is [SyncMode.full], always performs a full
+  /// database upload regardless of which device last synced.
+  ///
+  /// [mode] — [SyncMode.full] (default) checks Drive for changes from other
+  /// devices then uploads own delta or full backup as appropriate.
+  /// [SyncMode.uploadOnly] skips the remote-check step and only uploads
+  /// this device's pending changes as a delta — used by [scheduleAutoSync].
+  Future<void> performSync([
+    bool force = false,
+    SyncMode mode = SyncMode.full,
+  ]) async {
     if (_syncState == SyncState.syncing) return;
-
-    final key = await _getKey();
-    if (key == null) return; // PIN locked — caller must call unlockWithPin first
-
-    progressMessage = 'Starting sync...';
-    syncState = SyncState.syncing;
 
     if (!isLoggedIn) {
       lastError = 'Not signed in.';
-      progressMessage = null;
       syncState = SyncState.error;
       return;
     }
@@ -453,43 +481,69 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
+    final key = await _getKey();
+    if (key == null) return; // PIN locked
+
+    progressMessage = 'Starting sync...';
+    syncState = SyncState.syncing;
     lastError = null;
 
     try {
-      progressMessage = 'Fetching cloud metadata...';
-      final metadata = await _fetchCloudMetadata(key);
-
-      if (_localMetadata?.deviceId == metadata?.deviceId &&
-          metadata != null &&
-          _localMetadata != null) {
-        if (force) {
-          progressMessage = 'Uploading local backup...';
-          await _uploadBackupToCloud(key);
-        }
-        // else: same device, nothing new to pull
+      // ── Upload-only path (post-write auto-sync) ──────────────────────────
+      if (mode == SyncMode.uploadOnly) {
+        await _uploadDeltaToCloud(key);
         await _onSyncSuccess();
         return;
       }
 
-      if (metadata != null) {
-        progressMessage = 'New data detected. Downloading...';
-        final backupData = await _downloadBackupFromCloud(key);
-        if (backupData != null) {
-          progressMessage = 'Merging...';
-          await _mergeBackupData(backupData);
+      // ── Full cycle: delta path or full-backup path ───────────────────────
+      // Use delta when: not forced AND we have a sync cursor (_lastSyncTime).
+      // First sync or forced always goes to the full backup path.
+      final bool useDelta = !force && _lastSyncTime != null;
+
+      if (useDelta) {
+        final drive = await _getDriveService();
+        if (drive == null) {
+          // No Drive access — silently succeed to avoid error UI for a
+          // transient connectivity issue.
+          await _onSyncSuccess();
+          return;
         }
-        progressMessage = 'Uploading merged backup...';
-        await _uploadBackupToCloud(key);
+        final folderId = await _getFolderId(drive);
+        if (folderId == null) {
+          await _onSyncSuccess();
+          return;
+        }
+
+        progressMessage = 'Checking for updates...';
+        await _downloadAndApplyPendingDeltas(drive, folderId, key);
+
+        progressMessage = 'Uploading changes...';
+        await _uploadDeltaToCloud(key);
+
+        // Compaction: too many delta files → collapse to a full backup.
+        final deltaCount = await _countDeltaFiles(drive, folderId);
+        if (deltaCount >= _kDeltaCompactionThreshold) {
+          progressMessage = 'Compacting backups...';
+          await _fullSyncPath(key, force: true);
+          await _clearAllDeltaFiles(drive, folderId);
+        }
       } else {
-        progressMessage = 'No cloud data. Uploading local backup...';
-        await _uploadBackupToCloud(key);
+        // Full-backup path: download latest, merge, re-upload entire DB.
+        await _fullSyncPath(key, force: force);
+
+        // Wipe all delta files — the new full backup supersedes them.
+        final drive = await _getDriveService();
+        if (drive != null) {
+          final folderId = await _getFolderId(drive, create: false);
+          if (folderId != null) await _clearAllDeltaFiles(drive, folderId);
+        }
       }
 
       await _onSyncSuccess();
     } catch (e) {
       if (e is FormatException && e.message == 'legacy_v1') {
-        // Cloud backup was encrypted with the old passphrase system.
-        // Surface the migration UI instead of a generic error.
+        // Cloud backup encrypted with the old passphrase — surface migration UI.
         _needsMigration = true;
         syncState = SyncState.idle;
         lastError = null;
@@ -501,6 +555,51 @@ class BackupProvider extends ChangeNotifier {
       debugPrint(lastError);
       notifyListeners();
     }
+  }
+
+  /// Download the latest full backup from Drive, merge it, then re-upload.
+  ///
+  /// Skips the upload when the last backup was from this device and [force]
+  /// is false — there is nothing new to pull and nothing has changed server-side.
+  Future<void> _fullSyncPath(SecretKey key, {bool force = false}) async {
+    progressMessage = 'Fetching cloud metadata...';
+    final metadata = await _fetchCloudMetadata(key);
+
+    final sameDevice =
+        _localMetadata?.deviceId == metadata?.deviceId &&
+        metadata != null &&
+        _localMetadata != null;
+
+    if (sameDevice && !force) {
+      // We were the last device to upload — nothing new to pull.
+      return;
+    }
+
+    if (metadata != null) {
+      progressMessage = 'Downloading backup...';
+      final backupData = await _downloadBackupFromCloud(key);
+      if (backupData != null) {
+        progressMessage = 'Merging...';
+        await _mergeBackupData(backupData);
+      }
+      progressMessage = 'Uploading merged backup...';
+      await _uploadBackupToCloud(key);
+    } else {
+      progressMessage = 'No cloud data. Uploading local backup...';
+      await _uploadBackupToCloud(key);
+    }
+  }
+
+  /// Returns the number of delta (.habittd) files currently on Drive.
+  Future<int> _countDeltaFiles(
+    drive_api.DriveApi drive,
+    String folderId,
+  ) async {
+    final res = await drive.files.list(
+      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id)',
+    );
+    return (res.files ?? []).length;
   }
 
   /// Download the latest Drive backup and merge it into local data.
@@ -677,7 +776,11 @@ class BackupProvider extends ChangeNotifier {
     final folderId = await _getFolderId(drive);
     if (folderId == null) throw Exception('Could not get backup folder.');
 
-    final metadataBytes = await _downloadFileBytes(drive, folderId, 'metadata.meta');
+    final metadataBytes = await _downloadFileBytes(
+      drive,
+      folderId,
+      'metadata.meta',
+    );
     if (metadataBytes == null) return null;
 
     return BackupService.importMetadata(
@@ -703,7 +806,6 @@ class BackupProvider extends ChangeNotifier {
   }
 
   Future<void> _uploadBackupToCloud(SecretKey key) async {
-
     final encryptedDatabase = await BackupService.exportDataForGoogleDrive(
       secretKey: key,
       habitProvider: _habitProvider!,
@@ -733,7 +835,8 @@ class BackupProvider extends ChangeNotifier {
     final year = now.year.toString().substring(2);
     final hour = now.hour.toString().padLeft(2, '0');
     final minute = now.minute.toString().padLeft(2, '0');
-    final backupFileName = '$day-$month-$year-$hour$minute-habitt-backup.habitt';
+    final backupFileName =
+        '$day-$month-$year-$hour$minute-habitt-backup.habitt';
 
     final dbMedia = drive_api.Media(
       Stream.value(encryptedDatabase.toList()),
@@ -781,6 +884,178 @@ class BackupProvider extends ChangeNotifier {
         debugPrint('Deleted old backup: ${file.id}');
       }
     }
+  }
+
+  /// Download and apply every delta file on Drive that was not uploaded by
+  /// this device and has not already been applied to local storage.
+  ///
+  /// Deltas are applied in chronological order (oldest first) so that
+  /// later changes win in the per-field timestamp merge.
+  Future<void> _downloadAndApplyPendingDeltas(
+    drive_api.DriveApi drive,
+    String folderId,
+    SecretKey key,
+  ) async {
+    final res = await drive.files.list(
+      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id,name,createdTime)',
+      orderBy: 'createdTime asc',
+    );
+
+    final allFiles = res.files ?? [];
+    if (allFiles.isEmpty) return;
+
+    // The short device ID embedded in the filename (first 8 chars of deviceId).
+    final deviceId = _localMetadata?.deviceId ?? '';
+    final shortMyId =
+        deviceId.length >= 8 ? deviceId.substring(0, 8) : deviceId;
+
+    // Load the set of delta file IDs already applied on this device.
+    final prefs = await SharedPreferences.getInstance();
+    final appliedRaw = prefs.getString(_kAppliedDeltaIdsKey);
+    final applied =
+        appliedRaw != null
+            ? Set<String>.from(jsonDecode(appliedRaw) as List<dynamic>)
+            : <String>{};
+
+    // Filter: skip our own deltas and already-applied ones.
+    final pending =
+        allFiles.where((f) {
+          if (f.id == null) return false;
+          if (applied.contains(f.id!)) return false;
+          if (shortMyId.isNotEmpty && (f.name ?? '').contains(shortMyId))
+            return false;
+          return true;
+        }).toList();
+
+    if (pending.isEmpty) return;
+
+    debugPrint(
+      'Applying ${pending.length} pending delta(s) from other devices.',
+    );
+
+    for (final f in pending) {
+      try {
+        final response =
+            await drive.files.get(
+                  f.id!,
+                  downloadOptions: drive_api.DownloadOptions.fullMedia,
+                )
+                as drive_api.Media;
+
+        final bytes = <int>[];
+        await for (final chunk in response.stream) {
+          bytes.addAll(chunk);
+        }
+
+        final backupData = await BackupService.importDataFromGoogleDrive(
+          encryptedBytes: Uint8List.fromList(bytes),
+          secretKey: key,
+        );
+
+        if (backupData != null) {
+          await _mergeBackupData(backupData);
+          applied.add(f.id!);
+          debugPrint('Applied delta ${f.id} (${f.name})');
+        }
+      } catch (e) {
+        // Skip unreadable/corrupt deltas — do not add to applied set so we
+        // can retry on the next sync cycle.
+        debugPrint('Skipped delta ${f.id}: $e');
+      }
+    }
+
+    await prefs.setString(_kAppliedDeltaIdsKey, jsonEncode(applied.toList()));
+  }
+
+  /// Upload only the habits and days that changed since [_lastSyncTime].
+  ///
+  /// Does nothing if there are no changes (delta export returns null) or if
+  /// [_lastSyncTime] is null (caller should fall back to a full sync instead).
+  Future<void> _uploadDeltaToCloud(SecretKey key) async {
+    if (_lastSyncTime == null || _habitProvider == null) return;
+
+    final bytes = await BackupService.exportDeltaForGoogleDrive(
+      secretKey: key,
+      habitProvider: _habitProvider!,
+      fromTime: _lastSyncTime!,
+    );
+    if (bytes == null) {
+      debugPrint('Delta upload skipped — no changes since last sync.');
+      return;
+    }
+
+    final drive = await _getDriveService();
+    if (drive == null) return;
+    final folderId = await _getFolderId(drive);
+    if (folderId == null) return;
+
+    final now = DateTime.now();
+    final day = now.day.toString().padLeft(2, '0');
+    final month = now.month.toString().padLeft(2, '0');
+    final year = now.year.toString().substring(2);
+    final hour = now.hour.toString().padLeft(2, '0');
+    final minute = now.minute.toString().padLeft(2, '0');
+    final deviceId = _localMetadata?.deviceId ?? 'unknown';
+    final shortId = deviceId.length >= 8 ? deviceId.substring(0, 8) : deviceId;
+    final fileName =
+        '$day-$month-$year-$hour$minute-$shortId-habitt-delta.habittd';
+
+    final media = drive_api.Media(Stream.value(bytes.toList()), bytes.length);
+    final file =
+        drive_api.File()
+          ..name = fileName
+          ..parents = [folderId];
+    final created = await drive.files.create(file, uploadMedia: media);
+    debugPrint('Uploaded delta: ${created.id} ($fileName)');
+
+    await _rotateDeltaFiles(drive, folderId);
+  }
+
+  /// Delete delta files older than 7 days. Called after each delta upload to
+  /// prevent indefinite accumulation.
+  Future<void> _rotateDeltaFiles(
+    drive_api.DriveApi drive,
+    String folderId,
+  ) async {
+    final res = await drive.files.list(
+      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id,createdTime)',
+      orderBy: 'createdTime asc',
+    );
+
+    final cutoff = DateTime.now().toUtc().subtract(const Duration(days: 7));
+    for (final f in (res.files ?? [])) {
+      if (f.id != null &&
+          f.createdTime != null &&
+          f.createdTime!.isBefore(cutoff)) {
+        await drive.files.delete(f.id!);
+        debugPrint('Rotated old delta: ${f.id}');
+      }
+    }
+  }
+
+  /// Delete ALL delta files from Drive and clear the local applied-delta set.
+  /// Called after a successful full sync — the full backup supersedes all deltas.
+  Future<void> _clearAllDeltaFiles(
+    drive_api.DriveApi drive,
+    String folderId,
+  ) async {
+    final res = await drive.files.list(
+      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id)',
+    );
+
+    for (final f in (res.files ?? [])) {
+      if (f.id != null) {
+        await drive.files.delete(f.id!);
+        debugPrint('Cleared delta after full sync: ${f.id}');
+      }
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kAppliedDeltaIdsKey);
+    debugPrint('Applied-delta tracking cleared.');
   }
 
   Future<void> _replaceMetadataFile(
@@ -842,16 +1117,18 @@ class BackupProvider extends ChangeNotifier {
 
     for (final day in backupData.days) {
       final dayKey =
-          DateTime(day.date.year, day.date.month, day.date.day)
-              .toIso8601String()
-              .split('T')
-              .first;
+          DateTime(
+            day.date.year,
+            day.date.month,
+            day.date.day,
+          ).toIso8601String().split('T').first;
 
       final existingDay = daysBox.get(dayKey);
       if (existingDay != null) {
         final localTs = existingDay.timestamp;
         final incomingTs = day.timestamp;
-        if ((localTs == incomingTs) || (localTs == null && incomingTs == null)) {
+        if ((localTs == incomingTs) ||
+            (localTs == null && incomingTs == null)) {
           continue;
         }
       }
