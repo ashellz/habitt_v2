@@ -1,3 +1,5 @@
+import 'package:habitt/l10n/app_localizations.dart';
+
 enum PremadeHabitType {
   goToBedEarly,
   brushTeeth,
@@ -55,6 +57,47 @@ extension PremadeHabitTypeLabel on PremadeHabitType {
         return 'Productivity session';
       case PremadeHabitType.read:
         return 'Read';
+    }
+  }
+}
+
+extension PremadeHabitTypeLocalizedName on PremadeHabitType {
+  String localizedName(AppLocalizations l10n) {
+    switch (this) {
+      case PremadeHabitType.goToBedEarly:
+        return l10n.premadeHabitGoToBedEarly;
+      case PremadeHabitType.brushTeeth:
+        return l10n.premadeHabitBrushTeeth;
+      case PremadeHabitType.skinCare:
+        return l10n.premadeHabitSkinCare;
+      case PremadeHabitType.wakeUpEarly:
+        return l10n.premadeHabitWakeUpEarly;
+      case PremadeHabitType.shower:
+        return l10n.premadeHabitShower;
+      case PremadeHabitType.praying:
+        return l10n.premadeHabitPraying;
+      case PremadeHabitType.running:
+        return l10n.premadeHabitRunning;
+      case PremadeHabitType.walk:
+        return l10n.premadeHabitWalk;
+      case PremadeHabitType.gym:
+        return l10n.premadeHabitGym;
+      case PremadeHabitType.nutrition:
+        return l10n.premadeHabitNutrition;
+      case PremadeHabitType.medications:
+        return l10n.premadeHabitMedications;
+      case PremadeHabitType.drinkWater:
+        return l10n.premadeHabitDrinkWater;
+      case PremadeHabitType.studying:
+        return l10n.premadeHabitStudying;
+      case PremadeHabitType.work:
+        return l10n.premadeHabitWork;
+      case PremadeHabitType.research:
+        return l10n.premadeHabitResearch;
+      case PremadeHabitType.productivitySession:
+        return l10n.premadeHabitProductivitySession;
+      case PremadeHabitType.read:
+        return l10n.premadeHabitRead;
     }
   }
 }

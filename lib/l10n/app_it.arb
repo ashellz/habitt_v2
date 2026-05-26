@@ -842,5 +842,36 @@
   "paywallPerThreeMonths": "/ 3 mesi",
   "paywallPerWeek": "/ settimana",
   "paywallOneTimePurchase": "Acquisto unico",
-  "paywallProductsUnavailable": "Impossibile caricare i piani. Riprova più tardi."
+  "paywallProductsUnavailable": "Impossibile caricare i piani. Riprova più tardi.",
+
+  "premadeSectionWellnessSelfCare": "Benessere / Cura di sé",
+  "premadeSectionHealthFitness": "Salute & Fitness",
+  "premadeSectionProductivityGrowth": "Produttività & Crescita",
+
+  "premadeHabitGoToBedEarly": "Andare a letto presto",
+  "premadeHabitBrushTeeth": "Lavarsi i denti",
+  "premadeHabitSkinCare": "Cura della pelle",
+  "premadeHabitWakeUpEarly": "Svegliarsi presto",
+  "premadeHabitShower": "Doccia",
+  "premadeHabitRunning": "Corsa",
+  "premadeHabitWalk": "Camminata",
+  "premadeHabitGym": "Palestra",
+  "premadeHabitNutrition": "Nutrizione",
+  "premadeHabitMedications": "Farmaci",
+  "premadeHabitDrinkWater": "Bere acqua",
+  "premadeHabitStudying": "Studio",
+  "premadeHabitWork": "Lavoro",
+  "premadeHabitResearch": "Ricerca",
+  "premadeHabitRead": "Leggere",
+  "premadeHabitPraying": "Pregare",
+  "premadeHabitProductivitySession": "Sessione di produttività",
+
+  "premadeSheetTitle": "Seleziona abitudine",
+  "premadeSheetDescCreate": "Scegli un'abitudine dalle categorie — o salta e crea la tua abitudine",
+  "premadeSheetDescEdit": "Notifiche, stile dell'interfaccia e testo vengono personalizzati in base all'abitudine scelta.",
+
+  "overrideCurrentConfigTitle": "Sovrascrivere la configurazione attuale?",
+  "overrideCurrentConfigDesc": "Sovrascrivere i dettagli attuali dell'abitudine con il modello o mantenere le opzioni attuali?",
+  "overrideCurrentConfigOverride": "Sovrascrivi",
+  "overrideCurrentConfigKeepCurrent": "Mantieni attuale"
 }

@@ -2173,4 +2173,88 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'Couldn\'t load plans. Please try again later.';
+
+  @override
+  String get premadeSectionWellnessSelfCare => 'Wellness / Self-care';
+
+  @override
+  String get premadeSectionHealthFitness => 'Health & Fitness';
+
+  @override
+  String get premadeSectionProductivityGrowth => 'Productivity & Growth';
+
+  @override
+  String get premadeHabitGoToBedEarly => 'Go to bed early';
+
+  @override
+  String get premadeHabitBrushTeeth => 'Brush teeth';
+
+  @override
+  String get premadeHabitSkinCare => 'Skin care';
+
+  @override
+  String get premadeHabitWakeUpEarly => 'Wake up early';
+
+  @override
+  String get premadeHabitShower => 'Shower';
+
+  @override
+  String get premadeHabitRunning => 'Running';
+
+  @override
+  String get premadeHabitWalk => 'Walk';
+
+  @override
+  String get premadeHabitGym => 'Gym';
+
+  @override
+  String get premadeHabitNutrition => 'Nutrition';
+
+  @override
+  String get premadeHabitMedications => 'Medications';
+
+  @override
+  String get premadeHabitDrinkWater => 'Drink water';
+
+  @override
+  String get premadeHabitStudying => 'Studying';
+
+  @override
+  String get premadeHabitWork => 'Work';
+
+  @override
+  String get premadeHabitResearch => 'Research';
+
+  @override
+  String get premadeHabitRead => 'Read';
+
+  @override
+  String get premadeHabitPraying => 'Praying';
+
+  @override
+  String get premadeHabitProductivitySession => 'Productivity session';
+
+  @override
+  String get premadeSheetTitle => 'Select Habit';
+
+  @override
+  String get premadeSheetDescCreate =>
+      'Choose a habit from categories — or skip and create your own habit';
+
+  @override
+  String get premadeSheetDescEdit =>
+      'Notifications, UI styling, and text gets customized based on the chosen habit.';
+
+  @override
+  String get overrideCurrentConfigTitle => 'Override current configuration?';
+
+  @override
+  String get overrideCurrentConfigDesc =>
+      'Override current habit details with the template or keep current options?';
+
+  @override
+  String get overrideCurrentConfigOverride => 'Override';
+
+  @override
+  String get overrideCurrentConfigKeepCurrent => 'Keep current';
 }

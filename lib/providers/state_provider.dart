@@ -227,6 +227,7 @@ class StateProvider extends ChangeNotifier {
   void applyPremadeHabitTemplate(
     PremadeHabitTemplate template, {
     bool overrideConfig = true,
+    String? localizedName,
   }) {
     _selectedPremadeHabitType = template.type;
     if (!overrideConfig) {
@@ -235,7 +236,7 @@ class StateProvider extends ChangeNotifier {
     }
     _habitCategoryId = template.categoryId;
 
-    nameController.text = template.name;
+    nameController.text = localizedName ?? template.name;
     descController.clear();
     _iconPath = template.iconPath;
 

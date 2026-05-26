@@ -2186,4 +2186,89 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'Impossibile caricare i piani. Riprova più tardi.';
+
+  @override
+  String get premadeSectionWellnessSelfCare => 'Benessere / Cura di sé';
+
+  @override
+  String get premadeSectionHealthFitness => 'Salute & Fitness';
+
+  @override
+  String get premadeSectionProductivityGrowth => 'Produttività & Crescita';
+
+  @override
+  String get premadeHabitGoToBedEarly => 'Andare a letto presto';
+
+  @override
+  String get premadeHabitBrushTeeth => 'Lavarsi i denti';
+
+  @override
+  String get premadeHabitSkinCare => 'Cura della pelle';
+
+  @override
+  String get premadeHabitWakeUpEarly => 'Svegliarsi presto';
+
+  @override
+  String get premadeHabitShower => 'Doccia';
+
+  @override
+  String get premadeHabitRunning => 'Corsa';
+
+  @override
+  String get premadeHabitWalk => 'Camminata';
+
+  @override
+  String get premadeHabitGym => 'Palestra';
+
+  @override
+  String get premadeHabitNutrition => 'Nutrizione';
+
+  @override
+  String get premadeHabitMedications => 'Farmaci';
+
+  @override
+  String get premadeHabitDrinkWater => 'Bere acqua';
+
+  @override
+  String get premadeHabitStudying => 'Studio';
+
+  @override
+  String get premadeHabitWork => 'Lavoro';
+
+  @override
+  String get premadeHabitResearch => 'Ricerca';
+
+  @override
+  String get premadeHabitRead => 'Leggere';
+
+  @override
+  String get premadeHabitPraying => 'Pregare';
+
+  @override
+  String get premadeHabitProductivitySession => 'Sessione di produttività';
+
+  @override
+  String get premadeSheetTitle => 'Seleziona abitudine';
+
+  @override
+  String get premadeSheetDescCreate =>
+      'Scegli un\'abitudine dalle categorie — o salta e crea la tua abitudine';
+
+  @override
+  String get premadeSheetDescEdit =>
+      'Notifiche, stile dell\'interfaccia e testo vengono personalizzati in base all\'abitudine scelta.';
+
+  @override
+  String get overrideCurrentConfigTitle =>
+      'Sovrascrivere la configurazione attuale?';
+
+  @override
+  String get overrideCurrentConfigDesc =>
+      'Sovrascrivere i dettagli attuali dell\'abitudine con il modello o mantenere le opzioni attuali?';
+
+  @override
+  String get overrideCurrentConfigOverride => 'Sovrascrivi';
+
+  @override
+  String get overrideCurrentConfigKeepCurrent => 'Mantieni attuale';
 }

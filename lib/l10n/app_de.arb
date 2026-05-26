@@ -842,5 +842,36 @@
   "paywallPerThreeMonths": "/ 3 Monate",
   "paywallPerWeek": "/ Woche",
   "paywallOneTimePurchase": "Einmalige Zahlung",
-  "paywallProductsUnavailable": "Pläne konnten nicht geladen werden. Bitte versuche es später erneut."
+  "paywallProductsUnavailable": "Pläne konnten nicht geladen werden. Bitte versuche es später erneut.",
+
+  "premadeSectionWellnessSelfCare": "Wellness / Selbstpflege",
+  "premadeSectionHealthFitness": "Gesundheit & Fitness",
+  "premadeSectionProductivityGrowth": "Produktivität & Wachstum",
+
+  "premadeHabitGoToBedEarly": "Früh ins Bett",
+  "premadeHabitBrushTeeth": "Zähne putzen",
+  "premadeHabitSkinCare": "Hautpflege",
+  "premadeHabitWakeUpEarly": "Früh aufstehen",
+  "premadeHabitShower": "Duschen",
+  "premadeHabitRunning": "Laufen",
+  "premadeHabitWalk": "Spazieren gehen",
+  "premadeHabitGym": "Fitnessstudio",
+  "premadeHabitNutrition": "Ernährung",
+  "premadeHabitMedications": "Medikamente",
+  "premadeHabitDrinkWater": "Wasser trinken",
+  "premadeHabitStudying": "Lernen",
+  "premadeHabitWork": "Arbeit",
+  "premadeHabitResearch": "Recherche",
+  "premadeHabitRead": "Lesen",
+  "premadeHabitPraying": "Beten",
+  "premadeHabitProductivitySession": "Produktivitätssitzung",
+
+  "premadeSheetTitle": "Gewohnheit auswählen",
+  "premadeSheetDescCreate": "Wähle eine Gewohnheit aus Kategorien — oder überspringe und erstelle deine eigene",
+  "premadeSheetDescEdit": "Benachrichtigungen, UI-Stil und Text werden basierend auf der gewählten Gewohnheit angepasst.",
+
+  "overrideCurrentConfigTitle": "Aktuelle Konfiguration überschreiben?",
+  "overrideCurrentConfigDesc": "Aktuelle Gewohnheitsdetails mit der Vorlage überschreiben oder aktuelle Optionen behalten?",
+  "overrideCurrentConfigOverride": "Überschreiben",
+  "overrideCurrentConfigKeepCurrent": "Aktuelle behalten"
 }

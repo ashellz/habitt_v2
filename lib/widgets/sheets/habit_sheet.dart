@@ -98,7 +98,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         _sp.reset();
         final initialTemplate = widget.initialPremadeTemplate;
         if (initialTemplate != null) {
-          _sp.applyPremadeHabitTemplate(initialTemplate);
+          final loc = AppLocalizations.of(context)!;
+          _sp.applyPremadeHabitTemplate(
+            initialTemplate,
+            localizedName: initialTemplate.localizedName(loc),
+          );
         }
       }
 
@@ -911,7 +915,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final selectedTemplate =
         selectedType == null ? null : PremadeHabitCatalog.byType(selectedType);
     final loc = AppLocalizations.of(context)!;
-    final label = selectedTemplate?.name ?? loc.select;
+    final label = selectedTemplate?.localizedName(loc) ?? loc.select;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

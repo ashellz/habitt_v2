@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -19,16 +20,19 @@ class OverrideCurrentConfigDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final sp = context.read<StateProvider>();
     final cp = context.watch<ColorProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return NewDefaultDialog(
-      title: 'Override current configuration?',
-      desc:
-          'Override current habit details with the template or keep current options?',
-      primaryButtonLabel: 'Override',
+      title: l10n.overrideCurrentConfigTitle,
+      desc: l10n.overrideCurrentConfigDesc,
+      primaryButtonLabel: l10n.overrideCurrentConfigOverride,
       primaryButtonColor: cp.error,
-      secondaryButtonLabel: 'Keep current',
+      secondaryButtonLabel: l10n.overrideCurrentConfigKeepCurrent,
       onPrimaryButtonPressed: () {
-        sp.applyPremadeHabitTemplate(template);
+        sp.applyPremadeHabitTemplate(
+          template,
+          localizedName: template.localizedName(l10n),
+        );
         Navigator.of(dialogContext).pop();
       },
       onSecondaryButtonPressed: () {

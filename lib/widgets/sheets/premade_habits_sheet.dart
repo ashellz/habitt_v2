@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -51,15 +52,16 @@ class PremadeHabitsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final l10n = AppLocalizations.of(context)!;
     final mediaQuery = MediaQuery.of(context);
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
 
     final rightActionLabel =
-        mode == PremadeHabitSheetMode.create ? 'Skip' : 'Clear';
+        mode == PremadeHabitSheetMode.create ? l10n.skip : l10n.clear;
     final desc =
         mode == PremadeHabitSheetMode.create
-            ? 'Choose a habit from categories — or skip and create your own habit'
-            : 'Notifications, UI styling, and text gets customized based on the chosen habit.';
+            ? l10n.premadeSheetDescCreate
+            : l10n.premadeSheetDescEdit;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: maxSheetHeight),
@@ -93,13 +95,14 @@ class PremadeHabitsSheet extends StatelessWidget {
     PremadeHabitCategorySection section,
   ) {
     final cp = context.watch<ColorProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 12,
       children: [
         Text(
-          section.title,
+          section.localizedTitle(l10n),
           style: TextStyle(
             color: cp.text,
             fontSize: 18,
@@ -133,7 +136,7 @@ class PremadeHabitsSheet extends StatelessWidget {
                       TextIcon(template.iconPath, size: 24),
                       const SizedBox(width: 10),
                       Text(
-                        template.name,
+                        template.localizedName(l10n),
                         style: TextStyle(
                           color: isSelected ? cp.bg : cp.text,
                           fontSize: 16,
@@ -153,6 +156,7 @@ class PremadeHabitsSheet extends StatelessWidget {
     ColorProvider cp,
     String rightActionLabel,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final shouldShowRightButton =
         mode == PremadeHabitSheetMode.create ||
         selectedPremadeHabitType != null;
@@ -178,7 +182,7 @@ class PremadeHabitsSheet extends StatelessWidget {
           ),
         ),
         Text(
-          'Select Habit',
+          l10n.premadeSheetTitle,
           style: TextStyle(
             color: cp.text,
             fontSize: 22,

@@ -2182,4 +2182,89 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'No se pudieron cargar los planes. Por favor, inténtalo más tarde.';
+
+  @override
+  String get premadeSectionWellnessSelfCare => 'Bienestar / Cuidado personal';
+
+  @override
+  String get premadeSectionHealthFitness => 'Salud & Fitness';
+
+  @override
+  String get premadeSectionProductivityGrowth => 'Productividad & Crecimiento';
+
+  @override
+  String get premadeHabitGoToBedEarly => 'Acostarse temprano';
+
+  @override
+  String get premadeHabitBrushTeeth => 'Cepillarse los dientes';
+
+  @override
+  String get premadeHabitSkinCare => 'Cuidado de la piel';
+
+  @override
+  String get premadeHabitWakeUpEarly => 'Despertarse temprano';
+
+  @override
+  String get premadeHabitShower => 'Ducha';
+
+  @override
+  String get premadeHabitRunning => 'Correr';
+
+  @override
+  String get premadeHabitWalk => 'Caminar';
+
+  @override
+  String get premadeHabitGym => 'Gimnasio';
+
+  @override
+  String get premadeHabitNutrition => 'Nutrición';
+
+  @override
+  String get premadeHabitMedications => 'Medicamentos';
+
+  @override
+  String get premadeHabitDrinkWater => 'Beber agua';
+
+  @override
+  String get premadeHabitStudying => 'Estudiar';
+
+  @override
+  String get premadeHabitWork => 'Trabajo';
+
+  @override
+  String get premadeHabitResearch => 'Investigación';
+
+  @override
+  String get premadeHabitRead => 'Leer';
+
+  @override
+  String get premadeHabitPraying => 'Rezar';
+
+  @override
+  String get premadeHabitProductivitySession => 'Sesión de productividad';
+
+  @override
+  String get premadeSheetTitle => 'Seleccionar hábito';
+
+  @override
+  String get premadeSheetDescCreate =>
+      'Elige un hábito de las categorías — o salta y crea tu propio hábito';
+
+  @override
+  String get premadeSheetDescEdit =>
+      'Las notificaciones, el estilo de la interfaz y el texto se personalizan según el hábito elegido.';
+
+  @override
+  String get overrideCurrentConfigTitle =>
+      '¿Sobrescribir configuración actual?';
+
+  @override
+  String get overrideCurrentConfigDesc =>
+      '¿Sobrescribir los detalles actuales del hábito con la plantilla o mantener las opciones actuales?';
+
+  @override
+  String get overrideCurrentConfigOverride => 'Sobrescribir';
+
+  @override
+  String get overrideCurrentConfigKeepCurrent => 'Mantener actual';
 }

@@ -2188,4 +2188,89 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'Pläne konnten nicht geladen werden. Bitte versuche es später erneut.';
+
+  @override
+  String get premadeSectionWellnessSelfCare => 'Wellness / Selbstpflege';
+
+  @override
+  String get premadeSectionHealthFitness => 'Gesundheit & Fitness';
+
+  @override
+  String get premadeSectionProductivityGrowth => 'Produktivität & Wachstum';
+
+  @override
+  String get premadeHabitGoToBedEarly => 'Früh ins Bett';
+
+  @override
+  String get premadeHabitBrushTeeth => 'Zähne putzen';
+
+  @override
+  String get premadeHabitSkinCare => 'Hautpflege';
+
+  @override
+  String get premadeHabitWakeUpEarly => 'Früh aufstehen';
+
+  @override
+  String get premadeHabitShower => 'Duschen';
+
+  @override
+  String get premadeHabitRunning => 'Laufen';
+
+  @override
+  String get premadeHabitWalk => 'Spazieren gehen';
+
+  @override
+  String get premadeHabitGym => 'Fitnessstudio';
+
+  @override
+  String get premadeHabitNutrition => 'Ernährung';
+
+  @override
+  String get premadeHabitMedications => 'Medikamente';
+
+  @override
+  String get premadeHabitDrinkWater => 'Wasser trinken';
+
+  @override
+  String get premadeHabitStudying => 'Lernen';
+
+  @override
+  String get premadeHabitWork => 'Arbeit';
+
+  @override
+  String get premadeHabitResearch => 'Recherche';
+
+  @override
+  String get premadeHabitRead => 'Lesen';
+
+  @override
+  String get premadeHabitPraying => 'Beten';
+
+  @override
+  String get premadeHabitProductivitySession => 'Produktivitätssitzung';
+
+  @override
+  String get premadeSheetTitle => 'Gewohnheit auswählen';
+
+  @override
+  String get premadeSheetDescCreate =>
+      'Wähle eine Gewohnheit aus Kategorien — oder überspringe und erstelle deine eigene';
+
+  @override
+  String get premadeSheetDescEdit =>
+      'Benachrichtigungen, UI-Stil und Text werden basierend auf der gewählten Gewohnheit angepasst.';
+
+  @override
+  String get overrideCurrentConfigTitle =>
+      'Aktuelle Konfiguration überschreiben?';
+
+  @override
+  String get overrideCurrentConfigDesc =>
+      'Aktuelle Gewohnheitsdetails mit der Vorlage überschreiben oder aktuelle Optionen behalten?';
+
+  @override
+  String get overrideCurrentConfigOverride => 'Überschreiben';
+
+  @override
+  String get overrideCurrentConfigKeepCurrent => 'Aktuelle behalten';
 }

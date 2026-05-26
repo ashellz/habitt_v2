@@ -2176,4 +2176,88 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'Ponude se nisu mogle učitati. Molimo pokušaj ponovo kasnije.';
+
+  @override
+  String get premadeSectionWellnessSelfCare => 'Wellness / Briga o sebi';
+
+  @override
+  String get premadeSectionHealthFitness => 'Zdravlje & Fitnes';
+
+  @override
+  String get premadeSectionProductivityGrowth => 'Produktivnost & Rast';
+
+  @override
+  String get premadeHabitGoToBedEarly => 'Idi spavati rano';
+
+  @override
+  String get premadeHabitBrushTeeth => 'Peri zube';
+
+  @override
+  String get premadeHabitSkinCare => 'Njega kože';
+
+  @override
+  String get premadeHabitWakeUpEarly => 'Ustani rano';
+
+  @override
+  String get premadeHabitShower => 'Tuš';
+
+  @override
+  String get premadeHabitRunning => 'Trčanje';
+
+  @override
+  String get premadeHabitWalk => 'Šetnja';
+
+  @override
+  String get premadeHabitGym => 'Teretana';
+
+  @override
+  String get premadeHabitNutrition => 'Ishrana';
+
+  @override
+  String get premadeHabitMedications => 'Lijekovi';
+
+  @override
+  String get premadeHabitDrinkWater => 'Pij vodu';
+
+  @override
+  String get premadeHabitStudying => 'Učenje';
+
+  @override
+  String get premadeHabitWork => 'Posao';
+
+  @override
+  String get premadeHabitResearch => 'Istraživanje';
+
+  @override
+  String get premadeHabitRead => 'Čitanje';
+
+  @override
+  String get premadeHabitPraying => 'Molitva';
+
+  @override
+  String get premadeHabitProductivitySession => 'Produktivna sesija';
+
+  @override
+  String get premadeSheetTitle => 'Odaberi naviku';
+
+  @override
+  String get premadeSheetDescCreate =>
+      'Odaberi naviku iz kategorija — ili preskoči i kreiraj vlastitu naviku';
+
+  @override
+  String get premadeSheetDescEdit =>
+      'Obavijesti, izgled sučelja i tekst se prilagođavaju prema odabranoj navici.';
+
+  @override
+  String get overrideCurrentConfigTitle => 'Zamijeni trenutnu konfiguraciju?';
+
+  @override
+  String get overrideCurrentConfigDesc =>
+      'Zamijeni trenutne detalje navike predloškom ili zadrži trenutne opcije?';
+
+  @override
+  String get overrideCurrentConfigOverride => 'Zamijeni';
+
+  @override
+  String get overrideCurrentConfigKeepCurrent => 'Zadrži trenutno';
 }

@@ -842,5 +842,36 @@
   "paywallPerThreeMonths": "/ 3 meses",
   "paywallPerWeek": "/ semana",
   "paywallOneTimePurchase": "Compra única",
-  "paywallProductsUnavailable": "No se pudieron cargar los planes. Por favor, inténtalo más tarde."
+  "paywallProductsUnavailable": "No se pudieron cargar los planes. Por favor, inténtalo más tarde.",
+
+  "premadeSectionWellnessSelfCare": "Bienestar / Cuidado personal",
+  "premadeSectionHealthFitness": "Salud & Fitness",
+  "premadeSectionProductivityGrowth": "Productividad & Crecimiento",
+
+  "premadeHabitGoToBedEarly": "Acostarse temprano",
+  "premadeHabitBrushTeeth": "Cepillarse los dientes",
+  "premadeHabitSkinCare": "Cuidado de la piel",
+  "premadeHabitWakeUpEarly": "Despertarse temprano",
+  "premadeHabitShower": "Ducha",
+  "premadeHabitRunning": "Correr",
+  "premadeHabitWalk": "Caminar",
+  "premadeHabitGym": "Gimnasio",
+  "premadeHabitNutrition": "Nutrición",
+  "premadeHabitMedications": "Medicamentos",
+  "premadeHabitDrinkWater": "Beber agua",
+  "premadeHabitStudying": "Estudiar",
+  "premadeHabitWork": "Trabajo",
+  "premadeHabitResearch": "Investigación",
+  "premadeHabitRead": "Leer",
+  "premadeHabitPraying": "Rezar",
+  "premadeHabitProductivitySession": "Sesión de productividad",
+
+  "premadeSheetTitle": "Seleccionar hábito",
+  "premadeSheetDescCreate": "Elige un hábito de las categorías — o salta y crea tu propio hábito",
+  "premadeSheetDescEdit": "Las notificaciones, el estilo de la interfaz y el texto se personalizan según el hábito elegido.",
+
+  "overrideCurrentConfigTitle": "¿Sobrescribir configuración actual?",
+  "overrideCurrentConfigDesc": "¿Sobrescribir los detalles actuales del hábito con la plantilla o mantener las opciones actuales?",
+  "overrideCurrentConfigOverride": "Sobrescribir",
+  "overrideCurrentConfigKeepCurrent": "Mantener actual"
 }

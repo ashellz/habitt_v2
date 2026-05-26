@@ -3602,6 +3602,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t load plans. Please try again later.'**
   String get paywallProductsUnavailable;
+
+  /// No description provided for @premadeSectionWellnessSelfCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Wellness / Self-care'**
+  String get premadeSectionWellnessSelfCare;
+
+  /// No description provided for @premadeSectionHealthFitness.
+  ///
+  /// In en, this message translates to:
+  /// **'Health & Fitness'**
+  String get premadeSectionHealthFitness;
+
+  /// No description provided for @premadeSectionProductivityGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity & Growth'**
+  String get premadeSectionProductivityGrowth;
+
+  /// No description provided for @premadeHabitGoToBedEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to bed early'**
+  String get premadeHabitGoToBedEarly;
+
+  /// No description provided for @premadeHabitBrushTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'Brush teeth'**
+  String get premadeHabitBrushTeeth;
+
+  /// No description provided for @premadeHabitSkinCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin care'**
+  String get premadeHabitSkinCare;
+
+  /// No description provided for @premadeHabitWakeUpEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake up early'**
+  String get premadeHabitWakeUpEarly;
+
+  /// No description provided for @premadeHabitShower.
+  ///
+  /// In en, this message translates to:
+  /// **'Shower'**
+  String get premadeHabitShower;
+
+  /// No description provided for @premadeHabitRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get premadeHabitRunning;
+
+  /// No description provided for @premadeHabitWalk.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get premadeHabitWalk;
+
+  /// No description provided for @premadeHabitGym.
+  ///
+  /// In en, this message translates to:
+  /// **'Gym'**
+  String get premadeHabitGym;
+
+  /// No description provided for @premadeHabitNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get premadeHabitNutrition;
+
+  /// No description provided for @premadeHabitMedications.
+  ///
+  /// In en, this message translates to:
+  /// **'Medications'**
+  String get premadeHabitMedications;
+
+  /// No description provided for @premadeHabitDrinkWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink water'**
+  String get premadeHabitDrinkWater;
+
+  /// No description provided for @premadeHabitStudying.
+  ///
+  /// In en, this message translates to:
+  /// **'Studying'**
+  String get premadeHabitStudying;
+
+  /// No description provided for @premadeHabitWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get premadeHabitWork;
+
+  /// No description provided for @premadeHabitResearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Research'**
+  String get premadeHabitResearch;
+
+  /// No description provided for @premadeHabitRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get premadeHabitRead;
+
+  /// No description provided for @premadeHabitPraying.
+  ///
+  /// In en, this message translates to:
+  /// **'Praying'**
+  String get premadeHabitPraying;
+
+  /// No description provided for @premadeHabitProductivitySession.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity session'**
+  String get premadeHabitProductivitySession;
+
+  /// No description provided for @premadeSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Habit'**
+  String get premadeSheetTitle;
+
+  /// No description provided for @premadeSheetDescCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a habit from categories — or skip and create your own habit'**
+  String get premadeSheetDescCreate;
+
+  /// No description provided for @premadeSheetDescEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications, UI styling, and text gets customized based on the chosen habit.'**
+  String get premadeSheetDescEdit;
+
+  /// No description provided for @overrideCurrentConfigTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Override current configuration?'**
+  String get overrideCurrentConfigTitle;
+
+  /// No description provided for @overrideCurrentConfigDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Override current habit details with the template or keep current options?'**
+  String get overrideCurrentConfigDesc;
+
+  /// No description provided for @overrideCurrentConfigOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Override'**
+  String get overrideCurrentConfigOverride;
+
+  /// No description provided for @overrideCurrentConfigKeepCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep current'**
+  String get overrideCurrentConfigKeepCurrent;
 }
 
 class _AppLocalizationsDelegate

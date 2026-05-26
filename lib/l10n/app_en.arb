@@ -838,5 +838,36 @@
   "paywallPerThreeMonths": "/ 3 months",
   "paywallPerWeek": "/ week",
   "paywallOneTimePurchase": "One-time purchase",
-  "paywallProductsUnavailable": "Couldn't load plans. Please try again later."
+  "paywallProductsUnavailable": "Couldn't load plans. Please try again later.",
+
+  "premadeSectionWellnessSelfCare": "Wellness / Self-care",
+  "premadeSectionHealthFitness": "Health & Fitness",
+  "premadeSectionProductivityGrowth": "Productivity & Growth",
+
+  "premadeHabitGoToBedEarly": "Go to bed early",
+  "premadeHabitBrushTeeth": "Brush teeth",
+  "premadeHabitSkinCare": "Skin care",
+  "premadeHabitWakeUpEarly": "Wake up early",
+  "premadeHabitShower": "Shower",
+  "premadeHabitRunning": "Running",
+  "premadeHabitWalk": "Walk",
+  "premadeHabitGym": "Gym",
+  "premadeHabitNutrition": "Nutrition",
+  "premadeHabitMedications": "Medications",
+  "premadeHabitDrinkWater": "Drink water",
+  "premadeHabitStudying": "Studying",
+  "premadeHabitWork": "Work",
+  "premadeHabitResearch": "Research",
+  "premadeHabitRead": "Read",
+  "premadeHabitPraying": "Praying",
+  "premadeHabitProductivitySession": "Productivity session",
+
+  "premadeSheetTitle": "Select Habit",
+  "premadeSheetDescCreate": "Choose a habit from categories — or skip and create your own habit",
+  "premadeSheetDescEdit": "Notifications, UI styling, and text gets customized based on the chosen habit.",
+
+  "overrideCurrentConfigTitle": "Override current configuration?",
+  "overrideCurrentConfigDesc": "Override current habit details with the template or keep current options?",
+  "overrideCurrentConfigOverride": "Override",
+  "overrideCurrentConfigKeepCurrent": "Keep current"
 }

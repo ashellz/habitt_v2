@@ -1,3 +1,4 @@
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/util/amount_label_preset.dart';
@@ -41,6 +42,8 @@ class PremadeHabitTemplate {
   final Set<int> selectedDaysAMonth;
 
   String get resolvedAmountLabel => amountLabelPreset?.plural ?? amountLabel;
+
+  String localizedName(AppLocalizations l10n) => type.localizedName(l10n);
 }
 
 class PremadeHabitCategorySection {
@@ -51,4 +54,17 @@ class PremadeHabitCategorySection {
 
   final String title;
   final List<PremadeHabitTemplate> habits;
+
+  String localizedTitle(AppLocalizations l10n) {
+    switch (title) {
+      case 'Wellness / Self-care':
+        return l10n.premadeSectionWellnessSelfCare;
+      case 'Health & Fitness':
+        return l10n.premadeSectionHealthFitness;
+      case 'Productivity & Growth':
+        return l10n.premadeSectionProductivityGrowth;
+      default:
+        return title;
+    }
+  }
 }

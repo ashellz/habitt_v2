@@ -841,5 +841,36 @@
   "paywallPerThreeMonths": "/ svaka 3 mjeseca",
   "paywallPerWeek": "/ sedmično",
   "paywallOneTimePurchase": "Jednokratna kupnja",
-  "paywallProductsUnavailable": "Ponude se nisu mogle učitati. Molimo pokušaj ponovo kasnije."
+  "paywallProductsUnavailable": "Ponude se nisu mogle učitati. Molimo pokušaj ponovo kasnije.",
+
+  "premadeSectionWellnessSelfCare": "Wellness / Briga o sebi",
+  "premadeSectionHealthFitness": "Zdravlje & Fitnes",
+  "premadeSectionProductivityGrowth": "Produktivnost & Rast",
+
+  "premadeHabitGoToBedEarly": "Idi spavati rano",
+  "premadeHabitBrushTeeth": "Peri zube",
+  "premadeHabitSkinCare": "Njega kože",
+  "premadeHabitWakeUpEarly": "Ustani rano",
+  "premadeHabitShower": "Tuš",
+  "premadeHabitRunning": "Trčanje",
+  "premadeHabitWalk": "Šetnja",
+  "premadeHabitGym": "Teretana",
+  "premadeHabitNutrition": "Ishrana",
+  "premadeHabitMedications": "Lijekovi",
+  "premadeHabitDrinkWater": "Pij vodu",
+  "premadeHabitStudying": "Učenje",
+  "premadeHabitWork": "Posao",
+  "premadeHabitResearch": "Istraživanje",
+  "premadeHabitRead": "Čitanje",
+  "premadeHabitPraying": "Molitva",
+  "premadeHabitProductivitySession": "Produktivna sesija",
+
+  "premadeSheetTitle": "Odaberi naviku",
+  "premadeSheetDescCreate": "Odaberi naviku iz kategorija — ili preskoči i kreiraj vlastitu naviku",
+  "premadeSheetDescEdit": "Obavijesti, izgled sučelja i tekst se prilagođavaju prema odabranoj navici.",
+
+  "overrideCurrentConfigTitle": "Zamijeni trenutnu konfiguraciju?",
+  "overrideCurrentConfigDesc": "Zamijeni trenutne detalje navike predloškom ili zadrži trenutne opcije?",
+  "overrideCurrentConfigOverride": "Zamijeni",
+  "overrideCurrentConfigKeepCurrent": "Zadrži trenutno"
 }
