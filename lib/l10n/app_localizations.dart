@@ -3464,6 +3464,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discard'**
   String get discardOldBackupConfirm;
+
+  /// No description provided for @paywallUpgradeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to'**
+  String get paywallUpgradeTo;
+
+  /// No description provided for @paywallSupportUs.
+  ///
+  /// In en, this message translates to:
+  /// **'These features are available for free - support us by upgrading anyway'**
+  String get paywallSupportUs;
+
+  /// No description provided for @paywallCustomScheduling.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom habit scheduling'**
+  String get paywallCustomScheduling;
+
+  /// No description provided for @paywallPerHabitNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Per habit notifications'**
+  String get paywallPerHabitNotifications;
+
+  /// No description provided for @paywallImprovementSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit improvement suggestions'**
+  String get paywallImprovementSuggestions;
+
+  /// No description provided for @paywallCloudBackupSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud backup and sync'**
+  String get paywallCloudBackupSync;
+
+  /// No description provided for @paywallBestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Best value'**
+  String get paywallBestValue;
+
+  /// No description provided for @paywallMostPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Most popular'**
+  String get paywallMostPopular;
+
+  /// No description provided for @paywallUpgradeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade now'**
+  String get paywallUpgradeNow;
+
+  /// No description provided for @paywallManageSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage subscription'**
+  String get paywallManageSubscription;
+
+  /// No description provided for @paywallYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get paywallYearly;
+
+  /// No description provided for @paywallMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get paywallMonthly;
+
+  /// No description provided for @paywallLifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get paywallLifetime;
+
+  /// No description provided for @paywallSixMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Months'**
+  String get paywallSixMonths;
+
+  /// No description provided for @paywallThreeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Months'**
+  String get paywallThreeMonths;
+
+  /// No description provided for @paywallWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get paywallWeekly;
+
+  /// No description provided for @paywallPerYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/ year'**
+  String get paywallPerYear;
+
+  /// No description provided for @paywallPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/ month'**
+  String get paywallPerMonth;
+
+  /// No description provided for @paywallPerSixMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'/ 6 months'**
+  String get paywallPerSixMonths;
+
+  /// No description provided for @paywallPerThreeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'/ 3 months'**
+  String get paywallPerThreeMonths;
+
+  /// No description provided for @paywallPerWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'/ week'**
+  String get paywallPerWeek;
+
+  /// No description provided for @paywallOneTimePurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'One-time purchase'**
+  String get paywallOneTimePurchase;
+
+  /// No description provided for @paywallProductsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load plans. Please try again later.'**
+  String get paywallProductsUnavailable;
 }
 
 class _AppLocalizationsDelegate

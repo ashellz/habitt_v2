@@ -56,6 +56,20 @@ class BillingService {
     debugPrint('Paywall result: $paywallResult');
   }
 
+  static Future<bool> purchasePackage(Package package) async {
+    try {
+      // ignore: deprecated_member_use
+      final result = await Purchases.purchasePackage(package);
+      hasPro = result.customerInfo.entitlements.active.containsKey(
+        'Habitt Pro',
+      );
+      return true;
+    } catch (e) {
+      debugPrint('Purchase error: $e');
+      return false;
+    }
+  }
+
   static Future<List<Offering>> fetchOffers() async {
     try {
       final offerings = await Purchases.getOfferings();

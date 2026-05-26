@@ -2115,4 +2115,77 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get discardOldBackupConfirm => 'Verwerfen';
+
+  @override
+  String get paywallUpgradeTo => 'Upgraden auf';
+
+  @override
+  String get paywallSupportUs =>
+      'Diese Funktionen sind kostenlos verfügbar – unterstütze uns trotzdem mit einem Upgrade';
+
+  @override
+  String get paywallCustomScheduling => 'Individuelle Gewohnheitsplanung';
+
+  @override
+  String get paywallPerHabitNotifications =>
+      'Benachrichtigungen pro Gewohnheit';
+
+  @override
+  String get paywallImprovementSuggestions =>
+      'Verbesserungsvorschläge für Gewohnheiten';
+
+  @override
+  String get paywallCloudBackupSync => 'Cloud-Backup und Synchronisation';
+
+  @override
+  String get paywallBestValue => 'Bestes Angebot';
+
+  @override
+  String get paywallMostPopular => 'Am beliebtesten';
+
+  @override
+  String get paywallUpgradeNow => 'Jetzt upgraden';
+
+  @override
+  String get paywallManageSubscription => 'Abonnement verwalten';
+
+  @override
+  String get paywallYearly => 'Jährlich';
+
+  @override
+  String get paywallMonthly => 'Monatlich';
+
+  @override
+  String get paywallLifetime => 'Lebenslang';
+
+  @override
+  String get paywallSixMonths => '6 Monate';
+
+  @override
+  String get paywallThreeMonths => '3 Monate';
+
+  @override
+  String get paywallWeekly => 'Wöchentlich';
+
+  @override
+  String get paywallPerYear => '/ Jahr';
+
+  @override
+  String get paywallPerMonth => '/ Monat';
+
+  @override
+  String get paywallPerSixMonths => '/ 6 Monate';
+
+  @override
+  String get paywallPerThreeMonths => '/ 3 Monate';
+
+  @override
+  String get paywallPerWeek => '/ Woche';
+
+  @override
+  String get paywallOneTimePurchase => 'Einmalige Zahlung';
+
+  @override
+  String get paywallProductsUnavailable =>
+      'Pläne konnten nicht geladen werden. Bitte versuche es später erneut.';
 }

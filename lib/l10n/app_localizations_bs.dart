@@ -2104,4 +2104,76 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get discardOldBackupConfirm => 'Odbaci';
+
+  @override
+  String get paywallUpgradeTo => 'Nabavi';
+
+  @override
+  String get paywallSupportUs =>
+      'Ove funkcije su dostupne besplatno – podrži nas nadogradnjom';
+
+  @override
+  String get paywallCustomScheduling => 'Prilagođeno raspoređivanje navika';
+
+  @override
+  String get paywallPerHabitNotifications => 'Obavijesti po navici';
+
+  @override
+  String get paywallImprovementSuggestions =>
+      'Prijedlozi za poboljšanje navika';
+
+  @override
+  String get paywallCloudBackupSync => 'Sigurnosna kopija i sinkronizacija';
+
+  @override
+  String get paywallBestValue => 'Najbolja vrijednost';
+
+  @override
+  String get paywallMostPopular => 'Najpopularnije';
+
+  @override
+  String get paywallUpgradeNow => 'Nadogradi sada';
+
+  @override
+  String get paywallManageSubscription => 'Upravljaj pretplatom';
+
+  @override
+  String get paywallYearly => 'Godišnje';
+
+  @override
+  String get paywallMonthly => 'Mjesečno';
+
+  @override
+  String get paywallLifetime => 'Doživotno';
+
+  @override
+  String get paywallSixMonths => 'Svakih 6 Mjeseci';
+
+  @override
+  String get paywallThreeMonths => 'Svaka 3 Mjeseca';
+
+  @override
+  String get paywallWeekly => 'Sedmično';
+
+  @override
+  String get paywallPerYear => '/ godišnje';
+
+  @override
+  String get paywallPerMonth => '/ mjesečno';
+
+  @override
+  String get paywallPerSixMonths => '/ svakih 6 mjeseci';
+
+  @override
+  String get paywallPerThreeMonths => '/ svaka 3 mjeseca';
+
+  @override
+  String get paywallPerWeek => '/ sedmično';
+
+  @override
+  String get paywallOneTimePurchase => 'Jednokratna kupnja';
+
+  @override
+  String get paywallProductsUnavailable =>
+      'Ponude se nisu mogle učitati. Molimo pokušaj ponovo kasnije.';
 }

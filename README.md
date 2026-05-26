@@ -6,6 +6,13 @@ All habit data lives on-device. No analytics, no server-side data collection, no
 
 ---
 
+## Available on
+
+Android: 
+IOS:  
+
+---
+
 ## Features
 
 **Habit tracking**
