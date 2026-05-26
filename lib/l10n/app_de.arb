@@ -768,5 +768,40 @@
   "disconnectGoogle": "Google trennen",
   "restoreConfirmTitle": "Aus Sicherung wiederherstellen?",
   "restoreConfirmDescription": "Dabei wird die Cloud-Sicherung mit deinen lokalen Daten zusammengeführt. Konflikte werden anhand der neuesten Änderungen aufgelöst.",
-  "restore": "Wiederherstellen"
+  "restore": "Wiederherstellen",
+  "backupHistory": "Sicherungsverlauf",
+  "noBackupsFound": "Keine Sicherungen gefunden",
+  "backupDateToday": "Heute um {time}",
+  "@backupDateToday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateYesterday": "Gestern um {time}",
+  "@backupDateYesterday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateOther": "{day}. {month} um {time}",
+  "@backupDateOther": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "time": {}
+    }
+  },
+  "monthJan": "Jan",
+  "monthFeb": "Feb",
+  "monthMar": "Mär",
+  "monthApr": "Apr",
+  "monthMay": "Mai",
+  "monthJun": "Jun",
+  "monthJul": "Jul",
+  "monthAug": "Aug",
+  "monthSep": "Sep",
+  "monthOct": "Okt",
+  "monthNov": "Nov",
+  "monthDec": "Dez",
+  "migrationFailed": "Migration fehlgeschlagen. Überprüfe deine Passphrase."
 }

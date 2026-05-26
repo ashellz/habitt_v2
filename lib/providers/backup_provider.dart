@@ -10,6 +10,7 @@ import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:habitt/firebase_options.dart';
 import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
+import 'package:habitt/models/drive_backup_file.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -758,6 +759,88 @@ class BackupProvider extends ChangeNotifier {
     _habitProvider?.importDateJoined(backupData.dateJoined);
     await _habitProvider?.init();
     notifyListeners();
+  }
+
+  // --- Version history ---------------------------------------------------
+
+  /// Returns the list of versioned backups on Drive, newest first (max 3).
+  Future<List<DriveBackupFile>> listCloudBackups() async {
+    try {
+      final drive = await _getDriveService();
+      if (drive == null) return [];
+
+      final folderId = await _getFolderId(drive, create: false);
+      if (folderId == null) return [];
+
+      final found = await drive.files.list(
+        q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
+        $fields: 'files(id,name,createdTime)',
+        orderBy: 'createdTime desc',
+      );
+
+      return (found.files ?? [])
+          .where((f) => f.id != null && f.createdTime != null)
+          .map(
+            (f) => DriveBackupFile(
+              id: f.id!,
+              name: f.name ?? '',
+              createdAt: f.createdTime!,
+            ),
+          )
+          .take(3)
+          .toList();
+    } catch (e) {
+      debugPrint('Failed to list cloud backups: $e');
+      return [];
+    }
+  }
+
+  /// Restore from a specific Drive backup file by its file ID.
+  Future<void> restoreFromBackupFile(String fileId) async {
+    if (_syncState == SyncState.syncing) return;
+
+    progressMessage = 'Downloading backup...';
+    syncState = SyncState.syncing;
+    lastError = null;
+
+    try {
+      final backupData = await _downloadBackupById(fileId);
+      if (backupData != null) {
+        progressMessage = 'Merging...';
+        await _mergeBackupData(backupData);
+        await _onSyncSuccess();
+      } else {
+        lastError = 'Failed to decrypt backup.';
+        syncState = SyncState.error;
+      }
+    } catch (e) {
+      lastError = 'Restore failed: $e';
+      syncState = SyncState.error;
+      debugPrint(lastError);
+    }
+  }
+
+  Future<BackupData?> _downloadBackupById(String fileId) async {
+    final drive = await _getDriveService();
+    if (drive == null) return null;
+
+    final response =
+        await drive.files.get(
+              fileId,
+              downloadOptions: drive_api.DownloadOptions.fullMedia,
+            )
+            as drive_api.Media;
+
+    final bytes = <int>[];
+    await for (final chunk in response.stream) {
+      bytes.addAll(chunk);
+    }
+
+    final key = await BackupService.getOrCreateKey(_secureStorage);
+    return BackupService.importDataFromGoogleDrive(
+      encryptedBytes: Uint8List.fromList(bytes),
+      secretKey: key,
+    );
   }
 
   // --- Delete ------------------------------------------------------------

@@ -768,5 +768,40 @@
   "disconnectGoogle": "Disconnetti Google",
   "restoreConfirmTitle": "Ripristinare dal backup?",
   "restoreConfirmDescription": "Questo unirà il backup cloud con i tuoi dati locali. I conflitti saranno risolti usando le modifiche più recenti.",
-  "restore": "Ripristina"
+  "restore": "Ripristina",
+  "backupHistory": "Cronologia backup",
+  "noBackupsFound": "Nessun backup trovato",
+  "backupDateToday": "Oggi alle {time}",
+  "@backupDateToday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateYesterday": "Ieri alle {time}",
+  "@backupDateYesterday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateOther": "{day} {month} alle {time}",
+  "@backupDateOther": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "time": {}
+    }
+  },
+  "monthJan": "Gen",
+  "monthFeb": "Feb",
+  "monthMar": "Mar",
+  "monthApr": "Apr",
+  "monthMay": "Mag",
+  "monthJun": "Giu",
+  "monthJul": "Lug",
+  "monthAug": "Ago",
+  "monthSep": "Set",
+  "monthOct": "Ott",
+  "monthNov": "Nov",
+  "monthDec": "Dic",
+  "migrationFailed": "Migrazione fallita. Controlla la tua passphrase."
 }

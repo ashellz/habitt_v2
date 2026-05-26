@@ -3260,6 +3260,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore'**
   String get restore;
+
+  /// No description provided for @backupHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup history'**
+  String get backupHistory;
+
+  /// No description provided for @noBackupsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No backups found'**
+  String get noBackupsFound;
+
+  /// No description provided for @backupDateToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today at {time}'**
+  String backupDateToday(Object time);
+
+  /// No description provided for @backupDateYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday at {time}'**
+  String backupDateYesterday(Object time);
+
+  /// No description provided for @backupDateOther.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} {day} at {time}'**
+  String backupDateOther(Object month, Object day, Object time);
+
+  /// No description provided for @monthJan.
+  ///
+  /// In en, this message translates to:
+  /// **'Jan'**
+  String get monthJan;
+
+  /// No description provided for @monthFeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Feb'**
+  String get monthFeb;
+
+  /// No description provided for @monthMar.
+  ///
+  /// In en, this message translates to:
+  /// **'Mar'**
+  String get monthMar;
+
+  /// No description provided for @monthApr.
+  ///
+  /// In en, this message translates to:
+  /// **'Apr'**
+  String get monthApr;
+
+  /// No description provided for @monthMay.
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get monthMay;
+
+  /// No description provided for @monthJun.
+  ///
+  /// In en, this message translates to:
+  /// **'Jun'**
+  String get monthJun;
+
+  /// No description provided for @monthJul.
+  ///
+  /// In en, this message translates to:
+  /// **'Jul'**
+  String get monthJul;
+
+  /// No description provided for @monthAug.
+  ///
+  /// In en, this message translates to:
+  /// **'Aug'**
+  String get monthAug;
+
+  /// No description provided for @monthSep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sep'**
+  String get monthSep;
+
+  /// No description provided for @monthOct.
+  ///
+  /// In en, this message translates to:
+  /// **'Oct'**
+  String get monthOct;
+
+  /// No description provided for @monthNov.
+  ///
+  /// In en, this message translates to:
+  /// **'Nov'**
+  String get monthNov;
+
+  /// No description provided for @monthDec.
+  ///
+  /// In en, this message translates to:
+  /// **'Dec'**
+  String get monthDec;
+
+  /// No description provided for @migrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Migration failed. Check your passphrase.'**
+  String get migrationFailed;
 }
 
 class _AppLocalizationsDelegate

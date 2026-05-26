@@ -768,5 +768,40 @@
   "disconnectGoogle": "Desconectar Google",
   "restoreConfirmTitle": "¿Restaurar desde copia?",
   "restoreConfirmDescription": "Esto combinará la copia en la nube con tus datos locales. Los conflictos se resolverán con los cambios más recientes.",
-  "restore": "Restaurar"
+  "restore": "Restaurar",
+  "backupHistory": "Historial de copias",
+  "noBackupsFound": "No se encontraron copias",
+  "backupDateToday": "Hoy a las {time}",
+  "@backupDateToday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateYesterday": "Ayer a las {time}",
+  "@backupDateYesterday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateOther": "{day} de {month} a las {time}",
+  "@backupDateOther": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "time": {}
+    }
+  },
+  "monthJan": "Ene",
+  "monthFeb": "Feb",
+  "monthMar": "Mar",
+  "monthApr": "Abr",
+  "monthMay": "May",
+  "monthJun": "Jun",
+  "monthJul": "Jul",
+  "monthAug": "Ago",
+  "monthSep": "Sep",
+  "monthOct": "Oct",
+  "monthNov": "Nov",
+  "monthDec": "Dic",
+  "migrationFailed": "Migración fallida. Comprueba tu contraseña."
 }

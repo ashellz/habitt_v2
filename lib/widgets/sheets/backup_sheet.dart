@@ -3,11 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
-import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
+import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 class BackupSheet extends StatefulWidget {
   const BackupSheet({super.key});
@@ -45,24 +45,15 @@ class _BackupSheetState extends State<BackupSheet> {
     final minute = lastSync.minute.toString().padLeft(2, '0');
     final time = '$hour:$minute';
 
-    if (syncDay == today) return 'Today at $time';
-    if (syncDay == yesterday) return 'Yesterday at $time';
+    if (syncDay == today) return loc.backupDateToday(time);
+    if (syncDay == yesterday) return loc.backupDateYesterday(time);
 
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+    final months = [
+      loc.monthJan, loc.monthFeb, loc.monthMar, loc.monthApr,
+      loc.monthMay, loc.monthJun, loc.monthJul, loc.monthAug,
+      loc.monthSep, loc.monthOct, loc.monthNov, loc.monthDec,
     ];
-    return '${months[lastSync.month - 1]} ${lastSync.day} at $time';
+    return loc.backupDateOther(months[lastSync.month - 1], '${lastSync.day}', time);
   }
 
   Future<void> _handleMigrate(BackupProvider bp) async {
@@ -77,7 +68,7 @@ class _BackupSheetState extends State<BackupSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              bp.lastError ?? 'Migration failed. Check your passphrase.',
+              bp.lastError ?? AppLocalizations.of(context)!.migrationFailed,
             ),
           ),
         );
@@ -87,26 +78,14 @@ class _BackupSheetState extends State<BackupSheet> {
     }
   }
 
-  Future<void> _confirmRestore(
-    BuildContext context,
-    BackupProvider bp,
-    AppLocalizations loc,
-  ) async {
-    final confirmed = await showDialogSheet<bool>(
+  void _openBackupHistory(BuildContext context, ColorProvider cp) {
+    showModalBottomSheet(
       context: context,
-      builder:
-          (ctx) => NewDefaultDialog(
-            title: loc.restoreConfirmTitle,
-            desc: loc.restoreConfirmDescription,
-            primaryButtonLabel: loc.restore,
-            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
-            secondaryButtonLabel: loc.cancel,
-            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
-          ),
+      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder: (context) => const BackupHistorySheet(),
     );
-    if (confirmed == true && context.mounted) {
-      await bp.restoreFromCloud();
-    }
   }
 
   @override
@@ -360,8 +339,9 @@ class _BackupSheetState extends State<BackupSheet> {
           ),
           const SizedBox(height: 10),
           NewDefaultButton.secondary(
-            onPressed:
-                isSyncing ? () {} : () => _confirmRestore(context, bp, loc),
+            onPressed: isSyncing
+                ? () {}
+                : () => _openBackupHistory(context, cp),
             label: loc.restoreFromBackup,
           ),
           const SizedBox(height: 24),

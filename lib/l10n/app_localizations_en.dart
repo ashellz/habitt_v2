@@ -1990,4 +1990,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restore => 'Restore';
+
+  @override
+  String get backupHistory => 'Backup history';
+
+  @override
+  String get noBackupsFound => 'No backups found';
+
+  @override
+  String backupDateToday(Object time) {
+    return 'Today at $time';
+  }
+
+  @override
+  String backupDateYesterday(Object time) {
+    return 'Yesterday at $time';
+  }
+
+  @override
+  String backupDateOther(Object month, Object day, Object time) {
+    return '$month $day at $time';
+  }
+
+  @override
+  String get monthJan => 'Jan';
+
+  @override
+  String get monthFeb => 'Feb';
+
+  @override
+  String get monthMar => 'Mar';
+
+  @override
+  String get monthApr => 'Apr';
+
+  @override
+  String get monthMay => 'May';
+
+  @override
+  String get monthJun => 'Jun';
+
+  @override
+  String get monthJul => 'Jul';
+
+  @override
+  String get monthAug => 'Aug';
+
+  @override
+  String get monthSep => 'Sep';
+
+  @override
+  String get monthOct => 'Oct';
+
+  @override
+  String get monthNov => 'Nov';
+
+  @override
+  String get monthDec => 'Dec';
+
+  @override
+  String get migrationFailed => 'Migration failed. Check your passphrase.';
 }

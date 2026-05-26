@@ -764,5 +764,40 @@
   "disconnectGoogle": "Disconnect Google",
   "restoreConfirmTitle": "Restore from backup?",
   "restoreConfirmDescription": "This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.",
-  "restore": "Restore"
+  "restore": "Restore",
+  "backupHistory": "Backup history",
+  "noBackupsFound": "No backups found",
+  "backupDateToday": "Today at {time}",
+  "@backupDateToday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateYesterday": "Yesterday at {time}",
+  "@backupDateYesterday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateOther": "{month} {day} at {time}",
+  "@backupDateOther": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "time": {}
+    }
+  },
+  "monthJan": "Jan",
+  "monthFeb": "Feb",
+  "monthMar": "Mar",
+  "monthApr": "Apr",
+  "monthMay": "May",
+  "monthJun": "Jun",
+  "monthJul": "Jul",
+  "monthAug": "Aug",
+  "monthSep": "Sep",
+  "monthOct": "Oct",
+  "monthNov": "Nov",
+  "monthDec": "Dec",
+  "migrationFailed": "Migration failed. Check your passphrase."
 }

@@ -767,5 +767,40 @@
   "disconnectGoogle": "Prekini vezu s Googleom",
   "restoreConfirmTitle": "Vratiti backup?",
   "restoreConfirmDescription": "Ovo će spojiti cloud backup s tvojim lokalnim podacima. Konflikti će biti riješeni koristeći najnovije izmjene.",
-  "restore": "Vrati" 
+  "restore": "Vrati",
+  "backupHistory": "Prethodni backupi",
+  "noBackupsFound": "Nije pronađen nijedan backup",
+  "backupDateToday": "Danas u {time}",
+  "@backupDateToday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateYesterday": "Juče u {time}",
+  "@backupDateYesterday": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "backupDateOther": "{month} {day} u {time}",
+  "@backupDateOther": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "time": {}
+    }
+  },
+  "monthJan": "Jan",
+  "monthFeb": "Feb",
+  "monthMar": "Mar",
+  "monthApr": "Apr",
+  "monthMay": "Maj",
+  "monthJun": "Jun",
+  "monthJul": "Jul",
+  "monthAug": "Aug",
+  "monthSep": "Sep",
+  "monthOct": "Okt",
+  "monthNov": "Nov",
+  "monthDec": "Dec",
+  "migrationFailed": "Migracija nije uspjela. Provjeri svoju lozinku."
 }

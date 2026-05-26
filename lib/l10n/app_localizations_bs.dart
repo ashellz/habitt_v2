@@ -1993,4 +1993,65 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get restore => 'Vrati';
+
+  @override
+  String get backupHistory => 'Prethodni backupi';
+
+  @override
+  String get noBackupsFound => 'Nije pronađen nijedan backup';
+
+  @override
+  String backupDateToday(Object time) {
+    return 'Danas u $time';
+  }
+
+  @override
+  String backupDateYesterday(Object time) {
+    return 'Juče u $time';
+  }
+
+  @override
+  String backupDateOther(Object month, Object day, Object time) {
+    return '$month $day u $time';
+  }
+
+  @override
+  String get monthJan => 'Jan';
+
+  @override
+  String get monthFeb => 'Feb';
+
+  @override
+  String get monthMar => 'Mar';
+
+  @override
+  String get monthApr => 'Apr';
+
+  @override
+  String get monthMay => 'Maj';
+
+  @override
+  String get monthJun => 'Jun';
+
+  @override
+  String get monthJul => 'Jul';
+
+  @override
+  String get monthAug => 'Aug';
+
+  @override
+  String get monthSep => 'Sep';
+
+  @override
+  String get monthOct => 'Okt';
+
+  @override
+  String get monthNov => 'Nov';
+
+  @override
+  String get monthDec => 'Dec';
+
+  @override
+  String get migrationFailed =>
+      'Migracija nije uspjela. Provjeri svoju lozinku.';
 }
