@@ -128,7 +128,6 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                       if (Navigator.canPop(context)) {
                         Navigator.pop(context);
                       }
-                      ;
                     },
                   ),
                   SizedBox(height: 4),

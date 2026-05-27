@@ -494,10 +494,6 @@ class HabitProvider extends ChangeNotifier {
     final baseDate = _normalizeDate(anchorDate ?? DateTime.now());
     final startOfWeek = baseDate.subtract(Duration(days: baseDate.weekday - 1));
 
-    debugPrint(
-      "Calculating week progress. Start of week: $startOfWeek, Anchor: $baseDate",
-    );
-
     List<Day> thisWeekDays = [];
 
     for (int i = 0; i < 7; i++) {
@@ -508,13 +504,7 @@ class HabitProvider extends ChangeNotifier {
           timestamp: DateTime.now().toUtc(),
         ),
       );
-
-      debugPrint(
-        "Day: ${thisWeekDays[i].date}, Habits: ${thisWeekDays[i].habits.length}",
-      );
     }
-
-    debugPrint("This week days: $thisWeekDays");
 
     // Calculating progress for each day 0 - 1
 
@@ -548,7 +538,6 @@ class HabitProvider extends ChangeNotifier {
       daysProgress[day.date] = (completedWeight / totalHabits).clamp(0.0, 1.0);
     }
 
-    debugPrint("Returning Days progress: $daysProgress");
     return daysProgress;
   }
 

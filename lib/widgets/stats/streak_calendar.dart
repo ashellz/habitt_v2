@@ -13,11 +13,13 @@ class StreakCalendar extends StatefulWidget {
     required this.allStats,
     required this.perfectDayCompletion,
     this.today,
+    this.isActive = true,
   });
 
   final Map<DateTime, double> allStats;
   final Map<DateTime, bool> perfectDayCompletion;
   final DateTime? today;
+  final bool isActive;
 
   @override
   State<StreakCalendar> createState() => _StreakCalendarState();
@@ -43,20 +45,23 @@ class _StreakCalendarState extends State<StreakCalendar> {
     super.initState();
     final now = widget.today ?? DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _computeAndScheduleStreakCache(),
-    );
+    if (widget.isActive) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _computeAndScheduleStreakCache(),
+      );
+    }
   }
 
   @override
   void didUpdateWidget(covariant StreakCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!identical(oldWidget.allStats, widget.allStats) ||
-        !identical(
-          oldWidget.perfectDayCompletion,
-          widget.perfectDayCompletion,
-        )) {
-      _invalidateStreakCaches();
+    final dataChanged =
+        !identical(oldWidget.allStats, widget.allStats) ||
+        !identical(oldWidget.perfectDayCompletion, widget.perfectDayCompletion);
+    final becameActive = !oldWidget.isActive && widget.isActive;
+
+    if (becameActive || (widget.isActive && dataChanged)) {
+      if (dataChanged) _invalidateStreakCaches();
       _computeAndScheduleStreakCache();
     }
   }
@@ -220,14 +225,11 @@ class _StreakCalendarState extends State<StreakCalendar> {
     required DateTime today,
   }) async {
     final month = _monthStart(focusedDay);
-    debugPrint('_loadMonthMetadata: focusedDay=$focusedDay, month=$month');
     final key = _monthKey(month);
 
     final cached = _monthMetadataCache[key];
     if (cached != null) {
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
       setState(() {
         _activeMonthKey = key;
         _isMonthMetadataReady = true;
@@ -345,11 +347,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
       required bool isToday,
       bool forceDisabled = false,
     }) {
-      if (streakVisualMetadata[_normalize(day)] == null) {
-        debugPrint(
-          'No streak metadata for day ${_normalize(day)} in focusedDay=$focusedDay, defaulting to no connectors.',
-        );
-      }
       final metadata =
           streakVisualMetadata[_normalize(day)] ?? const _StreakVisualDayData();
       return _dayCell(
@@ -707,7 +704,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
     }
 
     for (final run in runs) {
-      debugPrint('Evaluating run: ${run.days}');
       for (int i = 0; i < run.days.length - 1; i++) {
         final leftDay = run.days[i];
         final rightDay = run.days[i + 1];
@@ -738,14 +734,12 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
     _ToleratedMissRun? ongoingRun;
     for (final run in runs) {
-      debugPrint('Evaluating run: ${run.days} for ongoing streak start');
       if (run.includesToday) {
         ongoingRun = run;
       }
     }
 
     final ongoingStart = ongoingRun?.firstCompletedDay;
-    debugPrint('Ongoing run: $ongoingRun, start: $ongoingStart');
     if (ongoingStart != null && visibleSet.contains(ongoingStart)) {
       metadata[ongoingStart] = (metadata[ongoingStart] ??
               const _StreakVisualDayData())
@@ -765,7 +759,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
     final daysAfter = (DateTime.sunday - monthEnd.weekday) % 7;
     final end = monthEnd.add(Duration(days: daysAfter));
 
-    debugPrint('_visibleMonthGridDays for $focusedDay: start=$start, end=$end');
     final dayCount = end.difference(start).inDays + 1;
     return List<DateTime>.generate(
       dayCount,

@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final pages = [
       MainPage(isActive: _currentPageIndex == 0, lifecycleTick: _lifecycleTick),
       const HabitsPage(),
-      const CalendarPage(),
+      CalendarPage(isActive: _currentPageIndex == 2),
       const ProfilePage(),
     ];
 

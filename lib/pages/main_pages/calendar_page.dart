@@ -14,7 +14,9 @@ import 'package:habitt/widgets/stats/streak_calendar.dart';
 import 'package:provider/provider.dart';
 
 class CalendarPage extends StatelessWidget {
-  const CalendarPage({super.key});
+  const CalendarPage({super.key, this.isActive = true});
+
+  final bool isActive;
 
   static Widget demo() => const _DemoCalendarBody();
 
@@ -52,6 +54,7 @@ class CalendarPage extends StatelessWidget {
               longestStreak: longestStreak,
               allStats: allStats,
               perfectDayCompletion: perfectDayCompletion,
+              isActive: isActive,
             ),
             SizedBox(height: 32),
             CompletionRatio(
@@ -239,6 +242,7 @@ class StreakCalendarSection extends StatelessWidget {
     required this.allStats,
     required this.perfectDayCompletion,
     this.today,
+    this.isActive = true,
   });
 
   final int streak;
@@ -246,6 +250,7 @@ class StreakCalendarSection extends StatelessWidget {
   final Map<DateTime, double> allStats;
   final Map<DateTime, bool> perfectDayCompletion;
   final DateTime? today;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -285,6 +290,7 @@ class StreakCalendarSection extends StatelessWidget {
           allStats: allStats,
           perfectDayCompletion: perfectDayCompletion,
           today: today,
+          isActive: isActive,
         ),
       ],
     );
