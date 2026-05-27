@@ -941,7 +941,7 @@ abstract class AppLocalizations {
   /// No description provided for @insightStrengthStartSmallType1BrushTeeth.
   ///
   /// In en, this message translates to:
-  /// **'Your brush your teeth habit is slipping. Do not let this routine fall off now.||You have been off track with brush your teeth. Show up today and protect the habit.||Momentum on brush your teeth is fading. Keep it alive with one solid rep today.||Do not let brush your teeth become inconsistent. Lock in and do your part today.||You started to brush your teeth for a reason. Stay disciplined and keep it from slipping.'**
+  /// **'Your brush your teeth habit is slipping. Do not let this routine fall off now.||You have been off track with brushing your teeth. Bruhs teeth today and protect the habit.||Momentum on brush your teeth is fading. Keep it alive by brushing teeth today.||Do not let brushing your teeth become inconsistent. Lock in and brush them today.||You wanted to start brushing your teeth for a reason. Stay disciplined and keep it from slipping.'**
   String get insightStrengthStartSmallType1BrushTeeth;
 
   /// No description provided for @insightStrengthStartSmallType1DrinkWater.

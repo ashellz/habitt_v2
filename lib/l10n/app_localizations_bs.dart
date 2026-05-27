@@ -531,11 +531,11 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get insightStrengthStartSmallType1BrushTeeth =>
-      'Tvoja navika pranja zuba slabi. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od pranja zuba. Prikaži se danas i zaštiti tu naviku.||Momentum u pranju zuba slabi. Oživi ga jednim dobrim ponavljanjem danas.||Nemoj dopustiti da pranje zuba postane nedosljedno. Fokusiraj se i odradi svoj dio danas.||Počeo si prati zube iz nekog razloga. Ostan discipliniran i spriječi da navika otpadne.';
+      'Tvoja navika pranja zuba slabi. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od pranja zuba. Operi zube se danas i zaštiti tu naviku.||Momentum u pranju zuba slabi. Oživi ga jednim pranjem zuba danas.||Nemoj dopustiti da pranje zuba postane neredovno. Fokusiraj se i operi ih danas.||Počeo si prati zube s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1DrinkWater =>
-      'Tvoja navika pijenja dovoljno vode slabi. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od pijenja dovoljno vode. Pojavi se danas i zaštiti tu naviku.||Momentum u pijenju dovoljno vode slabi. Oživi ga jednim čvrstim ponavljanjem danas.||Nemoj dopustiti da pijenje dovoljno vode postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si piti dovoljno vode iz nekog razloga. Ostan discipliniran i ne dopusti da navika otklizi.';
+      'Tvoja navika pijenja dovoljno vode slabi. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od pijenja dovoljno vode. Pojavi se danas i zaštiti tu naviku.||Momentum u pijenju dovoljno vode slabi. Povedi računa o hidraciji danas.||Nemoj dopustiti da pijenje dovoljno vode postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si piti dovoljno vode iz nekog razloga. Ostan discipliniran i ne dopusti da navika otklizi.';
 
   @override
   String get insightStrengthStartSmallType1Generic =>
@@ -1401,7 +1401,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get orToChangeLabel => 'ili etiketa iznosa';
 
   @override
-  String get passphrase => 'Lošina';
+  String get passphrase => 'Šifra';
 
   @override
   String get perfectDaysStreak => 'Niz savršenih dana';
