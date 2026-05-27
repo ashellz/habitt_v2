@@ -933,23 +933,22 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageDrinkWater1 =>
-      'hidracija sada podržava cijeli tvoj sistem';
+      'olakšaj sebi i svom tijelu, popij čašu vode';
 
   @override
-  String get notificationEncourageDrinkWater2 =>
-      'jedna čaša sada stabilizira tvoju energiju';
+  String get notificationEncourageDrinkWater2 => 'malo vode sada ne bi škodilo';
 
   @override
   String get notificationEncourageDrinkWater3 =>
-      'mali koraci hidratacije poboljšavaju svakodnevnu izvedbu';
+      'popij malo vode bar je to lahko';
 
   @override
   String get notificationEncourageGeneric1 =>
-      'dolaskom danas navika ostaje živa';
+      'pokaži da tvoja navika ostaje živa';
 
   @override
   String get notificationEncourageGeneric2 =>
-      'mala akcija sada štiti tvoj zamah';
+      'mali pokret sada štiti tvoj cilj';
 
   @override
   String get notificationEncourageGeneric3 =>
@@ -961,11 +960,11 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageGoToBedEarly10 =>
-      'ova večerašnja odluka pomaže da cijela sedmica protekne lakše';
+      'ova večerašnja odluka pomaže da sutra protekne lakše';
 
   @override
   String get notificationEncourageGoToBedEarly2 =>
-      'raniji odlazak u krevet daje tvom umu čišći početak';
+      'raniji odlazak u krevet daje sutra čišći početak';
 
   @override
   String get notificationEncourageGoToBedEarly3 =>
@@ -977,7 +976,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageGoToBedEarly5 =>
-      'rutina za mirnu noć štiti tvoju energetsku krivu';
+      'rutina za mirnu noć štiti tvoju energetsku stabilnost';
 
   @override
   String get notificationEncourageGoToBedEarly6 =>
@@ -985,7 +984,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageGoToBedEarly7 =>
-      'bolje vrijeme spavanja je tiha prednost u performansama';
+      'bolje vrijeme spavanja je ključno za bolji razvoj';
 
   @override
   String get notificationEncourageGoToBedEarly8 =>
@@ -996,16 +995,14 @@ class AppLocalizationsBs extends AppLocalizations {
       'mala disciplina pred spavanje stvara jača jutra';
 
   @override
-  String get notificationEncourageGym1 =>
-      'jedan trening danas održava tvoj standard visokim';
+  String get notificationEncourageGym1 => 'jedan trening danas za bolje sutra';
 
   @override
-  String get notificationEncourageGym2 =>
-      'sadašnje pojavljivanje štiti zamah tvoje snage';
+  String get notificationEncourageGym2 => 'ne zaboravi zbog čega si počeo';
 
   @override
   String get notificationEncourageGym3 =>
-      'današnja sesija se s vremenom kumulira';
+      'ustaj, rezultati se ne ostvaruju sami';
 
   @override
   String get notificationEncourageMedications1 =>
