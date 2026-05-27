@@ -16,11 +16,13 @@ class HabitPrimaryActionButton extends StatefulWidget {
     required this.habit,
     this.isDemo = false,
     this.onDemoTap,
+    this.dayOverride,
   });
 
   final Habit habit;
   final bool isDemo;
   final VoidCallback? onDemoTap;
+  final DateTime? dayOverride;
 
   @override
   State<HabitPrimaryActionButton> createState() =>
@@ -75,14 +77,14 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
 
     final habitProvider = context.read<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
-    final dayOverride = DateTime.now();
+    final effectiveDay = widget.dayOverride ?? DateTime.now();
 
     if (!widget.habit.hasTrackingType) {
       habitProvider.completeHabit(
         widget.habit.id,
         context,
         stateProvider,
-        dayOverride: dayOverride,
+        dayOverride: effectiveDay,
       );
       return;
     }
@@ -96,7 +98,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
                   ? ProgressType.amount
                   : ProgressType.duration,
           habit: widget.habit,
-          dayOverride: dayOverride,
+          dayOverride: effectiveDay,
         );
       },
     );
@@ -118,7 +120,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
                   widget.habit.id,
                   context,
                   stateProvider,
-                  dayOverride: DateTime.now(),
+                  dayOverride: widget.dayOverride ?? DateTime.now(),
                 );
               },
       child: NewDefaultButton(

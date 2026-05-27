@@ -428,42 +428,20 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
-  Future<void> _showNotificationSettingsDialog() async {
-    if (!mounted) {
-      return;
-    }
-    final loc = AppLocalizations.of(context)!;
-    await showDialogSheet(
-      context: context,
-      builder:
-          (dialogContext) => NewDefaultDialog(
-            title: loc.notificationsAreDisabled,
-            desc:
-                loc.toUseHabitRemindersEnableNotificationsInYourDeviceSettings,
-            primaryButtonLabel: "Settings",
-            secondaryButtonLabel: loc.notNow,
-            onPrimaryButtonPressed: () async {
-              Navigator.of(dialogContext).pop();
-              await AwesomeNotifications().showNotificationConfigPage();
-            },
-          ),
-    );
-  }
-
-  Future<void> _ensureNotificationPermissionForSave(StateProvider sp) async {
-    if (!sp.habitNotificationsEnabled) {
-      return;
-    }
-
+// Fire-and-forget after save: request permission and disable habit notifications
+  // on the already-saved habit if the user ultimately denies.
+  Future<void> _requestNotificationPermissionOrDisable(
+    HabitProvider habitProvider,
+    Habit habit,
+  ) async {
     final allowed = await NotificationService.areNotificationsAllowed();
-    if (allowed) {
-      return;
-    }
+    if (allowed) return;
 
     final lockedBeforeRequest =
         await AwesomeNotifications().shouldShowRationaleToRequest();
     if (lockedBeforeRequest.isNotEmpty) {
-      await _showNotificationSettingsDialog();
+      habit.notificationsEnabled = false;
+      habitProvider.updateHabit(habit);
       return;
     }
 
@@ -471,20 +449,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
     final allowedAfterRequest =
         await NotificationService.areNotificationsAllowed();
-    if (allowedAfterRequest) {
-      return;
-    }
+    if (allowedAfterRequest) return;
 
-    final lockedAfterRequest =
-        await AwesomeNotifications().shouldShowRationaleToRequest();
-    if (lockedAfterRequest.isNotEmpty) {
-      await _showNotificationSettingsDialog();
-    }
+    habit.notificationsEnabled = false;
+    habitProvider.updateHabit(habit);
   }
 
   Future<void> _saveHabit(StateProvider sp) async {
-    await _ensureNotificationPermissionForSave(sp);
-
     if (!mounted) {
       debugPrint("Not mounted, aborting save");
       return;
@@ -535,54 +506,60 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       if (mounted) {
         _popSheet(result: HabitSheetCloseResult.saved);
       }
+      if (habit.notificationsEnabled) {
+        _requestNotificationPermissionOrDisable(habitProvider, habit);
+      }
       return;
     }
 
     final loc = AppLocalizations.of(context)!;
 
-    habitProvider.addHabit(
-      Habit(
-        id: getUniqueId(),
-        name: sp.nameController.text,
-        description: sp.descController.text,
-        iconPath: sp.iconPath,
-        categoryId: sp.habitCategoryId,
-        tag: loc.noTag,
-        completed: false,
-        skipped: false,
-        amount: sp.habitAmount,
-        amountLabel: sp.habitAmountLabelController.text,
-        amountCompleted: 0,
-        duration: sp.habitDuration.inMinutes,
-        trackingType: sp.selectedHabitTrackingType,
-        durationCompleted: 0,
-        streak: 0,
-        longestStreak: 0,
-        optional: sp.isOptional,
-        timeIntervalEnabled: sp.timeIntervalEnabled,
-        timeIntervalStart: sp.timeIntervalStart,
-        timeIntervalEnd: sp.timeIntervalEnd,
-        scheduleType: sp.selectedScheduleOption,
-        weeklyTarget: sp.weeklyTarget,
-        monthlyTarget: sp.monthlyTarget,
-        customIntervalDays: sp.customIntervalDays,
-        selectedDaysAWeek: sp.selectedDaysAWeek.toList()..sort(),
-        selectedDaysAMonth: sp.selectedDaysAMonth.toList()..sort(),
-        customAppearance: buildCustomAppearance(sp.customIntervalDays),
-        timesCompletedThisWeek: 0,
-        timesCompletedThisMonth: 0,
-        createdAt: DateTime.now().toUtc(),
-        lastCustomUpdate: DateTime.now().toUtc(),
-        colorName: sp.habitColorName,
-        notificationsEnabled: sp.habitNotificationsEnabled,
-        notificationTimes:
-            sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
-        premadeHabitType: sp.selectedPremadeHabitType,
-      ),
+    final newHabit = Habit(
+      id: getUniqueId(),
+      name: sp.nameController.text,
+      description: sp.descController.text,
+      iconPath: sp.iconPath,
+      categoryId: sp.habitCategoryId,
+      tag: loc.noTag,
+      completed: false,
+      skipped: false,
+      amount: sp.habitAmount,
+      amountLabel: sp.habitAmountLabelController.text,
+      amountCompleted: 0,
+      duration: sp.habitDuration.inMinutes,
+      trackingType: sp.selectedHabitTrackingType,
+      durationCompleted: 0,
+      streak: 0,
+      longestStreak: 0,
+      optional: sp.isOptional,
+      timeIntervalEnabled: sp.timeIntervalEnabled,
+      timeIntervalStart: sp.timeIntervalStart,
+      timeIntervalEnd: sp.timeIntervalEnd,
+      scheduleType: sp.selectedScheduleOption,
+      weeklyTarget: sp.weeklyTarget,
+      monthlyTarget: sp.monthlyTarget,
+      customIntervalDays: sp.customIntervalDays,
+      selectedDaysAWeek: sp.selectedDaysAWeek.toList()..sort(),
+      selectedDaysAMonth: sp.selectedDaysAMonth.toList()..sort(),
+      customAppearance: buildCustomAppearance(sp.customIntervalDays),
+      timesCompletedThisWeek: 0,
+      timesCompletedThisMonth: 0,
+      createdAt: DateTime.now().toUtc(),
+      lastCustomUpdate: DateTime.now().toUtc(),
+      colorName: sp.habitColorName,
+      notificationsEnabled: sp.habitNotificationsEnabled,
+      notificationTimes:
+          sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
+      premadeHabitType: sp.selectedPremadeHabitType,
     );
+
+    habitProvider.addHabit(newHabit);
 
     if (mounted) {
       _popSheet(result: HabitSheetCloseResult.saved);
+    }
+    if (newHabit.notificationsEnabled) {
+      _requestNotificationPermissionOrDisable(habitProvider, newHabit);
     }
   }
 

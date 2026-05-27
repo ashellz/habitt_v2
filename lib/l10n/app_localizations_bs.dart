@@ -2187,19 +2187,19 @@ class AppLocalizationsBs extends AppLocalizations {
   String get premadeSectionProductivityGrowth => 'Produktivnost & Rast';
 
   @override
-  String get premadeHabitGoToBedEarly => 'Idi spavati rano';
+  String get premadeHabitGoToBedEarly => 'Leći ranije';
 
   @override
-  String get premadeHabitBrushTeeth => 'Peri zube';
+  String get premadeHabitBrushTeeth => 'Pranje zuba';
 
   @override
   String get premadeHabitSkinCare => 'Njega kože';
 
   @override
-  String get premadeHabitWakeUpEarly => 'Ustani rano';
+  String get premadeHabitWakeUpEarly => 'Rano ustajanje';
 
   @override
-  String get premadeHabitShower => 'Tuš';
+  String get premadeHabitShower => 'Kupanje';
 
   @override
   String get premadeHabitRunning => 'Trčanje';
@@ -2217,7 +2217,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get premadeHabitMedications => 'Lijekovi';
 
   @override
-  String get premadeHabitDrinkWater => 'Pij vodu';
+  String get premadeHabitDrinkWater => 'Pijenje vode';
 
   @override
   String get premadeHabitStudying => 'Učenje';

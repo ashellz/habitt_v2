@@ -125,6 +125,24 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     return null;
   }
 
+  bool _isToday(DateTime date) {
+    final today = DateTime.now();
+    return date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day;
+  }
+
+  // Returns the habit snapshot for the given date (completion state, progress).
+  // Falls back to the live habit if the date is today or the snapshot is missing.
+  Habit? _findHabitForDate(HabitProvider provider, DateTime date) {
+    if (_isToday(date)) return _findHabit(provider);
+    final dayHabits = provider.getHabitsFromDay(date);
+    for (final h in dayHabits) {
+      if (h.id == widget.habitId) return h;
+    }
+    return _findHabit(provider);
+  }
+
   void _syncNotesFromHabit(Habit habit) {
     if (_notesFocusNode.hasFocus) {
       return;
@@ -178,6 +196,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
 
     _syncNotesFromHabit(habit);
 
+    final selectedDate = habitProvider.selectedDate;
+    final effectiveDate = selectedDate ?? DateTime.now();
+    final displayHabit =
+        _findHabitForDate(habitProvider, effectiveDate) ?? habit;
+
     final stats = context.watch<HabitStatsProvider>().statsForHabit(
       habit,
       locale: Localizations.localeOf(context),
@@ -206,7 +229,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                     child: Column(
                       children: [
                         const SizedBox(height: 14),
-                        _summaryCard(cp, habit, stats),
+                        _summaryCard(cp, habit, displayHabit, effectiveDate, stats),
                         const SizedBox(height: 18),
                         _notesSection(cp),
                         const SizedBox(height: 24),
@@ -301,7 +324,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     );
   }
 
-  Widget _summaryCard(ColorProvider cp, Habit habit, HabitStatsData stats) {
+  Widget _summaryCard(
+    ColorProvider cp,
+    Habit habit,
+    Habit displayHabit,
+    DateTime effectiveDate,
+    HabitStatsData stats,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: ShapeDecoration(
@@ -323,7 +352,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                     NewHabitIcon(
                       forceColor: cp.border,
                       iconPath: habit.iconPath,
-                      isCompleted: habit.completed,
+                      isCompleted: displayHabit.completed,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,14 +366,17 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                           ),
                         ),
                         const SizedBox(height: 6),
-                        _summaryMeta(cp, habit),
+                        _summaryMeta(cp, displayHabit),
                       ],
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 16),
-                HabitPrimaryActionButton(habit: habit),
+                HabitPrimaryActionButton(
+                  habit: displayHabit,
+                  dayOverride: effectiveDate,
+                ),
               ],
             ),
           ),

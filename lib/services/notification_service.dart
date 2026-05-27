@@ -137,7 +137,7 @@ class NotificationService {
       return;
     }
 
-    await cancelHabitNotifications(habit.id);
+    await cancelHabitNotifications(habit, horizonDays: horizonDays);
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
     await _scheduleHabitNotifications(
@@ -255,27 +255,22 @@ class NotificationService {
     }
   }
 
-  static Future<void> cancelHabitNotifications(int habitId) async {
-    final scheduled = await AwesomeNotifications().listScheduledNotifications();
-    for (final model in scheduled) {
-      final content = model.content;
-      if (content == null) {
-        continue;
+  // Cancels notifications for a specific habit using deterministic ID computation,
+  // avoiding the expensive listScheduledNotifications() platform call.
+  // Note: notifications for removed slots are cleaned up by scheduleAllHabitNotifications on app init.
+  static Future<void> cancelHabitNotifications(
+    Habit habit, {
+    int horizonDays = 7,
+  }) async {
+    if (habit.notificationTimes.isEmpty) return;
+    final now = DateTime.now();
+    final startDay = DateTime(now.year, now.month, now.day);
+    for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
+      final day = startDay.add(Duration(days: dayOffset));
+      for (final slot in habit.notificationTimes) {
+        final id = _getHabitNotificationId(habit.id, slot.id, day);
+        await AwesomeNotifications().cancel(id);
       }
-
-      final payload = content.payload;
-      final isHabitNotification =
-          payload?[_habitPayloadTypeKey] == _habitPayloadTypeValue;
-      final belongsToHabit = payload?[_habitPayloadKey] == habitId.toString();
-      if (!isHabitNotification || !belongsToHabit) {
-        continue;
-      }
-
-      final id = content.id;
-      if (id == null) {
-        continue;
-      }
-      await AwesomeNotifications().cancel(id);
     }
   }
 

@@ -107,7 +107,6 @@ class StatsProvider extends ChangeNotifier {
       daysProgress[day.date] = getDayProgress(day.date, day.habits);
     }
 
-    debugPrint("Returning Days progress: $daysProgress");
     return daysProgress;
   }
 
