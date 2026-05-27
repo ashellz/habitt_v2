@@ -105,7 +105,9 @@ class EditHabitButton extends StatelessWidget {
 
               habitProvider.updateHabit(widget.habit);
 
-              Navigator.of(context).pop();
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
 
               final loc = AppLocalizations.of(context)!;
 

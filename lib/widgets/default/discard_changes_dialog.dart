@@ -18,7 +18,11 @@ class DiscardChangesDialog extends StatelessWidget {
             child: DefaultButton(
               label: "Cancel",
               outlined: true,
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              },
             ),
           ),
           SizedBox(width: 16),
@@ -26,8 +30,14 @@ class DiscardChangesDialog extends StatelessWidget {
             child: DefaultButton(
               label: loc.discard,
               onPressed: () {
-                Navigator.pop(context); // close dialog
-                Navigator.pop(context); // go back
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                // close dialog
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                // go back
               },
             ),
           ),

@@ -23,7 +23,9 @@ class _LeaveFeedbackSheetState extends State<LeaveFeedbackSheet> {
     setState(() {
       _allowPop = true;
     });
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   @override

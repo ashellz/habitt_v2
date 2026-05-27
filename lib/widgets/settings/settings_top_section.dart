@@ -30,7 +30,10 @@ class SettingsTopSection extends StatelessWidget {
           cnIcon: CNSymbol("xmark", size: 14),
 
           onPressed: () {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            ;
           },
         ),
       ],

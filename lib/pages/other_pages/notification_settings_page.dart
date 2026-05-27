@@ -195,7 +195,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
               Navigator.of(dialogContext).pop();
-              Navigator.of(context).pop();
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
             },
           ),
     );
@@ -204,7 +206,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   Future<void> _handleCloseAttempt(NotificationsProvider np) async {
     if (!_hasUnsavedChanges(np)) {
-      Navigator.of(context).pop();
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
       return;
     }
 

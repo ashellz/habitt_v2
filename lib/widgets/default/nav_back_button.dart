@@ -12,7 +12,13 @@ class NavBackButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: GestureDetector(
-        onTap: onPressed ?? () => Navigator.pop(context),
+        onTap:
+            onPressed ??
+            () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
+            },
         child: Align(
           alignment: Alignment.centerLeft,
           child: Container(

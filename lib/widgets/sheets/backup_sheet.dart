@@ -27,7 +27,9 @@ class _BackupSheetState extends State<BackupSheet> {
   void _popSheet() {
     if (!mounted) return;
     setState(() => _allowPop = true);
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   @override

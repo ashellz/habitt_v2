@@ -55,7 +55,10 @@ class AppLanguageSheet extends StatelessWidget {
             width: 66,
             child: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                ;
               },
               child: Align(
                 alignment: Alignment.centerLeft,

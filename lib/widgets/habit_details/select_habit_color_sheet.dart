@@ -80,7 +80,9 @@ class SelectHabitColorSheet extends StatelessWidget {
                           onTap: () {
                             stateProvider.habitColor = option.color;
                             stateProvider.habitColorName = option.name;
-                            Navigator.of(context).pop();
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
                           },
                           child: AnimatedContainer(
                             duration: Duration(milliseconds: 150),

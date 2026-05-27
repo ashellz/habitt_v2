@@ -84,7 +84,9 @@ class _EmojiPickerPageState extends State<EmojiPickerPage>
         return GestureDetector(
           onTap: () {
             stateProvider.iconPath = emoji;
-            Navigator.of(context).pop();
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
           },
           child: Container(
             decoration: BoxDecoration(

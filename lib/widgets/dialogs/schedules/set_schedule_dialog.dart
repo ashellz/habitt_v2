@@ -66,7 +66,9 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
         },
         onSecondaryButtonPressed: () {
           _restoreInitialSchedule();
-          Navigator.of(context).pop();
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
         },
       ),
     );

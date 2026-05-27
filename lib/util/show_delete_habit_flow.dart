@@ -43,5 +43,7 @@ Future<void> showDeleteHabitFlow(Habit habit, BuildContext context) async {
     return;
   }
 
-  Navigator.of(context).pop();
+  if (Navigator.canPop(context)) {
+    Navigator.pop(context);
+  }
 }

@@ -69,7 +69,9 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
   }
 
   void _returnToSetSchedule(ColorProvider cp) {
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
     showDialogSheet(
       context: context,
       builder:

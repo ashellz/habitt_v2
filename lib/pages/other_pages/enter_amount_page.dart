@@ -98,7 +98,10 @@ class EnterAmountPageState extends State<EnterAmountPage> {
       stateProvider.habitDuration = durationValue;
     }
 
-    Navigator.pop(context);
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+    ;
   }
 
   void switchValues() {

@@ -43,7 +43,9 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
   }
 
   void _returnToSetSchedule(ColorProvider cp) {
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
     showDialogSheet(
       context: context,
       builder:

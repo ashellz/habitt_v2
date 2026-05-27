@@ -52,7 +52,9 @@ class SelectColorSheet extends StatelessWidget {
                   GestureDetector(
                     onTap: () async {
                       await tp.setAccent(entry.key);
-                      Navigator.of(context).pop();
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),

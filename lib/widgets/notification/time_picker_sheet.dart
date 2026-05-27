@@ -90,7 +90,11 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                         children: [
                           Expanded(
                             child: DefaultButton(
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+                              },
                               label: "Cancel",
                               outlined: true,
                             ),

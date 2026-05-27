@@ -29,7 +29,9 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
   void _popSheet() {
     if (!mounted) return;
     setState(() => _allowPop = true);
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   String _formatDate(DateTime dt, AppLocalizations loc) {
@@ -46,9 +48,18 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     if (day == yesterday) return loc.backupDateYesterday(time);
 
     final months = [
-      loc.monthJan, loc.monthFeb, loc.monthMar, loc.monthApr,
-      loc.monthMay, loc.monthJun, loc.monthJul, loc.monthAug,
-      loc.monthSep, loc.monthOct, loc.monthNov, loc.monthDec,
+      loc.monthJan,
+      loc.monthFeb,
+      loc.monthMar,
+      loc.monthApr,
+      loc.monthMay,
+      loc.monthJun,
+      loc.monthJul,
+      loc.monthAug,
+      loc.monthSep,
+      loc.monthOct,
+      loc.monthNov,
+      loc.monthDec,
     ];
     return loc.backupDateOther(months[dt.month - 1], '${dt.day}', time);
   }
@@ -61,14 +72,15 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
   ) async {
     final confirmed = await showDialogSheet<bool>(
       context: context,
-      builder: (ctx) => NewDefaultDialog(
-        title: loc.restoreConfirmTitle,
-        desc: loc.restoreConfirmDescription,
-        primaryButtonLabel: loc.restore,
-        onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
-        secondaryButtonLabel: loc.cancel,
-        onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
-      ),
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.restoreConfirmTitle,
+            desc: loc.restoreConfirmDescription,
+            primaryButtonLabel: loc.restore,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
     );
 
     if (confirmed == true && context.mounted) {
@@ -151,13 +163,7 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
                           children: [
                             for (int i = 0; i < backups.length; i++) ...[
                               if (i > 0) Divider(color: cp.border, height: 32),
-                              _backupEntry(
-                                context,
-                                cp,
-                                bp,
-                                loc,
-                                backups[i],
-                              ),
+                              _backupEntry(context, cp, bp, loc, backups[i]),
                             ],
                           ],
                         ),
@@ -196,9 +202,8 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
         ),
         const SizedBox(width: 12),
         NewDefaultButton.primarySmall(
-          onPressed: isSyncing
-              ? () {}
-              : () => _confirmRestore(context, bp, loc, file),
+          onPressed:
+              isSyncing ? () {} : () => _confirmRestore(context, bp, loc, file),
           label: loc.restore,
           enabled: !isSyncing,
         ),

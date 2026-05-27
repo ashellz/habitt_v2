@@ -251,7 +251,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
             },
             child: Container(
               padding: const EdgeInsets.only(left: 16),
@@ -426,4 +428,3 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     );
   }
 }
-

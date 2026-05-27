@@ -89,7 +89,11 @@ class OldDefaultDialog extends StatelessWidget {
                           outlined: leftButtonOutlined,
                           onPressed:
                               leftButtonCallback ??
-                              () => Navigator.pop(context),
+                              () {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+                              },
                           label: leftButtonText!,
                         ),
                       ),
@@ -103,7 +107,11 @@ class OldDefaultDialog extends StatelessWidget {
                           outlined: rightButtonOutlined,
                           onPressed:
                               rightButtonCallback ??
-                              () => Navigator.pop(context),
+                              () {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+                              },
                           label: rightButtonText!,
                         ),
                       ),

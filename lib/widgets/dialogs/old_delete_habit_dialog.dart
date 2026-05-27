@@ -25,7 +25,10 @@ class OldDeleteHabitDialog extends StatelessWidget {
       rightButtonCallback: () {
         context.read<HabitProvider>().removeHabit(habit, context);
         while (Navigator.canPop(context)) {
-          Navigator.pop(context);
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+          ;
         }
         final stateProvider = context.read<StateProvider>();
         stateProvider.alertText = loc.habitDeleted;

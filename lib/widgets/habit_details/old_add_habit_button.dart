@@ -110,7 +110,9 @@ class OldAddHabitButton extends StatelessWidget {
                   colorName: stateProvider.habitColorName,
                 ),
               );
-              Navigator.of(context).pop();
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
 
               stateProvider.alertText = loc.habitAdded;
               stateProvider.toggleAlert(show: true);

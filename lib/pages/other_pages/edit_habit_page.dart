@@ -236,7 +236,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                         (context) => DiscardChangesDialog(),
                                   );
                                 } else {
-                                  Navigator.pop(context);
+                                  if (Navigator.canPop(context)) {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                    ;
+                                  }
                                 }
                               },
                             ),
@@ -344,7 +349,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                                     label: loc.reset,
                                                     onPressed: () {
                                                       setInitialValues();
-                                                      Navigator.pop(context);
+                                                      if (Navigator.canPop(
+                                                        context,
+                                                      )) {
+                                                        Navigator.pop(context);
+                                                      }
+                                                      ;
                                                     },
                                                   ),
                                                 ),

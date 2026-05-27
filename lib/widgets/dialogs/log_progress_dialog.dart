@@ -47,7 +47,10 @@ class LogProgressDialog extends StatelessWidget {
 
         if (progressType == ProgressType.amount) {
           if (habit.amountCompleted == stateProvider.habitAmount) {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            ;
             return;
           }
 
@@ -62,7 +65,10 @@ class LogProgressDialog extends StatelessWidget {
         if (progressType == ProgressType.duration) {
           if (habit.durationCompleted ==
               stateProvider.habitDuration.inMinutes) {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            ;
             return;
           }
 
@@ -74,7 +80,10 @@ class LogProgressDialog extends StatelessWidget {
           );
         }
 
-        Navigator.pop(context);
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+        ;
       },
       child: progress(cp, loc),
     );

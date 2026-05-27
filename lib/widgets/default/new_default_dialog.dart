@@ -85,7 +85,10 @@ class NewDefaultDialog extends StatelessWidget {
                           if (onSecondaryButtonPressed != null) {
                             onSecondaryButtonPressed!();
                           } else {
-                            Navigator.pop(context);
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
+                            ;
                           }
                         },
                         label: secondaryButtonLabel ?? loc.cancel,
@@ -99,7 +102,10 @@ class NewDefaultDialog extends StatelessWidget {
                         if (onPrimaryButtonPressed != null) {
                           onPrimaryButtonPressed!();
                         } else {
-                          Navigator.pop(context);
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                          ;
                         }
                       },
                       label: primaryButtonLabel ?? loc.done,

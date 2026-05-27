@@ -119,7 +119,10 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                     onPressed: () {
                       if (widget.habit.amountCompleted ==
                           stateProvider.habitAmount) {
-                        Navigator.pop(context);
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        }
+                        ;
                         return;
                       }
 
@@ -129,7 +132,10 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                         context,
                       );
 
-                      Navigator.pop(context);
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                      ;
                     },
                   ),
                   SizedBox(height: 4),
@@ -138,7 +144,11 @@ class _EnterAmountSliderDialogState extends State<EnterAmountSliderDialog> {
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
                     color: tp.secondaryButtonBackground,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
                   ),
                 ],
               ),

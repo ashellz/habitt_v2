@@ -170,7 +170,9 @@ class PremadeHabitsSheet extends StatelessWidget {
           width: 66,
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
             },
             child: Align(
               alignment: Alignment.centerLeft,

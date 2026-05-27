@@ -125,7 +125,10 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                         }
                       }
 
-                      Navigator.pop(context);
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                      ;
                     },
                   ),
                   SizedBox(height: 4),
@@ -134,7 +137,11 @@ class _SelectTimeDialogState extends State<SelectTimeDialog> {
                     tp: tp,
                     icon: Icon(Icons.close, color: tp.primaryTextColor),
                     color: tp.surfaceColor,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
                   ),
                 ],
               ),
