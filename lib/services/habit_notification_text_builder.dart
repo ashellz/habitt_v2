@@ -7,6 +7,7 @@ import 'package:habitt/services/notification_text/rules/progress_rule.dart';
 import 'package:habitt/services/notification_text/rules/schedule_rule.dart';
 import 'package:habitt/services/notification_text/types.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:habitt/util/get_capitalized_first.dart';
 
 export 'package:habitt/services/notification_text/types.dart';
 
@@ -191,7 +192,7 @@ class HabitNotificationTextBuilder {
           return l.notificationCombinedFresh(days, encouragement);
         }
         evaluatedChecks.add('combined.general');
-        return l.notificationCombinedGeneral(encouragement);
+        return l.notificationCombinedGeneral(capitalizeFirst(encouragement));
       case _PremadeFamily.shower:
         final showerProgress = _buildAmountProgressMessage(
           context,
@@ -208,7 +209,7 @@ class HabitNotificationTextBuilder {
           return l.notificationCombinedFresh(days, encouragement);
         }
         evaluatedChecks.add('combined.general');
-        return l.notificationCombinedGeneral(encouragement);
+        return l.notificationCombinedGeneral(capitalizeFirst(encouragement));
       case _PremadeFamily.activityGroup:
         final progressMessage = _buildProgressMessage(
           context,
@@ -225,7 +226,7 @@ class HabitNotificationTextBuilder {
           return l.notificationCombinedFresh(days, encouragement);
         }
         evaluatedChecks.add('combined.general');
-        return l.notificationCombinedGeneral(encouragement);
+        return l.notificationCombinedGeneral(capitalizeFirst(encouragement));
       case _PremadeFamily.none:
         final genericProgress = _buildProgressMessage(
           context,
@@ -245,7 +246,9 @@ class HabitNotificationTextBuilder {
           );
         }
         evaluatedChecks.add('combined.generic');
-        return l.notificationCombinedGeneral(l.notificationEncourageGeneric1);
+        return l.notificationCombinedGeneral(
+          capitalizeFirst(l.notificationEncourageGeneric1),
+        );
     }
   }
 

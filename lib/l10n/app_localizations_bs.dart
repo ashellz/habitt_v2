@@ -358,7 +358,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično se držiš u ribanju zuba. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da bi nastavio rasti još više.||Odlična konzistentnost u ribanju zuba. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održavaj visok zamah.||Tvoja navika ribanja zuba je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u četkanju zuba. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika četkanja zuba je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično se držiš u pranju zuba. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u pranju zuba. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Pranje zuba ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u pranju zuba. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u pranju zuba. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -367,7 +367,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with drink enough water. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on drink enough water. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your drink enough water habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for drink enough water. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on drink enough water. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš u pijenju dovoljno vode. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u pijenju dovoljno vode. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Pijenje dovoljno vode ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u pijenju dovoljno vode. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u pijenju dovoljno vode. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -376,7 +376,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Your consistency is strong. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing.||You are handling this habit well. Strength is stable at $strength%. Push the target from $fromValue to $toValue for more growth.||Momentum is solid here. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to level up.||You built a reliable baseline. Strength is stable at $strength%. Move from $fromValue to $toValue and keep improving.||Great consistency lately. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep your progress rising.';
+    return 'Tvoja konzistentnost je jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Dobro se nosiš s ovom navikom. Snaga je stabilna na $strength%. Gurni cilj sa $fromValue na $toValue za veći rast.||Zamah je ovdje solidan. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Izgradio si pouzdanu osnovu. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue i nastavi napredovati.||Odlična konzistentnost zadnje vrijeme. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da nastaviš napredovati.';
   }
 
   @override
@@ -385,7 +385,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with go to bed early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on go to bed early. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for go to bed early. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on go to bed early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš u ranom odlasku na spavanje. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u ranom odlasku na spavanje. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Rani odlazak na spavanje ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano odlaziš spavati rano. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u ranom odlasku na spavanje. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -394,7 +394,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your gym routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your gym routine. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your gym routine habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your gym routine. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your gym routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš sa svojom rutinom u teretani. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u rutini u teretani. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja rutina u teretani je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na trening u teretanu. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u rutini u teretani. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -403,7 +403,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on take your medications on time. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your take your medications on time habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for take your medications on time. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš u uzimanju lijekova na vrijeme. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u uzimanju lijekova na vrijeme. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Uzimanje lijekova na vrijeme ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano uzimas lijekove na vrijeme. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u uzimanju lijekova na vrijeme. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -412,7 +412,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your nutrition plan. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your nutrition plan. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your nutrition plan habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your nutrition plan. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your nutrition plan. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš svog plana ishrane. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u planu ishrane. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoj plan ishrane ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pridržavaš svog plana ishrane. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u planu ishrane. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -421,7 +421,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with pray consistently. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on pray consistently. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your pray consistently habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for pray consistently. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on pray consistently. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš u dosljednoj molitvi. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u dosljednoj molitvi. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Dosljedna molitva ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se moliš dosljedno. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u dosljednoj molitvi. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -430,7 +430,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your productivity sessions. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your productivity sessions. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your productivity sessions habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your productivity sessions. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your productivity sessions. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš svojih produktivnih sesija. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u produktivnim sesijama. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoje produktivne sesije idu odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na produktivne sesije. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u produktivnim sesijama. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -439,7 +439,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your reading habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your reading habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your reading habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your reading habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your reading habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš svoje navike čitanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u navici čitanja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika čitanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj navici čitanja. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u navici čitanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -448,7 +448,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your research habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your research habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your research habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your research habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your research habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'Odlično se držiš svoje navike istraživanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u navici istraživanja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika istraživanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj navici istraživanja. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u navici istraživanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -457,7 +457,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično se držiš sa svojom rutinom trčanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da bi nastavio rasti još više.||Odlična konzistentnost u tvojoj rutini trčanja. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održavaj visok zamah.||Tvoja navika trčanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na svoju rutinu trčanja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika trčanja je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično se držiš sa svojom rutinom trčanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u tvojoj rutini trčanja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja rutina trčanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na svoju rutinu trčanja. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u rutini trčanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -466,7 +466,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično napreduješ sa tuširanjem. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da nastaviš rasti još više.||Odlična konzistentnost u tuširanju. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi visok zamah.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se tuširaš. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično napreduješ sa tuširanjem. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u tuširanju. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika tuširanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se tuširaš. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u tuširanju. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -475,7 +475,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično se držiš sa svojom rutinom njege kože. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da biste nastavili rasti još više.||Odlična konzistentnost u vašoj rutini njege kože. Snaga je stabilna na $strength%. Povećajte svoj cilj sa $fromValue na $toValue i održavajte visok zamah.||Vaša navika njege kože je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pridržavate svoje rutine njege kože. Snaga je stabilna na $strength%. Povećajte svoj cilj sa $fromValue na $toValue i održavajte visok zamah.||Vaša navika njege kože je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično se držiš sa svojom rutinom njege kože. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u rutini njege kože. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja rutina njege kože je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pridržavaš rutine njege kože. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u rutini njege kože. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -484,7 +484,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično napreduješ sa svojom navikom učenja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da nastaviš rasti još više.||Odlična konzistentnost u tvojoj navici učenja. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi visok zamah.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj navici učenja. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi visok zamah.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično napreduješ sa svojom navikom učenja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u tvojoj navici učenja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika učenja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj navici učenja. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u navici učenja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -498,7 +498,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično napreduješ s ranim ustajanjem. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da nastaviš rasti još više.||Odlična konzistentnost u ranom ustajanju. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na ustajanje rano. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično napreduješ s ranim ustajanjem. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u ranom ustajanju. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika ranog ustajanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano ustajes rano. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u ranom ustajanju. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -507,7 +507,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično se držiš sa svojom rutinom hodanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da biste nastavili rasti još više.||Odlična konzistentnost u vašoj rutini hodanja. Snaga je stabilna na $strength%. Povećajte svoj cilj sa $fromValue na $toValue i održavajte visok zamah.||Vaša navika hodanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj rutini hodanja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja navika rutine hodanja je trenutno jaka. Snaga je stabilna na $strength%.';
+    return 'Odlično se držiš sa svojom rutinom hodanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u tvojoj rutini hodanja. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja rutina hodanja je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano se pojavljuješ u svojoj rutini hodanja. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u rutini hodanja. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -516,7 +516,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Odlično napreduješ sa svojom radnom navikom. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue da nastaviš rasti još više.||Odlična konzistentnost u tvojoj radnoj navici. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi visok zamah.||Tvoja radna navika je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na svoj radni navik. Snaga je stabilna na $strength%. Povećaj svoj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoj radni navik je trenutno jak. Snaga je stabilna na $strength%.';
+    return 'Odlično napreduješ sa svojom radnom navikom. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.||Odlična konzistentnost u tvojoj radnoj navici. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.||Tvoja radna navika je trenutno jaka. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.||Pouzdano dolaziš na svoju radnu naviku. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.||Odličan ritam u radnoj navici. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
   }
 
   @override
@@ -531,75 +531,75 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get insightStrengthStartSmallType1BrushTeeth =>
-      'Tvoja navika pranja zuba slabi. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od pranja zuba. Operi zube se danas i zaštiti tu naviku.||Momentum u pranju zuba slabi. Oživi ga jednim pranjem zuba danas.||Nemoj dopustiti da pranje zuba postane neredovno. Fokusiraj se i operi ih danas.||Počeo si prati zube s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
+      'Tvoja navika pranja zuba slabi. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od pranja zuba. Operi zube danas i zaštiti tu naviku.||Momentum u pranju zuba slabi. Održi ga živim pranjem zuba danas.||Nemoj dopustiti da pranje zuba postane neredovno. Fokusiraj se i operi ih danas.||Počeo si prati zube s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1DrinkWater =>
-      'Tvoja navika pijenja dovoljno vode slabi. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od pijenja dovoljno vode. Pojavi se danas i zaštiti tu naviku.||Momentum u pijenju dovoljno vode slabi. Povedi računa o hidraciji danas.||Nemoj dopustiti da pijenje dovoljno vode postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si piti dovoljno vode iz nekog razloga. Ostan discipliniran i ne dopusti da navika otklizi.';
+      'Tvoja navika pijenja vode slabi. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od pijenja dovoljno vode. Popij čašu vode danas i zaštiti tu naviku.||Momentum u pijenju dovoljno vode slabi. Održi ga živim pijenjem vode danas.||Nemoj dopustiti da pijenje dovoljno vode postane neredovno. Fokusiraj se i hidriraj danas.||Počeo si piti dovoljno vode s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1Generic =>
-      'Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.||Momentum ove navike slabi. Pojavi se danas i održi je živom.||Zadaješ se u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.||Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.||Nemoj dopustiti da ova navika odumre. Ostani dosljedan danas.';
+      'Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.||Momentum ove navike slabi. Pojavi se danas i održi je živom.||Zaostajuješ u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.||Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.||Prišao si predaleko da bi pustio ovu naviku da odumre. Ostani dosljedan danas.';
 
   @override
   String get insightStrengthStartSmallType1GoToBedEarly =>
-      'Tvoja navika ranog odlaska u krevet popušta. Nemoj dopustiti da ova rutina sada propadne.||Odskakao si od navike ranog odlaska u krevet. Pojavi se danas i zaštiti tu naviku.||Momentum za rani odlazak u krevet slabi. Održi ga živim s jednom čvrstom ponavljanjem danas.||Nemoj dopustiti da rani odlazak u krevet postane nekonzistentan. Zacementiraj ga i odradi svoj dio danas.||Počeo si rano odlaziti u krevet s razlogom. Ostan discipliniran i spriječi da navika popusti.';
+      'Tvoja navika ranog odlaska na spavanje posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od ranog odlaska na spavanje. Postavi alarm i idi spavati na vrijeme večeras.||Momentum za rani odlazak na spavanje slabi. Održi ga živim odlaskom u krevet na vrijeme večeras.||Nemoj dopustiti da rani odlazak na spavanje postane neredovan. Fokusiraj se i idi u krevet na vrijeme večeras.||Počeo si rano odlaziti na spavanje s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1Gym =>
-      'Tvoja navika vježbanja u teretani posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje rutine u teretani. Dođi danas i zaštiti tu naviku.||Momentum tvoje rutine u teretani slabi. Oživi ga jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoja rutina u teretani postane nekonzistentna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju rutinu u teretani s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika vježbanja u teretani posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od svojih treninga u teretani. Dođi na trening danas i zaštiti tu naviku.||Momentum tvoje rutine u teretani slabi. Održi ga živim treningom danas.||Nemoj dopustiti da tvoja rutina u teretani postane neredovna. Fokusiraj se i uvježbaj danas.||Počeo si graditi rutinu u teretani s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1Medications =>
-      'Tvoja navika da uzimaš lijekove na vrijeme posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od uzimanja lijekova na vrijeme. Pojavi se danas i zaštiti tu naviku.||Momentum u uzimanju lijekova na vrijeme slabi. Oživi ga jednim čvrstim ponavljanjem danas.||Nemoj dopustiti da uzimanje lijekova na vrijeme postane nekonzistentno. Fokusiraj se i odradi svoj dio danas.||Počeo si uzimati lijekove na vrijeme s razlogom! Ostani discipliniran i spriječi da ti navika propane.';
+      'Tvoja navika uzimanja lijekova posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od uzimanja lijekova. Uzmi ih danas i zaštiti tu naviku.||Momentum u uzimanju lijekova slabi. Održi ga živim uzimanjem lijekova na vrijeme danas.||Nemoj dopustiti da tvoj raspored uzimanja lijekova postane neredovan. Fokusiraj se i uzmi ih danas.||Počeo si uzimati lijekove na vrijeme s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1Nutrition =>
-      'Vaša navika u planu ishrane posustaje. Ne dopusti da ova rutina sada propadne.||Odstupili ste od svog plana ishrane. Pojavi se danas i zaštiti tu naviku.||Momentum vašeg plana ishrane slabi. Održi ga živim s jednom kvalitetnom ponavljanjem danas.||Ne dopusti da vaš plan ishrane postane nekonzistentan. Fokusirajte se i odradi svoj dio danas.||Započeli ste svoj plan ishrane s razlogom. Ostani disciplinirani i spriječi da posustane.';
+      'Tvoja navika plana ishrane posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od svog plana ishrane. Slijedi plan danas i zaštiti tu naviku.||Momentum tvog plana ishrane slabi. Održi ga živim pridržavanjem plana danas.||Nemoj dopustiti da tvoj plan ishrane postane neredovan. Fokusiraj se i slijedi ga danas.||Počeo si slijediti plan ishrane s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1Praying =>
-      'Tvoja navika dosljedne molitve posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od dosljedne molitve. Prisustvuj danas i zaštiti tu naviku.||Momentum u dosljednoj molitvi slabi. Oživi ga jednim čvrstim ponavljanjem danas.||Nemoj dopustiti da dosljedna molitva postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Počeo si se moliti dosljedno iz nekog razloga. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika molitve posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od dosljedne molitve. Pomoli se danas i zaštiti tu naviku.||Momentum u dosljednoj molitvi slabi. Održi ga živim molitvom danas.||Nemoj dopustiti da dosljedna molitva postane neredovna. Fokusiraj se i pomoli se danas.||Počeo si se moliti dosljedno s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1ProductivitySession =>
-      'Tvoja navika produktivnih sesija posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svojih produktivnih sesija. Pojavi se danas i zaštiti tu naviku.||Momentum tvojih produktivnih sesija slabi. Oživi ga jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoje produktivne sesije postanu neujednačene. Fokusiraj se i odradi svoj dio danas.||Započeo si svoje produktivne sesije s razlogom. Ostan discipliniran i spriječi da posustanu.';
+      'Tvoja navika produktivnih sesija posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od svojih produktivnih sesija. Odradi fokusiranu sesiju danas i zaštiti tu naviku.||Momentum tvojih produktivnih sesija slabi. Održi ga živim odradom sesije danas.||Nemoj dopustiti da tvoje produktivne sesije postanu neredovne. Fokusiraj se i odradi fokusirani blok danas.||Počeo si sa produktivnim sesijama s razlogom. Ostani discipliniran i spriječi da posustanu.';
 
   @override
   String get insightStrengthStartSmallType1Read =>
-      'Tvoja navika čitanja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje navike čitanja. Pojavi se danas i zaštiti tu naviku.||Zamah tvoje navike čitanja slabi. Oživi ga jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoja navika čitanja postane neujednačena. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju naviku čitanja s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika čitanja posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od navike čitanja. Pročitaj nekoliko stranica danas i zaštiti tu naviku.||Momentum tvoje navike čitanja slabi. Održi ga živim čitanjem nečeg danas.||Nemoj dopustiti da tvoja navika čitanja postane neredovna. Fokusiraj se i čitaj danas.||Počeo si sa navikom čitanja s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1Research =>
-      'Tvoja navika istraživanja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje navike istraživanja. Pojavi se danas i zaštiti tu naviku.||Momentum tvoje navike istraživanja slabi. Održi ga živim s jednom čvrstom ponavljanjem danas.||Nemoj dopustiti da tvoja navika istraživanja postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju naviku istraživanja s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika istraživanja posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od navike istraživanja. Odradi malo istraživanja danas i zaštiti tu naviku.||Momentum tvoje navike istraživanja slabi. Održi ga živim istraživanjem danas.||Nemoj dopustiti da tvoja navika istraživanja postane neredovna. Fokusiraj se i istraži danas.||Počeo si sa navikom istraživanja s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1Running =>
-      'Tvoja navika trčanja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje rutine trčanja. Pojavi se danas i zaštiti tu naviku.||Zamah tvoje rutine trčanja slabi. Oživi ga jednim kvalitetnim ponavljanjem danas.||Nemoj dopustiti da tvoja rutina trčanja postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju rutinu trčanja s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika trčanja posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od rutine trčanja. Izađi na trčanje danas i zaštiti tu naviku.||Momentum tvoje rutine trčanja slabi. Održi ga živim trčanjem danas.||Nemoj dopustiti da tvoja rutina trčanja postane neredovna. Fokusiraj se i trči danas.||Počeo si graditi rutinu trčanja s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1Shower =>
-      'Tvoja navika tuširanja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od navike tuširanja. Pojavi se danas i zaštiti tu naviku.||Momentum u tuširanju slabi. Održi ga živim jednim kvalitetnim ponavljanjem danas.||Nemoj dopustiti da tuširanje postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si se tuširati s razlogom. Ostan discipliniran i spriječi da navika posustane.';
+      'Tvoja navika tuširanja posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od navike tuširanja. Tuširaj se danas i zaštiti tu naviku.||Momentum u tuširanju slabi. Održi ga živim tuširanjem danas.||Nemoj dopustiti da tvoja rutina tuširanja postane neredovna. Fokusiraj se i tuširaj se danas.||Počeo si se tuširati redovito s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1SkinCare =>
-      'Tvoja navika njege kože posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje rutine njege kože. Pojavi se danas i zaštiti tu naviku.||Momentum tvoje rutine njege kože slabi. Oživi ga jednim kvalitetnim ponavljanjem danas.||Nemoj dopustiti da tvoja rutina njege kože postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju rutinu njege kože s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika njege kože posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od rutine njege kože. Odradi njegu kože danas i zaštiti tu naviku.||Momentum tvoje rutine njege kože slabi. Održi ga živim njegom kože danas.||Nemoj dopustiti da tvoja rutina njege kože postane neredovna. Fokusiraj se i odradi je danas.||Počeo si sa rutinom njege kože s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1Studying =>
-      'Tvoja navika učenja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje navike učenja. Pojavi se danas i zaštiti tu naviku.||Momentum tvoje navike učenja slabi. Oživi ga jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoja navika učenja postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju naviku učenja s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika učenja posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od navike učenja. Uči danas i zaštiti tu naviku.||Momentum tvoje navike učenja slabi. Održi ga živim učenjem danas.||Nemoj dopustiti da tvoja navika učenja postane neredovna. Fokusiraj se i uči danas.||Počeo si sa navikom učenja s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1WakeUpEarly =>
-      'Tvoja navika ranog ustajanja posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od ranog ustajanja. Prikaži se danas i zaštiti tu naviku.||Momentum za rano ustajanje slabi. Održi ga živim s jednom čvrstom ponavljanjem danas.||Nemoj dopustiti da rano ustajanje postane neujednačeno. Fokusiraj se i odradi svoj dio danas.||Počeo si rano ustajati iz nekog razloga. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika ranog ustajanja posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od ranog ustajanja. Postavi alarm i ustani na vrijeme sutra.||Momentum ranog ustajanja slabi. Održi ga živim ustajanjem na vrijeme sutra.||Nemoj dopustiti da rano ustajanje postane neredovno. Fokusiraj se i postavi alarm večeras.||Počeo si rano ustajati s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1Walk =>
-      'Tvoja navika šetnje posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje rutine šetnje. Pojavi se danas i zaštiti tu naviku.||Momentum tvoje rutine šetnje slabi. Oživi ga jednim kvalitetnim ponavljanjem danas.||Nemoj dopustiti da tvoja rutina šetnje postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju rutinu šetnje s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja navika šetnje posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od rutine šetnje. Idi u šetnju danas i zaštiti tu naviku.||Momentum tvoje rutine šetnje slabi. Održi ga živim odlaskom u šetnju danas.||Nemoj dopustiti da tvoja rutina šetnje postane neredovna. Fokusiraj se i prošetaj danas.||Počeo si graditi rutinu šetnje s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String get insightStrengthStartSmallType1Work =>
-      'Tvoja navika rada posustaje. Nemoj dopustiti da ova rutina sada propadne.||Odstupio si od svoje radne navike. Prikaži se danas i zaštiti tu naviku.||Momentum tvoje radne navike slabi. Održi ga živim jednim solidnim ponavljanjem danas.||Nemoj dopustiti da tvoja radna navika postane nedosljedna. Fokusiraj se i odradi svoj dio danas.||Započeo si svoju radnu naviku s razlogom. Ostan discipliniran i spriječi da posustane.';
+      'Tvoja radna navika posustaje. Nemoj dopustiti da ova rutina sada otpadne.||Odstupio si od svoje radne navike. Odradi smislen posao danas i zaštiti tu naviku.||Momentum tvoje radne navike slabi. Održi ga živim ulaganjem rada danas.||Nemoj dopustiti da tvoja radna navika postane neredovna. Fokusiraj se i odradi posao danas.||Počeo si graditi radnu naviku s razlogom. Ostani discipliniran i spriječi da posustane.';
 
   @override
   String insightStrengthStartSmallType2BrushTeeth(
@@ -616,7 +616,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Niste bili dosljedni u pijenju dovoljno vode u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Navika pijenja dovoljno vode je nedavno oslabljena. Snaga je pala za $drop%. Pomakni svoj cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost u pijenju dovoljno vode je smanjena. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku pijenja dovoljno vode, za sada snizi cilj. Snažnost je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Pijenje dovoljno vode treba reset. Snažnost je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
+    return 'Nisi pio dovoljno vode u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Navika pijenja dovoljno vode je nedavno oslabljena. Snaga je pala za $drop%. Pomakni svoj cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost u pijenju dovoljno vode je smanjena. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku pijenja dovoljno vode, za sada snizi cilj. Snažnost je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Pijenje dovoljno vode treba reset. Snažnost je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
   }
 
   @override
@@ -625,7 +625,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Consistency dropped on this habit. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to stabilize again.||You have been off track lately. Strength dropped by $drop%. Try this target shift: $fromValue -> $toValue to rebuild rhythm.||Recent performance is slipping. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to get back on track.||This habit needs a lighter target for now. Strength dropped by $drop%. Move from $fromValue to $toValue to improve consistency.||Your habit signal weakened recently. Strength dropped by $drop%. Recommended target: $fromValue -> $toValue so you can stay consistent.';
+    return 'Konzistentnost je opala na ovoj navici. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue za stabilizaciju.||Nedavno si skrenuo s puta. Snaga je pala za $drop%. Pokušaj ovu promjenu cilja: $fromValue -> $toValue da ponovo izgradiš ritam.||Nedavni učinak je u opadanju. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da se vratiš na pravi put.||Ovoj navici je potreban lakši cilj za sada. Snaga je pala za $drop%. Pomakni sa $fromValue na $toValue da poboljšaš konzistentnost.||Signal ove navike je nedavno oslabio. Snaga je pala za $drop%. Preporučeni cilj: $fromValue -> $toValue da možeš ostati dosljedan.';
   }
 
   @override
@@ -634,7 +634,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with go to bed early lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Go to bed early has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent go to bed early consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your go to bed early habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Go to bed early needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi išao rano na spavanje u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Rani odlazak na spavanje je nedavno bio teži. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u vremenu odlaska na spavanje je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis naviku ranog odlaska na spavanje, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Rani odlazak na spavanje treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -643,7 +643,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your gym routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your gym routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your gym routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your gym routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your gym routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi se držao rutine u teretani u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tvoja rutina u teretani je nedavno bila slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u teretani je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis svoju rutinu u teretani, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoja rutina u teretani treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -652,7 +652,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with take your medications on time lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Take your medications on time has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent take your medications on time consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your take your medications on time habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Take your medications on time needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi redovno uzimao lijekove na vrijeme zadnjih dana. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Uzimanje lijekova na vrijeme je nedavno bilo teže. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u uzimanju lijekova je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis naviku uzimanja lijekova, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoja navika uzimanja lijekova treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -661,7 +661,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your nutrition plan lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your nutrition plan has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your nutrition plan consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your nutrition plan habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your nutrition plan needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi se dovoljno držao planu ishrane u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tvoj plan ishrane je nedavno bio slabiji. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u ishrani je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis plan ishrane, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoj plan ishrane treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -670,7 +670,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with pray consistently lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Pray consistently has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent pray consistently consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your pray consistently habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Pray consistently needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi bio dosljedan u molitvi u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Dosljedna molitva je nedavno bila teža. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u molitvi je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis naviku molitve, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoja navika molitve treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -679,7 +679,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your productivity sessions lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your productivity sessions has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your productivity sessions consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your productivity sessions habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your productivity sessions needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi se bavio produktivnim sesijama u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tvoje produktivne sesije su nedavno bile slabije. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u produktivnim sesijama je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis produktivne sesije, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoje produktivne sesije trebaju reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -688,7 +688,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your reading habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your reading habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your reading habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your reading habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your reading habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Manje čitaš u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tvoja navika čitanja je nedavno bila slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u čitanju je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis naviku čitanja, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoja navika čitanja treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -697,7 +697,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your research habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your research habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your research habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your research habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your research habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nedovoljno se posvećuješ navici istraživanja u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tvoja navika istraživanja je nedavno bila slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u istraživanju je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis naviku istraživanja, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoja navika istraživanja treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -706,7 +706,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your running routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your running routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your running routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your running routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your running routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi bio dosljedan svojoj rutini trčanja u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tvoja rutina trčanja je nedavno bila slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.||Tvoja konzistentnost u trčanju je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.||Da zaštitis svoju rutinu trčanja, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Tvoja rutina trčanja treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -715,7 +715,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Nisi bio dosljedan u tuširanju u posljednje vrijeme. Snaga ti je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Uzimanje tuša je nedavno bilo slabije. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost u uzimanju tuša je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku tuširanja, za sada snizi cilj. Snaga je opala za $drop%. Preporučeno: $fromValue -> $toValue.||Navika tuširanja treba resetovanje. Snaga je opala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
+    return 'Tvoja navika tuširanja je slabija u posljednje vrijeme. Snaga ti je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.||Tuširanje je nedavno bilo slabije. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||Nedavna konzistentnost u uzimanju tuša je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku tuširanja, za sada snizi cilj. Snaga je opala za $drop%. Preporučeno: $fromValue -> $toValue.||Navika tuširanja treba resetovanje. Snaga je opala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
   }
 
   @override
@@ -724,7 +724,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Niste bili dosljedni svojoj rutini njege kože u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša rutina njege kože je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni svoj cilj sa $fromValue na $toValue da biste ponovo uspostavili konzistentnost.||U posljednje vrijeme je konzistentnost vaše rutine njege kože opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku njege kože, privremeno snizi cilj. Snaga je opala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša rutina njege kože treba resetovanje. Snaga je opala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
+    return 'Nisi pazio na rutinu njege kože u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša rutina njege kože je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni svoj cilj sa $fromValue na $toValue da biste ponovo uspostavili konzistentnost.||U posljednje vrijeme je konzistentnost vaše rutine njege kože opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku njege kože, privremeno snizi cilj. Snaga je opala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša rutina njege kože treba resetovanje. Snaga je opala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
   }
 
   @override
@@ -733,7 +733,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Niste bili dosljedni u svojoj navici učenja u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša navika učenja je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||U posljednje vrijeme je konzistentnost vaše navike učenja opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili svoju naviku učenja, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša navika učenja treba resetovanje. Snaga je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
+    return 'Nisi bio aktivan u učenju već neko vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša navika učenja je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||U posljednje vrijeme je konzistentnost vaše navike učenja opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili svoju naviku učenja, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša navika učenja treba resetovanje. Snaga je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
   }
 
   @override
@@ -751,7 +751,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'U posljednje vrijeme nisi bio dosljedan svojoj rutini hodanja. Snaga ti je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša rutina hodanja je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||U posljednje vrijeme je konzistentnost vaše rutine hodanja opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku šetnje, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša rutina šetnje treba resetovanje. Snaga je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
+    return 'U posljednje vrijeme nisi se posvećivao svojoj rutini hodanja. Snaga ti je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša rutina hodanja je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||U posljednje vrijeme je konzistentnost vaše rutine hodanja opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili naviku šetnje, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša rutina šetnje treba resetovanje. Snaga je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
   }
 
   @override
@@ -760,7 +760,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'U posljednje vrijeme nisi bio dosljedan u svojoj radnoj navici. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša radna navika je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||Vaša nedavna konzistentnost u radnoj navici je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili svoju naviku rada, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša navika rada treba resetovanje. Snaga je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
+    return 'Nisi bio u radnom ritmu u zadnje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da bi navika ostala živa.||Vaša radna navika je u posljednje vrijeme slabija. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da biste ponovo izgradili konzistentnost.||Vaša nedavna konzistentnost u radnoj navici je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da biste povratili zamah.||Da biste zaštitili svoju naviku rada, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.||Vaša navika rada treba resetovanje. Snaga je pala za $drop%. Pokušajte $fromValue -> $toValue kako bi ova navika ostala živa.';
   }
 
   @override
@@ -858,12 +858,12 @@ class AppLocalizationsBs extends AppLocalizations {
     Object encouragement,
     Object remaining,
   ) {
-    return 'Preostalo je samo $remaining, i $encouragement.';
+    return 'Preostalo je samo $remaining, $encouragement.';
   }
 
   @override
   String notificationCombinedAmountCompleted(Object encouragement) {
-    return 'Cilj je već dostignut, i $encouragement.';
+    return 'Cilj je već dostignut, $encouragement.';
   }
 
   @override
@@ -871,12 +871,12 @@ class AppLocalizationsBs extends AppLocalizations {
     Object encouragement,
     Object progress,
   ) {
-    return 'Nalaziš se na $progress, i $encouragement.';
+    return 'Nalaziš se na $progress, $encouragement.';
   }
 
   @override
   String notificationCombinedAmountNotStarted(Object encouragement) {
-    return 'Počni sada, čak i jedan korak se računa, i $encouragement.';
+    return 'Počni sada, čak i jedan korak se računa, $encouragement.';
   }
 
   @override
@@ -884,12 +884,12 @@ class AppLocalizationsBs extends AppLocalizations {
     Object encouragement,
     Object remaining,
   ) {
-    return 'Preostalo je samo $remaining, i $encouragement.';
+    return 'Preostalo je samo $remaining, $encouragement.';
   }
 
   @override
   String notificationCombinedDurationCompleted(Object encouragement) {
-    return 'Cilj je već dostignut, i $encouragement.';
+    return 'Cilj je već dostignut, $encouragement.';
   }
 
   @override
@@ -897,17 +897,17 @@ class AppLocalizationsBs extends AppLocalizations {
     Object encouragement,
     Object progress,
   ) {
-    return 'Nalaziš se na $progress, i $encouragement.';
+    return 'Nalaziš se na $progress, $encouragement.';
   }
 
   @override
   String notificationCombinedDurationNotStarted(Object encouragement) {
-    return 'Pokreni sada kratku sesiju i $encouragement.';
+    return 'Pokreni sada kratku sesiju, $encouragement.';
   }
 
   @override
   String notificationCombinedFresh(Object days, Object encouragement) {
-    return 'Počeli ste ovu naviku $days dana ranije, i $encouragement.';
+    return 'Dodao si ovu naviku prije $days dana, $encouragement.';
   }
 
   @override
@@ -917,163 +917,162 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String notificationCombinedOneOff(Object encouragement, Object period) {
-    return 'Ne propusti danas, to je vaša posljednja $period prilika i $encouragement.';
+    return 'Danas je posljednja $period prilika, $encouragement.';
   }
 
   @override
   String get notificationEncourageBrushTeeth1 =>
-      'Održavaj svoju higijenski streak snažnim!';
+      'održavaj taj higijeni niz jakim';
 
   @override
-  String get notificationEncourageBrushTeeth2 =>
-      'Pranje zuba je jednostavan korak koji te održava zdravim.';
+  String get notificationEncourageBrushTeeth2 => 'pranje zuba te čuva zdravim';
 
   @override
   String get notificationEncourageBrushTeeth3 =>
-      'Održavanje konzistentnosti u osnovnoj njezi';
+      'održavanje konzistentnosti u osnovnoj njezi';
 
   @override
   String get notificationEncourageDrinkWater1 =>
-      'Hidracija sada podržava vaš cijeli sistem';
+      'hidracija sada podržava cijeli tvoj sistem';
 
   @override
   String get notificationEncourageDrinkWater2 =>
-      'Jedan čaša sada održava vašu energiju stabilnijom.';
+      'jedna čaša sada stabilizira tvoju energiju';
 
   @override
   String get notificationEncourageDrinkWater3 =>
-      'Kratki treninzi poboljšavaju svakodnevnu izvedbu.';
+      'mali koraci hidratacije poboljšavaju svakodnevnu izvedbu';
 
   @override
   String get notificationEncourageGeneric1 =>
-      'Dolaskom danas održavamo naviku živom.';
+      'dolaskom danas navika ostaje živa';
 
   @override
   String get notificationEncourageGeneric2 =>
-      'Mala akcija sada štiti tvoj zamah.';
+      'mala akcija sada štiti tvoj zamah';
 
   @override
   String get notificationEncourageGeneric3 =>
-      'Konzistentnost danas olakšava sutra.';
+      'konzistentnost danas olakšava sutra';
 
   @override
   String get notificationEncourageGoToBedEarly1 =>
-      'Zaštita večeras pomaže da sutra bude lakše';
+      'zaštita večeras pomaže da sutra bude lakše';
 
   @override
   String get notificationEncourageGoToBedEarly10 =>
-      'Ova večerašnja odluka pomaže da vam cijela sedmica protekne lakše.';
+      'ova večerašnja odluka pomaže da cijela sedmica protekne lakše';
 
   @override
   String get notificationEncourageGoToBedEarly2 =>
-      'Raniji odlazak u krevet sada vašem umu omogućava čišći početak.';
+      'raniji odlazak u krevet daje tvom umu čišći početak';
 
   @override
   String get notificationEncourageGoToBedEarly3 =>
-      'Ovaj izbor večeras osigurava bolje jutro.';
+      'ovaj izbor večeras osigurava bolje jutro';
 
   @override
   String get notificationEncourageGoToBedEarly4 =>
-      'Konzistentnost u spavanju se sada isplati cijeli sutrašnji dan.';
+      'konzistentnost u spavanju se sada isplati cijeli sutrašnji dan';
 
   @override
   String get notificationEncourageGoToBedEarly5 =>
-      'Rutina za mirnu noć štiti vašu energetsku krivu';
+      'rutina za mirnu noć štiti tvoju energetsku krivu';
 
   @override
   String get notificationEncourageGoToBedEarly6 =>
-      'Završavanje dana na vrijeme održava vaš ritam stabilnim.';
+      'završavanje dana na vrijeme održava tvoj ritam stabilnim';
 
   @override
   String get notificationEncourageGoToBedEarly7 =>
-      'Bolje vrijeme spavanja je tiha prednost u performansama.';
+      'bolje vrijeme spavanja je tiha prednost u performansama';
 
   @override
   String get notificationEncourageGoToBedEarly8 =>
-      'Ranije gašenje svjetala održava vaš oporavak na pravom putu.';
+      'ranije gašenje svjetala održava tvoj oporavak na pravom putu';
 
   @override
   String get notificationEncourageGoToBedEarly9 =>
-      'Mala disciplina pred spavanje stvara jača jutra.';
+      'mala disciplina pred spavanje stvara jača jutra';
 
   @override
   String get notificationEncourageGym1 =>
-      'Jedan predstavnik teretane danas održava vaš standard visokim.';
+      'jedan trening danas održava tvoj standard visokim';
 
   @override
   String get notificationEncourageGym2 =>
-      'Sadašnje pojavljivanje štiti zamah tvoje snage.';
+      'sadašnje pojavljivanje štiti zamah tvoje snage';
 
   @override
   String get notificationEncourageGym3 =>
-      'Današnja sesija se s vremenom kumulira.';
+      'današnja sesija se s vremenom kumulira';
 
   @override
   String get notificationEncourageMedications1 =>
-      'Pravilno tempiranje štiti vašu zdravstvenu rutinu';
+      'pravilno tempiranje štiti tvoju zdravstvenu rutinu';
 
   @override
   String get notificationEncourageMedications2 =>
-      'Pridržavanje rasporeda održava vašu osnovu stabilnom.';
+      'pridržavanje rasporeda održava tvoju osnovu stabilnom';
 
   @override
   String get notificationEncourageMedications3 =>
-      'Ovaj korak podržava vašu dugoročnu dobrobit.';
+      'ovaj korak podržava tvoju dugoročnu dobrobit';
 
   @override
   String get notificationEncourageNutrition1 =>
-      'Jedan namjerni izbor sada podržava vašu osnovu.';
+      'jedan namjerni izbor sada podržava tvoju osnovu';
 
   @override
   String get notificationEncourageNutrition2 =>
-      'Male pobjede u ishrani se brzo zbrajaju.';
+      'male pobjede u ishrani se brzo zbrajaju';
 
   @override
   String get notificationEncourageNutrition3 =>
-      'Konzistentnost ovdje poboljšava sve ostalo.';
+      'konzistentnost ovdje poboljšava sve ostalo';
 
   @override
   String get notificationEncourageProductivitySession1 =>
-      'Jedna fokusirana sesija štiti vrijeme za duboki rad.';
+      'jedna fokusirana sesija štiti vrijeme za duboki rad';
 
   @override
   String get notificationEncourageProductivitySession2 =>
-      'Čisti fokus blok sada može promijeniti vaš dan.';
+      'čisti fokus blok sada može promijeniti tvoj dan';
 
   @override
   String get notificationEncourageProductivitySession3 =>
-      'Konzistentnost u fokusu dovodi do boljih rezultata.';
+      'konzistentnost u fokusu dovodi do boljih rezultata';
 
   @override
   String get notificationEncourageRead1 =>
-      'Nekoliko stranica sada održava vaš čitalački identitet jakim';
+      'nekoliko stranica sada drži tvoj čitalački identitet jakim';
 
   @override
   String get notificationEncourageRead2 =>
-      'Malo svakodnevno čitanje donosi stvarni napredak.';
+      'malo svakodnevno čitanje donosi stvarni napredak';
 
   @override
-  String get notificationEncourageRead3 => 'Dolaskom danas održavamo niz';
+  String get notificationEncourageRead3 => 'dolaskom danas niz ostaje živ';
 
   @override
   String get notificationEncourageResearch1 =>
-      'Jedan uvid danas pomjera vaš rad naprijed.';
+      'jedan uvid danas pomjera tvoj rad naprijed';
 
   @override
   String get notificationEncourageResearch2 =>
-      'Stalna istraživanja se pretvaraju u jasnoću.';
+      'stalna istraživanja se pretvaraju u jasnoću';
 
   @override
   String get notificationEncourageResearch3 =>
-      'Sada je uhvaćen jedan nalaz i zadržava zamah';
+      'hvatanje jednog nalaza danas zadržava zamah';
 
   @override
   String get notificationEncourageRunning1 =>
-      'Jedan današnji trening gradi izdržljivost';
+      'jedan trening danas gradi izdržljivost';
 
   @override
   String get notificationEncourageRunning2 =>
-      'Sadašnje pojavljivanje jača tvoju osnovnu izdržljivost u trčanju.';
+      'sadašnje pojavljivanje jača tvoju osnovnu izdržljivost u trčanju';
 
   @override
   String get notificationEncourageRunning3 =>
@@ -1081,7 +1080,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageShower1 =>
-      'Kratko resetovanje može poboljšati vašu koncentraciju.';
+      'kratko resetovanje može poboljšati tvoju koncentraciju';
 
   @override
   String get notificationEncourageShower2 =>
@@ -1089,66 +1088,66 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageShower3 =>
-      'Čisto resetiranje održava vaš dan u pokretu.';
+      'čisto resetiranje održava tvoj dan u pokretu';
 
   @override
   String get notificationEncourageSkinCare1 =>
-      'Zaštiti svoju kožu jednim sigurnim korakom';
+      'zaštiti svoju kožu jednim sigurnim korakom';
 
   @override
   String get notificationEncourageSkinCare2 =>
-      'Učini konzistentnost svojom prednošću u njezi kože';
+      'učini konzistentnost svojom prednošću u njezi kože';
 
   @override
   String get notificationEncourageSkinCare3 =>
-      'Održavanje vaše rutine pouzdanom i jednostavnom';
+      'održavanje tvoje rutine pouzdanom i jednostavnom';
 
   @override
   String get notificationEncourageStudying1 =>
-      'Jedan fokusirani blok sada gradi zamah u učenju.';
+      'jedan fokusirani blok sada gradi zamah u učenju';
 
   @override
   String get notificationEncourageStudying2 =>
-      'Dolaskom danas znanje se umnožava.';
+      'dolaskom danas znanje se umnožava';
 
   @override
   String get notificationEncourageStudying3 =>
-      'Kratki treninzi dosljedno pobjeđuju učenje u zadnji čas.';
+      'kratke sesije dosljedno pobjeđuju učenje u zadnji čas';
 
   @override
-  String get notificationEncourageWakeUpEarly1 => 'Počni svoj dan s namjerom';
+  String get notificationEncourageWakeUpEarly1 => 'počni dan s namjerom';
 
   @override
   String get notificationEncourageWakeUpEarly2 =>
-      'Održavanje dosljednog jutarnjeg ritma';
+      'održavanje dosljednog jutarnjeg ritma';
 
   @override
   String get notificationEncourageWakeUpEarly3 =>
-      'Omogući sebi mirniji početak';
+      'omogući sebi mirniji početak';
 
   @override
   String get notificationEncourageWalk1 =>
-      'Kratka šetnja je dovoljna da se održi zamah.';
+      'kratka šetnja je dovoljna da se održi zamah';
 
   @override
   String get notificationEncourageWalk2 =>
-      'Pomičanje sada pomaže tvojoj energiji i fokusu.';
+      'pomičanje sada pomaže tvojoj energiji i fokusu';
 
   @override
   String get notificationEncourageWalk3 =>
-      'Ovo jednostavno ponavljanje podržava dugoročnu konzistentnost.';
+      'ovo jednostavno ponavljanje podržava dugoročnu konzistentnost';
 
   @override
   String get notificationEncourageWork1 =>
-      'Početak od sada stvara stvarnu zamah.';
+      'početak od sada stvara stvarni zamah';
 
   @override
   String get notificationEncourageWork2 =>
-      'Jedan značajan potez može otvoriti vaš dan.';
+      'jedan značajan potez može otvoriti tvoj dan';
 
   @override
   String get notificationEncourageWork3 =>
-      'Dosljedna izvedba održava napredak vidljivim';
+      'dosljedna izvedba održava napredak vidljivim';
 
   @override
   String get notificationFallbackGeneric =>
@@ -1176,10 +1175,10 @@ class AppLocalizationsBs extends AppLocalizations {
       'Ovo je danas neobavezno, ali bi li ipak htio probati?|Imaš li malo viška vremena?';
 
   @override
-  String get notificationPeriodMonthly => 'mjesečno';
+  String get notificationPeriodMonthly => 'mjesečna';
 
   @override
-  String get notificationPeriodWeekly => 'sedmično';
+  String get notificationPeriodWeekly => 'sedmična';
 
   @override
   String get notificationPremadeBrushTeeth =>
@@ -1307,7 +1306,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationScheduleDaily =>
-      'Tvoj dnevni sidro te čeka. Zacementiraj ga.|Dnevni prozor je otvoren. Prođi kroz njega.|Tvoja dnevna rutina tiho se gradi. Ali se gradi.|Ovo je poziv tvojoj dnevnoj navici. Odgovori na njega!';
+      'Tvoja dnevna rutina tiho se gradi. Ali se gradi.|Ovo je poziv tvojoj dnevnoj navici. Odgovori na njega!';
 
   @override
   String notificationScheduleMonthlyAtRisk(
