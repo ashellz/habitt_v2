@@ -8,8 +8,8 @@ All habit data lives on-device. No analytics, no server-side data collection, no
 
 ## Available on
 
-Android: 
-IOS:  
+Android (latest apk): https://drive.proton.me/urls/D7R9D1QFTR#EkrK7Gt2aXM8
+IOS (early access): https://testflight.apple.com/join/sQyTmewh
 
 ---
 

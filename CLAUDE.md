@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Habitt v2** is a privacy-first, local-first habit tracking Flutter app (iOS, Android, web, desktop). All habit data is stored on-device via Hive; Google Drive backup is opt-in and client-side encrypted. No analytics or server-side data collection.
 
 - **App ID:** `com.shellz.habitt`
-- **Version:** 2.0.0+51
+- **Version:** 2.0.0+53
 - **Dart SDK:** ^3.7.0
 
 ## Common Commands
