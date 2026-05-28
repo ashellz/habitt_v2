@@ -1,1 +1,6 @@
-{}
+{
+  "bs": [
+    "insightStrengthStartSmallType1Medications",
+    "insightStrengthStartSmallType2Medications"
+  ]
+}

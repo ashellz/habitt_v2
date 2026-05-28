@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/models/notification.dart';
 import 'package:habitt/pages/other_pages/notification_settings_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
@@ -45,7 +46,26 @@ class _OnboardingStep4State extends State<OnboardingStep4>
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      await NotificationService.requestPermissions(context);
+      final allowed = await NotificationService.requestPermissions(context);
+      if (!mounted || !allowed) return;
+
+      final np = context.read<NotificationsProvider>();
+      await np.applyGlobalToggles(
+        context: context,
+        masterEnabled: true,
+        periodsEnabled: true,
+        habitsEnabled: true,
+      );
+      if (!mounted) return;
+      await np.setSettings(
+        NotificationPeriod.morning,
+        np.getSettings(NotificationPeriod.morning).copyWith(enabled: false),
+      );
+      if (!mounted) return;
+      await np.setSettings(
+        NotificationPeriod.midday,
+        np.getSettings(NotificationPeriod.midday).copyWith(enabled: false),
+      );
     });
   }
 

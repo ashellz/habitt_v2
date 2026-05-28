@@ -8,12 +8,14 @@ class CounterStatCard extends StatefulWidget {
     required this.iconPath,
     required this.value,
     required this.formatter,
+    this.isLoading = false,
   });
 
   final String title;
   final String iconPath;
   final int value;
   final String Function(int value) formatter;
+  final bool isLoading;
 
   @override
   State<CounterStatCard> createState() => _CounterStatCardState();
@@ -70,7 +72,7 @@ class _CounterStatCardState extends State<CounterStatCard>
           title: widget.title,
           value: widget.formatter(animatedValue),
           iconPath: widget.iconPath,
-          cloudProgress: _controller.value,
+          cloudProgress: widget.isLoading ? 0.1 : _controller.value,
         );
       },
     );

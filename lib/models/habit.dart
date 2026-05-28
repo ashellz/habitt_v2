@@ -504,6 +504,12 @@ class Habit extends HiveObject {
     }
   }
 
+  void setLongestStreak(int value) {
+    if (value == longestStreak) return;
+    longestStreak = value;
+    timestamps['longestStreak'] = DateTime.now().toUtc();
+  }
+
   /// Get the habit name color based on theme mode
   Color getNameColor(ThemeProvider tp) {
     return resolveTextColor(tp) ?? tp.primaryTextColor;

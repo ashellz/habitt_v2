@@ -223,36 +223,34 @@ class NewDefaultButton extends StatelessWidget {
                           ),
                         ),
                       )
-                      : Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (prefix != null) ...[
-                              prefix!,
-                              const SizedBox(width: 10),
-                            ],
-                            if (child != null)
-                              child!
-                            else if (label != null)
-                              Text(
-                                label!,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: resolvedTextColor,
-                                  fontSize:
-                                      _variant == _ButtonVariant.primarySmall ||
-                                              _variant ==
-                                                  _ButtonVariant.secondarySmall
-                                          ? 14
-                                          : 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                      : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (prefix != null) ...[
+                            prefix!,
+                            const SizedBox(width: 10),
                           ],
-                        ),
+                          if (child != null)
+                            child!
+                          else if (label != null)
+                            Text(
+                              label!,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: resolvedTextColor,
+                                fontSize:
+                                    _variant == _ButtonVariant.primarySmall ||
+                                            _variant ==
+                                                _ButtonVariant.secondarySmall
+                                        ? 14
+                                        : 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                        ],
                       ),
             ),
           ),

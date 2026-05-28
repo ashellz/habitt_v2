@@ -35,9 +35,13 @@ class CalendarPage extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-        child: ListView(
+      body: RefreshIndicator(
+        color: cp.main,
+        onRefresh: () => context.read<HabitProvider>().recalculateLongestStreaks(),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           children: [
             Text(
               loc.calendar,
@@ -55,6 +59,7 @@ class CalendarPage extends StatelessWidget {
               allStats: allStats,
               perfectDayCompletion: perfectDayCompletion,
               isActive: isActive,
+              isLoading: hp.isRecalculatingLongestStreak,
             ),
             SizedBox(height: 32),
             CompletionRatio(
@@ -65,6 +70,7 @@ class CalendarPage extends StatelessWidget {
             ConsistencyCalendar(allStats: allStats),
             SizedBox(height: 145),
           ],
+          ),
         ),
       ),
     );
@@ -243,6 +249,7 @@ class StreakCalendarSection extends StatelessWidget {
     required this.perfectDayCompletion,
     this.today,
     this.isActive = true,
+    this.isLoading = false,
   });
 
   final int streak;
@@ -251,6 +258,7 @@ class StreakCalendarSection extends StatelessWidget {
   final Map<DateTime, bool> perfectDayCompletion;
   final DateTime? today;
   final bool isActive;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -281,6 +289,7 @@ class StreakCalendarSection extends StatelessWidget {
                   formatter:
                       (value) =>
                           value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
+                  isLoading: isLoading,
                 ),
               ),
             ],

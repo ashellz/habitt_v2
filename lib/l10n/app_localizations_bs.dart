@@ -526,7 +526,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get insightStrengthStartSmallType1Medications =>
-      'Tvoja navika uzimanja lijekova posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od uzimanja lijekova. Uzmi ih danas i zaštiti tu naviku.|Momentum u uzimanju lijekova slabi. Održi ga živim uzimanjem lijekova na vrijeme danas.|Nemoj dopustiti da tvoj raspored uzimanja lijekova postane neredovan. Fokusiraj se i uzmi ih danas.|Počeo si uzimati lijekove na vrijeme s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
+      'Your medication habit is slipping. Do not let this routine fall off now.|You have been off track with taking your medications. Take them today and protect the habit.|Momentum on taking your medications is fading. Keep it alive by taking them on time today.|Do not let your medication schedule become inconsistent. Lock in and take them today.|You started taking your medications on time for a reason. Stay disciplined and keep it from slipping.';
 
   @override
   String get insightStrengthStartSmallType1Nutrition =>
@@ -627,7 +627,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Nisi redovno uzimao lijekove na vrijeme zadnjih dana. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.|Uzimanje lijekova na vrijeme je nedavno bilo teže. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.|Tvoja konzistentnost u uzimanju lijekova je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.|Da zaštitis naviku uzimanja lijekova, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.|Tvoja navika uzimanja lijekova treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
+    return 'You have not been consistent with taking your medications on time lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Taking your medications on time has been harder recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Your medication consistency is down lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your medication habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your medication habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -980,39 +980,39 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageMedications1 =>
-      'pravilno tempiranje štiti tvoju zdravstvenu rutinu';
+      'pravilno održavanje štiti tvoju zdravstvenu rutinu';
 
   @override
   String get notificationEncourageMedications2 =>
-      'pridržavanje rasporeda održava tvoju osnovu stabilnom';
+      'pridržavanje rasporeda lijekova je ključno za tvoje zdravlje';
 
   @override
   String get notificationEncourageMedications3 =>
-      'ovaj korak podržava tvoju dugoročnu dobrobit';
+      'lijekovi podržavaju tvoju dugoročnu dobrobit';
 
   @override
   String get notificationEncourageNutrition1 =>
-      'jedan namjerni izbor sada podržava tvoju osnovu';
+      'pravilnom ishranom održavaš svoje zdravlje i energiju';
 
   @override
   String get notificationEncourageNutrition2 =>
-      'male pobjede u ishrani se brzo zbrajaju';
+      'zdrava ishrana danas za bolje sutra';
 
   @override
   String get notificationEncourageNutrition3 =>
-      'konzistentnost ovdje poboljšava sve ostalo';
+      'hrana doslovno čini čovjeka sretnim';
 
   @override
   String get notificationEncourageProductivitySession1 =>
-      'jedna fokusirana sesija štiti vrijeme za duboki rad';
+      'vrijeme za fokus i duboki rad';
 
   @override
   String get notificationEncourageProductivitySession2 =>
-      'čisti fokus blok sada može promijeniti tvoj dan';
+      'osjećaćeš se ispunjeno kada završiš, vjeruj mi';
 
   @override
   String get notificationEncourageProductivitySession3 =>
-      'konzistentnost u fokusu dovodi do boljih rezultata';
+      'fokus bez distrakcija dovodi brže dovodi do boljih rezultata';
 
   @override
   String get notificationEncourageRead1 =>
@@ -1020,10 +1020,10 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageRead2 =>
-      'malo svakodnevno čitanje donosi stvarni napredak';
+      'malo svakodnevno čitanje da ispuniš svoj cilj';
 
   @override
-  String get notificationEncourageRead3 => 'dolaskom danas niz ostaje živ';
+  String get notificationEncourageRead3 => 'znaš zbog čega si počeo čitati';
 
   @override
   String get notificationEncourageResearch1 =>
@@ -1035,7 +1035,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageResearch3 =>
-      'hvatanje jednog nalaza danas zadržava zamah';
+      'sjeti se šta si danas htio istražiti';
 
   @override
   String get notificationEncourageRunning1 =>
@@ -1043,11 +1043,11 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageRunning2 =>
-      'sadašnje pojavljivanje jača tvoju osnovnu izdržljivost u trčanju';
+      'tračanje danas jača tvoju dugoročnu izdržljivost';
 
   @override
   String get notificationEncourageRunning3 =>
-      'ovaj napor održava tvoj fitnes zamah stvarnim';
+      'ovaj napor održava tvoju fitnes rutinu';
 
   @override
   String get notificationEncourageShower1 =>

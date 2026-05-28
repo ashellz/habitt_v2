@@ -210,56 +210,93 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       backgroundColor: cp.habitBg,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(
-            0,
-            MediaQuery.of(context).padding.top,
-            0,
-            0,
-          ),
-          physics: const ClampingScrollPhysics(),
-          children: [
-            Container(
-              color: cp.habitBg,
-              child: Column(
-                children: [
-                  _topBar(cp, habit),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 14),
-                        _summaryCard(cp, habit, displayHabit, effectiveDate, stats),
-                        const SizedBox(height: 18),
-                        _notesSection(cp),
-                        const SizedBox(height: 24),
-                      ],
+        child: RefreshIndicator(
+          color: cp.main,
+          onRefresh:
+              () => context.read<HabitProvider>().recalculateLongestStreaks(
+                widget.habitId,
+              ),
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(
+              0,
+              MediaQuery.of(context).padding.top,
+              0,
+              0,
+            ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              Container(
+                color: cp.habitBg,
+                child: Column(
+                  children: [
+                    _topBar(cp, habit),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 14),
+                          _summaryCard(
+                            cp,
+                            habit,
+                            displayHabit,
+                            effectiveDate,
+                            stats,
+                          ),
+                          const SizedBox(height: 18),
+                          _notesSection(cp),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Container(
-              color: cp.bg,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  SizedBox(height: 24),
-                  HabitDetailStatsSections(habit: habit, stats: stats),
-                  SizedBox(height: 24),
-                  ConsistencyCalendar(habitStats: stats),
-                  const SizedBox(height: 24),
-                  NewDefaultButton(
-                    height: 40,
-                    color: cp.fail,
-                    onPressed: () => showDeleteHabitFlow(habit, context),
-                    child: Text(loc.deleteHabit),
-                  ),
-                  const SizedBox(height: 24),
-                ],
+              Container(
+                color: cp.bg,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    SizedBox(height: 24),
+                    HabitDetailStatsSections(habit: habit, stats: stats),
+                    SizedBox(height: 24),
+                    ConsistencyCalendar(habitStats: stats),
+                    const SizedBox(height: 24),
+                    GestureDetector(
+                      onTap: () => showDeleteHabitFlow(habit, context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.deleteHabit,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/trash.svg',
+                              width: 20,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -439,6 +439,8 @@ class NotificationsProvider extends ChangeNotifier {
       _habitsEnabled = false;
     }
 
+    notifyListeners();
+
     await _prefs?.setBool(_masterKey, _masterEnabled);
     await _prefs?.setBool(_periodsKey, _periodsEnabled);
     await _prefs?.setBool(_habitsKey, _habitsEnabled);
@@ -506,7 +508,6 @@ class NotificationsProvider extends ChangeNotifier {
       }
     }
 
-    notifyListeners();
     return true;
   }
 }

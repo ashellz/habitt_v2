@@ -233,16 +233,21 @@ class HabitProvider extends ChangeNotifier {
   // Used for deterining if a habit with weekly schedule appears on a day
   int _effectiveTimesCompletedThisWeek(Habit habit, DateTime day) {
     final ts = habit.timestamps['timesCompletedThisWeek'];
-    if (ts == null) return habit.timesCompletedThisWeek;
-    return _weekKey(ts) == _weekKey(day) ? habit.timesCompletedThisWeek : 0;
+    if (ts == null) return 0;
+    // Convert UTC timestamp to local before comparing week keys, since `day`
+    // uses local date components. Without this, late-night completions for
+    // users behind UTC are attributed to the following week.
+    return _weekKey(ts.toLocal()) == _weekKey(day)
+        ? habit.timesCompletedThisWeek
+        : 0;
   }
 
   // Checks how many times a habit has been completed in the current month
   // Used for deterining if a habit with monthly schedule appears on a day
   int _effectiveTimesCompletedThisMonth(Habit habit, DateTime day) {
     final ts = habit.timestamps['timesCompletedThisMonth'];
-    if (ts == null) return habit.timesCompletedThisMonth;
-    return _isSameMonth(ts, day) ? habit.timesCompletedThisMonth : 0;
+    if (ts == null) return 0;
+    return _isSameMonth(ts.toLocal(), day) ? habit.timesCompletedThisMonth : 0;
   }
 
   // Used for building the dates when habit should appear for a habit with custom schedule
@@ -814,10 +819,6 @@ class HabitProvider extends ChangeNotifier {
       checkReorderCategories(context, habit);
     }
 
-    // fix:
-    // notifications should use more texts
-    // times a month or week counters broken
-
     await updateHabitInDB(habit, day: daySimple);
     if (daySimple == todaySimple && habit.completed) {
       await NotificationService.rescheduleHabitNotifications(
@@ -1029,6 +1030,68 @@ class HabitProvider extends ChangeNotifier {
         timestamp: DateTime.now().toUtc(),
       ),
     );
+  }
+
+  bool _isRecalculatingLongestStreak = false;
+  bool get isRecalculatingLongestStreak => _isRecalculatingLongestStreak;
+
+  Future<void> recalculateLongestStreaks([int? onlyHabitId]) async {
+    _isRecalculatingLongestStreak = true;
+    notifyListeners();
+
+    final sortedDays = daysBox.values.toList();
+    sortedDays.sort((a, b) => a.date.compareTo(b.date)); // oldest → newest
+    final today = _normalizeDate(DateTime.now());
+    sortedDays.removeWhere((day) => _normalizeDate(day.date) == today);
+
+    for (final habit in habitBox.values) {
+      if (onlyHabitId != null && habit.id != onlyHabitId) continue;
+      int longestStreak = 0;
+      int currentRun = 0;
+      int consecutiveMisses = 0;
+
+      for (final day in sortedDays) {
+        final normalizedDay = _normalizeDate(day.date);
+        if (!_appearsOnDay(habit, normalizedDay)) continue;
+
+        Habit? dayHabit;
+        for (final candidate in day.habits) {
+          if (candidate.id == habit.id) {
+            dayHabit = candidate;
+            break;
+          }
+        }
+        if (dayHabit == null) continue;
+
+        if (dayHabit.completed) {
+          currentRun++;
+          consecutiveMisses = 0;
+          if (currentRun > longestStreak) longestStreak = currentRun;
+        } else {
+          if (dayHabit.hasTrackingType) {
+            if (dayHabit.tracksAmount && dayHabit.amountCompleted > 0) {
+              consecutiveMisses = 0;
+              continue;
+            } else if (dayHabit.tracksDuration &&
+                dayHabit.durationCompleted > 0) {
+              consecutiveMisses = 0;
+              continue;
+            }
+          }
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2) {
+            currentRun = 0;
+            consecutiveMisses = 0;
+          }
+        }
+      }
+
+      habit.setLongestStreak(longestStreak);
+      await habit.save();
+    }
+
+    _isRecalculatingLongestStreak = false;
+    notifyListeners();
   }
 
   Future<void> assignStreaks([int? onlyHabitId]) async {

@@ -74,8 +74,11 @@ class BillingService {
     try {
       final offerings = await Purchases.getOfferings();
       final current = offerings.current;
+      if (current != null) return [current];
 
-      return current != null ? [current] : [];
+      // Fall back to all available offerings when no current offering is set
+      final all = offerings.all.values.toList();
+      return all;
     } catch (e) {
       debugPrint("Error fetching offerings: $e");
       return [];

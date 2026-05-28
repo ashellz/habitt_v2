@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -81,6 +82,8 @@ class _StatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final isRecalculating =
+        context.watch<HabitProvider>().isRecalculatingLongestStreak;
 
     return Column(
       children: [
@@ -127,6 +130,7 @@ class _StatsGrid extends StatelessWidget {
                 formatter:
                     (value) =>
                         value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
+                isLoading: isRecalculating,
               ),
             ),
           ],
