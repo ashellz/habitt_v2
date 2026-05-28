@@ -96,43 +96,16 @@ class ProfileOptions extends StatelessWidget {
                       cp: cp,
                       text: loc.backupAndSync,
                       svgPath: 'assets/images/new-svg/backup.svg',
-                      onTap: () => showModalBottomSheet(
-                        context: context,
-                        backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
-                        barrierColor: cp.greyText.darken().withValues(
-                          alpha: 0.3,
-                        ),
-                        isScrollControlled: true,
-                        builder: (context) => const BackupSheet(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: ShapeDecoration(
-                  color: cp.field,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1, color: cp.border),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                child: Row(
-                  spacing: 12,
-                  children: [
-                    Text(
-                      loc.logOut,
-                      style: TextStyle(
-                        color: cp.error,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Spacer(),
-                    SvgPicture.asset(
-                      'assets/images/new-svg/log-out.svg',
-                      colorFilter: ColorFilter.mode(cp.error, BlendMode.srcIn),
+                      onTap:
+                          () => showModalBottomSheet(
+                            context: context,
+                            backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                            barrierColor: cp.greyText.darken().withValues(
+                              alpha: 0.3,
+                            ),
+                            isScrollControlled: true,
+                            builder: (context) => const BackupSheet(),
+                          ),
                     ),
                   ],
                 ),
@@ -150,13 +123,13 @@ class ProfileOption extends StatelessWidget {
     super.key,
     required this.cp,
     required this.text,
-    required this.svgPath,
+    this.svgPath,
     this.onTap,
   });
 
   final ColorProvider cp;
   final String text;
-  final String svgPath;
+  final String? svgPath;
   final VoidCallback? onTap;
 
   @override
@@ -168,18 +141,19 @@ class ProfileOption extends StatelessWidget {
         child: Row(
           spacing: 12,
           children: [
-            SizedBox(
-              height: 20,
-              width: 20,
-              child: SvgPicture.asset(
-                svgPath,
-                colorFilter: ColorFilter.mode(
-                  cp.lightGreyText,
-                  BlendMode.srcIn,
+            if (svgPath != null)
+              SizedBox(
+                height: 20,
+                width: 20,
+                child: SvgPicture.asset(
+                  svgPath!,
+                  colorFilter: ColorFilter.mode(
+                    cp.lightGreyText,
+                    BlendMode.srcIn,
+                  ),
+                  fit: BoxFit.contain,
                 ),
-                fit: BoxFit.contain,
               ),
-            ),
             Text(
               text,
               style: TextStyle(

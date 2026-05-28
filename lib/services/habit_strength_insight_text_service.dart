@@ -84,9 +84,7 @@ class HabitStrengthInsightTextService {
               habitId: habit.id,
               todayKey: todayKey,
             )
-            : insight == HabitStrengthInsight.startSmall
-            ? localizations.insightStrengthApplyDecrease
-            : localizations.insightStrengthApplyIncrease;
+            : localizations.apply;
 
     return HabitStrengthInsightDialogCopy(
       title: title,
@@ -191,7 +189,7 @@ class HabitStrengthInsightTextService {
   }) {
     // Picks one of the text variants
     final variants = raw
-        .split('||')
+        .split('|')
         .map((it) => it.trim())
         .where((it) => it.isNotEmpty)
         .toList(growable: false);

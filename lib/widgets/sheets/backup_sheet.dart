@@ -8,6 +8,7 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -197,11 +198,55 @@ class _BackupSheetState extends State<BackupSheet> {
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: NewDefaultButton.primary(
-        width: double.infinity,
-        onPressed: () => bp.signIn(context),
-        label: loc.signInWithGoogle,
-        isLoading: bp.syncState == SyncState.syncing,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: ShapeDecoration(
+          color: cp.field,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(width: 1, color: cp.border),
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+        child: GestureDetector(
+          onTap: () => bp.signIn(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            color: Colors.transparent,
+            child: Row(
+              spacing: 12,
+              children: [
+                SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: SvgPicture.asset(
+                    'assets/images/new-svg/google.svg',
+                    colorFilter: ColorFilter.mode(
+                      cp.lightGreyText,
+                      BlendMode.srcIn,
+                    ),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Text(
+                  loc.signInWithGoogle,
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                RotatedBox(
+                  quarterTurns: 2,
+                  child: SvgPicture.asset(
+                    'assets/images/new-svg/back.svg',
+                    colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -281,7 +326,7 @@ class _BackupSheetState extends State<BackupSheet> {
           const SizedBox(height: 8),
           Center(
             child: GestureDetector(
-              onTap: () => bp.signOut(),
+              onTap: () => _confirmSignOut(context, bp, loc),
               child: Text(
                 loc.disconnectGoogle,
                 style: TextStyle(
@@ -321,6 +366,56 @@ class _BackupSheetState extends State<BackupSheet> {
     }
   }
 
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+  ) async {
+    final cp = context.read<ColorProvider>();
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.logOut,
+            desc: loc.logOutDesc,
+            primaryButtonLabel: loc.logOut,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      await bp.signOut();
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _confirmDeleteAccount(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+  ) async {
+    final cp = context.read<ColorProvider>();
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.deleteAccount,
+            desc: loc.deleteAccountDesc,
+            primaryButtonLabel: loc.delete,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      await bp.deleteAccount();
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
   // --- Signed-in state ---------------------------------------------------
 
   Widget _signedInState(
@@ -337,33 +432,6 @@ class _BackupSheetState extends State<BackupSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: ShapeDecoration(
-              color: cp.habitBg,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: cp.border),
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  loc.autoBackup,
-                  style: TextStyle(
-                    color: cp.text,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                NewDefaultSwitch(
-                  value: bp.isAutoSyncEnabled,
-                  onChanged: (v) => bp.setAutoSyncEnabled(v),
-                ),
-              ],
-            ),
-          ),
           /*
           const SizedBox(height: 12),
           Container(
@@ -412,6 +480,11 @@ class _BackupSheetState extends State<BackupSheet> {
               ],
             ),
           ), */
+          NewDefaultButton.secondary(
+            onPressed: isSyncing ? () {} : () => bp.performSync(true),
+            label: loc.backUpNow,
+            isLoading: isSyncing,
+          ),
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.only(left: 4),
@@ -436,31 +509,120 @@ class _BackupSheetState extends State<BackupSheet> {
                 ),
               ),
             ),
+
           const SizedBox(height: 24),
-          NewDefaultButton.secondary(
-            onPressed: isSyncing ? () {} : () => bp.performSync(true),
-            label: loc.backUpNow,
-            isLoading: isSyncing,
-          ),
-          const SizedBox(height: 10),
-          NewDefaultButton.secondary(
-            onPressed:
-                isSyncing ? () {} : () => _openBackupHistory(context, cp),
-            label: loc.restoreFromBackup,
-          ),
-          const SizedBox(height: 24),
-          Center(
-            child: GestureDetector(
-              onTap: () => bp.signOut(),
-              child: Text(
-                loc.disconnectGoogle,
-                style: TextStyle(
-                  color: cp.greyText,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: ShapeDecoration(
+                  color: cp.habitBg,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1, color: cp.border),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            loc.autoBackup,
+                            style: TextStyle(
+                              color: cp.text,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          NewDefaultSwitch(
+                            value: bp.isAutoSyncEnabled,
+                            onChanged: (v) => bp.setAutoSyncEnabled(v),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      color: Colors.transparent,
+                      child: ProfileOption(
+                        cp: cp,
+                        text: loc.restoreFromBackup,
+                        onTap: () => _openBackupHistory(context, cp),
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    GestureDetector(
+                      onTap: () => _confirmSignOut(context, bp, loc),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.logOut,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/log-out.svg',
+                              width: 20,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    GestureDetector(
+                      onTap: () => _confirmDeleteAccount(context, bp, loc),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.deleteAccount,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/trash.svg',
+                              width: 19,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),

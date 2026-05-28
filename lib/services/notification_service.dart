@@ -131,6 +131,7 @@ class NotificationService {
     required Habit habit,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
     int horizonDays = 7,
+    bool skipToday = false,
   }) async {
     final allowed = await areNotificationsAllowed();
     if (!allowed) {
@@ -145,6 +146,7 @@ class NotificationService {
       appearsOnDay: appearsOnDay,
       horizonDays: horizonDays,
       localizations: localizations,
+      startDayOffset: skipToday ? 1 : 0,
     );
   }
 
@@ -183,6 +185,7 @@ class NotificationService {
     required bool Function(Habit habit, DateTime day) appearsOnDay,
     required int horizonDays,
     required AppLocalizations localizations,
+    int startDayOffset = 0,
   }) async {
     if (habit.isDeleted == true ||
         !habit.notificationsEnabled ||
@@ -193,7 +196,7 @@ class NotificationService {
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day);
 
-    for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
+    for (int dayOffset = startDayOffset; dayOffset < horizonDays + startDayOffset; dayOffset++) {
       final day = startDay.add(Duration(days: dayOffset));
       if (!appearsOnDay(habit, day)) {
         continue;

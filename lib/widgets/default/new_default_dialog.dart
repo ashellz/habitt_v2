@@ -96,6 +96,7 @@ class NewDefaultDialog extends StatelessWidget {
                     ),
                   Expanded(
                     child: NewDefaultButton.primary(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       enabled: primaryButtonEnabled,
                       color: primaryButtonColor,
                       onPressed: () {

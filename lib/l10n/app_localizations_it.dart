@@ -126,24 +126,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Controllate quando e come ricevere le notifiche sulle vostre abitudini.';
 
   @override
-  String get couldNotGetOrCreateBackupFolder =>
-      'Impossibile ottenere o creare una cartella di backup';
-
-  @override
   String get createAmountLabel => 'Creare l\'etichetta dell\'importo';
-
-  @override
-  String get creatingNewDayEntry => 'Creazione di una nuova voce giornaliera';
-
-  @override
-  String get currentHourIsBetween12And19 =>
-      'L\'ora corrente è tra le 12 e le 19';
-
-  @override
-  String get currentHourIsBetween19And4 => 'L\'ora attuale è tra le 19 e le 4';
-
-  @override
-  String get currentHourIsBetween4And12 => 'L\'ora corrente è tra le 4 e le 12';
 
   @override
   String get custom => 'Personalizzato';
@@ -358,7 +341,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'State andando alla grande con il lavaggio dei denti. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nel lavarsi i denti. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine di lavarti i denti è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue Per il prossimo livello, l\'obiettivo consigliato è $fromValue -> $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare.||Eccellente ritmo di lavaggio dei denti. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a migliorare.';
+    return 'State andando alla grande con il lavaggio dei denti. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nel lavarsi i denti. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine di lavarti i denti è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue Per il prossimo livello, l\'obiettivo consigliato è $fromValue -> $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare.|Eccellente ritmo di lavaggio dei denti. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a migliorare.';
   }
 
   @override
@@ -367,7 +350,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with drink enough water. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on drink enough water. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your drink enough water habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for drink enough water. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on drink enough water. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with drink enough water. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on drink enough water. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your drink enough water habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for drink enough water. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on drink enough water. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -376,7 +359,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Your consistency is strong. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing.||You are handling this habit well. Strength is stable at $strength%. Push the target from $fromValue to $toValue for more growth.||Momentum is solid here. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to level up.||You built a reliable baseline. Strength is stable at $strength%. Move from $fromValue to $toValue and keep improving.||Great consistency lately. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep your progress rising.';
+    return 'Your consistency is strong. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing.|You are handling this habit well. Strength is stable at $strength%. Push the target from $fromValue to $toValue for more growth.|Momentum is solid here. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to level up.|You built a reliable baseline. Strength is stable at $strength%. Move from $fromValue to $toValue and keep improving.|Great consistency lately. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep your progress rising.';
   }
 
   @override
@@ -385,7 +368,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with go to bed early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on go to bed early. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your go to bed early habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for go to bed early. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on go to bed early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with go to bed early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on go to bed early. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your go to bed early habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for go to bed early. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on go to bed early. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -394,7 +377,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your gym routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your gym routine. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your gym routine habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your gym routine. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your gym routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with your gym routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on your gym routine. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your your gym routine habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for your gym routine. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on your gym routine. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -403,7 +386,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on take your medications on time. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your take your medications on time habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for take your medications on time. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on take your medications on time. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your take your medications on time habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for take your medications on time. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -412,7 +395,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your nutrition plan. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your nutrition plan. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your nutrition plan habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your nutrition plan. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your nutrition plan. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with your nutrition plan. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on your nutrition plan. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your your nutrition plan habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for your nutrition plan. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on your nutrition plan. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -421,7 +404,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with pray consistently. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on pray consistently. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your pray consistently habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for pray consistently. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on pray consistently. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with pray consistently. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on pray consistently. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your pray consistently habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for pray consistently. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on pray consistently. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -430,7 +413,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your productivity sessions. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your productivity sessions. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your productivity sessions habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your productivity sessions. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your productivity sessions. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with your productivity sessions. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on your productivity sessions. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your your productivity sessions habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for your productivity sessions. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on your productivity sessions. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -439,7 +422,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your reading habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your reading habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your reading habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your reading habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your reading habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with your reading habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on your reading habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your your reading habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for your reading habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on your reading habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -448,7 +431,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You are doing great with your research habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.||Great consistency on your research habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.||Your your research habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.||You are reliably showing up for your research habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.||Excellent rhythm on your research habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
+    return 'You are doing great with your research habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on your research habit. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your your research habit habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for your research habit. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on your research habit. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
   }
 
   @override
@@ -457,7 +440,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Stai andando alla grande con la tua routine di corsa. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nella tua routine di corsa. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine alla routine di corsa è forte in questo momento. La forza è stabile a $strength%. Obiettivo consigliato: $fromValue Per il livello successivo, l\'obiettivo consigliato è $fromValue -> $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
+    return 'Stai andando alla grande con la tua routine di corsa. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nella tua routine di corsa. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine alla routine di corsa è forte in questo momento. La forza è stabile a $strength%. Obiettivo consigliato: $fromValue Per il livello successivo, l\'obiettivo consigliato è $fromValue -> $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
   }
 
   @override
@@ -466,7 +449,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Stai andando alla grande con la doccia. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza con la doccia. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine di fare la doccia è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue Per il prossimo livello, l\'obiettivo consigliato è $fromValue -> $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a migliorare.';
+    return 'Stai andando alla grande con la doccia. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza con la doccia. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine di fare la doccia è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue Per il prossimo livello, l\'obiettivo consigliato è $fromValue -> $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a migliorare.';
   }
 
   @override
@@ -475,7 +458,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'La vostra routine di cura della pelle va benissimo. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nella tua routine di cura della pelle. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine alla cura della pelle è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il livello successivo, l\'obiettivo consigliato è $toValue. La forza è stabile al $strength%. Passa da $fromValue a $toValue per continuare a migliorare. La forza è stabile a $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
+    return 'La vostra routine di cura della pelle va benissimo. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nella tua routine di cura della pelle. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine alla cura della pelle è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il livello successivo, l\'obiettivo consigliato è $toValue. La forza è stabile al $strength%. Passa da $fromValue a $toValue per continuare a migliorare. La forza è stabile a $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
   }
 
   @override
@@ -484,7 +467,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Stai andando alla grande con la tua abitudine allo studio. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nella tua abitudine allo studio. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine allo studio è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il prossimo livello, l\'obiettivo raccomandato è $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare.||Eccellente ritmo di studio. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
+    return 'Stai andando alla grande con la tua abitudine allo studio. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nella tua abitudine allo studio. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine allo studio è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il prossimo livello, l\'obiettivo raccomandato è $toValue. La forza è stabile a $strength%. Passa da $fromValue a $toValue per continuare a migliorare.|Eccellente ritmo di studio. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
   }
 
   @override
@@ -498,7 +481,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Stai andando alla grande con il risveglio anticipato. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nel risveglio anticipato. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine a svegliarti presto è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue Per il prossimo livello, l\'obiettivo raccomandato è $fromValue -> $toValue. La forza è stabile al $strength%. Passa da $fromValue a $toValue per continuare a migliorare.||Eccellente ritmo al risveglio anticipato. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a migliorare.';
+    return 'Stai andando alla grande con il risveglio anticipato. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nel risveglio anticipato. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine a svegliarti presto è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue Per il prossimo livello, l\'obiettivo raccomandato è $fromValue -> $toValue. La forza è stabile al $strength%. Passa da $fromValue a $toValue per continuare a migliorare.|Eccellente ritmo al risveglio anticipato. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a migliorare.';
   }
 
   @override
@@ -507,7 +490,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'La tua routine di camminata va benissimo. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nella tua routine di camminata. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine alla camminata è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il livello successivo, l\'obiettivo consigliato è $toValue. La forza è stabile a $strength%. Passare da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
+    return 'La tua routine di camminata va benissimo. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nella tua routine di camminata. La forza è stabile al $strength%. Aumenta l\'obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine alla camminata è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il livello successivo, l\'obiettivo consigliato è $toValue. La forza è stabile a $strength%. Passare da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
   }
 
   @override
@@ -516,7 +499,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'La vostra abitudine al lavoro sta andando alla grande. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.||Grande costanza nella tua abitudine al lavoro. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.||La tua abitudine al lavoro è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il prossimo livello, l\'obiettivo consigliato è $toValue. La forza è stabile a $strength%. Passare da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
+    return 'La vostra abitudine al lavoro sta andando alla grande. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a crescere ancora di più.|Grande costanza nella tua abitudine al lavoro. La forza è stabile al $strength%. Aumenta il tuo obiettivo da $fromValue a $toValue e mantieni alto lo slancio.|La tua abitudine al lavoro è forte in questo momento. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> Per il prossimo livello, l\'obiettivo consigliato è $toValue. La forza è stabile a $strength%. Passare da $fromValue a $toValue per continuare a migliorare. La forza è stabile al $strength%. Obiettivo consigliato: $fromValue -> $toValue per continuare a progredire.';
   }
 
   @override
@@ -531,75 +514,75 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get insightStrengthStartSmallType1BrushTeeth =>
-      'L\'abitudine di lavarsi i denti sta venendo meno. Non lasciate che questa routine venga meno proprio ora.||Siete stati fuori strada con il lavaggio dei denti. Oggi, fatevi vedere e proteggete l\'abitudine.||Il sentimento di lavarsi i denti si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che il lavaggio dei denti diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato a lavarvi i denti per un motivo. Rimanete disciplinati e impedite che vi sfugga.';
+      'L\'abitudine di lavarsi i denti sta venendo meno. Non lasciate che questa routine venga meno proprio ora.|Siete stati fuori strada con il lavaggio dei denti. Oggi, fatevi vedere e proteggete l\'abitudine.|Il sentimento di lavarsi i denti si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che il lavaggio dei denti diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato a lavarvi i denti per un motivo. Rimanete disciplinati e impedite che vi sfugga.';
 
   @override
   String get insightStrengthStartSmallType1DrinkWater =>
-      'L\'abitudine di bere acqua a sufficienza sta venendo meno. Non lasciate che questa abitudine venga meno proprio ora. Oggi, fatevi vedere e proteggete l\'abitudine.||Lo slancio nel bere acqua a sufficienza sta svanendo. Mantenetelo vivo con una ripetizione solida oggi.Non lasciate che bere abbastanza acqua diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a bere abbastanza acqua per un motivo. Rimanete disciplinati e impedite che si sciolga.';
+      'L\'abitudine di bere acqua a sufficienza sta venendo meno. Non lasciate che questa abitudine venga meno proprio ora. Oggi, fatevi vedere e proteggete l\'abitudine.|Lo slancio nel bere acqua a sufficienza sta svanendo. Mantenetelo vivo con una ripetizione solida oggi.Non lasciate che bere abbastanza acqua diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a bere abbastanza acqua per un motivo. Rimanete disciplinati e impedite che si sciolga.';
 
   @override
   String get insightStrengthStartSmallType1Generic =>
-      'Avete aggiunto questa abitudine per un motivo. Non lasciatela sfuggire ora. Presentatevi oggi e mantenetela viva.||Stai rimanendo indietro con questa abitudine. Bloccatevi e portate a termine il vostro lavoro.||Non negoziate con la pigrizia. Proteggete questa abitudine oggi. Siete arrivati troppo lontano per lasciare che questa abitudine vada alla deriva. Rimanete coerenti oggi.';
+      'Avete aggiunto questa abitudine per un motivo. Non lasciatela sfuggire ora. Presentatevi oggi e mantenetela viva.|Stai rimanendo indietro con questa abitudine. Bloccatevi e portate a termine il vostro lavoro.|Non negoziate con la pigrizia. Proteggete questa abitudine oggi. Siete arrivati troppo lontano per lasciare che questa abitudine vada alla deriva. Rimanete coerenti oggi.';
 
   @override
   String get insightStrengthStartSmallType1GoToBedEarly =>
-      'L\'abitudine di andare a letto presto sta venendo meno. Non lasciate che questa routine venga meno proprio ora.||Siete stati fuori strada con l\'andare a letto presto. Oggi, presentatevi e proteggete l\'abitudine.||Il sentimento di andare a letto presto si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.||Non lasciate che andare a letto presto diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato ad andare a letto presto per un motivo. Rimanete disciplinati e impedite che la cosa si affievolisca.';
+      'L\'abitudine di andare a letto presto sta venendo meno. Non lasciate che questa routine venga meno proprio ora.|Siete stati fuori strada con l\'andare a letto presto. Oggi, presentatevi e proteggete l\'abitudine.|Il sentimento di andare a letto presto si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.|Non lasciate che andare a letto presto diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato ad andare a letto presto per un motivo. Rimanete disciplinati e impedite che la cosa si affievolisca.';
 
   @override
   String get insightStrengthStartSmallType1Gym =>
-      'L\'abitudine alla palestra sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio della vostra routine in palestra si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la vostra routine in palestra diventi incoerente. Non permettete che la vostra routine in palestra diventi incoerente. Rimanete disciplinati e impedite che si interrompa.';
+      'L\'abitudine alla palestra sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio della vostra routine in palestra si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che la vostra routine in palestra diventi incoerente. Non permettete che la vostra routine in palestra diventi incoerente. Rimanete disciplinati e impedite che si interrompa.';
 
   @override
   String get insightStrengthStartSmallType1Medications =>
-      'L\'abitudine di prendere i farmaci in tempo sta venendo meno. Non lasciate che questa routine cada ora.||Siete stati fuori strada con l\'assunzione dei farmaci in orario. Presentatevi oggi e proteggete l\'abitudine.||Il sentimento di prendere i farmaci in tempo si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.||Non permettete che l\'assunzione dei farmaci in orario diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a prendere i farmaci in tempo per un motivo. Rimanete disciplinati e impedite che si sciolga.';
+      'L\'abitudine di prendere i farmaci in tempo sta venendo meno. Non lasciate che questa routine cada ora.|Siete stati fuori strada con l\'assunzione dei farmaci in orario. Presentatevi oggi e proteggete l\'abitudine.|Il sentimento di prendere i farmaci in tempo si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.|Non permettete che l\'assunzione dei farmaci in orario diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a prendere i farmaci in tempo per un motivo. Rimanete disciplinati e impedite che si sciolga.';
 
   @override
   String get insightStrengthStartSmallType1Nutrition =>
-      'L\'abitudine al vostro piano nutrizionale sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio del vostro piano nutrizionale si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che il vostro piano nutrizionale diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato il vostro piano nutrizionale per un motivo. Rimanete disciplinati e impedite che scivoli via.';
+      'L\'abitudine al vostro piano nutrizionale sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio del vostro piano nutrizionale si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che il vostro piano nutrizionale diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato il vostro piano nutrizionale per un motivo. Rimanete disciplinati e impedite che scivoli via.';
 
   @override
   String get insightStrengthStartSmallType1Praying =>
-      'La vostra abitudine di pregare con costanza sta scivolando. Non lasciate che questa routine cada ora.||Siete stati fuori strada con il pregare con costanza. Presentatevi oggi e proteggete l\'abitudine.||Il sentimento di pregare con costanza si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.Non lasciate che pregare con costanza diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a pregare con costanza per un motivo. Rimanete disciplinati e impedite che si sciolga.';
+      'La vostra abitudine di pregare con costanza sta scivolando. Non lasciate che questa routine cada ora.|Siete stati fuori strada con il pregare con costanza. Presentatevi oggi e proteggete l\'abitudine.|Il sentimento di pregare con costanza si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.Non lasciate che pregare con costanza diventi incoerente. Bloccatevi e fate la vostra parte oggi. Avete iniziato a pregare con costanza per un motivo. Rimanete disciplinati e impedite che si sciolga.';
 
   @override
   String get insightStrengthStartSmallType1ProductivitySession =>
-      'L\'abitudine alle sessioni di produttività sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio per le vostre sessioni di produttività sta svanendo. Mantenetelo vivo con una solida ripetizione oggi.||Non lasciate che le vostre sessioni di produttività diventino incoerenti. Bloccatevi e fate la vostra parte oggi. Avete iniziato le vostre sessioni di produttività per un motivo. Rimanete disciplinati e impedite che si perdano.';
+      'L\'abitudine alle sessioni di produttività sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio per le vostre sessioni di produttività sta svanendo. Mantenetelo vivo con una solida ripetizione oggi.|Non lasciate che le vostre sessioni di produttività diventino incoerenti. Bloccatevi e fate la vostra parte oggi. Avete iniziato le vostre sessioni di produttività per un motivo. Rimanete disciplinati e impedite che si perdano.';
 
   @override
   String get insightStrengthStartSmallType1Read =>
-      'La vostra abitudine alla lettura sta scivolando. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||La vostra abitudine alla lettura si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine alla lettura diventi incoerente. Non permettete che la vostra abitudine alla lettura diventi incoerente. Rimanete disciplinati e impedite che si affievolisca.';
+      'La vostra abitudine alla lettura sta scivolando. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|La vostra abitudine alla lettura si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.|Non lasciate che la vostra abitudine alla lettura diventi incoerente. Non permettete che la vostra abitudine alla lettura diventi incoerente. Rimanete disciplinati e impedite che si affievolisca.';
 
   @override
   String get insightStrengthStartSmallType1Research =>
-      'La vostra abitudine alla ricerca sta venendo meno. Non lasciate che questa routine si interrompa ora.||Siete stati fuori strada con la vostra abitudine alla ricerca. Presentatevi oggi e proteggete l\'abitudine.||La vostra abitudine alla ricerca si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine alla ricerca diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra abitudine alla ricerca per un motivo. Rimanete disciplinati e impedite che si affievolisca.';
+      'La vostra abitudine alla ricerca sta venendo meno. Non lasciate che questa routine si interrompa ora.|Siete stati fuori strada con la vostra abitudine alla ricerca. Presentatevi oggi e proteggete l\'abitudine.|La vostra abitudine alla ricerca si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.|Non lasciate che la vostra abitudine alla ricerca diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato la vostra abitudine alla ricerca per un motivo. Rimanete disciplinati e impedite che si affievolisca.';
 
   @override
   String get insightStrengthStartSmallType1Running =>
-      'L\'abitudine alla corsa sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio della vostra routine di corsa si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la vostra routine di corsa diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra routine di corsa per un motivo. Rimanete disciplinati e impedite che si interrompa.';
+      'L\'abitudine alla corsa sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio della vostra routine di corsa si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che la vostra routine di corsa diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato la vostra routine di corsa per un motivo. Rimanete disciplinati e impedite che si interrompa.';
 
   @override
   String get insightStrengthStartSmallType1Shower =>
-      'L\'abitudine di fare la doccia sta venendo meno. Non lasciate che questa routine cada ora.||Siete stati fuori strada con la doccia. Presentatevi oggi e proteggete l\'abitudine.||Il sentimento di fare la doccia si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la doccia diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato a fare la doccia per un motivo. Rimanete disciplinati e impedite che si sciolga.';
+      'L\'abitudine di fare la doccia sta venendo meno. Non lasciate che questa routine cada ora.|Siete stati fuori strada con la doccia. Presentatevi oggi e proteggete l\'abitudine.|Il sentimento di fare la doccia si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che la doccia diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato a fare la doccia per un motivo. Rimanete disciplinati e impedite che si sciolga.';
 
   @override
   String get insightStrengthStartSmallType1SkinCare =>
-      'L\'abitudine alla cura della pelle sta venendo meno. Non lasciate che questa routine cada ora.||Siete stati fuori strada con la vostra routine di cura della pelle. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio della vostra routine di cura della pelle si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.||Non lasciate che la vostra routine di cura della pelle diventi incoerente. Bloccatevi e fate la vostra parte oggi stesso.||Avete iniziato la vostra routine di cura della pelle per un motivo. Rimanete disciplinati e impedite che scivoli via.';
+      'L\'abitudine alla cura della pelle sta venendo meno. Non lasciate che questa routine cada ora.|Siete stati fuori strada con la vostra routine di cura della pelle. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio della vostra routine di cura della pelle si sta affievolendo. Mantenetelo vivo con una solida ripetizione oggi.|Non lasciate che la vostra routine di cura della pelle diventi incoerente. Bloccatevi e fate la vostra parte oggi stesso.|Avete iniziato la vostra routine di cura della pelle per un motivo. Rimanete disciplinati e impedite che scivoli via.';
 
   @override
   String get insightStrengthStartSmallType1Studying =>
-      'La vostra abitudine allo studio sta venendo meno. Non lasciate che questa routine si interrompa ora.||Siete stati fuori strada con la vostra abitudine allo studio. Presentatevi oggi e proteggete l\'abitudine.||La vostra abitudine allo studio si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine allo studio diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra abitudine allo studio per un motivo. Rimanete disciplinati e impedite che si affievolisca.';
+      'La vostra abitudine allo studio sta venendo meno. Non lasciate che questa routine si interrompa ora.|Siete stati fuori strada con la vostra abitudine allo studio. Presentatevi oggi e proteggete l\'abitudine.|La vostra abitudine allo studio si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.|Non lasciate che la vostra abitudine allo studio diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato la vostra abitudine allo studio per un motivo. Rimanete disciplinati e impedite che si affievolisca.';
 
   @override
   String get insightStrengthStartSmallType1WakeUpEarly =>
-      'L\'abitudine di svegliarsi presto sta venendo meno. Non lasciate che questa routine venga meno ora. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio verso la sveglia presto si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la sveglia presto diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato a svegliarvi presto per un motivo. Rimanete disciplinati e impedite che la cosa scivoli via.';
+      'L\'abitudine di svegliarsi presto sta venendo meno. Non lasciate che questa routine venga meno ora. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio verso la sveglia presto si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che la sveglia presto diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato a svegliarvi presto per un motivo. Rimanete disciplinati e impedite che la cosa scivoli via.';
 
   @override
   String get insightStrengthStartSmallType1Walk =>
-      'La vostra abitudine di camminare sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||Lo slancio della vostra routine di camminata si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.||Non lasciate che la vostra routine di camminata diventi incoerente. Bloccatevi e fate la vostra parte oggi.||Avete iniziato la vostra routine di camminata per un motivo. Rimanete disciplinati e impedite che si interrompa.';
+      'La vostra abitudine di camminare sta venendo meno. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|Lo slancio della vostra routine di camminata si sta affievolendo. Mantenetelo vivo con una ripetizione solida oggi.|Non lasciate che la vostra routine di camminata diventi incoerente. Bloccatevi e fate la vostra parte oggi.|Avete iniziato la vostra routine di camminata per un motivo. Rimanete disciplinati e impedite che si interrompa.';
 
   @override
   String get insightStrengthStartSmallType1Work =>
-      'La vostra abitudine al lavoro sta scivolando. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.||La vostra abitudine al lavoro si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.||Non lasciate che la vostra abitudine al lavoro diventi incoerente. Non permettete che la vostra abitudine al lavoro diventi incoerente. Rimanete disciplinati e impedite che si affievolisca.';
+      'La vostra abitudine al lavoro sta scivolando. Non lasciate che questa routine venga meno proprio ora. Presentatevi oggi e proteggete l\'abitudine.|La vostra abitudine al lavoro si sta affievolendo. Mantenetela viva con una solida ripetizione oggi.|Non lasciate che la vostra abitudine al lavoro diventi incoerente. Non permettete che la vostra abitudine al lavoro diventi incoerente. Rimanete disciplinati e impedite che si affievolisca.';
 
   @override
   String insightStrengthStartSmallType2BrushTeeth(
@@ -607,7 +590,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non siete stati costanti nel lavarvi i denti. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||Lavarsi i denti è stato più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.||La costanza nel lavarsi i denti è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine di lavarsi i denti, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.||Lavarsi i denti ha bisogno di un reset. Forza diminuita del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
+    return 'Ultimamente non siete stati costanti nel lavarvi i denti. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|Lavarsi i denti è stato più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.|La costanza nel lavarsi i denti è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine di lavarsi i denti, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.|Lavarsi i denti ha bisogno di un reset. Forza diminuita del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
   }
 
   @override
@@ -616,7 +599,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non siete stati costanti nel bere abbastanza acqua. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||Bere abbastanza acqua è stato più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.||La costanza nel bere acqua a sufficienza è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine di bere abbastanza acqua, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Obiettivo consigliato: $fromValue -> $toValue per recuperare lo slancio: $fromValue -> Bevi abbastanza acqua ha bisogno di un reset. La forza è diminuita del $drop%. Provare con $fromValue -> $toValue per mantenere questa abitudine.';
+    return 'Ultimamente non siete stati costanti nel bere abbastanza acqua. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|Bere abbastanza acqua è stato più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.|La costanza nel bere acqua a sufficienza è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine di bere abbastanza acqua, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Obiettivo consigliato: $fromValue -> $toValue per recuperare lo slancio: $fromValue -> Bevi abbastanza acqua ha bisogno di un reset. La forza è diminuita del $drop%. Provare con $fromValue -> $toValue per mantenere questa abitudine.';
   }
 
   @override
@@ -625,7 +608,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Consistency dropped on this habit. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to stabilize again.||You have been off track lately. Strength dropped by $drop%. Try this target shift: $fromValue -> $toValue to rebuild rhythm.||Recent performance is slipping. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to get back on track.||This habit needs a lighter target for now. Strength dropped by $drop%. Move from $fromValue to $toValue to improve consistency.||Your habit signal weakened recently. Strength dropped by $drop%. Recommended target: $fromValue -> $toValue so you can stay consistent.';
+    return 'Consistency dropped on this habit. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to stabilize again.|You have been off track lately. Strength dropped by $drop%. Try this target shift: $fromValue -> $toValue to rebuild rhythm.|Recent performance is slipping. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to get back on track.|This habit needs a lighter target for now. Strength dropped by $drop%. Move from $fromValue to $toValue to improve consistency.|Your habit signal weakened recently. Strength dropped by $drop%. Recommended target: $fromValue -> $toValue so you can stay consistent.';
   }
 
   @override
@@ -634,7 +617,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with go to bed early lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Go to bed early has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent go to bed early consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your go to bed early habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Go to bed early needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with go to bed early lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Go to bed early has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent go to bed early consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your go to bed early habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Go to bed early needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -643,7 +626,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your gym routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your gym routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your gym routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your gym routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your gym routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with your gym routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Your gym routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent your gym routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your your gym routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your gym routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -652,7 +635,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with take your medications on time lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Take your medications on time has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent take your medications on time consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your take your medications on time habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Take your medications on time needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with take your medications on time lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Take your medications on time has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent take your medications on time consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your take your medications on time habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Take your medications on time needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -661,7 +644,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your nutrition plan lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your nutrition plan has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your nutrition plan consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your nutrition plan habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your nutrition plan needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with your nutrition plan lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Your nutrition plan has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent your nutrition plan consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your your nutrition plan habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your nutrition plan needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -670,7 +653,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with pray consistently lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Pray consistently has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent pray consistently consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your pray consistently habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Pray consistently needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with pray consistently lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Pray consistently has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent pray consistently consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your pray consistently habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Pray consistently needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -679,7 +662,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your productivity sessions lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your productivity sessions has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your productivity sessions consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your productivity sessions habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your productivity sessions needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with your productivity sessions lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Your productivity sessions has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent your productivity sessions consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your your productivity sessions habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your productivity sessions needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -688,7 +671,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your reading habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your reading habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your reading habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your reading habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your reading habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with your reading habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Your reading habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent your reading habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your your reading habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your reading habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -697,7 +680,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your research habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your research habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your research habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your research habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your research habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with your research habit lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Your research habit has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent your research habit consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your your research habit habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your research habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -706,7 +689,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with your running routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.||Your running routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.||Recent your running routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.||To protect your your running routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.||Your running routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'You have not been consistent with your running routine lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Your running routine has been weaker recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Recent your running routine consistency is down. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your your running routine habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your running routine needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
   }
 
   @override
@@ -715,7 +698,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non siete stati costanti nel fare la doccia. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||Fare la doccia è stato più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.||La costanza nel fare la doccia è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine alla doccia, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.||Fare la doccia ha bisogno di un reset. La forza è calata del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
+    return 'Ultimamente non siete stati costanti nel fare la doccia. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|Fare la doccia è stato più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.|La costanza nel fare la doccia è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine alla doccia, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.|Fare la doccia ha bisogno di un reset. La forza è calata del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
   }
 
   @override
@@ -724,7 +707,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non siete stati coerenti con la vostra routine di cura della pelle. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||La tua routine di cura della pelle è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.||La costanza della tua routine di cura della pelle è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine alla cura della pelle, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.||La vostra routine di cura della pelle ha bisogno di un reset. La forza è diminuita del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
+    return 'Ultimamente non siete stati coerenti con la vostra routine di cura della pelle. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|La tua routine di cura della pelle è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.|La costanza della tua routine di cura della pelle è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine alla cura della pelle, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.|La vostra routine di cura della pelle ha bisogno di un reset. La forza è diminuita del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
   }
 
   @override
@@ -733,7 +716,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non siete coerenti con le vostre abitudini di studio. La forza è scesa del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||La tua abitudine allo studio è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ricostruire l\'abitudine.||La tua abitudine allo studio è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere la vostra abitudine allo studio, abbassate l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> La tua abitudine allo studio ha bisogno di essere ripristinata. La forza è calata del $drop%. Provate con $fromValue -> $toValue in modo che questa abitudine rimanga viva.';
+    return 'Ultimamente non siete coerenti con le vostre abitudini di studio. La forza è scesa del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|La tua abitudine allo studio è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ricostruire l\'abitudine.|La tua abitudine allo studio è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere la vostra abitudine allo studio, abbassate l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> La tua abitudine allo studio ha bisogno di essere ripristinata. La forza è calata del $drop%. Provate con $fromValue -> $toValue in modo che questa abitudine rimanga viva.';
   }
 
   @override
@@ -742,7 +725,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non sei stato costante nello svegliarti presto. La forza è scesa del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||La sveglia presto è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ricostruire la costanza.||La costanza negli ultimi tempi è diminuita. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine di svegliarsi presto, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.||Il risveglio anticipato ha bisogno di un reset. La forza è diminuita del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
+    return 'Ultimamente non sei stato costante nello svegliarti presto. La forza è scesa del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|La sveglia presto è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ricostruire la costanza.|La costanza negli ultimi tempi è diminuita. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine di svegliarsi presto, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.|Il risveglio anticipato ha bisogno di un reset. La forza è diminuita del $drop%. Provate con $fromValue -> $toValue per mantenere questa abitudine.';
   }
 
   @override
@@ -751,7 +734,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non è stato coerente con la sua routine di camminata. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||La tua routine di camminata è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.||La costanza della tua routine di camminata è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine alla camminata, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Obiettivo consigliato: $fromValue -> $toValue per recuperare lo slancio: $fromValue -> $toValue.||La tua routine di camminata ha bisogno di un reset. La forza è calata del $drop%. Provare con $fromValue -> $toValue per mantenere questa abitudine.';
+    return 'Ultimamente non è stato coerente con la sua routine di camminata. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|La tua routine di camminata è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ripristinare la costanza.|La costanza della tua routine di camminata è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere l\'abitudine alla camminata, abbassare l\'obiettivo per ora. La forza è calata del $drop%. Obiettivo consigliato: $fromValue -> $toValue per recuperare lo slancio: $fromValue -> $toValue.|La tua routine di camminata ha bisogno di un reset. La forza è calata del $drop%. Provare con $fromValue -> $toValue per mantenere questa abitudine.';
   }
 
   @override
@@ -760,7 +743,7 @@ class AppLocalizationsIt extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'Ultimamente non siete coerenti con le vostre abitudini di lavoro. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.||La tua abitudine al lavoro è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ricostruire l\'abitudine.||La tua abitudine al lavoro è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere la vostra abitudine al lavoro, abbassate l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.||La vostra abitudine al lavoro ha bisogno di un reset. La forza è calata del $drop%. Provate con $fromValue -> $toValue per mantenere viva questa abitudine.';
+    return 'Ultimamente non siete coerenti con le vostre abitudini di lavoro. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> $toValue per mantenere l\'abitudine.|La tua abitudine al lavoro è stata più debole di recente. La forza è diminuita del $drop%. Spostare l\'obiettivo da $fromValue a $toValue per ricostruire l\'abitudine.|La tua abitudine al lavoro è diminuita di recente. La forza è diminuita del $drop% negli ultimi giorni. Obiettivo consigliato: $fromValue -> Per proteggere la vostra abitudine al lavoro, abbassate l\'obiettivo per ora. La forza è calata del $drop%. Consigliato: $fromValue -> $toValue.|La vostra abitudine al lavoro ha bisogno di un reset. La forza è calata del $drop%. Provate con $fromValue -> $toValue per mantenere viva questa abitudine.';
   }
 
   @override
@@ -2271,4 +2254,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get overrideCurrentConfigKeepCurrent => 'Mantieni attuale';
+
+  @override
+  String get apply => 'Applica';
+
+  @override
+  String get deleteAccount => 'Elimina account';
+
+  @override
+  String get logOutDesc =>
+      'La disconnessione disabiliterà il backup e la sincronizzazione, ma i tuoi dati locali rimarranno su questo dispositivo.';
+
+  @override
+  String get deleteAccountDesc =>
+      'Elimina il tuo account dai nostri server. I backup crittografati nella cartella habitt_backups del tuo Google Drive rimarranno — eliminali manualmente se necessario.';
 }

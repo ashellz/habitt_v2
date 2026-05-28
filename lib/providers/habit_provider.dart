@@ -814,8 +814,20 @@ class HabitProvider extends ChangeNotifier {
       checkReorderCategories(context, habit);
     }
 
+    // fix:
+    // notifications should use more texts
+    // times a month or week counters broken
+
     await updateHabitInDB(habit, day: daySimple);
-    await _syncSingleHabitNotifications(currentHabit);
+    if (daySimple == todaySimple && habit.completed) {
+      await NotificationService.rescheduleHabitNotifications(
+        habit: currentHabit,
+        appearsOnDay: appearsOnDay,
+        skipToday: true,
+      );
+    } else {
+      await _syncSingleHabitNotifications(currentHabit);
+    }
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();

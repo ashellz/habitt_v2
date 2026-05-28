@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -5,6 +7,7 @@ import 'package:habitt/services/notification_text/locale_resolver.dart';
 import 'package:habitt/services/notification_text/rules/freshness_rule.dart';
 import 'package:habitt/services/notification_text/rules/progress_rule.dart';
 import 'package:habitt/services/notification_text/rules/schedule_rule.dart';
+import 'package:habitt/services/notification_text/template_catalog.dart';
 import 'package:habitt/services/notification_text/types.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/get_capitalized_first.dart';
@@ -161,14 +164,27 @@ class HabitNotificationTextBuilder {
     required List<String> evaluatedChecks,
   }) {
     final l = context.localizations;
-    final type = context.habit.premadeHabitType;
-    evaluatedChecks.add('premadeType');
-    final family = _resolveFamily(type);
-    final encouragement = _pickEncouragement(context, type);
 
     final isOneOff =
         scheduleResult.riskState ==
         HabitNotificationScheduleRiskState.atRiskIfSkipToday;
+    final isAlmostDone =
+        progressResult.state == HabitNotificationProgressState.almostDone;
+
+    if (!isOneOff && !isAlmostDone && math.Random().nextDouble() < 0.3) {
+      evaluatedChecks.add('combined.noTracking.random');
+      return NotificationTemplateCatalog.resolve(
+        const NotificationTemplateToken(
+          key: NotificationTemplateKey.progressNoTracking,
+        ),
+        l,
+      );
+    }
+
+    final type = context.habit.premadeHabitType;
+    evaluatedChecks.add('premadeType');
+    final family = _resolveFamily(type);
+    final encouragement = _pickEncouragement(context, type);
 
     if (isOneOff && _supportsOneOff(family)) {
       evaluatedChecks.add('combined.oneOff');
@@ -402,15 +418,7 @@ class HabitNotificationTextBuilder {
     if (variants.isEmpty) {
       return context.localizations.notificationEncourageGeneric1;
     }
-
-    final dayKey =
-        (context.scheduledDay.year * 10000) +
-        (context.scheduledDay.month * 100) +
-        context.scheduledDay.day;
-    final typeSalt = type?.index ?? 0;
-    final raw = (context.habit.id * 37) ^ (dayKey * 17) ^ (typeSalt * 97);
-    final index = raw.abs() % variants.length;
-    return variants[index];
+    return variants[math.Random().nextInt(variants.length)];
   }
 
   static List<String> _encouragementVariants(

@@ -246,6 +246,25 @@ class BackupProvider extends ChangeNotifier {
           _currentUser = user;
           _firebaseUser = FirebaseAuth.instance.currentUser;
 
+          // Verify the Firebase account still exists — catches remote deletions
+          // (e.g. user deleted account on another device).
+          if (_firebaseUser != null) {
+            try {
+              await _firebaseUser!.reload();
+              _firebaseUser = FirebaseAuth.instance.currentUser;
+            } on FirebaseAuthException {
+              await _clearLocalAuthState(prefs);
+              return;
+            }
+          }
+
+          if (_firebaseUser == null) {
+            // Google session alive but Firebase account gone — sign out cleanly.
+            await _googleSignIn.signOut();
+            await _clearLocalAuthState(prefs);
+            return;
+          }
+
           // Check for legacy passphrase (old system) to surface migration UI
           _legacyPassphrase = await _secureStorage.read(
             key: _kLegacyPassphraseKey,
@@ -262,6 +281,23 @@ class BackupProvider extends ChangeNotifier {
   }
 
   // --- Sign-in / Sign-out ------------------------------------------------
+
+  Future<void> _clearLocalAuthState(SharedPreferences prefs) async {
+    _currentUser = null;
+    _firebaseUser = null;
+    _syncState = SyncState.idle;
+    _needsMigration = false;
+    _legacyPassphrase = null;
+    _lastSyncTime = null;
+    _cachedKey = null;
+    _autoSyncTimer?.cancel();
+    _autoSyncTimer = null;
+    await prefs.remove(_kBackupUserEmailKey);
+    await prefs.remove(_kBackupUserIdKey);
+    await prefs.remove(_kLastSyncTimeKey);
+    await prefs.remove(_kAppliedDeltaIdsKey);
+    notifyListeners();
+  }
 
   Future<void> signIn(BuildContext context) async {
     try {
@@ -326,6 +362,52 @@ class BackupProvider extends ChangeNotifier {
       _lastError = 'Failed to sign out: $e';
       debugPrint(_lastError);
       notifyListeners();
+    }
+  }
+
+  /// Permanently deletes the Firebase Auth account. Google Drive backup files
+  /// are left untouched. On other devices, the next app open will detect the
+  /// missing account and sign out automatically.
+  Future<bool> deleteAccount() async {
+    _autoSyncTimer?.cancel();
+    _autoSyncTimer = null;
+
+    try {
+      var firebaseUser = _firebaseUser ?? FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) return false;
+
+      try {
+        await firebaseUser.delete();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'requires-recent-login') {
+          // Token too old — reauthenticate with Google then retry.
+          final googleUser = await _googleSignIn.signIn();
+          if (googleUser == null) return false;
+          final auth = await googleUser.authentication.timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Google auth timed out'),
+          );
+          final credential = GoogleAuthProvider.credential(
+            accessToken: auth.accessToken,
+            idToken: auth.idToken,
+          );
+          await firebaseUser.reauthenticateWithCredential(credential);
+          await firebaseUser.delete();
+        } else {
+          rethrow;
+        }
+      }
+
+      await _googleSignIn.signOut();
+      await FirebaseAuth.instance.signOut();
+      final prefs = await SharedPreferences.getInstance();
+      await _clearLocalAuthState(prefs);
+      return true;
+    } catch (e) {
+      _lastError = 'Failed to delete account: $e';
+      debugPrint(_lastError);
+      notifyListeners();
+      return false;
     }
   }
 

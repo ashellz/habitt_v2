@@ -31,7 +31,7 @@ class FeedbackService {
       'https://play.google.com/store/apps/details?id=com.shellz.habitt&hl=en-US&ah=pOP1nFvk-kYT2fbDhv9cYBHNbG4',
     );
     final Uri iosUrl = Uri.parse(
-      'https://apps.apple.com/app/id6745617462',
+      'https://apps.apple.com/us/app/habitt-your-habit-tracker/id6745617462',
     ); // Replace with actual app ID
 
     try {
