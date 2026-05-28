@@ -383,15 +383,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String insightStrengthIncreaseMedications(
-    Object strength,
-    Object fromValue,
-    Object toValue,
-  ) {
-    return 'You are doing great with take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to keep growing even more.|Great consistency on take your medications on time. Strength is stable at $strength%. Increase your target from $fromValue to $toValue and keep momentum high.|Your take your medications on time habit is strong right now. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue for the next level.|You are reliably showing up for take your medications on time. Strength is stable at $strength%. Move from $fromValue to $toValue to keep improving.|Excellent rhythm on take your medications on time. Strength is stable at $strength%. Recommended target: $fromValue -> $toValue to continue progress.';
-  }
-
-  @override
   String insightStrengthIncreaseNutrition(
     Object strength,
     Object fromValue,

@@ -433,12 +433,7 @@ class HabitStrengthInsightTextService {
           fromValue,
           toValue,
         );
-      case PremadeHabitType.medications:
-        return l.insightStrengthIncreaseMedications(
-          strengthPercent,
-          fromValue,
-          toValue,
-        );
+
       case PremadeHabitType.drinkWater:
         return l.insightStrengthIncreaseDrinkWater(
           strengthPercent,
@@ -475,6 +470,8 @@ class HabitStrengthInsightTextService {
           fromValue,
           toValue,
         );
+      case PremadeHabitType.medications:
+        return "Invalid";
       case null:
         return l.insightStrengthIncreaseGeneric(
           strengthPercent,

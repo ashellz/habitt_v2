@@ -382,15 +382,6 @@ class AppLocalizationsBs extends AppLocalizations {
   }
 
   @override
-  String insightStrengthIncreaseMedications(
-    Object strength,
-    Object fromValue,
-    Object toValue,
-  ) {
-    return 'Odlično se držiš u uzimanju lijekova na vrijeme. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za daljnji rast.|Odlična konzistentnost u uzimanju lijekova na vrijeme. Snaga je stabilna na $strength%. Povećaj cilj sa $fromValue na $toValue i održi zamah visokim.|Uzimanje lijekova na vrijeme ide odlično. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za sljedeći nivo.|Pouzdano uzimas lijekove na vrijeme. Snaga je stabilna na $strength%. Pomakni sa $fromValue na $toValue da nastaviš napredovati.|Odličan ritam u uzimanju lijekova na vrijeme. Snaga je stabilna na $strength%. Preporučeni cilj: $fromValue -> $toValue za nastavak napretka.';
-  }
-
-  @override
   String insightStrengthIncreaseNutrition(
     Object strength,
     Object fromValue,

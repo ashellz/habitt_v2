@@ -143,14 +143,6 @@
       "toValue": {}
     }
   },
-  "insightStrengthIncreaseMedications": "Odlično se držiš u uzimanju lijekova na vrijeme. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za daljnji rast.|Odlična konzistentnost u uzimanju lijekova na vrijeme. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.|Uzimanje lijekova na vrijeme ide odlično. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.|Pouzdano uzimas lijekove na vrijeme. Snaga je stabilna na {strength}%. Pomakni sa {fromValue} na {toValue} da nastaviš napredovati.|Odličan ritam u uzimanju lijekova na vrijeme. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za nastavak napretka.",
-  "@insightStrengthIncreaseMedications": {
-    "placeholders": {
-      "strength": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
   "insightStrengthIncreaseNutrition": "Odlično se držiš svog plana ishrane. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za daljnji rast.|Odlična konzistentnost u planu ishrane. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.|Tvoj plan ishrane ide odlično. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.|Pouzdano se pridržavaš svog plana ishrane. Snaga je stabilna na {strength}%. Pomakni sa {fromValue} na {toValue} da nastaviš napredovati.|Odličan ritam u planu ishrane. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za nastavak napretka.",
   "@insightStrengthIncreaseNutrition": {
     "placeholders": {
@@ -270,7 +262,6 @@
   "insightStrengthStartSmallType1Generic": "Ovu si naviku uveo s razlogom. Nemoj je sada pustiti da propadne.|Momentum ove navike slabi. Pojavi se danas i održi je živom.|Zaostajuješ u ovoj navici. Fokusiraj se i odradi svoje ponavljanje.|Ne pregovaraj ovdje s lijenošću. Zaštiti ovu naviku danas.|Prišao si predaleko da bi pustio ovu naviku da odumre. Ostani dosljedan danas.",
   "insightStrengthStartSmallType1GoToBedEarly": "Tvoja navika ranog odlaska na spavanje posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od ranog odlaska na spavanje. Postavi alarm i idi spavati na vrijeme večeras.|Momentum za rani odlazak na spavanje slabi. Održi ga živim odlaskom u krevet na vrijeme večeras.|Nemoj dopustiti da rani odlazak na spavanje postane neredovan. Fokusiraj se i idi u krevet na vrijeme večeras.|Počeo si rano odlaziti na spavanje s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.",
   "insightStrengthStartSmallType1Gym": "Tvoja navika vježbanja u teretani posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od svojih treninga u teretani. Dođi na trening danas i zaštiti tu naviku.|Momentum tvoje rutine u teretani slabi. Održi ga živim treningom danas.|Nemoj dopustiti da tvoja rutina u teretani postane neredovna. Fokusiraj se i uvježbaj danas.|Počeo si graditi rutinu u teretani s razlogom. Ostani discipliniran i spriječi da posustane.",
-  "insightStrengthStartSmallType1Medications": "Tvoja navika uzimanja lijekova posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od uzimanja lijekova. Uzmi ih danas i zaštiti tu naviku.|Momentum u uzimanju lijekova slabi. Održi ga živim uzimanjem lijekova na vrijeme danas.|Nemoj dopustiti da tvoj raspored uzimanja lijekova postane neredovan. Fokusiraj se i uzmi ih danas.|Počeo si uzimati lijekove na vrijeme s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.",
   "insightStrengthStartSmallType1Nutrition": "Tvoja navika plana ishrane posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od svog plana ishrane. Slijedi plan danas i zaštiti tu naviku.|Momentum tvog plana ishrane slabi. Održi ga živim pridržavanjem plana danas.|Nemoj dopustiti da tvoj plan ishrane postane neredovan. Fokusiraj se i slijedi ga danas.|Počeo si slijediti plan ishrane s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.",
   "insightStrengthStartSmallType1Praying": "Tvoja navika molitve posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od dosljedne molitve. Pomoli se danas i zaštiti tu naviku.|Momentum u dosljednoj molitvi slabi. Održi ga živim molitvom danas.|Nemoj dopustiti da dosljedna molitva postane neredovna. Fokusiraj se i pomoli se danas.|Počeo si se moliti dosljedno s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.",
   "insightStrengthStartSmallType1ProductivitySession": "Tvoja navika produktivnih sesija posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od svojih produktivnih sesija. Odradi fokusiranu sesiju danas i zaštiti tu naviku.|Momentum tvojih produktivnih sesija slabi. Održi ga živim odradom sesije danas.|Nemoj dopustiti da tvoje produktivne sesije postanu neredovne. Fokusiraj se i odradi fokusirani blok danas.|Počeo si sa produktivnim sesijama s razlogom. Ostani discipliniran i spriječi da posustanu.",
@@ -317,14 +308,6 @@
   },
   "insightStrengthStartSmallType2Gym": "Nisi se držao rutine u teretani u posljednje vrijeme. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da navika ostane živa.|Tvoja rutina u teretani je nedavno bila slabija. Snaga je pala za {drop}%. Pomakni cilj sa {fromValue} na {toValue} da ponovo izgradiš konzistentnost.|Tvoja konzistentnost u teretani je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da povratiš zamah.|Da zaštitis svoju rutinu u teretani, za sada snizi cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.|Tvoja rutina u teretani treba reset. Snaga je pala za {drop}%. Pokušaj {fromValue} -> {toValue} da ova navika ostane živa.",
   "@insightStrengthStartSmallType2Gym": {
-    "placeholders": {
-      "drop": {},
-      "fromValue": {},
-      "toValue": {}
-    }
-  },
-  "insightStrengthStartSmallType2Medications": "Nisi redovno uzimao lijekove na vrijeme zadnjih dana. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da navika ostane živa.|Uzimanje lijekova na vrijeme je nedavno bilo teže. Snaga je pala za {drop}%. Pomakni cilj sa {fromValue} na {toValue} da ponovo izgradiš konzistentnost.|Tvoja konzistentnost u uzimanju lijekova je opala. Snaga je pala za {drop}% u posljednjih nekoliko dana. Preporučeni cilj: {fromValue} -> {toValue} da povratiš zamah.|Da zaštitis naviku uzimanja lijekova, za sada snizi cilj. Snaga je pala za {drop}%. Preporučeno: {fromValue} -> {toValue}.|Tvoja navika uzimanja lijekova treba reset. Snaga je pala za {drop}%. Pokušaj {fromValue} -> {toValue} da ova navika ostane živa.",
-  "@insightStrengthStartSmallType2Medications": {
     "placeholders": {
       "drop": {},
       "fromValue": {},
@@ -487,24 +470,24 @@
   "notificationEncourageGym1": "jedan trening danas za bolje sutra",
   "notificationEncourageGym2": "ne zaboravi zbog čega si počeo",
   "notificationEncourageGym3": "ustaj, rezultati se ne ostvaruju sami",
-  "notificationEncourageMedications1": "pravilno tempiranje štiti tvoju zdravstvenu rutinu",
-  "notificationEncourageMedications2": "pridržavanje rasporeda održava tvoju osnovu stabilnom",
-  "notificationEncourageMedications3": "ovaj korak podržava tvoju dugoročnu dobrobit",
-  "notificationEncourageNutrition1": "jedan namjerni izbor sada podržava tvoju osnovu",
-  "notificationEncourageNutrition2": "male pobjede u ishrani se brzo zbrajaju",
-  "notificationEncourageNutrition3": "konzistentnost ovdje poboljšava sve ostalo",
-  "notificationEncourageProductivitySession1": "jedna fokusirana sesija štiti vrijeme za duboki rad",
-  "notificationEncourageProductivitySession2": "čisti fokus blok sada može promijeniti tvoj dan",
-  "notificationEncourageProductivitySession3": "konzistentnost u fokusu dovodi do boljih rezultata",
+  "notificationEncourageMedications1": "pravilno održavanje štiti tvoju zdravstvenu rutinu",
+  "notificationEncourageMedications2": "pridržavanje rasporeda lijekova je ključno za tvoje zdravlje",
+  "notificationEncourageMedications3": "lijekovi podržavaju tvoju dugoročnu dobrobit",
+  "notificationEncourageNutrition1": "pravilnom ishranom održavaš svoje zdravlje i energiju",
+  "notificationEncourageNutrition2": "zdrava ishrana danas za bolje sutra",
+  "notificationEncourageNutrition3": "hrana doslovno čini čovjeka sretnim",
+  "notificationEncourageProductivitySession1": "vrijeme za fokus i duboki rad",
+  "notificationEncourageProductivitySession2": "osjećaćeš se ispunjeno kada završiš, vjeruj mi",
+  "notificationEncourageProductivitySession3": "fokus bez distrakcija dovodi brže dovodi do boljih rezultata",
   "notificationEncourageRead1": "nekoliko stranica sada drži tvoj čitalački identitet jakim",
-  "notificationEncourageRead2": "malo svakodnevno čitanje donosi stvarni napredak",
-  "notificationEncourageRead3": "dolaskom danas niz ostaje živ",
+  "notificationEncourageRead2": "malo svakodnevno čitanje da ispuniš svoj cilj",
+  "notificationEncourageRead3": "znaš zbog čega si počeo čitati",
   "notificationEncourageResearch1": "jedan uvid danas pomjera tvoj rad naprijed",
   "notificationEncourageResearch2": "stalna istraživanja se pretvaraju u jasnoću",
-  "notificationEncourageResearch3": "hvatanje jednog nalaza danas zadržava zamah",
+  "notificationEncourageResearch3": "sjeti se šta si danas htio istražiti",
   "notificationEncourageRunning1": "jedan trening danas gradi izdržljivost",
-  "notificationEncourageRunning2": "sadašnje pojavljivanje jača tvoju osnovnu izdržljivost u trčanju",
-  "notificationEncourageRunning3": "ovaj napor održava tvoj fitnes zamah stvarnim",
+  "notificationEncourageRunning2": "tračanje danas jača tvoju dugoročnu izdržljivost",
+  "notificationEncourageRunning3": "ovaj napor održava tvoju fitnes rutinu",
   "notificationEncourageShower1": "kratko resetovanje može poboljšati tvoju koncentraciju",
   "notificationEncourageShower2": "ova rutina ti pomaže da se osjećaš pun energije",
   "notificationEncourageShower3": "čisto resetiranje održava tvoj dan u pokretu",

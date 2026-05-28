@@ -75,7 +75,7 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
                                 )
                                 : Center(
                                   child: Text(
-                                    name.substring(0, 1),
+                                    name.substring(0, 1).toUpperCase(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 30,
