@@ -368,7 +368,11 @@ class _PaywallPageState extends State<PaywallPage> {
                                 itemBuilder: (context, index) {
                                   return AnimatedBuilder(
                                     animation: _pageController,
-                                    child: _PlanCard(plan: plans[index]),
+                                    child: _PlanCard(
+                                      plan: plans[index],
+                                      isSelected:
+                                          _pageValue.round() == index,
+                                    ),
                                     builder: (context, child) {
                                       final distance = (_pageValue - index)
                                           .abs()
@@ -476,9 +480,10 @@ String? _localizedBadgeLabel(PackageType type, AppLocalizations loc) {
 }
 
 class _PlanCard extends StatelessWidget {
-  const _PlanCard({required this.plan});
+  const _PlanCard({required this.plan, this.isSelected = false});
 
   final _PlanInfo plan;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -514,8 +519,27 @@ class _PlanCard extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SvgPicture.asset(
-                      'assets/images/new-svg/check-on-light.svg',
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                        opacity: isSelected ? 1.0 : 0.0,
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeOutBack,
+                          scale: isSelected ? 1.0 : 0.7,
+                          child: AnimatedRotation(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOutBack,
+                            turns: isSelected ? 0.0 : 0.18,
+                            child: SvgPicture.asset(
+                              'assets/images/new-svg/check-on-light.svg',
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
