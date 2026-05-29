@@ -373,13 +373,19 @@ class InsightSheetFlow {
 
     if (recommendation.kind == _TargetKind.amount) {
       updated.amount = recommendation.recommendedValue;
-      if (updated.amountCompleted > updated.amount) {
+      if (updated.amountCompleted >= updated.amount) {
         updated.amountCompleted = updated.amount;
+        updated.completed = true;
+      } else {
+        updated.completed = false;
       }
     } else {
       updated.duration = recommendation.recommendedValue;
-      if (updated.durationCompleted > updated.duration) {
+      if (updated.durationCompleted >= updated.duration) {
         updated.durationCompleted = updated.duration;
+        updated.completed = true;
+      } else {
+        updated.completed = false;
       }
     }
 

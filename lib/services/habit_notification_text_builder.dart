@@ -171,7 +171,7 @@ class HabitNotificationTextBuilder {
     final isAlmostDone =
         progressResult.state == HabitNotificationProgressState.almostDone;
 
-    if (!isOneOff && !isAlmostDone && math.Random().nextDouble() < 0.3) {
+    if (!isOneOff && !isAlmostDone && math.Random().nextDouble() < 0.5) {
       evaluatedChecks.add('combined.noTracking.random');
       return NotificationTemplateCatalog.resolve(
         const NotificationTemplateToken(
@@ -535,6 +535,7 @@ class HabitNotificationTextBuilder {
           l.notificationEncourageGeneric1,
           l.notificationEncourageGeneric2,
           l.notificationEncourageGeneric3,
+          l.notificationProgressNoTracking,
         ];
     }
   }
