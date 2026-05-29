@@ -89,6 +89,10 @@ class BackupProvider extends ChangeNotifier {
 
   String? _progressMessage;
 
+  // Set when the user is silently signed out due to revoked Drive scope.
+  // Consumed once by the UI to show a notification popup.
+  String? _pendingNotification;
+
   // --- Getters -----------------------------------------------------------
 
   GoogleSignInAccount? get currentUser => _currentUser;
@@ -103,6 +107,11 @@ class BackupProvider extends ChangeNotifier {
   DateTime? get lastSyncTime => _lastSyncTime;
   bool get needsMigration => _needsMigration;
   bool get isPinEnabled => _isPinEnabled;
+  String? get pendingNotification => _pendingNotification;
+
+  void clearPendingNotification() {
+    _pendingNotification = null;
+  }
 
   set syncState(SyncState state) {
     _syncState = state;
@@ -243,6 +252,20 @@ class BackupProvider extends ChangeNotifier {
       if (savedEmail != null) {
         final user = await _googleSignIn.signInSilently();
         if (user != null) {
+          // If the user revoked Drive scope (e.g. from Google account settings),
+          // silently sign out so they're prompted to re-authorize on next sign-in.
+          final hasScope = await _googleSignIn.canAccessScopes(
+            [drive_api.DriveApi.driveFileScope],
+          );
+          if (!hasScope) {
+            await _googleSignIn.signOut();
+            await FirebaseAuth.instance.signOut();
+            _pendingNotification =
+                'Google Drive access was revoked. Please sign in again to re-enable backup.';
+            await _clearLocalAuthState(prefs);
+            return;
+          }
+
           _currentUser = user;
           _firebaseUser = FirebaseAuth.instance.currentUser;
 
@@ -303,6 +326,24 @@ class BackupProvider extends ChangeNotifier {
     try {
       final user = await _googleSignIn.signIn();
       if (user == null) return;
+
+      // Verify Drive scope was granted — on Android 12+ users can selectively
+      // deny scopes while still completing sign-in.
+      final hasScope = await _googleSignIn.canAccessScopes(
+        [drive_api.DriveApi.driveFileScope],
+      );
+      if (!hasScope) {
+        final granted = await _googleSignIn.requestScopes(
+          [drive_api.DriveApi.driveFileScope],
+        );
+        if (!granted) {
+          await _googleSignIn.signOut();
+          _lastError =
+              'Google Drive access is required for backup. Please sign in again and allow Drive access when prompted.';
+          notifyListeners();
+          return;
+        }
+      }
 
       final auth = await user.authentication.timeout(
         const Duration(seconds: 10),

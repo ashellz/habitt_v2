@@ -6,10 +6,12 @@ import 'package:habitt/pages/main_pages/main_page.dart';
 import 'package:habitt/pages/main_pages/profile_page.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/new_bottom_nav_bar.dart';
@@ -22,10 +24,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   int _currentPageIndex = 0;
   int _lifecycleTick = 0;
   bool _supportsLiquidGlass = false;
+  late final StatusOverlayPopupController _statusPopup;
+  VoidCallback? _backupListener;
 
   // Check if app state has changed, therefore run _updateLastOpenedDate
   @override
@@ -61,6 +66,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
+    _statusPopup = StatusOverlayPopupController(vsync: this);
+
     _checkLiquidGlassSupport();
 
     // Set default to home page (index 0)
@@ -68,11 +75,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final stateProvider = context.read<StateProvider>();
+      if (!mounted) return;
       final backupProvider = context.read<BackupProvider>();
+
+      // Show popup for any notification queued before the widget mounted
+      // (e.g. Drive scope revoked during initialize()).
+      _maybeShowBackupNotification(backupProvider);
+
+      _backupListener = () {
+        if (!mounted) return;
+        _maybeShowBackupNotification(context.read<BackupProvider>());
+      };
+      backupProvider.addListener(_backupListener!);
+
+      final stateProvider = context.read<StateProvider>();
       final statsProvider = context.read<StatsProvider>();
 
-      // Update last opened date, reset habit completion
       await updateLastOpenedDate(
         context.read<HabitProvider>(),
         stateProvider,
@@ -85,17 +103,33 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         stateProvider.shouldUpdateStreaks = false;
       }
 
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
       setState(() {
         _lifecycleTick += 1;
       });
     });
   }
 
+  void _maybeShowBackupNotification(BackupProvider backupProvider) {
+    final message = backupProvider.pendingNotification;
+    if (message == null) return;
+    backupProvider.clearPendingNotification();
+    _statusPopup.show(
+      context: context,
+      cp: context.read<ColorProvider>(),
+      title: message,
+      isError: true,
+    );
+  }
+
   @override
   void dispose() {
+    if (_backupListener != null) {
+      try {
+        context.read<BackupProvider>().removeListener(_backupListener!);
+      } catch (_) {}
+    }
+    _statusPopup.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

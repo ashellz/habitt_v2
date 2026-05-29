@@ -13,7 +13,6 @@ import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_delete_habit_flow.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
-import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/habit_primary_action_button.dart';
 import 'package:habitt/widgets/habit_details/strength_ring.dart';
