@@ -854,5 +854,7 @@
   "apply": "Primijeni",
   "deleteAccount": "Obriši račun",
   "logOutDesc": "Odjavom će biti onemogućena sigurnosna kopija i sinkronizacija, ali tvoji lokalni podaci ostaju na ovom uređaju.",
-  "deleteAccountDesc": "Briše tvoj račun s naših servera. Šifrirane sigurnosne kopije u mapi habitt_backups na Google Driveu ostaju — ručno ih obriši po potrebi."
+  "deleteAccountDesc": "Briše tvoj račun s naših servera. Šifrirane sigurnosne kopije u mapi habitt_backups na Google Driveu ostaju — ručno ih obriši po potrebi.",
+  "accountDeletedSuccessfully": "Račun je uspješno obrisan",
+  "accountDeletionFailed": "Brisanje računa nije uspjelo: {errorMessage}"
 }

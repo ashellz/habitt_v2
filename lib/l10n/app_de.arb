@@ -864,5 +864,7 @@
   "apply": "Anwenden",
   "deleteAccount": "Konto löschen",
   "logOutDesc": "Durch das Abmelden werden Backup und Synchronisierung deaktiviert, aber deine lokalen Daten bleiben auf diesem Gerät.",
-  "deleteAccountDesc": "Löscht dein Konto von unseren Servern. Verschlüsselte Backups im habitt_backups-Ordner auf deinem Google Drive bleiben erhalten — lösche sie bei Bedarf manuell."
+  "deleteAccountDesc": "Löscht dein Konto von unseren Servern. Verschlüsselte Backups im habitt_backups-Ordner auf deinem Google Drive bleiben erhalten — lösche sie bei Bedarf manuell.",
+  "accountDeletedSuccessfully": "Konto erfolgreich gelöscht",
+  "accountDeletionFailed": "Konto konnte nicht gelöscht werden: {errorMessage}"
 }

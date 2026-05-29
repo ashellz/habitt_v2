@@ -254,9 +254,14 @@ class BackupProvider extends ChangeNotifier {
         if (user != null) {
           // If the user revoked Drive scope (e.g. from Google account settings),
           // silently sign out so they're prompted to re-authorize on next sign-in.
-          final hasScope = await _googleSignIn.canAccessScopes(
-            [drive_api.DriveApi.driveFileScope],
-          );
+          bool hasScope;
+          try {
+            hasScope = await _googleSignIn.canAccessScopes([
+              drive_api.DriveApi.driveFileScope,
+            ]);
+          } on UnimplementedError {
+            hasScope = true; // Android enforces scope during sign-in
+          }
           if (!hasScope) {
             await _googleSignIn.signOut();
             await FirebaseAuth.instance.signOut();
@@ -329,13 +334,23 @@ class BackupProvider extends ChangeNotifier {
 
       // Verify Drive scope was granted — on Android 12+ users can selectively
       // deny scopes while still completing sign-in.
-      final hasScope = await _googleSignIn.canAccessScopes(
-        [drive_api.DriveApi.driveFileScope],
-      );
+      bool hasScope;
+      try {
+        hasScope = await _googleSignIn.canAccessScopes([
+          drive_api.DriveApi.driveFileScope,
+        ]);
+      } on UnimplementedError {
+        hasScope = true; // Android enforces scope during sign-in
+      }
       if (!hasScope) {
-        final granted = await _googleSignIn.requestScopes(
-          [drive_api.DriveApi.driveFileScope],
-        );
+        bool granted;
+        try {
+          granted = await _googleSignIn.requestScopes([
+            drive_api.DriveApi.driveFileScope,
+          ]);
+        } on UnimplementedError {
+          granted = true;
+        }
         if (!granted) {
           await _googleSignIn.signOut();
           _lastError =

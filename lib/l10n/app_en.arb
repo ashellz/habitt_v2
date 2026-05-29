@@ -859,5 +859,7 @@
   "apply": "Apply",
   "deleteAccount": "Delete account",
   "logOutDesc": "Logging out will disable backup and sync, but your local data will remain on this device.",
-  "deleteAccountDesc": "Deletes your account from our servers. Encrypted backups in your Google Drive's habitt_backups folder will remain — delete them manually if needed."
+  "deleteAccountDesc": "Deletes your account from our servers. Encrypted backups in your Google Drive's habitt_backups folder will remain — delete them manually if needed.",
+  "accountDeletedSuccessfully": "Account deleted successfully",
+  "accountDeletionFailed": "Account deletion failed: {errorMessage}"
 }

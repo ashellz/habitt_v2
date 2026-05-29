@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
@@ -14,7 +15,9 @@ import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 class BackupSheet extends StatefulWidget {
-  const BackupSheet({super.key});
+  const BackupSheet({super.key, required this.statusOverlay});
+
+  final StatusOverlayPopupController statusOverlay;
 
   @override
   State<BackupSheet> createState() => _BackupSheetState();
@@ -24,6 +27,7 @@ class _BackupSheetState extends State<BackupSheet> {
   bool _allowPop = false;
   final _passphraseController = TextEditingController();
   bool _migrationLoading = false;
+  bool _signingIn = false;
 
   void _popSheet() {
     if (!mounted) return;
@@ -208,7 +212,14 @@ class _BackupSheetState extends State<BackupSheet> {
           ),
         ),
         child: GestureDetector(
-          onTap: () => bp.signIn(context),
+          onTap:
+              _signingIn
+                  ? null
+                  : () async {
+                    setState(() => _signingIn = true);
+                    await bp.signIn(context);
+                    if (mounted) setState(() => _signingIn = false);
+                  },
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             color: Colors.transparent,
@@ -236,13 +247,23 @@ class _BackupSheetState extends State<BackupSheet> {
                   ),
                 ),
                 const Spacer(),
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: SvgPicture.asset(
-                    'assets/images/new-svg/back.svg',
-                    colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                if (_signingIn)
+                  SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: cp.text,
+                    ),
+                  )
+                else
+                  RotatedBox(
+                    quarterTurns: 2,
+                    child: SvgPicture.asset(
+                      'assets/images/new-svg/back.svg',
+                      colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -411,8 +432,24 @@ class _BackupSheetState extends State<BackupSheet> {
           ),
     );
     if (confirmed == true && context.mounted) {
-      await bp.deleteAccount();
-      if (context.mounted) Navigator.of(context).pop();
+      final success = await bp.deleteAccount();
+      if (!mounted) return;
+      if (success) {
+        widget.statusOverlay.show(
+          context: context,
+          cp: cp,
+          title: loc.accountDeletedSuccessfully,
+          isError: false,
+        );
+        Navigator.of(context).pop();
+      } else {
+        widget.statusOverlay.show(
+          context: context,
+          cp: cp,
+          title: loc.accountDeletionFailed(bp.lastError ?? ''),
+          isError: true,
+        );
+      }
     }
   }
 

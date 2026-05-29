@@ -2259,4 +2259,12 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get deleteAccountDesc =>
       'Elimina il tuo account dai nostri server. I backup crittografati nella cartella habitt_backups del tuo Google Drive rimarranno — eliminali manualmente se necessario.';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account eliminato con successo';
+
+  @override
+  String accountDeletionFailed(Object errorMessage) {
+    return 'Eliminazione account non riuscita: $errorMessage';
+  }
 }

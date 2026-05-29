@@ -1,6 +1,7 @@
 import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/profile_image_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,24 +22,29 @@ class ProfileTopPart extends StatefulWidget {
 class _ProfileTopPartState extends State<ProfileTopPart> {
   String? name;
   String? email;
+
   @override
   void initState() {
     super.initState();
+    _loadProfile();
+  }
 
-    // Loading name and email
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() {
-        name = prefs.getString('name');
-        email = prefs.getString('backup_user_email');
-      });
+
+  Future<void> _loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      name = prefs.getString('name');
+      email = prefs.getString('backup_user_email');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final bp = context.watch<BackupProvider>();
     final name = this.name ?? loc.guest;
-    final email = this.email ?? '';
+    final email = bp.isLoggedIn ? (bp.currentUser?.email ?? this.email ?? '') : '';
 
     return Container(
       color: widget.cp.bg,
@@ -148,12 +154,7 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
               builder: (context) => EditProfileSheet(),
             );
 
-            // Reload profile data after sheet closes
-            final prefs = await SharedPreferences.getInstance();
-            setState(() {
-              name = prefs.getString('name');
-              email = prefs.getString('backup_user_email');
-            });
+            await _loadProfile();
             await context.read<ProfileImageProvider>().load();
           },
         ),

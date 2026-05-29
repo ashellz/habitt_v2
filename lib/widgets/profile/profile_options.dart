@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/profile/get_premium_widget.dart';
 import 'package:habitt/widgets/profile/leave_feedback_sheet.dart';
 import 'package:habitt/widgets/sheets/backup_sheet.dart';
@@ -9,9 +10,14 @@ import 'package:tinycolor2/tinycolor2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileOptions extends StatelessWidget {
-  const ProfileOptions({super.key, required this.cp});
+  const ProfileOptions({
+    super.key,
+    required this.cp,
+    required this.statusOverlay,
+  });
 
   final ColorProvider cp;
+  final StatusOverlayPopupController statusOverlay;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +110,7 @@ class ProfileOptions extends StatelessWidget {
                               alpha: 0.3,
                             ),
                             isScrollControlled: true,
-                            builder: (context) => const BackupSheet(),
+                            builder: (context) => BackupSheet(statusOverlay: statusOverlay),
                           ),
                     ),
                   ],

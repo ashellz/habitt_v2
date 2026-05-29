@@ -3748,6 +3748,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deletes your account from our servers. Encrypted backups in your Google Drive\'s habitt_backups folder will remain — delete them manually if needed.'**
   String get deleteAccountDesc;
+
+  /// No description provided for @accountDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeletedSuccessfully;
+
+  /// No description provided for @accountDeletionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion failed: {errorMessage}'**
+  String accountDeletionFailed(Object errorMessage);
 }
 
 class _AppLocalizationsDelegate

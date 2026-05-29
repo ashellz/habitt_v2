@@ -2244,4 +2244,12 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get deleteAccountDesc =>
       'Briše tvoj račun s naših servera. Šifrirane sigurnosne kopije u mapi habitt_backups na Google Driveu ostaju — ručno ih obriši po potrebi.';
+
+  @override
+  String get accountDeletedSuccessfully => 'Račun je uspješno obrisan';
+
+  @override
+  String accountDeletionFailed(Object errorMessage) {
+    return 'Brisanje računa nije uspjelo: $errorMessage';
+  }
 }

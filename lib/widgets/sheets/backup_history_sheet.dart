@@ -202,6 +202,7 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
         ),
         const SizedBox(width: 12),
         NewDefaultButton.primarySmall(
+          width: null,
           onPressed:
               isSyncing ? () {} : () => _confirmRestore(context, bp, loc, file),
           label: loc.restore,

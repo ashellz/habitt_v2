@@ -2246,4 +2246,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deleteAccountDesc =>
       'Deletes your account from our servers. Encrypted backups in your Google Drive\'s habitt_backups folder will remain — delete them manually if needed.';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account deleted successfully';
+
+  @override
+  String accountDeletionFailed(Object errorMessage) {
+    return 'Account deletion failed: $errorMessage';
+  }
 }
