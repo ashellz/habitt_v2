@@ -754,6 +754,7 @@
   "syncFailed": "Sincronizzazione fallita",
   "disconnectGoogle": "Disconnetti Google",
   "restoreConfirmTitle": "Ripristinare dal backup?",
+  "restoreConfirmDesc": "I tuoi dati verranno completamente sostituiti con questo backup. Tutto ciò che hai monitorato da allora andrà perso. Questa operazione non può essere annullata.",
   "restoreConfirmDescription": "Questo unirà il backup cloud con i tuoi dati locali. I conflitti saranno risolti usando le modifiche più recenti.",
   "restore": "Ripristina",
   "backupHistory": "Cronologia backup",

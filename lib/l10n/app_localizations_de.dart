@@ -1969,6 +1969,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get restoreConfirmTitle => 'Aus Sicherung wiederherstellen?';
 
   @override
+  String get restoreConfirmDesc =>
+      'Deine Daten werden vollständig durch dieses Backup ersetzt. Alles, was du seit diesem Backup erfasst hast, geht verloren. Dies kann nicht rückgängig gemacht werden.';
+
+  @override
   String get restoreConfirmDescription =>
       'Dabei wird die Cloud-Sicherung mit deinen lokalen Daten zusammengeführt. Konflikte werden anhand der neuesten Änderungen aufgelöst.';
 

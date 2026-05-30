@@ -6,7 +6,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
-import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/dialogs/confirm_restore_backup_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BackupHistorySheet extends StatefulWidget {
@@ -71,21 +71,14 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     AppLocalizations loc,
     DriveBackupFile file,
   ) async {
+    final cp = context.read<ColorProvider>();
     final confirmed = await showDialogSheet<bool>(
       context: context,
-      builder:
-          (ctx) => NewDefaultDialog(
-            title: loc.restoreConfirmTitle,
-            desc: loc.restoreConfirmDescription,
-            primaryButtonLabel: loc.restore,
-            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
-            secondaryButtonLabel: loc.cancel,
-            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
-          ),
+      builder: (ctx) => ConfirmRestoreBackupDialog(cp: cp),
     );
 
     if (confirmed == true && context.mounted) {
-      await bp.restoreFromBackupFile(file.id);
+      await bp.replaceFromBackupFile(file.id);
       if (context.mounted) _popSheet();
     }
   }

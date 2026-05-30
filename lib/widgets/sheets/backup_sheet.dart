@@ -36,9 +36,8 @@ class _BackupSheetState extends State<BackupSheet> {
     if (mounted) setState(() => _signingIn = false);
     if (!mounted) return;
     if (context.read<BackupProvider>().pendingRestoreDecision) {
-      await showDialog<void>(
+      await showDialogSheet<void>(
         context: context,
-        barrierDismissible: false,
         builder: (_) => const RestoreChoiceDialog(),
       );
     }

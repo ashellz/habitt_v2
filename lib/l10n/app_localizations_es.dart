@@ -1963,6 +1963,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get restoreConfirmTitle => '¿Restaurar desde copia?';
 
   @override
+  String get restoreConfirmDesc =>
+      'Tus datos serán completamente reemplazados por esta copia de seguridad. Todo lo que hayas registrado desde entonces se perderá. Esto no se puede deshacer.';
+
+  @override
   String get restoreConfirmDescription =>
       'Esto combinará la copia en la nube con tus datos locales. Los conflictos se resolverán con los cambios más recientes.';
 

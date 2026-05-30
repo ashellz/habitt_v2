@@ -1507,6 +1507,44 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
+  /// Wipes the local DB and restores entirely from a specific Drive backup
+  /// file. No deltas are applied — this is a point-in-time hard restore.
+  Future<void> replaceFromBackupFile(String fileId) async {
+    if (_syncState == SyncState.syncing) return;
+
+    final key = await _getKey();
+    if (key == null) return;
+
+    progressMessage = 'Clearing local data...';
+    syncState = SyncState.syncing;
+    lastError = null;
+
+    try {
+      await Hive.box<Habit>('habits').clear();
+      await Hive.box<Day>('days').clear();
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kAppliedDeltaIdsKey);
+
+      await _habitProvider?.init();
+
+      progressMessage = 'Downloading backup...';
+      final backupData = await _downloadBackupById(fileId, key);
+      if (backupData != null) {
+        progressMessage = 'Restoring...';
+        await _mergeBackupData(backupData);
+        await _onSyncSuccess();
+      } else {
+        lastError = 'Failed to decrypt backup.';
+        syncState = SyncState.error;
+      }
+    } catch (e) {
+      lastError = 'Restore failed: $e';
+      syncState = SyncState.error;
+      debugPrint(lastError);
+    }
+  }
+
   Future<BackupData?> _downloadBackupById(String fileId, SecretKey key) async {
     final drive = await _getDriveService();
     if (drive == null) return null;

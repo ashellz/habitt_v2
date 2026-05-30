@@ -754,6 +754,7 @@
   "syncFailed": "Error de sincronización",
   "disconnectGoogle": "Desconectar Google",
   "restoreConfirmTitle": "¿Restaurar desde copia?",
+  "restoreConfirmDesc": "Tus datos serán completamente reemplazados por esta copia de seguridad. Todo lo que hayas registrado desde entonces se perderá. Esto no se puede deshacer.",
   "restoreConfirmDescription": "Esto combinará la copia en la nube con tus datos locales. Los conflictos se resolverán con los cambios más recientes.",
   "restore": "Restaurar",
   "backupHistory": "Historial de copias",

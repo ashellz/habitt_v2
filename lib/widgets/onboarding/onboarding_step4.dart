@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -13,15 +15,25 @@ class OnboardingStep4 extends StatefulWidget {
   const OnboardingStep4({super.key});
 
   @override
-  State<OnboardingStep4> createState() => _OnboardingStep4State();
+  OnboardingStep4State createState() => OnboardingStep4State();
 }
 
-class _OnboardingStep4State extends State<OnboardingStep4>
+// Public so onboarding_pages.dart can call commitDraft() via GlobalKey.
+class OnboardingStep4State extends State<OnboardingStep4>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animPhone;
   late Animation<double> _animToggles;
   late Animation<double> _animBell;
+
+  bool _draftMaster = true;
+  bool _draftPeriods = true;
+  bool _draftHabits = true;
+  bool _draftInitialized = false;
+
+  final Map<NotificationPeriod, NotificationSettings> _draftPeriodSettings = {};
+  // Saved per-period enabled states before periods were disabled.
+  final Map<NotificationPeriod, bool> _savedPeriodEnabled = {};
 
   @override
   void initState() {
@@ -42,30 +54,58 @@ class _OnboardingStep4State extends State<OnboardingStep4>
       parent: _controller,
       curve: const Interval(0.40, 0.80, curve: Curves.easeOut),
     );
+
+    // Rebuilding on every animation tick guarantees the phone demo reflects
+    // draft state immediately — no AnimatedBuilder child-caching issues.
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
     _controller.forward();
+
+    // Pre-initialize with onboarding defaults (wrapUp on, rest off).
+    for (final period in NotificationPeriod.values) {
+      _draftPeriodSettings[period] = NotificationSettings.defaultForPeriod(
+        period,
+      ).copyWith(enabled: period == NotificationPeriod.wrapUp);
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       final allowed = await NotificationService.requestPermissions(context);
-      if (!mounted || !allowed) return;
+      if (!mounted) return;
 
       final np = context.read<NotificationsProvider>();
-      await np.applyGlobalToggles(
-        context: context,
-        masterEnabled: true,
-        periodsEnabled: true,
-        habitsEnabled: true,
-      );
-      if (!mounted) return;
-      await np.setSettings(
-        NotificationPeriod.morning,
-        np.getSettings(NotificationPeriod.morning).copyWith(enabled: false),
-      );
-      if (!mounted) return;
-      await np.setSettings(
-        NotificationPeriod.midday,
-        np.getSettings(NotificationPeriod.midday).copyWith(enabled: false),
-      );
+
+      if (allowed) {
+        // One-time heavy setup persisted to the provider.
+        await np.applyGlobalToggles(
+          context: context,
+          masterEnabled: true,
+          periodsEnabled: true,
+          habitsEnabled: true,
+        );
+        if (!mounted) return;
+        await np.setSettings(
+          NotificationPeriod.morning,
+          np.getSettings(NotificationPeriod.morning).copyWith(enabled: false),
+        );
+        if (!mounted) return;
+        await np.setSettings(
+          NotificationPeriod.midday,
+          np.getSettings(NotificationPeriod.midday).copyWith(enabled: false),
+        );
+        if (!mounted) return;
+      }
+
+      setState(() {
+        _draftMaster = np.isMasterEnabled;
+        _draftPeriods = np.arePeriodNotificationsEnabled;
+        _draftHabits = np.areHabitNotificationsEnabled;
+        for (final period in NotificationPeriod.values) {
+          _draftPeriodSettings[period] = np.getSettings(period);
+        }
+        _draftInitialized = true;
+      });
     });
   }
 
@@ -73,6 +113,28 @@ class _OnboardingStep4State extends State<OnboardingStep4>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  /// Called by the parent right before navigating away. Fires notification
+  /// scheduling in the background so navigation is not blocked.
+  void commitDraft() {
+    if (!_draftInitialized || !mounted) return;
+    final np = context.read<NotificationsProvider>();
+    unawaited(() async {
+      final applied = await np.applyGlobalToggles(
+        context: context,
+        masterEnabled: _draftMaster,
+        periodsEnabled: _draftPeriods,
+        habitsEnabled: _draftHabits,
+      );
+      if (!applied) return;
+      for (final period in NotificationPeriod.values) {
+        final draft = _draftPeriodSettings[period];
+        if (draft != null) {
+          await np.setSettings(period, draft);
+        }
+      }
+    }());
   }
 
   Widget _slide(Widget child, Animation<double> anim) {
@@ -94,6 +156,15 @@ class _OnboardingStep4State extends State<OnboardingStep4>
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
+    // Read animation value directly — the controller listener keeps this
+    // widget rebuilding each frame during animation, and setState from toggle
+    // callbacks keeps it current afterwards.
+    final phoneV = _animPhone.value.clamp(0.0, 1.0);
+
+    final periodEnabledOverrides = {
+      for (final e in _draftPeriodSettings.entries) e.key: e.value.enabled,
+    };
+
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -101,25 +172,37 @@ class _OnboardingStep4State extends State<OnboardingStep4>
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          _slide(
-            Transform.scale(
-              scale: 0.8,
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: cp.border,
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(38),
-                  child: IgnorePointer(child: NotificationSettingsPage.demo()),
+          // Phone is NOT wrapped in _slide / AnimatedBuilder so the demo
+          // rerenders whenever draft state changes via setState.
+          Opacity(
+            opacity: phoneV,
+            child: Transform.translate(
+              offset: Offset(0, -40 * (1 - phoneV)),
+              child: Transform.scale(
+                scale: 0.8,
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: cp.border,
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(38),
+                    child: IgnorePointer(
+                      child: NotificationSettingsPage.demo(
+                        masterEnabled: _draftMaster,
+                        periodsEnabled: _draftPeriods,
+                        habitsEnabled: _draftHabits,
+                        periodEnabledOverrides: periodEnabledOverrides,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            _animPhone,
           ),
           Align(
             alignment: const FractionalOffset(0.94, 0.25),
@@ -129,7 +212,64 @@ class _OnboardingStep4State extends State<OnboardingStep4>
             top: 220,
             left: 12,
             right: 12,
-            child: _slide(const _NotificationTogglesCard(), _animToggles),
+            child: _slide(
+              _NotificationTogglesCard(
+                masterEnabled: _draftMaster,
+                periodsEnabled: _draftPeriods,
+                habitsEnabled: _draftHabits,
+                onMasterChanged: (value) {
+                  setState(() {
+                    _draftMaster = value;
+                    if (!value) {
+                      _draftPeriods = false;
+                      _draftHabits = false;
+                      for (final p in NotificationPeriod.values) {
+                        final cur = _draftPeriodSettings[p];
+                        if (cur != null && cur.enabled) {
+                          _draftPeriodSettings[p] = cur.copyWith(enabled: false);
+                        }
+                      }
+                    }
+                  });
+                },
+                onHabitsChanged: (value) {
+                  setState(() {
+                    _draftHabits = value;
+                    if (value) _draftMaster = true;
+                  });
+                },
+                onPeriodsChanged: (value) {
+                  setState(() {
+                    _draftPeriods = value;
+                    if (value) {
+                      _draftMaster = true;
+                      for (final p in NotificationPeriod.values) {
+                        final cur = _draftPeriodSettings[p];
+                        if (cur != null) {
+                          _draftPeriodSettings[p] = cur.copyWith(
+                            enabled: _savedPeriodEnabled[p] ??
+                                (p == NotificationPeriod.wrapUp),
+                          );
+                        }
+                      }
+                      _savedPeriodEnabled.clear();
+                    } else {
+                      for (final p in NotificationPeriod.values) {
+                        _savedPeriodEnabled[p] =
+                            _draftPeriodSettings[p]?.enabled ?? false;
+                      }
+                      for (final p in NotificationPeriod.values) {
+                        final cur = _draftPeriodSettings[p];
+                        if (cur != null && cur.enabled) {
+                          _draftPeriodSettings[p] = cur.copyWith(enabled: false);
+                        }
+                      }
+                    }
+                  });
+                },
+              ),
+              _animToggles,
+            ),
           ),
           IgnorePointer(
             child: Align(
@@ -156,12 +296,25 @@ class _OnboardingStep4State extends State<OnboardingStep4>
 }
 
 class _NotificationTogglesCard extends StatelessWidget {
-  const _NotificationTogglesCard();
+  const _NotificationTogglesCard({
+    required this.masterEnabled,
+    required this.periodsEnabled,
+    required this.habitsEnabled,
+    required this.onMasterChanged,
+    required this.onHabitsChanged,
+    required this.onPeriodsChanged,
+  });
+
+  final bool masterEnabled;
+  final bool periodsEnabled;
+  final bool habitsEnabled;
+  final ValueChanged<bool> onMasterChanged;
+  final ValueChanged<bool> onHabitsChanged;
+  final ValueChanged<bool> onPeriodsChanged;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final np = context.watch<NotificationsProvider>();
     final loc = AppLocalizations.of(context)!;
 
     return Container(
@@ -191,19 +344,7 @@ class _NotificationTogglesCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                NewDefaultSwitch(
-                  value: np.isMasterEnabled,
-                  onChanged: (value) async {
-                    await np.applyGlobalToggles(
-                      context: context,
-                      masterEnabled: value,
-                      periodsEnabled:
-                          value ? np.arePeriodNotificationsEnabled : false,
-                      habitsEnabled:
-                          value ? np.areHabitNotificationsEnabled : false,
-                    );
-                  },
-                ),
+                NewDefaultSwitch(value: masterEnabled, onChanged: onMasterChanged),
               ],
             ),
           ),
@@ -222,17 +363,7 @@ class _NotificationTogglesCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                NewDefaultSwitch(
-                  value: np.areHabitNotificationsEnabled,
-                  onChanged: (value) async {
-                    await np.applyGlobalToggles(
-                      context: context,
-                      masterEnabled: value || np.isMasterEnabled,
-                      periodsEnabled: np.arePeriodNotificationsEnabled,
-                      habitsEnabled: value,
-                    );
-                  },
-                ),
+                NewDefaultSwitch(value: habitsEnabled, onChanged: onHabitsChanged),
               ],
             ),
           ),
@@ -251,17 +382,7 @@ class _NotificationTogglesCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                NewDefaultSwitch(
-                  value: np.arePeriodNotificationsEnabled,
-                  onChanged: (value) async {
-                    await np.applyGlobalToggles(
-                      context: context,
-                      masterEnabled: value || np.isMasterEnabled,
-                      periodsEnabled: value,
-                      habitsEnabled: np.areHabitNotificationsEnabled,
-                    );
-                  },
-                ),
+                NewDefaultSwitch(value: periodsEnabled, onChanged: onPeriodsChanged),
               ],
             ),
           ),

@@ -15,7 +15,17 @@ import 'package:habitt/l10n/app_localizations.dart';
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
 
-  static Widget demo() => const _DemoNotificationBody();
+  static Widget demo({
+    bool? masterEnabled,
+    bool? periodsEnabled,
+    bool? habitsEnabled,
+    Map<NotificationPeriod, bool>? periodEnabledOverrides,
+  }) => _DemoNotificationBody(
+    overrideMasterEnabled: masterEnabled,
+    overridePeriodsEnabled: periodsEnabled,
+    overrideHabitsEnabled: habitsEnabled,
+    periodEnabledOverrides: periodEnabledOverrides,
+  );
 
   @override
   State<NotificationSettingsPage> createState() =>
@@ -590,13 +600,34 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 }
 
 class _DemoNotificationBody extends StatelessWidget {
-  const _DemoNotificationBody();
+  const _DemoNotificationBody({
+    this.overrideMasterEnabled,
+    this.overridePeriodsEnabled,
+    this.overrideHabitsEnabled,
+    this.periodEnabledOverrides,
+  });
+
+  final bool? overrideMasterEnabled;
+  final bool? overridePeriodsEnabled;
+  final bool? overrideHabitsEnabled;
+  final Map<NotificationPeriod, bool>? periodEnabledOverrides;
+
+  bool _isPeriodEnabled(NotificationPeriod period, NotificationsProvider np) {
+    final master = overrideMasterEnabled ?? np.isMasterEnabled;
+    final periods = overridePeriodsEnabled ?? np.arePeriodNotificationsEnabled;
+    final periodOn = periodEnabledOverrides?[period] ?? false;
+    return master && periods && periodOn;
+  }
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final np = context.watch<NotificationsProvider>();
     final loc = AppLocalizations.of(context)!;
+
+    final master = overrideMasterEnabled ?? np.isMasterEnabled;
+    final habits = overrideHabitsEnabled ?? np.areHabitNotificationsEnabled;
+    final periods = overridePeriodsEnabled ?? np.arePeriodNotificationsEnabled;
 
     return ColoredBox(
       color: cp.bg,
@@ -647,7 +678,7 @@ class _DemoNotificationBody extends StatelessWidget {
                                   ),
                                 ),
                                 NewDefaultSwitch(
-                                  value: np.isMasterEnabled,
+                                  value: master,
                                   onChanged: (_) {},
                                 ),
                               ],
@@ -669,7 +700,7 @@ class _DemoNotificationBody extends StatelessWidget {
                                   ),
                                 ),
                                 NewDefaultSwitch(
-                                  value: np.areHabitNotificationsEnabled,
+                                  value: habits,
                                   onChanged: (_) {},
                                 ),
                               ],
@@ -691,7 +722,7 @@ class _DemoNotificationBody extends StatelessWidget {
                                   ),
                                 ),
                                 NewDefaultSwitch(
-                                  value: np.arePeriodNotificationsEnabled,
+                                  value: periods,
                                   onChanged: (_) {},
                                 ),
                               ],
@@ -717,18 +748,24 @@ class _DemoNotificationBody extends StatelessWidget {
                       children: [
                         NotificationCard(
                           period: NotificationPeriod.morning,
-                          settings: np.getSettings(NotificationPeriod.morning),
-                          enabled: np.isEnabled(NotificationPeriod.morning),
+                          settings: np.getSettings(NotificationPeriod.morning).copyWith(
+                            enabled: _isPeriodEnabled(NotificationPeriod.morning, np),
+                          ),
+                          enabled: _isPeriodEnabled(NotificationPeriod.morning, np),
                         ),
                         NotificationCard(
                           period: NotificationPeriod.midday,
-                          settings: np.getSettings(NotificationPeriod.midday),
-                          enabled: np.isEnabled(NotificationPeriod.midday),
+                          settings: np.getSettings(NotificationPeriod.midday).copyWith(
+                            enabled: _isPeriodEnabled(NotificationPeriod.midday, np),
+                          ),
+                          enabled: _isPeriodEnabled(NotificationPeriod.midday, np),
                         ),
                         NotificationCard(
                           period: NotificationPeriod.wrapUp,
-                          settings: np.getSettings(NotificationPeriod.wrapUp),
-                          enabled: np.isEnabled(NotificationPeriod.wrapUp),
+                          settings: np.getSettings(NotificationPeriod.wrapUp).copyWith(
+                            enabled: _isPeriodEnabled(NotificationPeriod.wrapUp, np),
+                          ),
+                          enabled: _isPeriodEnabled(NotificationPeriod.wrapUp, np),
                         ),
                       ],
                     ),

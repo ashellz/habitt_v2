@@ -754,6 +754,7 @@
   "syncFailed": "Synchronisation fehlgeschlagen",
   "disconnectGoogle": "Google trennen",
   "restoreConfirmTitle": "Aus Sicherung wiederherstellen?",
+  "restoreConfirmDesc": "Deine Daten werden vollständig durch dieses Backup ersetzt. Alles, was du seit diesem Backup erfasst hast, geht verloren. Dies kann nicht rückgängig gemacht werden.",
   "restoreConfirmDescription": "Dabei wird die Cloud-Sicherung mit deinen lokalen Daten zusammengeführt. Konflikte werden anhand der neuesten Änderungen aufgelöst.",
   "restore": "Wiederherstellen",
   "backupHistory": "Sicherungsverlauf",

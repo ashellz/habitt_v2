@@ -129,6 +129,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
 
   late PageController _pageController;
   int _currentStep = 0;
+  final GlobalKey<OnboardingStep4State> _step4Key = GlobalKey();
 
   @override
   void initState() {
@@ -146,6 +147,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
 
   Future<void> _goNext() async {
     if (_isLastStep) {
+      _step4Key.currentState?.commitDraft();
       await widget.onDone();
       return;
     }
@@ -157,6 +159,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
   }
 
   Future<void> _skip() async {
+    _step4Key.currentState?.commitDraft();
     await widget.onDone();
   }
 
@@ -227,7 +230,7 @@ class _OnboardingIntroTemplateState extends State<_OnboardingIntroTemplate> {
                           0 => const OnboardingStep1(key: ValueKey(0)),
                           1 => const OnboardingStep2(key: ValueKey(1)),
                           2 => const OnboardingStep3(key: ValueKey(2)),
-                          _ => const OnboardingStep4(key: ValueKey(3)),
+                          _ => OnboardingStep4(key: _step4Key),
                         };
                       },
                     ),

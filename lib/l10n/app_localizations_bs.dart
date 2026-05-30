@@ -1958,6 +1958,10 @@ class AppLocalizationsBs extends AppLocalizations {
   String get restoreConfirmTitle => 'Vratiti backup?';
 
   @override
+  String get restoreConfirmDesc =>
+      'Tvoji podaci bit će potpuno zamijenjeni ovim backupom. Sve što si postigao od tada bit će obrisano. Ovo se ne može poništiti.';
+
+  @override
   String get restoreConfirmDescription =>
       'Ovo će spojiti cloud backup s tvojim lokalnim podacima. Konflikti će biti riješeni koristeći najnovije izmjene.';
 
@@ -2264,7 +2268,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get merge => 'Spoji';
 
   @override
-  String get overwriteLocalDataTitle => 'Prepisati lokalne podatke?';
+  String get overwriteLocalDataTitle => 'Obrisati trenutne podatke?';
 
   @override
   String get overwriteLocalDataDesc =>

@@ -749,6 +749,7 @@
   "syncFailed": "Sync failed",
   "disconnectGoogle": "Disconnect Google",
   "restoreConfirmTitle": "Restore from backup?",
+  "restoreConfirmDesc": "Your data will be completely replaced with this backup. Everything you've tracked since this backup was made will be lost. This cannot be undone.",
   "restoreConfirmDescription": "This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.",
   "restore": "Restore",
   "backupHistory": "Backup history",

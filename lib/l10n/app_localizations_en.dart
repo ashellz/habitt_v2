@@ -1960,6 +1960,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restoreConfirmTitle => 'Restore from backup?';
 
   @override
+  String get restoreConfirmDesc =>
+      'Your data will be completely replaced with this backup. Everything you\'ve tracked since this backup was made will be lost. This cannot be undone.';
+
+  @override
   String get restoreConfirmDescription =>
       'This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.';
 

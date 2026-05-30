@@ -1968,6 +1968,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get restoreConfirmTitle => 'Ripristinare dal backup?';
 
   @override
+  String get restoreConfirmDesc =>
+      'I tuoi dati verranno completamente sostituiti con questo backup. Tutto ciò che hai monitorato da allora andrà perso. Questa operazione non può essere annullata.';
+
+  @override
   String get restoreConfirmDescription =>
       'Questo unirà il backup cloud con i tuoi dati locali. I conflitti saranno risolti usando le modifiche più recenti.';
 

@@ -3209,6 +3209,12 @@ abstract class AppLocalizations {
   /// **'Restore from backup?'**
   String get restoreConfirmTitle;
 
+  /// No description provided for @restoreConfirmDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data will be completely replaced with this backup. Everything you\'ve tracked since this backup was made will be lost. This cannot be undone.'**
+  String get restoreConfirmDesc;
+
   /// No description provided for @restoreConfirmDescription.
   ///
   /// In en, this message translates to:
