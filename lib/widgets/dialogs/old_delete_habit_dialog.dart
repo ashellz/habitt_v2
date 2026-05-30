@@ -3,7 +3,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
 import 'package:provider/provider.dart';
 
 class OldDeleteHabitDialog extends StatelessWidget {

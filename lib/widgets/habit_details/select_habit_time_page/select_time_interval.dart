@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/dialogs/select_time_dialog.dart';
 import 'package:provider/provider.dart';
@@ -129,7 +129,7 @@ class SelectTimeInterval extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          DefaultButton(
+          OldDefaultButton(
             enabled: enabled,
             label: label,
             offsetLabel: true,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/notification_service.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
 import 'package:habitt/widgets/default/default_switch.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/notification/time_picker_sheet.dart';

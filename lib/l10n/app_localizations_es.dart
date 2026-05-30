@@ -2261,4 +2261,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String accountDeletionFailed(Object errorMessage) {
     return 'Error al eliminar la cuenta: $errorMessage';
   }
+
+  @override
+  String get backupFound => 'Copia de seguridad encontrada';
+
+  @override
+  String get backupFoundDesc =>
+      'Tu Google Drive tiene una copia de seguridad. ¿Cómo te gustaría restaurar?';
+
+  @override
+  String get merge => 'Combinar';
+
+  @override
+  String get overwriteLocalDataTitle => '¿Sobreescribir datos locales?';
+
+  @override
+  String get overwriteLocalDataDesc =>
+      'Esto reemplazará permanentemente todos tus datos locales con la copia de seguridad. Esta acción no se puede deshacer.';
+
+  @override
+  String get overwrite => 'Sobreescribir';
 }

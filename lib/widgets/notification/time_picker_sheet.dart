@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +89,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                         key: const ValueKey("value"),
                         children: [
                           Expanded(
-                            child: DefaultButton(
+                            child: OldDefaultButton(
                               onPressed: () {
                                 if (Navigator.canPop(context)) {
                                   Navigator.pop(context);
@@ -101,7 +101,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                           ),
                           SizedBox(width: 16),
                           Expanded(
-                            child: DefaultButton(
+                            child: OldDefaultButton(
                               onPressed: () {
                                 debugPrint(
                                   "Selected time: ${hoursController.selectedItem}:${minutesController.selectedItem}",

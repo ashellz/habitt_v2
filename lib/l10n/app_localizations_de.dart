@@ -2267,4 +2267,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String accountDeletionFailed(Object errorMessage) {
     return 'Konto konnte nicht gelöscht werden: $errorMessage';
   }
+
+  @override
+  String get backupFound => 'Backup gefunden';
+
+  @override
+  String get backupFoundDesc =>
+      'Dein Google Drive hat ein Backup. Wie möchtest du wiederherstellen?';
+
+  @override
+  String get merge => 'Zusammenführen';
+
+  @override
+  String get overwriteLocalDataTitle => 'Lokale Daten überschreiben?';
+
+  @override
+  String get overwriteLocalDataDesc =>
+      'Dadurch werden alle deine lokalen Daten dauerhaft durch das Backup ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get overwrite => 'Überschreiben';
 }

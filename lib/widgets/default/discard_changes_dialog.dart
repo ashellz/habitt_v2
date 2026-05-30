@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/widgets/default/default_button.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
 class DiscardChangesDialog extends StatelessWidget {
@@ -15,7 +15,7 @@ class DiscardChangesDialog extends StatelessWidget {
       content: Row(
         children: [
           Expanded(
-            child: DefaultButton(
+            child: OldDefaultButton(
               label: "Cancel",
               outlined: true,
               onPressed: () {
@@ -27,7 +27,7 @@ class DiscardChangesDialog extends StatelessWidget {
           ),
           SizedBox(width: 16),
           Expanded(
-            child: DefaultButton(
+            child: OldDefaultButton(
               label: loc.discard,
               onPressed: () {
                 if (Navigator.canPop(context)) {

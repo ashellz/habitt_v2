@@ -3,8 +3,8 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_contrast.dart';
 import 'package:provider/provider.dart';
 
-class DefaultButton extends StatelessWidget {
-  const DefaultButton({
+class OldDefaultButton extends StatelessWidget {
+  const OldDefaultButton({
     super.key,
 
     required this.onPressed,

@@ -866,5 +866,11 @@
   "logOutDesc": "La disconnessione disabiliterà il backup e la sincronizzazione, ma i tuoi dati locali rimarranno su questo dispositivo.",
   "deleteAccountDesc": "Elimina il tuo account dai nostri server. I backup crittografati nella cartella habitt_backups del tuo Google Drive rimarranno — eliminali manualmente se necessario.",
   "accountDeletedSuccessfully": "Account eliminato con successo",
-  "accountDeletionFailed": "Eliminazione account non riuscita: {errorMessage}"
+  "accountDeletionFailed": "Eliminazione account non riuscita: {errorMessage}",
+  "backupFound": "Backup trovato",
+  "backupFoundDesc": "Il tuo Google Drive ha un backup. Come vorresti ripristinare?",
+  "merge": "Unisci",
+  "overwriteLocalDataTitle": "Sovrascrivere i dati locali?",
+  "overwriteLocalDataDesc": "Questo sostituirà definitivamente tutti i tuoi dati locali con il backup. Questa azione non può essere annullata.",
+  "overwrite": "Sovrascrivi"
 }

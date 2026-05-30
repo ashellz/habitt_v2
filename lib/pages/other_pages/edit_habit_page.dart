@@ -8,8 +8,8 @@ import 'package:habitt/widgets/habit_details/optional_habit_switch.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/default_button.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/old_delete_habit_dialog.dart';
 import 'package:habitt/widgets/default/discard_changes_dialog.dart';
 import 'package:habitt/widgets/habit_details/edit_habit_button.dart';
@@ -322,7 +322,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           key: const ValueKey("value"),
                           children: [
                             Expanded(
-                              child: DefaultButton(
+                              child: OldDefaultButton(
                                 onPressed:
                                     () => showDialog(
                                       context: context,
@@ -334,7 +334,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                             content: Row(
                                               children: [
                                                 Expanded(
-                                                  child: DefaultButton(
+                                                  child: OldDefaultButton(
                                                     label: "Cancel",
                                                     outlined: true,
                                                     onPressed:
@@ -345,7 +345,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                                 ),
                                                 SizedBox(width: 16),
                                                 Expanded(
-                                                  child: DefaultButton(
+                                                  child: OldDefaultButton(
                                                     label: loc.reset,
                                                     onPressed: () {
                                                       setInitialValues();

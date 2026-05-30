@@ -866,5 +866,11 @@
   "logOutDesc": "Durch das Abmelden werden Backup und Synchronisierung deaktiviert, aber deine lokalen Daten bleiben auf diesem Gerät.",
   "deleteAccountDesc": "Löscht dein Konto von unseren Servern. Verschlüsselte Backups im habitt_backups-Ordner auf deinem Google Drive bleiben erhalten — lösche sie bei Bedarf manuell.",
   "accountDeletedSuccessfully": "Konto erfolgreich gelöscht",
-  "accountDeletionFailed": "Konto konnte nicht gelöscht werden: {errorMessage}"
+  "accountDeletionFailed": "Konto konnte nicht gelöscht werden: {errorMessage}",
+  "backupFound": "Backup gefunden",
+  "backupFoundDesc": "Dein Google Drive hat ein Backup. Wie möchtest du wiederherstellen?",
+  "merge": "Zusammenführen",
+  "overwriteLocalDataTitle": "Lokale Daten überschreiben?",
+  "overwriteLocalDataDesc": "Dadurch werden alle deine lokalen Daten dauerhaft durch das Backup ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "overwrite": "Überschreiben"
 }

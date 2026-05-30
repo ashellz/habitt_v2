@@ -2254,4 +2254,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String accountDeletionFailed(Object errorMessage) {
     return 'Account deletion failed: $errorMessage';
   }
+
+  @override
+  String get backupFound => 'Backup found';
+
+  @override
+  String get backupFoundDesc =>
+      'Your Google Drive has a backup. How would you like to restore?';
+
+  @override
+  String get merge => 'Merge';
+
+  @override
+  String get overwriteLocalDataTitle => 'Overwrite local data?';
+
+  @override
+  String get overwriteLocalDataDesc =>
+      'This will permanently replace all your local data with the backup. This action cannot be undone.';
+
+  @override
+  String get overwrite => 'Overwrite';
 }

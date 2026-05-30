@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 import 'package:provider/provider.dart';
 
 class OldDefaultDialog extends StatelessWidget {
@@ -84,7 +84,7 @@ class OldDefaultDialog extends StatelessWidget {
                   children: [
                     if (leftButtonText != null)
                       Expanded(
-                        child: DefaultButton(
+                        child: OldDefaultButton(
                           danger: danger,
                           outlined: leftButtonOutlined,
                           onPressed:
@@ -100,7 +100,7 @@ class OldDefaultDialog extends StatelessWidget {
 
                     if (rightButtonText != null)
                       Expanded(
-                        child: DefaultButton(
+                        child: OldDefaultButton(
                           isLoading: rightButtonLoading,
                           enabled: rightButtonEnabled,
                           danger: danger,

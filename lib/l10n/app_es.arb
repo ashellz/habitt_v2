@@ -866,5 +866,11 @@
   "logOutDesc": "Al cerrar sesión se desactivará la copia de seguridad y la sincronización, pero tus datos locales permanecerán en este dispositivo.",
   "deleteAccountDesc": "Elimina tu cuenta de nuestros servidores. Las copias de seguridad cifradas en la carpeta habitt_backups de tu Google Drive permanecerán — elimínalas manualmente si es necesario.",
   "accountDeletedSuccessfully": "Cuenta eliminada correctamente",
-  "accountDeletionFailed": "Error al eliminar la cuenta: {errorMessage}"
+  "accountDeletionFailed": "Error al eliminar la cuenta: {errorMessage}",
+  "backupFound": "Copia de seguridad encontrada",
+  "backupFoundDesc": "Tu Google Drive tiene una copia de seguridad. ¿Cómo te gustaría restaurar?",
+  "merge": "Combinar",
+  "overwriteLocalDataTitle": "¿Sobreescribir datos locales?",
+  "overwriteLocalDataDesc": "Esto reemplazará permanentemente todos tus datos locales con la copia de seguridad. Esta acción no se puede deshacer.",
+  "overwrite": "Sobreescribir"
 }

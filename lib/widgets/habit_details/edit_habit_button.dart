@@ -7,8 +7,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/widgets/default/default_button.dart';
-import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 
 class EditHabitButton extends StatelessWidget {
   const EditHabitButton({
@@ -39,7 +38,7 @@ class EditHabitButton extends StatelessWidget {
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: nameController,
       builder:
-          (context, value, child) => DefaultButton(
+          (context, value, child) => OldDefaultButton(
             enabled: canEditHabit(),
             onPressed: () {
               if (!canEditHabit()) return;

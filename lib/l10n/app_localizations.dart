@@ -3760,6 +3760,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account deletion failed: {errorMessage}'**
   String accountDeletionFailed(Object errorMessage);
+
+  /// No description provided for @backupFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup found'**
+  String get backupFound;
+
+  /// No description provided for @backupFoundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Google Drive has a backup. How would you like to restore?'**
+  String get backupFoundDesc;
+
+  /// No description provided for @merge.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge'**
+  String get merge;
+
+  /// No description provided for @overwriteLocalDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overwrite local data?'**
+  String get overwriteLocalDataTitle;
+
+  /// No description provided for @overwriteLocalDataDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently replace all your local data with the backup. This action cannot be undone.'**
+  String get overwriteLocalDataDesc;
+
+  /// No description provided for @overwrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Overwrite'**
+  String get overwrite;
 }
 
 class _AppLocalizationsDelegate

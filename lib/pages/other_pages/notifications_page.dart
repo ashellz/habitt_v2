@@ -7,8 +7,8 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
-import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/widgets/notification/notification_day.dart';
 import 'package:provider/provider.dart';
@@ -276,7 +276,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   widget: Row(
                     children: [
                       Expanded(
-                        child: DefaultButton(
+                        child: OldDefaultButton(
                           label: "Cancel",
                           onPressed: _resetChanges,
                           outlined: true,
@@ -286,7 +286,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: DefaultButton(
+                        child: OldDefaultButton(
                           label: loc.save,
                           onPressed: _saveChanges,
                         ),

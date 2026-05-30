@@ -3,20 +3,23 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_contrast.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/default_button.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
-class BackupDataPage extends StatefulWidget {
-  const BackupDataPage({super.key});
+// DEPRACETED
+// Page no longer used, check backup_sheet.dart for backup-related UI
+
+class OldBackupDataPage extends StatefulWidget {
+  const OldBackupDataPage({super.key});
 
   @override
-  State<BackupDataPage> createState() => _BackupDataPageState();
+  State<OldBackupDataPage> createState() => _OldBackupDataPageState();
 }
 
-class _BackupDataPageState extends State<BackupDataPage> {
+class _OldBackupDataPageState extends State<OldBackupDataPage> {
   String getLastSyncText(BackupProvider backupProvider) {
     final loc = AppLocalizations.of(context)!;
     if (backupProvider.localMetadata == null) {
@@ -48,123 +51,99 @@ class _BackupDataPageState extends State<BackupDataPage> {
         backgroundColor: tp.backgroundColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Stack(
-            children: [
-              SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    NavBackButton(tp: tp),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                NavBackButton(tp: tp),
 
-                    Text(
-                      loc.backupData,
-                      style: TextStyle(
-                        fontSize: 38,
-                        color: tp.primaryTextColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      loc.keepYourDataSafeByBackingItUpToGoogleDrive,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: tp.secondaryTextColor,
-                      ),
-                    ),
-                    Spacer(),
-                    if (!isLoggedIn) ...[
-                      Text(
-                        loc.youAreCurrentlyNotConnectedToYourGoogleAccount,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: tp.secondaryTextColor,
-                        ),
-                      ),
-                      DefaultButton(
-                        onPressed: () async {
-                          try {
-                            await backupProvider.signIn(context);
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Google sign-in failed. Please try again.',
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        label: loc.connectToGoogle,
-                      ),
-                    ] else ...[
-                      Text(
-                        "Connected as ${backupProvider.currentUser?.email}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: tp.secondaryTextColor,
-                        ),
-                      ),
-                      Text(
-                        getSyncProgressText(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: tp.secondaryTextColor,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: extraPadding),
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            Expanded(
-                              child: DefaultButton(
-                                onPressed: () async {
-                                  showDialog(
-                                    context: context,
-                                    builder:
-                                        (context) => OldDefaultDialog(
-                                          title: loc.optOutOfBackup,
-                                          desc: loc.optOutOfBackup,
-                                          rightButtonCallback: () async {
-                                            backupProvider.signOut();
-                                          },
-                                          rightButtonText: loc.optOut,
-                                          danger: true,
-                                          leftButtonText: "Cancel",
-                                        ),
-                                  );
-                                },
-                                label: loc.optOut,
-                                color: tp.backgroundColor,
-                              ),
-                            ),
-                            Expanded(
-                              child: DefaultButton(
-                                isLoading:
-                                    backupProvider.syncState ==
-                                    SyncState.syncing,
-                                prefix: Icon(
-                                  Icons.sync,
-                                  color: bestContrastingOn(
-                                    tp.primaryButtonBackground,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  await backupProvider.performSync(true);
-                                },
-                                label: loc.syncNow,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ],
+                Text(
+                  loc.backupData,
+                  style: TextStyle(
+                    fontSize: 38,
+                    color: tp.primaryTextColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  loc.keepYourDataSafeByBackingItUpToGoogleDrive,
+                  style: TextStyle(fontSize: 16, color: tp.secondaryTextColor),
+                ),
+                const Spacer(),
+                if (!isLoggedIn) ...[
+                  Text(
+                    loc.youAreCurrentlyNotConnectedToYourGoogleAccount,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: tp.secondaryTextColor,
+                    ),
+                  ),
+                ] else ...[
+                  Text(
+                    "Connected as ${backupProvider.currentUser?.email}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: tp.secondaryTextColor,
+                    ),
+                  ),
+                  Text(
+                    getSyncProgressText(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: tp.secondaryTextColor,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: extraPadding),
+                    child: Row(
+                      spacing: 8,
+                      children: [
+                        Expanded(
+                          child: OldDefaultButton(
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (context) => OldDefaultDialog(
+                                      title: loc.optOutOfBackup,
+                                      desc: loc.optOutOfBackup,
+                                      rightButtonCallback: () async {
+                                        backupProvider.signOut();
+                                      },
+                                      rightButtonText: loc.optOut,
+                                      danger: true,
+                                      leftButtonText: "Cancel",
+                                    ),
+                              );
+                            },
+                            label: loc.optOut,
+                            color: tp.backgroundColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: OldDefaultButton(
+                            isLoading:
+                                backupProvider.syncState == SyncState.syncing,
+                            prefix: Icon(
+                              Icons.sync,
+                              color: bestContrastingOn(
+                                tp.primaryButtonBackground,
+                              ),
+                            ),
+                            onPressed: () async {
+                              await backupProvider.performSync(true);
+                            },
+                            label: loc.syncNow,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

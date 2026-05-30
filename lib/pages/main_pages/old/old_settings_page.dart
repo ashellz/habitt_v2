@@ -9,7 +9,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/alert_popup.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/default_dialog.dart';
+import 'package:habitt/widgets/default/old_default_dialog.dart';
 import 'package:habitt/widgets/default/default_text_field.dart';
 import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/old_settings/select_color_sheet.dart';
@@ -433,7 +433,7 @@ class _OldSettingsPageState extends State<OldSettingsPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BackupDataPage(),
+                            builder: (context) => OldBackupDataPage(),
                           ),
                         );
                       },

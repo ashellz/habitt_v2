@@ -9,6 +9,7 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
+import 'package:habitt/widgets/dialogs/restore_choice_dialog.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,20 @@ class _BackupSheetState extends State<BackupSheet> {
   final _passphraseController = TextEditingController();
   bool _migrationLoading = false;
   bool _signingIn = false;
+
+  Future<void> _handleSignIn(BackupProvider backupProvider) async {
+    setState(() => _signingIn = true);
+    await backupProvider.signIn(context);
+    if (mounted) setState(() => _signingIn = false);
+    if (!mounted) return;
+    if (context.read<BackupProvider>().pendingRestoreDecision) {
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const RestoreChoiceDialog(),
+      );
+    }
+  }
 
   void _popSheet() {
     if (!mounted) return;
@@ -212,14 +227,7 @@ class _BackupSheetState extends State<BackupSheet> {
           ),
         ),
         child: GestureDetector(
-          onTap:
-              _signingIn
-                  ? null
-                  : () async {
-                    setState(() => _signingIn = true);
-                    await bp.signIn(context);
-                    if (mounted) setState(() => _signingIn = false);
-                  },
+          onTap: _signingIn ? null : () => _handleSignIn(bp),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             color: Colors.transparent,

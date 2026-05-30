@@ -6,7 +6,6 @@ import 'package:habitt/widgets/default/custom_shader_mask.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/all_habits_on_time_line_stack.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 enum TimeType { regular, midnight, overday }
 

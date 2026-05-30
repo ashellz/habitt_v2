@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
@@ -48,7 +48,7 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  DefaultButton(
+                  OldDefaultButton(
                     onPressed: () {
                       fetchOffers();
                     },

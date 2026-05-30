@@ -83,6 +83,10 @@ class BackupProvider extends ChangeNotifier {
 
   bool _dataExists = false;
 
+  /// Set after login when Drive has data and local DB is non-empty.
+  /// The UI should watch this and present the merge/replace choice dialog.
+  bool _pendingRestoreDecision = false;
+
   bool _isPinEnabled = false;
   // Decrypted keychain key cached in memory after PIN entry. Cleared on restart.
   SecretKey? _cachedKey;
@@ -108,6 +112,7 @@ class BackupProvider extends ChangeNotifier {
   bool get needsMigration => _needsMigration;
   bool get isPinEnabled => _isPinEnabled;
   String? get pendingNotification => _pendingNotification;
+  bool get pendingRestoreDecision => _pendingRestoreDecision;
 
   void clearPendingNotification() {
     _pendingNotification = null;
@@ -301,6 +306,14 @@ class BackupProvider extends ChangeNotifier {
 
           _dataExists = await _checkDataExists();
           notifyListeners();
+
+          // If the user logged in on a previous session but never completed the
+          // restore-choice dialog (i.e. _lastSyncTime is still null), auto-merge
+          // on the next app open. Merge is always safe — it never overwrites
+          // local data, it only brings in cloud data.
+          if (!_needsMigration && _dataExists && _lastSyncTime == null) {
+            await performSync(true);
+          }
         }
       }
     } catch (e) {
@@ -383,10 +396,21 @@ class BackupProvider extends ChangeNotifier {
       _needsMigration = _legacyPassphrase != null;
 
       _dataExists = await _checkDataExists();
-      notifyListeners();
 
       if (!_needsMigration) {
-        await performSync();
+        final localIsEmpty = Hive.box<Habit>('habits').isEmpty;
+        if (_dataExists && !localIsEmpty) {
+          // Local data exists and Drive has a backup — let the user decide.
+          _pendingRestoreDecision = true;
+          notifyListeners();
+        } else {
+          // Empty local DB → auto-restore from cloud (merge into empty = full
+          // restore). No cloud data → upload local as first backup.
+          notifyListeners();
+          await performSync(true);
+        }
+      } else {
+        notifyListeners();
       }
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
@@ -588,6 +612,127 @@ class BackupProvider extends ChangeNotifier {
       syncState = SyncState.idle;
       notifyListeners();
     }
+  }
+
+  // --- Post-login restore choices ----------------------------------------
+
+  /// Called when the user picks "Merge": pulls cloud data and merges it into
+  /// the existing local DB using timestamp-based conflict resolution.
+  Future<void> confirmMerge() async {
+    _pendingRestoreDecision = false;
+    notifyListeners();
+    await performSync(true); // force=true: bypass same-device skip
+  }
+
+  /// Called when the user picks "Start fresh": wipes the local DB and
+  /// restores entirely from the latest cloud backup + all deltas.
+  Future<void> confirmReplace() async {
+    _pendingRestoreDecision = false;
+    notifyListeners();
+
+    if (_syncState == SyncState.syncing) return;
+    final key = await _getKey();
+    if (key == null) return;
+
+    progressMessage = 'Preparing restore...';
+    syncState = SyncState.syncing;
+    lastError = null;
+
+    try {
+      await _replaceFromCloud(key);
+      await _onSyncSuccess();
+    } catch (e) {
+      syncState = SyncState.error;
+      lastError = 'Restore failed: $e';
+      debugPrint(lastError);
+      notifyListeners();
+    }
+  }
+
+  /// Clears the local DB, then downloads the latest full backup from Drive
+  /// and applies every delta on top, giving a clean slate identical to the
+  /// cloud state.
+  Future<void> _replaceFromCloud(SecretKey key) async {
+    progressMessage = 'Clearing local data...';
+    await Hive.box<Habit>('habits').clear();
+    await Hive.box<Day>('days').clear();
+
+    // Reset applied-deltas cursor so we fetch them all fresh.
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kAppliedDeltaIdsKey);
+
+    // Let the habit provider reload the (now empty) state.
+    await _habitProvider?.init();
+
+    // Restore the latest full backup.
+    progressMessage = 'Downloading backup...';
+    final backupData = await _downloadBackupFromCloud(key);
+    if (backupData != null) {
+      progressMessage = 'Restoring data...';
+      await _mergeBackupData(backupData);
+    }
+
+    // Apply every delta file on top (all devices, all deltas).
+    final drive = await _getDriveService();
+    if (drive != null) {
+      final folderId = await _getFolderId(drive, create: false);
+      if (folderId != null) {
+        progressMessage = 'Applying updates...';
+        await _downloadAndApplyAllDeltas(drive, folderId, key);
+      }
+    }
+  }
+
+  /// Downloads and applies every delta file on Drive, without skipping by
+  /// device ID or already-applied set. Used after a full local wipe so we
+  /// reconstruct the complete cloud state.
+  Future<void> _downloadAndApplyAllDeltas(
+    drive_api.DriveApi drive,
+    String folderId,
+    SecretKey key,
+  ) async {
+    final res = await drive.files.list(
+      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id,name,createdTime)',
+      orderBy: 'createdTime asc',
+    );
+
+    final allFiles = res.files ?? [];
+    if (allFiles.isEmpty) return;
+
+    final applied = <String>{};
+    for (final f in allFiles) {
+      if (f.id == null) continue;
+      try {
+        final response =
+            await drive.files.get(
+                  f.id!,
+                  downloadOptions: drive_api.DownloadOptions.fullMedia,
+                )
+                as drive_api.Media;
+
+        final bytes = <int>[];
+        await for (final chunk in response.stream) {
+          bytes.addAll(chunk);
+        }
+
+        final backupData = await BackupService.importDataFromGoogleDrive(
+          encryptedBytes: Uint8List.fromList(bytes),
+          secretKey: key,
+        );
+
+        if (backupData != null) {
+          await _mergeBackupData(backupData);
+          applied.add(f.id!);
+          debugPrint('Applied delta ${f.id} (${f.name})');
+        }
+      } catch (e) {
+        debugPrint('Skipped delta ${f.id}: $e');
+      }
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kAppliedDeltaIdsKey, jsonEncode(applied.toList()));
   }
 
   // --- Sync --------------------------------------------------------------

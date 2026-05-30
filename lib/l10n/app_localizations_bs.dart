@@ -2252,4 +2252,24 @@ class AppLocalizationsBs extends AppLocalizations {
   String accountDeletionFailed(Object errorMessage) {
     return 'Brisanje računa nije uspjelo: $errorMessage';
   }
+
+  @override
+  String get backupFound => 'Pronađen backup';
+
+  @override
+  String get backupFoundDesc =>
+      'Tvoj Google Drive već ima backup. Kako bi ga želio obnoviti?';
+
+  @override
+  String get merge => 'Spoji';
+
+  @override
+  String get overwriteLocalDataTitle => 'Prepisati lokalne podatke?';
+
+  @override
+  String get overwriteLocalDataDesc =>
+      'Ovo će trajno zamijeniti sve tvoje lokalne podatke backupom. Ova radnja se ne može poništiti.';
+
+  @override
+  String get overwrite => 'Prepiši';
 }

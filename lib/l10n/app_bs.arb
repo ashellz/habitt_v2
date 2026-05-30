@@ -856,5 +856,11 @@
   "logOutDesc": "Odjavom će biti onemogućena sigurnosna kopija i sinkronizacija, ali tvoji lokalni podaci ostaju na ovom uređaju.",
   "deleteAccountDesc": "Briše tvoj račun s naših servera. Šifrirane sigurnosne kopije u mapi habitt_backups na Google Driveu ostaju — ručno ih obriši po potrebi.",
   "accountDeletedSuccessfully": "Račun je uspješno obrisan",
-  "accountDeletionFailed": "Brisanje računa nije uspjelo: {errorMessage}"
+  "accountDeletionFailed": "Brisanje računa nije uspjelo: {errorMessage}",
+  "backupFound": "Pronađen backup",
+  "backupFoundDesc": "Tvoj Google Drive već ima backup. Kako bi ga želio obnoviti?",
+  "merge": "Spoji",
+  "overwriteLocalDataTitle": "Prepisati lokalne podatke?",
+  "overwriteLocalDataDesc": "Ovo će trajno zamijeniti sve tvoje lokalne podatke backupom. Ova radnja se ne može poništiti.",
+  "overwrite": "Prepiši"
 }

@@ -7,7 +7,7 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
-import 'package:habitt/widgets/default/default_button.dart';
+import 'package:habitt/widgets/default/old_default_button.dart';
 
 class OldAddHabitButton extends StatelessWidget {
   const OldAddHabitButton({
@@ -65,7 +65,7 @@ class OldAddHabitButton extends StatelessWidget {
 
         return CustomSwitcherWrapper(
           value: enabled,
-          widget: DefaultButton(
+          widget: OldDefaultButton(
             key: const ValueKey("add_habit_button"),
             enabled: enabled,
             onPressed: () {

@@ -861,5 +861,11 @@
   "logOutDesc": "Logging out will disable backup and sync, but your local data will remain on this device.",
   "deleteAccountDesc": "Deletes your account from our servers. Encrypted backups in your Google Drive's habitt_backups folder will remain — delete them manually if needed.",
   "accountDeletedSuccessfully": "Account deleted successfully",
-  "accountDeletionFailed": "Account deletion failed: {errorMessage}"
+  "accountDeletionFailed": "Account deletion failed: {errorMessage}",
+  "backupFound": "Backup found",
+  "backupFoundDesc": "Your Google Drive has a backup. How would you like to restore?",
+  "merge": "Merge",
+  "overwriteLocalDataTitle": "Overwrite local data?",
+  "overwriteLocalDataDesc": "This will permanently replace all your local data with the backup. This action cannot be undone.",
+  "overwrite": "Overwrite"
 }
