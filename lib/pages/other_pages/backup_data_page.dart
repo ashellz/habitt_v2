@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_contrast.dart';
-import 'package:habitt/widgets/default/alert_popup.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/default/default_button.dart';
 import 'package:habitt/widgets/default/default_dialog.dart';
@@ -18,9 +17,6 @@ class BackupDataPage extends StatefulWidget {
 }
 
 class _BackupDataPageState extends State<BackupDataPage> {
-  String? _alertMessage;
-  bool _showAlert = false;
-
   String getLastSyncText(BackupProvider backupProvider) {
     final loc = AppLocalizations.of(context)!;
     if (backupProvider.localMetadata == null) {
@@ -168,7 +164,6 @@ class _BackupDataPageState extends State<BackupDataPage> {
                   ],
                 ),
               ),
-              AlertPopup(message: _alertMessage, show: _showAlert),
             ],
           ),
         ),

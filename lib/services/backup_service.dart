@@ -337,9 +337,6 @@ class BackupService {
           }
         }
 
-        // Build a map for consistent references when saving days
-        final habitById = {for (final h in habitsBox.values) h.id: h};
-
         final importedDays = payload.days;
 
         for (final day in importedDays) {
@@ -384,14 +381,11 @@ class BackupService {
           // Preserve any local-only habits for that day
           mergedDayHabits.addAll(existingById.values);
 
-          final normalizedHabits =
-              mergedDayHabits.map((h) => habitById[h.id] ?? h).toList();
-
           await daysBox.put(
             dayKey,
             Day(
               date: day.date,
-              habits: normalizedHabits,
+              habits: mergedDayHabits,
               timestamp: day.timestamp,
             ),
           );
@@ -487,7 +481,7 @@ class BackupService {
     final year = now.year.toString().substring(2);
     final suggestedName = '$day-$month-$year-habitt-backup.habitt';
 
-    final path = await FilePicker.platform.saveFile(
+    final path = await FilePicker.saveFile(
       bytes: bytes,
       dialogTitle: 'Export backup',
       fileName: suggestedName,
@@ -500,13 +494,11 @@ class BackupService {
   }
 
   static Future<String?> _pickImportPath() async {
-    return FilePicker.platform
-        .pickFiles(
-          dialogTitle: 'Import backup',
-          type: FileType.custom,
-          allowedExtensions: ['habitt'],
-        )
-        .then((result) => result?.files.single.path);
+    return FilePicker.pickFiles(
+      dialogTitle: 'Import backup',
+      type: FileType.custom,
+      allowedExtensions: ['habitt'],
+    ).then((result) => result?.files.single.path);
   }
 
   static BackupMetadata? _parseInlineMetadata(dynamic rawMeta) {

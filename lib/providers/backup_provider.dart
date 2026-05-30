@@ -397,7 +397,7 @@ class BackupProvider extends ChangeNotifier {
 
   Future<void> signOut() async {
     try {
-      await GoogleSignIn().signOut();
+      await _googleSignIn.signOut();
       await FirebaseAuth.instance.signOut();
 
       _currentUser = null;
@@ -1251,8 +1251,6 @@ class BackupProvider extends ChangeNotifier {
       }
     }
 
-    final habitById = {for (final h in habitsBox.values) h.id: h};
-
     for (final day in backupData.days) {
       final dayKey =
           DateTime(
@@ -1291,11 +1289,9 @@ class BackupProvider extends ChangeNotifier {
       }
       mergedDayHabits.addAll(existingById.values);
 
-      final normalizedHabits =
-          mergedDayHabits.map((h) => habitById[h.id] ?? h).toList();
       await daysBox.put(
         dayKey,
-        Day(date: day.date, habits: normalizedHabits, timestamp: day.timestamp),
+        Day(date: day.date, habits: mergedDayHabits, timestamp: day.timestamp),
       );
     }
 
