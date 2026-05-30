@@ -200,6 +200,21 @@ Do not edit these directly — they are overwritten by `build_runner`:
 
 ---
 
+## AI usage
+
+This project has been in active development since 2024 — long before AI-assisted coding became mainstream. The architecture, design decisions, and core logic are the product of hands-on engineering, not generated from scratch by an AI. This is not a vibecoded app.
+
+AI tools (primarily Claude) are used selectively throughout this project as a development aid. The focus areas are:
+
+- **Repetitive, boilerplate tasks** — generating adapter code, localization entries, or other mechanical patterns that follow a clear template
+- **Quick bug fixes** — diagnosing and patching straightforward issues faster than doing it manually
+- **Time-consuming but simple tasks** — things that are tedious rather than complex, where AI can compress hours into minutes
+- **Feature planning** — talking through design decisions, tradeoffs, and implementation approaches before writing any code
+
+All AI-generated code is reviewed and tested by me before it lands in the codebase. Nothing ships on AI output alone.
+
+---
+
 ## License
 
 This project is licensed under the **[Business Source License 1.1](LICENSE)** (BSL 1.1).
