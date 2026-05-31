@@ -277,6 +277,20 @@ class NotificationService {
     }
   }
 
+  // Cancels only the notification slots for a single day. Used when a habit is
+  // completed today and its future schedule is unaffected (daily habits).
+  static Future<void> cancelHabitNotificationsForDay(
+    Habit habit,
+    DateTime day,
+  ) async {
+    if (habit.notificationTimes.isEmpty) return;
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    for (final slot in habit.notificationTimes) {
+      final id = _getHabitNotificationId(habit.id, slot.id, normalizedDay);
+      await AwesomeNotifications().cancel(id);
+    }
+  }
+
   static Future<void> cancelAllHabitNotifications() async {
     final scheduled = await AwesomeNotifications().listScheduledNotifications();
     for (final model in scheduled) {

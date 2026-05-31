@@ -82,6 +82,54 @@ class HabitProvider extends ChangeNotifier {
     );
   }
 
+  // Syncs notifications after a completion-state change, skipping work that
+  // has no effect on the scheduled notification set.
+  Future<void> _syncNotificationsOnCompletionChange({
+    required Habit habit,
+    required bool wasCompleted,
+    required bool isNowCompleted,
+    required DateTime daySimple,
+    required DateTime todaySimple,
+  }) async {
+    if (wasCompleted == isNowCompleted) return;
+
+    if (daySimple == todaySimple) {
+      if (isNowCompleted) {
+        // Daily: future schedule unchanged — only cancel today's remaining slots.
+        // Weekly/monthly/custom: completing today may satisfy the period target,
+        // so re-evaluate which future days still need notifications.
+        if (habit.scheduleType == ScheduleType.daily) {
+          await NotificationService.cancelHabitNotificationsForDay(
+            habit,
+            daySimple,
+          );
+        } else {
+          await NotificationService.rescheduleHabitNotifications(
+            habit: habit,
+            appearsOnDay: appearsOnDay,
+            skipToday: true,
+          );
+        }
+      } else {
+        // Un-completed today: restore notifications for today and future days.
+        await _syncSingleHabitNotifications(habit);
+      }
+    } else {
+      // Past day: only weekly/monthly habits within the current period need a
+      // reschedule, because toggling changes timesCompletedThisWeek/Month which
+      // affects appearsOnDay for remaining days in that period.
+      final affectsCurrentPeriod =
+          (habit.scheduleType == ScheduleType.weekly &&
+              _isSameWeek(daySimple, todaySimple)) ||
+          (habit.scheduleType == ScheduleType.monthly &&
+              _isSameMonth(daySimple, todaySimple));
+      if (affectsCurrentPeriod) {
+        await _syncSingleHabitNotifications(habit);
+      }
+      // Daily/custom past-day toggle: no effect on future notifications, skip.
+    }
+  }
+
   Future<void> _loadMissingDays() async {
     if (_dateJoined == null) {
       debugPrint("Date joined is null");
@@ -820,15 +868,13 @@ class HabitProvider extends ChangeNotifier {
     }
 
     await updateHabitInDB(habit, day: daySimple);
-    if (daySimple == todaySimple && habit.completed) {
-      await NotificationService.rescheduleHabitNotifications(
-        habit: currentHabit,
-        appearsOnDay: appearsOnDay,
-        skipToday: true,
-      );
-    } else {
-      await _syncSingleHabitNotifications(currentHabit);
-    }
+    await _syncNotificationsOnCompletionChange(
+      habit: currentHabit,
+      wasCompleted: wasCompleted,
+      isNowCompleted: habit.completed,
+      daySimple: daySimple,
+      todaySimple: todaySimple,
+    );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
@@ -952,12 +998,20 @@ class HabitProvider extends ChangeNotifier {
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 
+    final wasCompleted = habit.completed;
     habit.updateHabitAmountCompleted(amountCompleted);
+    final isNowCompleted = habit.completed;
     if (context.mounted) checkReorderCategories(context, habit);
 
     final currentHabit = habits.firstWhere((h) => h.id == id);
     await updateHabitInDB(currentHabit);
-    await _syncSingleHabitNotifications(currentHabit);
+    await _syncNotificationsOnCompletionChange(
+      habit: currentHabit,
+      wasCompleted: wasCompleted,
+      isNowCompleted: isNowCompleted,
+      daySimple: daySimple,
+      todaySimple: todaySimple,
+    );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
@@ -991,13 +1045,21 @@ class HabitProvider extends ChangeNotifier {
       habit = dayHabits.firstWhere((h) => h.id == id);
     }
 
+    final wasCompleted = habit.completed;
     habit.updateHabitDurationCompleted(durationCompleted);
+    final isNowCompleted = habit.completed;
 
     if (context.mounted) checkReorderCategories(context, habit);
 
     final currentHabit = habits.firstWhere((h) => h.id == id);
     await updateHabitInDB(currentHabit);
-    await _syncSingleHabitNotifications(currentHabit);
+    await _syncNotificationsOnCompletionChange(
+      habit: currentHabit,
+      wasCompleted: wasCompleted,
+      isNowCompleted: isNowCompleted,
+      daySimple: daySimple,
+      todaySimple: todaySimple,
+    );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
