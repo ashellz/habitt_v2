@@ -214,11 +214,69 @@ class StatsProvider extends ChangeNotifier {
     }
     if (_refreshList.contains(StatsType.perfectDaysStreak) || force) {
       _perfectDaysStreak = refreshPerfectStreak();
+      recalculateLongestPerfectDaysStreak();
     }
 
     _refreshList = [];
 
     notifyListeners();
+  }
+
+  /// Scans all historical days (oldest → newest) to find the true longest
+  /// perfect-days streak. Updates both the in-memory field and SharedPreferences.
+  void recalculateLongestPerfectDaysStreak() {
+    final allDays = daysBox.values.toList();
+    allDays.sort((a, b) => a.date.compareTo(b.date)); // oldest → newest
+
+    final now = DateTime.now();
+    allDays.removeWhere(
+      (d) =>
+          d.date.year == now.year &&
+          d.date.month == now.month &&
+          d.date.day == now.day,
+    );
+
+    int longest = 0;
+    int currentRun = 0;
+    int missedAllowed = 1;
+
+    for (final day in allDays) {
+      int habitsCompleted = 0;
+      int habitsSkipped = 0;
+      int required = 0;
+
+      for (final habit in day.habits) {
+        if (habit.optional) continue;
+        required++;
+        if (habit.completed) {
+          habitsCompleted++;
+        } else if (habit.skipped) {
+          habitsSkipped++;
+        } else if (habit.tracksAmount && habit.amountCompleted > 0) {
+          habitsCompleted++;
+        } else if (habit.tracksDuration && habit.durationCompleted > 0) {
+          habitsCompleted++;
+        }
+      }
+
+      if (required == 0) continue;
+
+      if (habitsCompleted + habitsSkipped >= required) {
+        currentRun++;
+        missedAllowed = 2;
+        if (currentRun > longest) longest = currentRun;
+      } else {
+        if (missedAllowed > 0) {
+          missedAllowed--;
+        } else {
+          currentRun = 0;
+          missedAllowed = 1;
+        }
+      }
+    }
+
+    _longestPerfectDaysStreak = longest;
+    prefs?.setInt(longestPerfectDaysStreakKey, longest);
   }
 
   int refreshHabitsCompleted() {
@@ -403,6 +461,7 @@ class StatsProvider extends ChangeNotifier {
       for (final habit in day.habits) {
         // If habit is optional, we dont count it
         if (habit.optional) continue;
+
         requiredHabits++;
         if (habit.completed) {
           habitsCompleted++;
@@ -411,12 +470,23 @@ class StatsProvider extends ChangeNotifier {
           habitsSkipped++;
           debugPrint("Skipped habit found, {$habitsSkipped} total");
         }
+        // If any progress is detected on a habit count it as completed for the streak
+        //  to be more forgiving and encourage progress
+        else if (habit.tracksAmount) {
+          if (habit.amountCompleted > 0) {
+            habitsCompleted++;
+          }
+        } else if (habit.tracksDuration) {
+          if (habit.durationCompleted > 0) {
+            habitsCompleted++;
+          }
+        }
       }
       if (requiredHabits == 0) continue;
 
       if (habitsCompleted + habitsSkipped >= requiredHabits) {
         allHabitsCompletedStreak++;
-        missedDaysAllowed = 1;
+        missedDaysAllowed = 2;
       } else {
         if (missedDaysAllowed > 0) {
           missedDaysAllowed--;

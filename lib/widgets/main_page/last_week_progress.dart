@@ -60,7 +60,10 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     if (allDates.isEmpty || !mounted) return;
 
     // Load only the visible 7 days immediately so the first frame renders fast
-    final visibleStart = (allDates.length - _visibleDays).clamp(0, allDates.length);
+    final visibleStart = (allDates.length - _visibleDays).clamp(
+      0,
+      allDates.length,
+    );
     setState(() {
       for (final date in allDates.sublist(visibleStart)) {
         final key = _dateKey(date);
@@ -149,7 +152,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
 
     // Keep today's selection pinned to the latest day instead of centering it.
     if (selectedDate != null && _isSameDay(selectedDate, today)) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
       _didInitialScrollToRight = true;
       _updateRightEdgeState();
       return;

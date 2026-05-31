@@ -724,6 +724,9 @@ class BackupService {
     try {
       final content = utf8.decode(encryptedBytes);
       final wrapper = jsonDecode(content) as Map<String, dynamic>;
+      // v2/v3 backups are device-key encrypted — no salt field, can't use passphrase.
+      final version = wrapper['version'] as int? ?? 1;
+      if (version != 1) return null;
       final BackupData payload = await _decryptPayload(wrapper, passphrase);
       return payload;
     } on SecretBoxAuthenticationError {

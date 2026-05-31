@@ -39,6 +39,10 @@ class _HomePageState extends State<HomePage>
 
     final categoryProvider = context.read<CategoryProvider>();
 
+    if (state == AppLifecycleState.paused) {
+      context.read<BackupProvider>().flushPendingSyncIfNeeded();
+    }
+
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final backupProvider = context.read<BackupProvider>();

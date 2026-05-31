@@ -91,6 +91,9 @@ class BackupProvider extends ChangeNotifier {
   // Decrypted keychain key cached in memory after PIN entry. Cleared on restart.
   SecretKey? _cachedKey;
 
+  // True while a scheduleAutoSync timer is pending but hasn't fired yet.
+  bool _hasPendingSync = false;
+
   String? _progressMessage;
 
   // Set when the user is silently signed out due to revoked Drive scope.
@@ -101,6 +104,11 @@ class BackupProvider extends ChangeNotifier {
   // locally. UI shows a PIN entry dialog; submitCloudPin() clears this.
   bool _pendingCloudPinEntry = false;
   Map<String, dynamic>? _cloudPinWrapped;
+
+  // Set when a specific backup file could not be decrypted with any known key.
+  // UI shows a passphrase prompt; retryRestoreWithPassphrase() clears this.
+  String? _failedBackupFileId;
+  Uint8List? _failedBackupFileBytes;
 
   // --- Getters -----------------------------------------------------------
 
@@ -117,8 +125,10 @@ class BackupProvider extends ChangeNotifier {
   bool get needsMigration => _needsMigration;
   bool get isPinEnabled => _isPinEnabled;
   bool get pendingCloudPinEntry => _pendingCloudPinEntry;
+  bool get hasPendingBackupPassphrase => _failedBackupFileId != null;
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
+  bool get hasPendingSync => _hasPendingSync;
 
   void clearPendingNotification() {
     _pendingNotification = null;
@@ -150,12 +160,27 @@ class BackupProvider extends ChangeNotifier {
     if (!isLoggedIn || !_isAutoSyncEnabled) return;
 
     _autoSyncTimer?.cancel();
+    _hasPendingSync = true;
     _autoSyncTimer = Timer(const Duration(seconds: 15), () {
+      _hasPendingSync = false;
       // Upload-only: just push local changes as a delta — no remote check.
-      // Remote checks happen on app launch and resume (SyncMode.full).
+      // Remote checks happen on resume (SyncMode.full via didChangeAppLifecycleState).
       performSync(false, SyncMode.uploadOnly).catchError((e) {
         debugPrint('Auto-sync failed: $e');
       });
+    });
+  }
+
+  /// Flush any pending auto-sync immediately. Called when the app is about
+  /// to be suspended (AppLifecycleState.paused) so changes aren't lost if
+  /// the user leaves before the 15-second timer fires.
+  void flushPendingSyncIfNeeded() {
+    if (!_hasPendingSync) return;
+    _autoSyncTimer?.cancel();
+    _autoSyncTimer = null;
+    _hasPendingSync = false;
+    performSync(false, SyncMode.uploadOnly).catchError((e) {
+      debugPrint('Auto-sync (app pause) failed: $e');
     });
   }
 
@@ -367,6 +392,8 @@ class BackupProvider extends ChangeNotifier {
     _isPinEnabled = false;
     _pendingCloudPinEntry = false;
     _cloudPinWrapped = null;
+    _failedBackupFileId = null;
+    _failedBackupFileBytes = null;
     _autoSyncTimer?.cancel();
     _autoSyncTimer = null;
     await prefs.remove(_kBackupUserEmailKey);
@@ -1069,8 +1096,15 @@ class BackupProvider extends ChangeNotifier {
             if (key == null) {
               // PIN changed on another device — prompt re-entry.
               await _handlePinWrappedDriveKey(envelope);
+            } else {
+              // PIN valid — ensure local key matches the Drive key.
+              // Covers the case where Android had a locally-generated key
+              // that differs from the iOS key used to encrypt backups.
+              final keyBytes = await key.extractBytes();
+              await BackupService.storeKeyBytes(_secureStorage, keyBytes);
+              _cachedKey =
+                  null; // force _getKey() to re-derive from updated storage
             }
-            // else: consistent — no-op.
           } else {
             await _handlePinWrappedDriveKey(envelope);
           }
@@ -1787,6 +1821,9 @@ class BackupProvider extends ChangeNotifier {
 
     _habitProvider?.importDateJoined(backupData.dateJoined);
     await _habitProvider?.init();
+    await _habitProvider?.assignStreaks();
+    await _habitProvider?.recalculateLongestStreaks();
+    _habitProvider?.statsProvider?.refreshStats(force: true);
     notifyListeners();
   }
 
@@ -1855,36 +1892,61 @@ class BackupProvider extends ChangeNotifier {
 
   /// Wipes the local DB and restores entirely from a specific Drive backup
   /// file. No deltas are applied — this is a point-in-time hard restore.
+  ///
+  /// Decryption fallback order:
+  ///   1. Current key (_getKey)
+  ///   2. Plain device key (when PIN is enabled and might differ from Try 1)
+  ///
+  /// Local data is only cleared after successful decryption. If all keys fail,
+  /// [hasPendingBackupPassphrase] is set to true and the UI should prompt for
+  /// a passphrase via [retryRestoreWithPassphrase].
   Future<void> replaceFromBackupFile(String fileId) async {
     if (_syncState == SyncState.syncing) return;
-
-    await _ensureKeySync();
-    final key = await _getKey();
-    if (key == null) return;
-
-    progressMessage = 'Clearing local data...';
     syncState = SyncState.syncing;
     lastError = null;
 
+    await _ensureKeySync();
+    final key = await _getKey(); // includes pin if exists
+    if (key == null) return;
+
+    progressMessage = 'Downloading backup...';
+
     try {
-      await Hive.box<Habit>('habits').clear();
-      await Hive.box<Day>('days').clear();
+      // Download bytes once; cache for passphrase retry if needed.
+      final rawBytes = await _fetchRawFileBytes(fileId);
+      if (rawBytes == null) {
+        lastError = 'Could not download backup.';
+        syncState = SyncState.error;
+        return;
+      }
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_kAppliedDeltaIdsKey);
+      // Try decryption with available keys before touching local data.
+      final backupData = await _tryDecryptBackupFile(rawBytes, key);
 
-      await _habitProvider?.init();
-
-      progressMessage = 'Downloading backup...';
-      final backupData = await _downloadBackupById(fileId, key);
-      if (backupData != null) {
-        progressMessage = 'Restoring...';
-        await _mergeBackupData(backupData);
-        await _onSyncSuccess();
-      } else {
+      if (backupData == null) {
+        // Only offer passphrase entry for v1 (passphrase-based) backups.
+        // v2/v3 backups use a device key; a passphrase cannot decrypt them.
+        if (_isLegacyV1(rawBytes)) {
+          _failedBackupFileId = fileId;
+          _failedBackupFileBytes = rawBytes;
+        }
         lastError = 'Failed to decrypt backup.';
         syncState = SyncState.error;
+        notifyListeners();
+        return;
       }
+
+      // Decryption succeeded — now safe to wipe and restore.
+      progressMessage = 'Clearing local data...';
+      await Hive.box<Habit>('habits').clear();
+      await Hive.box<Day>('days').clear();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kAppliedDeltaIdsKey);
+      await _habitProvider?.init();
+
+      progressMessage = 'Restoring...';
+      await _mergeBackupData(backupData);
+      await _onSyncSuccess();
     } catch (e) {
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
@@ -1892,7 +1954,57 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  Future<BackupData?> _downloadBackupById(String fileId, SecretKey key) async {
+  /// Retries the last failed backup restore using a user-supplied passphrase.
+  /// Used when decryption failed with the device key and the backup might have
+  /// been created with the old passphrase-based system.
+  /// Returns true on success.
+  Future<bool> retryRestoreWithPassphrase(String passphrase) async {
+    final bytes = _failedBackupFileBytes;
+    if (bytes == null) return false;
+
+    syncState = SyncState.syncing;
+    lastError = null;
+    progressMessage = 'Decrypting with passphrase...';
+
+    try {
+      final backupData = await BackupService.importDataFromGoogleDriveLegacy(
+        encryptedBytes: bytes,
+        passphrase: passphrase,
+      );
+
+      if (backupData == null) {
+        lastError = 'Failed to decrypt backup.';
+        syncState = SyncState.error;
+        progressMessage = null;
+        notifyListeners();
+        return false;
+      }
+
+      progressMessage = 'Clearing local data...';
+      await Hive.box<Habit>('habits').clear();
+      await Hive.box<Day>('days').clear();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kAppliedDeltaIdsKey);
+      await _habitProvider?.init();
+
+      progressMessage = 'Restoring...';
+      await _mergeBackupData(backupData);
+      _failedBackupFileId = null;
+      _failedBackupFileBytes = null;
+      await _onSyncSuccess();
+      return true;
+    } catch (e) {
+      lastError = 'Restore failed: $e';
+      syncState = SyncState.error;
+      progressMessage = null;
+      debugPrint(lastError);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Downloads raw bytes for a Drive file by its ID.
+  Future<Uint8List?> _fetchRawFileBytes(String fileId) async {
     final drive = await _getDriveService();
     if (drive == null) return null;
 
@@ -1907,9 +2019,98 @@ class BackupProvider extends ChangeNotifier {
     await for (final chunk in response.stream) {
       bytes.addAll(chunk);
     }
+    return Uint8List.fromList(bytes);
+  }
 
+  /// Tries to decrypt [bytes] with the current key, then (if PIN is enabled)
+  /// with the raw plain device key as a fallback.
+  /// Returns null if no key works, signalling that the UI should prompt for a passphrase.
+  Future<BackupData?> _tryDecryptBackupFile(
+    Uint8List bytes,
+    SecretKey currentKey,
+  ) async {
+    debugPrint('Trying to decrypt backup...');
+    // Try 1: current key (may be plain or PIN-derived).
+    try {
+      debugPrint('Importing data with current key (may include PIN)...');
+      final data = await BackupService.importDataFromGoogleDrive(
+        encryptedBytes: bytes,
+        secretKey: currentKey,
+      );
+      if (data != null) return data;
+      debugPrint('Decryption with current key failed.');
+    } on FormatException {
+      // Legacy v1 — passphrase needed, no point trying another device key.
+      return null;
+    }
+
+    // Try 2: plain device key, in case the backup was made before PIN was set.
+
+    if (_isPinEnabled) {
+      debugPrint('PIN enabled');
+      final plainKey = await BackupService.getOrCreateKey(_secureStorage);
+      try {
+        final data = await BackupService.importDataFromGoogleDrive(
+          encryptedBytes: bytes,
+          secretKey: plainKey,
+        );
+        debugPrint('Trying to decrypt with plain device key...');
+        if (data != null) return data;
+      } on FormatException {
+        return null;
+      }
+    } else {
+      debugPrint('PIN not enabled');
+    }
+
+    // Try 3: hardcoded PIN "1902" — diagnostic check before prompting user.
+    debugPrint('Trying hardcoded PIN 1902...');
+    const debugPin = '1902';
+    final pinDerivedKey = await BackupService.unwrapKeyWithPin(
+      _secureStorage,
+      debugPin,
+    );
+    if (pinDerivedKey != null) {
+      try {
+        final data = await BackupService.importDataFromGoogleDrive(
+          encryptedBytes: bytes,
+          secretKey: pinDerivedKey,
+        );
+        if (data != null) {
+          debugPrint('Decryption succeeded with hardcoded PIN 1902.');
+          return data;
+        }
+        debugPrint('Hardcoded PIN 1902 unwrapped a key but decryption failed.');
+      } on FormatException {
+        debugPrint('Hardcoded PIN 1902 key hit legacy v1 format.');
+        return null;
+      }
+    } else {
+      debugPrint('Hardcoded PIN 1902 failed to unwrap key from keychain.');
+    }
+
+    // Fallback: prompt user to enter a pin to try unwrapping the key
+    debugPrint('Prompting user to enter PIN and retry decryption...');
+
+    notifyListeners();
+
+    return null;
+  }
+
+  bool _isLegacyV1(Uint8List bytes) {
+    try {
+      final wrapper = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
+      return (wrapper['version'] as int? ?? 1) == 1;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<BackupData?> _downloadBackupById(String fileId, SecretKey key) async {
+    final bytes = await _fetchRawFileBytes(fileId);
+    if (bytes == null) return null;
     return BackupService.importDataFromGoogleDrive(
-      encryptedBytes: Uint8List.fromList(bytes),
+      encryptedBytes: bytes,
       secretKey: key,
     );
   }

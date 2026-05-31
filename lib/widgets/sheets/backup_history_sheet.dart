@@ -6,6 +6,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/dialogs/backup_passphrase_dialog.dart';
 import 'package:habitt/widgets/dialogs/confirm_restore_backup_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -77,9 +78,19 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
       builder: (ctx) => ConfirmRestoreBackupDialog(cp: cp),
     );
 
-    if (confirmed == true && context.mounted) {
-      await bp.replaceFromBackupFile(file.id);
-      if (context.mounted) _popSheet();
+    if (confirmed != true || !context.mounted) return;
+
+    await bp.replaceFromBackupFile(file.id);
+    if (!context.mounted) return;
+
+    if (bp.hasPendingBackupPassphrase) {
+      final success = await showDialogSheet<bool>(
+        context: context,
+        builder: (ctx) => BackupPassphraseDialog(bp: bp),
+      );
+      if (success == true && context.mounted) _popSheet();
+    } else if (bp.syncState != SyncState.error) {
+      _popSheet();
     }
   }
 

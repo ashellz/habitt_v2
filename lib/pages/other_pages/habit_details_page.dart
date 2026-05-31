@@ -212,7 +212,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
         child: RefreshIndicator(
           color: cp.main,
           onRefresh:
-              () => context.read<HabitProvider>().recalculateLongestStreaks(
+              () => context.read<HabitProvider>().recalculateHabitStreaks(
                 widget.habitId,
               ),
           child: ListView(

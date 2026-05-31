@@ -37,7 +37,9 @@ class CalendarPage extends StatelessWidget {
     return Scaffold(
       body: RefreshIndicator(
         color: cp.main,
-        onRefresh: () => context.read<HabitProvider>().recalculateLongestStreaks(),
+        onRefresh: () async {
+          context.read<StatsProvider>().refreshStats(force: true);
+        },
         child: Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: ListView(

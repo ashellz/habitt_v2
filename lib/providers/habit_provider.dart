@@ -1177,4 +1177,9 @@ class HabitProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> recalculateHabitStreaks(int habitId) async {
+    await assignStreaks(habitId);
+    await recalculateLongestStreaks(habitId);
+  }
 }
