@@ -5,15 +5,12 @@ PODS:
   - awesome_notifications_core (0.0.1):
     - Flutter
   - Flutter (1.0.0)
-  - flutter_email_sender (0.0.1):
-    - Flutter
   - IosAwnCore (0.10.0)
 
 DEPENDENCIES:
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - awesome_notifications_core (from `.symlinks/plugins/awesome_notifications_core/ios`)
   - Flutter (from `Flutter`)
-  - flutter_email_sender (from `.symlinks/plugins/flutter_email_sender/ios`)
 
 SPEC REPOS:
   trunk:
@@ -26,14 +23,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/awesome_notifications_core/ios"
   Flutter:
     :path: Flutter
-  flutter_email_sender:
-    :path: ".symlinks/plugins/flutter_email_sender/ios"
 
 SPEC CHECKSUMS:
   awesome_notifications: 0f432b28098d193920b11a44cfa9d2d9313a3888
   awesome_notifications_core: 429c28df8746780a474de177e5acde33af87da63
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_email_sender: 2397f5e84aaacfb61af569637a963e7c687858d8
   IosAwnCore: 653786a911089012092ce831f2945cd339855a89
 
 PODFILE CHECKSUM: 9e1d63682c108ccd97bb327deb23803cadf6f054

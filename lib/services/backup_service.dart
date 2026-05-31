@@ -46,6 +46,7 @@ class BackupService {
     const iOSOpts = IOSOptions(synchronizable: true);
     const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
 
+    // getting stored key if exists and returning it
     final stored = await storage.read(
       key: _kBackupKeyStorageKey,
       iOptions: iOSOpts,
@@ -56,6 +57,7 @@ class BackupService {
       return SecretKey(base64Decode(stored));
     }
 
+    // generating new key, storing and returning it
     final bytes = List<int>.generate(32, (_) => _rng.nextInt(256));
     await storage.write(
       key: _kBackupKeyStorageKey,
@@ -99,16 +101,19 @@ class BackupService {
   // --- PIN key wrapping --------------------------------------------------
 
   /// Wraps [key] with a PBKDF2-derived key from [pin]. Returns a JSON-ready map.
-  /// Not used, will be removed later
   static Future<Map<String, String>> wrapKeyWithPin(
-    SecretKey key,
-    String pin,
+    SecretKey key, // The key to wrap
+    String pin, // The user PIN to derive the wrapping key from
   ) async {
     final keyBytes = await key.extractBytes();
     final salt = _randomBytes(16);
     final nonce = _randomBytes(12);
     final pinKey = await _deriveKey(pin, salt);
     final box = await _aes.encrypt(keyBytes, secretKey: pinKey, nonce: nonce);
+
+    // Key gets wrapped with pin and a JSON is made
+    // with salt, nonce, ciphertext and tag as instructions to unwrap it
+    // for the other side
     return {
       'salt': base64Encode(salt),
       'nonce': base64Encode(nonce),
@@ -119,7 +124,6 @@ class BackupService {
 
   /// Reads the stored PIN-wrapped key and decrypts it using [pin].
   /// Returns null if PIN is wrong or no data is stored.
-  /// Not used, will be removed later, used for migration only
   static Future<SecretKey?> unwrapKeyWithPin(
     FlutterSecureStorage storage,
     String pin,

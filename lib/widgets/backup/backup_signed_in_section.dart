@@ -1,0 +1,356 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/providers/backup_provider.dart';
+import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/default/new_default_switch.dart';
+import 'package:habitt/widgets/dialogs/pin_dialog.dart';
+import 'package:habitt/widgets/profile/profile_options.dart';
+import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
+import 'package:provider/provider.dart';
+import 'package:tinycolor2/tinycolor2.dart';
+
+class BackupSignedInSection extends StatelessWidget {
+  const BackupSignedInSection({super.key, required this.statusOverlay});
+
+  final StatusOverlayPopupController statusOverlay;
+
+  String _formatLastSync(DateTime? lastSync, AppLocalizations loc) {
+    if (lastSync == null) return loc.neverBackedUp;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final syncDay = DateTime(lastSync.year, lastSync.month, lastSync.day);
+
+    final hour = lastSync.hour.toString().padLeft(2, '0');
+    final minute = lastSync.minute.toString().padLeft(2, '0');
+    final time = '$hour:$minute';
+
+    if (syncDay == today) return loc.backupDateToday(time);
+    if (syncDay == yesterday) return loc.backupDateYesterday(time);
+
+    final months = [
+      loc.monthJan,
+      loc.monthFeb,
+      loc.monthMar,
+      loc.monthApr,
+      loc.monthMay,
+      loc.monthJun,
+      loc.monthJul,
+      loc.monthAug,
+      loc.monthSep,
+      loc.monthOct,
+      loc.monthNov,
+      loc.monthDec,
+    ];
+    return loc.backupDateOther(
+      months[lastSync.month - 1],
+      '${lastSync.day}',
+      time,
+    );
+  }
+
+  void _openBackupHistory(BuildContext context, ColorProvider cp) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder: (context) => const BackupHistorySheet(),
+    );
+  }
+
+  void _showPinDialog(
+    BuildContext context, {
+    required String title,
+    required String desc,
+    required String buttonLabel,
+    Color? buttonColor,
+    required Future<bool> Function(String pin) onConfirm,
+  }) {
+    showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => PinDialog(
+            title: title,
+            desc: desc,
+            buttonLabel: buttonLabel,
+            buttonColor: buttonColor,
+            onConfirm: onConfirm,
+          ),
+    );
+  }
+
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+  ) async {
+    final cp = context.read<ColorProvider>();
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.logOut,
+            desc: loc.logOutDesc,
+            primaryButtonLabel: loc.logOut,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      await bp.signOut();
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _confirmDeleteAccount(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+    ColorProvider cp,
+  ) async {
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.deleteAccount,
+            desc: loc.deleteAccountDesc,
+            primaryButtonLabel: loc.delete,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      final success = await bp.deleteAccount();
+      if (!context.mounted) return;
+      if (success) {
+        statusOverlay.show(
+          context: context,
+          cp: cp,
+          title: loc.accountDeletedSuccessfully,
+          isError: false,
+        );
+        Navigator.of(context).pop();
+      } else {
+        statusOverlay.show(
+          context: context,
+          cp: cp,
+          title: loc.accountDeletionFailed(bp.lastError ?? ''),
+          isError: true,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final bp = context.watch<BackupProvider>();
+    final loc = AppLocalizations.of(context)!;
+    final isSyncing = bp.syncState == SyncState.syncing;
+    final lastSyncText = _formatLastSync(bp.lastSyncTime, loc);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          NewDefaultButton.secondary(
+            onPressed: isSyncing ? () {} : () => bp.performSync(true),
+            label: loc.backUpNow,
+            isLoading: isSyncing,
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Text(
+              loc.lastSynced(lastSyncText),
+              style: TextStyle(
+                color:
+                    bp.syncState == SyncState.error ? cp.error : cp.greyText,
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          if (bp.syncState == SyncState.error && bp.lastError != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 4, top: 4),
+              child: Text(
+                bp.lastError!,
+                style: TextStyle(
+                  color: cp.error,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          const SizedBox(height: 24),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: ShapeDecoration(
+                  color: cp.habitBg,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1, color: cp.border),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            loc.autoBackup,
+                            style: TextStyle(
+                              color: cp.text,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          NewDefaultSwitch(
+                            value: bp.isAutoSyncEnabled,
+                            onChanged: (v) => bp.setAutoSyncEnabled(v),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            loc.pinProtection,
+                            style: TextStyle(
+                              color: cp.text,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          NewDefaultSwitch(
+                            value: bp.isPinEnabled,
+                            onChanged: (v) {
+                              if (v) {
+                                _showPinDialog(
+                                  context,
+                                  title: loc.setPinTitle,
+                                  desc: loc.setPinDesc,
+                                  buttonLabel: loc.enable,
+                                  onConfirm: (pin) => bp.enablePin(pin),
+                                );
+                              } else {
+                                _showPinDialog(
+                                  context,
+                                  title: loc.disablePinTitle,
+                                  desc: loc.disablePinDesc,
+                                  buttonLabel: loc.disable,
+                                  buttonColor: cp.error,
+                                  onConfirm: (pin) => bp.disablePin(pin),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      color: Colors.transparent,
+                      child: ProfileOption(
+                        cp: cp,
+                        text: loc.restoreFromBackup,
+                        onTap: () => _openBackupHistory(context, cp),
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    GestureDetector(
+                      onTap: () => _confirmSignOut(context, bp, loc),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.logOut,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/log-out.svg',
+                              width: 20,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    GestureDetector(
+                      onTap: () => _confirmDeleteAccount(context, bp, loc, cp),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.deleteAccount,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/trash.svg',
+                              width: 19,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1146,7 +1146,7 @@ class HabitProvider extends ChangeNotifier {
             longestStreak = streak;
           }
         } else {
-          // If not completed we increment misses counter
+          // If it doesn't have any progress we increment misses counter
 
           if (dayHabit.hasTrackingType) {
             if (dayHabit.tracksAmount) {
@@ -1163,8 +1163,8 @@ class HabitProvider extends ChangeNotifier {
           }
 
           consecutiveMisses++;
-          if (consecutiveMisses >= 2) {
-            // If there are 2 or more consecutive misses, we break the loop
+          if (consecutiveMisses >= 3) {
+            // If there are 3 or more consecutive misses, we break the loop
             break;
           }
         }

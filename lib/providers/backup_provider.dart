@@ -177,10 +177,21 @@ class BackupProvider extends ChangeNotifier {
     if (!_isPinEnabled) return BackupService.getOrCreateKey(_secureStorage);
 
     final pin = await BackupService.readStoredPin(_secureStorage);
-    if (pin == null) return null;
+    if (pin == null) {
+      // No stored PIN — will be resolved by _syncKeyWithDrive on next full sync.
+      return null;
+    }
+
     final key = await BackupService.unwrapKeyWithPin(_secureStorage, pin);
-    if (key != null) _cachedKey = key;
-    return key;
+    if (key != null) {
+      _cachedKey = key;
+      return key;
+    }
+
+    // Stored PIN is wrong or corrupted — force a full sync next cycle so
+    // _syncKeyWithDrive can detect the mismatch and surface a re-entry prompt.
+    _lastSyncTime = null;
+    return null;
   }
 
   /// Wraps the keychain key with [pin], stores both the wrapped key and the
@@ -188,15 +199,27 @@ class BackupProvider extends ChangeNotifier {
   /// Also re-uploads key.key to Drive in PIN-wrapped format.
   Future<bool> enablePin(String pin) async {
     try {
+      // gets existing or creates a new key
       final key = await BackupService.getOrCreateKey(_secureStorage);
+
+      // wraps the key with entered pin
       final wrapped = await BackupService.wrapKeyWithPin(key, pin);
+
+      // stores pin with instructions json
       await BackupService.storePinData(_secureStorage, wrapped);
+
+      // stores raw pin for auto-unwrap on future launches
       await BackupService.storePin(_secureStorage, pin);
+
       final prefs = await SharedPreferences.getInstance();
+
+      // sets PIN enabled flag
       await prefs.setBool(_kPinEnabledKey, true);
       _isPinEnabled = true;
       _cachedKey = key;
       notifyListeners();
+
+      // uploads the key to drive
       await _uploadKeyFileToDrive();
       return true;
     } catch (e) {
@@ -341,6 +364,9 @@ class BackupProvider extends ChangeNotifier {
     _legacyPassphrase = null;
     _lastSyncTime = null;
     _cachedKey = null;
+    _isPinEnabled = false;
+    _pendingCloudPinEntry = false;
+    _cloudPinWrapped = null;
     _autoSyncTimer?.cancel();
     _autoSyncTimer = null;
     await prefs.remove(_kBackupUserEmailKey);
@@ -961,16 +987,17 @@ class BackupProvider extends ChangeNotifier {
 
   /// Syncs the backup encryption key with Google Drive.
   ///
-  /// **Download** (new device — no local key yet):
-  ///   - `type:plain`   → stores key bytes directly, sync proceeds.
-  ///   - `type:pin`     → tries stored PIN; on success stores key and enables
-  ///                      local PIN state. If no stored PIN, sets
-  ///                      [_pendingCloudPinEntry] so the UI can prompt the user.
-  ///   - old plain-b64  → backward-compat path, treated as plain.
+  /// Always reads the Drive `key.key` envelope and reconciles with local state.
+  /// Six cases are handled (see plan for full matrix):
   ///
-  /// **Upload** (no `key.key` on Drive yet):
-  ///   Uploads the key in plain or PIN-wrapped format depending on [_isPinEnabled].
-  ///   PIN changes (`enablePin`/`disablePin`) re-upload via [_uploadKeyFileToDrive].
+  ///   • Drive missing  → upload local key
+  ///   • Drive plain  + no local key   → install key locally
+  ///   • Drive pin    + no local key   → [_handlePinWrappedDriveKey]
+  ///   • Drive plain  + local + PIN off → no-op (consistent)
+  ///   • Drive plain  + local + PIN on  → [_applyDriveDisabledPin] (other device disabled PIN)
+  ///   • Drive pin    + local + PIN off → [_handlePinWrappedDriveKey] (other device enabled PIN)
+  ///   • Drive pin    + local + PIN on + stored PIN works → no-op (consistent)
+  ///   • Drive pin    + local + PIN on + stored PIN fails → [_handlePinWrappedDriveKey] (PIN changed)
   Future<void> _syncKeyWithDrive(
     drive_api.DriveApi drive,
     String folderId,
@@ -983,58 +1010,127 @@ class BackupProvider extends ChangeNotifier {
         keyFileName,
       );
 
-      if (driveKeyRaw != null) {
-        // Only download if this device has no local key yet.
-        final hasLocal = await BackupService.hasStoredKey(_secureStorage);
-        if (hasLocal) return;
+      if (driveKeyRaw == null) {
+        await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
+        return;
+      }
 
-        final content = utf8.decode(driveKeyRaw);
+      final content = utf8.decode(driveKeyRaw);
+      final hasLocal = await BackupService.hasStoredKey(_secureStorage);
 
-        // Try JSON envelope (current format). Fall back to old plain-base64.
-        Map<String, dynamic>? envelope =
-            jsonDecode(content) as Map<String, dynamic>;
+      // Parse JSON envelope; fall back to old plain-base64 for backward compat.
+      Map<String, dynamic> envelope;
+      try {
+        envelope = jsonDecode(content) as Map<String, dynamic>;
+      } catch (_) {
+        if (!hasLocal) {
+          await BackupService.storeKeyBytes(
+            _secureStorage,
+            base64Decode(content),
+          );
+          debugPrint('Key synced (legacy plain-b64) → local keychain');
+        }
+        return;
+      }
 
-        final type = envelope['type'] as String?;
+      final type = envelope['type'] as String?;
 
-        if (type == 'pin') {
-          // PIN-wrapped — try to unwrap with stored PIN.
+      if (!hasLocal) {
+        // New device — install whatever Drive has.
+        if (type == 'plain') {
+          await BackupService.storeKeyBytes(
+            _secureStorage,
+            base64Decode(envelope['key'] as String),
+          );
+          debugPrint('Key installed (plain) → local keychain');
+        } else {
+          await _handlePinWrappedDriveKey(envelope);
+        }
+        return;
+      }
+
+      // Existing device — reconcile PIN state with Drive.
+      if (type == 'plain') {
+        if (_isPinEnabled) {
+          // Another device disabled PIN — sync state locally.
+          await _applyDriveDisabledPin(envelope);
+        }
+        // else: both plain, consistent — no-op.
+      } else {
+        // Drive is PIN-wrapped.
+        if (!_isPinEnabled) {
+          // Another device enabled PIN — prompt user.
+          await _handlePinWrappedDriveKey(envelope);
+        } else {
+          // PIN enabled on both — verify stored PIN still works.
           final storedPin = await BackupService.readStoredPin(_secureStorage);
           if (storedPin != null) {
             final key = await _unwrapKeyFromEnvelope(envelope, storedPin);
-            if (key != null) {
-              final keyBytes = await key.extractBytes();
-              await BackupService.storeKeyBytes(_secureStorage, keyBytes);
-              await BackupService.storePinData(_secureStorage, {
-                'salt': envelope['salt'] as String,
-                'nonce': envelope['nonce'] as String,
-                'ciphertext': envelope['ciphertext'] as String,
-                'tag': envelope['tag'] as String,
-              });
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.setBool(_kPinEnabledKey, true);
-              _isPinEnabled = true;
-              debugPrint('Key synced (PIN-wrapped) → local keychain');
-              return;
+            if (key == null) {
+              // PIN changed on another device — prompt re-entry.
+              await _handlePinWrappedDriveKey(envelope);
             }
+            // else: consistent — no-op.
+          } else {
+            await _handlePinWrappedDriveKey(envelope);
           }
-          // No stored pin or wrong pin — shows dialog to user
-          _cloudPinWrapped = envelope;
-          _pendingCloudPinEntry = true;
-          notifyListeners();
-          debugPrint('Cloud key is PIN-wrapped — awaiting user PIN entry');
-        } else {
-          // type == 'plain' - store plain key.
-          final keyBytes = base64Decode(envelope['key'] as String);
-          await BackupService.storeKeyBytes(_secureStorage, keyBytes);
-          debugPrint('Key synced (plain) → local keychain');
         }
-      } else {
-        // No key.key on Drive — upload current local key.
-        await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
       }
     } catch (e) {
       debugPrint('Key sync skipped: $e');
     }
+  }
+
+  /// Another device disabled PIN. Downloads the plain key bytes from the Drive
+  /// envelope and clears local PIN state so both devices are consistent.
+  Future<void> _applyDriveDisabledPin(Map<String, dynamic> envelope) async {
+    try {
+      final keyBytes = base64Decode(envelope['key'] as String);
+      await BackupService.storeKeyBytes(_secureStorage, keyBytes);
+      await BackupService.clearPinData(_secureStorage);
+      await BackupService.clearStoredPin(_secureStorage);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_kPinEnabledKey, false);
+      _isPinEnabled = false;
+      _cachedKey = null;
+      notifyListeners();
+      debugPrint('PIN disabled from Drive — local state updated');
+    } catch (e) {
+      debugPrint('_applyDriveDisabledPin failed: $e');
+    }
+  }
+
+  /// Drive has a PIN-wrapped key. Tries to unwrap with any locally-stored PIN.
+  /// On success, installs the key and enables local PIN state.
+  /// On failure (no stored PIN, or wrong PIN), surfaces a user prompt via
+  /// [_pendingCloudPinEntry] and [_pendingNotification].
+  Future<void> _handlePinWrappedDriveKey(Map<String, dynamic> envelope) async {
+    final storedPin = await BackupService.readStoredPin(_secureStorage);
+    if (storedPin != null) {
+      final key = await _unwrapKeyFromEnvelope(envelope, storedPin);
+      if (key != null) {
+        final keyBytes = await key.extractBytes();
+        await BackupService.storeKeyBytes(_secureStorage, keyBytes);
+        await BackupService.storePinData(_secureStorage, {
+          'salt': envelope['salt'] as String,
+          'nonce': envelope['nonce'] as String,
+          'ciphertext': envelope['ciphertext'] as String,
+          'tag': envelope['tag'] as String,
+        });
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(_kPinEnabledKey, true);
+        _isPinEnabled = true;
+        notifyListeners();
+        debugPrint('Key synced (PIN-wrapped) → local keychain');
+        return;
+      }
+    }
+    // No stored PIN or wrong PIN — prompt the user.
+    _cloudPinWrapped = envelope;
+    _pendingCloudPinEntry = true;
+    _pendingNotification = 'Backup sync paused — enter PIN';
+    notifyListeners();
+    debugPrint('Cloud key is PIN-wrapped — awaiting user PIN entry');
   }
 
   /// Decrypts a PIN-wrapped key envelope directly (without reading local storage).
@@ -1094,9 +1190,7 @@ class BackupProvider extends ChangeNotifier {
         final key = await BackupService.getOrCreateKey(_secureStorage);
         final pin = await BackupService.readStoredPin(_secureStorage);
         if (pin == null) {
-          // PIN enabled but no stored PIN, disable pin
-          await disablePin('');
-          await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
+          // Keychain failure — skip upload, next sync will resolve.
           return;
         }
         final wrapped = await BackupService.wrapKeyWithPin(key, pin);
@@ -1167,7 +1261,7 @@ class BackupProvider extends ChangeNotifier {
     _cloudPinWrapped = null;
     notifyListeners();
 
-    await performSync(true);
+    performSync(true);
     return true;
   }
 
