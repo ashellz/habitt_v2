@@ -3802,6 +3802,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Overwrite'**
   String get overwrite;
+
+  /// No description provided for @syncSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get syncSectionTitle;
+
+  /// No description provided for @syncSpeedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync speed'**
+  String get syncSpeedTitle;
+
+  /// No description provided for @syncSpeedFast.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get syncSpeedFast;
+
+  /// No description provided for @syncSpeedOptimized.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimized'**
+  String get syncSpeedOptimized;
+
+  /// No description provided for @syncSpeedFastDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncs instantly\nChecks every 30 s'**
+  String get syncSpeedFastDescription;
+
+  /// No description provided for @syncSpeedOptimizedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncs after 15 s\nChecks every 2 min'**
+  String get syncSpeedOptimizedDescription;
+
+  /// No description provided for @syncSpeedFastHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes upload immediately and your data is refreshed every 30 seconds.'**
+  String get syncSpeedFastHint;
+
+  /// No description provided for @syncSpeedOptimizedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes are batched and uploaded after a short pause to save battery.'**
+  String get syncSpeedOptimizedHint;
 }
 
 class _AppLocalizationsDelegate

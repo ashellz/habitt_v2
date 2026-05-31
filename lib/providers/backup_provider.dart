@@ -33,6 +33,15 @@ class _GoogleAuthClient extends http.BaseClient {
 
 enum SyncState { idle, syncing, success, error }
 
+/// How aggressively the app syncs in the background.
+enum SyncSpeed {
+  /// Upload delta immediately after a change; poll for remote changes every 5 min.
+  fast,
+
+  /// Upload delta 15 s after the last change; poll for remote changes every 20 min.
+  optimized,
+}
+
 /// Controls which parts of the sync cycle run
 enum SyncMode {
   /// full cycle: checks for remote changes from other devices (checks deltas), then uploads own
@@ -51,6 +60,7 @@ class BackupProvider extends ChangeNotifier {
   static const String _kBackupUserEmailKey = 'backup_user_email';
   static const String _kBackupUserIdKey = 'backup_user_id';
   static const String _kAutoSyncEnabledKey = 'backup_auto_sync_enabled';
+  static const String _kSyncSpeedKey = 'backup_sync_speed';
   static const String _kLastSyncTimeKey = 'backup_last_sync_time';
   static const String _kLegacyPassphraseKey = 'habitt_backup_passphrase';
   static const String _kPinEnabledKey = 'backup_pin_enabled';
@@ -72,8 +82,10 @@ class BackupProvider extends ChangeNotifier {
   String? _lastError;
   BackupMetadata? _localMetadata;
   Timer? _autoSyncTimer;
+  Timer? _periodicSyncTimer;
 
   bool _isAutoSyncEnabled = true;
+  SyncSpeed _syncSpeed = SyncSpeed.optimized;
   DateTime? _lastSyncTime;
 
   // Set to true when the Drive has data encrypted with the old passphrase
@@ -121,6 +133,7 @@ class BackupProvider extends ChangeNotifier {
   bool get dataExists => _dataExists;
   String? get progressMessage => _progressMessage;
   bool get isAutoSyncEnabled => _isAutoSyncEnabled;
+  SyncSpeed get syncSpeed => _syncSpeed;
   DateTime? get lastSyncTime => _lastSyncTime;
   bool get needsMigration => _needsMigration;
   bool get isPinEnabled => _isPinEnabled;
@@ -160,20 +173,27 @@ class BackupProvider extends ChangeNotifier {
     if (!isLoggedIn || !_isAutoSyncEnabled) return;
 
     _autoSyncTimer?.cancel();
-    _hasPendingSync = true;
-    _autoSyncTimer = Timer(const Duration(seconds: 15), () {
-      _hasPendingSync = false;
-      // Upload-only: just push local changes as a delta — no remote check.
-      // Remote checks happen on resume (SyncMode.full via didChangeAppLifecycleState).
+
+    if (_syncSpeed == SyncSpeed.fast) {
+      // Fast mode: fire immediately, no debounce.
       performSync(false, SyncMode.uploadOnly).catchError((e) {
-        debugPrint('Auto-sync failed: $e');
+        debugPrint('Auto-sync (fast) failed: $e');
       });
-    });
+    } else {
+      // Optimized mode: debounce for 15 s to batch rapid changes.
+      _hasPendingSync = true;
+      _autoSyncTimer = Timer(const Duration(seconds: 15), () {
+        _hasPendingSync = false;
+        performSync(false, SyncMode.uploadOnly).catchError((e) {
+          debugPrint('Auto-sync failed: $e');
+        });
+      });
+    }
   }
 
-  /// Flush any pending auto-sync immediately. Called when the app is about
-  /// to be suspended (AppLifecycleState.paused) so changes aren't lost if
-  /// the user leaves before the 15-second timer fires.
+  /// Flush any pending debounce-timer sync immediately. Called when the app is
+  /// about to be suspended (AppLifecycleState.paused) so optimized-mode changes
+  /// aren't lost if the user leaves before the 15-second timer fires.
   void flushPendingSyncIfNeeded() {
     if (!_hasPendingSync) return;
     _autoSyncTimer?.cancel();
@@ -182,6 +202,38 @@ class BackupProvider extends ChangeNotifier {
     performSync(false, SyncMode.uploadOnly).catchError((e) {
       debugPrint('Auto-sync (app pause) failed: $e');
     });
+  }
+
+  /// Starts a recurring timer that pulls remote changes from other devices
+  /// while the app is in the foreground.
+  ///
+  /// Interval: 5 min for [SyncSpeed.fast], 20 min for [SyncSpeed.optimized].
+  void _startPeriodicSync() {
+    _periodicSyncTimer?.cancel();
+    if (!isLoggedIn || !_isAutoSyncEnabled) return;
+
+    final interval =
+        _syncSpeed == SyncSpeed.fast
+            ? const Duration(seconds: 30)
+            : const Duration(minutes: 2);
+
+    _periodicSyncTimer = Timer.periodic(interval, (_) {
+      // Only run when not already syncing and no upload is pending.
+      if (_syncState == SyncState.syncing || _hasPendingSync) return;
+      performSync(false, SyncMode.full).catchError((e) {
+        debugPrint('Periodic sync failed: $e');
+      });
+    });
+  }
+
+  Future<void> setSyncSpeed(SyncSpeed speed) async {
+    if (_syncSpeed == speed) return;
+    _syncSpeed = speed;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kSyncSpeedKey, speed.name);
+    // Restart the periodic timer with the new interval.
+    _startPeriodicSync();
+    notifyListeners();
   }
 
   Future<void> setAutoSyncEnabled(bool value) async {
@@ -292,6 +344,9 @@ class BackupProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       _isAutoSyncEnabled = prefs.getBool(_kAutoSyncEnabledKey) ?? true;
       _isPinEnabled = prefs.getBool(_kPinEnabledKey) ?? false;
+      final speedName = prefs.getString(_kSyncSpeedKey);
+      _syncSpeed =
+          speedName == SyncSpeed.fast.name ? SyncSpeed.fast : SyncSpeed.optimized;
 
       // Pre-load key from stored PIN so auto-sync works immediately on startup.
       if (_isPinEnabled) {
@@ -372,6 +427,8 @@ class BackupProvider extends ChangeNotifier {
           if (!_needsMigration && _dataExists && _lastSyncTime == null) {
             await performSync(true);
           }
+
+          _startPeriodicSync();
         }
       }
     } catch (e) {
@@ -396,6 +453,8 @@ class BackupProvider extends ChangeNotifier {
     _failedBackupFileBytes = null;
     _autoSyncTimer?.cancel();
     _autoSyncTimer = null;
+    _periodicSyncTimer?.cancel();
+    _periodicSyncTimer = null;
     await prefs.remove(_kBackupUserEmailKey);
     await prefs.remove(_kBackupUserIdKey);
     await prefs.remove(_kLastSyncTimeKey);
@@ -475,6 +534,7 @@ class BackupProvider extends ChangeNotifier {
       } else {
         notifyListeners();
       }
+      _startPeriodicSync();
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
       debugPrint(_lastError);
@@ -499,6 +559,8 @@ class BackupProvider extends ChangeNotifier {
 
       _autoSyncTimer?.cancel();
       _autoSyncTimer = null;
+      _periodicSyncTimer?.cancel();
+      _periodicSyncTimer = null;
 
       notifyListeners();
     } catch (e) {
@@ -514,6 +576,8 @@ class BackupProvider extends ChangeNotifier {
   Future<bool> deleteAccount() async {
     _autoSyncTimer?.cancel();
     _autoSyncTimer = null;
+    _periodicSyncTimer?.cancel();
+    _periodicSyncTimer = null;
 
     try {
       var firebaseUser = _firebaseUser ?? FirebaseAuth.instance.currentUser;

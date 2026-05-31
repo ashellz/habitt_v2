@@ -2291,4 +2291,32 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get overwrite => 'Überschreiben';
+
+  @override
+  String get syncSectionTitle => 'Sync';
+
+  @override
+  String get syncSpeedTitle => 'Sync-Geschwindigkeit';
+
+  @override
+  String get syncSpeedFast => 'Schnell';
+
+  @override
+  String get syncSpeedOptimized => 'Optimiert';
+
+  @override
+  String get syncSpeedFastDescription =>
+      'Sofort synchronisieren\nAlle 30 Sek. prüfen';
+
+  @override
+  String get syncSpeedOptimizedDescription =>
+      'Nach 15 Sek. synchronisieren\nAlle 2 Min. prüfen';
+
+  @override
+  String get syncSpeedFastHint =>
+      'Änderungen werden sofort hochgeladen und die Daten alle 30 Sekunden aktualisiert.';
+
+  @override
+  String get syncSpeedOptimizedHint =>
+      'Änderungen werden gebündelt und nach kurzer Pause hochgeladen, um den Akku zu schonen.';
 }

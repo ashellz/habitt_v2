@@ -873,5 +873,14 @@
   "merge": "Unisci",
   "overwriteLocalDataTitle": "Sovrascrivere i dati locali?",
   "overwriteLocalDataDesc": "Questo sostituirà definitivamente tutti i tuoi dati locali con il backup. Questa azione non può essere annullata.",
-  "overwrite": "Sovrascrivi"
+  "overwrite": "Sovrascrivi",
+
+  "syncSectionTitle": "Sincronizzazione",
+  "syncSpeedTitle": "Velocità di sincronizzazione",
+  "syncSpeedFast": "Veloce",
+  "syncSpeedOptimized": "Ottimizzato",
+  "syncSpeedFastDescription": "Sincronizza subito\nControlla ogni 30 sec.",
+  "syncSpeedOptimizedDescription": "Sincronizza dopo 15 sec.\nControlla ogni 2 min.",
+  "syncSpeedFastHint": "Le modifiche vengono caricate immediatamente e i dati aggiornati ogni 30 secondi.",
+  "syncSpeedOptimizedHint": "Le modifiche vengono raggruppate e caricate dopo una breve pausa per risparmiare batteria."
 }

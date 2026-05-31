@@ -152,7 +152,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
 
     // Keep today's selection pinned to the latest day instead of centering it.
     if (selectedDate != null && _isSameDay(selectedDate, today)) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       _didInitialScrollToRight = true;
       _updateRightEdgeState();
       return;
@@ -184,7 +184,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
       }
     }
 
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
     _didInitialScrollToRight = true;
     _updateRightEdgeState();
   }

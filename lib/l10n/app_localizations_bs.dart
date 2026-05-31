@@ -2276,4 +2276,32 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get overwrite => 'Prepiši';
+
+  @override
+  String get syncSectionTitle => 'Sinhronizacija';
+
+  @override
+  String get syncSpeedTitle => 'Brzina sinhronizacije';
+
+  @override
+  String get syncSpeedFast => 'Brzo';
+
+  @override
+  String get syncSpeedOptimized => 'Optimizirano';
+
+  @override
+  String get syncSpeedFastDescription =>
+      'Sinhronizuje odmah\nProvjerava svakih 30 sek.';
+
+  @override
+  String get syncSpeedOptimizedDescription =>
+      'Sinhronizuje nakon 15 sek.\nProvjerava svakih 2 min.';
+
+  @override
+  String get syncSpeedFastHint =>
+      'Promjene se prenose odmah, a podaci se osvježavaju svakih 30 sekundi.';
+
+  @override
+  String get syncSpeedOptimizedHint =>
+      'Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije.';
 }

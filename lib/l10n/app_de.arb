@@ -873,5 +873,14 @@
   "merge": "Zusammenführen",
   "overwriteLocalDataTitle": "Lokale Daten überschreiben?",
   "overwriteLocalDataDesc": "Dadurch werden alle deine lokalen Daten dauerhaft durch das Backup ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "overwrite": "Überschreiben"
+  "overwrite": "Überschreiben",
+
+  "syncSectionTitle": "Sync",
+  "syncSpeedTitle": "Sync-Geschwindigkeit",
+  "syncSpeedFast": "Schnell",
+  "syncSpeedOptimized": "Optimiert",
+  "syncSpeedFastDescription": "Sofort synchronisieren\nAlle 30 Sek. prüfen",
+  "syncSpeedOptimizedDescription": "Nach 15 Sek. synchronisieren\nAlle 2 Min. prüfen",
+  "syncSpeedFastHint": "Änderungen werden sofort hochgeladen und die Daten alle 30 Sekunden aktualisiert.",
+  "syncSpeedOptimizedHint": "Änderungen werden gebündelt und nach kurzer Pause hochgeladen, um den Akku zu schonen."
 }

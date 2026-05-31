@@ -873,5 +873,14 @@
   "merge": "Combinar",
   "overwriteLocalDataTitle": "¿Sobreescribir datos locales?",
   "overwriteLocalDataDesc": "Esto reemplazará permanentemente todos tus datos locales con la copia de seguridad. Esta acción no se puede deshacer.",
-  "overwrite": "Sobreescribir"
+  "overwrite": "Sobreescribir",
+
+  "syncSectionTitle": "Sincronización",
+  "syncSpeedTitle": "Velocidad de sincronización",
+  "syncSpeedFast": "Rápido",
+  "syncSpeedOptimized": "Optimizado",
+  "syncSpeedFastDescription": "Sincroniza al instante\nComprueba cada 30 seg.",
+  "syncSpeedOptimizedDescription": "Sincroniza tras 15 seg.\nComprueba cada 2 min.",
+  "syncSpeedFastHint": "Los cambios se suben inmediatamente y los datos se actualizan cada 30 segundos.",
+  "syncSpeedOptimizedHint": "Los cambios se agrupan y se suben tras una breve pausa para ahorrar batería."
 }

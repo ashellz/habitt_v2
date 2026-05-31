@@ -863,5 +863,14 @@
   "merge": "Spoji",
   "overwriteLocalDataTitle": "Obrisati trenutne podatke?",
   "overwriteLocalDataDesc": "Ovo će trajno zamijeniti sve tvoje lokalne podatke backupom. Ova radnja se ne može poništiti.",
-  "overwrite": "Prepiši"
+  "overwrite": "Prepiši",
+
+  "syncSectionTitle": "Sinhronizacija",
+  "syncSpeedTitle": "Brzina sinhronizacije",
+  "syncSpeedFast": "Brzo",
+  "syncSpeedOptimized": "Optimizirano",
+  "syncSpeedFastDescription": "Sinhronizuje odmah\nProvjerava svakih 30 sek.",
+  "syncSpeedOptimizedDescription": "Sinhronizuje nakon 15 sek.\nProvjerava svakih 2 min.",
+  "syncSpeedFastHint": "Promjene se prenose odmah, a podaci se osvježavaju svakih 30 sekundi.",
+  "syncSpeedOptimizedHint": "Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije."
 }
