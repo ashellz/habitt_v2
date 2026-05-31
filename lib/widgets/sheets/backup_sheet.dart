@@ -41,6 +41,21 @@ class _BackupSheetState extends State<BackupSheet> {
         builder: (_) => const RestoreChoiceDialog(),
       );
     }
+    if (!mounted) return;
+    final bp = context.read<BackupProvider>();
+    final loc = AppLocalizations.of(context)!;
+    if (bp.pendingCloudPinEntry) {
+      await showDialogSheet<void>(
+        context: context,
+        builder:
+            (_) => _PinDialog(
+              title: loc.unlockForSyncTitle,
+              desc: loc.unlockForSyncDesc,
+              buttonLabel: loc.unlockAction,
+              onConfirm: (pin) => bp.submitCloudPin(pin),
+            ),
+      );
+    }
   }
 
   void _popSheet() {
@@ -124,7 +139,7 @@ class _BackupSheetState extends State<BackupSheet> {
       builder: (context) => const BackupHistorySheet(),
     );
   }
-  /*
+
   void _showPinDialog(
     BuildContext context, {
     required String title,
@@ -144,7 +159,7 @@ class _BackupSheetState extends State<BackupSheet> {
             onConfirm: onConfirm,
           ),
     );
-  } */
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -476,54 +491,6 @@ class _BackupSheetState extends State<BackupSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          /*
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: ShapeDecoration(
-              color: cp.habitBg,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: cp.border),
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  loc.pinProtection,
-                  style: TextStyle(
-                    color: cp.text,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                NewDefaultSwitch(
-                  value: bp.isPinEnabled,
-                  onChanged: (v) {
-                    if (v) {
-                      _showPinDialog(
-                        context,
-                        title: loc.setPinTitle,
-                        desc: loc.setPinDesc,
-                        buttonLabel: loc.enable,
-                        onConfirm: (pin) => bp.enablePin(pin),
-                      );
-                    } else {
-                      _showPinDialog(
-                        context,
-                        title: loc.disablePinTitle,
-                        desc: loc.disablePinDesc,
-                        buttonLabel: loc.disable,
-                        buttonColor: cp.error,
-                        onConfirm: (pin) => bp.disablePin(pin),
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
-          ), */
           NewDefaultButton.secondary(
             onPressed: isSyncing ? () {} : () => bp.performSync(true),
             label: loc.backUpNow,
@@ -587,6 +554,46 @@ class _BackupSheetState extends State<BackupSheet> {
                           NewDefaultSwitch(
                             value: bp.isAutoSyncEnabled,
                             onChanged: (v) => bp.setAutoSyncEnabled(v),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            loc.pinProtection,
+                            style: TextStyle(
+                              color: cp.text,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          NewDefaultSwitch(
+                            value: bp.isPinEnabled,
+                            onChanged: (v) {
+                              if (v) {
+                                _showPinDialog(
+                                  context,
+                                  title: loc.setPinTitle,
+                                  desc: loc.setPinDesc,
+                                  buttonLabel: loc.enable,
+                                  onConfirm: (pin) => bp.enablePin(pin),
+                                );
+                              } else {
+                                _showPinDialog(
+                                  context,
+                                  title: loc.disablePinTitle,
+                                  desc: loc.disablePinDesc,
+                                  buttonLabel: loc.disable,
+                                  buttonColor: cp.error,
+                                  onConfirm: (pin) => bp.disablePin(pin),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -703,13 +710,15 @@ class _BackupSheetState extends State<BackupSheet> {
             ),
           ),
           Expanded(
-            child: Text(
-              loc.backupAndSync,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: cp.text,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
+            child: Center(
+              child: Text(
+                loc.backupAndSync,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: cp.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -726,7 +735,8 @@ class _PinDialog extends StatefulWidget {
     required this.desc,
     required this.buttonLabel,
     required this.onConfirm,
-  }) : buttonColor = null;
+    this.buttonColor,
+  });
 
   final String title;
   final String desc;

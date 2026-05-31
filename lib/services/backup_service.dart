@@ -40,6 +40,8 @@ class BackupService {
   /// Creates one on first call and persists it in the platform keychain.
   /// On iOS, synchronizable=true syncs the key via iCloud Keychain so a new
   /// device with the same Apple ID can decrypt existing Drive backups.
+  /// For cross-platform restore (iOS→Android), the key is synced via Drive
+  /// using [storeKeyBytes] before this is called.
   static Future<SecretKey> getOrCreateKey(FlutterSecureStorage storage) async {
     const iOSOpts = IOSOptions(synchronizable: true);
     const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
@@ -62,6 +64,36 @@ class BackupService {
       aOptions: androidOpts,
     );
     return SecretKey(bytes);
+  }
+
+  /// Returns true if  backup key is already stored in the keychain.
+  /// Used to gate Drive download — local always wins over Drive on existing devices.
+  static Future<bool> hasStoredKey(FlutterSecureStorage storage) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    final stored = await storage.read(
+      key: _kBackupKeyStorageKey,
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
+    return stored != null;
+  }
+
+  /// Overwrites the stored device backup key with [keyBytes].
+  /// Used when downloading the shared key from Google Drive so all platforms
+  /// (iOS, Android) use the same encryption key.
+  static Future<void> storeKeyBytes(
+    FlutterSecureStorage storage,
+    List<int> keyBytes,
+  ) async {
+    const iOSOpts = IOSOptions(synchronizable: true);
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.write(
+      key: _kBackupKeyStorageKey,
+      value: base64Encode(keyBytes),
+      iOptions: iOSOpts,
+      aOptions: androidOpts,
+    );
   }
 
   // --- PIN key wrapping --------------------------------------------------

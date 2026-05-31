@@ -97,6 +97,11 @@ class BackupProvider extends ChangeNotifier {
   // Consumed once by the UI to show a notification popup.
   String? _pendingNotification;
 
+  // Set when Drive has a PIN-wrapped key.key and no stored PIN is available
+  // locally. UI shows a PIN entry dialog; submitCloudPin() clears this.
+  bool _pendingCloudPinEntry = false;
+  Map<String, dynamic>? _cloudPinWrapped;
+
   // --- Getters -----------------------------------------------------------
 
   GoogleSignInAccount? get currentUser => _currentUser;
@@ -111,6 +116,7 @@ class BackupProvider extends ChangeNotifier {
   DateTime? get lastSyncTime => _lastSyncTime;
   bool get needsMigration => _needsMigration;
   bool get isPinEnabled => _isPinEnabled;
+  bool get pendingCloudPinEntry => _pendingCloudPinEntry;
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
 
@@ -179,6 +185,7 @@ class BackupProvider extends ChangeNotifier {
 
   /// Wraps the keychain key with [pin], stores both the wrapped key and the
   /// raw PIN (so auto-sync works on future app launches without re-entry).
+  /// Also re-uploads key.key to Drive in PIN-wrapped format.
   Future<bool> enablePin(String pin) async {
     try {
       final key = await BackupService.getOrCreateKey(_secureStorage);
@@ -190,6 +197,7 @@ class BackupProvider extends ChangeNotifier {
       _isPinEnabled = true;
       _cachedKey = key;
       notifyListeners();
+      await _uploadKeyFileToDrive();
       return true;
     } catch (e) {
       debugPrint('Enable PIN failed: $e');
@@ -199,6 +207,7 @@ class BackupProvider extends ChangeNotifier {
 
   /// Verifies [pin] against the stored wrapped key, then clears all PIN data.
   /// Returns false if [pin] is wrong.
+  /// Also re-uploads key.key to Drive in plain format.
   Future<bool> disablePin(String pin) async {
     final key = await BackupService.unwrapKeyWithPin(_secureStorage, pin);
     if (key == null) return false;
@@ -209,6 +218,7 @@ class BackupProvider extends ChangeNotifier {
     _isPinEnabled = false;
     _cachedKey = null;
     notifyListeners();
+    await _uploadKeyFileToDrive();
     return true;
   }
 
@@ -631,6 +641,7 @@ class BackupProvider extends ChangeNotifier {
     notifyListeners();
 
     if (_syncState == SyncState.syncing) return;
+    await _ensureKeySync();
     final key = await _getKey();
     if (key == null) return;
 
@@ -779,6 +790,17 @@ class BackupProvider extends ChangeNotifier {
         return;
       }
 
+      // Sync the encryption key with Drive before any decrypt attempt.
+      // This is what enables cross-platform restore (e.g. iOS → Android).
+      await _ensureKeySync();
+
+      // Key is PIN-protected and user hasn't entered PIN yet — pause sync.
+      if (_pendingCloudPinEntry) {
+        syncState = SyncState.idle;
+        progressMessage = null;
+        return;
+      }
+
       // ── Full cycle: delta path or full-backup path ───────────────────────
       // Use delta when: not forced AND we have a sync cursor (_lastSyncTime).
       // First sync or forced always goes to the full backup path.
@@ -893,6 +915,7 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
+    await _ensureKeySync();
     final key = await _getKey();
     if (key == null) return;
 
@@ -931,6 +954,234 @@ class BackupProvider extends ChangeNotifier {
         _kLastSyncTimeKey,
         _lastSyncTime!.millisecondsSinceEpoch,
       );
+    }
+  }
+
+  // --- Cross-platform key sync -------------------------------------------
+
+  /// Syncs the backup encryption key with Google Drive.
+  ///
+  /// **Download** (new device — no local key yet):
+  ///   - `type:plain`   → stores key bytes directly, sync proceeds.
+  ///   - `type:pin`     → tries stored PIN; on success stores key and enables
+  ///                      local PIN state. If no stored PIN, sets
+  ///                      [_pendingCloudPinEntry] so the UI can prompt the user.
+  ///   - old plain-b64  → backward-compat path, treated as plain.
+  ///
+  /// **Upload** (no `key.key` on Drive yet):
+  ///   Uploads the key in plain or PIN-wrapped format depending on [_isPinEnabled].
+  ///   PIN changes (`enablePin`/`disablePin`) re-upload via [_uploadKeyFileToDrive].
+  Future<void> _syncKeyWithDrive(
+    drive_api.DriveApi drive,
+    String folderId,
+  ) async {
+    try {
+      const keyFileName = 'key.key';
+      final driveKeyRaw = await _downloadFileBytes(
+        drive,
+        folderId,
+        keyFileName,
+      );
+
+      if (driveKeyRaw != null) {
+        // Only download if this device has no local key yet.
+        final hasLocal = await BackupService.hasStoredKey(_secureStorage);
+        if (hasLocal) return;
+
+        final content = utf8.decode(driveKeyRaw);
+
+        // Try JSON envelope (current format). Fall back to old plain-base64.
+        Map<String, dynamic>? envelope =
+            jsonDecode(content) as Map<String, dynamic>;
+
+        final type = envelope['type'] as String?;
+
+        if (type == 'pin') {
+          // PIN-wrapped — try to unwrap with stored PIN.
+          final storedPin = await BackupService.readStoredPin(_secureStorage);
+          if (storedPin != null) {
+            final key = await _unwrapKeyFromEnvelope(envelope, storedPin);
+            if (key != null) {
+              final keyBytes = await key.extractBytes();
+              await BackupService.storeKeyBytes(_secureStorage, keyBytes);
+              await BackupService.storePinData(_secureStorage, {
+                'salt': envelope['salt'] as String,
+                'nonce': envelope['nonce'] as String,
+                'ciphertext': envelope['ciphertext'] as String,
+                'tag': envelope['tag'] as String,
+              });
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool(_kPinEnabledKey, true);
+              _isPinEnabled = true;
+              debugPrint('Key synced (PIN-wrapped) → local keychain');
+              return;
+            }
+          }
+          // No stored pin or wrong pin — shows dialog to user
+          _cloudPinWrapped = envelope;
+          _pendingCloudPinEntry = true;
+          notifyListeners();
+          debugPrint('Cloud key is PIN-wrapped — awaiting user PIN entry');
+        } else {
+          // type == 'plain' - store plain key.
+          final keyBytes = base64Decode(envelope['key'] as String);
+          await BackupService.storeKeyBytes(_secureStorage, keyBytes);
+          debugPrint('Key synced (plain) → local keychain');
+        }
+      } else {
+        // No key.key on Drive — upload current local key.
+        await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
+      }
+    } catch (e) {
+      debugPrint('Key sync skipped: $e');
+    }
+  }
+
+  /// Decrypts a PIN-wrapped key envelope directly (without reading local storage).
+  Future<SecretKey?> _unwrapKeyFromEnvelope(
+    Map<String, dynamic> envelope,
+    String pin,
+  ) async {
+    try {
+      final salt = base64Decode(envelope['salt'] as String);
+      final nonce = base64Decode(envelope['nonce'] as String);
+      final cipher = base64Decode(envelope['ciphertext'] as String);
+      final tag = base64Decode(envelope['tag'] as String);
+
+      final aes = AesGcm.with256bits();
+      final pbkdf2 = Pbkdf2(
+        macAlgorithm: Hmac.sha256(),
+        iterations: 200000,
+        bits: 256,
+      );
+      final pinKey = await pbkdf2.deriveKey(
+        secretKey: SecretKey(utf8.encode(pin)),
+        nonce: salt,
+      );
+      final decrypted = await aes.decrypt(
+        SecretBox(cipher, nonce: nonce, mac: Mac(tag)),
+        secretKey: pinKey,
+      );
+      return SecretKey(decrypted);
+    } on SecretBoxAuthenticationError {
+      return null;
+    } catch (e) {
+      debugPrint('Envelope unwrap error: $e');
+      return null;
+    }
+  }
+
+  /// Builds the `key.key` file content and uploads it to Drive.
+  /// When [_isPinEnabled], the key is wrapped with PBKDF2 + AES-GCM so Drive
+  /// readers cannot decrypt it without the PIN. When disabled, the key is
+  /// stored as a plain JSON envelope.
+  ///
+  /// Pass [drive] and [folderId] when already available to avoid a second
+  /// round-trip; they are looked up automatically when omitted.
+  Future<void> _uploadKeyFileToDrive({
+    drive_api.DriveApi? drive,
+    String? folderId,
+  }) async {
+    try {
+      drive ??= await _getDriveService();
+      if (drive == null) return;
+      folderId ??= await _getFolderId(drive);
+      if (folderId == null) return;
+
+      // Building the json content.
+      final Uint8List content;
+      if (_isPinEnabled) {
+        final key = await BackupService.getOrCreateKey(_secureStorage);
+        final pin = await BackupService.readStoredPin(_secureStorage);
+        if (pin == null) {
+          // PIN enabled but no stored PIN, disable pin
+          await disablePin('');
+          await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
+          return;
+        }
+        final wrapped = await BackupService.wrapKeyWithPin(key, pin);
+        content = Uint8List.fromList(
+          utf8.encode(jsonEncode({'type': 'pin', ...wrapped})),
+        );
+      } else {
+        final key = await BackupService.getOrCreateKey(_secureStorage);
+        final keyBytes = await key.extractBytes();
+        content = Uint8List.fromList(
+          utf8.encode(
+            jsonEncode({'type': 'plain', 'key': base64Encode(keyBytes)}),
+          ),
+        );
+      }
+
+      // Delete any existing key.key, then upload fresh.
+      const keyFileName = 'key.key';
+      final existing = await drive.files.list(
+        q: "name = '$keyFileName' and '$folderId' in parents and trashed = false",
+        $fields: 'files(id)',
+      );
+      for (final f in (existing.files ?? [])) {
+        if (f.id != null) await drive.files.delete(f.id!);
+      }
+
+      final media = drive_api.Media(
+        Stream.value(content.toList()),
+        content.length,
+      );
+      final file =
+          drive_api.File()
+            ..name = keyFileName
+            ..parents = [folderId];
+      await drive.files.create(file, uploadMedia: media);
+      debugPrint('key.key uploaded to Drive (PIN: $_isPinEnabled)');
+    } catch (e) {
+      debugPrint('_uploadKeyFileToDrive failed: $e');
+    }
+  }
+
+  /// Called when the user enters their PIN to unlock a PIN-protected cloud backup.
+  ///
+  /// Decrypts the cached [_cloudPinWrapped] envelope, stores the key and PIN
+  /// data locally, enables PIN state, then resumes sync.
+  /// Returns false if the PIN is wrong.
+  Future<bool> submitCloudPin(String pin) async {
+    final envelope = _cloudPinWrapped;
+    if (envelope == null) return false;
+
+    final key = await _unwrapKeyFromEnvelope(envelope, pin);
+    if (key == null) return false;
+
+    final keyBytes = await key.extractBytes();
+    await BackupService.storeKeyBytes(_secureStorage, keyBytes);
+    await BackupService.storePinData(_secureStorage, {
+      'salt': envelope['salt'] as String,
+      'nonce': envelope['nonce'] as String,
+      'ciphertext': envelope['ciphertext'] as String,
+      'tag': envelope['tag'] as String,
+    });
+    await BackupService.storePin(_secureStorage, pin);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kPinEnabledKey, true);
+    _isPinEnabled = true;
+    _cachedKey = key;
+    _pendingCloudPinEntry = false;
+    _cloudPinWrapped = null;
+    notifyListeners();
+
+    await performSync(true);
+    return true;
+  }
+
+  /// Convenience wrapper: syncs the key with Drive when possible.
+  /// Must be called before [_getKey] on any path that decrypts Drive backups.
+  Future<void> _ensureKeySync() async {
+    try {
+      final drive = await _getDriveService();
+      if (drive == null) return;
+      final folderId = await _getFolderId(drive, create: false);
+      if (folderId == null) return;
+      await _syncKeyWithDrive(drive, folderId);
+    } catch (e) {
+      debugPrint('_ensureKeySync error: $e');
     }
   }
 
@@ -1483,6 +1734,7 @@ class BackupProvider extends ChangeNotifier {
   Future<void> restoreFromBackupFile(String fileId) async {
     if (_syncState == SyncState.syncing) return;
 
+    await _ensureKeySync();
     final key = await _getKey();
     if (key == null) return;
 
@@ -1512,6 +1764,7 @@ class BackupProvider extends ChangeNotifier {
   Future<void> replaceFromBackupFile(String fileId) async {
     if (_syncState == SyncState.syncing) return;
 
+    await _ensureKeySync();
     final key = await _getKey();
     if (key == null) return;
 

@@ -1,4 +1,4 @@
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter/foundation.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,50 +13,39 @@ class FeedbackService {
 
     try {
       if (await inAppReview.isAvailable()) {
-        await inAppReview.requestReview();
+        await inAppReview.openStoreListing(appStoreId: '6745617462');
       } else {
-        // Fallback to store links if in-app review is not available
         await _launchStorePage();
       }
     } catch (_) {
-      // If in-app review fails, try launching store page
       await _launchStorePage();
     }
   }
 
   static Future<void> _launchStorePage() async {
-    // Try to open the app store link
-    // These URLs should be replaced with actual app store URLs
     final Uri androidUrl = Uri.parse(
-      'https://play.google.com/store/apps/details?id=com.shellz.habitt&hl=en-US&ah=pOP1nFvk-kYT2fbDhv9cYBHNbG4',
+      'https://play.google.com/store/apps/details?id=com.shellz.habitt',
     );
     final Uri iosUrl = Uri.parse(
       'https://apps.apple.com/us/app/habitt-your-habit-tracker/id6745617462',
-    ); // Replace with actual app ID
+    );
 
-    try {
-      if (await canLaunchUrl(androidUrl)) {
-        await launchUrl(androidUrl, mode: LaunchMode.externalApplication);
-      } else if (await canLaunchUrl(iosUrl)) {
-        await launchUrl(iosUrl, mode: LaunchMode.externalApplication);
-      }
-    } catch (_) {
-      rethrow;
+    final Uri url =
+        defaultTargetPlatform == TargetPlatform.android ? androidUrl : iosUrl;
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 
   static Future<void> sendBugReport() async {
-    final Email email = Email(
-      body: bugReportTemplate,
-      subject: 'Bug Report',
-      recipients: [supportEmail],
-      isHTML: false,
+    final Uri uri = Uri(
+      scheme: 'mailto',
+      path: supportEmail,
+      queryParameters: {'subject': 'Bug Report', 'body': bugReportTemplate},
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (_) {
-      rethrow;
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch email client');
     }
   }
 }
