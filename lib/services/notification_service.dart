@@ -160,7 +160,26 @@ class NotificationService {
       return;
     }
 
-    await cancelAllHabitNotifications();
+    // Cancel existing notifications by deterministic IDs instead of using the
+    // expensive listScheduledNotifications() platform call. Since IDs are computed
+    // from habitId × slotId × day, we can cancel exactly the right set without
+    // fetching anything from the platform first.
+    // Note: notification slots removed from a habit since the last sync are
+    // non-repeating, so any orphaned entries fire at most once then disappear.
+    final now = DateTime.now();
+    final startDay = DateTime(now.year, now.month, now.day);
+    for (final habit in habits) {
+      if (habit.notificationTimes.isEmpty) continue;
+      for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
+        final day = startDay.add(Duration(days: dayOffset));
+        for (final slot in habit.notificationTimes) {
+          await AwesomeNotifications().cancel(
+            _getHabitNotificationId(habit.id, slot.id, day),
+          );
+        }
+      }
+    }
+
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
 

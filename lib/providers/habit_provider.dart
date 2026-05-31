@@ -68,11 +68,28 @@ class HabitProvider extends ChangeNotifier {
     _syncAllHabitNotifications();
   }
 
-  Future<void> _syncAllHabitNotifications() async {
+  Future<void> _syncAllHabitNotifications({bool force = false}) async {
+    // Skip if already synced today unless forced. Individual habit changes are
+    // handled by per-habit syncs; the full startup sync only needs to run once
+    // per day to roll the 7-day window forward and catch any notifications that
+    // fired while the app was closed.
+    final prefs = await SharedPreferences.getInstance();
+    final today = _normalizeDate(DateTime.now()).toIso8601String().split('T').first;
+
+    if (!force) {
+      final lastSync = prefs.getString('lastNotificationSyncDate');
+      if (lastSync == today) {
+        debugPrint('Notification sync skipped — already synced today');
+        return;
+      }
+    }
+
     await NotificationService.scheduleAllHabitNotifications(
       habits: habits.where((habit) => habit.isDeleted != true),
       appearsOnDay: appearsOnDay,
     );
+
+    await prefs.setString('lastNotificationSyncDate', today);
   }
 
   Future<void> _syncSingleHabitNotifications(Habit habit) async {
@@ -943,7 +960,7 @@ class HabitProvider extends ChangeNotifier {
       await updateHabitInDB(habit);
     }
     refreshTodaysHabits(notify: false);
-    _syncAllHabitNotifications();
+    _syncAllHabitNotifications(force: true);
     notifyListeners();
   }
 
@@ -966,7 +983,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     refreshTodaysHabits(notify: false);
-    _syncAllHabitNotifications();
+    _syncAllHabitNotifications(force: true);
     notifyListeners();
   }
 
