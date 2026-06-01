@@ -52,6 +52,10 @@ enum SyncMode {
   /// upload only: skips checking for remote changes, just uploads own delta
   /// used by the 15 second timer after changes - auto sync
   uploadOnly,
+
+  /// delta cycle without compaction: downloads remote deltas + uploads own delta,
+  /// but never creates a full backup. Used by the manual "Sync now" button.
+  syncOnly,
 }
 
 class BackupProvider extends ChangeNotifier {
@@ -243,6 +247,15 @@ class BackupProvider extends ChangeNotifier {
     _isAutoSyncEnabled = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_kAutoSyncEnabledKey, value);
+    if (!value) {
+      _autoSyncTimer?.cancel();
+      _autoSyncTimer = null;
+      _periodicSyncTimer?.cancel();
+      _periodicSyncTimer = null;
+      _hasPendingSync = false;
+    } else {
+      _startPeriodicSync();
+    }
     notifyListeners();
   }
 
@@ -920,6 +933,24 @@ class BackupProvider extends ChangeNotifier {
       if (_pendingCloudPinEntry) {
         syncState = SyncState.idle;
         progressMessage = null;
+        return;
+      }
+
+      // ── Sync-only path (manual "Sync now" — delta cycle, no backup) ─────
+      if (mode == SyncMode.syncOnly) {
+        if (_lastSyncTime != null) {
+          final drive = await _getDriveService();
+          if (drive != null) {
+            final folderId = await _getFolderId(drive);
+            if (folderId != null) {
+              progressMessage = 'Checking for updates...';
+              await _downloadAndApplyPendingDeltas(drive, folderId, key);
+            }
+          }
+        }
+        progressMessage = 'Uploading changes...';
+        await _uploadDeltaToCloud(key);
+        await _onSyncSuccess();
         return;
       }
 

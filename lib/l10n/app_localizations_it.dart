@@ -1926,7 +1926,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Acquistando Premium sostieni lo sviluppatore.';
 
   @override
-  String get autoBackup => 'Backup automatico';
+  String get autoBackup => 'Sincronizzazione e backup automatici';
 
   @override
   String get backUpNow => 'Esegui backup ora';

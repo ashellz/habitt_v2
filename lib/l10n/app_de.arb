@@ -741,7 +741,7 @@
   "onboardingDemoHabitReadBook": "Ein Buch lesen",
   "onboardingDemoHabitPushUps": "Liegestütze",
   "supportDeveloper": "Der Kauf von Premium unterstützt den Entwickler.",
-  "autoBackup": "Automatische Sicherung",
+  "autoBackup": "Automatische Synchronisierung und Sicherung",
   "backUpNow": "Jetzt sichern",
   "restoreFromBackup": "Aus Sicherung wiederherstellen",
   "signInWithGoogle": "Mit Google anmelden",

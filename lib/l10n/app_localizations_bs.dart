@@ -1917,7 +1917,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get supportDeveloper => 'Kupovinom premiuma podržavate programera.';
 
   @override
-  String get autoBackup => 'Automatski backup';
+  String get autoBackup => 'Automatska sinkronizacija i backup';
 
   @override
   String get backUpNow => 'Backup-aj sada';

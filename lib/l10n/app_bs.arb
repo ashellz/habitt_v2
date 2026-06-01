@@ -731,7 +731,7 @@
   "onboardingDemoHabitReadBook": "Čitanje knjige",
   "onboardingDemoHabitPushUps": "Sklekovi",
   "supportDeveloper": "Kupovinom premiuma podržavate programera.",
-  "autoBackup": "Automatski backup",
+  "autoBackup": "Automatska sinkronizacija i backup",
   "backUpNow": "Backup-aj sada",
   "restoreFromBackup": "Vrati backup",
   "signInWithGoogle": "Prijavi se s Googleom",

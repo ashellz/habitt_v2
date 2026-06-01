@@ -108,7 +108,7 @@ class NewDefaultButton extends StatelessWidget {
        isGradient = false,
        _variant = _ButtonVariant.circle;
 
-  final Function onPressed;
+  final Function? onPressed;
   final String? label;
   final bool enabled;
   final Color? color;
@@ -183,7 +183,7 @@ class NewDefaultButton extends StatelessWidget {
           child: IgnorePointer(
             ignoring: !enabled,
             child: ElevatedButton(
-              onPressed: () => enabled && !isLoading ? onPressed() : null,
+              onPressed: () => enabled && !isLoading ? onPressed?.call() : null,
               style: ButtonStyle(
                 splashFactory: isAndroid ? null : NoSplash.splashFactory,
                 elevation: const WidgetStatePropertyAll(0),

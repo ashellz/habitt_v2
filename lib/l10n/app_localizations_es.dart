@@ -1923,7 +1923,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get supportDeveloper => 'Comprar Premium apoya al desarrollador.';
 
   @override
-  String get autoBackup => 'Copia de seguridad automática';
+  String get autoBackup => 'Sincronización y copia de seguridad automática';
 
   @override
   String get backUpNow => 'Hacer copia ahora';

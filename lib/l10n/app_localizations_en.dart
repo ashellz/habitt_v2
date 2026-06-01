@@ -1920,7 +1920,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportDeveloper => 'Buying Premium supports the developer.';
 
   @override
-  String get autoBackup => 'Auto backup';
+  String get autoBackup => 'Auto sync and backup';
 
   @override
   String get backUpNow => 'Back up now';

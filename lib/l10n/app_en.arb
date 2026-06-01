@@ -736,7 +736,7 @@
   "onboardingDemoHabitReadBook": "Read a book",
   "onboardingDemoHabitPushUps": "Push ups",
   "supportDeveloper": "Buying Premium supports the developer.",
-  "autoBackup": "Auto backup",
+  "autoBackup": "Auto sync and backup",
   "backUpNow": "Back up now",
   "restoreFromBackup": "Restore from backup",
   "signInWithGoogle": "Sign in with Google",

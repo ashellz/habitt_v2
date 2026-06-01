@@ -3134,7 +3134,7 @@ abstract class AppLocalizations {
   /// No description provided for @autoBackup.
   ///
   /// In en, this message translates to:
-  /// **'Auto backup'**
+  /// **'Auto sync and backup'**
   String get autoBackup;
 
   /// No description provided for @backUpNow.
