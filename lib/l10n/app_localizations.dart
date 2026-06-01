@@ -3203,6 +3203,30 @@ abstract class AppLocalizations {
   /// **'Disconnect Google'**
   String get disconnectGoogle;
 
+  /// No description provided for @restoreWithDeltasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Include recent changes?'**
+  String get restoreWithDeltasTitle;
+
+  /// No description provided for @restoreWithDeltasDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes made after this backup exist on your Drive. You can include them on top of the restored backup, or restore the backup as-is.'**
+  String get restoreWithDeltasDesc;
+
+  /// No description provided for @restoreWithDeltasInclude.
+  ///
+  /// In en, this message translates to:
+  /// **'Include changes'**
+  String get restoreWithDeltasInclude;
+
+  /// No description provided for @restoreWithDeltasSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore only'**
+  String get restoreWithDeltasSkip;
+
   /// No description provided for @restoreConfirmTitle.
   ///
   /// In en, this message translates to:
@@ -3830,20 +3854,20 @@ abstract class AppLocalizations {
   /// No description provided for @syncSpeedFastDescription.
   ///
   /// In en, this message translates to:
-  /// **'Syncs instantly\nChecks every 30 s'**
+  /// **'Syncs after 5s\nChecks every 30 s'**
   String get syncSpeedFastDescription;
+
+  /// No description provided for @syncSpeedFastHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes upload after 5 seconds and your data is refreshed every 30 seconds.'**
+  String get syncSpeedFastHint;
 
   /// No description provided for @syncSpeedOptimizedDescription.
   ///
   /// In en, this message translates to:
   /// **'Syncs after 15 s\nChecks every 2 min'**
   String get syncSpeedOptimizedDescription;
-
-  /// No description provided for @syncSpeedFastHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Changes upload immediately and your data is refreshed every 30 seconds.'**
-  String get syncSpeedFastHint;
 
   /// No description provided for @syncSpeedOptimizedHint.
   ///

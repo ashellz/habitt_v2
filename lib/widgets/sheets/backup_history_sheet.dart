@@ -8,6 +8,7 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/dialogs/backup_passphrase_dialog.dart';
 import 'package:habitt/widgets/dialogs/confirm_restore_backup_dialog.dart';
+import 'package:habitt/widgets/dialogs/restore_with_deltas_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BackupHistorySheet extends StatefulWidget {
@@ -70,8 +71,9 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     BuildContext context,
     BackupProvider bp,
     AppLocalizations loc,
-    DriveBackupFile file,
-  ) async {
+    DriveBackupFile file, {
+    bool isNewest = false,
+  }) async {
     final cp = context.read<ColorProvider>();
     final confirmed = await showDialogSheet<bool>(
       context: context,
@@ -80,7 +82,22 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
 
     if (confirmed != true || !context.mounted) return;
 
-    await bp.replaceFromBackupFile(file.id);
+    bool includeDeltasSince = false;
+    if (isNewest) {
+      final hasDeltas = await bp.hasDeltaFiles();
+      if (!context.mounted) return;
+      if (hasDeltas) {
+        final choice = await showDialogSheet<bool>(
+          context: context,
+          builder: (ctx) => RestoreWithDeltasDialog(cp: cp),
+        );
+        if (!context.mounted) return;
+        if (choice == null) return;
+        includeDeltasSince = choice;
+      }
+    }
+
+    await bp.replaceFromBackupFile(file.id, includeDeltasSince: includeDeltasSince);
     if (!context.mounted) return;
 
     if (bp.hasPendingBackupPassphrase) {
@@ -168,7 +185,7 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
                           children: [
                             for (int i = 0; i < backups.length; i++) ...[
                               if (i > 0) Divider(color: cp.border, height: 32),
-                              _backupEntry(context, cp, bp, loc, backups[i]),
+                              _backupEntry(context, cp, bp, loc, backups[i], isNewest: i == 0),
                             ],
                           ],
                         ),
@@ -189,8 +206,9 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     ColorProvider cp,
     BackupProvider bp,
     AppLocalizations loc,
-    DriveBackupFile file,
-  ) {
+    DriveBackupFile file, {
+    bool isNewest = false,
+  }) {
     final isSyncing = bp.syncState == SyncState.syncing;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,8 +226,9 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
         const SizedBox(width: 12),
         NewDefaultButton.primarySmall(
           width: null,
-          onPressed:
-              isSyncing ? () {} : () => _confirmRestore(context, bp, loc, file),
+          onPressed: isSyncing
+              ? () {}
+              : () => _confirmRestore(context, bp, loc, file, isNewest: isNewest),
           label: loc.restore,
           enabled: !isSyncing,
         ),

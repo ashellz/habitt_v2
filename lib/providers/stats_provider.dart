@@ -285,7 +285,6 @@ class StatsProvider extends ChangeNotifier {
       for (final habit in day.habits) {
         if (habit.completed) {
           habitsCompleted++;
-          debugPrint("Completed habit found, {$habitsCompleted} total");
         }
       }
     }
@@ -411,7 +410,6 @@ class StatsProvider extends ChangeNotifier {
         if (habit.optional) continue;
         if (habit.completed) {
           habitsCompleted++;
-          debugPrint("Completed habit found, {$habitsCompleted} total");
         } else if (habit.tracksAmount) {
           if (habit.amount > 0) {
             habitsCompleted += (habit.amountCompleted / habit.amount).clamp(
@@ -465,7 +463,6 @@ class StatsProvider extends ChangeNotifier {
         requiredHabits++;
         if (habit.completed) {
           habitsCompleted++;
-          debugPrint("Completed habit found, {$habitsCompleted} total");
         } else if (habit.skipped) {
           habitsSkipped++;
           debugPrint("Skipped habit found, {$habitsSkipped} total");

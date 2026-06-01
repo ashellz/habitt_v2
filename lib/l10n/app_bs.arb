@@ -743,6 +743,10 @@
   "enterOldPassphrase": "Unesi staru lozinku",
   "syncFailed": "Greška pri sinkronizaciji",
   "disconnectGoogle": "Prekini vezu s Googleom",
+  "restoreWithDeltasTitle": "Uključiti nedavne promjene?",
+  "restoreWithDeltasDesc": "Promjene napravljene nakon ovog backupa postoje na tvojem Driveu. Možeš ih uključiti na vrh vraćenog backupa, ili vratiti backup kakav jeste.",
+  "restoreWithDeltasInclude": "Uključi promjene",
+  "restoreWithDeltasSkip": "Samo vrati",
   "restoreConfirmTitle": "Vratiti backup?",
   "restoreConfirmDesc": "Tvoji podaci bit će potpuno zamijenjeni ovim backupom. Sve što si postigao od tada bit će obrisano. Ovo se ne može poništiti.",
   "restoreConfirmDescription": "Ovo će spojiti cloud backup s tvojim lokalnim podacima. Konflikti će biti riješeni koristeći najnovije izmjene.",
@@ -869,8 +873,8 @@
   "syncSpeedTitle": "Brzina sinhronizacije",
   "syncSpeedFast": "Brzo",
   "syncSpeedOptimized": "Optimizirano",
-  "syncSpeedFastDescription": "Sinhronizuje odmah\nProvjerava svakih 30 sek.",
+  "syncSpeedFastDescription": "Sinhronizuje nakon 5 sek.\nProvjerava svakih 30 sek.",
   "syncSpeedOptimizedDescription": "Sinhronizuje nakon 15 sek.\nProvjerava svakih 2 min.",
-  "syncSpeedFastHint": "Promjene se prenose odmah, a podaci se osvježavaju svakih 30 sekundi.",
+  "syncSpeedFastHint": "Promjene se prenose nakon 5 sekundi, a podaci se osvježavaju svakih 30 sekundi.",
   "syncSpeedOptimizedHint": "Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije."
 }

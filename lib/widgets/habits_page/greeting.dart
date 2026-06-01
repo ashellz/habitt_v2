@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -38,6 +39,11 @@ class _GreetingState extends State<Greeting> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final cp = context.watch<ColorProvider>();
+    final bp = context.watch<BackupProvider>();
+
+    final googleName = bp.currentUser?.displayName;
+    final firstName = googleName?.split(' ').first;
+    final displayName = name ?? firstName ?? loc.guest;
 
     return Column(
       spacing: 4,
@@ -52,7 +58,7 @@ class _GreetingState extends State<Greeting> {
           ),
         ),
         Text(
-          name ?? loc.guest,
+          displayName,
           style: TextStyle(
             color: cp.text,
             fontSize: 32,

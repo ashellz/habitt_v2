@@ -748,6 +748,10 @@
   "enterOldPassphrase": "Enter old passphrase",
   "syncFailed": "Sync failed",
   "disconnectGoogle": "Disconnect Google",
+  "restoreWithDeltasTitle": "Include recent changes?",
+  "restoreWithDeltasDesc": "Changes made after this backup exist on your Drive. You can include them on top of the restored backup, or restore the backup as-is.",
+  "restoreWithDeltasInclude": "Include changes",
+  "restoreWithDeltasSkip": "Restore only",
   "restoreConfirmTitle": "Restore from backup?",
   "restoreConfirmDesc": "Your data will be completely replaced with this backup. Everything you've tracked since this backup was made will be lost. This cannot be undone.",
   "restoreConfirmDescription": "This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.",
@@ -874,8 +878,8 @@
   "syncSpeedTitle": "Sync speed",
   "syncSpeedFast": "Fast",
   "syncSpeedOptimized": "Optimized",
-  "syncSpeedFastDescription": "Syncs instantly\nChecks every 30 s",
+  "syncSpeedFastDescription": "Syncs after 5s\nChecks every 30 s",
+  "syncSpeedFastHint": "Changes upload after 5 seconds and your data is refreshed every 30 seconds.",
   "syncSpeedOptimizedDescription": "Syncs after 15 s\nChecks every 2 min",
-  "syncSpeedFastHint": "Changes upload immediately and your data is refreshed every 30 seconds.",
   "syncSpeedOptimizedHint": "Changes are batched and uploaded after a short pause to save battery."
 }

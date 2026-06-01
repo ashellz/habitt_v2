@@ -23,8 +23,8 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
-# Flutter/Dart/Pub related
 **/doc/api/
+# Flutter/Dart/Pub related
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
@@ -59,3 +59,7 @@ android/key.properties
 
 # App secrets (RevenueCat keys etc.) — copy app_secrets.example.dart instead
 lib/config/app_secrets.dart
+
+# Claude Code & OpenSpec
+.claude/
+openspec/

@@ -1965,6 +1965,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get disconnectGoogle => 'Disconnetti Google';
 
   @override
+  String get restoreWithDeltasTitle => 'Includere le modifiche recenti?';
+
+  @override
+  String get restoreWithDeltasDesc =>
+      'Sul tuo Drive esistono modifiche effettuate dopo questo backup. Puoi includerle nel backup ripristinato oppure ripristinare il backup così com\'è.';
+
+  @override
+  String get restoreWithDeltasInclude => 'Includi modifiche';
+
+  @override
+  String get restoreWithDeltasSkip => 'Solo ripristina';
+
+  @override
   String get restoreConfirmTitle => 'Ripristinare dal backup?';
 
   @override
@@ -2306,15 +2319,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get syncSpeedFastDescription =>
-      'Sincronizza subito\nControlla ogni 30 sec.';
+      'Sincronizza dopo 5 sec.\nControlla ogni 30 sec.';
+
+  @override
+  String get syncSpeedFastHint =>
+      'Le modifiche vengono caricate dopo 5 secondi e i dati aggiornati ogni 30 secondi.';
 
   @override
   String get syncSpeedOptimizedDescription =>
       'Sincronizza dopo 15 sec.\nControlla ogni 2 min.';
-
-  @override
-  String get syncSpeedFastHint =>
-      'Le modifiche vengono caricate immediatamente e i dati aggiornati ogni 30 secondi.';
 
   @override
   String get syncSpeedOptimizedHint =>

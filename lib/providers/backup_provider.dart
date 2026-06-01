@@ -175,9 +175,12 @@ class BackupProvider extends ChangeNotifier {
     _autoSyncTimer?.cancel();
 
     if (_syncSpeed == SyncSpeed.fast) {
-      // Fast mode: fire immediately, no debounce.
-      performSync(false, SyncMode.uploadOnly).catchError((e) {
-        debugPrint('Auto-sync (fast) failed: $e');
+      // Fast mode: debounce for 5 s to batch rapid changes.
+      _autoSyncTimer = Timer(const Duration(seconds: 5), () {
+        _hasPendingSync = false;
+        performSync(false, SyncMode.uploadOnly).catchError((e) {
+          debugPrint('Auto-sync (fast) failed: $e');
+        });
       });
     } else {
       // Optimized mode: debounce for 15 s to batch rapid changes.
@@ -346,7 +349,9 @@ class BackupProvider extends ChangeNotifier {
       _isPinEnabled = prefs.getBool(_kPinEnabledKey) ?? false;
       final speedName = prefs.getString(_kSyncSpeedKey);
       _syncSpeed =
-          speedName == SyncSpeed.fast.name ? SyncSpeed.fast : SyncSpeed.optimized;
+          speedName == SyncSpeed.fast.name
+              ? SyncSpeed.fast
+              : SyncSpeed.optimized;
 
       // Pre-load key from stored PIN so auto-sync works immediately on startup.
       if (_isPinEnabled) {
@@ -844,9 +849,9 @@ class BackupProvider extends ChangeNotifier {
           bytes.addAll(chunk);
         }
 
-        final backupData = await BackupService.importDataFromGoogleDrive(
-          encryptedBytes: Uint8List.fromList(bytes),
-          secretKey: key,
+        final backupData = await _tryDecryptWithFallback(
+          Uint8List.fromList(bytes),
+          key,
         );
 
         if (backupData != null) {
@@ -1674,9 +1679,9 @@ class BackupProvider extends ChangeNotifier {
           bytes.addAll(chunk);
         }
 
-        final backupData = await BackupService.importDataFromGoogleDrive(
-          encryptedBytes: Uint8List.fromList(bytes),
-          secretKey: key,
+        final backupData = await _tryDecryptWithFallback(
+          Uint8List.fromList(bytes),
+          key,
         );
 
         if (backupData != null) {
@@ -1955,7 +1960,8 @@ class BackupProvider extends ChangeNotifier {
   }
 
   /// Wipes the local DB and restores entirely from a specific Drive backup
-  /// file. No deltas are applied — this is a point-in-time hard restore.
+  /// file. When [includeDeltasSince] is true, all Drive delta files are applied
+  /// on top of the restored backup before completing.
   ///
   /// Decryption fallback order:
   ///   1. Current key (_getKey)
@@ -1964,7 +1970,10 @@ class BackupProvider extends ChangeNotifier {
   /// Local data is only cleared after successful decryption. If all keys fail,
   /// [hasPendingBackupPassphrase] is set to true and the UI should prompt for
   /// a passphrase via [retryRestoreWithPassphrase].
-  Future<void> replaceFromBackupFile(String fileId) async {
+  Future<void> replaceFromBackupFile(
+    String fileId, {
+    bool includeDeltasSince = false,
+  }) async {
     if (_syncState == SyncState.syncing) return;
     syncState = SyncState.syncing;
     lastError = null;
@@ -2010,11 +2019,36 @@ class BackupProvider extends ChangeNotifier {
 
       progressMessage = 'Restoring...';
       await _mergeBackupData(backupData);
+
+      if (includeDeltasSince) {
+        final drive = await _getDriveService();
+        if (drive != null) {
+          final folderId = await _getFolderId(drive, create: false);
+          if (folderId != null) {
+            progressMessage = 'Applying updates...';
+            await _downloadAndApplyAllDeltas(drive, folderId, key);
+          }
+        }
+      }
+
       await _onSyncSuccess();
     } catch (e) {
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
       debugPrint(lastError);
+    }
+  }
+
+  /// Returns true if any delta files exist on Drive for the current account.
+  Future<bool> hasDeltaFiles() async {
+    try {
+      final drive = await _getDriveService();
+      if (drive == null) return false;
+      final folderId = await _getFolderId(drive, create: false);
+      if (folderId == null) return false;
+      return await _countDeltaFiles(drive, folderId) > 0;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -2089,75 +2123,50 @@ class BackupProvider extends ChangeNotifier {
   /// Tries to decrypt [bytes] with the current key, then (if PIN is enabled)
   /// with the raw plain device key as a fallback.
   /// Returns null if no key works, signalling that the UI should prompt for a passphrase.
-  Future<BackupData?> _tryDecryptBackupFile(
+  /// Tries [currentKey] first, then falls back to the plain device key when
+  /// PIN is enabled — covers files encrypted before PIN was set or by a device
+  /// without PIN. A [FormatException] from either attempt means the file is
+  /// legacy v1 or corrupt; returns null immediately in that case.
+  Future<BackupData?> _tryDecryptWithFallback(
     Uint8List bytes,
     SecretKey currentKey,
   ) async {
-    debugPrint('Trying to decrypt backup...');
-    // Try 1: current key (may be plain or PIN-derived).
+    // Try 1: current key (plain or PIN-derived).
     try {
-      debugPrint('Importing data with current key (may include PIN)...');
       final data = await BackupService.importDataFromGoogleDrive(
         encryptedBytes: bytes,
         secretKey: currentKey,
       );
       if (data != null) return data;
-      debugPrint('Decryption with current key failed.');
     } on FormatException {
-      // Legacy v1 — passphrase needed, no point trying another device key.
       return null;
     }
 
-    // Try 2: plain device key, in case the backup was made before PIN was set.
-
+    // Try 2: plain device key — for files created before PIN was set.
     if (_isPinEnabled) {
-      debugPrint('PIN enabled');
       final plainKey = await BackupService.getOrCreateKey(_secureStorage);
       try {
         final data = await BackupService.importDataFromGoogleDrive(
           encryptedBytes: bytes,
           secretKey: plainKey,
         );
-        debugPrint('Trying to decrypt with plain device key...');
         if (data != null) return data;
       } on FormatException {
         return null;
       }
-    } else {
-      debugPrint('PIN not enabled');
     }
 
-    // Try 3: hardcoded PIN "1902" — diagnostic check before prompting user.
-    debugPrint('Trying hardcoded PIN 1902...');
-    const debugPin = '1902';
-    final pinDerivedKey = await BackupService.unwrapKeyWithPin(
-      _secureStorage,
-      debugPin,
-    );
-    if (pinDerivedKey != null) {
-      try {
-        final data = await BackupService.importDataFromGoogleDrive(
-          encryptedBytes: bytes,
-          secretKey: pinDerivedKey,
-        );
-        if (data != null) {
-          debugPrint('Decryption succeeded with hardcoded PIN 1902.');
-          return data;
-        }
-        debugPrint('Hardcoded PIN 1902 unwrapped a key but decryption failed.');
-      } on FormatException {
-        debugPrint('Hardcoded PIN 1902 key hit legacy v1 format.');
-        return null;
-      }
-    } else {
-      debugPrint('Hardcoded PIN 1902 failed to unwrap key from keychain.');
-    }
+    return null;
+  }
 
-    // Fallback: prompt user to enter a pin to try unwrapping the key
-    debugPrint('Prompting user to enter PIN and retry decryption...');
-
+  Future<BackupData?> _tryDecryptBackupFile(
+    Uint8List bytes,
+    SecretKey currentKey,
+  ) async {
+    debugPrint('Trying to decrypt backup...');
+    final data = await _tryDecryptWithFallback(bytes, currentKey);
+    if (data != null) return data;
     notifyListeners();
-
     return null;
   }
 

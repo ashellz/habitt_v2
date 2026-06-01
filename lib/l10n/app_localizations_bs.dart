@@ -1955,6 +1955,19 @@ class AppLocalizationsBs extends AppLocalizations {
   String get disconnectGoogle => 'Prekini vezu s Googleom';
 
   @override
+  String get restoreWithDeltasTitle => 'Uključiti nedavne promjene?';
+
+  @override
+  String get restoreWithDeltasDesc =>
+      'Promjene napravljene nakon ovog backupa postoje na tvojem Driveu. Možeš ih uključiti na vrh vraćenog backupa, ili vratiti backup kakav jeste.';
+
+  @override
+  String get restoreWithDeltasInclude => 'Uključi promjene';
+
+  @override
+  String get restoreWithDeltasSkip => 'Samo vrati';
+
+  @override
   String get restoreConfirmTitle => 'Vratiti backup?';
 
   @override
@@ -2291,15 +2304,15 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get syncSpeedFastDescription =>
-      'Sinhronizuje odmah\nProvjerava svakih 30 sek.';
+      'Sinhronizuje nakon 5 sek.\nProvjerava svakih 30 sek.';
+
+  @override
+  String get syncSpeedFastHint =>
+      'Promjene se prenose nakon 5 sekundi, a podaci se osvježavaju svakih 30 sekundi.';
 
   @override
   String get syncSpeedOptimizedDescription =>
       'Sinhronizuje nakon 15 sek.\nProvjerava svakih 2 min.';
-
-  @override
-  String get syncSpeedFastHint =>
-      'Promjene se prenose odmah, a podaci se osvježavaju svakih 30 sekundi.';
 
   @override
   String get syncSpeedOptimizedHint =>

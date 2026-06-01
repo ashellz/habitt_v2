@@ -753,6 +753,10 @@
   "enterOldPassphrase": "Ingresar contraseña antigua",
   "syncFailed": "Error de sincronización",
   "disconnectGoogle": "Desconectar Google",
+  "restoreWithDeltasTitle": "¿Incluir cambios recientes?",
+  "restoreWithDeltasDesc": "Existen cambios realizados después de esta copia en tu Drive. Puedes incluirlos sobre la copia restaurada, o restaurar la copia tal como está.",
+  "restoreWithDeltasInclude": "Incluir cambios",
+  "restoreWithDeltasSkip": "Solo restaurar",
   "restoreConfirmTitle": "¿Restaurar desde copia?",
   "restoreConfirmDesc": "Tus datos serán completamente reemplazados por esta copia de seguridad. Todo lo que hayas registrado desde entonces se perderá. Esto no se puede deshacer.",
   "restoreConfirmDescription": "Esto combinará la copia en la nube con tus datos locales. Los conflictos se resolverán con los cambios más recientes.",
@@ -879,8 +883,8 @@
   "syncSpeedTitle": "Velocidad de sincronización",
   "syncSpeedFast": "Rápido",
   "syncSpeedOptimized": "Optimizado",
-  "syncSpeedFastDescription": "Sincroniza al instante\nComprueba cada 30 seg.",
+  "syncSpeedFastDescription": "Sincroniza tras 5 seg.\nComprueba cada 30 seg.",
   "syncSpeedOptimizedDescription": "Sincroniza tras 15 seg.\nComprueba cada 2 min.",
-  "syncSpeedFastHint": "Los cambios se suben inmediatamente y los datos se actualizan cada 30 segundos.",
+  "syncSpeedFastHint": "Los cambios se suben tras 5 segundos y los datos se actualizan cada 30 segundos.",
   "syncSpeedOptimizedHint": "Los cambios se agrupan y se suben tras una breve pausa para ahorrar batería."
 }

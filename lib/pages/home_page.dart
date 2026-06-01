@@ -10,7 +10,6 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/update_last_date.dart';
@@ -169,7 +168,7 @@ class _HomePageState extends State<HomePage>
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     final backupProvider = context.watch<BackupProvider>();
     final loading = backupProvider.syncState == SyncState.syncing;
-    final tp = context.watch<ThemeProvider>();
+    final cp = context.watch<ColorProvider>();
 
     final pages = [
       MainPage(isActive: _currentPageIndex == 0, lifecycleTick: _lifecycleTick),
@@ -195,19 +194,29 @@ class _HomePageState extends State<HomePage>
                   children: pages,
                 ),
               ),
-              if (loading)
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: loading ? 1.0 : 0.0),
+                  duration: const Duration(milliseconds: 750),
+                  curve: Curves.easeInOut,
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, -6.0 * (1.0 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                    color: tp.primaryTextColor,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      tp.primaryTextColor,
-                    ),
+                    backgroundColor: cp.habitBg,
+                    valueColor: AlwaysStoppedAnimation<Color>(cp.field),
                   ),
                 ),
+              ),
             ],
           ),
 

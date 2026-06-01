@@ -43,7 +43,9 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final bp = context.watch<BackupProvider>();
-    final name = this.name ?? loc.guest;
+    final googleName = bp.currentUser?.displayName;
+    final name = this.name ?? googleName ?? loc.guest;
+    final googlePhotoUrl = bp.isLoggedIn ? bp.currentUser?.photoUrl : null;
     final email = bp.isLoggedIn ? (bp.currentUser?.email ?? this.email ?? '') : '';
 
     return Container(
@@ -64,32 +66,48 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
                 Consumer<ProfileImageProvider>(
                   builder: (context, pip, _) {
                     final file = pip.imageFile;
+                    Widget avatarChild;
+                    if (file != null) {
+                      avatarChild = Image.file(
+                        file,
+                        fit: BoxFit.cover,
+                        key: Key('profile_image_${pip.version}'),
+                      );
+                    } else if (googlePhotoUrl != null) {
+                      avatarChild = Image.network(
+                        googlePhotoUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Center(
+                          child: Text(
+                            name.substring(0, 1).toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      avatarChild = Center(
+                        child: Text(
+                          name.substring(0, 1).toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }
                     return Container(
                       height: 80,
                       width: 80,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.teal,
                         shape: BoxShape.circle,
                       ),
-                      child: ClipOval(
-                        child:
-                            file != null
-                                ? Image.file(
-                                  file,
-                                  fit: BoxFit.cover,
-                                  key: Key('profile_image_${pip.version}'),
-                                )
-                                : Center(
-                                  child: Text(
-                                    name.substring(0, 1).toUpperCase(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                      ),
+                      child: ClipOval(child: avatarChild),
                     );
                   },
                 ),

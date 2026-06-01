@@ -753,6 +753,10 @@
   "enterOldPassphrase": "Inserisci la vecchia passphrase",
   "syncFailed": "Sincronizzazione fallita",
   "disconnectGoogle": "Disconnetti Google",
+  "restoreWithDeltasTitle": "Includere le modifiche recenti?",
+  "restoreWithDeltasDesc": "Sul tuo Drive esistono modifiche effettuate dopo questo backup. Puoi includerle nel backup ripristinato oppure ripristinare il backup così com'è.",
+  "restoreWithDeltasInclude": "Includi modifiche",
+  "restoreWithDeltasSkip": "Solo ripristina",
   "restoreConfirmTitle": "Ripristinare dal backup?",
   "restoreConfirmDesc": "I tuoi dati verranno completamente sostituiti con questo backup. Tutto ciò che hai monitorato da allora andrà perso. Questa operazione non può essere annullata.",
   "restoreConfirmDescription": "Questo unirà il backup cloud con i tuoi dati locali. I conflitti saranno risolti usando le modifiche più recenti.",
@@ -879,8 +883,8 @@
   "syncSpeedTitle": "Velocità di sincronizzazione",
   "syncSpeedFast": "Veloce",
   "syncSpeedOptimized": "Ottimizzato",
-  "syncSpeedFastDescription": "Sincronizza subito\nControlla ogni 30 sec.",
+  "syncSpeedFastDescription": "Sincronizza dopo 5 sec.\nControlla ogni 30 sec.",
   "syncSpeedOptimizedDescription": "Sincronizza dopo 15 sec.\nControlla ogni 2 min.",
-  "syncSpeedFastHint": "Le modifiche vengono caricate immediatamente e i dati aggiornati ogni 30 secondi.",
+  "syncSpeedFastHint": "Le modifiche vengono caricate dopo 5 secondi e i dati aggiornati ogni 30 secondi.",
   "syncSpeedOptimizedHint": "Le modifiche vengono raggruppate e caricate dopo una breve pausa per risparmiare batteria."
 }
