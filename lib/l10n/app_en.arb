@@ -817,6 +817,18 @@
   "paywallMostPopular": "Most popular",
   "paywallUpgradeNow": "Upgrade now",
   "paywallManageSubscription": "Manage subscription",
+  "paywallCancel": "Cancel",
+  "paywallDowngrade": "Downgrade",
+  "paywallUpgrade": "Upgrade",
+  "currentPlan": "Current plan",
+  "renewsOn": "Renews {date}",
+  "@renewsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "paywallYearly": "Yearly",
   "paywallMonthly": "Monthly",
   "paywallLifetime": "Lifetime",
@@ -830,6 +842,7 @@
   "paywallPerWeek": "/ week",
   "paywallOneTimePurchase": "One-time purchase",
   "paywallProductsUnavailable": "Couldn't load plans. Please try again later.",
+  "paywallRestorePurchases": "Restore purchases",
 
   "premadeSectionWellnessSelfCare": "Wellness / Self-care",
   "premadeSectionHealthFitness": "Health & Fitness",
@@ -881,5 +894,7 @@
   "syncSpeedFastDescription": "Syncs after 5s\nChecks every 30 s",
   "syncSpeedFastHint": "Changes upload after 5 seconds and your data is refreshed every 30 seconds.",
   "syncSpeedOptimizedDescription": "Syncs after 15 s\nChecks every 2 min",
-  "syncSpeedOptimizedHint": "Changes are batched and uploaded after a short pause to save battery."
+  "syncSpeedOptimizedHint": "Changes are batched and uploaded after a short pause to save battery.",
+  "disconnectGoogleDrive": "Disconnect Google Drive",
+  "connectGoogleDrive": "Connect Google Drive"
 }

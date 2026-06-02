@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/pin_dialog.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
@@ -12,11 +14,17 @@ import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-class BackupSignedInSection extends StatelessWidget {
+// ignore: must_be_immutable
+class BackupSignedInSection extends StatefulWidget {
   const BackupSignedInSection({super.key, required this.statusOverlay});
 
   final StatusOverlayPopupController statusOverlay;
 
+  @override
+  State<BackupSignedInSection> createState() => _BackupSignedInSectionState();
+}
+
+class _BackupSignedInSectionState extends State<BackupSignedInSection> {
   String _formatLastSync(DateTime? lastSync, AppLocalizations loc) {
     if (lastSync == null) return loc.neverBackedUp;
 
@@ -63,6 +71,31 @@ class BackupSignedInSection extends StatelessWidget {
     );
   }
 
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+  ) async {
+    final cp = context.read<ColorProvider>();
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.logOut,
+            desc: loc.logOutDesc,
+            primaryButtonLabel: loc.logOut,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      await bp.signOut();
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
   void _showPinDialog(
     BuildContext context, {
     required String title,
@@ -82,6 +115,47 @@ class BackupSignedInSection extends StatelessWidget {
             onConfirm: onConfirm,
           ),
     );
+  }
+
+  Future<void> _confirmDeleteAccount(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+    ColorProvider cp,
+  ) async {
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.deleteAccount,
+            desc: loc.deleteAccountDesc,
+            primaryButtonLabel: loc.delete,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      final success = await bp.deleteAccount();
+      if (!context.mounted) return;
+      if (success) {
+        widget.statusOverlay.show(
+          context: context,
+          cp: cp,
+          title: loc.accountDeletedSuccessfully,
+          isError: false,
+        );
+        Navigator.of(context).pop();
+      } else {
+        widget.statusOverlay.show(
+          context: context,
+          cp: cp,
+          title: loc.accountDeletionFailed(bp.lastError ?? ''),
+          isError: true,
+        );
+      }
+    }
   }
 
   @override
@@ -228,6 +302,82 @@ class BackupSignedInSection extends StatelessWidget {
                         cp: cp,
                         text: loc.restoreFromBackup,
                         onTap: () => _openBackupHistory(context, cp),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: ShapeDecoration(
+                  color: cp.habitBg,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1, color: cp.border),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _confirmSignOut(context, bp, loc),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.disconnectGoogleDrive,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/log-out.svg',
+                              width: 20,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(color: cp.border, height: 1),
+                    GestureDetector(
+                      onTap: () => _confirmDeleteAccount(context, bp, loc, cp),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        color: Colors.transparent,
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              loc.deleteAccount,
+                              style: TextStyle(
+                                color: cp.error,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            SvgPicture.asset(
+                              'assets/images/new-svg/trash.svg',
+                              width: 19,
+                              height: 20,
+                              colorFilter: ColorFilter.mode(
+                                cp.error,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

@@ -2139,6 +2139,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get paywallManageSubscription => 'Abonnement verwalten';
 
   @override
+  String get paywallCancel => 'Kündigen';
+
+  @override
+  String get paywallDowngrade => 'Downgrade';
+
+  @override
+  String get paywallUpgrade => 'Upgrade';
+
+  @override
+  String get currentPlan => 'Aktueller Plan';
+
+  @override
+  String renewsOn(String date) {
+    return 'Verlängert am $date';
+  }
+
+  @override
   String get paywallYearly => 'Jährlich';
 
   @override
@@ -2177,6 +2194,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'Pläne konnten nicht geladen werden. Bitte versuche es später erneut.';
+
+  @override
+  String get paywallRestorePurchases => 'Käufe wiederherstellen';
 
   @override
   String get premadeSectionWellnessSelfCare => 'Wellness / Selbstpflege';
@@ -2332,4 +2352,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get syncSpeedOptimizedHint =>
       'Änderungen werden gebündelt und nach kurzer Pause hochgeladen, um den Akku zu schonen.';
+
+  @override
+  String get disconnectGoogleDrive => 'Google Drive trennen';
+
+  @override
+  String get connectGoogleDrive => 'Google Drive verbinden';
 }

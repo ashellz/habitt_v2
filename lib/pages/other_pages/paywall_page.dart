@@ -8,9 +8,22 @@ import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Toggle to show placeholder plans in debug builds without a RevenueCat configuration.
 const bool _debugShowPlaceholderPlans = false;
+
+enum _ButtonAction { purchase, upgrade, downgrade, cancel }
+
+int _rankOf(PackageType type) => switch (type) {
+  PackageType.weekly => 1,
+  PackageType.monthly => 2,
+  PackageType.threeMonth => 3,
+  PackageType.sixMonth => 4,
+  PackageType.annual => 5,
+  PackageType.lifetime => 6,
+  _ => 0,
+};
 
 class _PlanInfo {
   const _PlanInfo({
@@ -45,6 +58,8 @@ class _PaywallPageState extends State<PaywallPage> {
   bool _isLoadingOffers = true;
 
   List<Package> _packages = [];
+  String? _activeProductId;
+  String? _managementUrl;
 
   final PageController _pageController = PageController(viewportFraction: 0.88);
   double _pageValue = 0;
@@ -53,6 +68,30 @@ class _PaywallPageState extends State<PaywallPage> {
     if (kDebugMode && _debugShowPlaceholderPlans) return null;
     if (_packages.isEmpty) return null;
     return _packages[_pageValue.round().clamp(0, _packages.length - 1)];
+  }
+
+  PackageType? get _activePackageType {
+    if (_activeProductId == null) return null;
+    try {
+      return _packages
+          .firstWhere((p) => p.storeProduct.identifier == _activeProductId)
+          .packageType;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  _ButtonAction get _buttonAction {
+    if (!_hasPro) return _ButtonAction.purchase;
+    final selected = _selectedPackage;
+    if (selected == null) return _ButtonAction.purchase;
+    final activeType = _activePackageType;
+    if (activeType == null) return _ButtonAction.purchase;
+    final activeRank = _rankOf(activeType);
+    final selectedRank = _rankOf(selected.packageType);
+    if (selectedRank == activeRank) return _ButtonAction.cancel;
+    if (selectedRank > activeRank) return _ButtonAction.upgrade;
+    return _ButtonAction.downgrade;
   }
 
   @override
@@ -97,21 +136,46 @@ class _PaywallPageState extends State<PaywallPage> {
 
   Future<void> _refreshSubscriptionStatus() async {
     setState(() => _isRefreshing = true);
-    final hasPro = await BillingService.checkHasPro();
-    if (!mounted) return;
-    setState(() {
-      _hasPro = hasPro;
-      _isRefreshing = false;
-    });
+    try {
+      final info = await Purchases.getCustomerInfo();
+      if (!mounted) return;
+      final entitlement = info.entitlements.active['Habitt Pro'];
+      setState(() {
+        _hasPro = entitlement != null;
+        BillingService.hasPro = _hasPro;
+        _activeProductId = entitlement?.productIdentifier;
+        _managementUrl = info.managementURL;
+        _isRefreshing = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _isRefreshing = false);
+    }
+  }
+
+  Future<void> _handleRestorePurchases() async {
+    HapticFeedback.selectionClick();
+    setState(() => _isPresenting = true);
+    try {
+      await Purchases.restorePurchases();
+      await _refreshSubscriptionStatus();
+    } finally {
+      if (mounted) setState(() => _isPresenting = false);
+    }
   }
 
   Future<void> _handleUpgradeTap() async {
     HapticFeedback.selectionClick();
+    final action = _buttonAction;
+
+    if (action == _ButtonAction.cancel) {
+      await _handleCancelTap();
+      return;
+    }
+
     setState(() => _isPresenting = true);
     try {
-      if (_hasPro) {
-        await BillingService.presentPaywall();
-      } else if (_selectedPackage != null) {
+      if (_selectedPackage != null) {
         await BillingService.purchasePackage(_selectedPackage!);
       } else {
         await BillingService.presentPaywall();
@@ -119,6 +183,17 @@ class _PaywallPageState extends State<PaywallPage> {
       await _refreshSubscriptionStatus();
     } finally {
       if (mounted) setState(() => _isPresenting = false);
+    }
+  }
+
+  Future<void> _handleCancelTap() async {
+    HapticFeedback.selectionClick();
+    final url = _managementUrl;
+    if (url != null) {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
     }
   }
 
@@ -370,8 +445,7 @@ class _PaywallPageState extends State<PaywallPage> {
                                     animation: _pageController,
                                     child: _PlanCard(
                                       plan: plans[index],
-                                      isSelected:
-                                          _pageValue.round() == index,
+                                      isSelected: _pageValue.round() == index,
                                     ),
                                     builder: (context, child) {
                                       final distance = (_pageValue - index)
@@ -420,15 +494,29 @@ class _PaywallPageState extends State<PaywallPage> {
                       children: [
                         const SizedBox(height: 24),
                         NewDefaultButton(
-                          label:
-                              _hasPro
-                                  ? loc.paywallManageSubscription
-                                  : loc.paywallUpgradeNow,
+                          label: switch (_buttonAction) {
+                            _ButtonAction.purchase => loc.paywallUpgradeNow,
+                            _ButtonAction.upgrade => loc.paywallUpgrade,
+                            _ButtonAction.downgrade => loc.paywallDowngrade,
+                            _ButtonAction.cancel => loc.paywallCancel,
+                          },
                           onPressed: _isPresenting ? () {} : _handleUpgradeTap,
                           isLoading: _isRefreshing,
                           width: double.infinity,
                           color: Colors.white,
                           textColor: const Color(0xFF02D382),
+                        ),
+                        const SizedBox(height: 12),
+                        GestureDetector(
+                          onTap: _isPresenting ? null : _handleRestorePurchases,
+                          child: Text(
+                            loc.paywallRestorePurchases,
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.7),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
                       ],
                     ),

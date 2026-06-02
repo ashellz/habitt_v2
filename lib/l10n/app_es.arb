@@ -822,6 +822,18 @@
   "paywallMostPopular": "Más popular",
   "paywallUpgradeNow": "Actualizar ahora",
   "paywallManageSubscription": "Gestionar suscripción",
+  "paywallCancel": "Cancelar",
+  "paywallDowngrade": "Degradar",
+  "paywallUpgrade": "Mejorar",
+  "currentPlan": "Plan actual",
+  "renewsOn": "Se renueva el {date}",
+  "@renewsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "paywallYearly": "Anual",
   "paywallMonthly": "Mensual",
   "paywallLifetime": "De por vida",
@@ -835,6 +847,7 @@
   "paywallPerWeek": "/ semana",
   "paywallOneTimePurchase": "Compra única",
   "paywallProductsUnavailable": "No se pudieron cargar los planes. Por favor, inténtalo más tarde.",
+  "paywallRestorePurchases": "Restaurar compras",
 
   "premadeSectionWellnessSelfCare": "Bienestar / Cuidado personal",
   "premadeSectionHealthFitness": "Salud & Fitness",
@@ -886,5 +899,7 @@
   "syncSpeedFastDescription": "Sincroniza tras 5 seg.\nComprueba cada 30 seg.",
   "syncSpeedOptimizedDescription": "Sincroniza tras 15 seg.\nComprueba cada 2 min.",
   "syncSpeedFastHint": "Los cambios se suben tras 5 segundos y los datos se actualizan cada 30 segundos.",
-  "syncSpeedOptimizedHint": "Los cambios se agrupan y se suben tras una breve pausa para ahorrar batería."
+  "syncSpeedOptimizedHint": "Los cambios se agrupan y se suben tras una breve pausa para ahorrar batería.",
+  "disconnectGoogleDrive": "Desconectar Google Drive",
+  "connectGoogleDrive": "Conectar Google Drive"
 }

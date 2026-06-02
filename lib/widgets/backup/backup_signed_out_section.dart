@@ -45,7 +45,7 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: ShapeDecoration(
-          color: cp.field,
+          color: cp.habitBg,
           shape: RoundedRectangleBorder(
             side: BorderSide(width: 1, color: cp.border),
             borderRadius: BorderRadius.circular(24),
@@ -59,20 +59,8 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
             child: Row(
               spacing: 12,
               children: [
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: SvgPicture.asset(
-                    'assets/images/new-svg/google.svg',
-                    colorFilter: ColorFilter.mode(
-                      cp.lightGreyText,
-                      BlendMode.srcIn,
-                    ),
-                    fit: BoxFit.contain,
-                  ),
-                ),
                 Text(
-                  loc.signInWithGoogle,
+                  loc.connectGoogleDrive,
                   style: TextStyle(
                     color: cp.text,
                     fontSize: 16,
@@ -90,11 +78,16 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
                     ),
                   )
                 else
-                  RotatedBox(
-                    quarterTurns: 2,
+                  SizedBox(
+                    height: 20,
+                    width: 20,
                     child: SvgPicture.asset(
-                      'assets/images/new-svg/back.svg',
-                      colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                      'assets/images/new-svg/google.svg',
+                      colorFilter: ColorFilter.mode(
+                        cp.lightGreyText,
+                        BlendMode.srcIn,
+                      ),
+                      fit: BoxFit.contain,
                     ),
                   ),
               ],

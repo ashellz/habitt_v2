@@ -1259,11 +1259,11 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationProgressNoTracking =>
-      'Mala akcija sada održava ovu naviku živom.|Ne dopusti da ova navika izblijedi, malo truda sada štiti tvoj zamah.|Konzistentnost danas čini sutra lakšim. Hoćeš li probati?|Ne zaboravi danas na svoju naviku!|Mala akcija sada održava tvoju naviku snažnom.|Hej! Vrijeme je za tvoj naviiik!|Jedan mali korak održava niz živim.|Završeno je bolje od savršenog. Uradi to.|Konzistentnost se uvećava. Još jedan dan je važan.|Tvoj navika je obećanje sebi. Održi ga.|Ista navika, jedan dan jača. Nastavi graditi.|Ne treba ti motivacija. Samo počni.|Smatraj ovo poklonom svom budućem ja. Kreni s tim!|Gradiš nešto važno. Nastavi dalje.|Praviš vrijeme za ono što je važno. To si ti.|Zanima li te šta se dešava kada nikada ne preskočiš?|Obavijest o navici; Šta ćeš sad?|Vrijeme je da djeluješ po svom planu.|Ne prekidaj lanac. Još jedan dan.|Ne moraš biti savršen. Samo moraš biti prisutan.|Male akcije danas = veliki rezultati sutra.';
+      'Mala akcija sada održava ovu naviku živom.|Ne dopusti da ova navika opane, malo truda sada štiti tvoj cilj.|Konzistentnost danas čini sutra lakšim. Hoćeš li probati?|Ne zaboravi danas na svoju naviku!|Mala akcija sada održava tvoju naviku snažnom.|Hej! Vrijeme je za tvoju naviku!|Jedan mali korak održava streak živim.|Završeno je bolje od savršenog. Samo počni :)|Konzistentnost redovno jača, i ovaj dan je važan.|Tvoj navika je tvoje obećanje sebi. Održi ga.|Ista navika, jedan dan jača. Nastavi graditi.|Ne treba ti motivacija. Samo počni.|Smatraj ovo poklonom svom budućem ja. Kreni s tim!|Gradiš nešto važno. Nastavi dalje.|Nađi vrijeme za ono što je važno. To si ti.|Zanima li te šta se desi kada nikada ne izostaviš naviku?|Obavijest o navici: Koji je tvoj sljedeći korak?|Vrijeme je da djeluješ po svom planu.|Ne prekidaj lanac. Još jedan dan.|Ne moraš biti savršen. Samo budi prisutan, možeš ti to! :)|Male akcije danas = veliki rezultati sutra.';
 
   @override
   String notificationProgressNotStartedAmount(Object label) {
-    return 'Počni samo s 1 $label i stvori zamah. Lako je!|Ne treba ti motivacija. Samo počni.|Najteži dio je početak. Možeš to!';
+    return 'Počni samo s 1 $label, lahko je!|Ne treba ti motivacija. Samo počni.|Najteži dio je početak. Možeš to!';
   }
 
   @override
@@ -2125,6 +2125,23 @@ class AppLocalizationsBs extends AppLocalizations {
   String get paywallManageSubscription => 'Upravljaj pretplatom';
 
   @override
+  String get paywallCancel => 'Otkaži';
+
+  @override
+  String get paywallDowngrade => 'Smanji plan';
+
+  @override
+  String get paywallUpgrade => 'Nadogradi';
+
+  @override
+  String get currentPlan => 'Trenutni plan';
+
+  @override
+  String renewsOn(String date) {
+    return 'Obnavlja se $date';
+  }
+
+  @override
   String get paywallYearly => 'Godišnje';
 
   @override
@@ -2163,6 +2180,9 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get paywallProductsUnavailable =>
       'Ponude se nisu mogle učitati. Molimo pokušaj ponovo kasnije.';
+
+  @override
+  String get paywallRestorePurchases => 'Vrati prethodne kupnje';
 
   @override
   String get premadeSectionWellnessSelfCare => 'Wellness / Briga o sebi';
@@ -2317,4 +2337,10 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get syncSpeedOptimizedHint =>
       'Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije.';
+
+  @override
+  String get disconnectGoogleDrive => 'Prekini vezu s Google Drive';
+
+  @override
+  String get connectGoogleDrive => 'Poveži Google Drive';
 }

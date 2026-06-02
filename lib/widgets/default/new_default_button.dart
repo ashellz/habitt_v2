@@ -19,6 +19,7 @@ class NewDefaultButton extends StatelessWidget {
     this.enabled = true,
     this.color,
     this.textColor,
+    this.textStyle,
     this.isLoading = false,
     this.prefix,
     this.height = 52,
@@ -39,6 +40,7 @@ class NewDefaultButton extends StatelessWidget {
     this.child,
     this.padding = const EdgeInsets.only(),
     this.textColor,
+    this.textStyle,
     this.color,
     this.width,
   }) : isGradient = true,
@@ -55,6 +57,7 @@ class NewDefaultButton extends StatelessWidget {
     this.child,
     this.padding = const EdgeInsets.only(),
     this.textColor,
+    this.textStyle,
     this.width,
   }) : color = null,
        isGradient = false,
@@ -71,6 +74,7 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 36,
     this.child,
     this.textColor,
+    this.textStyle,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
   }) : color = null,
        isGradient = true,
@@ -87,6 +91,7 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 36,
     this.child,
     this.textColor,
+    this.textStyle,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
   }) : color = null,
        isGradient = false,
@@ -103,6 +108,7 @@ class NewDefaultButton extends StatelessWidget {
     this.height = 36,
     this.child,
     this.textColor,
+    this.textStyle,
     this.padding = const EdgeInsets.all(10),
   }) : color = null,
        isGradient = false,
@@ -113,6 +119,7 @@ class NewDefaultButton extends StatelessWidget {
   final bool enabled;
   final Color? color;
   final Color? textColor;
+  final TextStyle? textStyle;
   final bool isLoading;
   final Widget? prefix;
   final _ButtonVariant _variant;
@@ -239,16 +246,18 @@ class NewDefaultButton extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               maxLines: 1,
-                              style: TextStyle(
-                                color: resolvedTextColor,
-                                fontSize:
-                                    _variant == _ButtonVariant.primarySmall ||
-                                            _variant ==
-                                                _ButtonVariant.secondarySmall
-                                        ? 14
-                                        : 18,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: textStyle ??
+                                  TextStyle(
+                                    color: resolvedTextColor,
+                                    fontSize:
+                                        _variant ==
+                                                    _ButtonVariant.primarySmall ||
+                                                _variant ==
+                                                    _ButtonVariant.secondarySmall
+                                            ? 14
+                                            : 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                         ],
                       ),

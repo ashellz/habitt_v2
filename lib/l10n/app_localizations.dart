@@ -3515,6 +3515,36 @@ abstract class AppLocalizations {
   /// **'Manage subscription'**
   String get paywallManageSubscription;
 
+  /// No description provided for @paywallCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get paywallCancel;
+
+  /// No description provided for @paywallDowngrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Downgrade'**
+  String get paywallDowngrade;
+
+  /// No description provided for @paywallUpgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get paywallUpgrade;
+
+  /// No description provided for @currentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current plan'**
+  String get currentPlan;
+
+  /// No description provided for @renewsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Renews {date}'**
+  String renewsOn(String date);
+
   /// No description provided for @paywallYearly.
   ///
   /// In en, this message translates to:
@@ -3592,6 +3622,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t load plans. Please try again later.'**
   String get paywallProductsUnavailable;
+
+  /// No description provided for @paywallRestorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get paywallRestorePurchases;
 
   /// No description provided for @premadeSectionWellnessSelfCare.
   ///
@@ -3874,6 +3910,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Changes are batched and uploaded after a short pause to save battery.'**
   String get syncSpeedOptimizedHint;
+
+  /// No description provided for @disconnectGoogleDrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect Google Drive'**
+  String get disconnectGoogleDrive;
+
+  /// No description provided for @connectGoogleDrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Google Drive'**
+  String get connectGoogleDrive;
 }
 
 class _AppLocalizationsDelegate
