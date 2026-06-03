@@ -37,13 +37,41 @@ class BillingService {
 
   static Future<bool> checkHasPro() async {
     try {
-      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-      final hasPro = customerInfo.entitlements.active.containsKey('Habitt Pro');
-      return hasPro;
+      final customerInfo = await Purchases.getCustomerInfo();
+      debugPrint(
+        '[BillingService] active entitlements: ${customerInfo.entitlements.active.keys.toList()}',
+      );
+      debugPrint(
+        '[BillingService] active subscriptions: ${customerInfo.activeSubscriptions}',
+      );
+      return _entitlementActive(customerInfo);
     } catch (e) {
-      debugPrint("Error checking subscription status: $e");
+      debugPrint('[BillingService] Error checking subscription status: $e');
       return false;
     }
+  }
+
+  /// Returns true if the user has an active Pro entitlement.
+  /// Checks the canonical key first, then falls back to any active entitlement
+  /// so a mis-labelled key in the dashboard doesn't silently break everything.
+  static bool _entitlementActive(CustomerInfo info) {
+    if (info.entitlements.active.containsKey('Habitt Pro')) return true;
+    if (info.entitlements.active.isNotEmpty) {
+      debugPrint(
+        '[BillingService] "Habitt Pro" key not found — using first active entitlement: '
+        '${info.entitlements.active.keys.first}',
+      );
+      return true;
+    }
+    return false;
+  }
+
+  /// Returns the active Pro entitlement, trying the canonical key first.
+  static EntitlementInfo? activeEntitlement(CustomerInfo info) {
+    return info.entitlements.active['Habitt Pro'] ??
+        (info.entitlements.active.isNotEmpty
+            ? info.entitlements.active.values.first
+            : null);
   }
 
   static Future<void> presentPaywall() async {
@@ -60,12 +88,14 @@ class BillingService {
     try {
       // ignore: deprecated_member_use
       final result = await Purchases.purchasePackage(package);
-      hasPro = result.customerInfo.entitlements.active.containsKey(
-        'Habitt Pro',
+      debugPrint(
+        '[BillingService] post-purchase active entitlements: '
+        '${result.customerInfo.entitlements.active.keys.toList()}',
       );
+      hasPro = _entitlementActive(result.customerInfo);
       return true;
     } catch (e) {
-      debugPrint('Purchase error: $e');
+      debugPrint('[BillingService] Purchase error: $e');
       return false;
     }
   }

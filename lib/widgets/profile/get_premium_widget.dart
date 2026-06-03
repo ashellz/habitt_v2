@@ -75,10 +75,15 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
     final loc = AppLocalizations.of(context)!;
 
     return GestureDetector(
-      onTap: () {
-        Navigator.of(
+      onTap: () async {
+        await Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (_) => const PaywallPage()));
+        // Rebuild so _isSubscribed re-reads BillingService.hasPro after purchase.
+        if (mounted) setState(() {});
+        if (mounted && _isSubscribed && _entitlement == null) {
+          _loadEntitlement();
+        }
       },
       child: Container(
         decoration: BoxDecoration(

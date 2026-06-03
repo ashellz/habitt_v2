@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 // Toggle to show placeholder plans in debug builds without a RevenueCat configuration.
 const bool _debugShowPlaceholderPlans = false;
 
-enum _ButtonAction { purchase, upgrade, downgrade, cancel }
+enum _ButtonAction { purchase, upgrade, downgrade, cancel, manage }
 
 int _rankOf(PackageType type) => switch (type) {
   PackageType.weekly => 1,
@@ -72,21 +72,37 @@ class _PaywallPageState extends State<PaywallPage> {
 
   PackageType? get _activePackageType {
     if (_activeProductId == null) return null;
+    // Primary: match by store product identifier against loaded packages.
     try {
       return _packages
           .firstWhere((p) => p.storeProduct.identifier == _activeProductId)
           .packageType;
-    } catch (_) {
-      return null;
+    } catch (_) {}
+    // Fallback: infer from product ID string so sandbox/old products still work.
+    final id = _activeProductId!.toLowerCase();
+    if (id.contains('lifetime')) return PackageType.lifetime;
+    if (id.contains('annual') || id.contains('yearly') || id.contains('year')) {
+      return PackageType.annual;
     }
+    if (id.contains('6month') || id.contains('six')) {
+      return PackageType.sixMonth;
+    }
+    if (id.contains('3month') || id.contains('three')) {
+      return PackageType.threeMonth;
+    }
+    if (id.contains('week')) return PackageType.weekly;
+    if (id.contains('month')) return PackageType.monthly;
+    return null;
   }
 
   _ButtonAction get _buttonAction {
     if (!_hasPro) return _ButtonAction.purchase;
     final selected = _selectedPackage;
-    if (selected == null) return _ButtonAction.purchase;
+    // Subscribed but no plan card shown yet — open management page.
+    if (selected == null) return _ButtonAction.manage;
     final activeType = _activePackageType;
-    if (activeType == null) return _ButtonAction.purchase;
+    // Subscribed but can't determine current plan — open management page.
+    if (activeType == null) return _ButtonAction.manage;
     final activeRank = _rankOf(activeType);
     final selectedRank = _rankOf(selected.packageType);
     if (selectedRank == activeRank) return _ButtonAction.cancel;
@@ -139,7 +155,7 @@ class _PaywallPageState extends State<PaywallPage> {
     try {
       final info = await Purchases.getCustomerInfo();
       if (!mounted) return;
-      final entitlement = info.entitlements.active['Habitt Pro'];
+      final entitlement = BillingService.activeEntitlement(info);
       setState(() {
         _hasPro = entitlement != null;
         BillingService.hasPro = _hasPro;
@@ -168,7 +184,7 @@ class _PaywallPageState extends State<PaywallPage> {
     HapticFeedback.selectionClick();
     final action = _buttonAction;
 
-    if (action == _ButtonAction.cancel) {
+    if (action == _ButtonAction.cancel || action == _ButtonAction.manage) {
       await _handleCancelTap();
       return;
     }
@@ -499,6 +515,8 @@ class _PaywallPageState extends State<PaywallPage> {
                             _ButtonAction.upgrade => loc.paywallUpgrade,
                             _ButtonAction.downgrade => loc.paywallDowngrade,
                             _ButtonAction.cancel => loc.paywallCancel,
+                            _ButtonAction.manage =>
+                              loc.paywallManageSubscription,
                           },
                           onPressed: _isPresenting ? () {} : _handleUpgradeTap,
                           isLoading: _isRefreshing,
