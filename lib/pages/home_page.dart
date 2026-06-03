@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage>
         if (!mounted) {
           return;
         }
+        context.read<StatsProvider>().addShouldRefresh(StatsType.perfectDaysStreak);
         setState(() {
           _lifecycleTick += 1;
         });
@@ -101,6 +102,10 @@ class _HomePageState extends State<HomePage>
       );
       await backupProvider.initializationDone;
       await backupProvider.performSync();
+
+      if (mounted) {
+        statsProvider.addShouldRefresh(StatsType.perfectDaysStreak);
+      }
 
       if (stateProvider.shouldUpdateStreaks && mounted) {
         context.read<HabitProvider>().assignStreaks();
