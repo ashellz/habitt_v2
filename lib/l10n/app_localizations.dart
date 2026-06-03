@@ -524,6 +524,12 @@ abstract class AppLocalizations {
   /// **'Glass Feel'**
   String get glassFeel;
 
+  /// No description provided for @showStreakBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Show streak badge'**
+  String get showStreakBadge;
+
   /// No description provided for @goodAfternoon.
   ///
   /// In en, this message translates to:

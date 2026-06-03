@@ -235,6 +235,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get glassFeel => 'Glass Feel';
 
   @override
+  String get showStreakBadge => 'Show streak badge';
+
+  @override
   String get goodAfternoon => 'Good afternoon';
 
   @override

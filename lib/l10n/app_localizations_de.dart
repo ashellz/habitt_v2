@@ -237,6 +237,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get glassFeel => 'Glas Gefühl';
 
   @override
+  String get showStreakBadge => 'Streak-Abzeichen anzeigen';
+
+  @override
   String get goodAfternoon => 'Guten Tag';
 
   @override

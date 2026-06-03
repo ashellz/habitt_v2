@@ -236,6 +236,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get glassFeel => 'Stakleni interfejs';
 
   @override
+  String get showStreakBadge => 'Prikaži streak navike';
+
+  @override
   String get goodAfternoon => 'Dobar dan';
 
   @override

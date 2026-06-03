@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -52,6 +53,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       final habitProvider = context.read<HabitProvider>();
       if (sp.shouldUpdateStreaks) {
         habitProvider.assignStreaks(widget.habitId);
+      } else {
+        final habit = _findHabit(habitProvider);
+        if (habit != null && habit.longestStreak < habit.streak) {
+          habitProvider.assignStreaks(widget.habitId);
+        }
       }
     });
   }
@@ -205,6 +211,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       locale: Localizations.localeOf(context),
     );
 
+    final isCompletedToday = _isToday(effectiveDate) && displayHabit.completed;
+    final effectiveStreak = stats.currentStreak +
+        (isCompletedToday && stats.currentStreak > 0 ? 1 : 0);
+    final effectiveLongest = max(effectiveStreak, stats.longestStreak);
+
     return Scaffold(
       backgroundColor: cp.habitBg,
       body: GestureDetector(
@@ -256,7 +267,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                 child: Column(
                   children: [
                     SizedBox(height: 24),
-                    HabitDetailStatsSections(habit: habit, stats: stats),
+                    HabitDetailStatsSections(
+                      habit: habit,
+                      stats: stats,
+                      currentStreakOverride: effectiveStreak,
+                      longestStreakOverride: effectiveLongest,
+                    ),
                     SizedBox(height: 24),
                     ConsistencyCalendar(habitStats: stats),
                     const SizedBox(height: 24),

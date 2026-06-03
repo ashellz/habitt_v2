@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/notification_settings_page.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:provider/provider.dart';
 
 class Preferences extends StatelessWidget {
@@ -23,26 +25,26 @@ class Preferences extends StatelessWidget {
           textAlign: TextAlign.start,
           style: TextStyle(color: cp.lightGreyText, fontSize: 16),
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => NotificationSettingsPage()),
-            );
-          },
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: ShapeDecoration(
-              color: cp.isDark ? cp.habitBg : cp.bg,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: cp.border),
-                borderRadius: BorderRadius.circular(24),
-              ),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: ShapeDecoration(
+            color: cp.isDark ? cp.habitBg : cp.bg,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(width: 1, color: cp.border),
+              borderRadius: BorderRadius.circular(24),
             ),
-            child: Column(
-              children: [
-                Container(
+          ),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => NotificationSettingsPage()),
+                  );
+                },
+                child: Container(
                   height: 32,
                   color: Colors.transparent,
                   child: Row(
@@ -69,32 +71,28 @@ class Preferences extends StatelessWidget {
                     ],
                   ),
                 ),
-                /*
-                Divider(color: cp.border, height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '12-hour format',
-                      style: TextStyle(
-                        color: cp.text,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+              ),
+              Divider(color: cp.border, height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    loc.showStreakBadge,
+                    style: TextStyle(
+                      color: cp.text,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
-                    NewDefaultSwitch(
-                      onChanged: (value) {
-                        context
-                            .read<PreferencesProvider>()
-                            .toggleAmericanTimeFormat();
-                      },
-                      value:
-                          context.watch<PreferencesProvider>().americanTimeFormat,
-                    ),
-                  ],
-                ), */
-              ],
-            ),
+                  ),
+                  NewDefaultSwitch(
+                    onChanged: (value) {
+                      context.read<PreferencesProvider>().toggleShowStreakBadge();
+                    },
+                    value: context.watch<PreferencesProvider>().showStreakBadge,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],

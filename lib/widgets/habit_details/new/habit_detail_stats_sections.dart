@@ -18,10 +18,14 @@ class HabitDetailStatsSections extends StatelessWidget {
     super.key,
     required this.habit,
     required this.stats,
+    this.currentStreakOverride,
+    this.longestStreakOverride,
   });
 
   final Habit habit;
   final HabitStatsData stats;
+  final int? currentStreakOverride;
+  final int? longestStreakOverride;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,12 @@ class HabitDetailStatsSections extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _StatsGrid(habit: habit, stats: stats),
+        _StatsGrid(
+          habit: habit,
+          stats: stats,
+          currentStreakOverride: currentStreakOverride,
+          longestStreakOverride: longestStreakOverride,
+        ),
         const SizedBox(height: 28),
         CompletionRatioText(),
         const SizedBox(height: 14),
@@ -74,10 +83,17 @@ class HabitDetailStatsSections extends StatelessWidget {
 }
 
 class _StatsGrid extends StatelessWidget {
-  const _StatsGrid({required this.habit, required this.stats});
+  const _StatsGrid({
+    required this.habit,
+    required this.stats,
+    this.currentStreakOverride,
+    this.longestStreakOverride,
+  });
 
   final Habit habit;
   final HabitStatsData stats;
+  final int? currentStreakOverride;
+  final int? longestStreakOverride;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +131,7 @@ class _StatsGrid extends StatelessWidget {
               child: CounterStatCard(
                 title: loc.currentStreak,
                 iconPath: 'assets/images/new-svg/streak.svg',
-                value: stats.currentStreak,
+                value: currentStreakOverride ?? stats.currentStreak,
                 formatter:
                     (value) =>
                         value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',
@@ -126,7 +142,7 @@ class _StatsGrid extends StatelessWidget {
               child: CounterStatCard(
                 title: loc.longestStreak,
                 iconPath: 'assets/images/new-svg/longest-streak.svg',
-                value: stats.longestStreak,
+                value: longestStreakOverride ?? stats.longestStreak,
                 formatter:
                     (value) =>
                         value == 1 ? '1 ${loc.day}' : '$value ${loc.days}',

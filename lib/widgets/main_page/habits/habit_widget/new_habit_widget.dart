@@ -4,6 +4,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
+import 'package:habitt/widgets/main_page/habits/habit_widget/streak_badge.dart';
 
 import 'package:provider/provider.dart';
 
@@ -133,7 +134,16 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
             isCompleted: widget.habit.completed,
           ),
           Expanded(child: MainHabitInfo(habit: widget.habit, cp: cp)),
-          NewHabitProgress(habit: widget.habit, isDemo: widget.isDemo),
+          Row(
+            spacing: 4,
+            children: [
+              StreakBadge(
+                streak: widget.habit.streak +
+                    (widget.habit.streak > 0 && widget.habit.completed ? 1 : 0),
+              ),
+              NewHabitProgress(habit: widget.habit, isDemo: widget.isDemo),
+            ],
+          ),
         ],
       ),
     );

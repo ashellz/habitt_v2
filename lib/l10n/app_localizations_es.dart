@@ -236,6 +236,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get glassFeel => 'Sensación de vidrio';
 
   @override
+  String get showStreakBadge => 'Mostrar insignia de racha';
+
+  @override
   String get goodAfternoon => 'Buenas tardes';
 
   @override

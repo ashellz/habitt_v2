@@ -1158,7 +1158,7 @@ class HabitProvider extends ChangeNotifier {
             }
           }
           consecutiveMisses++;
-          if (consecutiveMisses >= 2) {
+          if (consecutiveMisses >= 3) {
             currentRun = 0;
             consecutiveMisses = 0;
           }
@@ -1259,6 +1259,5 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> recalculateHabitStreaks(int habitId) async {
     await assignStreaks(habitId);
-    await recalculateLongestStreaks(habitId);
   }
 }
