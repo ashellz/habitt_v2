@@ -54,7 +54,7 @@ class PreferencesProvider extends ChangeNotifier {
   void init() {
     _glassFeel = _prefs?.getBool('glassFeel') ?? true;
     _americanTimeFormat = _prefs?.getBool('americanTimeFormat') ?? false;
-    _showStreakBadge = _prefs?.getBool('showStreakBadge') ?? true;
+    _showStreakBadge = _prefs?.getBool('showStreakBadge') ?? false;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
     notifyListeners();
