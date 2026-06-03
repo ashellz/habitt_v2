@@ -126,6 +126,11 @@ class BackupProvider extends ChangeNotifier {
   String? _failedBackupFileId;
   Uint8List? _failedBackupFileBytes;
 
+  final Completer<void> _initCompleter = Completer<void>();
+
+  /// Completes when [initialize] finishes (successfully or not).
+  Future<void> get initializationDone => _initCompleter.future;
+
   // --- Getters -----------------------------------------------------------
 
   GoogleSignInAccount? get currentUser => _currentUser;
@@ -451,6 +456,8 @@ class BackupProvider extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Failed to restore sign-in state: $e');
+    } finally {
+      if (!_initCompleter.isCompleted) _initCompleter.complete();
     }
   }
 

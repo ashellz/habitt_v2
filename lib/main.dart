@@ -84,9 +84,11 @@ Future<void> main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Initialize BackupProvider to restore persisted sign-in state
+  // Initialize BackupProvider to restore persisted sign-in state.
+  // Not awaited — runs concurrently so the splash dismisses immediately.
+  // HomePage awaits backupProvider.initializationDone before performSync().
   final backupProvider = BackupProvider();
-  await backupProvider.initialize();
+  backupProvider.initialize();
 
   // Initialize NotificationsProvider
   final notificationsProvider = NotificationsProvider(prefs);

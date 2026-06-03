@@ -901,5 +901,8 @@
   "syncSpeedFastHint": "Änderungen werden nach 5 Sekunden hochgeladen und die Daten alle 30 Sekunden aktualisiert.",
   "syncSpeedOptimizedHint": "Änderungen werden gebündelt und nach kurzer Pause hochgeladen, um den Akku zu schonen.",
   "disconnectGoogleDrive": "Google Drive trennen",
-  "connectGoogleDrive": "Google Drive verbinden"
+  "connectGoogleDrive": "Google Drive verbinden",
+
+  "enterEmojiTitle": "Emoji auswählen",
+  "enterEmojiDesc": "Tippe oder füge ein Emoji in das Feld unten ein."
 }

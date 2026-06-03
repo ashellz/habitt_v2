@@ -99,6 +99,7 @@ class _HomePageState extends State<HomePage>
         stateProvider,
         statsProvider,
       );
+      await backupProvider.initializationDone;
       await backupProvider.performSync();
 
       if (stateProvider.shouldUpdateStreaks && mounted) {

@@ -3922,6 +3922,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect Google Drive'**
   String get connectGoogleDrive;
+
+  /// No description provided for @enterEmojiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an emoji'**
+  String get enterEmojiTitle;
+
+  /// No description provided for @enterEmojiDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Type or paste an emoji into the field below.'**
+  String get enterEmojiDesc;
 }
 
 class _AppLocalizationsDelegate

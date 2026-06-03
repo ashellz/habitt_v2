@@ -896,5 +896,8 @@
   "syncSpeedOptimizedDescription": "Syncs after 15 s\nChecks every 2 min",
   "syncSpeedOptimizedHint": "Changes are batched and uploaded after a short pause to save battery.",
   "disconnectGoogleDrive": "Disconnect Google Drive",
-  "connectGoogleDrive": "Connect Google Drive"
+  "connectGoogleDrive": "Connect Google Drive",
+
+  "enterEmojiTitle": "Choose an emoji",
+  "enterEmojiDesc": "Type or paste an emoji into the field below."
 }

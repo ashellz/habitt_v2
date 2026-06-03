@@ -891,5 +891,8 @@
   "syncSpeedFastHint": "Promjene se prenose nakon 5 sekundi, a podaci se osvježavaju svakih 30 sekundi.",
   "syncSpeedOptimizedHint": "Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije.",
   "disconnectGoogleDrive": "Prekini vezu s Google Drive",
-  "connectGoogleDrive": "Poveži Google Drive"
+  "connectGoogleDrive": "Poveži Google Drive",
+
+  "enterEmojiTitle": "Odaberi emoji",
+  "enterEmojiDesc": "Upišite ili zalijepite emoji u polje ispod."
 }

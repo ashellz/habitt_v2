@@ -2358,4 +2358,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get connectGoogleDrive => 'Google Drive verbinden';
+
+  @override
+  String get enterEmojiTitle => 'Emoji auswählen';
+
+  @override
+  String get enterEmojiDesc =>
+      'Tippe oder füge ein Emoji in das Feld unten ein.';
 }
