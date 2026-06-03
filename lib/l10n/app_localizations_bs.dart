@@ -2351,5 +2351,5 @@ class AppLocalizationsBs extends AppLocalizations {
   String get enterEmojiTitle => 'Odaberi emoji';
 
   @override
-  String get enterEmojiDesc => 'Upišite ili zalijepite emoji u polje ispod.';
+  String get enterEmojiDesc => 'Upiši emoji u polje ispod.';
 }

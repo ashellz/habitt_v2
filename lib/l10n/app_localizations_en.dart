@@ -2352,5 +2352,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterEmojiTitle => 'Choose an emoji';
 
   @override
-  String get enterEmojiDesc => 'Type or paste an emoji into the field below.';
+  String get enterEmojiDesc => 'Type an emoji into the field below.';
 }

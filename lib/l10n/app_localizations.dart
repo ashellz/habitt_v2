@@ -3938,7 +3938,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterEmojiDesc.
   ///
   /// In en, this message translates to:
-  /// **'Type or paste an emoji into the field below.'**
+  /// **'Type an emoji into the field below.'**
   String get enterEmojiDesc;
 }
 
