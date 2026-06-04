@@ -52,7 +52,6 @@ class _EmojiDialogState extends State<_EmojiDialog> {
           child: NewDefaultTextField(
             controller: _controller,
             autofocus: true,
-            hint: 'Enter an emoji',
             onChanged: (value) {
               final emoji = _extractFirstEmojiGrapheme(value);
               if (emoji != null) {
