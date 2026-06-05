@@ -208,7 +208,7 @@ class HabitNotificationTextBuilder {
           return l.notificationCombinedFresh(days, encouragement);
         }
         evaluatedChecks.add('combined.general');
-        return l.notificationCombinedGeneral(capitalizeFirst(encouragement));
+        return _pickCombinedGeneral(l, _encouragementVariants(l, type));
       case _PremadeFamily.shower:
         final showerProgress = _buildAmountProgressMessage(
           context,
@@ -225,7 +225,7 @@ class HabitNotificationTextBuilder {
           return l.notificationCombinedFresh(days, encouragement);
         }
         evaluatedChecks.add('combined.general');
-        return l.notificationCombinedGeneral(capitalizeFirst(encouragement));
+        return _pickCombinedGeneral(l, _encouragementVariants(l, type));
       case _PremadeFamily.activityGroup:
         final progressMessage = _buildProgressMessage(
           context,
@@ -242,7 +242,7 @@ class HabitNotificationTextBuilder {
           return l.notificationCombinedFresh(days, encouragement);
         }
         evaluatedChecks.add('combined.general');
-        return l.notificationCombinedGeneral(capitalizeFirst(encouragement));
+        return _pickCombinedGeneral(l, _encouragementVariants(l, type));
       case _PremadeFamily.none:
         final genericProgress = _buildProgressMessage(
           context,
@@ -262,10 +262,26 @@ class HabitNotificationTextBuilder {
           );
         }
         evaluatedChecks.add('combined.generic');
-        return l.notificationCombinedGeneral(
-          capitalizeFirst(l.notificationEncourageGeneric1),
-        );
+        return _pickCombinedGeneral(l, [
+          l.notificationEncourageGeneric1,
+          l.notificationEncourageGeneric2,
+          l.notificationEncourageGeneric3,
+        ]);
     }
+  }
+
+  static String _pickCombinedGeneral(
+    AppLocalizations l,
+    List<String> variants,
+  ) {
+    final options = [
+      ...variants.map((v) => l.notificationCombinedGeneral(capitalizeFirst(v))),
+      ...l.notificationProgressNoTracking
+          .split('|')
+          .map((s) => s.trim())
+          .where((s) => s.isNotEmpty),
+    ];
+    return options[math.Random().nextInt(options.length)];
   }
 
   static String? _buildAmountProgressMessage(
