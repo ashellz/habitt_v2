@@ -4,6 +4,7 @@ import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
+import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -36,11 +37,20 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   bool _isInitialized = false;
   bool _isSaving = false;
   bool _isExitDialogOpen = false;
+  bool _isCheckingPermissions = false;
 
   late bool _draftMasterEnabled;
   late bool _draftPeriodEnabled;
   late bool _draftHabitsEnabled;
   final Map<NotificationPeriod, NotificationSettings> _draftSettings = {};
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _checkPermissionsOnOpen(),
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -56,7 +66,80 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     for (final period in NotificationPeriod.values) {
       _draftSettings[period] = np.getSettings(period);
     }
+    _reconcileDraftState();
     _isInitialized = true;
+  }
+
+  // Repairs inconsistent draft state: if any sub-setting is enabled, its parent
+  // toggles must also be on. This fixes cases where stored state has e.g.
+  // master=false but individual period enabled=true (orphaned after cascades).
+  void _reconcileDraftState() {
+    final anyPeriodEnabled = _draftSettings.values.any((s) => s.enabled);
+    if (anyPeriodEnabled && !_draftPeriodEnabled) {
+      _draftPeriodEnabled = true;
+    }
+    if ((_draftHabitsEnabled || anyPeriodEnabled) && !_draftMasterEnabled) {
+      _draftMasterEnabled = true;
+    }
+  }
+
+  // Runs once after first frame. If OS permissions have been revoked since app
+  // start, requests them. If the user denies, disables everything.
+  Future<void> _checkPermissionsOnOpen() async {
+    if (_isCheckingPermissions || !mounted) return;
+    _isCheckingPermissions = true;
+
+    final anyDraftEnabled =
+        _draftMasterEnabled ||
+        _draftHabitsEnabled ||
+        _draftSettings.values.any((s) => s.enabled);
+
+    if (!anyDraftEnabled) {
+      _isCheckingPermissions = false;
+      return;
+    }
+
+    final allowed = await NotificationService.areNotificationsAllowed();
+    if (allowed || !mounted) {
+      _isCheckingPermissions = false;
+      return;
+    }
+
+    final granted = await NotificationService.requestPermissions(context);
+    if (!mounted) {
+      _isCheckingPermissions = false;
+      return;
+    }
+
+    if (!granted) {
+      final np = context.read<NotificationsProvider>();
+      final habitProvider = context.read<HabitProvider>();
+      await np.applyGlobalToggles(
+        context: context,
+        masterEnabled: false,
+        periodsEnabled: false,
+        habitsEnabled: false,
+        habits: habitProvider.habits,
+        appearsOnDay: habitProvider.appearsOnDay,
+      );
+      if (!mounted) {
+        _isCheckingPermissions = false;
+        return;
+      }
+      setState(() {
+        _draftMasterEnabled = false;
+        _draftPeriodEnabled = false;
+        _draftHabitsEnabled = false;
+        for (final period in NotificationPeriod.values) {
+          final cur = _draftSettings[period];
+          if (cur != null) {
+            _draftSettings[period] = cur.copyWith(enabled: false);
+          }
+        }
+      });
+    }
+
+    _isCheckingPermissions = false;
   }
 
   bool _sameWeekdays(Set<int> a, Set<int> b) {
@@ -748,24 +831,48 @@ class _DemoNotificationBody extends StatelessWidget {
                       children: [
                         NotificationCard(
                           period: NotificationPeriod.morning,
-                          settings: np.getSettings(NotificationPeriod.morning).copyWith(
-                            enabled: _isPeriodEnabled(NotificationPeriod.morning, np),
+                          settings: np
+                              .getSettings(NotificationPeriod.morning)
+                              .copyWith(
+                                enabled: _isPeriodEnabled(
+                                  NotificationPeriod.morning,
+                                  np,
+                                ),
+                              ),
+                          enabled: _isPeriodEnabled(
+                            NotificationPeriod.morning,
+                            np,
                           ),
-                          enabled: _isPeriodEnabled(NotificationPeriod.morning, np),
                         ),
                         NotificationCard(
                           period: NotificationPeriod.midday,
-                          settings: np.getSettings(NotificationPeriod.midday).copyWith(
-                            enabled: _isPeriodEnabled(NotificationPeriod.midday, np),
+                          settings: np
+                              .getSettings(NotificationPeriod.midday)
+                              .copyWith(
+                                enabled: _isPeriodEnabled(
+                                  NotificationPeriod.midday,
+                                  np,
+                                ),
+                              ),
+                          enabled: _isPeriodEnabled(
+                            NotificationPeriod.midday,
+                            np,
                           ),
-                          enabled: _isPeriodEnabled(NotificationPeriod.midday, np),
                         ),
                         NotificationCard(
                           period: NotificationPeriod.wrapUp,
-                          settings: np.getSettings(NotificationPeriod.wrapUp).copyWith(
-                            enabled: _isPeriodEnabled(NotificationPeriod.wrapUp, np),
+                          settings: np
+                              .getSettings(NotificationPeriod.wrapUp)
+                              .copyWith(
+                                enabled: _isPeriodEnabled(
+                                  NotificationPeriod.wrapUp,
+                                  np,
+                                ),
+                              ),
+                          enabled: _isPeriodEnabled(
+                            NotificationPeriod.wrapUp,
+                            np,
                           ),
-                          enabled: _isPeriodEnabled(NotificationPeriod.wrapUp, np),
                         ),
                       ],
                     ),
