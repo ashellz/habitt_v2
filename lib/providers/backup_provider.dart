@@ -131,6 +131,8 @@ class BackupProvider extends ChangeNotifier {
   /// Completes when [initialize] finishes (successfully or not).
   Future<void> get initializationDone => _initCompleter.future;
 
+  bool get isInitialized => _initCompleter.isCompleted;
+
   // --- Getters -----------------------------------------------------------
 
   GoogleSignInAccount? get currentUser => _currentUser;

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/services/habit_strength_insight_text_service.dart';
@@ -59,6 +60,12 @@ class InsightSheetFlow {
     if (!_canProceed(context, isActive) ||
         _isInsightSheetOpen ||
         _isInsightEvaluationRunning) {
+      return;
+    }
+
+    final backupProvider = context.read<BackupProvider>();
+    if (!backupProvider.isInitialized ||
+        backupProvider.syncState == SyncState.syncing) {
       return;
     }
 
