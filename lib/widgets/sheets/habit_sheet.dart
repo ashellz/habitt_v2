@@ -428,7 +428,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
-// Fire-and-forget after save: request permission and disable habit notifications
+  // Fire-and-forget after save: request permission and disable habit notifications
   // on the already-saved habit if the user ultimately denies.
   Future<void> _requestNotificationPermissionOrDisable(
     HabitProvider habitProvider,
@@ -579,6 +579,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final hasUnsavedChanges = !_isInitializing && _hasUnsavedChanges(sp, tp);
 
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
+    // viewInsets.bottom tracks keyboard per-frame; padding.bottom is safe area
+    // (on iOS, safe area collapses to 0 when keyboard is shown, so summing both is correct)
+    final bottomInset = keyboardInset + mediaQuery.padding.bottom;
 
     return PopScope(
       canPop: _allowPop || !hasUnsavedChanges,
@@ -594,10 +597,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       },
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxSheetHeight),
-        child: AnimatedPadding(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          padding: EdgeInsets.only(bottom: keyboardInset),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
           child: GestureDetector(
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();

@@ -145,7 +145,7 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
     }
   }
 
-  // This toggles the duration type on tap, and navigates if selected
+  // This toggles the duration type on tap
   void onTapDuration() {
     debugPrint("Tapped duration");
     setState(() {

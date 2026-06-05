@@ -132,7 +132,11 @@ class _TypeButton extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
-          child: Text(label),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: "Satoshi"),
+          ),
         ),
       ),
     );
