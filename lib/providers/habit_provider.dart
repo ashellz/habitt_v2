@@ -407,7 +407,11 @@ class HabitProvider extends ChangeNotifier {
   // Function to filter habits for a specific day based on their schedule and completion status
   List<Habit> _filteredHabitsForDay(DateTime day, List<Habit> source) {
     return source
-        .where((habit) => _appearsOnDay(habit, day) || habit.completed)
+        .where(
+          (habit) =>
+              (habit.isDeleted != true) &&
+              (_appearsOnDay(habit, day) || habit.completed),
+        )
         .toList();
   }
 
@@ -644,13 +648,22 @@ class HabitProvider extends ChangeNotifier {
     if (dayEntry != null) {
       final index = dayEntry.habits.indexWhere((h) => h.id == habit.id);
       if (index != -1) {
-        dayEntry.habits[index] = habit; // still use passed-in habit copy
-        await dayEntry.save();
+        dayEntry.habits[index] = habit;
       } else {
         debugPrint("Habit not found in day entry");
         dayEntry.habits.add(habit);
-        await dayEntry.save();
       }
+      // Day.timestamp is final, so replace the entry entirely to update the
+      // modification time.  Without this the delta export would never include
+      // changed day data because it filters by d.timestamp.isAfter(fromTime).
+      await daysBox.put(
+        dayKey,
+        Day(
+          date: dayEntry.date,
+          habits: dayEntry.habits,
+          timestamp: DateTime.now().toUtc(),
+        ),
+      );
     } else {
       debugPrint("Day entry is null");
       saveHabitDay(usedDay);

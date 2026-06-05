@@ -383,6 +383,55 @@ class Habit extends HiveObject {
     }
   }
 
+  /// Apply the result of a [merge] call directly, preserving the
+  /// merge-resolved timestamps instead of stamping everything with
+  /// [DateTime.now] like [updateHabit] does.  Use this in sync/merge
+  /// code paths; use [updateHabit] only for real user edits.
+  void applyMerge(Habit merged) {
+    name = merged.name;
+    description = merged.description;
+    iconPath = merged.iconPath;
+    categoryId = merged.categoryId;
+    order = merged.order;
+    tag = merged.tag;
+    completed = merged.completed;
+    skipped = merged.skipped;
+    amount = merged.amount;
+    amountCompleted = merged.amountCompleted;
+    amountLabel = merged.amountLabel;
+    duration = merged.duration;
+    durationCompleted = merged.durationCompleted;
+    streak = merged.streak;
+    longestStreak = merged.longestStreak;
+    optional = merged.optional;
+    timeIntervalEnabled = merged.timeIntervalEnabled;
+    timeIntervalStart = merged.timeIntervalStart;
+    timeIntervalEnd = merged.timeIntervalEnd;
+    scheduleType = merged.scheduleType;
+    weeklyTarget = merged.weeklyTarget;
+    monthlyTarget = merged.monthlyTarget;
+    customIntervalDays = merged.customIntervalDays;
+    selectedDaysAWeek = List<int>.from(merged.selectedDaysAWeek);
+    selectedDaysAMonth = List<int>.from(merged.selectedDaysAMonth);
+    customAppearance = List<String>.from(merged.customAppearance);
+    timesCompletedThisWeek = merged.timesCompletedThisWeek;
+    timesCompletedThisMonth = merged.timesCompletedThisMonth;
+    createdAt = merged.createdAt;
+    lastCustomUpdate = merged.lastCustomUpdate;
+    colorName = merged.colorName;
+    color = merged.color;
+    notificationsEnabled = merged.notificationsEnabled;
+    notificationTimes =
+        merged.notificationTimes.map((s) => s.copy()).toList();
+    premadeHabitType = merged.premadeHabitType;
+    trackingType = merged.trackingType;
+    isDeleted = merged.isDeleted;
+    insightPopstonedUntil = merged.insightPopstonedUntil;
+    timestamps
+      ..clear()
+      ..addAll(merged.timestamps);
+  }
+
   Future<void> deleteHabit() async {
     isDeleted = true;
     timestamps['isDeleted'] = DateTime.now().toUtc();
@@ -437,10 +486,9 @@ class Habit extends HiveObject {
     skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
-    timestamps['completed'] = DateTime.now().toUtc();
-    timestamps['skipped'] = DateTime.now().toUtc();
-    timestamps['amountCompleted'] = DateTime.now().toUtc();
-    timestamps['durationCompleted'] = DateTime.now().toUtc();
+    // Do NOT update timestamps — this is a local day-boundary reset, not a
+    // user action. Updating timestamps here would cause the reset to win over
+    // genuine completions from another device when the merge runs later.
   }
 
   Future<void> resetScheduleCounters({

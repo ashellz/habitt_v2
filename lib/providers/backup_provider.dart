@@ -981,6 +981,7 @@ class BackupProvider extends ChangeNotifier {
         }
 
         progressMessage = 'Checking for updates...';
+        await _checkAndApplyNewerBackup(drive, folderId, key);
         await _downloadAndApplyPendingDeltas(drive, folderId, key);
 
         progressMessage = 'Uploading changes...';
@@ -1655,6 +1656,57 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
+  /// Checks whether the latest full backup on Drive is newer than last sync on device
+  /// if so download and merge it.
+  ///
+  /// This handles the compaction case: when another device accumulates
+  /// [_kDeltaCompactionThreshold] deltas it creates a new full backup and
+  /// wipes all delta files.  A device in delta mode would otherwise find no
+  /// deltas to apply and silently miss every change captured in that backup.
+  static const String _kLastAppliedBackupIdKey =
+      'backup_last_applied_backup_id';
+
+  Future<void> _checkAndApplyNewerBackup(
+    drive_api.DriveApi drive,
+    String folderId,
+    SecretKey key,
+  ) async {
+    final res = await drive.files.list(
+      q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
+      $fields: 'files(id,modifiedTime)',
+      orderBy: 'modifiedTime desc',
+      pageSize: 1,
+    );
+
+    final files = res.files ?? [];
+    if (files.isEmpty) return;
+
+    final latest = files.first;
+    final fileId = latest.id;
+    final modifiedTime = latest.modifiedTime;
+    if (fileId == null || modifiedTime == null) return;
+
+    // Skip if we already applied this exact backup file.
+    final prefs = await SharedPreferences.getInstance();
+    final lastAppliedId = prefs.getString(_kLastAppliedBackupIdKey);
+    if (lastAppliedId == fileId) return;
+
+    // Skip if the backup predates our last successful sync (nothing new).
+    if (_lastSyncTime != null && !modifiedTime.isAfter(_lastSyncTime!)) return;
+
+    debugPrint(
+      'Full backup ($fileId, modified $modifiedTime) is newer than last sync '
+      '($_lastSyncTime) — downloading and merging.',
+    );
+
+    final backupData = await _downloadBackupFromCloud(key);
+    if (backupData != null) {
+      await _mergeBackupData(backupData);
+      await prefs.setString(_kLastAppliedBackupIdKey, fileId);
+      debugPrint('Applied newer full backup $fileId');
+    }
+  }
+
   /// Download and apply every delta file on Drive that was not uploaded by
   /// this device and has not already been applied to local storage.
   ///
@@ -1874,7 +1926,7 @@ class BackupProvider extends ChangeNotifier {
 
       if (existing != null) {
         final merged = existing.merge(incoming);
-        existing.updateHabit(merged);
+        existing.applyMerge(merged);
         await existing.save();
       } else {
         if (incoming.isDeleted ?? false) continue;
