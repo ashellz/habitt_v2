@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/dual_option_selector.dart';
 import 'package:provider/provider.dart';
 
 class SyncSpeedSetting extends StatelessWidget {
@@ -50,28 +51,16 @@ class SyncSpeedSetting extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              Row(
-                spacing: 8,
-                children: [
-                  _SpeedOption(
-                    label: loc.syncSpeedFast,
-                    description: loc.syncSpeedFastDescription,
-                    isSelected: selected == SyncSpeed.fast,
-                    onTap:
-                        () => context.read<BackupProvider>().setSyncSpeed(
-                          SyncSpeed.fast,
-                        ),
-                  ),
-                  _SpeedOption(
-                    label: loc.syncSpeedOptimized,
-                    description: loc.syncSpeedOptimizedDescription,
-                    isSelected: selected == SyncSpeed.optimized,
-                    onTap:
-                        () => context.read<BackupProvider>().setSyncSpeed(
-                          SyncSpeed.optimized,
-                        ),
-                  ),
-                ],
+              DualOptionSelector<SyncSpeed>(
+                firstLabel: loc.syncSpeedFast,
+                firstValue: SyncSpeed.fast,
+                secondLabel: loc.syncSpeedOptimized,
+                secondValue: SyncSpeed.optimized,
+                selectedValue: selected,
+                onSelect: (v) {
+                  if (v != null) context.read<BackupProvider>().setSyncSpeed(v);
+                },
+                allowDeselect: false,
               ),
               AnimatedSwitcher(
                 duration: _kAnimDuration,
@@ -87,81 +76,6 @@ class SyncSpeedSetting extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _SpeedOption extends StatelessWidget {
-  const _SpeedOption({
-    required this.label,
-    required this.description,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String label;
-  final String description;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  static const _kAnimDuration = Duration(milliseconds: 220);
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: _kAnimDuration,
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: ShapeDecoration(
-            color:
-                isSelected
-                    ? cp.main.withValues(alpha: 0.08)
-                    : Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-              side: BorderSide(
-                width: 1,
-                color: isSelected ? cp.main.withValues(alpha: 0.35) : cp.border,
-              ),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 4,
-            children: [
-              AnimatedDefaultTextStyle(
-                duration: _kAnimDuration,
-                curve: Curves.easeOutCubic,
-                style: TextStyle(
-                  color: isSelected ? cp.main : cp.text,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-                child: Text(label),
-              ),
-              AnimatedDefaultTextStyle(
-                duration: _kAnimDuration,
-                curve: Curves.easeOutCubic,
-                style: TextStyle(
-                  color:
-                      isSelected
-                          ? cp.main.withValues(alpha: 0.75)
-                          : cp.lightGreyText,
-                  fontSize: 12,
-                  height: 1.4,
-                ),
-                child: Text(description),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
