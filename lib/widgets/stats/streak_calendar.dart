@@ -347,8 +347,10 @@ class _StreakCalendarState extends State<StreakCalendar> {
       required bool isToday,
       bool forceDisabled = false,
     }) {
+      final normalizedDay = _normalize(day);
       final metadata =
-          streakVisualMetadata[_normalize(day)] ?? const _StreakVisualDayData();
+          streakVisualMetadata[normalizedDay] ?? const _StreakVisualDayData();
+      final isPerfectDay = widget.perfectDayCompletion[normalizedDay] == true;
       return _dayCell(
         context: context,
         day: day,
@@ -356,6 +358,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
         today: today,
         isOutside: isOutside,
         isToday: isToday,
+        isPerfectDay: isPerfectDay,
         forceDisabled: forceDisabled,
         hasLeftConnector: metadata.hasLeftConnector,
         hasRightConnector: metadata.hasRightConnector,
@@ -572,6 +575,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     required DateTime today,
     required bool isOutside,
     required bool isToday,
+    required bool isPerfectDay,
     required bool hasLeftConnector,
     required bool hasRightConnector,
     required bool isOngoingStreakStartCompletedDay,
@@ -598,9 +602,19 @@ class _StreakCalendarState extends State<StreakCalendar> {
       textColor = outsideDisabledText;
       borderColor = outsideDisabledFill;
     } else {
-      fillColor = _colorForProgress(cp, progress, isToday) ?? cp.bg;
-      borderColor =
-          _colorForProgress(cp, progress, isToday, isBorder: true) ?? cp.bg;
+      // Fill: orange only for today when perfect, otherwise background.
+      fillColor = (isPerfectDay && isToday) ? cp.orange300 : cp.bg;
+
+      // Border: orange only for perfect days, gray for partial progress, none otherwise.
+      if (isPerfectDay) {
+        borderColor = isToday ? cp.orange300 : cp.orange200;
+      } else if (progress > 0) {
+        borderColor = cp.disabled;
+      } else {
+        borderColor = cp.bg;
+      }
+
+      // Text: white on orange fill, otherwise default.
       textColor =
           isOngoingStreakStartCompletedDay
               ? Colors.white
@@ -789,6 +803,13 @@ class _StreakCalendarState extends State<StreakCalendar> {
           toleratedMissesUsed = 0;
           currentDays.add(normalizedCursor);
           currentCompletedDays.add(normalizedCursor);
+          debugPrint(
+            '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — COMPLETED (run start)',
+          );
+        } else {
+          debugPrint(
+            '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — skipping (no run yet)',
+          );
         }
         cursor = cursor.add(const Duration(days: 1));
         continue;
@@ -798,13 +819,22 @@ class _StreakCalendarState extends State<StreakCalendar> {
         currentDays.add(normalizedCursor);
         currentCompletedDays.add(normalizedCursor);
         toleratedMissesUsed = 0;
-      } else if (toleratedMissesUsed == 0) {
+        debugPrint(
+          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — COMPLETED',
+        );
+      } else if (toleratedMissesUsed < 2) {
         currentDays.add(normalizedCursor);
-        toleratedMissesUsed = 1;
+        toleratedMissesUsed++;
+        debugPrint(
+          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — MISS tolerated ($toleratedMissesUsed/2)',
+        );
       } else {
-        // If a second miss happens, the previous tolerated miss did not bridge
-        // to a completion and should not be part of the rendered streak run.
-        if (currentDays.isNotEmpty &&
+        debugPrint(
+          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — BREAK (3rd consecutive miss), saving run of ${currentDays.length} days',
+        );
+        // Third consecutive miss — remove all trailing non-completed days that
+        // were added as tolerated misses but never bridged to a completion.
+        while (currentDays.isNotEmpty &&
             !completedDays.contains(currentDays.last)) {
           currentDays.removeLast();
         }

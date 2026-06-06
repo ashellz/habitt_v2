@@ -119,6 +119,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get confirm => 'Potvrdi';
 
   @override
+  String get confirmDeletion => 'Potvrdi brisanje';
+
+  @override
   String get connectToGoogle => 'Poveži se na Google';
 
   @override
@@ -198,8 +201,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get endTime => 'Kraj vremena';
 
   @override
-  String get enterHabitNameToConfirmDeletion =>
-      'Unesi naziv navike da potvrdi brisanje';
+  String enterHabitNameToConfirmDeletion(Object habitName) {
+    return 'Unesi \'$habitName\' da potvrdiš brisanje';
+  }
 
   @override
   String get enterPassphrase => 'Unesi sigurnosnu frazu';

@@ -302,6 +302,12 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get confirm;
 
+  /// No description provided for @confirmDeletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Deletion'**
+  String get confirmDeletion;
+
   /// No description provided for @connectToGoogle.
   ///
   /// In en, this message translates to:
@@ -455,8 +461,8 @@ abstract class AppLocalizations {
   /// No description provided for @enterHabitNameToConfirmDeletion.
   ///
   /// In en, this message translates to:
-  /// **'Enter habit name to confirm deletion'**
-  String get enterHabitNameToConfirmDeletion;
+  /// **'Enter \'{habitName}\' to confirm deletion'**
+  String enterHabitNameToConfirmDeletion(Object habitName);
 
   /// No description provided for @enterPassphrase.
   ///

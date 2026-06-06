@@ -48,15 +48,15 @@ class _DeleteHabitNameDialogState extends State<DeleteHabitDialogNameConfirm> {
         final loc = AppLocalizations.of(context)!;
 
         return NewDefaultDialog(
-          title: 'Confirm deletion',
-          desc: loc.enterHabitNameToConfirmDeletion,
-          primaryButtonLabel: 'Delete',
+          title: loc.confirmDeletion,
+          desc: loc.enterHabitNameToConfirmDeletion(widget.expectedHabitName),
+          primaryButtonLabel: loc.delete,
           primaryButtonEnabled: isMatch,
           primaryButtonColor: widget.primaryButtonColor,
           onPrimaryButtonPressed: widget.onConfirmed,
           child: NewDefaultTextField(
             controller: _nameController,
-            title: 'Habit name',
+            title: loc.habitName,
             fontWeight: FontWeight.w500,
             maxLines: 1,
           ),

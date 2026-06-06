@@ -27,21 +27,21 @@ class ConsistencyCalendar extends StatefulWidget {
 
 class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
   static final List<Color> _progressScaleDark = [
-    const Color(0xFF11F29B).withValues(alpha: 0.1),
-    const Color(0xFF0CD280).withValues(alpha: 0.2),
-    const Color(0xFF11F29B).withValues(alpha: 0.4),
-    const Color(0xFF11F29B).withValues(alpha: 0.6),
-    const Color(0xFF11F29B).withValues(alpha: 0.8),
-    const Color(0xFF02D382),
+    const Color(0xFF11F29B).withValues(alpha: 0.06),
+    const Color(0xFF11F29B).withValues(alpha: 0.12),
+    const Color(0xFF11F29B).withValues(alpha: 0.18),
+    const Color(0xFF11F29B).withValues(alpha: 0.24),
+    const Color(0xFF11F29B).withValues(alpha: 0.32),
+    const Color(0xFF02D382), // 100% only
   ];
 
   static final List<Color> _progressScaleLight = [
-    const Color(0xFF0CD280).withValues(alpha: 0.1),
-    const Color(0xFFBBF3DC),
-    const Color(0xFF02D382).withValues(alpha: 0.4),
-    const Color(0xFF02D382).withValues(alpha: 0.6),
-    const Color(0xFF02D382).withValues(alpha: 0.8),
-    const Color(0xFF02D382),
+    const Color(0xFF0CD280).withValues(alpha: 0.08),
+    const Color(0xFF0CD280).withValues(alpha: 0.16),
+    const Color(0xFF0CD280).withValues(alpha: 0.24),
+    const Color(0xFF0CD280).withValues(alpha: 0.32),
+    const Color(0xFF0CD280).withValues(alpha: 0.42),
+    const Color(0xFF02D382), // 100% only
   ];
 
   late DateTime _focusedDay;
@@ -419,17 +419,14 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
     return day.year != focusedDay.year || day.month != focusedDay.month;
   }
 
-  Color? _colorForProgress(double progress, List<Color> _progressScale) {
-    if (progress <= 0) {
-      return null;
-    }
-
-    final clamped = progress.clamp(0.0, 1.0);
-    final index = ((clamped * _progressScale.length).ceil() - 1).clamp(
-      0,
-      _progressScale.length - 1,
-    );
-    return _progressScale[index];
+  Color? _colorForProgress(double progress, List<Color> progressScale) {
+    if (progress <= 0) return null;
+    // Only fully completed days get the brightest color.
+    if (progress >= 1.0) return progressScale.last;
+    // Partial progress maps across all buckets except the last.
+    final partialBuckets = progressScale.length - 1;
+    final index = (progress * partialBuckets).floor().clamp(0, partialBuckets - 1);
+    return progressScale[index];
   }
 
   static DateTime _normalize(DateTime date) {

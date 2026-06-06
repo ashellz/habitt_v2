@@ -118,6 +118,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirm => 'Confirm';
 
   @override
+  String get confirmDeletion => 'Confirm Deletion';
+
+  @override
   String get connectToGoogle => 'Connect to Google';
 
   @override
@@ -197,8 +200,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get endTime => 'End time';
 
   @override
-  String get enterHabitNameToConfirmDeletion =>
-      'Enter habit name to confirm deletion';
+  String enterHabitNameToConfirmDeletion(Object habitName) {
+    return 'Enter \'$habitName\' to confirm deletion';
+  }
 
   @override
   String get enterPassphrase => 'Enter Passphrase';

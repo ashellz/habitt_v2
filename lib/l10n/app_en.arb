@@ -32,6 +32,7 @@
   "completedHabitFoundHabitscompletedTotal": "Completed habit found, {habitsCompleted} total",
   "completedHabits": "Completed habits: ",
   "confirm": "Confirm",
+  "confirmDeletion": "Confirm Deletion",
   "connectToGoogle": "Connect to Google",
   "controlWhenAndHowYouGetNotifiedAboutYourHabits": "Control when and how you get notified about your habits.",
   "createAmountLabel": "Create amount label",
@@ -57,7 +58,12 @@
   "editProfile": "Edit profile",
   "enable": "Enable",
   "endTime": "End time",
-  "enterHabitNameToConfirmDeletion": "Enter habit name to confirm deletion",
+  "enterHabitNameToConfirmDeletion": "Enter '{habitName}' to confirm deletion",
+  "@enterHabitNameToConfirmDeletion": {
+    "placeholders": {
+      "habitName": {}
+    }
+  },
   "enterPassphrase": "Enter Passphrase",
   "enterYourAmount": "Enter your amount",
   "enterYourDuration": "Enter your duration",

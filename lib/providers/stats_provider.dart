@@ -141,6 +141,8 @@ class StatsProvider extends ChangeNotifier {
     }
 
     final completedWeight = habits.fold<double>(0.0, (sum, habit) {
+      if (habit.optional) return sum;
+
       if (habit.completed) {
         return sum + 1.0;
       }
@@ -446,9 +448,9 @@ class StatsProvider extends ChangeNotifier {
       "Refreshing perfect days streak, first date: ${orderedDays.first.date}, last date: ${orderedDays.last.date}, total days: ${orderedDays.length}",
     );
 
-    // Then we check all days from yesterday to the day we started using the app
-    // If all habits are completed, we add 1 to the streak
-    // Else we stop there
+    // Check all days from yesterday backwards to the day we started using the app.
+    // Today is excluded because it is almost never completed at check time.
+    // Up to 2 consecutive missed days are tolerated before the streak breaks.
     int longestStreak = 0;
 
     for (int i = 1; i < orderedDays.length; i++) {
@@ -456,39 +458,46 @@ class StatsProvider extends ChangeNotifier {
       int habitsCompleted = 0;
       int habitsSkipped = 0;
       int requiredHabits = 0;
-      for (final habit in day.habits) {
-        // If habit is optional, we dont count it
-        if (habit.optional) continue;
+      bool hasPartialProgress = false;
 
+      for (final habit in day.habits) {
+        if (habit.optional) continue;
         requiredHabits++;
         if (habit.completed) {
           habitsCompleted++;
         } else if (habit.skipped) {
           habitsSkipped++;
-          debugPrint("Skipped habit found, {$habitsSkipped} total");
-        }
-        // If any progress is detected on a habit count it as completed for the streak
-        //  to be more forgiving and encourage progress
-        else if (habit.tracksAmount) {
-          if (habit.amountCompleted > 0) {
-            habitsCompleted++;
-          }
-        } else if (habit.tracksDuration) {
-          if (habit.durationCompleted > 0) {
-            habitsCompleted++;
-          }
+        } else if (habit.tracksAmount && habit.amountCompleted > 0) {
+          hasPartialProgress = true;
+        } else if (habit.tracksDuration && habit.durationCompleted > 0) {
+          hasPartialProgress = true;
         }
       }
-      if (requiredHabits == 0) continue;
 
-      if (habitsCompleted + habitsSkipped >= requiredHabits) {
+      if (requiredHabits == 0) {
+        debugPrint('[streak] ${day.date.toIso8601String().split("T").first} — SKIPPED (no required habits)');
+        continue;
+      }
+
+      final isPerfect = habitsCompleted + habitsSkipped >= requiredHabits;
+      debugPrint(
+        '[streak] ${day.date.toIso8601String().split("T").first} — '
+        'required=$requiredHabits completed=$habitsCompleted skipped=$habitsSkipped partial=$hasPartialProgress '
+        '→ ${isPerfect ? "PERFECT (streak=${allHabitsCompletedStreak + 1})" : hasPartialProgress ? "PARTIAL (neutral)" : "MISS (missedLeft=${missedDaysAllowed - 1})"}'
+      );
+
+      if (isPerfect) {
         allHabitsCompletedStreak++;
         missedDaysAllowed = 2;
+      } else if (hasPartialProgress) {
+        // Some incomplete habits have progress — treat as neutral, don't touch streak or miss count.
+        continue;
       } else {
         if (missedDaysAllowed > 0) {
           missedDaysAllowed--;
           continue;
         }
+        debugPrint('[streak] → BREAK (no misses left)');
         break;
       }
     }
