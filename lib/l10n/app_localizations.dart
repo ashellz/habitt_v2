@@ -434,12 +434,6 @@ abstract class AppLocalizations {
   /// **'Edit Habit'**
   String get editHabit;
 
-  /// No description provided for @pauseHabit.
-  ///
-  /// In en, this message translates to:
-  /// **'Pause Habit'**
-  String get pauseHabit;
-
   /// No description provided for @editProfile.
   ///
   /// In en, this message translates to:
@@ -3952,6 +3946,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type an emoji into the field below.'**
   String get enterEmojiDesc;
+
+  /// No description provided for @pauseHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Habit'**
+  String get pauseHabit;
+
+  /// No description provided for @pauseHabitName.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause \'{name}\''**
+  String pauseHabitName(Object name);
+
+  /// No description provided for @unpauseHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpause Habit'**
+  String get unpauseHabit;
+
+  /// No description provided for @pauseHabitDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'While paused, this habit won\'t appear in your daily list. Your streak and stats will be preserved.'**
+  String get pauseHabitDesc;
+
+  /// No description provided for @habitPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit paused!'**
+  String get habitPaused;
+
+  /// No description provided for @habitUnpaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit unpaused!'**
+  String get habitUnpaused;
 }
 
 class _AppLocalizationsDelegate

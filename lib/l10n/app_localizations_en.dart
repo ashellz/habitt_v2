@@ -188,9 +188,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabit => 'Edit Habit';
 
   @override
-  String get pauseHabit => 'Pause Habit';
-
-  @override
   String get editProfile => 'Edit profile';
 
   @override
@@ -2360,4 +2357,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterEmojiDesc => 'Type an emoji into the field below.';
+
+  @override
+  String get pauseHabit => 'Pause Habit';
+
+  @override
+  String pauseHabitName(Object name) {
+    return 'Pause \'$name\'';
+  }
+
+  @override
+  String get unpauseHabit => 'Unpause Habit';
+
+  @override
+  String get pauseHabitDesc =>
+      'While paused, this habit won\'t appear in your daily list. Your streak and stats will be preserved.';
+
+  @override
+  String get habitPaused => 'Habit paused!';
+
+  @override
+  String get habitUnpaused => 'Habit unpaused!';
 }

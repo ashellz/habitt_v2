@@ -189,9 +189,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get editHabit => 'Gewohnheit bearbeiten';
 
   @override
-  String get pauseHabit => 'Pause Habit';
-
-  @override
   String get editProfile => 'Profil bearbeiten';
 
   @override
@@ -2375,4 +2372,25 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get enterEmojiDesc =>
       'Tippe oder füge ein Emoji in das Feld unten ein.';
+
+  @override
+  String get pauseHabit => 'Gewohnheit pausieren';
+
+  @override
+  String pauseHabitName(Object name) {
+    return '\'$name\' pausieren';
+  }
+
+  @override
+  String get unpauseHabit => 'Pausierung aufheben';
+
+  @override
+  String get pauseHabitDesc =>
+      'Während der Pause erscheint diese Gewohnheit nicht in deiner Tagesliste. Deine Streak und Statistiken bleiben erhalten.';
+
+  @override
+  String get habitPaused => 'Gewohnheit pausiert!';
+
+  @override
+  String get habitUnpaused => 'Gewohnheit fortgesetzt!';
 }

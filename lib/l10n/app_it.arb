@@ -56,7 +56,13 @@
   "duration": "Durata",
   "edit": "Modifica",
   "editHabit": "Modifica abitudine",
-  "pauseHabit": "Pause Habit",
+  "pauseHabit": "Metti in pausa abitudine",
+  "pauseHabitName": "Metti in pausa '{name}'",
+  "@pauseHabitName": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "editProfile": "Modifica profilo",
   "enable": "Abilitazione",
   "endTime": "Ora di fine",
@@ -907,5 +913,10 @@
   "connectGoogleDrive": "Collega Google Drive",
 
   "enterEmojiTitle": "Scegli un'emoji",
-  "enterEmojiDesc": "Digita o incolla un'emoji nel campo sottostante."
+  "enterEmojiDesc": "Digita o incolla un'emoji nel campo sottostante.",
+
+  "unpauseHabit": "Riprendi abitudine",
+  "pauseHabitDesc": "Mentre è in pausa, questa abitudine non apparirà nella tua lista giornaliera. La tua serie e le statistiche saranno conservate.",
+  "habitPaused": "Abitudine in pausa!",
+  "habitUnpaused": "Abitudine ripresa!"
 }

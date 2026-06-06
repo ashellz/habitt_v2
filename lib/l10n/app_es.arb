@@ -56,7 +56,13 @@
   "duration": "Duración",
   "edit": "Editar",
   "editHabit": "Editar hábito",
-  "pauseHabit": "Pause Habit",
+  "pauseHabit": "Pausar hábito",
+  "pauseHabitName": "Pausar '{name}'",
+  "@pauseHabitName": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "editProfile": "Editar perfil",
   "enable": "Activar",
   "endTime": "Hora de finalización",
@@ -907,5 +913,10 @@
   "connectGoogleDrive": "Conectar Google Drive",
 
   "enterEmojiTitle": "Elige un emoji",
-  "enterEmojiDesc": "Escribe o pega un emoji en el campo de abajo."
+  "enterEmojiDesc": "Escribe o pega un emoji en el campo de abajo.",
+
+  "unpauseHabit": "Reanudar hábito",
+  "pauseHabitDesc": "Mientras esté en pausa, este hábito no aparecerá en tu lista diaria. Tu racha y estadísticas se conservarán.",
+  "habitPaused": "¡Hábito pausado!",
+  "habitUnpaused": "¡Hábito reanudado!"
 }

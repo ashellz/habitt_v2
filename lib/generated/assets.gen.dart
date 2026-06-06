@@ -622,6 +622,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/eye.svg
   String get eye => 'assets/images/new-svg/eye.svg';
 
+  /// File path: assets/images/new-svg/google.svg
+  String get google => 'assets/images/new-svg/google.svg';
+
   /// File path: assets/images/new-svg/heatmap.svg
   String get heatmap => 'assets/images/new-svg/heatmap.svg';
 
@@ -647,6 +650,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/minus.svg
   String get minus => 'assets/images/new-svg/minus.svg';
 
+  /// File path: assets/images/new-svg/more.svg
+  String get more => 'assets/images/new-svg/more.svg';
+
   /// File path: assets/images/new-svg/morning.svg
   String get morning => 'assets/images/new-svg/morning.svg';
 
@@ -655,6 +661,9 @@ class $AssetsImagesNewSvgGen {
 
   /// File path: assets/images/new-svg/notify.svg
   String get notify => 'assets/images/new-svg/notify.svg';
+
+  /// File path: assets/images/new-svg/pause.svg
+  String get pause => 'assets/images/new-svg/pause.svg';
 
   /// File path: assets/images/new-svg/per-session.svg
   String get perSession => 'assets/images/new-svg/per-session.svg';
@@ -695,6 +704,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/total-time.svg
   String get totalTime => 'assets/images/new-svg/total-time.svg';
 
+  /// File path: assets/images/new-svg/trash.svg
+  String get trash => 'assets/images/new-svg/trash.svg';
+
   /// File path: assets/images/new-svg/upload-photo.svg
   String get uploadPhoto => 'assets/images/new-svg/upload-photo.svg';
 
@@ -731,6 +743,7 @@ class $AssetsImagesNewSvgGen {
     es,
     eyeShut,
     eye,
+    google,
     heatmap,
     home,
     it,
@@ -738,9 +751,11 @@ class $AssetsImagesNewSvgGen {
     longestStreak,
     midDay,
     minus,
+    more,
     morning,
     notifications,
     notify,
+    pause,
     perSession,
     plus,
     privacyPolicy,
@@ -754,6 +769,7 @@ class $AssetsImagesNewSvgGen {
     streak,
     terms,
     totalTime,
+    trash,
     uploadPhoto,
     wrapUp,
   ];

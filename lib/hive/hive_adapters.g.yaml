@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 43
+    nextIndex: 44
     fields:
       id:
         index: 0
@@ -87,6 +87,8 @@ types:
         index: 41
       insightPopstonedUntil:
         index: 42
+      isPaused:
+        index: 43
   Day:
     typeId: 1
     nextIndex: 3

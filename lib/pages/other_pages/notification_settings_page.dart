@@ -205,6 +205,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   void _handleToggle(NotificationPeriod period, bool enabled) {
     final current = _draftSettings[period]!;
     _updatePeriod(period, current.copyWith(enabled: enabled));
+    if (enabled) {
+      setState(() {
+        _draftPeriodEnabled = true;
+        _draftMasterEnabled = true;
+      });
+    }
   }
 
   void _handleTime(NotificationPeriod period, TimeOfDay time) {

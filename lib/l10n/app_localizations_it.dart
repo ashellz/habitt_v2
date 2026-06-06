@@ -189,9 +189,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editHabit => 'Modifica abitudine';
 
   @override
-  String get pauseHabit => 'Pause Habit';
-
-  @override
   String get editProfile => 'Modifica profilo';
 
   @override
@@ -2375,4 +2372,25 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get enterEmojiDesc =>
       'Digita o incolla un\'emoji nel campo sottostante.';
+
+  @override
+  String get pauseHabit => 'Metti in pausa abitudine';
+
+  @override
+  String pauseHabitName(Object name) {
+    return 'Metti in pausa \'$name\'';
+  }
+
+  @override
+  String get unpauseHabit => 'Riprendi abitudine';
+
+  @override
+  String get pauseHabitDesc =>
+      'Mentre è in pausa, questa abitudine non apparirà nella tua lista giornaliera. La tua serie e le statistiche saranno conservate.';
+
+  @override
+  String get habitPaused => 'Abitudine in pausa!';
+
+  @override
+  String get habitUnpaused => 'Abitudine ripresa!';
 }

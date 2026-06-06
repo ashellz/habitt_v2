@@ -13,6 +13,9 @@ import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_delete_habit_flow.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/default_popup_menu.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
@@ -34,9 +37,11 @@ class HabitDetailsPage extends StatefulWidget {
   State<HabitDetailsPage> createState() => _HabitDetailsPageState();
 }
 
-class _HabitDetailsPageState extends State<HabitDetailsPage> {
+class _HabitDetailsPageState extends State<HabitDetailsPage>
+    with TickerProviderStateMixin {
   late final TextEditingController _notesController;
   late final FocusNode _notesFocusNode;
+  late final StatusOverlayPopupController _statusOverlay;
   HabitProvider? _habitProvider;
 
   Timer? _notesDebounce;
@@ -46,6 +51,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
   @override
   void initState() {
     super.initState();
+    _statusOverlay = StatusOverlayPopupController(vsync: this);
     _notesController = TextEditingController();
     _notesFocusNode = FocusNode();
     _notesController.addListener(_onNotesChanged);
@@ -71,6 +77,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
 
   @override
   void dispose() {
+    _statusOverlay.dispose();
     _notesDebounce?.cancel();
     _persistNotesIfNeeded(allowWhenUnmounted: true);
 
@@ -288,6 +295,48 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     );
   }
 
+  Future<void> _pauseHabit(Habit habit) async {
+    final loc = AppLocalizations.of(context)!;
+    final confirmed = await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: loc.pauseHabitName(habit.name),
+            desc: loc.pauseHabitDesc,
+            primaryButtonLabel: loc.pauseHabit,
+            onPrimaryButtonPressed: () {
+              Navigator.of(dialogContext).pop(true);
+            },
+          ),
+    );
+    if (confirmed != true || !mounted) return;
+    await context.read<HabitProvider>().pauseHabit(habit);
+    if (!mounted) return;
+    final cp = context.read<ColorProvider>();
+    _statusOverlay.show(
+      context: context,
+      cp: cp,
+      title: loc.habitPaused,
+      isError: false,
+      iconPath: 'assets/images/new-svg/pause.svg',
+      iconColor: cp.text,
+    );
+  }
+
+  void _unpauseHabit(Habit habit) {
+    final loc = AppLocalizations.of(context)!;
+    context.read<HabitProvider>().unpauseHabit(habit);
+    if (!mounted) return;
+    final cp = context.read<ColorProvider>();
+    _statusOverlay.show(
+      context: context,
+      cp: cp,
+      title: loc.habitUnpaused,
+      isError: false,
+      iconWidget: Icon(Icons.play_arrow_rounded, size: 24, color: cp.main),
+    );
+  }
+
   Widget _topBar(ColorProvider cp, Habit habit) {
     final loc = AppLocalizations.of(context)!;
 
@@ -338,9 +387,20 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   onTap: () => _openEditSheet(habit),
                 ),
                 DefaultPopupMenuItem(
-                  label: loc.pauseHabit,
+                  label:
+                      habit.isPaused == true
+                          ? loc.unpauseHabit
+                          : loc.pauseHabit,
+                  icon:
+                      habit.isPaused == true
+                          ? Icon(Icons.play_arrow_rounded, size: 18)
+                          : null,
                   svgPath: 'assets/images/new-svg/pause.svg',
-                  onTap: () {},
+                  onTap:
+                      () =>
+                          habit.isPaused == true
+                              ? _unpauseHabit(habit)
+                              : _pauseHabit(habit),
                 ),
                 DefaultPopupMenuItem(
                   label: loc.deleteHabit,

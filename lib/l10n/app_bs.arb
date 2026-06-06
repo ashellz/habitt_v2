@@ -56,7 +56,6 @@
   "duration": "Trajanje",
   "edit": "Uredi",
   "editHabit": "Uredi naviku",
-  "pauseHabit": "Pause Habit",
   "editProfile": "Uredi profil",
   "enable": "Omogući",
   "endTime": "Kraj vremena",
@@ -895,7 +894,17 @@
   "syncSpeedOptimizedHint": "Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije.",
   "disconnectGoogleDrive": "Prekini vezu s Google Drive",
   "connectGoogleDrive": "Poveži Google Drive",
-
   "enterEmojiTitle": "Odaberi emoji",
-  "enterEmojiDesc": "Upiši emoji u polje ispod."
+  "enterEmojiDesc": "Upiši emoji u polje ispod.",
+  "pauseHabit": "Pauziraj naviku",
+  "pauseHabitName": "Pauziraj '{name}'",
+  "@pauseHabitName": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "unpauseHabit": "Nastavi naviku",
+  "pauseHabitDesc": "Dok je pauzirana, ova navika se neće pojaviti na vašoj dnevnoj listi. Vaš niz i statistike bit će sačuvani.",
+  "habitPaused": "Navika pauzirana!",
+  "habitUnpaused": "Navika nastavljena!"
 }

@@ -189,9 +189,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get editHabit => 'Uredi naviku';
 
   @override
-  String get pauseHabit => 'Pause Habit';
-
-  @override
   String get editProfile => 'Uredi profil';
 
   @override
@@ -2359,4 +2356,25 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get enterEmojiDesc => 'Upiši emoji u polje ispod.';
+
+  @override
+  String get pauseHabit => 'Pauziraj naviku';
+
+  @override
+  String pauseHabitName(Object name) {
+    return 'Pauziraj \'$name\'';
+  }
+
+  @override
+  String get unpauseHabit => 'Nastavi naviku';
+
+  @override
+  String get pauseHabitDesc =>
+      'Dok je pauzirana, ova navika se neće pojaviti na vašoj dnevnoj listi. Vaš niz i statistike bit će sačuvani.';
+
+  @override
+  String get habitPaused => 'Navika pauzirana!';
+
+  @override
+  String get habitUnpaused => 'Navika nastavljena!';
 }

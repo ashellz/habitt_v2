@@ -74,7 +74,8 @@ class HabitProvider extends ChangeNotifier {
     // per day to roll the 7-day window forward and catch any notifications that
     // fired while the app was closed.
     final prefs = await SharedPreferences.getInstance();
-    final today = _normalizeDate(DateTime.now()).toIso8601String().split('T').first;
+    final today =
+        _normalizeDate(DateTime.now()).toIso8601String().split('T').first;
 
     if (!force) {
       final lastSync = prefs.getString('lastNotificationSyncDate');
@@ -85,7 +86,9 @@ class HabitProvider extends ChangeNotifier {
     }
 
     await NotificationService.scheduleAllHabitNotifications(
-      habits: habits.where((habit) => habit.isDeleted != true),
+      habits: habits.where(
+        (habit) => habit.isDeleted != true && habit.isPaused != true,
+      ),
       appearsOnDay: appearsOnDay,
     );
 
@@ -371,6 +374,9 @@ class HabitProvider extends ChangeNotifier {
     if (habit.isDeleted == true) {
       return false;
     }
+    if (habit.isPaused == true) {
+      return false;
+    }
     final normalizedDay = _normalizeDate(day);
     switch (habit.scheduleType) {
       case ScheduleType.daily:
@@ -410,6 +416,7 @@ class HabitProvider extends ChangeNotifier {
         .where(
           (habit) =>
               (habit.isDeleted != true) &&
+              (habit.isPaused != true) &&
               (_appearsOnDay(habit, day) || habit.completed),
         )
         .toList();
@@ -826,6 +833,22 @@ class HabitProvider extends ChangeNotifier {
     await NotificationService.cancelHabitNotifications(habit);
     if (context.mounted) checkReorderCategories(context, habit);
 
+    updateHabitInDB(habit);
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+  }
+
+  Future<void> pauseHabit(Habit habit) async {
+    await habit.pauseHabit();
+    await NotificationService.cancelHabitNotifications(habit);
+    updateHabitInDB(habit);
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+  }
+
+  Future<void> unpauseHabit(Habit habit) async {
+    await habit.unpauseHabit();
+    _syncSingleHabitNotifications(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
     notifyListeners();

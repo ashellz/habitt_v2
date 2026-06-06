@@ -55,6 +55,7 @@ class Habit extends HiveObject {
   premadeHabitType; // If created from a premade template which type
   HabitTrackingType? trackingType; // amount or duration
   bool? isDeleted;
+  bool? isPaused;
   Map<String, DateTime> timestamps;
   DateTime? insightPopstonedUntil;
 
@@ -96,6 +97,7 @@ class Habit extends HiveObject {
     this.premadeHabitType,
     this.trackingType,
     this.isDeleted,
+    this.isPaused,
     Map<String, DateTime>? timestamps,
     this.insightPopstonedUntil,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
@@ -180,6 +182,7 @@ class Habit extends HiveObject {
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
+      isPaused: isPaused,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
@@ -224,6 +227,7 @@ class Habit extends HiveObject {
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
+      isPaused: isPaused,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
     );
@@ -381,6 +385,10 @@ class Habit extends HiveObject {
       insightPopstonedUntil = habit.insightPopstonedUntil;
       timestamps['insightPopstonedUntil'] = now;
     }
+    if (isPaused != habit.isPaused) {
+      isPaused = habit.isPaused;
+      timestamps['isPaused'] = now;
+    }
   }
 
   /// Apply the result of a [merge] call directly, preserving the
@@ -426,6 +434,7 @@ class Habit extends HiveObject {
     premadeHabitType = merged.premadeHabitType;
     trackingType = merged.trackingType;
     isDeleted = merged.isDeleted;
+    isPaused = merged.isPaused;
     insightPopstonedUntil = merged.insightPopstonedUntil;
     timestamps
       ..clear()
@@ -435,6 +444,16 @@ class Habit extends HiveObject {
   Future<void> deleteHabit() async {
     isDeleted = true;
     timestamps['isDeleted'] = DateTime.now().toUtc();
+  }
+
+  Future<void> pauseHabit() async {
+    isPaused = true;
+    timestamps['isPaused'] = DateTime.now().toUtc();
+  }
+
+  Future<void> unpauseHabit() async {
+    isPaused = false;
+    timestamps['isPaused'] = DateTime.now().toUtc();
   }
 
   Future<void> completeHabit() async {
@@ -670,6 +689,7 @@ class Habit extends HiveObject {
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'trackingType': _serializeTrackingType(trackingType),
       'isDeleted': isDeleted,
+      'isPaused': isPaused,
       'insightPopstonedUntil': insightPopstonedUntil?.toIso8601String(),
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
@@ -740,6 +760,7 @@ class Habit extends HiveObject {
             duration: (m['duration'] as int?) ?? 0,
           ),
       isDeleted: m['isDeleted'] as bool?,
+      isPaused: m['isPaused'] as bool?,
       insightPopstonedUntil:
           DateTime.tryParse(
             m['insightPopstonedUntil']?.toString() ?? '',
@@ -909,6 +930,7 @@ class Habit extends HiveObject {
         incoming.trackingType,
       ),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
+      isPaused: resolve('isPaused', isPaused, incoming.isPaused),
       timestamps: mergedTimestamps,
     );
 

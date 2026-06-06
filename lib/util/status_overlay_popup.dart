@@ -31,6 +31,9 @@ class StatusOverlayPopupController {
     required ColorProvider cp,
     required String title,
     required bool isError,
+    String? iconPath,
+    Widget? iconWidget,
+    Color? iconColor,
   }) {
     _removeOverlay();
 
@@ -46,12 +49,13 @@ class StatusOverlayPopupController {
     );
     _overlayController = controller;
 
-    final iconPath =
-        isError
+    final resolvedIconPath =
+        iconPath ??
+        (isError
             ? 'assets/images/new-svg/skipped.svg'
             : (cp.isDark
                 ? 'assets/images/new-svg/check-on-dark.svg'
-                : 'assets/images/new-svg/check-on-light.svg');
+                : 'assets/images/new-svg/check-on-light.svg'));
 
     final accent = isError ? cp.fail : cp.main;
 
@@ -103,7 +107,18 @@ class StatusOverlayPopupController {
                             SizedBox(
                               width: 24,
                               height: 24,
-                              child: SvgPicture.asset(iconPath),
+                              child:
+                                  iconWidget ??
+                                  SvgPicture.asset(
+                                    resolvedIconPath,
+                                    colorFilter:
+                                        iconColor != null
+                                            ? ColorFilter.mode(
+                                              iconColor,
+                                              BlendMode.srcIn,
+                                            )
+                                            : null,
+                                  ),
                             ),
                             Text(
                               title,
