@@ -185,6 +185,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabit => 'Edit Habit';
 
   @override
+  String get pauseHabit => 'Pause Habit';
+
+  @override
   String get editProfile => 'Edit profile';
 
   @override

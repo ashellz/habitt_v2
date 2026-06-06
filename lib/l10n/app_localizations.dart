@@ -428,6 +428,12 @@ abstract class AppLocalizations {
   /// **'Edit Habit'**
   String get editHabit;
 
+  /// No description provided for @pauseHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Habit'**
+  String get pauseHabit;
+
   /// No description provided for @editProfile.
   ///
   /// In en, this message translates to:

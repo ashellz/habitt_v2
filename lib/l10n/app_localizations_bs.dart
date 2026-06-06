@@ -186,6 +186,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get editHabit => 'Uredi naviku';
 
   @override
+  String get pauseHabit => 'Pause Habit';
+
+  @override
   String get editProfile => 'Uredi profil';
 
   @override

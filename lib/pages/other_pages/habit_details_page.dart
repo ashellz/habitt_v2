@@ -13,6 +13,7 @@ import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_delete_habit_flow.dart';
+import 'package:habitt/widgets/default/default_popup_menu.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/habit_primary_action_button.dart';
@@ -212,7 +213,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     );
 
     final isCompletedToday = _isToday(effectiveDate) && displayHabit.completed;
-    final effectiveStreak = stats.currentStreak +
+    final effectiveStreak =
+        stats.currentStreak +
         (isCompletedToday && stats.currentStreak > 0 ? 1 : 0);
     final effectiveLongest = max(effectiveStreak, stats.longestStreak);
 
@@ -276,37 +278,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                     SizedBox(height: 24),
                     ConsistencyCalendar(habitStats: stats),
                     const SizedBox(height: 24),
-                    GestureDetector(
-                      onTap: () => showDeleteHabitFlow(habit, context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        color: Colors.transparent,
-                        child: Row(
-                          spacing: 12,
-                          children: [
-                            Text(
-                              loc.deleteHabit,
-                              style: TextStyle(
-                                color: cp.error,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Spacer(),
-                            SvgPicture.asset(
-                              'assets/images/new-svg/trash.svg',
-                              width: 20,
-                              height: 20,
-                              colorFilter: ColorFilter.mode(
-                                cp.error,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -359,16 +330,33 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
 
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: NewCircleButton(
-              svgPath: 'assets/images/new-svg/edit.svg',
-              cnIcon: CNSymbol('pencil.line', size: 14),
-              width: 44,
-              height: 44,
-              color: cp.bg,
-              padding: const EdgeInsets.all(13),
-              onPressed: () async {
-                await _openEditSheet(habit);
-              },
+            child: DefaultPopupMenu(
+              items: [
+                DefaultPopupMenuItem(
+                  label: loc.editHabit,
+                  svgPath: 'assets/images/new-svg/edit.svg',
+                  onTap: () => _openEditSheet(habit),
+                ),
+                DefaultPopupMenuItem(
+                  label: loc.pauseHabit,
+                  svgPath: 'assets/images/new-svg/pause.svg',
+                  onTap: () {},
+                ),
+                DefaultPopupMenuItem(
+                  label: loc.deleteHabit,
+                  svgPath: 'assets/images/new-svg/trash.svg',
+                  color: cp.error,
+                  onTap: () => showDeleteHabitFlow(habit, context),
+                ),
+              ],
+              child: NewCircleButton(
+                svgPath: 'assets/images/new-svg/more.svg',
+                cnIcon: CNSymbol('ellipsis', size: 14),
+                width: 44,
+                height: 44,
+                color: cp.bg,
+                padding: const EdgeInsets.all(13),
+              ),
             ),
           ),
         ],
