@@ -568,11 +568,11 @@ class BackupProvider extends ChangeNotifier {
           // restore). No cloud data → upload local as first backup.
           notifyListeners();
           await performSync(true);
+          _startPeriodicSync();
         }
       } else {
         notifyListeners();
       }
-      _startPeriodicSync();
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
       debugPrint(_lastError);
@@ -807,6 +807,7 @@ class BackupProvider extends ChangeNotifier {
     try {
       await _replaceFromCloud(key);
       await _onSyncSuccess();
+      _startPeriodicSync();
     } catch (e) {
       syncState = SyncState.error;
       lastError = 'Restore failed: $e';
@@ -1151,6 +1152,7 @@ class BackupProvider extends ChangeNotifier {
     String folderId,
   ) async {
     try {
+      debugPrint('[SYNC] _syncKeyWithDrive: starting key sync...');
       const keyFileName = 'key.key';
       final driveKeyRaw = await _downloadFileBytes(
         drive,
@@ -1159,18 +1161,27 @@ class BackupProvider extends ChangeNotifier {
       );
 
       if (driveKeyRaw == null) {
+        debugPrint(
+          '[SYNC] _syncKeyWithDrive: no key.key on Drive — uploading local key.',
+        );
         await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
         return;
       }
 
       final content = utf8.decode(driveKeyRaw);
       final hasLocal = await BackupService.hasStoredKey(_secureStorage);
+      debugPrint(
+        '[SYNC] _syncKeyWithDrive: Drive key.key found (${driveKeyRaw.length} bytes), hasLocal=$hasLocal',
+      );
 
       // Parse JSON envelope; fall back to old plain-base64 for backward compat.
       Map<String, dynamic> envelope;
       try {
         envelope = jsonDecode(content) as Map<String, dynamic>;
       } catch (_) {
+        debugPrint(
+          '[SYNC] _syncKeyWithDrive: legacy plain-b64 format detected.',
+        );
         if (!hasLocal) {
           await BackupService.storeKeyBytes(
             _secureStorage,
@@ -1182,8 +1193,12 @@ class BackupProvider extends ChangeNotifier {
       }
 
       final type = envelope['type'] as String?;
+      debugPrint(
+        '[SYNC] _syncKeyWithDrive: envelope parsed — type="$type", isPinEnabled=$_isPinEnabled, hasLocal=$hasLocal',
+      );
 
       if (!hasLocal) {
+        debugPrint('[SYNC] _syncKeyWithDrive: new device path.');
         // New device — install whatever Drive has.
         if (type == 'plain') {
           await BackupService.storeKeyBytes(
@@ -1197,13 +1212,49 @@ class BackupProvider extends ChangeNotifier {
         return;
       }
 
-      // Existing device — reconcile PIN state with Drive.
+      debugPrint('[SYNC] _syncKeyWithDrive: existing device path.');
       if (type == 'plain') {
         if (_isPinEnabled) {
           // Another device disabled PIN — sync state locally.
           await _applyDriveDisabledPin(envelope);
+        } else {
+          // both plain — verify that key matches Drive.
+          // if they dont match (e.g. Android regenerated its key after a reinstall),
+          // drive is correct: update local to match drive
+          final driveKeyBytes = base64Decode(envelope['key'] as String);
+          final localKey = await BackupService.getOrCreateKey(_secureStorage);
+          final localKeyBytes = await localKey.extractBytes();
+
+          final driveFingerprint =
+              driveKeyBytes
+                  .take(4)
+                  .map((b) => b.toRadixString(16).padLeft(2, '0'))
+                  .join();
+          final localFingerprint =
+              localKeyBytes
+                  .take(4)
+                  .map((b) => b.toRadixString(16).padLeft(2, '0'))
+                  .join();
+          debugPrint(
+            '[SYNC] _syncKeyWithDrive: local key fingerprint=$localFingerprint, Drive key fingerprint=$driveFingerprint',
+          );
+          final keysMatch =
+              driveKeyBytes.length == localKeyBytes.length &&
+              List.generate(
+                driveKeyBytes.length,
+                (i) => driveKeyBytes[i] == localKeyBytes[i],
+              ).every((e) => e);
+          if (!keysMatch) {
+            debugPrint(
+              '[SYNC] _syncKeyWithDrive: KEY MISMATCH — updating local key from Drive (was $localFingerprint, now $driveFingerprint).',
+            );
+            await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
+            _cachedKey =
+                null; // force _getKey() to re-derive from updated storage
+          } else {
+            debugPrint('[SYNC] _syncKeyWithDrive: keys match — no-op.');
+          }
         }
-        // else: both plain, consistent — no-op.
       } else {
         // Drive is PIN-wrapped.
         if (!_isPinEnabled) {
@@ -1684,6 +1735,9 @@ class BackupProvider extends ChangeNotifier {
     String folderId,
     SecretKey key,
   ) async {
+    debugPrint(
+      '[SYNC] _checkAndApplyNewerBackup: checking for newer full backup...',
+    );
     final res = await drive.files.list(
       q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
       $fields: 'files(id,modifiedTime)',
@@ -1692,31 +1746,60 @@ class BackupProvider extends ChangeNotifier {
     );
 
     final files = res.files ?? [];
-    if (files.isEmpty) return;
+    if (files.isEmpty) {
+      debugPrint(
+        '[SYNC] _checkAndApplyNewerBackup: no backup files found on Drive.',
+      );
+      return;
+    }
 
     final latest = files.first;
     final fileId = latest.id;
     final modifiedTime = latest.modifiedTime;
-    if (fileId == null || modifiedTime == null) return;
+    if (fileId == null || modifiedTime == null) {
+      debugPrint(
+        '[SYNC] _checkAndApplyNewerBackup: backup file missing id or modifiedTime.',
+      );
+      return;
+    }
+
+    debugPrint(
+      '[SYNC] _checkAndApplyNewerBackup: found backup $fileId modified=$modifiedTime lastSyncTime=$_lastSyncTime',
+    );
 
     // Skip if we already applied this exact backup file.
     final prefs = await SharedPreferences.getInstance();
     final lastAppliedId = prefs.getString(_kLastAppliedBackupIdKey);
-    if (lastAppliedId == fileId) return;
+    if (lastAppliedId == fileId) {
+      debugPrint(
+        '[SYNC] _checkAndApplyNewerBackup: SKIP — already applied this backup (id=$fileId).',
+      );
+      return;
+    }
 
     // Skip if the backup predates our last successful sync (nothing new).
-    if (_lastSyncTime != null && !modifiedTime.isAfter(_lastSyncTime!)) return;
+    if (_lastSyncTime != null && !modifiedTime.isAfter(_lastSyncTime!)) {
+      debugPrint(
+        '[SYNC] _checkAndApplyNewerBackup: SKIP — backup ($modifiedTime) is not newer than lastSyncTime ($_lastSyncTime).',
+      );
+      return;
+    }
 
     debugPrint(
-      'Full backup ($fileId, modified $modifiedTime) is newer than last sync '
-      '($_lastSyncTime) — downloading and merging.',
+      '[SYNC] _checkAndApplyNewerBackup: backup is newer than last sync — downloading and merging.',
     );
 
     final backupData = await _downloadBackupFromCloud(key);
     if (backupData != null) {
       await _mergeBackupData(backupData);
       await prefs.setString(_kLastAppliedBackupIdKey, fileId);
-      debugPrint('Applied newer full backup $fileId');
+      debugPrint(
+        '[SYNC] _checkAndApplyNewerBackup: applied newer full backup $fileId',
+      );
+    } else {
+      debugPrint(
+        '[SYNC] _checkAndApplyNewerBackup: failed to download/decrypt backup.',
+      );
     }
   }
 
@@ -1737,12 +1820,18 @@ class BackupProvider extends ChangeNotifier {
     );
 
     final allFiles = res.files ?? [];
+    debugPrint(
+      '[SYNC] _downloadAndApplyPendingDeltas: ${allFiles.length} delta file(s) found on Drive.',
+    );
     if (allFiles.isEmpty) return;
 
     // The short device ID embedded in the filename (first 8 chars of deviceId).
     final deviceId = _localMetadata?.deviceId ?? '';
     final shortMyId =
         deviceId.length >= 8 ? deviceId.substring(0, 8) : deviceId;
+    debugPrint(
+      '[SYNC] _downloadAndApplyPendingDeltas: this device shortId="$shortMyId"',
+    );
 
     // Load the set of delta file IDs already applied on this device.
     final prefs = await SharedPreferences.getInstance();
@@ -1755,21 +1844,38 @@ class BackupProvider extends ChangeNotifier {
     // Filter: skip our own deltas and already-applied ones.
     final pending =
         allFiles.where((f) {
-          if (f.id == null) return false;
-          if (applied.contains(f.id!)) return false;
-          if (shortMyId.isNotEmpty && (f.name ?? '').contains(shortMyId))
+          if (f.id == null) {
+            debugPrint('[SYNC]   skip delta (null id): ${f.name}');
             return false;
+          }
+          if (applied.contains(f.id!)) {
+            debugPrint(
+              '[SYNC]   skip delta (already applied): ${f.name} id=${f.id}',
+            );
+            return false;
+          }
+          if (shortMyId.isNotEmpty && (f.name ?? '').contains(shortMyId)) {
+            debugPrint('[SYNC]   skip delta (own device): ${f.name}');
+            return false;
+          }
+          debugPrint('[SYNC]   pending delta: ${f.name} id=${f.id}');
           return true;
         }).toList();
 
-    if (pending.isEmpty) return;
+    if (pending.isEmpty) {
+      debugPrint(
+        '[SYNC] _downloadAndApplyPendingDeltas: no pending deltas to apply.',
+      );
+      return;
+    }
 
     debugPrint(
-      'Applying ${pending.length} pending delta(s) from other devices.',
+      '[SYNC] _downloadAndApplyPendingDeltas: applying ${pending.length} pending delta(s).',
     );
 
     for (final f in pending) {
       try {
+        debugPrint('[SYNC] Downloading delta: ${f.name} (${f.id})');
         final response =
             await drive.files.get(
                   f.id!,
@@ -1781,6 +1887,9 @@ class BackupProvider extends ChangeNotifier {
         await for (final chunk in response.stream) {
           bytes.addAll(chunk);
         }
+        debugPrint(
+          '[SYNC] Downloaded ${bytes.length} bytes for delta ${f.name}',
+        );
 
         final backupData = await _tryDecryptWithFallback(
           Uint8List.fromList(bytes),
@@ -1788,14 +1897,24 @@ class BackupProvider extends ChangeNotifier {
         );
 
         if (backupData != null) {
+          debugPrint(
+            '[SYNC] Decrypted delta ${f.name}: ${backupData.habits.length} habit(s), ${backupData.days.length} day(s)',
+          );
           await _mergeBackupData(backupData);
           applied.add(f.id!);
-          debugPrint('Applied delta ${f.id} (${f.name})');
+          debugPrint('[SYNC] Applied delta ${f.id} (${f.name})');
+        } else {
+          // Decryption failed — wrong key or permanently corrupt file.
+          // Retrying will never succeed, so mark as applied to skip on
+          // future cycles. The delta will rotate off Drive within 7 days.
+          applied.add(f.id!);
+          debugPrint(
+            '[SYNC] WARN: delta ${f.name} could not be decrypted (wrong key or corrupt) — permanently skipping.',
+          );
         }
       } catch (e) {
-        // Skip unreadable/corrupt deltas — do not add to applied set so we
-        // can retry on the next sync cycle.
-        debugPrint('Skipped delta ${f.id}: $e');
+        // Network/IO error — do NOT mark as applied so we retry next cycle.
+        debugPrint('[SYNC] ERROR applying delta ${f.id} (${f.name}): $e');
       }
     }
 
@@ -1815,9 +1934,14 @@ class BackupProvider extends ChangeNotifier {
       fromTime: _lastSyncTime!,
     );
     if (bytes == null) {
-      debugPrint('Delta upload skipped — no changes since last sync.');
+      debugPrint(
+        '[SYNC] _uploadDeltaToCloud: no changes since $_lastSyncTime — skipping upload.',
+      );
       return;
     }
+    debugPrint(
+      '[SYNC] _uploadDeltaToCloud: exporting delta with fromTime=$_lastSyncTime',
+    );
 
     final drive = await _getDriveService();
     if (drive == null) return;
@@ -1928,6 +2052,11 @@ class BackupProvider extends ChangeNotifier {
     final habitsBox = Hive.box<Habit>('habits');
     final daysBox = Hive.box<Day>('days');
 
+    debugPrint(
+      '[SYNC] _mergeBackupData: merging ${backupData.habits.length} habit(s), ${backupData.days.length} day(s)',
+    );
+
+    // ── Habits (master records) ──────────────────────────────────────────────
     for (final incoming in backupData.habits) {
       Habit? existing;
       for (final h in habitsBox.values) {
@@ -1938,15 +2067,39 @@ class BackupProvider extends ChangeNotifier {
       }
 
       if (existing != null) {
+        final beforeCompleted = existing.completed;
+        final beforeAmountC = existing.amountCompleted;
+        final beforeDurationC = existing.durationCompleted;
         final merged = existing.merge(incoming);
         existing.applyMerge(merged);
         await existing.save();
+        // Log only when completion-related fields changed.
+        if (existing.completed != beforeCompleted ||
+            existing.amountCompleted != beforeAmountC ||
+            existing.durationCompleted != beforeDurationC) {
+          debugPrint(
+            '[SYNC]   habit id=${incoming.id} "${incoming.name}": '
+            'completed $beforeCompleted→${existing.completed} '
+            'amountC $beforeAmountC→${existing.amountCompleted} '
+            'durationC $beforeDurationC→${existing.durationCompleted} '
+            '(local completedTs=${existing.timestamps["completed"]}, incoming completedTs=${incoming.timestamps["completed"]})',
+          );
+        }
       } else {
-        if (incoming.isDeleted ?? false) continue;
+        if (incoming.isDeleted ?? false) {
+          debugPrint(
+            '[SYNC]   habit id=${incoming.id} "${incoming.name}": new but deleted — skip.',
+          );
+          continue;
+        }
+        debugPrint(
+          '[SYNC]   habit id=${incoming.id} "${incoming.name}": new habit added.',
+        );
         await habitsBox.add(incoming);
       }
     }
 
+    // ── Days (snapshots) ─────────────────────────────────────────────────────
     for (final day in backupData.days) {
       final dayKey =
           DateTime(
@@ -1964,9 +2117,19 @@ class BackupProvider extends ChangeNotifier {
       // block incoming backup or delta data from being applied.
       if (existingDay != null && existingDay.habits.isNotEmpty) {
         // Skip if incoming has no timestamp (can't be newer).
-        if (incomingTs == null) continue;
+        if (incomingTs == null) {
+          debugPrint(
+            '[SYNC]   day $dayKey: SKIP — incoming has no timestamp (local=$localTs).',
+          );
+          continue;
+        }
         // Skip if local is the same moment or more recent than incoming.
-        if (localTs != null && !incomingTs.isAfter(localTs)) continue;
+        if (localTs != null && !incomingTs.isAfter(localTs)) {
+          debugPrint(
+            '[SYNC]   day $dayKey: SKIP — local ($localTs) >= incoming ($incomingTs).',
+          );
+          continue;
+        }
       }
 
       final existingById = <int, Habit>{};
@@ -1981,7 +2144,16 @@ class BackupProvider extends ChangeNotifier {
       for (final incomingHabit in day.habits) {
         final local = existingById.remove(incomingHabit.id);
         if (local != null) {
-          mergedDayHabits.add(local.merge(incomingHabit));
+          final beforeCompleted = local.completed;
+          final merged = local.merge(incomingHabit);
+          if (merged.completed != beforeCompleted) {
+            debugPrint(
+              '[SYNC]   day $dayKey habit id=${incomingHabit.id} "${incomingHabit.name}": '
+              'completed $beforeCompleted→${merged.completed} '
+              '(local completedTs=${local.timestamps["completed"]}, incoming completedTs=${incomingHabit.timestamps["completed"]})',
+            );
+          }
+          mergedDayHabits.add(merged);
         } else {
           if (incomingHabit.isDeleted ?? false) continue;
           mergedDayHabits.add(incomingHabit);
@@ -1994,6 +2166,12 @@ class BackupProvider extends ChangeNotifier {
           (localTs != null && incomingTs != null)
               ? (incomingTs.isAfter(localTs) ? incomingTs : localTs)
               : (localTs ?? incomingTs);
+
+      debugPrint(
+        '[SYNC]   day $dayKey: MERGE — local=${existingDay != null ? "${existingDay.habits.length} habits, ts=$localTs" : "none"} '
+        '| incoming=${day.habits.length} habits, ts=$incomingTs '
+        '| result=${mergedDayHabits.length} habits, ts=$mergedTs',
+      );
 
       await daysBox.put(
         dayKey,

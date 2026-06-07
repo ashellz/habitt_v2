@@ -17,7 +17,7 @@ class OverwriteLocalDataDialog extends StatelessWidget {
     return NewDefaultDialog(
       title: loc.overwriteLocalDataTitle,
       desc: loc.overwriteLocalDataDesc,
-      primaryButtonLabel: loc.overwrite,
+      primaryButtonLabel: loc.delete,
       primaryButtonColor: cp.error,
       secondaryButtonLabel: loc.cancel,
       onPrimaryButtonPressed: () {

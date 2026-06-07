@@ -625,6 +625,20 @@ class BackupService {
               )
               .toList();
 
+      debugPrint(
+        '[SYNC] exportDelta: fromTime=$fromTime → ${changedHabits.length} changed habit(s), ${changedDays.length} changed day(s)',
+      );
+      for (final h in changedHabits) {
+        debugPrint(
+          '[SYNC]   habit id=${h.id} "${h.name}" completed=${h.completed} amountC=${h.amountCompleted} durationC=${h.durationCompleted} completedTs=${h.timestamps["completed"]}',
+        );
+      }
+      for (final d in changedDays) {
+        debugPrint(
+          '[SYNC]   day ${d.date.toIso8601String().split("T").first} ts=${d.timestamp} habits=${d.habits.length}',
+        );
+      }
+
       if (changedHabits.isEmpty && changedDays.isEmpty) return null;
 
       final metadata = await buildMetadata();
