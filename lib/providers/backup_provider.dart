@@ -187,6 +187,7 @@ class BackupProvider extends ChangeNotifier {
 
     if (_syncSpeed == SyncSpeed.fast) {
       // Fast mode: debounce for 5 s to batch rapid changes.
+      _hasPendingSync = true;
       _autoSyncTimer = Timer(const Duration(seconds: 5), () {
         _hasPendingSync = false;
         performSync(false, SyncMode.uploadOnly).catchError((e) {
@@ -248,6 +249,16 @@ class BackupProvider extends ChangeNotifier {
     // Restart the periodic timer with the new interval.
     _startPeriodicSync();
     notifyListeners();
+    // Switching to fast: cancel any pending debounce timer and sync immediately
+    // so changes aren't held back by the optimized-mode 15-second delay.
+    if (speed == SyncSpeed.fast && isLoggedIn && _isAutoSyncEnabled) {
+      _autoSyncTimer?.cancel();
+      _autoSyncTimer = null;
+      _hasPendingSync = false;
+      performSync(false, SyncMode.syncOnly).catchError((e) {
+        debugPrint('Post-speed-switch sync failed: $e');
+      });
+    }
   }
 
   Future<void> setAutoSyncEnabled(bool value) async {
@@ -1948,7 +1959,10 @@ class BackupProvider extends ChangeNotifier {
       final localTs = existingDay?.timestamp;
       final incomingTs = day.timestamp;
 
-      if (existingDay != null) {
+      // Only apply directional skip when the existing day has real habit data.
+      // Placeholder days created after a wipe (habits.isEmpty) should never
+      // block incoming backup or delta data from being applied.
+      if (existingDay != null && existingDay.habits.isNotEmpty) {
         // Skip if incoming has no timestamp (can't be newer).
         if (incomingTs == null) continue;
         // Skip if local is the same moment or more recent than incoming.
