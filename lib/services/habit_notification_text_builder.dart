@@ -558,7 +558,10 @@ class HabitNotificationTextBuilder {
 
   static String _resolveTitle(HabitNotificationContext context) {
     final trimmed = context.habit.name.trim();
-    final name = trimmed.isNotEmpty ? trimmed : context.localizations.notificationFallbackTitle;
+    final name =
+        trimmed.isNotEmpty
+            ? trimmed
+            : context.localizations.notificationFallbackTitle;
     final icon = context.habit.iconPath.trim();
     if (icon.isNotEmpty) {
       return '$icon $name';
