@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
@@ -6,6 +8,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:hive_ce/hive.dart';
@@ -929,6 +932,11 @@ class HabitProvider extends ChangeNotifier {
       todaySimple: todaySimple,
     );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
+
+    if (!wasCompleted && habit.completed) {
+      unawaited(_maybeRequestReview());
+    }
+
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }
@@ -1149,6 +1157,18 @@ class HabitProvider extends ChangeNotifier {
 
   bool _isRecalculatingLongestStreak = false;
   bool get isRecalculatingLongestStreak => _isRecalculatingLongestStreak;
+
+  Future<void> _maybeRequestReview() async {
+    final prefs = await SharedPreferences.getInstance();
+    final count = (prefs.getInt('total_habit_completions') ?? 0) + 1;
+    await prefs.setInt('total_habit_completions', count);
+
+    final maxStreak = habits.fold(0, (m, h) => h.streak > m ? h.streak : m);
+    await FeedbackService.maybeRequestReview(
+      totalCompletions: count,
+      maxStreak: maxStreak,
+    );
+  }
 
   Future<void> recalculateLongestStreaks([int? onlyHabitId]) async {
     _isRecalculatingLongestStreak = true;

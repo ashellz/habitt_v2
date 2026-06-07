@@ -9,7 +9,6 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/default/glass_blur_container.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class CircleButton extends StatefulWidget {
   const CircleButton({
