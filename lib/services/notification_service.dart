@@ -183,11 +183,9 @@ class NotificationService {
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
 
-    debugPrint(
-      'Scheduling notifications for ${habits.length} habits over next $horizonDays days',
-    );
+    // debugPrint('Scheduling notifications for ${habits.length} habits over next $horizonDays days',);
     for (final habit in habits) {
-      debugPrint('Scheduling notifications for habit ${habit.name}');
+      //debugPrint('Scheduling notifications for habit ${habit.name}');
       await _scheduleHabitNotifications(
         habit: habit,
         appearsOnDay: appearsOnDay,
@@ -215,7 +213,11 @@ class NotificationService {
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day);
 
-    for (int dayOffset = startDayOffset; dayOffset < horizonDays + startDayOffset; dayOffset++) {
+    for (
+      int dayOffset = startDayOffset;
+      dayOffset < horizonDays + startDayOffset;
+      dayOffset++
+    ) {
       final day = startDay.add(Duration(days: dayOffset));
       if (!appearsOnDay(habit, day)) {
         continue;

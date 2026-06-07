@@ -1945,13 +1945,14 @@ class BackupProvider extends ChangeNotifier {
           ).toIso8601String().split('T').first;
 
       final existingDay = daysBox.get(dayKey);
+      final localTs = existingDay?.timestamp;
+      final incomingTs = day.timestamp;
+
       if (existingDay != null) {
-        final localTs = existingDay.timestamp;
-        final incomingTs = day.timestamp;
-        if ((localTs == incomingTs) ||
-            (localTs == null && incomingTs == null)) {
-          continue;
-        }
+        // Skip if incoming has no timestamp (can't be newer).
+        if (incomingTs == null) continue;
+        // Skip if local is the same moment or more recent than incoming.
+        if (localTs != null && !incomingTs.isAfter(localTs)) continue;
       }
 
       final existingById = <int, Habit>{};
@@ -1974,9 +1975,15 @@ class BackupProvider extends ChangeNotifier {
       }
       mergedDayHabits.addAll(existingById.values);
 
+      // Preserve the most recent modification timestamp from either device.
+      final mergedTs =
+          (localTs != null && incomingTs != null)
+              ? (incomingTs.isAfter(localTs) ? incomingTs : localTs)
+              : (localTs ?? incomingTs);
+
       await daysBox.put(
         dayKey,
-        Day(date: day.date, habits: mergedDayHabits, timestamp: day.timestamp),
+        Day(date: day.date, habits: mergedDayHabits, timestamp: mergedTs),
       );
     }
 

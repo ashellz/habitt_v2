@@ -623,7 +623,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> updateHabitInDB(Habit habit, {DateTime? day}) async {
-    debugPrint("Updating habit in DB: ${habit.name}");
+    // debugPrint("Updating habit in DB: ${habit.name}");
     habitStatsProvider?.invalidateHabit(habit.id);
     if (statsProvider != null) {
       statsProvider!.addShouldRefresh(StatsType.habitsCompleted);
@@ -1226,7 +1226,7 @@ class HabitProvider extends ChangeNotifier {
       if (onlyHabitId != null && habit.id != onlyHabitId) {
         continue;
       }
-      debugPrint("Checking habit: ${habit.name}");
+      // debugPrint("Checking habit: ${habit.name}");
 
       int streak = 0;
       int longestStreak = habit.longestStreak;
@@ -1286,7 +1286,7 @@ class HabitProvider extends ChangeNotifier {
       }
 
       habit.updateStreak(streak: streak, longestStreak: longestStreak);
-      debugPrint("Streak: $streak, Longest Streak: $longestStreak");
+      // debugPrint("Streak: $streak, Longest Streak: $longestStreak");
       await habit.save();
     }
 

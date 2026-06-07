@@ -10,7 +10,10 @@ class Day extends HiveObject {
 
   Map<String, dynamic> toMap() {
     return {
-      'date': date.toIso8601String(),
+      'date':
+          '${date.year.toString().padLeft(4, '0')}-'
+          '${date.month.toString().padLeft(2, '0')}-'
+          '${date.day.toString().padLeft(2, '0')}',
       'habits': habits.map((h) => h.toMap()).toList(),
       'timestamp': timestamp?.toIso8601String(),
     };

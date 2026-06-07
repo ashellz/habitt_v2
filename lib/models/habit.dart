@@ -481,20 +481,28 @@ class Habit extends HiveObject {
   }
 
   void updateHabitAmountCompleted(int amountCompleted) {
+    final bool wasCompleted = completed;
     if (amountCompleted >= amount) {
       completed = true;
     } else if (completed) {
       completed = false;
+    }
+    if (completed != wasCompleted) {
+      timestamps['completed'] = DateTime.now().toUtc();
     }
     this.amountCompleted = amountCompleted;
     timestamps['amountCompleted'] = DateTime.now().toUtc();
   }
 
   void updateHabitDurationCompleted(int durationCompleted) {
+    final bool wasCompleted = completed;
     if (durationCompleted >= duration) {
       completed = true;
     } else if (completed) {
       completed = false;
+    }
+    if (completed != wasCompleted) {
+      timestamps['completed'] = DateTime.now().toUtc();
     }
     this.durationCompleted = durationCompleted;
     timestamps['durationCompleted'] = DateTime.now().toUtc();
