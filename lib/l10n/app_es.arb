@@ -572,6 +572,8 @@
   "notificationScheduleWeeklyRemaining": "Necesitas {remaining} más esta semana para alcanzar {target}. El ritmo constante funciona. Necesitas {remaining} más esta semana. Hoy es un buen momento para empezar uno.|Objetivo semanal: {remaining} restantes de {target}. Reparte el esfuerzo. Quedan {remaining} sesiones para llegar a {target} esta semana. Cada una es igual de importante. Tu objetivo semanal es {target} y te quedan {remaining}. Un paso cada vez.",
   "notifications": "Notificaciones",
   "notificationsAreDisabled": "Notificaciones desactivadas",
+  "notificationsOffDialogDesc": "Activa las notificaciones para recibir recordatorios de este hábito.",
+  "turnOn": "Activar",
   "now": "Ahora",
   "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Número de días seguidos que has completado todos tus hábitos.",
   "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Sólo visible en el plan diario. Activa el modo \"Colorido\" en Ajustes para que se muestre al finalizar.",

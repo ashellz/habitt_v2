@@ -1354,6 +1354,13 @@ class AppLocalizationsBs extends AppLocalizations {
   String get notificationsAreDisabled => 'Obavijesti su onemogućene';
 
   @override
+  String get notificationsOffDialogDesc =>
+      'Uključite obavijesti kako biste primali podsjetike za ovu naviku.';
+
+  @override
+  String get turnOn => 'Uključi';
+
+  @override
   String get now => 'Sada';
 
   @override

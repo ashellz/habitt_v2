@@ -308,6 +308,8 @@
   "notificationScheduleWeeklyRemaining": "You need {remaining} more this week to reach {target}.|{remaining} to go for weekly target of {target}. Steady pacing works.|You need {remaining} more this week. Today is a great time to start one.|Weekly goal: {remaining} remaining of {target}. Spread the effort.|{remaining} sessions left to hit {target} this week. Each one matters equally.|Your weekly target is {target}, with {remaining} to go. One step at a time.",
   "notifications": "Notifications",
   "notificationsAreDisabled": "Notifications are disabled",
+  "notificationsOffDialogDesc": "Turn on notifications to receive reminders for this habit.",
+  "turnOn": "Turn on",
   "now": "Now",
   "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Number of days in a row you have completed all your habits.",
   "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Only visible on Daily plan. Enable 'Colorful' mode in Settings to show on completion.",

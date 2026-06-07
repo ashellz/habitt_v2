@@ -2090,6 +2090,18 @@ abstract class AppLocalizations {
   /// **'Notifications are disabled'**
   String get notificationsAreDisabled;
 
+  /// No description provided for @notificationsOffDialogDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on notifications to receive reminders for this habit.'**
+  String get notificationsOffDialogDesc;
+
+  /// No description provided for @turnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get turnOn;
+
   /// No description provided for @now.
   ///
   /// In en, this message translates to:

@@ -556,6 +556,8 @@
   "notificationScheduleWeeklyRemaining": "Trebate još {remaining} ove sedmice da biste dostigli {target}.|Preostalo je {remaining} do sedmičnog cilja od {target}. Stalno tempo djeluje.|Trebate još {remaining} ove sedmice. Danas je odlično vrijeme da započnete jedan.|Sedmični cilj: preostalo {remaining} od {target}. Raspodijeli napor.|Preostalo je {remaining} sesija da dosegnete {target} ove sedmice. Svaka je jednako važna.|Vaš sedmični cilj je {target}, preostalo je {remaining}. Korak po korak.",
   "notifications": "Obavijesti",
   "notificationsAreDisabled": "Obavijesti su onemogućene",
+  "notificationsOffDialogDesc": "Uključite obavijesti kako biste primali podsjetike za ovu naviku.",
+  "turnOn": "Uključi",
   "now": "Sada",
   "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Broj dana zaredom tokom kojih ste ispunili sve svoje navike.",
   "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Vidljivo samo na dnevnom planu. Uključi 'Šareni' način u postavkama da biste ga prikazali nakon završetka.",

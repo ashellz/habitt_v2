@@ -572,6 +572,8 @@
   "notificationScheduleWeeklyRemaining": "Hai bisogno di {remaining} in più questa settimana per raggiungere {target}.|{remaining} per raggiungere l'obiettivo settimanale di {target}. Il ritmo costante funziona.|Avete bisogno di {remaining} in più questa settimana. Oggi è un ottimo momento per iniziare.|Obiettivo settimanale: {remaining} rimanenti di {target}. Distribuite lo sforzo.|{remaining} sessioni rimaste per raggiungere {target} questa settimana. Ognuna conta allo stesso modo.|Il vostro obiettivo settimanale è {target}, con {remaining} da raggiungere. Un passo alla volta.",
   "notifications": "Notifiche",
   "notificationsAreDisabled": "Le notifiche sono disattivate",
+  "notificationsOffDialogDesc": "Attiva le notifiche per ricevere promemoria per questa abitudine.",
+  "turnOn": "Attiva",
   "now": "Ora",
   "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Numero di giorni consecutivi in cui avete completato tutte le vostre abitudini.",
   "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Visibile solo sul piano giornaliero. Attivare la modalità \"colorata\" nelle Impostazioni per visualizzarla al completamento.",

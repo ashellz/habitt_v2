@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/paywall_page.dart';
@@ -19,16 +18,22 @@ class GetPremiumWidget extends StatefulWidget {
 
 class _GetPremiumWidgetState extends State<GetPremiumWidget> {
   EntitlementInfo? _entitlement;
-
-  static const bool _demoSubscribed = false;
-
-  bool get _isSubscribed =>
-      kDebugMode ? _demoSubscribed : BillingService.hasPro;
+  bool _hasPro = BillingService.hasPro;
 
   @override
   void initState() {
     super.initState();
-    if (_isSubscribed) _loadEntitlement();
+    _refreshStatus();
+  }
+
+  Future<void> _refreshStatus() async {
+    final hasPro = await BillingService.checkHasPro();
+    if (!mounted) return;
+    setState(() {
+      _hasPro = hasPro;
+      BillingService.hasPro = hasPro;
+    });
+    if (hasPro && _entitlement == null) _loadEntitlement();
   }
 
   Future<void> _loadEntitlement() async {
@@ -67,7 +72,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isSubscribed) return _buildSubscribedWidget(context);
+    if (_hasPro) return _buildSubscribedWidget(context);
     return _buildGetPremiumWidget(context);
   }
 
@@ -79,11 +84,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
         await Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (_) => const PaywallPage()));
-        // Rebuild so _isSubscribed re-reads BillingService.hasPro after purchase.
-        if (mounted) setState(() {});
-        if (mounted && _isSubscribed && _entitlement == null) {
-          _loadEntitlement();
-        }
+        if (mounted) _refreshStatus();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -153,11 +154,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
         entitlement != null
             ? _planLabel(loc, entitlement.productIdentifier)
             : '';
-    final expiryFormatted = _formatExpiration(
-      (_demoSubscribed
-          ? DateTime.now().add(const Duration(days: 30)).toIso8601String()
-          : entitlement?.expirationDate),
-    );
+    final expiryFormatted = _formatExpiration(entitlement?.expirationDate);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -186,7 +183,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    if (expiryFormatted.isNotEmpty || _demoSubscribed)
+                    if (expiryFormatted.isNotEmpty)
                       Text(
                         loc.renewsOn(expiryFormatted),
                         style: TextStyle(color: cp.lightGreyText, fontSize: 16),
@@ -194,7 +191,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
                   ],
                 ),
               ),
-              if (planLabel.isNotEmpty || _demoSubscribed)
+              if (planLabel.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -212,7 +209,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
                     ),
                   ),
                   child: Text(
-                    _demoSubscribed ? "Monthly" : planLabel,
+                    planLabel,
                     style: TextStyle(color: cp.main, fontSize: 16),
                   ),
                 ),

@@ -1357,6 +1357,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notificationsAreDisabled => 'Notificaciones desactivadas';
 
   @override
+  String get notificationsOffDialogDesc =>
+      'Activa las notificaciones para recibir recordatorios de este hábito.';
+
+  @override
+  String get turnOn => 'Activar';
+
+  @override
   String get now => 'Ahora';
 
   @override

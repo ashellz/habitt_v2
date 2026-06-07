@@ -572,6 +572,8 @@
   "notificationScheduleWeeklyRemaining": "Sie brauchen {remaining} mehr in dieser Woche, um {target} zu erreichen.|{remaining}, um das Wochenziel von {target} zu erreichen. Ein gleichmäßiges Tempo funktioniert.|Sie brauchen {remaining} mehr in dieser Woche. Heute ist ein guter Zeitpunkt, um damit anzufangen.|Wochenziel: {remaining} übrig von {target}. Verteilen Sie die Anstrengung.|{remaining} Sitzungen bleiben übrig, um {target} diese Woche zu erreichen. Jede Sitzung ist gleich wichtig.|Ihr Wochenziel ist {target}, und Sie haben noch {remaining} vor sich. Ein Schritt nach dem anderen.",
   "notifications": "Benachrichtigungen",
   "notificationsAreDisabled": "Benachrichtigungen sind deaktiviert",
+  "notificationsOffDialogDesc": "Schalte Benachrichtigungen ein, um Erinnerungen für diese Gewohnheit zu erhalten.",
+  "turnOn": "Einschalten",
   "now": "Jetzt",
   "numberOfDaysInARowYouHaveCompletedAllYourHabits": "Anzahl der Tage in Folge, an denen Sie alle Ihre Gewohnheiten erledigt haben.",
   "onlyVisibleOnDailyPlanEnableColorfulModeInSettingsToShowOnCompletion": "Nur im Tagesplan sichtbar. Aktivieren Sie den Modus \"Bunt\" in den Einstellungen, damit er bei Abschluss angezeigt wird.",

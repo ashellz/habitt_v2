@@ -429,17 +429,46 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
-  // Fire-and-forget after save: request permission and disable habit notifications
-  // on the already-saved habit if the user ultimately denies.
+  Future<bool> _showEnableNotificationsDialog() async {
+    if (!mounted) return false;
+    final loc = AppLocalizations.of(context)!;
+    bool result = false;
+    await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: loc.notificationsAreDisabled,
+            desc: loc.notificationsOffDialogDesc,
+            primaryButtonLabel: loc.turnOn,
+            onPrimaryButtonPressed: () {
+              result = true;
+              Navigator.of(dialogContext).pop();
+            },
+            onSecondaryButtonPressed: () {
+              result = false;
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+    );
+    return result;
+  }
+
+  // Fire-and-forget after save: request OS permission and disable habit notifications
+  // if the user ultimately denies.
   Future<void> _requestNotificationPermissionOrDisable(
     HabitProvider habitProvider,
     Habit habit,
   ) async {
     final allowed = await NotificationService.areNotificationsAllowed();
 
-    // Turn on the all notifications toggle and habit notifications toggle if off
     if (allowed && mounted) {
       final notificationsProvider = context.read<NotificationsProvider>();
+
+      final enabled = await _showEnableNotificationsDialog();
+
+      if (!enabled) {
+        return;
+      }
       await notificationsProvider.enableGlobalNotificationToggles();
       return;
     }
@@ -468,6 +497,10 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       return;
     }
 
+    bool habitNotificationsEnabled = sp.habitNotificationsEnabled;
+
+    if (!mounted) return;
+
     final habitProvider = context.read<HabitProvider>();
 
     if (_isEditMode) {
@@ -493,7 +526,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.selectedDaysAWeek = sp.selectedDaysAWeek.toList()..sort();
       habit.selectedDaysAMonth = sp.selectedDaysAMonth.toList()..sort();
       habit.premadeHabitType = sp.selectedPremadeHabitType;
-      habit.notificationsEnabled = sp.habitNotificationsEnabled;
+      habit.notificationsEnabled = habitNotificationsEnabled;
       habit.notificationTimes =
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList();
 
@@ -513,7 +546,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       if (mounted) {
         _popSheet(result: HabitSheetCloseResult.saved);
       }
-      if (habit.notificationsEnabled) {
+      if (habitNotificationsEnabled) {
         _requestNotificationPermissionOrDisable(habitProvider, habit);
       }
       return;
@@ -554,7 +587,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       createdAt: DateTime.now().toUtc(),
       lastCustomUpdate: DateTime.now().toUtc(),
       colorName: sp.habitColorName,
-      notificationsEnabled: sp.habitNotificationsEnabled,
+      notificationsEnabled: habitNotificationsEnabled,
       notificationTimes:
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
       premadeHabitType: sp.selectedPremadeHabitType,
@@ -565,7 +598,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     if (mounted) {
       _popSheet(result: HabitSheetCloseResult.saved);
     }
-    if (newHabit.notificationsEnabled) {
+    if (habitNotificationsEnabled) {
       _requestNotificationPermissionOrDisable(habitProvider, newHabit);
     }
   }
