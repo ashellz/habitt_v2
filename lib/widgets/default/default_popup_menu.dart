@@ -1,6 +1,8 @@
+import 'package:cupertino_native_better/cupertino_native_better.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:provider/provider.dart';
 
 class DefaultPopupMenuItem {
@@ -9,6 +11,7 @@ class DefaultPopupMenuItem {
     required this.svgPath,
     required this.onTap,
     this.icon,
+    this.cnIcon,
     this.color,
   });
 
@@ -16,14 +19,29 @@ class DefaultPopupMenuItem {
   final String svgPath;
   final VoidCallback onTap;
   final Widget? icon;
+
+  /// SF Symbol used for the native iOS 26+ popup menu item.
+  final CNSymbol? cnIcon;
   final Color? color;
 }
 
 class DefaultPopupMenu extends StatefulWidget {
-  const DefaultPopupMenu({super.key, required this.items, required this.child});
+  const DefaultPopupMenu({
+    super.key,
+    required this.items,
+    required this.child,
+    this.buttonIcon,
+    this.buttonSize = 44.0,
+  });
 
   final List<DefaultPopupMenuItem> items;
   final Widget child;
+
+  /// Icon for the native iOS 26+ popup button. When provided and running on
+  /// iOS 26+, the widget renders as a CNPopupMenuButton instead of the
+  /// custom overlay. The [child] is ignored in that case.
+  final CNSymbol? buttonIcon;
+  final double buttonSize;
 
   @override
   State<DefaultPopupMenu> createState() => _DefaultPopupMenuState();
@@ -33,6 +51,7 @@ class _DefaultPopupMenuState extends State<DefaultPopupMenu>
     with SingleTickerProviderStateMixin {
   final GlobalKey _buttonKey = GlobalKey();
   OverlayEntry? _overlayEntry;
+  bool _supportsLiquidGlass = false;
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -41,15 +60,29 @@ class _DefaultPopupMenuState extends State<DefaultPopupMenu>
   @override
   void initState() {
     super.initState();
+    _checkLiquidGlass();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 320),
     );
-    _fadeAnimation = CurvedAnimation(parent: _controller, curve: const Interval(0, 0.5, curve: Curves.easeOut));
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0, 0.5, curve: Curves.easeOut),
+    );
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -0.08),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: const Interval(0, 0.5, curve: Curves.easeOut)));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+  }
+
+  Future<void> _checkLiquidGlass() async {
+    final supports = await supportsLiquidGlass();
+    if (mounted) setState(() => _supportsLiquidGlass = supports);
   }
 
   @override
@@ -75,36 +108,37 @@ class _DefaultPopupMenuState extends State<DefaultPopupMenu>
     final position = button.localToGlobal(Offset.zero, ancestor: overlay);
 
     _overlayEntry = OverlayEntry(
-      builder: (ctx) => Stack(
-        children: [
-          Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onPanDown: (_) => _dismiss(),
-              child: const ColoredBox(color: Colors.transparent),
-            ),
-          ),
-          Positioned(
-            right: overlay.size.width - position.dx - button.size.width,
-            top: position.dy + button.size.height + 8,
-            child: Material(
-              color: Colors.transparent,
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: _MenuPanel(
-                    items: widget.items,
-                    color: cp.bg,
-                    controller: _controller,
-                    onDismiss: _dismiss,
+      builder:
+          (ctx) => Stack(
+            children: [
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onPanDown: (_) => _dismiss(),
+                  child: const ColoredBox(color: Colors.transparent),
+                ),
+              ),
+              Positioned(
+                right: overlay.size.width - position.dx - button.size.width,
+                top: position.dy + button.size.height + 8,
+                child: Material(
+                  color: Colors.transparent,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: _MenuPanel(
+                        items: widget.items,
+                        color: cp.bg,
+                        controller: _controller,
+                        onDismiss: _dismiss,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
     );
 
     Overlay.of(context).insert(_overlayEntry!);
@@ -121,11 +155,47 @@ class _DefaultPopupMenuState extends State<DefaultPopupMenu>
 
   @override
   Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+
+    if (_supportsLiquidGlass && widget.buttonIcon != null) {
+      return CNPopupMenuButton.icon(
+        buttonIcon: widget.buttonIcon,
+        buttonStyle: CNButtonStyle.prominentGlass,
+        tint: cp.bg,
+        size: widget.buttonSize,
+        items:
+            widget.items
+                .map(
+                  (item) => CNPopupMenuItem(
+                    label: item.label,
+                    icon:
+                        item.cnIcon != null
+                            ? CNSymbol(
+                              item.cnIcon!.name,
+                              size: item.cnIcon!.size,
+                              color: item.color ?? cp.text,
+                            )
+                            : null,
+                    imageAsset:
+                        item.cnIcon == null
+                            ? CNImageAsset(
+                              item.svgPath,
+                              size: 18,
+                              color: item.color ?? cp.text,
+                            )
+                            : null,
+                  ),
+                )
+                .toList(),
+        onSelected: (index) => widget.items[index].onTap(),
+      );
+    }
+
     return GestureDetector(
       key: _buttonKey,
       onTap: _toggle,
       behavior: HitTestBehavior.opaque,
-      child: widget.child,
+      child: IgnorePointer(child: widget.child),
     );
   }
 }
@@ -163,13 +233,12 @@ class _MenuPanel extends StatelessWidget {
     final step = (windowEnd - windowStart) / total;
     final start = windowStart + step * index;
     final end = (start + step * 0.85).clamp(0.0, 1.0);
-    return Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: Interval(start, end, curve: Curves.easeOut),
-    ));
+    return Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(start, end, curve: Curves.easeOut),
+      ),
+    );
   }
 
   @override
@@ -214,7 +283,10 @@ class _MenuPanel extends StatelessWidget {
                     item.onTap();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 10,
@@ -224,7 +296,10 @@ class _MenuPanel extends StatelessWidget {
                         else
                           SvgPicture.asset(
                             item.svgPath,
-                            colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(
+                              itemColor,
+                              BlendMode.srcIn,
+                            ),
                             width: 18,
                             height: 18,
                           ),

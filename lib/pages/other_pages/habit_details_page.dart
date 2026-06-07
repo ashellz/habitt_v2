@@ -380,10 +380,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: DefaultPopupMenu(
+              buttonIcon: CNSymbol('ellipsis', size: 14),
               items: [
                 DefaultPopupMenuItem(
                   label: loc.editHabit,
                   svgPath: 'assets/images/new-svg/edit.svg',
+                  cnIcon: CNSymbol('pencil', size: 16),
                   onTap: () => _openEditSheet(habit),
                 ),
                 DefaultPopupMenuItem(
@@ -395,6 +397,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       habit.isPaused == true
                           ? Icon(Icons.play_arrow_rounded, size: 18)
                           : null,
+                  cnIcon:
+                      habit.isPaused == true
+                          ? CNSymbol('play.fill', size: 16)
+                          : CNSymbol('pause.fill', size: 16),
                   svgPath: 'assets/images/new-svg/pause.svg',
                   onTap:
                       () =>
@@ -405,11 +411,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 DefaultPopupMenuItem(
                   label: loc.deleteHabit,
                   svgPath: 'assets/images/new-svg/trash.svg',
+                  cnIcon: CNSymbol('trash', size: 16),
                   color: cp.error,
                   onTap: () => showDeleteHabitFlow(habit, context),
                 ),
               ],
               child: NewCircleButton(
+                onPressed: () {},
                 svgPath: 'assets/images/new-svg/more.svg',
                 cnIcon: CNSymbol('ellipsis', size: 14),
                 width: 44,

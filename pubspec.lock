@@ -261,10 +261,10 @@ packages:
     dependency: "direct main"
     description:
       name: cupertino_native_better
-      sha256: "1258ff2e0f061a01ddaac0818b8b5e51972c0b7de524d3be6628b5574cf0df4d"
+      sha256: "271fbf582aebb55d8ccef103add60373f65359fa7626e995ed62b5afca1131f8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.6"
+    version: "1.5.0"
   dart_style:
     dependency: transitive
     description:
