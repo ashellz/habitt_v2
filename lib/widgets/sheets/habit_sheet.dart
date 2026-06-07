@@ -9,6 +9,7 @@ import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
@@ -435,7 +436,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     Habit habit,
   ) async {
     final allowed = await NotificationService.areNotificationsAllowed();
-    if (allowed) return;
+
+    // Turn on the all notifications toggle and habit notifications toggle if off
+    if (allowed && mounted) {
+      final notificationsProvider = context.read<NotificationsProvider>();
+      await notificationsProvider.enableGlobalNotificationToggles();
+      return;
+    }
 
     final lockedBeforeRequest =
         await AwesomeNotifications().shouldShowRationaleToRequest();

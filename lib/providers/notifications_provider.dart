@@ -394,6 +394,21 @@ class NotificationsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Enable the master and habit toggles when permission is already known to be
+  /// granted (no permission prompt needed).
+  Future<void> enableGlobalNotificationToggles() async {
+    if (!_masterEnabled) {
+      _masterEnabled = true;
+      await _prefs?.setBool(_masterKey, true);
+      await NotificationService.scheduleAllNotifications(this);
+    }
+    if (!_habitsEnabled) {
+      _habitsEnabled = true;
+      await _prefs?.setBool(_habitsKey, true);
+    }
+    notifyListeners();
+  }
+
   /// Apply all global notification toggles in one transaction.
   ///
   /// Returns false when enabling requires permission and the user denies it.
