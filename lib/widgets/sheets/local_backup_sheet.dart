@@ -28,6 +28,8 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
     with TickerProviderStateMixin {
   bool _allowPop = false;
   bool _pinEnabled = false;
+  bool _exporting = false;
+  bool _importing = false;
   final _storage = const FlutterSecureStorage();
   late final StatusOverlayPopupController _overlay;
 
@@ -66,17 +68,19 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
   // ---------------------------------------------------------------------------
 
   Future<void> _handleExport() async {
-    if (!mounted) return;
+    if (!mounted || _exporting) return;
     final loc = AppLocalizations.of(context)!;
 
     final pin = await BackupService.readLocalBackupPin(_storage);
 
     if (pin != null) {
+      setState(() => _exporting = true);
       final result = await BackupService.exportDataLocally(
         context: context,
         passphrase: pin,
       );
       if (!mounted) return;
+      setState(() => _exporting = false);
       if (result == BackupOperationResult.success) {
         _showOverlay(title: loc.exportSuccess, isError: false);
       } else if (result == BackupOperationResult.failed) {
@@ -85,11 +89,13 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
     } else {
       final confirmed = await _showUnencryptedWarning();
       if (!mounted || confirmed != true) return;
+      setState(() => _exporting = true);
       final result = await BackupService.exportDataLocally(
         context: context,
         passphrase: null,
       );
       if (!mounted) return;
+      setState(() => _exporting = false);
       if (result == BackupOperationResult.success) {
         _showOverlay(title: loc.exportSuccess, isError: false);
       } else if (result == BackupOperationResult.failed) {
@@ -110,7 +116,7 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
   // ---------------------------------------------------------------------------
 
   Future<void> _handleImport() async {
-    if (!mounted) return;
+    if (!mounted || _importing) return;
     final loc = AppLocalizations.of(context)!;
 
     final storedPin = await BackupService.readLocalBackupPin(_storage);
@@ -123,12 +129,12 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
     if (!mounted) return;
     final confirmed = await showDialogSheet<bool>(
       context: context,
-      builder: (ctx) => ConfirmRestoreBackupDialog(
-        cp: ctx.read<ColorProvider>(),
-      ),
+      builder:
+          (ctx) => ConfirmRestoreBackupDialog(cp: ctx.read<ColorProvider>()),
     );
     if (!mounted || confirmed != true) return;
 
+    setState(() => _importing = true);
     final result = await BackupService.importLocalData(
       context: context,
       passphrase: storedPin,
@@ -136,6 +142,7 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
     );
 
     if (!mounted) return;
+    setState(() => _importing = false);
 
     if (result == BackupOperationResult.success) {
       _showOverlay(title: loc.importSuccess, isError: false);
@@ -367,7 +374,7 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: ShapeDecoration(
                           color: cp.field,
                           shape: RoundedRectangleBorder(
@@ -383,14 +390,16 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
                               svgPath:
                                   'assets/images/new-svg/export-backup.svg',
                               onTap: _handleExport,
+                              isLoading: _exporting,
                             ),
-                            Divider(color: cp.border, height: 32),
+                            Divider(color: cp.border, height: 0),
                             ProfileOption(
                               cp: cp,
                               text: loc.importBackup,
                               svgPath:
                                   'assets/images/new-svg/import-backup.svg',
                               onTap: _handleImport,
+                              isLoading: _importing,
                             ),
                           ],
                         ),
@@ -403,9 +412,9 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
                       child: Container(
                         padding: EdgeInsets.fromLTRB(
                           16,
+                          0,
                           _pinEnabled ? 0 : 16,
-                          _pinEnabled ? 0 : 16,
-                          16,
+                          0,
                         ),
                         decoration: ShapeDecoration(
                           color: cp.field,
@@ -543,43 +552,19 @@ class _PinEnabledRowsState extends State<_PinEnabledRows> {
           child: Column(
             children: [
               Divider(color: cp.border, height: 0),
-              SizedBox(height: 16),
               ProfileOption(
                 cp: cp,
                 text: loc.changePin,
                 onTap: widget.onChange,
               ),
-              Divider(color: cp.border, height: 32),
+              Divider(color: cp.border, height: 0),
               // Remove PIN — red text, red chevron
-              GestureDetector(
+              ProfileOption(
+                cp: cp,
+                text: loc.removePin,
                 onTap: widget.onRemove,
-                child: Container(
-                  color: Colors.transparent,
-                  child: Row(
-                    spacing: 12,
-                    children: [
-                      Text(
-                        loc.removePin,
-                        style: TextStyle(
-                          color: cp.fail,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      RotatedBox(
-                        quarterTurns: 2,
-                        child: SvgPicture.asset(
-                          'assets/images/new-svg/back.svg',
-                          colorFilter: ColorFilter.mode(
-                            cp.fail,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                textColor: cp.fail,
+                arrowColor: cp.fail,
               ),
             ],
           ),

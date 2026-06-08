@@ -25,6 +25,8 @@ class BackupSignedInSection extends StatefulWidget {
 }
 
 class _BackupSignedInSectionState extends State<BackupSignedInSection> {
+  bool _localSyncLoading = false;
+
   String _formatLastSync(DateTime? lastSync, AppLocalizations loc) {
     if (lastSync == null) return loc.neverBackedUp;
 
@@ -163,7 +165,10 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
     final cp = context.watch<ColorProvider>();
     final bp = context.watch<BackupProvider>();
     final loc = AppLocalizations.of(context)!;
-    final isSyncing = bp.syncState == SyncState.syncing;
+    final isBackingUp = bp.isBackingUp;
+    final isSyncing =
+        _localSyncLoading ||
+        (bp.syncState == SyncState.syncing && !isBackingUp);
     final lastSyncText = _formatLastSync(bp.lastSyncTime, loc);
 
     return Padding(
@@ -175,18 +180,30 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
             children: [
               Expanded(
                 child: NewDefaultButton.secondary(
-                  onPressed: isSyncing ? null : () => bp.performSync(true),
+                  enabled: !isSyncing,
+                  onPressed:
+                      (isSyncing || isBackingUp) ? null : () => bp.backupNow(),
                   label: loc.backUpNow,
-                  isLoading: isSyncing,
+                  isLoading: isBackingUp,
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: NewDefaultButton.primary(
+                  enabled: !isBackingUp,
                   onPressed:
-                      isSyncing
+                      (isSyncing || isBackingUp)
                           ? null
-                          : () => bp.performSync(false, SyncMode.syncOnly),
+                          : () async {
+                            setState(() => _localSyncLoading = true);
+                            try {
+                              await bp.performSync(false, SyncMode.syncOnly);
+                            } finally {
+                              if (mounted) {
+                                setState(() => _localSyncLoading = false);
+                              }
+                            }
+                          },
                   label: loc.syncNow,
                   isLoading: isSyncing,
                 ),
@@ -294,15 +311,11 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                         ],
                       ),
                     ),
-                    Divider(color: cp.border, height: 1),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      color: Colors.transparent,
-                      child: ProfileOption(
-                        cp: cp,
-                        text: loc.restoreFromBackup,
-                        onTap: () => _openBackupHistory(context, cp),
-                      ),
+                    Divider(color: cp.border, height: 0),
+                    ProfileOption(
+                      cp: cp,
+                      text: loc.restoreFromBackup,
+                      onTap: () => _openBackupHistory(context, cp),
                     ),
                   ],
                 ),

@@ -2501,4 +2501,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get savePin => 'Guardar PIN';
+
+  @override
+  String get removePinDesc =>
+      'Los futuros archivos de copia de seguridad no estarán cifrados. Cualquier persona con acceso al archivo podrá leer tus datos.';
 }

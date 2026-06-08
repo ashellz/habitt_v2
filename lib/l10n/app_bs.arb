@@ -935,11 +935,12 @@
   "pinSetSuccess": "PIN postavljen",
   "pinCopied": "PIN kopiran",
   "exportUnencryptedWarningTitle": "Sačuvanje bez enkripcije?",
-  "exportUnencryptedWarningDesc": "PIN nije postavljen. Ova datoteka sigurnosne kopije neće biti enkriptovana. Svako ko ima pristup backupu moći će čitati vaše podatke.",
+  "exportUnencryptedWarningDesc": "PIN nije postavljen. Ovaj backup neće biti šifriran. Svako ko ima pristup backupu moći će čitati vaše podatke.",
   "exportUnencryptedConfirm": "Svejedno sačuvaj",
   "enterPinToDecrypt": "Unesite PIN sigurnosne kopije",
   "wrongPin": "Pogrešan PIN. Molimo pokušajte ponovo.",
   "importSuccessPinSaved": "Backup učitan. PIN sačuvan za buduće backupe.",
   "useThisPinQuestion": "Koristi ovaj PIN za buduće backupe?",
-  "savePin": "Sačuvaj PIN"
+  "savePin": "Sačuvaj PIN",
+  "removePinDesc": "Budući backupi neće biti šifrirani. Svako ko ima pristup backupu moći će čitati vaše podatke."
 }

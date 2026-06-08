@@ -121,6 +121,7 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     final loc = AppLocalizations.of(context)!;
     final mediaQuery = MediaQuery.of(context);
     final maxSheetHeight = mediaQuery.size.height - 59 - 16;
+    final isSyncing = bp.syncState == SyncState.syncing && !bp.isBackingUp;
 
     return PopScope(
       canPop: _allowPop,
@@ -194,6 +195,7 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
                                 bp,
                                 loc,
                                 backups[i],
+                                isSyncing: isSyncing,
                                 isNewest: i == 0,
                               ),
                             ],
@@ -217,9 +219,9 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     BackupProvider bp,
     AppLocalizations loc,
     DriveBackupFile file, {
+    required bool isSyncing,
     bool isNewest = false,
   }) {
-    final isSyncing = bp.syncState == SyncState.syncing;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

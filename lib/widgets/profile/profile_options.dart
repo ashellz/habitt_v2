@@ -62,7 +62,7 @@ class _ProfileOptionsState extends State<ProfileOptions> {
             spacing: 10,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: ShapeDecoration(
                   color: widget.cp.field,
                   shape: RoundedRectangleBorder(
@@ -89,7 +89,7 @@ class _ProfileOptionsState extends State<ProfileOptions> {
                       },
                     ),
 
-                    Divider(color: widget.cp.border, height: 32),
+                    Divider(color: widget.cp.border, height: 0),
                     ProfileOption(
                       cp: widget.cp,
                       text: loc.termsOfService,
@@ -106,7 +106,7 @@ class _ProfileOptionsState extends State<ProfileOptions> {
                         }
                       },
                     ),
-                    Divider(color: widget.cp.border, height: 32),
+                    Divider(color: widget.cp.border, height: 0),
                     ProfileOption(
                       cp: widget.cp,
                       text: loc.leaveFeedback,
@@ -126,14 +126,14 @@ class _ProfileOptionsState extends State<ProfileOptions> {
                         );
                       },
                     ),
-                    Divider(color: widget.cp.border, height: 32),
+                    Divider(color: widget.cp.border, height: 0),
                     ProfileOption(
                       cp: widget.cp,
                       text: loc.backupAndSync,
                       svgPath: 'assets/images/new-svg/backup.svg',
                       onTap: _showBackupSheet,
                     ),
-                    Divider(color: widget.cp.border, height: 32),
+                    Divider(color: widget.cp.border, height: 0),
                     ProfileOption(
                       cp: widget.cp,
                       text: loc.localBackups,
@@ -158,19 +158,28 @@ class ProfileOption extends StatelessWidget {
     required this.text,
     this.svgPath,
     this.onTap,
+    this.isLoading = false,
+    this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.textColor,
+    this.arrowColor,
   });
 
   final ColorProvider cp;
   final String text;
   final String? svgPath;
   final VoidCallback? onTap;
+  final bool isLoading;
+  final EdgeInsets padding;
+  final Color? textColor;
+  final Color? arrowColor;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         color: Colors.transparent,
+        padding: padding,
         child: Row(
           spacing: 12,
           children: [
@@ -190,19 +199,32 @@ class ProfileOption extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                color: cp.text,
+                color: textColor ?? cp.text,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
             Spacer(),
-            RotatedBox(
-              quarterTurns: 2,
-              child: SvgPicture.asset(
-                'assets/images/new-svg/back.svg',
-                colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+            if (isLoading)
+              SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: cp.text,
+                ),
+              )
+            else
+              RotatedBox(
+                quarterTurns: 2,
+                child: SvgPicture.asset(
+                  'assets/images/new-svg/back.svg',
+                  colorFilter: ColorFilter.mode(
+                    arrowColor ?? cp.text,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
-            ),
           ],
         ),
       ),

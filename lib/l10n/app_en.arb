@@ -953,5 +953,6 @@
   "wrongPin": "Wrong PIN. Please try again.",
   "importSuccessPinSaved": "Backup imported. PIN saved for future backups.",
   "useThisPinQuestion": "Use this PIN for future backups?",
-  "savePin": "Save PIN"
+  "savePin": "Save PIN",
+  "removePinDesc": "Future backup files will not be encrypted. Anyone with access to the file will be able to read your data."
 }

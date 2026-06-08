@@ -182,20 +182,21 @@ class _PaywallPageState extends State<PaywallPage> {
 
   Future<void> _handleUpgradeTap() async {
     HapticFeedback.selectionClick();
+
+    /*
+    
     final action = _buttonAction;
 
     if (action == _ButtonAction.cancel || action == _ButtonAction.manage) {
       await _handleCancelTap();
       return;
     }
+    */
 
     setState(() => _isPresenting = true);
     try {
-      if (_selectedPackage != null) {
-        await BillingService.purchasePackage(_selectedPackage!);
-      } else {
-        await BillingService.presentPaywall();
-      }
+      await BillingService.purchasePackage(_selectedPackage!);
+
       await _refreshSubscriptionStatus();
     } finally {
       if (mounted) setState(() => _isPresenting = false);
@@ -461,7 +462,12 @@ class _PaywallPageState extends State<PaywallPage> {
                                     animation: _pageController,
                                     child: _PlanCard(
                                       plan: plans[index],
-                                      isSelected: _pageValue.round() == index,
+                                      isActive:
+                                          plans[index]
+                                              .package
+                                              ?.storeProduct
+                                              .identifier ==
+                                          _activeProductId,
                                     ),
                                     builder: (context, child) {
                                       final distance = (_pageValue - index)
@@ -586,10 +592,10 @@ String? _localizedBadgeLabel(PackageType type, AppLocalizations loc) {
 }
 
 class _PlanCard extends StatelessWidget {
-  const _PlanCard({required this.plan, this.isSelected = false});
+  const _PlanCard({required this.plan, this.isActive = false});
 
   final _PlanInfo plan;
-  final bool isSelected;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -631,15 +637,15 @@ class _PlanCard extends StatelessWidget {
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 200),
                         curve: Curves.easeOut,
-                        opacity: isSelected ? 1.0 : 0.0,
+                        opacity: isActive ? 1.0 : 0.0,
                         child: AnimatedScale(
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeOutBack,
-                          scale: isSelected ? 1.0 : 0.7,
+                          scale: isActive ? 1.0 : 0.7,
                           child: AnimatedRotation(
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.easeOutBack,
-                            turns: isSelected ? 0.0 : 0.18,
+                            turns: isActive ? 0.0 : 0.18,
                             child: SvgPicture.asset(
                               'assets/images/new-svg/check-on-light.svg',
                             ),

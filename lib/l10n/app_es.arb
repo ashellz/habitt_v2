@@ -953,5 +953,6 @@
   "wrongPin": "PIN incorrecto. Por favor, inténtalo de nuevo.",
   "importSuccessPinSaved": "Copia de seguridad importada. PIN guardado para futuras copias.",
   "useThisPinQuestion": "¿Usar este PIN para futuras copias de seguridad?",
-  "savePin": "Guardar PIN"
+  "savePin": "Guardar PIN",
+  "removePinDesc": "Los futuros archivos de copia de seguridad no estarán cifrados. Cualquier persona con acceso al archivo podrá leer tus datos."
 }

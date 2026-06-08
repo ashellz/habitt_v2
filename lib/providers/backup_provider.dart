@@ -83,6 +83,7 @@ class BackupProvider extends ChangeNotifier {
   HabitProvider? _habitProvider;
 
   SyncState _syncState = SyncState.idle;
+  bool _isBackingUp = false;
   String? _lastError;
   BackupMetadata? _localMetadata;
   Timer? _autoSyncTimer;
@@ -140,6 +141,7 @@ class BackupProvider extends ChangeNotifier {
   bool get isLoggedIn => _currentUser != null && _firebaseUser != null;
   BackupMetadata? get localMetadata => _localMetadata;
   SyncState get syncState => _syncState;
+  bool get isBackingUp => _isBackingUp;
   String? get lastError => _lastError;
   bool get dataExists => _dataExists;
   String? get progressMessage => _progressMessage;
@@ -903,6 +905,19 @@ class BackupProvider extends ChangeNotifier {
   }
 
   // --- Sync --------------------------------------------------------------
+
+  /// User-triggered backup entry point ("Back Up Now").
+  /// Sets [isBackingUp] so the UI can show a spinner only on the backup button.
+  Future<void> backupNow() async {
+    _isBackingUp = true;
+    notifyListeners();
+    try {
+      await performSync(true);
+    } finally {
+      _isBackingUp = false;
+      notifyListeners();
+    }
+  }
 
   /// Main sync entry point.
   ///

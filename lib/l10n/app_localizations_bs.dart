@@ -2466,7 +2466,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get exportUnencryptedWarningDesc =>
-      'PIN nije postavljen. Ova datoteka sigurnosne kopije neće biti enkriptovana. Svako ko ima pristup backupu moći će čitati vaše podatke.';
+      'PIN nije postavljen. Ovaj backup neće biti šifriran. Svako ko ima pristup backupu moći će čitati vaše podatke.';
 
   @override
   String get exportUnencryptedConfirm => 'Svejedno sačuvaj';
@@ -2486,4 +2486,8 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get savePin => 'Sačuvaj PIN';
+
+  @override
+  String get removePinDesc =>
+      'Budući backupi neće biti šifrirani. Svako ko ima pristup backupu moći će čitati vaše podatke.';
 }

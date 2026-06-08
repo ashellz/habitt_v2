@@ -69,7 +69,7 @@ class _LeaveFeedbackSheetState extends State<LeaveFeedbackSheet> {
                         vertical: 24,
                       ),
                       child: Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: ShapeDecoration(
                           color: cp.field,
                           shape: RoundedRectangleBorder(
@@ -102,8 +102,9 @@ class _LeaveFeedbackSheetState extends State<LeaveFeedbackSheet> {
                                 }
                               },
                             ),
-                            Divider(color: cp.border, height: 32),
+                            Divider(color: cp.border, height: 0),
                             ProfileOption(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                               cp: cp,
                               text: loc.reportBug,
                               svgPath: 'assets/images/new-svg/rate.svg',

@@ -4192,6 +4192,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save PIN'**
   String get savePin;
+
+  /// No description provided for @removePinDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Future backup files will not be encrypted. Anyone with access to the file will be able to read your data.'**
+  String get removePinDesc;
 }
 
 class _AppLocalizationsDelegate
