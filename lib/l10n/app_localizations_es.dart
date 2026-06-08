@@ -2071,6 +2071,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Crea una contraseña o PIN (al menos 4 caracteres) para añadir protección adicional a tu clave de respaldo.';
 
   @override
+  String get setLocalPinDesc =>
+      'Este PIN se usará para cifrar tus copias de seguridad locales. Sin él, los archivos de copia de seguridad no podrán descifrarse.';
+
+  @override
   String get disablePinTitle => 'Desactivar PIN';
 
   @override
@@ -2393,4 +2397,108 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get habitUnpaused => '¡Hábito reanudado!';
+
+  @override
+  String get localBackups => 'Copias locales';
+
+  @override
+  String get localBackupsDesc =>
+      'Exportar o importar archivos de copia de seguridad cifrados en este dispositivo';
+
+  @override
+  String get exportBackup => 'Exportar copia';
+
+  @override
+  String get exportBackupDesc =>
+      'Guardar un archivo de copia de seguridad cifrado en el dispositivo';
+
+  @override
+  String get importBackup => 'Importar copia';
+
+  @override
+  String get importBackupDesc =>
+      'Restaurar desde un archivo de copia de seguridad cifrado';
+
+  @override
+  String get exportSuccess => 'Copia de seguridad exportada correctamente.';
+
+  @override
+  String get exportFailed =>
+      'Error al exportar. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get importSuccess => 'Copia de seguridad importada correctamente.';
+
+  @override
+  String get importFailed =>
+      'Error al importar. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get setPin => 'Establecer PIN';
+
+  @override
+  String get pinEnabled => 'PIN activado';
+
+  @override
+  String get changePin => 'Cambiar PIN';
+
+  @override
+  String get removePin => 'Eliminar PIN';
+
+  @override
+  String get revealPin => 'Mostrar PIN';
+
+  @override
+  String get confirmPin => 'Confirmar PIN';
+
+  @override
+  String get currentPin => 'PIN actual';
+
+  @override
+  String get newPin => 'Nuevo PIN';
+
+  @override
+  String get confirmNewPin => 'Confirmar nuevo PIN';
+
+  @override
+  String get pinMismatch => 'Los PIN no coinciden';
+
+  @override
+  String get pinChangedSuccess => 'PIN cambiado';
+
+  @override
+  String get pinRemovedSuccess => 'PIN eliminado';
+
+  @override
+  String get pinSetSuccess => 'PIN establecido';
+
+  @override
+  String get pinCopied => 'PIN copiado';
+
+  @override
+  String get exportUnencryptedWarningTitle => '¿Exportar sin cifrado?';
+
+  @override
+  String get exportUnencryptedWarningDesc =>
+      'No hay PIN configurado. Este archivo de copia de seguridad no estará cifrado. Cualquier persona con acceso al archivo podrá leer tus datos.';
+
+  @override
+  String get exportUnencryptedConfirm => 'Exportar de todas formas';
+
+  @override
+  String get enterPinToDecrypt => 'Introduce el PIN de la copia de seguridad';
+
+  @override
+  String get wrongPin => 'PIN incorrecto. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get importSuccessPinSaved =>
+      'Copia de seguridad importada. PIN guardado para futuras copias.';
+
+  @override
+  String get useThisPinQuestion =>
+      '¿Usar este PIN para futuras copias de seguridad?';
+
+  @override
+  String get savePin => 'Guardar PIN';
 }

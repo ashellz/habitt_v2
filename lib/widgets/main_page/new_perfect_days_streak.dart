@@ -5,8 +5,55 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
-class NewPerfectDaysStreak extends StatelessWidget {
+class NewPerfectDaysStreak extends StatefulWidget {
   const NewPerfectDaysStreak({super.key});
+
+  @override
+  State<NewPerfectDaysStreak> createState() => _NewPerfectDaysStreakState();
+}
+
+class _NewPerfectDaysStreakState extends State<NewPerfectDaysStreak>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<Offset> _fireSlide;
+  late final Animation<double> _bulbFade;
+  late final Animation<double> _gradientProgress;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    _fireSlide = Tween<Offset>(
+      begin: const Offset(0, 0.6),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    _bulbFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 1.0, curve: Curves.easeIn),
+      ),
+    );
+
+    _gradientProgress = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
+      ),
+    );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,25 +72,41 @@ class NewPerfectDaysStreak extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            clipBehavior: Clip.antiAlias,
-            height: 82,
-            decoration: ShapeDecoration(
-              gradient: LinearGradient(
-                begin: Alignment(1.00, 0.00),
-                end: Alignment(0.00, 1.00),
-                colors: [cp.leftOrangeGraident, cp.rightOrangeGradient],
-              ),
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 1,
-                  strokeAlign: BorderSide.strokeAlignOutside,
-                  color: Colors.white,
+          AnimatedBuilder(
+            animation: _gradientProgress,
+            builder: (context, child) {
+              final rightColor =
+                  Color.lerp(
+                    cp.leftOrangeGraident,
+                    cp.rightOrangeGradient,
+                    _gradientProgress.value,
+                  )!;
+
+              return Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
                 ),
-                borderRadius: BorderRadius.circular(32),
-              ),
-            ),
+                clipBehavior: Clip.antiAlias,
+                height: 82,
+                decoration: ShapeDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment(1.00, 0.00),
+                    end: Alignment(0.00, 1.00),
+                    colors: [cp.leftOrangeGraident, rightColor],
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 1,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                      color: Colors.white,
+                    ),
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                ),
+                child: child,
+              );
+            },
             child: Row(
               spacing: 12,
               children: [
@@ -83,27 +146,33 @@ class NewPerfectDaysStreak extends StatelessWidget {
           Positioned(
             bottom: -20,
             right: -40,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.45,
-              height: MediaQuery.of(context).size.width * 0.45,
-              decoration: ShapeDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    cp.orange.withOpacity(0.9),
-                    cp.orange.withOpacity(0),
-                  ],
+            child: FadeTransition(
+              opacity: _bulbFade,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.45,
+                height: MediaQuery.of(context).size.width * 0.45,
+                decoration: ShapeDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      cp.orange.withOpacity(0.9),
+                      cp.orange.withOpacity(0),
+                    ],
+                  ),
+                  shape: OvalBorder(),
                 ),
-                shape: OvalBorder(),
               ),
             ),
           ),
           Positioned(
             bottom: -20,
             right: 0,
-            child: SvgPicture.asset(
-              "assets/images/new-svg/streak.svg",
-              width: 94,
-              height: 94,
+            child: SlideTransition(
+              position: _fireSlide,
+              child: SvgPicture.asset(
+                "assets/images/new-svg/streak.svg",
+                width: 94,
+                height: 94,
+              ),
             ),
           ),
         ],

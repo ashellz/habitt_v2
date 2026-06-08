@@ -3401,6 +3401,12 @@ abstract class AppLocalizations {
   /// **'Create a passphrase or PIN (at least 4 characters) to add extra protection to your backup key.'**
   String get setPinDesc;
 
+  /// No description provided for @setLocalPinDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This PIN will be used to encrypt your local backups. Without it, your backup files cannot be decrypted.'**
+  String get setLocalPinDesc;
+
   /// No description provided for @disablePinTitle.
   ///
   /// In en, this message translates to:
@@ -3994,6 +4000,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Habit unpaused!'**
   String get habitUnpaused;
+
+  /// No description provided for @localBackups.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Backups'**
+  String get localBackups;
+
+  /// No description provided for @localBackupsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Export or import encrypted backup files on this device'**
+  String get localBackupsDesc;
+
+  /// No description provided for @exportBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Backup'**
+  String get exportBackup;
+
+  /// No description provided for @exportBackupDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Save an encrypted backup file to your device'**
+  String get exportBackupDesc;
+
+  /// No description provided for @importBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Backup'**
+  String get importBackup;
+
+  /// No description provided for @importBackupDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from an encrypted backup file'**
+  String get importBackupDesc;
+
+  /// No description provided for @exportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup exported successfully.'**
+  String get exportSuccess;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed. Please try again.'**
+  String get exportFailed;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup imported successfully.'**
+  String get importSuccess;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed. Please try again.'**
+  String get importFailed;
+
+  /// No description provided for @setPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Set PIN'**
+  String get setPin;
+
+  /// No description provided for @pinEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN enabled'**
+  String get pinEnabled;
+
+  /// No description provided for @changePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Change PIN'**
+  String get changePin;
+
+  /// No description provided for @removePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove PIN'**
+  String get removePin;
+
+  /// No description provided for @revealPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Show PIN'**
+  String get revealPin;
+
+  /// No description provided for @confirmPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm PIN'**
+  String get confirmPin;
+
+  /// No description provided for @currentPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Current PIN'**
+  String get currentPin;
+
+  /// No description provided for @newPin.
+  ///
+  /// In en, this message translates to:
+  /// **'New PIN'**
+  String get newPin;
+
+  /// No description provided for @confirmNewPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new PIN'**
+  String get confirmNewPin;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'PINs don\'t match'**
+  String get pinMismatch;
+
+  /// No description provided for @pinChangedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN changed'**
+  String get pinChangedSuccess;
+
+  /// No description provided for @pinRemovedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN removed'**
+  String get pinRemovedSuccess;
+
+  /// No description provided for @pinSetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN set'**
+  String get pinSetSuccess;
+
+  /// No description provided for @pinCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN copied'**
+  String get pinCopied;
+
+  /// No description provided for @exportUnencryptedWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export without encryption?'**
+  String get exportUnencryptedWarningTitle;
+
+  /// No description provided for @exportUnencryptedWarningDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'No PIN is set. This backup file will not be encrypted. Anyone with access to the file will be able to read your data.'**
+  String get exportUnencryptedWarningDesc;
+
+  /// No description provided for @exportUnencryptedConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Export anyway'**
+  String get exportUnencryptedConfirm;
+
+  /// No description provided for @enterPinToDecrypt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the backup PIN'**
+  String get enterPinToDecrypt;
+
+  /// No description provided for @wrongPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong PIN. Please try again.'**
+  String get wrongPin;
+
+  /// No description provided for @importSuccessPinSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup imported. PIN saved for future backups.'**
+  String get importSuccessPinSaved;
+
+  /// No description provided for @useThisPinQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this PIN for future backups?'**
+  String get useThisPinQuestion;
+
+  /// No description provided for @savePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Save PIN'**
+  String get savePin;
 }
 
 class _AppLocalizationsDelegate

@@ -931,6 +931,19 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
+    // Always sync the Drive key first — Drive is authoritative.
+    // This ensures every upload (delta or full backup) uses the same key as
+    // every other device, regardless of which device created the backup.
+    // Must happen before _getKey() so the cached key is the Drive key.
+    await _ensureKeySync();
+
+    // Key is PIN-protected and user hasn't entered PIN yet — pause sync.
+    if (_pendingCloudPinEntry) {
+      syncState = SyncState.idle;
+      progressMessage = null;
+      return;
+    }
+
     final key = await _getKey();
     if (key == null) return; // PIN locked
 
@@ -943,17 +956,6 @@ class BackupProvider extends ChangeNotifier {
       if (mode == SyncMode.uploadOnly) {
         await _uploadDeltaToCloud(key);
         await _onSyncSuccess();
-        return;
-      }
-
-      // Sync the encryption key with Drive before any decrypt attempt.
-      // This is what enables cross-platform restore (e.g. iOS → Android).
-      await _ensureKeySync();
-
-      // Key is PIN-protected and user hasn't entered PIN yet — pause sync.
-      if (_pendingCloudPinEntry) {
-        syncState = SyncState.idle;
-        progressMessage = null;
         return;
       }
 
@@ -1218,42 +1220,12 @@ class BackupProvider extends ChangeNotifier {
           // Another device disabled PIN — sync state locally.
           await _applyDriveDisabledPin(envelope);
         } else {
-          // both plain — verify that key matches Drive.
-          // if they dont match (e.g. Android regenerated its key after a reinstall),
-          // drive is correct: update local to match drive
+          // Drive is authoritative — always install its plain key locally.
           final driveKeyBytes = base64Decode(envelope['key'] as String);
-          final localKey = await BackupService.getOrCreateKey(_secureStorage);
-          final localKeyBytes = await localKey.extractBytes();
-
-          final driveFingerprint =
-              driveKeyBytes
-                  .take(4)
-                  .map((b) => b.toRadixString(16).padLeft(2, '0'))
-                  .join();
-          final localFingerprint =
-              localKeyBytes
-                  .take(4)
-                  .map((b) => b.toRadixString(16).padLeft(2, '0'))
-                  .join();
-          debugPrint(
-            '[SYNC] _syncKeyWithDrive: local key fingerprint=$localFingerprint, Drive key fingerprint=$driveFingerprint',
-          );
-          final keysMatch =
-              driveKeyBytes.length == localKeyBytes.length &&
-              List.generate(
-                driveKeyBytes.length,
-                (i) => driveKeyBytes[i] == localKeyBytes[i],
-              ).every((e) => e);
-          if (!keysMatch) {
-            debugPrint(
-              '[SYNC] _syncKeyWithDrive: KEY MISMATCH — updating local key from Drive (was $localFingerprint, now $driveFingerprint).',
-            );
-            await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
-            _cachedKey =
-                null; // force _getKey() to re-derive from updated storage
-          } else {
-            debugPrint('[SYNC] _syncKeyWithDrive: keys match — no-op.');
-          }
+          final df = driveKeyBytes.take(4).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+          debugPrint('[SYNC] _syncKeyWithDrive: plain — installing Drive key ($df) into local storage.');
+          await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
+          _cachedKey = null; // force _getKey() to re-derive from updated storage
         }
       } else {
         // Drive is PIN-wrapped.
@@ -1269,33 +1241,22 @@ class BackupProvider extends ChangeNotifier {
               // PIN changed on another device — prompt re-entry.
               await _handlePinWrappedDriveKey(envelope);
             } else {
-              // PIN valid — ensure local key matches the Drive key.
-              // Covers cross-platform divergence (e.g. Android regenerated
-              // its key after a reinstall while iOS kept its old key).
+              // PIN valid. Drive key is authoritative — install it into both
+              // storage slots and cache it so _getKey() returns the right key
+              // for the rest of this sync cycle and all future launches.
+              //
+              // Slot B (raw bytes via storeKeyBytes) — used by getOrCreateKey.
+              // Slot C (PIN-wrapped blob via storePinData) — used by unwrapKeyWithPin,
+              //   which is what _getKey() actually reads in PIN mode.
+              // Both must be updated; comparing only slot B was the old bug.
               final driveKeyBytes = await key.extractBytes();
-              final localKey = await BackupService.getOrCreateKey(_secureStorage);
-              final localKeyBytes = await localKey.extractBytes();
               final df = driveKeyBytes.take(4).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-              final lf = localKeyBytes.take(4).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-              final keysMatch = driveKeyBytes.length == localKeyBytes.length &&
-                  List.generate(driveKeyBytes.length, (i) => driveKeyBytes[i] == localKeyBytes[i]).every((e) => e);
-              debugPrint('[SYNC] _syncKeyWithDrive: PIN path — local=$lf, Drive=$df, match=$keysMatch');
-              if (!keysMatch) {
-                debugPrint('[SYNC] _syncKeyWithDrive: PIN key mismatch — re-wrapping Drive key with local PIN and updating storage.');
-                // Update raw key storage (used by getOrCreateKey / non-PIN path).
-                await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
-                // Re-wrap Drive key with stored PIN so unwrapKeyWithPin()
-                // returns the correct key on next launch.
-                final wrapped = await BackupService.wrapKeyWithPin(SecretKey(driveKeyBytes), storedPin);
-                await BackupService.storePinData(_secureStorage, wrapped);
-                // Cache immediately so this sync cycle decrypts with the right key.
-                _cachedKey = SecretKey(driveKeyBytes);
-                debugPrint('[SYNC] _syncKeyWithDrive: local key updated to match Drive key.');
-              } else {
-                debugPrint('[SYNC] _syncKeyWithDrive: PIN keys match — no-op.');
-                // Ensure _cachedKey reflects current key for this sync cycle.
-                _cachedKey ??= key;
-              }
+              debugPrint('[SYNC] _syncKeyWithDrive: PIN valid — installing Drive key ($df) into local storage.');
+              await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
+              final wrapped = await BackupService.wrapKeyWithPin(SecretKey(driveKeyBytes), storedPin);
+              await BackupService.storePinData(_secureStorage, wrapped);
+              _cachedKey = SecretKey(driveKeyBytes);
+              debugPrint('[SYNC] _syncKeyWithDrive: Drive key installed (both slots updated, cache set).');
             }
           } else {
             await _handlePinWrappedDriveKey(envelope);

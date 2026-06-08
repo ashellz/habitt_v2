@@ -33,6 +33,7 @@ class BackupService {
   static const _kBackupKeyStorageKey = 'habitt_backup_key';
   static const _kPinDataStorageKey = 'habitt_backup_pin_data';
   static const _kPinValueStorageKey = 'habitt_backup_pin_value';
+  static const _kLocalBackupPinKey = 'local_backup_pin';
 
   // --- Keychain key management -------------------------------------------
 
@@ -214,6 +215,34 @@ class BackupService {
     );
   }
 
+  // --- Local backup PIN helpers ------------------------------------------
+
+  static Future<String?> readLocalBackupPin(
+    FlutterSecureStorage storage,
+  ) async {
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    return storage.read(key: _kLocalBackupPinKey, aOptions: androidOpts);
+  }
+
+  static Future<void> saveLocalBackupPin(
+    FlutterSecureStorage storage,
+    String pin,
+  ) async {
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.write(
+      key: _kLocalBackupPinKey,
+      value: pin,
+      aOptions: androidOpts,
+    );
+  }
+
+  static Future<void> deleteLocalBackupPin(
+    FlutterSecureStorage storage,
+  ) async {
+    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    await storage.delete(key: _kLocalBackupPinKey, aOptions: androidOpts);
+  }
+
   // --- Key-based encryption ---
 
   static Future<Map<String, dynamic>> _encryptWithKey(
@@ -280,11 +309,12 @@ class BackupService {
     return BackupMetadata.fromMap(map['metadata']);
   }
 
-  /// Export all Hive data (habits + days) as a single encrypted JSON file.
-  /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
+  /// Export all Hive data (habits + days) as a local backup file.
+  /// When [passphrase] is non-null the file is AES-GCM encrypted; when null
+  /// the file is written as plain JSON with `"encrypted": false`.
   static Future<BackupOperationResult> exportDataLocally({
     required BuildContext context,
-    required String passphrase,
+    String? passphrase,
   }) async {
     try {
       final habitsBox = Hive.box<Habit>('habits');
@@ -300,36 +330,43 @@ class BackupService {
         'dateJoined': dateJoined.toIso8601String(),
       };
 
-      final backupWrapper = await _encryptPayload(payload, passphrase);
+      final Map<String, dynamic> backupWrapper;
+      if (passphrase != null) {
+        backupWrapper = await _encryptPayload(payload, passphrase);
+      } else {
+        backupWrapper = {'version': 1, 'encrypted': false, ...payload};
+      }
+
       final exportBytes = Uint8List.fromList(
         utf8.encode(jsonEncode(backupWrapper)),
       );
 
+      // _pickSavePath passes bytes: to FilePicker.saveFile, which writes the
+      // file directly to the user-chosen location (including iCloud Drive /
+      // Files app cloud providers). The returned path is outside the app
+      // sandbox on iOS, so we must NOT attempt a second File.writeAsBytes.
       final savePath = await _pickSavePath(exportBytes);
       if (savePath == null) {
-        return BackupOperationResult.cancelled; // User canceled
+        return BackupOperationResult.cancelled;
       }
 
-      final file = File(savePath);
-      if (!await file.exists()) {
-        await file.create(recursive: true);
-      }
-      await file.writeAsBytes(exportBytes, flush: true);
       return BackupOperationResult.success;
     } catch (e, st) {
       debugPrint('Export failed: $e\n$st');
-      return BackupOperationResult.failed; // Export failed
+      return BackupOperationResult.failed;
     }
   }
 
-  /// Import data from an encrypted file. Replaces existing box contents.
-  /// Returns [BackupOperationResult.success] on success, [BackupOperationResult.cancelled] if user canceled, or [BackupOperationResult.failed] on error.
+  /// Import data from a local backup file.
+  /// When [passphrase] is non-null it is used for decryption; when null the
+  /// file must have `"encrypted": false` or [BackupOperationResult.wrongPassphrase] is returned.
   static Future<BackupOperationResult> importLocalData({
     required BuildContext context,
-    required String passphrase,
+    String? passphrase,
+    String? filePath,
   }) async {
     try {
-      final path = await _pickImportPath();
+      final path = filePath ?? await _pickImportPath();
       if (path == null) return BackupOperationResult.cancelled;
 
       debugPrint('Importing from $path');
@@ -338,10 +375,18 @@ class BackupService {
       if (!await file.exists()) return BackupOperationResult.failed;
 
       try {
-        final BackupData payload = await _decryptPayload(
-          jsonDecode(await file.readAsString()) as Map<String, dynamic>,
-          passphrase,
-        );
+        final wrapper =
+            jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+        final isEncrypted = wrapper['encrypted'] != false;
+
+        final BackupData payload;
+        if (!isEncrypted) {
+          payload = BackupData.fromMap(wrapper);
+        } else if (passphrase == null) {
+          return BackupOperationResult.wrongPassphrase;
+        } else {
+          payload = await _decryptPayload(wrapper, passphrase);
+        }
         if ((payload.version) != 1) {
           throw Exception('Unsupported backup version');
         }
@@ -352,84 +397,30 @@ class BackupService {
         final habitsBox = Hive.box<Habit>('habits');
         final daysBox = Hive.box<Day>('days');
 
-        final importedHabits = payload.habits;
-        // Merge habits using timestamp-aware conflict resolution
-        for (final incoming in importedHabits) {
-          Habit? existing;
-          for (final h in habitsBox.values) {
-            if (h.id == incoming.id) {
-              existing = h;
-              break;
-            }
-          }
+        // Full replace: wipe device data and write exactly what the file contains.
+        await habitsBox.clear();
+        await daysBox.clear();
 
-          if (existing != null) {
-            final merged = existing.merge(incoming);
-            existing.updateHabit(merged);
-            await existing.save();
-          } else {
-            if (incoming.isDeleted ?? false) continue;
-            await habitsBox.add(incoming);
+        for (final habit in payload.habits) {
+          if (!(habit.isDeleted ?? false)) {
+            await habitsBox.add(habit);
           }
         }
 
-        final importedDays = payload.days;
-
-        for (final day in importedDays) {
+        for (final day in payload.days) {
           final dayKey =
               DateTime(
                 day.date.year,
                 day.date.month,
                 day.date.day,
               ).toIso8601String().split('T').first;
+          await daysBox.put(dayKey, day);
+        }
 
-          final existingDay = daysBox.get(dayKey);
-          if (existingDay != null) {
-            final localTs = existingDay.timestamp;
-            final incomingTs = day.timestamp;
-            if ((localTs == incomingTs) ||
-                (localTs == null && incomingTs == null)) {
-              continue;
-            }
-          }
-
-          final existingById = <int, Habit>{};
-          if (existingDay != null) {
-            for (final h in existingDay.habits) {
-              if (h.isDeleted ?? false) continue;
-              existingById[h.id] = h;
-            }
-          }
-
-          final mergedDayHabits = <Habit>[];
-
-          for (final incomingHabit in day.habits) {
-            final local = existingById.remove(incomingHabit.id);
-            if (local != null) {
-              final merged = local.merge(incomingHabit);
-              mergedDayHabits.add(merged);
-            } else {
-              if (incomingHabit.isDeleted ?? false) continue;
-              mergedDayHabits.add(incomingHabit);
-            }
-          }
-
-          // Preserve any local-only habits for that day
-          mergedDayHabits.addAll(existingById.values);
-
-          await daysBox.put(
-            dayKey,
-            Day(
-              date: day.date,
-              habits: mergedDayHabits,
-              timestamp: day.timestamp,
-            ),
+        if (context.mounted) {
+          await context.read<HabitProvider>().importDateJoined(
+            payload.dateJoined,
           );
-
-          final dateJoined = payload.dateJoined;
-          if (context.mounted) {
-            await context.read<HabitProvider>().importDateJoined(dateJoined);
-          }
         }
       } on SecretBoxAuthenticationError {
         debugPrint('Decryption failed: invalid passphrase or corrupted file');
@@ -529,13 +520,15 @@ class BackupService {
     return null;
   }
 
-  static Future<String?> _pickImportPath() async {
+  static Future<String?> pickImportPath() async {
     return FilePicker.pickFiles(
       dialogTitle: 'Import backup',
       type: FileType.custom,
       allowedExtensions: ['habitt'],
     ).then((result) => result?.files.single.path);
   }
+
+  static Future<String?> _pickImportPath() => pickImportPath();
 
   static BackupMetadata? _parseInlineMetadata(dynamic rawMeta) {
     if (rawMeta is Map<String, dynamic>) {

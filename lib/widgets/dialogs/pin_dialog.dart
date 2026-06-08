@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:provider/provider.dart';
 
 class PinDialog extends StatefulWidget {
   const PinDialog({
+    super.key,
     required this.title,
     required this.desc,
     required this.buttonLabel,
@@ -62,71 +63,24 @@ class _PinDialogState extends State<PinDialog> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
-    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 40 + keyboardInset),
-      child: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: cp.isDark ? cp.habitBg : cp.bg,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.title,
-                style: TextStyle(
-                  color: cp.text,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                widget.desc,
-                style: TextStyle(color: cp.greyText, fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              NewDefaultTextField(
-                controller: _ctrl,
-                obscureText: true,
-                autofocus: true,
-                hint: loc.pinHint,
-                errorText: _error,
-                color: cp.isDark ? cp.bg : cp.field,
-                showBorder: true,
-                onSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: NewDefaultButton.secondary(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      label: loc.cancel,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: NewDefaultButton.primary(
-                      onPressed: _submit,
-                      label: widget.buttonLabel,
-                      isLoading: _loading,
-                      color: widget.buttonColor,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+    return NewDefaultDialog(
+      title: widget.title,
+      desc: widget.desc,
+      primaryButtonLabel: widget.buttonLabel,
+      primaryButtonColor: widget.buttonColor,
+      primaryButtonEnabled: !_loading,
+      onPrimaryButtonPressed: _submit,
+      onSecondaryButtonPressed: () => Navigator.of(context).pop(false),
+      child: NewDefaultTextField(
+        controller: _ctrl,
+        obscureText: true,
+        autofocus: true,
+        hint: loc.pinHint,
+        errorText: _error,
+        color: cp.isDark ? cp.bg : cp.field,
+        showBorder: true,
+        onSubmitted: (_) => _submit(),
       ),
     );
   }

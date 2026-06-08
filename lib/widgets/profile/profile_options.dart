@@ -6,6 +6,7 @@ import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/profile/get_premium_widget.dart';
 import 'package:habitt/widgets/profile/leave_feedback_sheet.dart';
 import 'package:habitt/widgets/sheets/backup_sheet.dart';
+import 'package:habitt/widgets/sheets/local_backup_sheet.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,6 +32,16 @@ class _ProfileOptionsState extends State<ProfileOptions> {
       barrierColor: widget.cp.greyText.darken().withValues(alpha: 0.3),
       isScrollControlled: true,
       builder: (context) => BackupSheet(statusOverlay: widget.statusOverlay),
+    );
+  }
+
+  _showLocalBackupSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: widget.cp.isDark ? widget.cp.habitBg : widget.cp.bg,
+      barrierColor: widget.cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder: (context) => const LocalBackupSheet(),
     );
   }
 
@@ -121,6 +132,13 @@ class _ProfileOptionsState extends State<ProfileOptions> {
                       text: loc.backupAndSync,
                       svgPath: 'assets/images/new-svg/backup.svg',
                       onTap: _showBackupSheet,
+                    ),
+                    Divider(color: widget.cp.border, height: 32),
+                    ProfileOption(
+                      cp: widget.cp,
+                      text: loc.localBackups,
+                      svgPath: 'assets/images/new-svg/local-backup.svg',
+                      onTap: _showLocalBackupSheet,
                     ),
                   ],
                 ),

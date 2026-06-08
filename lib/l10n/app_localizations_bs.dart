@@ -2066,6 +2066,10 @@ class AppLocalizationsBs extends AppLocalizations {
       'Kreiraj šifru ili PIN (najmanje 4 znaka) za dodatnu zaštitu ključa sigurnosne kopije.';
 
   @override
+  String get setLocalPinDesc =>
+      'Ovaj PIN će se koristiti za šifriranje tvojih lokalnih sigurnosnih kopija. Bez njega, tvoje backup datoteke ne mogu biti dešifrirane.';
+
+  @override
   String get disablePinTitle => 'Deaktiviraj PIN';
 
   @override
@@ -2377,11 +2381,109 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get pauseHabitDesc =>
-      'Dok je pauzirana, ova navika se neće pojaviti na vašoj dnevnoj listi. Vaš niz i statistike bit će sačuvani.';
+      'Dok je pauzirana, ova navika se neće pojaviti na tvojoj dnevnoj listi. Streak i statistike bit će pauzirane.';
 
   @override
   String get habitPaused => 'Navika pauzirana!';
 
   @override
   String get habitUnpaused => 'Navika nastavljena!';
+
+  @override
+  String get localBackups => 'Lokalni backup';
+
+  @override
+  String get localBackupsDesc => 'Sačuvaj ili učitaj backupe na ovaj uređaj';
+
+  @override
+  String get exportBackup => 'Sačuvaj backup';
+
+  @override
+  String get exportBackupDesc => 'Sačuvaj backup na vašem uređaju';
+
+  @override
+  String get importBackup => 'Učitaj backup';
+
+  @override
+  String get importBackupDesc => 'Učitaj podatke iz sačuvanog backupa';
+
+  @override
+  String get exportSuccess => 'Backup uspješno sačuvan';
+
+  @override
+  String get exportFailed => 'Sačuvanje backupa nije uspjelo';
+
+  @override
+  String get importSuccess => 'Backup uspješno učitan';
+
+  @override
+  String get importFailed => 'Učitavanje backupa nije uspjelo';
+
+  @override
+  String get setPin => 'Postavi PIN';
+
+  @override
+  String get pinEnabled => 'PIN aktiviran';
+
+  @override
+  String get changePin => 'Promijeni PIN';
+
+  @override
+  String get removePin => 'Ukloni PIN';
+
+  @override
+  String get revealPin => 'Prikaži PIN';
+
+  @override
+  String get confirmPin => 'Potvrdi PIN';
+
+  @override
+  String get currentPin => 'Trenutni PIN';
+
+  @override
+  String get newPin => 'Novi PIN';
+
+  @override
+  String get confirmNewPin => 'Potvrdi novi PIN';
+
+  @override
+  String get pinMismatch => 'PIN-ovi se ne podudaraju';
+
+  @override
+  String get pinChangedSuccess => 'PIN promijenjen';
+
+  @override
+  String get pinRemovedSuccess => 'PIN uklonjen';
+
+  @override
+  String get pinSetSuccess => 'PIN postavljen';
+
+  @override
+  String get pinCopied => 'PIN kopiran';
+
+  @override
+  String get exportUnencryptedWarningTitle => 'Sačuvanje bez enkripcije?';
+
+  @override
+  String get exportUnencryptedWarningDesc =>
+      'PIN nije postavljen. Ova datoteka sigurnosne kopije neće biti enkriptovana. Svako ko ima pristup backupu moći će čitati vaše podatke.';
+
+  @override
+  String get exportUnencryptedConfirm => 'Svejedno sačuvaj';
+
+  @override
+  String get enterPinToDecrypt => 'Unesite PIN sigurnosne kopije';
+
+  @override
+  String get wrongPin => 'Pogrešan PIN. Molimo pokušajte ponovo.';
+
+  @override
+  String get importSuccessPinSaved =>
+      'Backup učitan. PIN sačuvan za buduće backupe.';
+
+  @override
+  String get useThisPinQuestion => 'Koristi ovaj PIN za buduće backupe?';
+
+  @override
+  String get savePin => 'Sačuvaj PIN';
 }

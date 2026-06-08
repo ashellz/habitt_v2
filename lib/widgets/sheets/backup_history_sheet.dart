@@ -97,7 +97,10 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
       }
     }
 
-    await bp.replaceFromBackupFile(file.id, includeDeltasSince: includeDeltasSince);
+    await bp.replaceFromBackupFile(
+      file.id,
+      includeDeltasSince: includeDeltasSince,
+    );
     if (!context.mounted) return;
 
     if (bp.hasPendingBackupPassphrase) {
@@ -185,7 +188,14 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
                           children: [
                             for (int i = 0; i < backups.length; i++) ...[
                               if (i > 0) Divider(color: cp.border, height: 32),
-                              _backupEntry(context, cp, bp, loc, backups[i], isNewest: i == 0),
+                              _backupEntry(
+                                context,
+                                cp,
+                                bp,
+                                loc,
+                                backups[i],
+                                isNewest: i == 0,
+                              ),
                             ],
                           ],
                         ),
@@ -226,9 +236,16 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
         const SizedBox(width: 12),
         NewDefaultButton.primarySmall(
           width: null,
-          onPressed: isSyncing
-              ? () {}
-              : () => _confirmRestore(context, bp, loc, file, isNewest: isNewest),
+          onPressed:
+              isSyncing
+                  ? () {}
+                  : () => _confirmRestore(
+                    context,
+                    bp,
+                    loc,
+                    file,
+                    isNewest: isNewest,
+                  ),
           label: loc.restore,
           enabled: !isSyncing,
         ),
