@@ -73,6 +73,16 @@ class BackupProvider extends ChangeNotifier {
   /// this device. Cleared when a full sync runs.
   static const String _kAppliedDeltaIdsKey = 'backup_applied_delta_ids';
 
+  /// Cache of Drive delta file IDs seen on the last download pass. Used to
+  /// skip re-processing when the file list hasn't changed.
+  static const String _kLastKnownDeltaIdsKey = 'backup_known_delta_ids';
+
+  /// SharedPrefs key storing the last time _rotateDeltaFiles ran (ms since epoch).
+  static const String _kLastRotationTimeKey = 'backup_last_rotation_time';
+
+  /// Maximum backoff interval when consecutive sync failures occur.
+  static const Duration _kMaxBackoffDuration = Duration(minutes: 30);
+
   /// start a full compaction sync when this many delta files accumulate:
   static const int _kDeltaCompactionThreshold = 20;
 
@@ -110,6 +120,10 @@ class BackupProvider extends ChangeNotifier {
 
   // True while a scheduleAutoSync timer is pending but hasn't fired yet.
   bool _hasPendingSync = false;
+
+  // Counts consecutive performSync failures; resets on success. Used to
+  // compute exponential backoff for the periodic sync timer.
+  int _consecutiveSyncFailures = 0;
 
   String? _progressMessage;
 
@@ -155,6 +169,27 @@ class BackupProvider extends ChangeNotifier {
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
   bool get hasPendingSync => _hasPendingSync;
+
+  /// True when the last successful sync was more than 5 minutes ago (or never).
+  /// Used by the resume lifecycle handler to decide whether a full sync cycle
+  /// is warranted or just an upload flush.
+  bool get isSyncStale =>
+      _lastSyncTime == null ||
+      DateTime.now().difference(_lastSyncTime!) > const Duration(minutes: 5);
+
+  /// Backoff interval for the periodic sync timer. Doubles on each consecutive
+  /// failure, capped at [_kMaxBackoffDuration]. Resets to the base interval on
+  /// any successful sync.
+  Duration get _currentBackoffInterval {
+    final base =
+        _syncSpeed == SyncSpeed.fast
+            ? const Duration(seconds: 30)
+            : const Duration(minutes: 2);
+    if (_consecutiveSyncFailures == 0) return base;
+    final factor = 1 << _consecutiveSyncFailures.clamp(0, 10);
+    final backed = base * factor;
+    return backed > _kMaxBackoffDuration ? _kMaxBackoffDuration : backed;
+  }
 
   void clearPendingNotification() {
     _pendingNotification = null;
@@ -224,17 +259,13 @@ class BackupProvider extends ChangeNotifier {
   /// Starts a recurring timer that pulls remote changes from other devices
   /// while the app is in the foreground.
   ///
-  /// Interval: 5 min for [SyncSpeed.fast], 20 min for [SyncSpeed.optimized].
+  /// Interval: 30 s for [SyncSpeed.fast], 2 min for [SyncSpeed.optimized],
+  /// doubled on each consecutive failure up to [_kMaxBackoffDuration].
   void _startPeriodicSync() {
     _periodicSyncTimer?.cancel();
     if (!isLoggedIn || !_isAutoSyncEnabled) return;
 
-    final interval =
-        _syncSpeed == SyncSpeed.fast
-            ? const Duration(seconds: 30)
-            : const Duration(minutes: 2);
-
-    _periodicSyncTimer = Timer.periodic(interval, (_) {
+    _periodicSyncTimer = Timer.periodic(_currentBackoffInterval, (_) {
       // Only run when not already syncing and no upload is pending.
       if (_syncState == SyncState.syncing || _hasPendingSync) return;
       performSync(false, SyncMode.full).catchError((e) {
@@ -1047,6 +1078,8 @@ class BackupProvider extends ChangeNotifier {
         notifyListeners();
         return;
       }
+      _consecutiveSyncFailures++;
+      _startPeriodicSync(); // restart with backed-off interval
       syncState = SyncState.error;
       lastError = 'Sync failed: $e';
       debugPrint(lastError);
@@ -1135,6 +1168,11 @@ class BackupProvider extends ChangeNotifier {
   Future<void> _onSyncSuccess() async {
     _lastSyncTime = DateTime.now();
     await _persistLastSyncTime();
+    if (_consecutiveSyncFailures > 0) {
+      // Came back from backoff — reset counter and restart timer at normal rate.
+      _consecutiveSyncFailures = 0;
+      _startPeriodicSync();
+    }
     syncState = SyncState.success;
     progressMessage = null;
   }
@@ -1237,10 +1275,17 @@ class BackupProvider extends ChangeNotifier {
         } else {
           // Drive is authoritative — always install its plain key locally.
           final driveKeyBytes = base64Decode(envelope['key'] as String);
-          final df = driveKeyBytes.take(4).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-          debugPrint('[SYNC] _syncKeyWithDrive: plain — installing Drive key ($df) into local storage.');
+          final df =
+              driveKeyBytes
+                  .take(4)
+                  .map((b) => b.toRadixString(16).padLeft(2, '0'))
+                  .join();
+          debugPrint(
+            '[SYNC] _syncKeyWithDrive: plain — installing Drive key ($df) into local storage.',
+          );
           await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
-          _cachedKey = null; // force _getKey() to re-derive from updated storage
+          _cachedKey =
+              null; // force _getKey() to re-derive from updated storage
         }
       } else {
         // Drive is PIN-wrapped.
@@ -1265,13 +1310,24 @@ class BackupProvider extends ChangeNotifier {
               //   which is what _getKey() actually reads in PIN mode.
               // Both must be updated; comparing only slot B was the old bug.
               final driveKeyBytes = await key.extractBytes();
-              final df = driveKeyBytes.take(4).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-              debugPrint('[SYNC] _syncKeyWithDrive: PIN valid — installing Drive key ($df) into local storage.');
+              final df =
+                  driveKeyBytes
+                      .take(4)
+                      .map((b) => b.toRadixString(16).padLeft(2, '0'))
+                      .join();
+              debugPrint(
+                '[SYNC] _syncKeyWithDrive: PIN valid — installing Drive key ($df) into local storage.',
+              );
               await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
-              final wrapped = await BackupService.wrapKeyWithPin(SecretKey(driveKeyBytes), storedPin);
+              final wrapped = await BackupService.wrapKeyWithPin(
+                SecretKey(driveKeyBytes),
+                storedPin,
+              );
               await BackupService.storePinData(_secureStorage, wrapped);
               _cachedKey = SecretKey(driveKeyBytes);
-              debugPrint('[SYNC] _syncKeyWithDrive: Drive key installed (both slots updated, cache set).');
+              debugPrint(
+                '[SYNC] _syncKeyWithDrive: Drive key installed (both slots updated, cache set).',
+              );
             }
           } else {
             await _handlePinWrappedDriveKey(envelope);
@@ -1809,8 +1865,14 @@ class BackupProvider extends ChangeNotifier {
     String folderId,
     SecretKey key,
   ) async {
+    // Filter server-side to only files modified since our last sync when possible.
+    // This shrinks the response dramatically in the steady-state case.
+    final timeFilter =
+        _lastSyncTime != null
+            ? " and modifiedTime > '${_lastSyncTime!.toUtc().toIso8601String()}'"
+            : '';
     final res = await drive.files.list(
-      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false$timeFilter",
       $fields: 'files(id,name,createdTime)',
       orderBy: 'createdTime asc',
     );
@@ -1821,6 +1883,27 @@ class BackupProvider extends ChangeNotifier {
     );
     if (allFiles.isEmpty) return;
 
+    // Load SharedPrefs once for both cache comparison and applied-ID tracking.
+    final prefs = await SharedPreferences.getInstance();
+
+    // If the returned file IDs are identical to the last known set, nothing
+    // changed on Drive since the previous download pass — skip processing.
+    final currentIds =
+        allFiles.where((f) => f.id != null).map((f) => f.id!).toSet();
+    final cachedIdsRaw = prefs.getString(_kLastKnownDeltaIdsKey);
+    if (cachedIdsRaw != null) {
+      final cachedIds = Set<String>.from(
+        jsonDecode(cachedIdsRaw) as List<dynamic>,
+      );
+      if (cachedIds.length == currentIds.length &&
+          cachedIds.containsAll(currentIds)) {
+        debugPrint(
+          '[SYNC] _downloadAndApplyPendingDeltas: delta file list unchanged — skipping download pass.',
+        );
+        return;
+      }
+    }
+
     // The short device ID embedded in the filename (first 8 chars of deviceId).
     final deviceId = _localMetadata?.deviceId ?? '';
     final shortMyId =
@@ -1830,7 +1913,6 @@ class BackupProvider extends ChangeNotifier {
     );
 
     // Load the set of delta file IDs already applied on this device.
-    final prefs = await SharedPreferences.getInstance();
     final appliedRaw = prefs.getString(_kAppliedDeltaIdsKey);
     final applied =
         appliedRaw != null
@@ -1915,6 +1997,11 @@ class BackupProvider extends ChangeNotifier {
     }
 
     await prefs.setString(_kAppliedDeltaIdsKey, jsonEncode(applied.toList()));
+    // Update the known-IDs cache so future cycles can skip when nothing changed.
+    await prefs.setString(
+      _kLastKnownDeltaIdsKey,
+      jsonEncode(currentIds.toList()),
+    );
   }
 
   /// Upload only the habits and days that changed since [_lastSyncTime].
@@ -1967,26 +2054,47 @@ class BackupProvider extends ChangeNotifier {
   }
 
   /// Delete delta files older than 7 days. Called after each delta upload to
-  /// prevent indefinite accumulation.
+  /// prevent indefinite accumulation. Throttled to run at most once per 24 h
+  /// to avoid a Drive list call on every upload.
   Future<void> _rotateDeltaFiles(
     drive_api.DriveApi drive,
     String folderId,
   ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastMs = prefs.getInt(_kLastRotationTimeKey);
+    if (lastMs != null) {
+      final lastRotation = DateTime.fromMillisecondsSinceEpoch(
+        lastMs,
+        isUtc: true,
+      );
+      if (DateTime.now().toUtc().difference(lastRotation) <
+          const Duration(hours: 24)) {
+        debugPrint('[SYNC] _rotateDeltaFiles: throttled — ran within 24 h.');
+        return;
+      }
+    }
+
+    // Query only files old enough to be rotated (server-side filter).
+    final cutoff = DateTime.now().toUtc().subtract(const Duration(days: 7));
     final res = await drive.files.list(
-      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
+      q:
+          "name contains 'habitt-delta' and '$folderId' in parents and trashed = false"
+          " and createdTime < '${cutoff.toIso8601String()}'",
       $fields: 'files(id,createdTime)',
       orderBy: 'createdTime asc',
     );
 
-    final cutoff = DateTime.now().toUtc().subtract(const Duration(days: 7));
     for (final f in (res.files ?? [])) {
-      if (f.id != null &&
-          f.createdTime != null &&
-          f.createdTime!.isBefore(cutoff)) {
+      if (f.id != null) {
         await drive.files.delete(f.id!);
         debugPrint('Rotated old delta: ${f.id}');
       }
     }
+
+    await prefs.setInt(
+      _kLastRotationTimeKey,
+      DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
   }
 
   /// Delete ALL delta files from Drive and clear the local applied-delta set.
@@ -2009,6 +2117,7 @@ class BackupProvider extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_kAppliedDeltaIdsKey);
+    await prefs.remove(_kLastKnownDeltaIdsKey);
     debugPrint('Applied-delta tracking cleared.');
   }
 

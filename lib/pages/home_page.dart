@@ -53,11 +53,21 @@ class _HomePageState extends State<HomePage>
         );
         categoryProvider.reorderCategoriesBasedOnTime();
 
-        await backupProvider.performSync();
+        // If the app was only briefly backgrounded, we skip the full Drive check
+        // (which looks for newer full backups and all remote deltas). Just
+        // flush any pending local upload instead. The periodic timer and the
+        // next stale resume will catch compaction / new deltas within 30s–2min.
+        if (backupProvider.isSyncStale) {
+          await backupProvider.performSync();
+        } else {
+          await backupProvider.performSync(false, SyncMode.uploadOnly);
+        }
         if (!mounted) {
           return;
         }
-        context.read<StatsProvider>().addShouldRefresh(StatsType.perfectDaysStreak);
+        context.read<StatsProvider>().addShouldRefresh(
+          StatsType.perfectDaysStreak,
+        );
         setState(() {
           _lifecycleTick += 1;
         });

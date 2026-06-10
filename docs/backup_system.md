@@ -130,7 +130,7 @@ Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Incoming day is skipped i
 
 | Mode | Trigger | What it does |
 |---|---|---|
-| `full` | App launch, app resume, "Back Up Now" | Check remote → download deltas/full backup → upload delta or full |
+| `full` | App launch, stale resume (>5 min), "Back Up Now" | Check remote → download deltas/full backup → upload delta or full |
 | `uploadOnly` | Auto-sync after local change | Skip remote check, only upload delta |
 | `syncOnly` | "Sync Now" button | Download deltas + upload delta, no compaction |
 
@@ -158,11 +158,18 @@ Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Incoming day is skipped i
 3. On timer fire: `performSync(false, SyncMode.uploadOnly)`
 
 ### 3. Periodic Timer
-- Fires every 30 s (fast) or 2 min (optimized)
+- Fires every 30 s (fast) or 2 min (optimized) when there are no failures
+- Backs off exponentially on consecutive `performSync` failures (doubles each time, max 30 min), resets to normal interval on next success
 - Skipped if: already syncing, pending upload in queue, not signed in
 - Calls `performSync(false, SyncMode.full)`
 
-### 4. Manual Actions
+### 4. App Resume (`didChangeAppLifecycleState(resumed)`)
+- If `isSyncStale` (last sync > 5 min ago or never): `performSync()` — full cycle
+- If recently synced (< 5 min): `performSync(false, SyncMode.uploadOnly)` — only flush pending local upload; skip Drive read pass
+
+The 5-minute stale threshold means the full-backup check (needed to detect compaction by another device) still runs on any meaningful resume, while rapid app-switches avoid unnecessary Drive API calls. The periodic timer catches compaction within 30 s–2 min regardless.
+
+### 5. Manual Actions
 - **"Back Up Now"** → `backupNow()` → `performSync(force: true)` + UI spinner
 - **"Sync Now"** → `performSync(false, SyncMode.syncOnly)`
 
@@ -185,14 +192,17 @@ performSync(force, mode)
     ├─ Check if Drive has a newer full backup (compaction recovery)
     │   └─ If yes → _fullSyncPath()
     ├─ _downloadAndApplyPendingDeltas()
-    │   ├─ List all .habittd files sorted oldest→newest
+    │   ├─ Drive query filtered by modifiedTime > _lastSyncTime (server-side)
+    │   ├─ If returned IDs == cached IDs → early return (nothing new)
     │   ├─ Skip already-applied (SharedPrefs set)
     │   ├─ Skip own device's deltas (SHORTID in filename)
-    │   └─ Apply each: merge habits+days using timestamp logic
+    │   ├─ Apply each: merge habits+days using timestamp logic
+    │   └─ Update cached file ID set in SharedPrefs
     ├─ _uploadDeltaToCloud()
     │   ├─ exportDeltaForGoogleDrive(fromTime: _lastSyncTime)
     │   ├─ Skip if null (no changes)
-    │   └─ _rotateDeltaFiles() — delete files older than 7 days
+    │   └─ _rotateDeltaFiles() — throttled to once per 24 h; Drive query
+    │       pre-filtered by createdTime < 7-days-ago
     └─ If delta count ≥ 20 → _compactDeltas()
         ├─ Upload new full backup
         ├─ Delete all delta files
