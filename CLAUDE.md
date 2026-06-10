@@ -83,6 +83,12 @@ After modifying any `@HiveType` / `@HiveField` annotated model, regenerate with 
 
 Configured via `l10n.yaml`. ARB files are in `lib/l10n/`. Localized strings are accessed through the generated `AppLocalizations` class. After adding/modifying ARB entries, run `flutter gen-l10n` or `build_runner build`.
 
+### Backup & Sync System
+
+The Google Drive backup/sync system is documented in full at [`docs/backup_system.md`](docs/backup_system.md). Read it before touching any backup, sync, encryption, or Drive integration code.
+
+**Maintenance rule:** Any change to the backup system must also update `docs/backup_system.md`.
+
 ### Third-Party Integrations
 
 - **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions
