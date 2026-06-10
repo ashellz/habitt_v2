@@ -88,7 +88,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: widget.cp.bg,
+          color: widget.cp.widget,
           borderRadius: BorderRadius.circular(24),
         ),
         clipBehavior: Clip.hardEdge,
@@ -159,7 +159,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       decoration: BoxDecoration(
-        color: cp.field,
+        color: cp.widget,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: cp.border),
       ),

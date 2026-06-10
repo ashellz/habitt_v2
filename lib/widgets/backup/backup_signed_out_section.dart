@@ -73,7 +73,7 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: ShapeDecoration(
-          color: cp.habitBg,
+          color: cp.field,
           shape: RoundedRectangleBorder(
             side: BorderSide(width: 1, color: cp.border),
             borderRadius: BorderRadius.circular(24),

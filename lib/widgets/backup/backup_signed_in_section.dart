@@ -310,7 +310,7 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: ShapeDecoration(
-                  color: cp.habitBg,
+                  color: cp.field,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(width: 1, color: cp.border),
                     borderRadius: BorderRadius.circular(24),
@@ -397,7 +397,7 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: ShapeDecoration(
-                  color: cp.habitBg,
+                  color: cp.field,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(width: 1, color: cp.border),
                     borderRadius: BorderRadius.circular(24),

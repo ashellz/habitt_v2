@@ -54,7 +54,7 @@ class _ProfileOptionsState extends State<ProfileOptions> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: ShapeDecoration(
-                  color: widget.cp.field,
+                  color: widget.cp.widget,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(width: 1, color: widget.cp.border),
                     borderRadius: BorderRadius.circular(24),
