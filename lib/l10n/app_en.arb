@@ -960,5 +960,6 @@
   "syncFailedDrive": "Google Drive sync failed",
   "syncFailedICloud": "iCloud unavailable — check Settings",
   "syncFailedICloudQuota": "Not enough iCloud storage",
-  "syncWarningICloudQuota": "Apple storage full — data saved locally only"
+  "syncWarningICloudQuota": "Apple storage full — data saved locally only",
+  "syncFailedDriveQuota": "Google Drive storage full"
 }

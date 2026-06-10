@@ -4234,6 +4234,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Apple storage full — data saved locally only'**
   String get syncWarningICloudQuota;
+
+  /// No description provided for @syncFailedDriveQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive storage full'**
+  String get syncFailedDriveQuota;
 }
 
 class _AppLocalizationsDelegate

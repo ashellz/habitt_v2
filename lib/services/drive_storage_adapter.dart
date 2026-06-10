@@ -233,4 +233,17 @@ class DriveStorageAdapter implements CloudStorageAdapter {
   Future<void> dispose() async {
     _cachedFolderId = null;
   }
+
+  /// Returns true if [e] is a Google Drive storage quota exceeded error
+  /// (HTTP 403 storageQuotaExceeded).
+  static bool isQuotaExceededError(Object e) {
+    if (e is drive_api.DetailedApiRequestError && e.status == 403) {
+      final msg = (e.message ?? '').toLowerCase();
+      return msg.contains('quota') || msg.contains('storage');
+    }
+    // Catch via string in case of wrapping by http layer.
+    final str = e.toString().toLowerCase();
+    return str.contains('storagequotaexceeded') ||
+        (str.contains('status: 403') && str.contains('quota'));
+  }
 }

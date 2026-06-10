@@ -1083,6 +1083,17 @@ class BackupProvider extends ChangeNotifier {
         await _silentlyDeactivateICloud(); // calls notifyListeners()
         return;
       }
+      if (DriveStorageAdapter.isQuotaExceededError(e)) {
+        // Drive storage full — upload failed completely (no local fallback).
+        _consecutiveSyncFailures++;
+        _startPeriodicSync();
+        syncState = SyncState.error;
+        lastError = 'drive_quota_exceeded';
+        _pendingNotification = 'Google Drive storage full';
+        debugPrint('[SYNC] Drive quota exceeded: $e');
+        notifyListeners();
+        return;
+      }
       _consecutiveSyncFailures++;
       _startPeriodicSync(); // restart with backed-off interval
       syncState = SyncState.error;

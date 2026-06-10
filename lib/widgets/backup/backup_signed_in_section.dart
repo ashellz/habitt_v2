@@ -35,13 +35,9 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
 
   String? _localizedSyncError(BackupProvider bp, AppLocalizations loc) {
     if (bp.syncState != SyncState.error || bp.lastError == null) return null;
-    final raw = bp.lastError!.toLowerCase();
-    if (raw.contains('quota') ||
-        raw.contains('code=-1003') ||
-        raw.contains('ckerrordomain:25')) {
-      return loc.syncFailedICloudQuota;
-    }
+    final raw = bp.lastError!;
     if (raw == 'icloud_unavailable') return loc.syncFailedICloud;
+    if (raw == 'drive_quota_exceeded') return loc.syncFailedDriveQuota;
     return widget.isICloud ? loc.syncFailedICloud : loc.syncFailedDrive;
   }
 

@@ -2509,4 +2509,7 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get syncWarningICloudQuota =>
       'Apple storage je pun — podaci su sačuvani samo lokalno';
+
+  @override
+  String get syncFailedDriveQuota => 'Google Drive storage je pun';
 }
