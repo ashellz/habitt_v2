@@ -285,7 +285,7 @@ class _NewCategoriesListState extends State<NewCategoriesList> {
     final wasSelectedVisibleInPreviousFrame = _lastVisibleIds.contains(
       selectedId,
     );
-    debugPrint("Selected id: $selectedId | showAll=${widget.showAll}");
+    // debugPrint("Selected id: $selectedId | showAll=${widget.showAll}");
     final isSelectedVisible = visibleIds.contains(selectedId);
 
     if (!isSelectedVisible && wasSelectedVisibleInPreviousFrame) {

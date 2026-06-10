@@ -954,5 +954,11 @@
   "importSuccessPinSaved": "Backup imported. PIN saved for future backups.",
   "useThisPinQuestion": "Use this PIN for future backups?",
   "savePin": "Save PIN",
-  "removePinDesc": "Future backup files will not be encrypted. Anyone with access to the file will be able to read your data."
+  "removePinDesc": "Future backup files will not be encrypted. Anyone with access to the file will be able to read your data.",
+  "connectICloud": "Connect iCloud",
+  "disconnectICloud": "Disconnect iCloud",
+  "syncFailedDrive": "Google Drive sync failed",
+  "syncFailedICloud": "iCloud unavailable — check Settings",
+  "syncFailedICloudQuota": "Not enough iCloud storage",
+  "syncWarningICloudQuota": "Apple storage full — data saved locally only"
 }

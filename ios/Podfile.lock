@@ -5,12 +5,15 @@ PODS:
   - awesome_notifications_core (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - icloud_storage (0.0.1):
+    - Flutter
   - IosAwnCore (0.10.0)
 
 DEPENDENCIES:
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - awesome_notifications_core (from `.symlinks/plugins/awesome_notifications_core/ios`)
   - Flutter (from `Flutter`)
+  - icloud_storage (from `.symlinks/plugins/icloud_storage/ios`)
 
 SPEC REPOS:
   trunk:
@@ -23,11 +26,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/awesome_notifications_core/ios"
   Flutter:
     :path: Flutter
+  icloud_storage:
+    :path: ".symlinks/plugins/icloud_storage/ios"
 
 SPEC CHECKSUMS:
   awesome_notifications: 0f432b28098d193920b11a44cfa9d2d9313a3888
   awesome_notifications_core: 429c28df8746780a474de177e5acde33af87da63
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  icloud_storage: e55639f0c0d7cb2b0ba9c0b3d5968ccca9cd9aa2
   IosAwnCore: 653786a911089012092ce831f2945cd339855a89
 
 PODFILE CHECKSUM: 9e1d63682c108ccd97bb327deb23803cadf6f054

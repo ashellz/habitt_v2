@@ -533,7 +533,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get insightStrengthStartSmallType1Medications =>
-      'Your medication habit is slipping. Do not let this routine fall off now.|You have been off track with taking your medications. Take them today and protect the habit.|Momentum on taking your medications is fading. Keep it alive by taking them on time today.|Do not let your medication schedule become inconsistent. Lock in and take them today.|You started taking your medications on time for a reason. Stay disciplined and keep it from slipping.';
+      'Tvoja navika uzimanja lijekova posustaje. Nemoj dopustiti da ova rutina sada otpadne.|Odstupio si od uzimanja lijekova. Uzmi ih danas i zaštiti tu naviku.|Momentum u uzimanju lijekova slabi. Održi ga živim uzimanjem lijekova na vrijeme danas.|Nemoj dopustiti da tvoj raspored uzimanja lijekova postane neredovan. Fokusiraj se i uzmi ih danas.|Počeo si uzimati lijekove na vrijeme s razlogom. Ostani discipliniran i spriječi da ova navika otpadne.';
 
   @override
   String get insightStrengthStartSmallType1Nutrition =>
@@ -634,7 +634,7 @@ class AppLocalizationsBs extends AppLocalizations {
     Object fromValue,
     Object toValue,
   ) {
-    return 'You have not been consistent with taking your medications on time lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to keep the habit alive.|Taking your medications on time has been harder recently. Strength dropped by $drop%. Move your target from $fromValue to $toValue to rebuild consistency.|Your medication consistency is down lately. Strength dropped by $drop% in the last few days. Recommended target: $fromValue -> $toValue to recover momentum.|To protect your medication habit, lower the target for now. Strength dropped by $drop%. Recommended: $fromValue -> $toValue.|Your medication habit needs a reset. Strength dropped by $drop%. Try $fromValue -> $toValue so this habit stays alive.';
+    return 'Nisi bio dosljedan u uzimanju lijekova na vrijeme u posljednje vrijeme. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da navika ostane živa.|Uzimanje lijekova na vrijeme je nedavno bilo teže. Snaga je pala za $drop%. Pomakni cilj sa $fromValue na $toValue da ponovo izgradiš konzistentnost.|Tvoja konzistentnost u uzimanju lijekova je opala. Snaga je pala za $drop% u posljednjih nekoliko dana. Preporučeni cilj: $fromValue -> $toValue da povratiš zamah.|Da zaštitis naviku uzimanja lijekova, za sada snizi cilj. Snaga je pala za $drop%. Preporučeno: $fromValue -> $toValue.|Tvoja navika uzimanja lijekova treba reset. Snaga je pala za $drop%. Pokušaj $fromValue -> $toValue da ova navika ostane živa.';
   }
 
   @override
@@ -1675,7 +1675,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get logOut => 'Odjavi se';
 
   @override
-  String get backupAndSync => 'Sigurnosna kopija i sinhronizacija';
+  String get backupAndSync => 'Backup i sinhronizacija';
 
   @override
   String lastSynced(Object lastSynced) {
@@ -2490,4 +2490,23 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get removePinDesc =>
       'Budući backupi neće biti šifrirani. Svako ko ima pristup backupu moći će čitati vaše podatke.';
+
+  @override
+  String get connectICloud => 'Poveži iCloud';
+
+  @override
+  String get disconnectICloud => 'Odspoji iCloud';
+
+  @override
+  String get syncFailedDrive => 'Google Drive sinhronizacija neuspješna';
+
+  @override
+  String get syncFailedICloud => 'iCloud nedostupan — provjeri Postavke';
+
+  @override
+  String get syncFailedICloudQuota => 'Nema dovoljno prostora na iCloud-u';
+
+  @override
+  String get syncWarningICloudQuota =>
+      'Apple storage je pun — podaci su sačuvani samo lokalno';
 }

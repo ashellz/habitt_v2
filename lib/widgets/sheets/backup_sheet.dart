@@ -113,7 +113,7 @@ class _BackupSheetState extends State<BackupSheet> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    if (!bp.isLoggedIn)
+                    if (!bp.isLoggedIn && !bp.isICloudConnected)
                       BackupSignedOutSection(
                         onAfterSignIn: _checkAndShowPinDialog,
                       )
@@ -122,6 +122,7 @@ class _BackupSheetState extends State<BackupSheet> {
                     else
                       BackupSignedInSection(
                         statusOverlay: widget.statusOverlay,
+                        isICloud: bp.isICloudConnected,
                       ),
                   ],
                 ),

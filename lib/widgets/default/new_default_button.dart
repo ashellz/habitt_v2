@@ -214,6 +214,8 @@ class NewDefaultButton extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(24)),
                   ),
                 ),
+                minimumSize: WidgetStatePropertyAll(Size(0, height)),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 padding: WidgetStatePropertyAll(
                   padding ?? const EdgeInsets.symmetric(horizontal: 20),
                 ),
@@ -241,23 +243,28 @@ class NewDefaultButton extends StatelessWidget {
                           if (child != null)
                             child!
                           else if (label != null)
-                            Text(
-                              label!,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              style: textStyle ??
-                                  TextStyle(
-                                    color: resolvedTextColor,
-                                    fontSize:
-                                        _variant ==
-                                                    _ButtonVariant.primarySmall ||
-                                                _variant ==
-                                                    _ButtonVariant.secondarySmall
-                                            ? 14
-                                            : 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                            Flexible(
+                              child: Text(
+                                label!,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                style:
+                                    textStyle ??
+                                    TextStyle(
+                                      color: resolvedTextColor,
+                                      fontSize:
+                                          _variant ==
+                                                      _ButtonVariant
+                                                          .primarySmall ||
+                                                  _variant ==
+                                                      _ButtonVariant
+                                                          .secondarySmall
+                                              ? 14
+                                              : 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
                             ),
                         ],
                       ),

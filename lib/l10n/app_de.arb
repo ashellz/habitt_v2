@@ -954,5 +954,10 @@
   "importSuccessPinSaved": "Backup importiert. PIN für zukünftige Backups gespeichert.",
   "useThisPinQuestion": "Diesen PIN für zukünftige Backups verwenden?",
   "savePin": "PIN speichern",
-  "removePinDesc": "Zukünftige Backup-Dateien werden nicht verschlüsselt. Jeder mit Zugriff auf die Datei kann Ihre Daten lesen."
+  "removePinDesc": "Zukünftige Backup-Dateien werden nicht verschlüsselt. Jeder mit Zugriff auf die Datei kann Ihre Daten lesen.",
+  "connectICloud": "iCloud verbinden",
+  "disconnectICloud": "iCloud trennen",
+  "syncFailedDrive": "Google Drive-Synchronisierung fehlgeschlagen",
+  "syncFailedICloud": "iCloud nicht verfügbar — Einstellungen prüfen",
+  "syncFailedICloudQuota": "Nicht genug iCloud-Speicherplatz"
 }

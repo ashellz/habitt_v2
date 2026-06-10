@@ -6,28 +6,33 @@
 
 ## Overview
 
-Habitt uses a **delta-based, client-side encrypted** backup system built on Google Drive. No plaintext data ever leaves the device. The system is opt-in and designed around three goals: privacy, multi-device sync, and low bandwidth usage.
+Habitt uses a **delta-based, client-side encrypted** backup system supporting two cloud backends: Google Drive and iCloud. No plaintext data ever leaves the device. The system is opt-in and designed around three goals: privacy, multi-device sync, and low bandwidth usage.
 
 **Key source files:**
-- `lib/services/backup_service.dart` — encryption, serialization, Drive I/O, delta logic
+- `lib/services/backup_service.dart` — encryption, serialization, delta logic
+- `lib/services/cloud_storage_adapter.dart` — abstract `CloudStorageAdapter` interface
+- `lib/services/drive_storage_adapter.dart` — Google Drive implementation
+- `lib/services/icloud_storage_adapter.dart` — iCloud Documents implementation
 - `lib/providers/backup_provider.dart` — sync orchestration, timers, state management
 - `lib/models/backup_data.dart` — `BackupData`, `BackupMetadata` models
 
 ---
 
-## Drive Folder Structure
+## Cloud Folder Structure
 
-All files live inside a single `habitt_backups/` folder in the user's Google Drive root.
+All files live inside a single `habitt_backups/` folder — in Drive root for Google Drive, in the iCloud container `iCloud.com.shellz.habitt` for iCloud.
 
 ```
 habitt_backups/
-├── DD-MM-YY-HHMM-habitt-backup.habitt      ← full backups (max 3 kept)
+├── DD-MM-YY-HHMM-habitt-backup.habitt          ← full backups (max 3 kept)
 ├── DD-MM-YY-HHMM-SHORTID-habitt-delta.habittd  ← delta files (7-day TTL)
-├── metadata.meta                            ← encrypted device metadata
-└── key.key                                  ← encryption key (plain or PIN-wrapped)
+├── metadata.meta                                ← encrypted device metadata
+└── key.key                                      ← Drive only; encryption key (plain or PIN-wrapped)
 ```
 
 The `SHORTID` in delta filenames is the first 8 chars of the device UUID — used to identify the source device and skip re-applying your own deltas.
+
+`key.key` is **not used on iCloud** — `flutter_secure_storage` with `IOSOptions(synchronizable: true)` syncs all keychain slots (encryption key, PIN data, stored PIN) via iCloud Keychain automatically.
 
 ---
 

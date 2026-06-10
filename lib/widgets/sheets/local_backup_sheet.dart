@@ -119,11 +119,16 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
     if (!mounted || _importing) return;
     final loc = AppLocalizations.of(context)!;
 
+    setState(() => _importing = true);
+
     final storedPin = await BackupService.readLocalBackupPin(_storage);
 
     // Pick the file once so the same path can be reused in the fallback dialog.
     final filePath = await BackupService.pickImportPath();
-    if (filePath == null) return;
+    if (filePath == null) {
+      if (mounted) setState(() => _importing = false);
+      return;
+    }
 
     // Show confirmation before touching any local data.
     if (!mounted) return;
@@ -132,9 +137,10 @@ class _LocalBackupSheetState extends State<LocalBackupSheet>
       builder:
           (ctx) => ConfirmRestoreBackupDialog(cp: ctx.read<ColorProvider>()),
     );
-    if (!mounted || confirmed != true) return;
-
-    setState(() => _importing = true);
+    if (!mounted || confirmed != true) {
+      if (mounted) setState(() => _importing = false);
+      return;
+    }
     final result = await BackupService.importLocalData(
       context: context,
       passphrase: storedPin,

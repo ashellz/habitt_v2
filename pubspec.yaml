@@ -74,6 +74,7 @@ dependencies:
   dotted_border: ^3.1.0
   image_picker: ^1.2.2
   shimmer: ^3.0.0
+  icloud_storage: ^2.1.0
 
 
 dev_dependencies:
@@ -93,6 +94,12 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+# Patched local copy of icloud_storage to handle null isUploading/isUploaded
+# fields from iOS metadata (package bug: type 'Null' is not a subtype of bool).
+dependency_overrides:
+  icloud_storage:
+    path: packages/icloud_storage
 
 # The following section is specific to Flutter packages.
 flutter:

@@ -954,5 +954,10 @@
   "importSuccessPinSaved": "Copia de seguridad importada. PIN guardado para futuras copias.",
   "useThisPinQuestion": "¿Usar este PIN para futuras copias de seguridad?",
   "savePin": "Guardar PIN",
-  "removePinDesc": "Los futuros archivos de copia de seguridad no estarán cifrados. Cualquier persona con acceso al archivo podrá leer tus datos."
+  "removePinDesc": "Los futuros archivos de copia de seguridad no estarán cifrados. Cualquier persona con acceso al archivo podrá leer tus datos.",
+  "connectICloud": "Conectar iCloud",
+  "disconnectICloud": "Desconectar iCloud",
+  "syncFailedDrive": "Error de sincronización con Google Drive",
+  "syncFailedICloud": "iCloud no disponible — comprueba los Ajustes",
+  "syncFailedICloudQuota": "Almacenamiento de iCloud insuficiente"
 }

@@ -1,6 +1,13 @@
 {
-  "bs": [
-    "insightStrengthStartSmallType1Medications",
-    "insightStrengthStartSmallType2Medications"
+  "de": [
+    "syncWarningICloudQuota"
+  ],
+
+  "es": [
+    "syncWarningICloudQuota"
+  ],
+
+  "it": [
+    "syncWarningICloudQuota"
   ]
 }

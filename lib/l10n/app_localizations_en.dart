@@ -2492,4 +2492,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get removePinDesc =>
       'Future backup files will not be encrypted. Anyone with access to the file will be able to read your data.';
+
+  @override
+  String get connectICloud => 'Connect iCloud';
+
+  @override
+  String get disconnectICloud => 'Disconnect iCloud';
+
+  @override
+  String get syncFailedDrive => 'Google Drive sync failed';
+
+  @override
+  String get syncFailedICloud => 'iCloud unavailable — check Settings';
+
+  @override
+  String get syncFailedICloudQuota => 'Not enough iCloud storage';
+
+  @override
+  String get syncWarningICloudQuota =>
+      'Apple storage full — data saved locally only';
 }

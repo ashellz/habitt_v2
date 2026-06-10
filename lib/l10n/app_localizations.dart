@@ -4198,6 +4198,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Future backup files will not be encrypted. Anyone with access to the file will be able to read your data.'**
   String get removePinDesc;
+
+  /// No description provided for @connectICloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect iCloud'**
+  String get connectICloud;
+
+  /// No description provided for @disconnectICloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect iCloud'**
+  String get disconnectICloud;
+
+  /// No description provided for @syncFailedDrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive sync failed'**
+  String get syncFailedDrive;
+
+  /// No description provided for @syncFailedICloud.
+  ///
+  /// In en, this message translates to:
+  /// **'iCloud unavailable — check Settings'**
+  String get syncFailedICloud;
+
+  /// No description provided for @syncFailedICloudQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough iCloud storage'**
+  String get syncFailedICloudQuota;
+
+  /// No description provided for @syncWarningICloudQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple storage full — data saved locally only'**
+  String get syncWarningICloudQuota;
 }
 
 class _AppLocalizationsDelegate

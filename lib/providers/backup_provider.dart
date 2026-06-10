@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
+
 import 'package:cryptography/cryptography.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -15,23 +17,15 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/backup_service.dart';
+import 'package:habitt/services/cloud_storage_adapter.dart';
+import 'package:habitt/services/drive_storage_adapter.dart';
+import 'package:habitt/services/icloud_storage_adapter.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _GoogleAuthClient extends http.BaseClient {
-  final Map<String, String> _headers;
-  final http.Client _client = http.Client();
-  _GoogleAuthClient(this._headers);
-
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers.addAll(_headers);
-    return _client.send(request);
-  }
-}
-
 enum SyncState { idle, syncing, success, error }
+
+enum BackupBackend { googleDrive, iCloud }
 
 /// How aggressively the app syncs in the background.
 enum SyncSpeed {
@@ -86,11 +80,16 @@ class BackupProvider extends ChangeNotifier {
   /// start a full compaction sync when this many delta files accumulate:
   static const int _kDeltaCompactionThreshold = 20;
 
+  static const String _kActiveBackendKey = 'backup_active_backend';
+
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
   late final GoogleSignIn _googleSignIn;
   late final FlutterSecureStorage _secureStorage;
   HabitProvider? _habitProvider;
+
+  BackupBackend _activeBackend = BackupBackend.googleDrive;
+  CloudStorageAdapter? _adapter;
 
   SyncState _syncState = SyncState.idle;
   bool _isBackingUp = false;
@@ -121,6 +120,10 @@ class BackupProvider extends ChangeNotifier {
   // True while a scheduleAutoSync timer is pending but hasn't fired yet.
   bool _hasPendingSync = false;
 
+  // Set to true inside _mergeBackupData; consumed once by _onSyncSuccess to
+  // trigger streak/stats recalculation only after the full sync completes.
+  bool _pendingStreakRecalc = false;
+
   // Counts consecutive performSync failures; resets on success. Used to
   // compute exponential backoff for the periodic sync timer.
   int _consecutiveSyncFailures = 0;
@@ -130,6 +133,7 @@ class BackupProvider extends ChangeNotifier {
   // Set when the user is silently signed out due to revoked Drive scope.
   // Consumed once by the UI to show a notification popup.
   String? _pendingNotification;
+  String? _syncWarning;
 
   // Set when Drive has a PIN-wrapped key.key and no stored PIN is available
   // locally. UI shows a PIN entry dialog; submitCloudPin() clears this.
@@ -157,6 +161,7 @@ class BackupProvider extends ChangeNotifier {
   SyncState get syncState => _syncState;
   bool get isBackingUp => _isBackingUp;
   String? get lastError => _lastError;
+  String? get syncWarning => _syncWarning;
   bool get dataExists => _dataExists;
   String? get progressMessage => _progressMessage;
   bool get isAutoSyncEnabled => _isAutoSyncEnabled;
@@ -169,6 +174,8 @@ class BackupProvider extends ChangeNotifier {
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
   bool get hasPendingSync => _hasPendingSync;
+  bool get isICloudConnected =>
+      _activeBackend == BackupBackend.iCloud && _adapter != null;
 
   /// True when the last successful sync was more than 5 minutes ago (or never).
   /// Used by the resume lifecycle handler to decide whether a full sync cycle
@@ -218,7 +225,7 @@ class BackupProvider extends ChangeNotifier {
   // --- Auto-sync ---------------------------------------------------------
 
   void scheduleAutoSync() {
-    if (!isLoggedIn || !_isAutoSyncEnabled) return;
+    if (_adapter == null || !_isAutoSyncEnabled) return;
 
     _autoSyncTimer?.cancel();
 
@@ -263,7 +270,7 @@ class BackupProvider extends ChangeNotifier {
   /// doubled on each consecutive failure up to [_kMaxBackoffDuration].
   void _startPeriodicSync() {
     _periodicSyncTimer?.cancel();
-    if (!isLoggedIn || !_isAutoSyncEnabled) return;
+    if (_adapter == null || !_isAutoSyncEnabled) return;
 
     _periodicSyncTimer = Timer.periodic(_currentBackoffInterval, (_) {
       // Only run when not already syncing and no upload is pending.
@@ -284,7 +291,7 @@ class BackupProvider extends ChangeNotifier {
     notifyListeners();
     // Switching to fast: cancel any pending debounce timer and sync immediately
     // so changes aren't held back by the optimized-mode 15-second delay.
-    if (speed == SyncSpeed.fast && isLoggedIn && _isAutoSyncEnabled) {
+    if (speed == SyncSpeed.fast && _adapter != null && _isAutoSyncEnabled) {
       _autoSyncTimer?.cancel();
       _autoSyncTimer = null;
       _hasPendingSync = false;
@@ -364,7 +371,7 @@ class BackupProvider extends ChangeNotifier {
       notifyListeners();
 
       // uploads the key to drive
-      await _uploadKeyFileToDrive();
+      await _uploadKeyFile();
       return true;
     } catch (e) {
       debugPrint('Enable PIN failed: $e');
@@ -385,7 +392,7 @@ class BackupProvider extends ChangeNotifier {
     _isPinEnabled = false;
     _cachedKey = null;
     notifyListeners();
-    await _uploadKeyFileToDrive();
+    await _uploadKeyFile();
     return true;
   }
 
@@ -436,6 +443,31 @@ class BackupProvider extends ChangeNotifier {
       final savedEmail = prefs.getString(_kBackupUserEmailKey);
       _localMetadata = await BackupService.buildMetadata();
 
+      // ── Restore iCloud backend if it was the active backend ───────────────
+      final savedBackend = prefs.getString(_kActiveBackendKey);
+      if (savedBackend == BackupBackend.iCloud.name &&
+          !kIsWeb &&
+          (Platform.isIOS || Platform.isMacOS)) {
+        final candidate = ICloudStorageAdapter();
+        if (await candidate.isAvailable) {
+          _activeBackend = BackupBackend.iCloud;
+          _adapter = candidate;
+          _dataExists = await _checkDataExists();
+          notifyListeners();
+          if (_dataExists && _lastSyncTime == null) {
+            await performSync(true);
+          }
+          _startPeriodicSync();
+          return;
+        } else {
+          // iCloud unavailable (not signed in / disabled) — forget the saved
+          // backend silently so the user isn't prompted about Apple accounts.
+          await candidate.dispose();
+          await prefs.remove(_kActiveBackendKey);
+        }
+      }
+
+      // ── Restore Google Drive sign-in ───────────────────────────────────────
       if (savedEmail != null) {
         final user = await _googleSignIn.signInSilently();
         if (user != null) {
@@ -479,6 +511,8 @@ class BackupProvider extends ChangeNotifier {
             await _clearLocalAuthState(prefs);
             return;
           }
+
+          _adapter = DriveStorageAdapter(account: user);
 
           // Check for legacy passphrase (old system) to surface migration UI
           _legacyPassphrase = await _secureStorage.read(
@@ -526,6 +560,8 @@ class BackupProvider extends ChangeNotifier {
     _autoSyncTimer = null;
     _periodicSyncTimer?.cancel();
     _periodicSyncTimer = null;
+    await _adapter?.dispose();
+    _adapter = null;
     await prefs.remove(_kBackupUserEmailKey);
     await prefs.remove(_kBackupUserIdKey);
     await prefs.remove(_kLastSyncTimeKey);
@@ -561,6 +597,7 @@ class BackupProvider extends ChangeNotifier {
           await _googleSignIn.signOut();
           _lastError =
               'Google Drive access is required for backup. Please sign in again and allow Drive access when prompted.';
+          _pendingNotification = 'Google Drive sync failed';
           notifyListeners();
           return;
         }
@@ -579,6 +616,7 @@ class BackupProvider extends ChangeNotifier {
 
       _currentUser = user;
       _firebaseUser = FirebaseAuth.instance.currentUser;
+      _adapter = DriveStorageAdapter(account: user);
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_kBackupUserEmailKey, user.email);
@@ -608,6 +646,7 @@ class BackupProvider extends ChangeNotifier {
       }
     } catch (e) {
       _lastError = 'Failed to sign in: $e';
+      _pendingNotification = 'Google Drive sync failed';
       debugPrint(_lastError);
       notifyListeners();
     }
@@ -623,6 +662,9 @@ class BackupProvider extends ChangeNotifier {
       _syncState = SyncState.idle;
       _needsMigration = false;
       _legacyPassphrase = null;
+
+      await _adapter?.dispose();
+      _adapter = null;
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_kBackupUserEmailKey);
@@ -694,30 +736,12 @@ class BackupProvider extends ChangeNotifier {
   /// Migrate a passphrase-encrypted Drive backup to the device keychain key.
   /// Returns true on success.
   Future<bool> migrateFromLegacy(String oldPassphrase) async {
-    if (!isLoggedIn) return false;
+    if (_adapter == null) return false;
     syncState = SyncState.syncing;
 
     try {
-      final drive = await _getDriveService();
-      if (drive == null) {
-        lastError = 'Drive service unavailable';
-        syncState = SyncState.error;
-        return false;
-      }
-
-      final folderId = await _getFolderId(drive);
-      if (folderId == null) {
-        lastError = 'Could not access backup folder';
-        syncState = SyncState.error;
-        return false;
-      }
-
       // Verify passphrase by trying to decrypt metadata
-      final metadataBytes = await _downloadFileBytes(
-        drive,
-        folderId,
-        'metadata.meta',
-      );
+      final metadataBytes = await _adapter!.download('metadata.meta');
       if (metadataBytes != null) {
         final meta = await BackupService.importMetadataLegacy(
           encryptedBytes: metadataBytes,
@@ -731,7 +755,7 @@ class BackupProvider extends ChangeNotifier {
       }
 
       // Download and decrypt legacy backup
-      final backupBytes = await _downloadLatestBackupBytes(drive, folderId);
+      final backupBytes = await _downloadLatestBackupBytes();
       BackupData? backupData;
       if (backupBytes != null) {
         backupData = await BackupService.importDataFromGoogleDriveLegacy(
@@ -755,6 +779,13 @@ class BackupProvider extends ChangeNotifier {
       _lastSyncTime = DateTime.now();
       await _persistLastSyncTime();
 
+      if (_pendingStreakRecalc) {
+        _pendingStreakRecalc = false;
+        await _habitProvider?.assignStreaks();
+        await _habitProvider?.recalculateLongestStreaks();
+        _habitProvider?.statsProvider?.refreshStats(force: true);
+      }
+
       syncState = SyncState.success;
       return true;
     } catch (e) {
@@ -771,7 +802,7 @@ class BackupProvider extends ChangeNotifier {
   /// migration flag, and uploads a fresh backup with the new keychain key
   /// Safe to call when the user has forgotten their old passphrase.
   Future<void> discardLegacyBackup() async {
-    if (!isLoggedIn) return;
+    if (_adapter == null) return;
 
     syncState = SyncState.syncing;
     lastError = null;
@@ -782,22 +813,8 @@ class BackupProvider extends ChangeNotifier {
       _legacyPassphrase = null;
       _needsMigration = false;
 
-      // Delete all existing Drive files (old encrypted backups + metadata)
-      final drive = await _getDriveService();
-      if (drive != null) {
-        final folderId = await _getFolderId(drive, create: false);
-        if (folderId != null) {
-          final found = await drive.files.list(
-            q: "'$folderId' in parents and trashed = false",
-            $fields: 'files(id)',
-          );
-          if (found.files != null) {
-            for (final f in found.files!) {
-              if (f.id != null) await drive.files.delete(f.id!);
-            }
-          }
-        }
-      }
+      // Delete all existing cloud files (old encrypted backups + metadata)
+      await _adapter!.deleteAll();
 
       // Upload fresh backup with the new keychain key
       final key = await BackupService.getOrCreateKey(_secureStorage);
@@ -805,7 +822,7 @@ class BackupProvider extends ChangeNotifier {
       await _onSyncSuccess();
     } catch (e) {
       debugPrint('Discard legacy backup failed: $e');
-      // Clear migration state even if Drive cleanup partially failed
+      // Clear migration state even if cloud cleanup partially failed
       _needsMigration = false;
       syncState = SyncState.idle;
       notifyListeners();
@@ -873,57 +890,36 @@ class BackupProvider extends ChangeNotifier {
     }
 
     // Apply every delta file on top (all devices, all deltas).
-    final drive = await _getDriveService();
-    if (drive != null) {
-      final folderId = await _getFolderId(drive, create: false);
-      if (folderId != null) {
-        progressMessage = 'Applying updates...';
-        await _downloadAndApplyAllDeltas(drive, folderId, key);
-      }
+    if (_adapter != null) {
+      progressMessage = 'Applying updates...';
+      await _downloadAndApplyAllDeltas(key);
     }
   }
 
-  /// Downloads and applies every delta file on Drive, without skipping by
-  /// device ID or already-applied set. Used after a full local wipe so we
-  /// reconstruct the complete cloud state.
-  Future<void> _downloadAndApplyAllDeltas(
-    drive_api.DriveApi drive,
-    String folderId,
-    SecretKey key,
-  ) async {
-    final res = await drive.files.list(
-      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id,name,createdTime)',
-      orderBy: 'createdTime asc',
-    );
-
-    final allFiles = res.files ?? [];
+  /// Downloads and applies every delta file without skipping by device ID or
+  /// already-applied set. Used after a full local wipe to reconstruct cloud state.
+  Future<void> _downloadAndApplyAllDeltas(SecretKey key) async {
+    if (_adapter == null) return;
+    final allFiles = await _adapter!.listFiles(nameContains: 'habitt-delta');
     if (allFiles.isEmpty) return;
+
+    // Apply oldest-first so later changes win in the timestamp merge.
+    allFiles.sort((a, b) {
+      final ta = a.createdTime ?? a.modifiedTime ?? DateTime(0);
+      final tb = b.createdTime ?? b.modifiedTime ?? DateTime(0);
+      return ta.compareTo(tb);
+    });
 
     final applied = <String>{};
     for (final f in allFiles) {
-      if (f.id == null) continue;
       try {
-        final response =
-            await drive.files.get(
-                  f.id!,
-                  downloadOptions: drive_api.DownloadOptions.fullMedia,
-                )
-                as drive_api.Media;
+        final bytes = await _adapter!.downloadById(f.id);
+        if (bytes == null) continue;
 
-        final bytes = <int>[];
-        await for (final chunk in response.stream) {
-          bytes.addAll(chunk);
-        }
-
-        final backupData = await _tryDecryptWithFallback(
-          Uint8List.fromList(bytes),
-          key,
-        );
-
+        final backupData = await _tryDecryptWithFallback(bytes, key);
         if (backupData != null) {
           await _mergeBackupData(backupData);
-          applied.add(f.id!);
+          applied.add(f.id);
           debugPrint('Applied delta ${f.id} (${f.name})');
         }
       } catch (e) {
@@ -965,10 +961,9 @@ class BackupProvider extends ChangeNotifier {
   ]) async {
     if (_syncState == SyncState.syncing) return;
 
-    if (!isLoggedIn) {
-      lastError = 'Not signed in.';
-      syncState = SyncState.error;
-      return;
+    if (_adapter == null) {
+      debugPrint("Adapter is null");
+      return; // No backup backend active.
     }
 
     if (_needsMigration) {
@@ -981,21 +976,36 @@ class BackupProvider extends ChangeNotifier {
     // This ensures every upload (delta or full backup) uses the same key as
     // every other device, regardless of which device created the backup.
     // Must happen before _getKey() so the cached key is the Drive key.
-    await _ensureKeySync();
+    try {
+      await _ensureKeySync();
+    } catch (e) {
+      lastError = 'Failed to sync encryption key: $e';
+      syncState = SyncState.error;
+      debugPrint(lastError);
+      return;
+    }
 
     // Key is PIN-protected and user hasn't entered PIN yet — pause sync.
     if (_pendingCloudPinEntry) {
+      debugPrint('Sync paused: pending cloud PIN entry');
       syncState = SyncState.idle;
       progressMessage = null;
       return;
     }
 
     final key = await _getKey();
-    if (key == null) return; // PIN locked
+    if (key == null) {
+      debugPrint('Sync paused: encryption key is null');
+      syncState = SyncState.idle;
+      progressMessage = null;
+      return; // PIN locked
+    }
 
     progressMessage = 'Starting sync...';
     syncState = SyncState.syncing;
     lastError = null;
+
+    debugPrint("Starting sync with mode $mode (force: $force)");
 
     try {
       // ── Upload-only path (post-write auto-sync) ──────────────────────────
@@ -1008,14 +1018,8 @@ class BackupProvider extends ChangeNotifier {
       // ── Sync-only path (manual "Sync now" — delta cycle, no backup) ─────
       if (mode == SyncMode.syncOnly) {
         if (_lastSyncTime != null) {
-          final drive = await _getDriveService();
-          if (drive != null) {
-            final folderId = await _getFolderId(drive);
-            if (folderId != null) {
-              progressMessage = 'Checking for updates...';
-              await _downloadAndApplyPendingDeltas(drive, folderId, key);
-            }
-          }
+          progressMessage = 'Checking for updates...';
+          await _downloadAndApplyPendingDeltas(key);
         }
         progressMessage = 'Uploading changes...';
         await _uploadDeltaToCloud(key);
@@ -1029,43 +1033,26 @@ class BackupProvider extends ChangeNotifier {
       final bool useDelta = !force && _lastSyncTime != null;
 
       if (useDelta) {
-        final drive = await _getDriveService();
-        if (drive == null) {
-          // No Drive access — silently succeed to avoid error UI for a
-          // transient connectivity issue.
-          await _onSyncSuccess();
-          return;
-        }
-        final folderId = await _getFolderId(drive);
-        if (folderId == null) {
-          await _onSyncSuccess();
-          return;
-        }
-
         progressMessage = 'Checking for updates...';
-        await _checkAndApplyNewerBackup(drive, folderId, key);
-        await _downloadAndApplyPendingDeltas(drive, folderId, key);
+        await _checkAndApplyNewerBackup(key);
+        await _downloadAndApplyPendingDeltas(key);
 
         progressMessage = 'Uploading changes...';
         await _uploadDeltaToCloud(key);
 
         // Compaction: too many delta files → collapse to a full backup.
-        final deltaCount = await _countDeltaFiles(drive, folderId);
+        final deltaCount = await _countDeltaFiles();
         if (deltaCount >= _kDeltaCompactionThreshold) {
           progressMessage = 'Compacting backups...';
           await _fullSyncPath(key, force: true);
-          await _clearAllDeltaFiles(drive, folderId);
+          await _clearAllDeltaFiles();
         }
       } else {
         // Full-backup path: download latest, merge, re-upload entire DB.
         await _fullSyncPath(key, force: force);
 
         // Wipe all delta files — the new full backup supersedes them.
-        final drive = await _getDriveService();
-        if (drive != null) {
-          final folderId = await _getFolderId(drive, create: false);
-          if (folderId != null) await _clearAllDeltaFiles(drive, folderId);
-        }
+        await _clearAllDeltaFiles();
       }
 
       await _onSyncSuccess();
@@ -1078,10 +1065,32 @@ class BackupProvider extends ChangeNotifier {
         notifyListeners();
         return;
       }
+      if (_activeBackend == BackupBackend.iCloud &&
+          ICloudStorageAdapter.isQuotaExceededError(e)) {
+        // The file was written to the local ubiquity container successfully —
+        // the quota error comes from the background daemon failing to push to
+        // Apple's servers. Data is safe locally; warn without setting error state.
+        _syncWarning = 'icloud_quota_warning';
+        await _onSyncSuccess(clearWarning: false);
+        return;
+      }
+      if (_activeBackend == BackupBackend.iCloud &&
+          ICloudStorageAdapter.isUnavailableError(e)) {
+        // iCloud not available (not signed in, disabled, or container invalid).
+        // Drop back silently — show a one-off toast but don't set error state
+        // or prompt about Apple accounts.
+        _pendingNotification = 'iCloud unavailable — check Settings';
+        await _silentlyDeactivateICloud(); // calls notifyListeners()
+        return;
+      }
       _consecutiveSyncFailures++;
       _startPeriodicSync(); // restart with backed-off interval
       syncState = SyncState.error;
       lastError = 'Sync failed: $e';
+      _pendingNotification =
+          _activeBackend == BackupBackend.iCloud
+              ? 'iCloud unavailable — check Settings'
+              : 'Google Drive sync failed';
       debugPrint(lastError);
       notifyListeners();
     }
@@ -1120,23 +1129,16 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Returns the number of delta (.habittd) files currently on Drive.
-  Future<int> _countDeltaFiles(
-    drive_api.DriveApi drive,
-    String folderId,
-  ) async {
-    final res = await drive.files.list(
-      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
-    );
-    return (res.files ?? []).length;
+  Future<int> _countDeltaFiles() async {
+    if (_adapter == null) return 0;
+    return (await _adapter!.listFiles(nameContains: 'habitt-delta')).length;
   }
 
   /// Download the latest Drive backup and merge it into local data.
   Future<void> restoreFromCloud() async {
     if (_syncState == SyncState.syncing) return;
-    if (!isLoggedIn) {
-      lastError = 'Not signed in.';
+    if (_adapter == null) {
+      lastError = 'No backup backend active.';
       return;
     }
 
@@ -1165,13 +1167,20 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _onSyncSuccess() async {
+  Future<void> _onSyncSuccess({bool clearWarning = true}) async {
     _lastSyncTime = DateTime.now();
+    if (clearWarning) _syncWarning = null;
     await _persistLastSyncTime();
     if (_consecutiveSyncFailures > 0) {
       // Came back from backoff — reset counter and restart timer at normal rate.
       _consecutiveSyncFailures = 0;
       _startPeriodicSync();
+    }
+    if (_pendingStreakRecalc) {
+      _pendingStreakRecalc = false;
+      await _habitProvider?.assignStreaks();
+      await _habitProvider?.recalculateLongestStreaks();
+      _habitProvider?.statsProvider?.refreshStats(force: true);
     }
     syncState = SyncState.success;
     progressMessage = null;
@@ -1189,44 +1198,44 @@ class BackupProvider extends ChangeNotifier {
 
   // --- Cross-platform key sync -------------------------------------------
 
-  /// Syncs the backup encryption key with Google Drive.
+  /// Syncs the backup encryption key with the active cloud backend.
   ///
-  /// Always reads the Drive `key.key` envelope and reconciles with local state.
-  /// Six cases are handled (see plan for full matrix):
+  /// For iCloud: `downloadKeyFile()` returns null — iCloud Keychain already
+  /// syncs all key slots automatically; no reconciliation is needed.
+  ///
+  /// For Drive: always reads `key.key` and reconciles with local state.
+  /// Six cases are handled:
   ///
   ///   • Drive missing  → upload local key
   ///   • Drive plain  + no local key   → install key locally
   ///   • Drive pin    + no local key   → [_handlePinWrappedDriveKey]
   ///   • Drive plain  + local + PIN off → no-op (consistent)
-  ///   • Drive plain  + local + PIN on  → [_applyDriveDisabledPin] (other device disabled PIN)
-  ///   • Drive pin    + local + PIN off → [_handlePinWrappedDriveKey] (other device enabled PIN)
-  ///   • Drive pin    + local + PIN on + stored PIN works → no-op (consistent)
-  ///   • Drive pin    + local + PIN on + stored PIN fails → [_handlePinWrappedDriveKey] (PIN changed)
-  Future<void> _syncKeyWithDrive(
-    drive_api.DriveApi drive,
-    String folderId,
-  ) async {
+  ///   • Drive plain  + local + PIN on  → [_applyDriveDisabledPin]
+  ///   • Drive pin    + local + PIN off → [_handlePinWrappedDriveKey]
+  ///   • Drive pin    + local + PIN on + stored PIN works → no-op
+  ///   • Drive pin    + local + PIN on + stored PIN fails → [_handlePinWrappedDriveKey]
+  Future<void> _syncKey() async {
+    if (_adapter == null) return;
     try {
-      debugPrint('[SYNC] _syncKeyWithDrive: starting key sync...');
-      const keyFileName = 'key.key';
-      final driveKeyRaw = await _downloadFileBytes(
-        drive,
-        folderId,
-        keyFileName,
-      );
+      debugPrint('[SYNC] _syncKey: starting key sync...');
+      final driveKeyRaw = await _adapter!.downloadKeyFile();
 
       if (driveKeyRaw == null) {
-        debugPrint(
-          '[SYNC] _syncKeyWithDrive: no key.key on Drive — uploading local key.',
-        );
-        await _uploadKeyFileToDrive(drive: drive, folderId: folderId);
+        // iCloud: null means keychain already synced — done.
+        // Drive: no key.key exists yet — upload our local key.
+        if (_activeBackend == BackupBackend.googleDrive) {
+          debugPrint(
+            '[SYNC] _syncKey: no key.key on Drive — uploading local key.',
+          );
+          await _uploadKeyFile();
+        }
         return;
       }
 
       final content = utf8.decode(driveKeyRaw);
       final hasLocal = await BackupService.hasStoredKey(_secureStorage);
       debugPrint(
-        '[SYNC] _syncKeyWithDrive: Drive key.key found (${driveKeyRaw.length} bytes), hasLocal=$hasLocal',
+        '[SYNC] _syncKey: Drive key.key found (${driveKeyRaw.length} bytes), hasLocal=$hasLocal',
       );
 
       // Parse JSON envelope; fall back to old plain-base64 for backward compat.
@@ -1234,9 +1243,7 @@ class BackupProvider extends ChangeNotifier {
       try {
         envelope = jsonDecode(content) as Map<String, dynamic>;
       } catch (_) {
-        debugPrint(
-          '[SYNC] _syncKeyWithDrive: legacy plain-b64 format detected.',
-        );
+        debugPrint('[SYNC] _syncKey: legacy plain-b64 format detected.');
         if (!hasLocal) {
           await BackupService.storeKeyBytes(
             _secureStorage,
@@ -1249,11 +1256,11 @@ class BackupProvider extends ChangeNotifier {
 
       final type = envelope['type'] as String?;
       debugPrint(
-        '[SYNC] _syncKeyWithDrive: envelope parsed — type="$type", isPinEnabled=$_isPinEnabled, hasLocal=$hasLocal',
+        '[SYNC] _syncKey: envelope parsed — type="$type", isPinEnabled=$_isPinEnabled, hasLocal=$hasLocal',
       );
 
       if (!hasLocal) {
-        debugPrint('[SYNC] _syncKeyWithDrive: new device path.');
+        debugPrint('[SYNC] _syncKey: new device path.');
         // New device — install whatever Drive has.
         if (type == 'plain') {
           await BackupService.storeKeyBytes(
@@ -1267,7 +1274,7 @@ class BackupProvider extends ChangeNotifier {
         return;
       }
 
-      debugPrint('[SYNC] _syncKeyWithDrive: existing device path.');
+      debugPrint('[SYNC] _syncKey: existing device path.');
       if (type == 'plain') {
         if (_isPinEnabled) {
           // Another device disabled PIN — sync state locally.
@@ -1281,7 +1288,7 @@ class BackupProvider extends ChangeNotifier {
                   .map((b) => b.toRadixString(16).padLeft(2, '0'))
                   .join();
           debugPrint(
-            '[SYNC] _syncKeyWithDrive: plain — installing Drive key ($df) into local storage.',
+            '[SYNC] _syncKey: plain — installing Drive key ($df) into local storage.',
           );
           await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
           _cachedKey =
@@ -1316,7 +1323,7 @@ class BackupProvider extends ChangeNotifier {
                       .map((b) => b.toRadixString(16).padLeft(2, '0'))
                       .join();
               debugPrint(
-                '[SYNC] _syncKeyWithDrive: PIN valid — installing Drive key ($df) into local storage.',
+                '[SYNC] _syncKey: PIN valid — installing Drive key ($df) into local storage.',
               );
               await BackupService.storeKeyBytes(_secureStorage, driveKeyBytes);
               final wrapped = await BackupService.wrapKeyWithPin(
@@ -1326,7 +1333,7 @@ class BackupProvider extends ChangeNotifier {
               await BackupService.storePinData(_secureStorage, wrapped);
               _cachedKey = SecretKey(driveKeyBytes);
               debugPrint(
-                '[SYNC] _syncKeyWithDrive: Drive key installed (both slots updated, cache set).',
+                '[SYNC] _syncKey: Drive key installed (both slots updated, cache set).',
               );
             }
           } else {
@@ -1425,32 +1432,16 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Builds the `key.key` file content and uploads it to Drive.
-  /// When [_isPinEnabled], the key is wrapped with PBKDF2 + AES-GCM so Drive
-  /// readers cannot decrypt it without the PIN. When disabled, the key is
-  /// stored as a plain JSON envelope.
-  ///
-  /// Pass [drive] and [folderId] when already available to avoid a second
-  /// round-trip; they are looked up automatically when omitted.
-  Future<void> _uploadKeyFileToDrive({
-    drive_api.DriveApi? drive,
-    String? folderId,
-  }) async {
+  /// Builds the `key.key` file content and uploads it via the active adapter.
+  /// iCloud adapters are a no-op — keychain sync handles key distribution.
+  Future<void> _uploadKeyFile() async {
+    if (_adapter == null) return;
     try {
-      drive ??= await _getDriveService();
-      if (drive == null) return;
-      folderId ??= await _getFolderId(drive);
-      if (folderId == null) return;
-
-      // Building the json content.
       final Uint8List content;
       if (_isPinEnabled) {
         final key = await BackupService.getOrCreateKey(_secureStorage);
         final pin = await BackupService.readStoredPin(_secureStorage);
-        if (pin == null) {
-          // Keychain failure — skip upload, next sync will resolve.
-          return;
-        }
+        if (pin == null) return; // Keychain failure — skip, next sync resolves.
         final wrapped = await BackupService.wrapKeyWithPin(key, pin);
         content = Uint8List.fromList(
           utf8.encode(jsonEncode({'type': 'pin', ...wrapped})),
@@ -1464,29 +1455,10 @@ class BackupProvider extends ChangeNotifier {
           ),
         );
       }
-
-      // Delete any existing key.key, then upload fresh.
-      const keyFileName = 'key.key';
-      final existing = await drive.files.list(
-        q: "name = '$keyFileName' and '$folderId' in parents and trashed = false",
-        $fields: 'files(id)',
-      );
-      for (final f in (existing.files ?? [])) {
-        if (f.id != null) await drive.files.delete(f.id!);
-      }
-
-      final media = drive_api.Media(
-        Stream.value(content.toList()),
-        content.length,
-      );
-      final file =
-          drive_api.File()
-            ..name = keyFileName
-            ..parents = [folderId];
-      await drive.files.create(file, uploadMedia: media);
-      debugPrint('key.key uploaded to Drive (PIN: $_isPinEnabled)');
+      await _adapter!.uploadKeyFile(content);
+      debugPrint('key.key uploaded (PIN: $_isPinEnabled)');
     } catch (e) {
-      debugPrint('_uploadKeyFileToDrive failed: $e');
+      debugPrint('_uploadKeyFile failed: $e');
     }
   }
 
@@ -1523,152 +1495,40 @@ class BackupProvider extends ChangeNotifier {
     return true;
   }
 
-  /// Convenience wrapper: syncs the key with Drive when possible.
-  /// Must be called before [_getKey] on any path that decrypts Drive backups.
+  /// Syncs the key with the active cloud backend before any decrypt operation.
   Future<void> _ensureKeySync() async {
     try {
-      final drive = await _getDriveService();
-      if (drive == null) return;
-      final folderId = await _getFolderId(drive, create: false);
-      if (folderId == null) return;
-      await _syncKeyWithDrive(drive, folderId);
+      await _syncKey();
     } catch (e) {
       debugPrint('_ensureKeySync error: $e');
     }
   }
 
-  // --- Drive helpers -----------------------------------------------------
+  // --- Cloud helpers -------------------------------------------------------
 
-  Future<drive_api.DriveApi?> _getDriveService() async {
-    final user = _currentUser;
-    if (user == null) return null;
-    final headers = await user.authHeaders;
-    return drive_api.DriveApi(_GoogleAuthClient(headers));
-  }
-
-  Future<String?> _getFolderId(
-    drive_api.DriveApi driveApi, {
-    bool create = true,
-  }) async {
-    const mimeType = 'application/vnd.google-apps.folder';
-    const folderName = 'habitt_backups';
-
-    try {
-      final found = await driveApi.files.list(
-        q: "mimeType = '$mimeType' and name = '$folderName' and trashed = false and 'root' in parents",
-        $fields: 'files(id,name)',
-        spaces: 'drive',
-      );
-
-      final files = found.files;
-      if (files == null) return null;
-      if (files.isNotEmpty) return files.first.id;
-
-      if (!create) return null;
-
-      final folder =
-          drive_api.File()
-            ..name = folderName
-            ..mimeType = mimeType
-            ..parents = ['root'];
-      final created = await driveApi.files.create(folder, $fields: 'id');
-      return created.id;
-    } catch (e) {
-      debugPrint('Failed to get/create folder: $e');
-      return null;
-    }
-  }
-
-  Future<Uint8List?> _downloadFileBytes(
-    drive_api.DriveApi drive,
-    String folderId,
-    String name,
-  ) async {
-    final found = await drive.files.list(
-      q: "name = '$name' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
-    );
-    if (found.files == null || found.files!.isEmpty) return null;
-    final fileId = found.files!.first.id;
-    if (fileId == null) return null;
-
-    final response =
-        await drive.files.get(
-              fileId,
-              downloadOptions: drive_api.DownloadOptions.fullMedia,
-            )
-            as drive_api.Media;
-
-    final bytes = <int>[];
-    await for (final chunk in response.stream) {
-      bytes.addAll(chunk);
-    }
-    return Uint8List.fromList(bytes);
-  }
-
-  Future<Uint8List?> _downloadLatestBackupBytes(
-    drive_api.DriveApi drive,
-    String folderId,
-  ) async {
-    final found = await drive.files.list(
-      q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
-      orderBy: 'modifiedTime desc',
-    );
-    if (found.files == null || found.files!.isEmpty) return null;
-    final fileId = found.files!.first.id;
-    if (fileId == null) return null;
-
-    final response =
-        await drive.files.get(
-              fileId,
-              downloadOptions: drive_api.DownloadOptions.fullMedia,
-            )
-            as drive_api.Media;
-
-    final bytes = <int>[];
-    await for (final chunk in response.stream) {
-      bytes.addAll(chunk);
-    }
-    return Uint8List.fromList(bytes);
+  /// Returns bytes of the most recently modified full backup, or null.
+  Future<Uint8List?> _downloadLatestBackupBytes() async {
+    if (_adapter == null) return null;
+    final files = await _adapter!.listFiles(nameContains: 'habitt-backup');
+    if (files.isEmpty) return null;
+    files.sort((a, b) {
+      final ta = b.modifiedTime ?? b.createdTime ?? DateTime(0);
+      final tb = a.modifiedTime ?? a.createdTime ?? DateTime(0);
+      return ta.compareTo(tb);
+    });
+    return _adapter!.downloadById(files.first.id);
   }
 
   Future<bool> _checkDataExists() async {
-    final drive = await _getDriveService();
-    if (drive == null) return false;
-
-    final folderId = await _getFolderId(drive, create: false);
-    if (folderId == null) return false;
-
-    final found = await drive.files.list(
-      q: "'$folderId' in parents and trashed = false",
-      $fields: 'files(id,name)',
-    );
-
-    if (found.files == null || found.files!.isEmpty) return false;
-
-    for (final file in found.files!) {
-      final name = file.name;
-      if (name == null) continue;
-      if (name == 'metadata.meta' || name.endsWith('.habitt')) return true;
-    }
-    return false;
+    if (_adapter == null) return false;
+    final backups = await _adapter!.listFiles(nameContains: 'habitt-backup');
+    return backups.isNotEmpty;
   }
 
   Future<BackupMetadata?> _fetchCloudMetadata(SecretKey key) async {
-    final drive = await _getDriveService();
-    if (drive == null) throw Exception('Drive service unavailable.');
-
-    final folderId = await _getFolderId(drive);
-    if (folderId == null) throw Exception('Could not get backup folder.');
-
-    final metadataBytes = await _downloadFileBytes(
-      drive,
-      folderId,
-      'metadata.meta',
-    );
+    if (_adapter == null) return null;
+    final metadataBytes = await _adapter!.download('metadata.meta');
     if (metadataBytes == null) return null;
-
     return BackupService.importMetadata(
       encryptedBytes: metadataBytes,
       secretKey: key,
@@ -1676,15 +1536,8 @@ class BackupProvider extends ChangeNotifier {
   }
 
   Future<BackupData?> _downloadBackupFromCloud(SecretKey key) async {
-    final drive = await _getDriveService();
-    if (drive == null) return null;
-
-    final folderId = await _getFolderId(drive);
-    if (folderId == null) return null;
-
-    final backupBytes = await _downloadLatestBackupBytes(drive, folderId);
+    final backupBytes = await _downloadLatestBackupBytes();
     if (backupBytes == null) return null;
-
     return BackupService.importDataFromGoogleDrive(
       encryptedBytes: backupBytes,
       secretKey: key,
@@ -1692,6 +1545,8 @@ class BackupProvider extends ChangeNotifier {
   }
 
   Future<void> _uploadBackupToCloud(SecretKey key) async {
+    if (_adapter == null) return;
+
     final encryptedDatabase = await BackupService.exportDataForGoogleDrive(
       secretKey: key,
       habitProvider: _habitProvider!,
@@ -1708,13 +1563,6 @@ class BackupProvider extends ChangeNotifier {
       metadata: metadata,
     );
 
-    final drive = await _getDriveService();
-    if (drive == null) return;
-
-    final folderId = await _getFolderId(drive);
-    if (folderId == null) return;
-
-    // Upload new backup file first (versioned — keep up to 3 on Drive)
     final now = DateTime.now();
     final day = now.day.toString().padLeft(2, '0');
     final month = now.month.toString().padLeft(2, '0');
@@ -1724,51 +1572,29 @@ class BackupProvider extends ChangeNotifier {
     final backupFileName =
         '$day-$month-$year-$hour$minute-habitt-backup.habitt';
 
-    final dbMedia = drive_api.Media(
-      Stream.value(encryptedDatabase.toList()),
-      encryptedDatabase.length,
-    );
-    final dbFile =
-        drive_api.File()
-          ..name = backupFileName
-          ..parents = [folderId];
-    final dbCreation = await drive.files.create(dbFile, uploadMedia: dbMedia);
+    await _adapter!.upload(backupFileName, encryptedDatabase);
+    debugPrint('Uploaded backup: $backupFileName');
 
-    if (dbCreation.id == null) {
-      _lastError = 'Failed to upload backup file.';
-      notifyListeners();
-      return;
-    }
-    debugPrint('Uploaded backup: ${dbCreation.id}');
-
-    // Rotate old backups — keep only the 3 most recent .habitt files
-    await _rotateOldBackups(drive, folderId);
-
-    // Overwrite metadata file
-    await _replaceMetadataFile(drive, folderId, encryptedMetadata);
+    await _rotateOldBackups();
+    await _replaceMetadataFile(encryptedMetadata);
 
     _localMetadata = metadata;
     notifyListeners();
   }
 
-  Future<void> _rotateOldBackups(
-    drive_api.DriveApi drive,
-    String folderId,
-  ) async {
-    final found = await drive.files.list(
-      q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id,createdTime)',
-      orderBy: 'createdTime desc',
-    );
-
-    final files = found.files;
-    if (files == null || files.length <= 3) return;
-
-    for (final file in files.skip(3)) {
-      if (file.id != null) {
-        await drive.files.delete(file.id!);
-        debugPrint('Deleted old backup: ${file.id}');
-      }
+  Future<void> _rotateOldBackups() async {
+    if (_adapter == null) return;
+    final files = await _adapter!.listFiles(nameContains: 'habitt-backup');
+    if (files.length <= 3) return;
+    // Keep newest 3 — sort descending by createdTime/modifiedTime.
+    files.sort((a, b) {
+      final ta = b.createdTime ?? b.modifiedTime ?? DateTime(0);
+      final tb = a.createdTime ?? a.modifiedTime ?? DateTime(0);
+      return ta.compareTo(tb);
+    });
+    for (final f in files.skip(3)) {
+      await _adapter!.delete(f.id);
+      debugPrint('Deleted old backup: ${f.id}');
     }
   }
 
@@ -1782,35 +1608,30 @@ class BackupProvider extends ChangeNotifier {
   static const String _kLastAppliedBackupIdKey =
       'backup_last_applied_backup_id';
 
-  Future<void> _checkAndApplyNewerBackup(
-    drive_api.DriveApi drive,
-    String folderId,
-    SecretKey key,
-  ) async {
+  Future<void> _checkAndApplyNewerBackup(SecretKey key) async {
+    if (_adapter == null) return;
     debugPrint(
       '[SYNC] _checkAndApplyNewerBackup: checking for newer full backup...',
     );
-    final res = await drive.files.list(
-      q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id,modifiedTime)',
-      orderBy: 'modifiedTime desc',
-      pageSize: 1,
-    );
 
-    final files = res.files ?? [];
+    final files = await _adapter!.listFiles(nameContains: 'habitt-backup');
     if (files.isEmpty) {
-      debugPrint(
-        '[SYNC] _checkAndApplyNewerBackup: no backup files found on Drive.',
-      );
+      debugPrint('[SYNC] _checkAndApplyNewerBackup: no backup files found.');
       return;
     }
 
+    // Find the most recently modified backup.
+    files.sort((a, b) {
+      final ta = b.modifiedTime ?? b.createdTime ?? DateTime(0);
+      final tb = a.modifiedTime ?? a.createdTime ?? DateTime(0);
+      return ta.compareTo(tb);
+    });
     final latest = files.first;
     final fileId = latest.id;
-    final modifiedTime = latest.modifiedTime;
-    if (fileId == null || modifiedTime == null) {
+    final modifiedTime = latest.modifiedTime ?? latest.createdTime;
+    if (modifiedTime == null) {
       debugPrint(
-        '[SYNC] _checkAndApplyNewerBackup: backup file missing id or modifiedTime.',
+        '[SYNC] _checkAndApplyNewerBackup: backup file missing modifiedTime.',
       );
       return;
     }
@@ -1855,41 +1676,33 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Download and apply every delta file on Drive that was not uploaded by
-  /// this device and has not already been applied to local storage.
+  /// Download and apply every delta that was not uploaded by this device and
+  /// has not already been applied to local storage.
   ///
-  /// Deltas are applied in chronological order (oldest first) so that
-  /// later changes win in the per-field timestamp merge.
-  Future<void> _downloadAndApplyPendingDeltas(
-    drive_api.DriveApi drive,
-    String folderId,
-    SecretKey key,
-  ) async {
-    // Filter server-side to only files modified since our last sync when possible.
-    // This shrinks the response dramatically in the steady-state case.
-    final timeFilter =
-        _lastSyncTime != null
-            ? " and modifiedTime > '${_lastSyncTime!.toUtc().toIso8601String()}'"
-            : '';
-    final res = await drive.files.list(
-      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false$timeFilter",
-      $fields: 'files(id,name,createdTime)',
-      orderBy: 'createdTime asc',
-    );
+  /// Deltas are applied oldest-first so later changes win the timestamp merge.
+  Future<void> _downloadAndApplyPendingDeltas(SecretKey key) async {
+    if (_adapter == null) {
+      debugPrint("Adapter is null");
+      return;
+    }
 
-    final allFiles = res.files ?? [];
+    debugPrint("Adapter isnt null");
+
+    // Pass modifiedTime hint so Drive can filter server-side; iCloud filters client-side.
+    final allFiles = await _adapter!.listFiles(
+      nameContains: 'habitt-delta',
+      modifiedAfter: _lastSyncTime,
+    );
     debugPrint(
-      '[SYNC] _downloadAndApplyPendingDeltas: ${allFiles.length} delta file(s) found on Drive.',
+      '[SYNC] _downloadAndApplyPendingDeltas: ${allFiles.length} delta file(s) found.',
     );
     if (allFiles.isEmpty) return;
 
-    // Load SharedPrefs once for both cache comparison and applied-ID tracking.
+    // Load SharedPrefs once for cache comparison and applied-ID tracking.
     final prefs = await SharedPreferences.getInstance();
 
-    // If the returned file IDs are identical to the last known set, nothing
-    // changed on Drive since the previous download pass — skip processing.
-    final currentIds =
-        allFiles.where((f) => f.id != null).map((f) => f.id!).toSet();
+    // Early-return if the file ID set hasn't changed since last pass.
+    final currentIds = allFiles.map((f) => f.id).toSet();
     final cachedIdsRaw = prefs.getString(_kLastKnownDeltaIdsKey);
     if (cachedIdsRaw != null) {
       final cachedIds = Set<String>.from(
@@ -1898,13 +1711,19 @@ class BackupProvider extends ChangeNotifier {
       if (cachedIds.length == currentIds.length &&
           cachedIds.containsAll(currentIds)) {
         debugPrint(
-          '[SYNC] _downloadAndApplyPendingDeltas: delta file list unchanged — skipping download pass.',
+          '[SYNC] _downloadAndApplyPendingDeltas: delta file list unchanged — skipping.',
         );
         return;
       }
     }
 
-    // The short device ID embedded in the filename (first 8 chars of deviceId).
+    // Apply oldest-first.
+    allFiles.sort((a, b) {
+      final ta = a.createdTime ?? a.modifiedTime ?? DateTime(0);
+      final tb = b.createdTime ?? b.modifiedTime ?? DateTime(0);
+      return ta.compareTo(tb);
+    });
+
     final deviceId = _localMetadata?.deviceId ?? '';
     final shortMyId =
         deviceId.length >= 8 ? deviceId.substring(0, 8) : deviceId;
@@ -1912,27 +1731,21 @@ class BackupProvider extends ChangeNotifier {
       '[SYNC] _downloadAndApplyPendingDeltas: this device shortId="$shortMyId"',
     );
 
-    // Load the set of delta file IDs already applied on this device.
     final appliedRaw = prefs.getString(_kAppliedDeltaIdsKey);
     final applied =
         appliedRaw != null
             ? Set<String>.from(jsonDecode(appliedRaw) as List<dynamic>)
             : <String>{};
 
-    // Filter: skip our own deltas and already-applied ones.
     final pending =
         allFiles.where((f) {
-          if (f.id == null) {
-            debugPrint('[SYNC]   skip delta (null id): ${f.name}');
-            return false;
-          }
-          if (applied.contains(f.id!)) {
+          if (applied.contains(f.id)) {
             debugPrint(
               '[SYNC]   skip delta (already applied): ${f.name} id=${f.id}',
             );
             return false;
           }
-          if (shortMyId.isNotEmpty && (f.name ?? '').contains(shortMyId)) {
+          if (shortMyId.isNotEmpty && f.name.contains(shortMyId)) {
             debugPrint('[SYNC]   skip delta (own device): ${f.name}');
             return false;
           }
@@ -1946,58 +1759,44 @@ class BackupProvider extends ChangeNotifier {
       );
       return;
     }
-
     debugPrint(
-      '[SYNC] _downloadAndApplyPendingDeltas: applying ${pending.length} pending delta(s).',
+      '[SYNC] _downloadAndApplyPendingDeltas: applying ${pending.length} delta(s).',
     );
 
     for (final f in pending) {
       try {
         debugPrint('[SYNC] Downloading delta: ${f.name} (${f.id})');
-        final response =
-            await drive.files.get(
-                  f.id!,
-                  downloadOptions: drive_api.DownloadOptions.fullMedia,
-                )
-                as drive_api.Media;
-
-        final bytes = <int>[];
-        await for (final chunk in response.stream) {
-          bytes.addAll(chunk);
+        final bytes = await _adapter!.downloadById(f.id);
+        if (bytes == null) {
+          debugPrint('[SYNC] ERROR: could not download delta ${f.id}');
+          continue;
         }
         debugPrint(
           '[SYNC] Downloaded ${bytes.length} bytes for delta ${f.name}',
         );
 
-        final backupData = await _tryDecryptWithFallback(
-          Uint8List.fromList(bytes),
-          key,
-        );
-
+        final backupData = await _tryDecryptWithFallback(bytes, key);
         if (backupData != null) {
           debugPrint(
             '[SYNC] Decrypted delta ${f.name}: ${backupData.habits.length} habit(s), ${backupData.days.length} day(s)',
           );
           await _mergeBackupData(backupData);
-          applied.add(f.id!);
+          applied.add(f.id);
           debugPrint('[SYNC] Applied delta ${f.id} (${f.name})');
         } else {
-          // Decryption failed — wrong key or permanently corrupt file.
-          // Retrying will never succeed, so mark as applied to skip on
-          // future cycles. The delta will rotate off Drive within 7 days.
-          applied.add(f.id!);
+          // Permanently corrupt / wrong key — mark applied so we never retry.
+          applied.add(f.id);
           debugPrint(
-            '[SYNC] WARN: delta ${f.name} could not be decrypted (wrong key or corrupt) — permanently skipping.',
+            '[SYNC] WARN: delta ${f.name} could not be decrypted — permanently skipping.',
           );
         }
       } catch (e) {
-        // Network/IO error — do NOT mark as applied so we retry next cycle.
+        // Network/IO error — do NOT mark applied so we retry next cycle.
         debugPrint('[SYNC] ERROR applying delta ${f.id} (${f.name}): $e');
       }
     }
 
     await prefs.setString(_kAppliedDeltaIdsKey, jsonEncode(applied.toList()));
-    // Update the known-IDs cache so future cycles can skip when nothing changed.
     await prefs.setString(
       _kLastKnownDeltaIdsKey,
       jsonEncode(currentIds.toList()),
@@ -2009,7 +1808,8 @@ class BackupProvider extends ChangeNotifier {
   /// Does nothing if there are no changes (delta export returns null) or if
   /// [_lastSyncTime] is null (caller should fall back to a full sync instead).
   Future<void> _uploadDeltaToCloud(SecretKey key) async {
-    if (_lastSyncTime == null || _habitProvider == null) return;
+    if (_lastSyncTime == null || _habitProvider == null || _adapter == null)
+      return;
 
     final bytes = await BackupService.exportDeltaForGoogleDrive(
       secretKey: key,
@@ -2018,18 +1818,13 @@ class BackupProvider extends ChangeNotifier {
     );
     if (bytes == null) {
       debugPrint(
-        '[SYNC] _uploadDeltaToCloud: no changes since $_lastSyncTime — skipping upload.',
+        '[SYNC] _uploadDeltaToCloud: no changes since $_lastSyncTime — skipping.',
       );
       return;
     }
     debugPrint(
       '[SYNC] _uploadDeltaToCloud: exporting delta with fromTime=$_lastSyncTime',
     );
-
-    final drive = await _getDriveService();
-    if (drive == null) return;
-    final folderId = await _getFolderId(drive);
-    if (folderId == null) return;
 
     final now = DateTime.now();
     final day = now.day.toString().padLeft(2, '0');
@@ -2042,24 +1837,16 @@ class BackupProvider extends ChangeNotifier {
     final fileName =
         '$day-$month-$year-$hour$minute-$shortId-habitt-delta.habittd';
 
-    final media = drive_api.Media(Stream.value(bytes.toList()), bytes.length);
-    final file =
-        drive_api.File()
-          ..name = fileName
-          ..parents = [folderId];
-    final created = await drive.files.create(file, uploadMedia: media);
-    debugPrint('Uploaded delta: ${created.id} ($fileName)');
+    await _adapter!.upload(fileName, bytes);
+    debugPrint('Uploaded delta: $fileName');
 
-    await _rotateDeltaFiles(drive, folderId);
+    await _rotateDeltaFiles();
   }
 
-  /// Delete delta files older than 7 days. Called after each delta upload to
-  /// prevent indefinite accumulation. Throttled to run at most once per 24 h
-  /// to avoid a Drive list call on every upload.
-  Future<void> _rotateDeltaFiles(
-    drive_api.DriveApi drive,
-    String folderId,
-  ) async {
+  /// Delete delta files older than 7 days. Throttled to once per 24 h.
+  Future<void> _rotateDeltaFiles() async {
+    if (_adapter == null) return;
+
     final prefs = await SharedPreferences.getInstance();
     final lastMs = prefs.getInt(_kLastRotationTimeKey);
     if (lastMs != null) {
@@ -2074,21 +1861,14 @@ class BackupProvider extends ChangeNotifier {
       }
     }
 
-    // Query only files old enough to be rotated (server-side filter).
     final cutoff = DateTime.now().toUtc().subtract(const Duration(days: 7));
-    final res = await drive.files.list(
-      q:
-          "name contains 'habitt-delta' and '$folderId' in parents and trashed = false"
-          " and createdTime < '${cutoff.toIso8601String()}'",
-      $fields: 'files(id,createdTime)',
-      orderBy: 'createdTime asc',
+    final old = await _adapter!.listFiles(
+      nameContains: 'habitt-delta',
+      createdBefore: cutoff,
     );
-
-    for (final f in (res.files ?? [])) {
-      if (f.id != null) {
-        await drive.files.delete(f.id!);
-        debugPrint('Rotated old delta: ${f.id}');
-      }
+    for (final f in old) {
+      await _adapter!.delete(f.id);
+      debugPrint('Rotated old delta: ${f.id}');
     }
 
     await prefs.setInt(
@@ -2097,57 +1877,28 @@ class BackupProvider extends ChangeNotifier {
     );
   }
 
-  /// Delete ALL delta files from Drive and clear the local applied-delta set.
-  /// Called after a successful full sync — the full backup supersedes all deltas.
-  Future<void> _clearAllDeltaFiles(
-    drive_api.DriveApi drive,
-    String folderId,
-  ) async {
-    final res = await drive.files.list(
-      q: "name contains 'habitt-delta' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
-    );
-
-    for (final f in (res.files ?? [])) {
-      if (f.id != null) {
-        await drive.files.delete(f.id!);
-        debugPrint('Cleared delta after full sync: ${f.id}');
-      }
+  /// Delete ALL delta files and clear local applied-delta tracking.
+  Future<void> _clearAllDeltaFiles() async {
+    if (_adapter == null) return;
+    final files = await _adapter!.listFiles(nameContains: 'habitt-delta');
+    for (final f in files) {
+      await _adapter!.delete(f.id);
+      debugPrint('Cleared delta after full sync: ${f.id}');
     }
-
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_kAppliedDeltaIdsKey);
     await prefs.remove(_kLastKnownDeltaIdsKey);
     debugPrint('Applied-delta tracking cleared.');
   }
 
-  Future<void> _replaceMetadataFile(
-    drive_api.DriveApi drive,
-    String folderId,
-    Uint8List? encryptedMetadata,
-  ) async {
-    if (encryptedMetadata == null) return;
-
-    // Delete existing metadata
-    final existing = await drive.files.list(
-      q: "name = 'metadata.meta' and '$folderId' in parents and trashed = false",
-      $fields: 'files(id)',
-    );
-    if (existing.files != null) {
-      for (final f in existing.files!) {
-        if (f.id != null) await drive.files.delete(f.id!);
-      }
+  Future<void> _replaceMetadataFile(Uint8List? encryptedMetadata) async {
+    if (encryptedMetadata == null || _adapter == null) return;
+    // Remove stale copies before uploading (Drive allows multiple same-name files).
+    final existing = await _adapter!.listFiles(nameContains: 'metadata.meta');
+    for (final f in existing) {
+      await _adapter!.delete(f.id);
     }
-
-    final metadataMedia = drive_api.Media(
-      Stream.value(encryptedMetadata.toList()),
-      encryptedMetadata.length,
-    );
-    final metadataFile =
-        drive_api.File()
-          ..name = 'metadata.meta'
-          ..parents = [folderId];
-    await drive.files.create(metadataFile, uploadMedia: metadataMedia);
+    await _adapter!.upload('metadata.meta', encryptedMetadata);
     debugPrint('Uploaded metadata.meta');
   }
 
@@ -2286,39 +2037,32 @@ class BackupProvider extends ChangeNotifier {
 
     _habitProvider?.importDateJoined(backupData.dateJoined);
     await _habitProvider?.init();
-    await _habitProvider?.assignStreaks();
-    await _habitProvider?.recalculateLongestStreaks();
-    _habitProvider?.statsProvider?.refreshStats(force: true);
+    _pendingStreakRecalc = true;
     notifyListeners();
   }
 
   // --- Version history ---------------------------------------------------
 
-  /// Returns the list of versioned backups on Drive, newest first (max 3).
+  /// Returns the list of versioned backups, newest first (max 3).
   Future<List<DriveBackupFile>> listCloudBackups() async {
+    if (_adapter == null) return [];
     try {
-      final drive = await _getDriveService();
-      if (drive == null) return [];
-
-      final folderId = await _getFolderId(drive, create: false);
-      if (folderId == null) return [];
-
-      final found = await drive.files.list(
-        q: "name contains 'habitt-backup' and '$folderId' in parents and trashed = false",
-        $fields: 'files(id,name,createdTime)',
-        orderBy: 'createdTime desc',
-      );
-
-      return (found.files ?? [])
-          .where((f) => f.id != null && f.createdTime != null)
+      final files = await _adapter!.listFiles(nameContains: 'habitt-backup');
+      files.sort((a, b) {
+        final ta = b.createdTime ?? b.modifiedTime ?? DateTime(0);
+        final tb = a.createdTime ?? a.modifiedTime ?? DateTime(0);
+        return ta.compareTo(tb);
+      });
+      return files
+          .take(3)
+          .where((f) => f.createdTime != null || f.modifiedTime != null)
           .map(
             (f) => DriveBackupFile(
-              id: f.id!,
-              name: f.name ?? '',
-              createdAt: f.createdTime!,
+              id: f.id,
+              name: f.name,
+              createdAt: f.createdTime ?? f.modifiedTime!,
             ),
           )
-          .take(3)
           .toList();
     } catch (e) {
       debugPrint('Failed to list cloud backups: $e');
@@ -2417,14 +2161,8 @@ class BackupProvider extends ChangeNotifier {
       await _mergeBackupData(backupData);
 
       if (includeDeltasSince) {
-        final drive = await _getDriveService();
-        if (drive != null) {
-          final folderId = await _getFolderId(drive, create: false);
-          if (folderId != null) {
-            progressMessage = 'Applying updates...';
-            await _downloadAndApplyAllDeltas(drive, folderId, key);
-          }
-        }
+        progressMessage = 'Applying updates...';
+        await _downloadAndApplyAllDeltas(key);
       }
 
       await _onSyncSuccess();
@@ -2435,14 +2173,9 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Returns true if any delta files exist on Drive for the current account.
   Future<bool> hasDeltaFiles() async {
     try {
-      final drive = await _getDriveService();
-      if (drive == null) return false;
-      final folderId = await _getFolderId(drive, create: false);
-      if (folderId == null) return false;
-      return await _countDeltaFiles(drive, folderId) > 0;
+      return await _countDeltaFiles() > 0;
     } catch (_) {
       return false;
     }
@@ -2497,24 +2230,8 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Downloads raw bytes for a Drive file by its ID.
-  Future<Uint8List?> _fetchRawFileBytes(String fileId) async {
-    final drive = await _getDriveService();
-    if (drive == null) return null;
-
-    final response =
-        await drive.files.get(
-              fileId,
-              downloadOptions: drive_api.DownloadOptions.fullMedia,
-            )
-            as drive_api.Media;
-
-    final bytes = <int>[];
-    await for (final chunk in response.stream) {
-      bytes.addAll(chunk);
-    }
-    return Uint8List.fromList(bytes);
-  }
+  Future<Uint8List?> _fetchRawFileBytes(String fileId) =>
+      _adapter?.downloadById(fileId) ?? Future.value(null);
 
   /// Tries to decrypt [bytes] with the current key, then (if PIN is enabled)
   /// with the raw plain device key as a fallback.
@@ -2587,33 +2304,89 @@ class BackupProvider extends ChangeNotifier {
   // --- Delete ------------------------------------------------------------
 
   Future<void> deleteCloudBackup() async {
-    if (!isLoggedIn) {
-      _lastError = 'Not signed in.';
+    if (_adapter == null) {
+      _lastError = 'No backup backend active.';
       notifyListeners();
       return;
     }
-
     try {
-      final drive = await _getDriveService();
-      if (drive == null) return;
-
-      final folderId = await _getFolderId(drive);
-      if (folderId == null) return;
-
-      final found = await drive.files.list(
-        q: "'$folderId' in parents and trashed = false",
-        $fields: 'files(id)',
-      );
-      if (found.files != null) {
-        for (final f in found.files!) {
-          await drive.files.delete(f.id!);
-        }
-      }
+      await _adapter!.deleteAll();
       notifyListeners();
     } catch (e) {
       _lastError = 'Failed to delete backup: $e';
       debugPrint(_lastError);
       notifyListeners();
     }
+  }
+
+  // --- iCloud activation -------------------------------------------------
+
+  /// Switch the active backend to iCloud. Signs out of Drive if needed.
+  /// Only available on iOS and macOS.
+  Future<void> activateICloud() async {
+    if (kIsWeb || (!Platform.isIOS && !Platform.isMacOS)) return;
+
+    final candidate = ICloudStorageAdapter();
+    if (!await candidate.isAvailable) {
+      await candidate.dispose();
+      _pendingNotification = 'iCloud unavailable — check Settings';
+      notifyListeners();
+      return;
+    }
+
+    await _adapter?.dispose();
+    _adapter = candidate;
+    _activeBackend = BackupBackend.iCloud;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kActiveBackendKey, BackupBackend.iCloud.name);
+
+    _dataExists = await _checkDataExists();
+    notifyListeners();
+
+    _startPeriodicSync();
+    await performSync(true);
+  }
+
+  /// Called when iCloud becomes unavailable mid-session (E_CTR).
+  /// Drops the adapter silently with no error state shown to the user.
+  Future<void> _silentlyDeactivateICloud() async {
+    await _adapter?.dispose();
+    _adapter =
+        _currentUser != null
+            ? DriveStorageAdapter(account: _currentUser!)
+            : null;
+    _activeBackend = BackupBackend.googleDrive;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kActiveBackendKey);
+    _autoSyncTimer?.cancel();
+    _autoSyncTimer = null;
+    _periodicSyncTimer?.cancel();
+    _periodicSyncTimer = null;
+    lastError = 'icloud_unavailable';
+    syncState = SyncState.error;
+    if (_adapter != null) _startPeriodicSync();
+    notifyListeners();
+  }
+
+  /// Switch back to Google Drive (or no backend if not signed in).
+  Future<void> deactivateICloud() async {
+    await _adapter?.dispose();
+    _adapter =
+        _currentUser != null
+            ? DriveStorageAdapter(account: _currentUser!)
+            : null;
+    _activeBackend = BackupBackend.googleDrive;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kActiveBackendKey);
+
+    _autoSyncTimer?.cancel();
+    _autoSyncTimer = null;
+    _periodicSyncTimer?.cancel();
+    _periodicSyncTimer = null;
+
+    if (_adapter != null) _startPeriodicSync();
+    notifyListeners();
   }
 }

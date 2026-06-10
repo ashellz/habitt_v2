@@ -475,7 +475,7 @@ class StatsProvider extends ChangeNotifier {
       }
 
       if (requiredHabits == 0) {
-        debugPrint('[streak] ${day.date.toIso8601String().split("T").first} — SKIPPED (no required habits)');
+        // debugPrint('[streak] ${day.date.toIso8601String().split("T").first} — SKIPPED (no required habits)');
         continue;
       }
 
@@ -483,7 +483,11 @@ class StatsProvider extends ChangeNotifier {
       debugPrint(
         '[streak] ${day.date.toIso8601String().split("T").first} — '
         'required=$requiredHabits completed=$habitsCompleted skipped=$habitsSkipped partial=$hasPartialProgress '
-        '→ ${isPerfect ? "PERFECT (streak=${allHabitsCompletedStreak + 1})" : hasPartialProgress ? "PARTIAL (neutral)" : "MISS (missedLeft=${missedDaysAllowed - 1})"}'
+        '→ ${isPerfect
+            ? "PERFECT (streak=${allHabitsCompletedStreak + 1})"
+            : hasPartialProgress
+            ? "PARTIAL (neutral)"
+            : "MISS (missedLeft=${missedDaysAllowed - 1})"}',
       );
 
       if (isPerfect) {
@@ -497,7 +501,7 @@ class StatsProvider extends ChangeNotifier {
           missedDaysAllowed--;
           continue;
         }
-        debugPrint('[streak] → BREAK (no misses left)');
+        // debugPrint('[streak] → BREAK (no misses left)');
         break;
       }
     }

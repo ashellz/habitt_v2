@@ -11,14 +11,20 @@ import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/pin_dialog.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
+import 'package:habitt/widgets/sheets/local_backup_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 // ignore: must_be_immutable
 class BackupSignedInSection extends StatefulWidget {
-  const BackupSignedInSection({super.key, required this.statusOverlay});
+  const BackupSignedInSection({
+    super.key,
+    required this.statusOverlay,
+    this.isICloud = false,
+  });
 
   final StatusOverlayPopupController statusOverlay;
+  final bool isICloud;
 
   @override
   State<BackupSignedInSection> createState() => _BackupSignedInSectionState();
@@ -26,6 +32,18 @@ class BackupSignedInSection extends StatefulWidget {
 
 class _BackupSignedInSectionState extends State<BackupSignedInSection> {
   bool _localSyncLoading = false;
+
+  String? _localizedSyncError(BackupProvider bp, AppLocalizations loc) {
+    if (bp.syncState != SyncState.error || bp.lastError == null) return null;
+    final raw = bp.lastError!.toLowerCase();
+    if (raw.contains('quota') ||
+        raw.contains('code=-1003') ||
+        raw.contains('ckerrordomain:25')) {
+      return loc.syncFailedICloudQuota;
+    }
+    if (raw == 'icloud_unavailable') return loc.syncFailedICloud;
+    return widget.isICloud ? loc.syncFailedICloud : loc.syncFailedDrive;
+  }
 
   String _formatLastSync(DateTime? lastSync, AppLocalizations loc) {
     if (lastSync == null) return loc.neverBackedUp;
@@ -73,6 +91,18 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
     );
   }
 
+  _showLocalBackupSheet() {
+    final cp = context.read<ColorProvider>();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder: (context) => const LocalBackupSheet(),
+    );
+  }
+
   Future<void> _confirmSignOut(
     BuildContext context,
     BackupProvider bp,
@@ -94,6 +124,31 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
     );
     if (confirmed == true && context.mounted) {
       await bp.signOut();
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _confirmDisconnectICloud(
+    BuildContext context,
+    BackupProvider bp,
+    AppLocalizations loc,
+  ) async {
+    final cp = context.read<ColorProvider>();
+    final confirmed = await showDialogSheet<bool>(
+      context: context,
+      builder:
+          (ctx) => NewDefaultDialog(
+            title: loc.disconnectICloud,
+            desc: loc.logOutDesc,
+            primaryButtonLabel: loc.disconnectICloud,
+            primaryButtonColor: cp.error,
+            onPrimaryButtonPressed: () => Navigator.of(ctx).pop(true),
+            secondaryButtonLabel: loc.cancel,
+            onSecondaryButtonPressed: () => Navigator.of(ctx).pop(false),
+          ),
+    );
+    if (confirmed == true && context.mounted) {
+      await bp.deactivateICloud();
       if (context.mounted) Navigator.of(context).pop();
     }
   }
@@ -222,13 +277,25 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
               ),
             ),
           ),
-          if (bp.syncState == SyncState.error && bp.lastError != null)
+          if (_localizedSyncError(bp, loc) case final errorMsg?)
             Padding(
               padding: const EdgeInsets.only(left: 4, top: 4),
               child: Text(
-                bp.lastError!,
+                errorMsg,
                 style: TextStyle(
                   color: cp.error,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            )
+          else if (bp.syncWarning == 'icloud_quota_warning')
+            Padding(
+              padding: const EdgeInsets.only(left: 4, top: 4),
+              child: Text(
+                loc.syncWarningICloudQuota,
+                style: const TextStyle(
+                  color: Colors.orange,
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                 ),
@@ -317,6 +384,12 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                       text: loc.restoreFromBackup,
                       onTap: () => _openBackupHistory(context, cp),
                     ),
+                    Divider(color: cp.border, height: 0),
+                    ProfileOption(
+                      cp: cp,
+                      text: loc.localBackups,
+                      onTap: _showLocalBackupSheet,
+                    ),
                   ],
                 ),
               ),
@@ -332,8 +405,12 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                 ),
                 child: Column(
                   children: [
+                    // ─── Disconnect ────────────────────────────────────────
                     GestureDetector(
-                      onTap: () => _confirmSignOut(context, bp, loc),
+                      onTap:
+                          widget.isICloud
+                              ? () => _confirmDisconnectICloud(context, bp, loc)
+                              : () => _confirmSignOut(context, bp, loc),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         color: Colors.transparent,
@@ -341,7 +418,9 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                           spacing: 12,
                           children: [
                             Text(
-                              loc.disconnectGoogleDrive,
+                              widget.isICloud
+                                  ? loc.disconnectICloud
+                                  : loc.disconnectGoogleDrive,
                               style: TextStyle(
                                 color: cp.error,
                                 fontSize: 16,
@@ -349,6 +428,7 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                               ),
                             ),
                             const Spacer(),
+
                             SvgPicture.asset(
                               'assets/images/new-svg/log-out.svg',
                               width: 20,
@@ -362,37 +442,41 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                         ),
                       ),
                     ),
-                    Divider(color: cp.border, height: 1),
-                    GestureDetector(
-                      onTap: () => _confirmDeleteAccount(context, bp, loc, cp),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        color: Colors.transparent,
-                        child: Row(
-                          spacing: 12,
-                          children: [
-                            Text(
-                              loc.deleteAccount,
-                              style: TextStyle(
-                                color: cp.error,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                    // ─── Delete account (Google Drive only) ────────────────
+                    if (!widget.isICloud) ...[
+                      Divider(color: cp.border, height: 1),
+                      GestureDetector(
+                        onTap:
+                            () => _confirmDeleteAccount(context, bp, loc, cp),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          color: Colors.transparent,
+                          child: Row(
+                            spacing: 12,
+                            children: [
+                              Text(
+                                loc.deleteAccount,
+                                style: TextStyle(
+                                  color: cp.error,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            const Spacer(),
-                            SvgPicture.asset(
-                              'assets/images/new-svg/trash.svg',
-                              width: 19,
-                              height: 20,
-                              colorFilter: ColorFilter.mode(
-                                cp.error,
-                                BlendMode.srcIn,
+                              const Spacer(),
+                              SvgPicture.asset(
+                                'assets/images/new-svg/trash.svg',
+                                width: 19,
+                                height: 20,
+                                colorFilter: ColorFilter.mode(
+                                  cp.error,
+                                  BlendMode.srcIn,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
