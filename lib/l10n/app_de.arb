@@ -959,5 +959,7 @@
   "disconnectICloud": "iCloud trennen",
   "syncFailedDrive": "Google Drive-Synchronisierung fehlgeschlagen",
   "syncFailedICloud": "iCloud nicht verfügbar — Einstellungen prüfen",
-  "syncFailedICloudQuota": "Nicht genug iCloud-Speicherplatz"
+  "syncFailedICloudQuota": "Nicht genug iCloud-Speicherplatz",
+  "syncWarningICloudQuota": "Apple-Speicher voll — Daten nur lokal gespeichert",
+  "syncFailedDriveQuota": "Google Drive-Speicher voll"
 }

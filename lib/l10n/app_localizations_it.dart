@@ -2528,8 +2528,8 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get syncWarningICloudQuota =>
-      'Apple storage full — data saved locally only';
+      'Spazio Apple pieno — dati salvati solo localmente';
 
   @override
-  String get syncFailedDriveQuota => 'Google Drive storage full';
+  String get syncFailedDriveQuota => 'Spazio Google Drive pieno';
 }

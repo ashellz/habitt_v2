@@ -959,5 +959,7 @@
   "disconnectICloud": "Desconectar iCloud",
   "syncFailedDrive": "Error de sincronización con Google Drive",
   "syncFailedICloud": "iCloud no disponible — comprueba los Ajustes",
-  "syncFailedICloudQuota": "Almacenamiento de iCloud insuficiente"
+  "syncFailedICloudQuota": "Almacenamiento de iCloud insuficiente",
+  "syncWarningICloudQuota": "Almacenamiento de Apple lleno — datos guardados solo localmente",
+  "syncFailedDriveQuota": "Almacenamiento de Google Drive lleno"
 }

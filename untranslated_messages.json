@@ -1,16 +1,1 @@
-{
-  "de": [
-    "syncWarningICloudQuota",
-    "syncFailedDriveQuota"
-  ],
-
-  "es": [
-    "syncWarningICloudQuota",
-    "syncFailedDriveQuota"
-  ],
-
-  "it": [
-    "syncWarningICloudQuota",
-    "syncFailedDriveQuota"
-  ]
-}
+{}
