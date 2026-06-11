@@ -216,11 +216,25 @@ performSync(force, mode)
 
 ---
 
+## Initial Connection Behavior
+
+When the user connects an account for the first time (no prior sync history) or after signing out, `performSync(force: true)` is always called. `force=true` sets `useDelta = false` regardless of `_lastSyncTime`, so the full-backup path is guaranteed:
+
+- **Cloud empty + local data** — full backup uploaded immediately (else branch in `signIn()`).
+- **Cloud has data + local data** — RestoreChoiceDialog shown; Merge triggers `performSync(true)` which downloads, merges, and re-uploads the entire DB, then starts the periodic sync timer so future cross-device changes are polled.
+
+This guarantees Device B can always download a complete snapshot containing all changes made before and after the account was connected.
+
+`signOut()` clears `_lastSyncTime` from both memory and SharedPreferences so that re-connection always starts from a clean cursor.
+
+---
+
 ## New Device Setup
 
 | Drive state | Local state | Behavior |
 |---|---|---|
 | Empty | Empty | Proceed, nothing to do |
+| Empty | Has data | Upload full backup immediately |
 | Has backups | Empty | Auto-merge (safe, merging into nothing) |
 | Has backups | Has data | Show merge/replace dialog to user |
 | Has PIN-wrapped key | No key | Prompt for PIN before proceeding |

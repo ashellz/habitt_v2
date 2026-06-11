@@ -669,6 +669,9 @@ class BackupProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_kBackupUserEmailKey);
       await prefs.remove(_kBackupUserIdKey);
+      await prefs.remove(_kLastSyncTimeKey);
+      await prefs.remove(_kAppliedDeltaIdsKey);
+      _lastSyncTime = null;
 
       _autoSyncTimer?.cancel();
       _autoSyncTimer = null;
@@ -837,6 +840,7 @@ class BackupProvider extends ChangeNotifier {
     _pendingRestoreDecision = false;
     notifyListeners();
     await performSync(true); // force=true: bypass same-device skip
+    _startPeriodicSync();
   }
 
   /// Called when the user picks "Start fresh": wipes the local DB and
@@ -2355,8 +2359,8 @@ class BackupProvider extends ChangeNotifier {
     _dataExists = await _checkDataExists();
     notifyListeners();
 
-    _startPeriodicSync();
     await performSync(true);
+    _startPeriodicSync();
   }
 
   /// Called when iCloud becomes unavailable mid-session (E_CTR).
