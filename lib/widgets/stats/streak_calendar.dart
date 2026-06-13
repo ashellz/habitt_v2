@@ -120,7 +120,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
   void _invalidateStreakCaches() {
     _cachedRuns = const [];
-    _cachedSelectableFirstDay = null;
     _cachedToday = null;
     _cachedAllStatsReference = null;
     _cachedPerfectDayCompletionReference = null;

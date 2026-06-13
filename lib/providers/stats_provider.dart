@@ -23,6 +23,12 @@ class StatsProvider extends ChangeNotifier {
   List<StatsType> _refreshList = [];
   SharedPreferences? prefs;
 
+  int _dataVersion = 0;
+  int _cachedVersion = -1;
+  Object? _cachedHabitsRef;
+  Map<DateTime, double>? _cachedAllDaysProgress;
+  Map<DateTime, bool>? _cachedPerfectDayCompletion;
+
   static const String longestPerfectDaysStreakKey = 'longestPerfectDaysStreak';
 
   StatsProvider({this.prefs}) {
@@ -96,24 +102,35 @@ class StatsProvider extends ChangeNotifier {
     return completedOrSkipped >= requiredHabits;
   }
 
+  void _maybeInvalidateMapCache(HabitProvider hp) {
+    if (_cachedVersion != _dataVersion ||
+        !identical(_cachedHabitsRef, hp.todaysHabits)) {
+      _cachedAllDaysProgress = null;
+      _cachedPerfectDayCompletion = null;
+      _cachedVersion = _dataVersion;
+      _cachedHabitsRef = hp.todaysHabits;
+    }
+  }
+
   Map<DateTime, double> getAllDaysProgress(HabitProvider hp) {
+    _maybeInvalidateMapCache(hp);
+    if (_cachedAllDaysProgress != null) return _cachedAllDaysProgress!;
+
     final allDays = _allDaysIncludingToday(hp);
-
-    // Calculating progress for each day 0 - 1
-
     final Map<DateTime, double> daysProgress = {};
-
     for (final day in allDays) {
       daysProgress[day.date] = getDayProgress(day.date, day.habits);
     }
-
+    _cachedAllDaysProgress = daysProgress;
     return daysProgress;
   }
 
   Map<DateTime, bool> getPerfectDayCompletion(HabitProvider hp) {
+    _maybeInvalidateMapCache(hp);
+    if (_cachedPerfectDayCompletion != null) return _cachedPerfectDayCompletion!;
+
     final allDays = _allDaysIncludingToday(hp);
     final perfectDayCompletion = <DateTime, bool>{};
-
     for (final day in allDays) {
       final normalizedDate = DateTime(
         day.date.year,
@@ -122,7 +139,7 @@ class StatsProvider extends ChangeNotifier {
       );
       perfectDayCompletion[normalizedDate] = _isPerfectDay(day.habits);
     }
-
+    _cachedPerfectDayCompletion = perfectDayCompletion;
     return perfectDayCompletion;
   }
 
@@ -206,6 +223,7 @@ class StatsProvider extends ChangeNotifier {
   }
 
   void refreshStats({bool force = false}) {
+    _dataVersion++;
     if (_refreshList.contains(StatsType.habitsCompleted) || force) {
       _habitsCompleted = refreshHabitsCompleted();
       _habitsCompletedLastWeek = refreshHabitsCompletedLastWeek();
