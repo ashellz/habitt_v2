@@ -18,6 +18,7 @@ class GetPremiumWidget extends StatefulWidget {
 
 class _GetPremiumWidgetState extends State<GetPremiumWidget> {
   EntitlementInfo? _entitlement;
+  PackageType? _packageType;
   bool _hasPro = BillingService.hasPro;
 
   @override
@@ -38,26 +39,62 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
 
   Future<void> _loadEntitlement() async {
     try {
-      final info = await Purchases.getCustomerInfo();
-      final entitlement = info.entitlements.active['Habitt Pro'];
-      if (mounted) setState(() => _entitlement = entitlement);
+      final results = await Future.wait([
+        Purchases.getCustomerInfo(),
+        BillingService.fetchOffers(),
+      ]);
+      final info = results[0] as CustomerInfo;
+      final offerings = results[1] as List;
+      final entitlement = BillingService.activeEntitlement(info);
+      if (!mounted) return;
+
+      PackageType? packageType;
+      if (entitlement != null) {
+        final productId = entitlement.productIdentifier;
+        // Primary: match against loaded packages to get RevenueCat's PackageType.
+        for (final offering in offerings) {
+          for (final pkg in (offering as dynamic).availablePackages as List) {
+            if ((pkg as dynamic).storeProduct.identifier == productId) {
+              packageType = (pkg as dynamic).packageType as PackageType;
+              break;
+            }
+          }
+          if (packageType != null) break;
+        }
+        // Fallback: infer from product ID string.
+        packageType ??= _inferPackageType(productId);
+      }
+
+      setState(() {
+        _entitlement = entitlement;
+        _packageType = packageType;
+      });
     } catch (_) {}
   }
 
-  String _planLabel(AppLocalizations loc, String productId) {
+  PackageType? _inferPackageType(String productId) {
     final id = productId.toLowerCase();
+    if (id.contains('lifetime')) return PackageType.lifetime;
     if (id.contains('annual') || id.contains('yearly') || id.contains('year')) {
-      return loc.paywallYearly;
+      return PackageType.annual;
     }
-    if (id.contains('6month') || id.contains('six')) {
-      return loc.paywallSixMonths;
-    }
-    if (id.contains('3month') || id.contains('three')) {
-      return loc.paywallThreeMonths;
-    }
-    if (id.contains('week')) return loc.paywallWeekly;
-    if (id.contains('lifetime')) return loc.paywallLifetime;
-    return loc.paywallMonthly;
+    if (id.contains('6month') || id.contains('six')) return PackageType.sixMonth;
+    if (id.contains('3month') || id.contains('three')) return PackageType.threeMonth;
+    if (id.contains('week')) return PackageType.weekly;
+    if (id.contains('month')) return PackageType.monthly;
+    return null;
+  }
+
+  String _planLabel(AppLocalizations loc) {
+    return switch (_packageType) {
+      PackageType.annual => loc.paywallYearly,
+      PackageType.sixMonth => loc.paywallSixMonths,
+      PackageType.threeMonth => loc.paywallThreeMonths,
+      PackageType.weekly => loc.paywallWeekly,
+      PackageType.lifetime => loc.paywallLifetime,
+      PackageType.monthly => loc.paywallMonthly,
+      _ => '',
+    };
   }
 
   String _formatExpiration(String? isoDate) {
@@ -150,10 +187,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
     final loc = AppLocalizations.of(context)!;
     final cp = widget.cp;
     final entitlement = _entitlement;
-    final planLabel =
-        entitlement != null
-            ? _planLabel(loc, entitlement.productIdentifier)
-            : '';
+    final planLabel = _planLabel(loc);
     final expiryFormatted = _formatExpiration(entitlement?.expirationDate);
 
     return Container(
