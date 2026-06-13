@@ -54,7 +54,7 @@ void checkForNewDay(
       lastOpenedDate.month != today.month ||
       lastOpenedDate.year != today.year) {
     debugPrint("New day, resetting completion");
-    await habitProvider.saveHabitDay(lastOpenedDate);
+    await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
     await habitProvider.resetCompletion();
     await habitProvider.resetScheduleCountersIfNeeded(
       resetWeekly: crossedWeekBoundary,

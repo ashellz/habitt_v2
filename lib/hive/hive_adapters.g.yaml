@@ -91,7 +91,7 @@ types:
         index: 43
   Day:
     typeId: 1
-    nextIndex: 3
+    nextIndex: 4
     fields:
       date:
         index: 0
@@ -99,3 +99,5 @@ types:
         index: 1
       timestamp:
         index: 2
+      isAutoCreated:
+        index: 3

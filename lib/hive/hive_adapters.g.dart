@@ -179,19 +179,22 @@ class DayAdapter extends TypeAdapter<Day> {
       date: fields[0] as DateTime,
       habits: (fields[1] as List).cast<Habit>(),
       timestamp: fields[2] as DateTime?,
+      isAutoCreated: (fields[3] as bool?) ?? false,
     );
   }
 
   @override
   void write(BinaryWriter writer, Day obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
       ..write(obj.habits)
       ..writeByte(2)
-      ..write(obj.timestamp);
+      ..write(obj.timestamp)
+      ..writeByte(3)
+      ..write(obj.isAutoCreated);
   }
 
   @override

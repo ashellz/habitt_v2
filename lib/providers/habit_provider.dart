@@ -190,7 +190,7 @@ class HabitProvider extends ChangeNotifier {
       // Check if this day already exists in the database
       if (daysBox.get(dayKey) == null) {
         // Save the day with habits that should be scheduled for that day
-        await saveHabitDay(currentDay, resetCompletion: true);
+        await saveHabitDay(currentDay, resetCompletion: true, isAutoCreated: true);
       }
 
       // Move to the next day
@@ -717,7 +717,7 @@ class HabitProvider extends ChangeNotifier {
         normalizedDay.isBefore(today) &&
         (_dateJoined == null || normalizedDay.isAfter(_dateJoined!)) &&
         habits.isNotEmpty) {
-      saveHabitDay(normalizedDay, resetCompletion: true);
+      saveHabitDay(normalizedDay, resetCompletion: true, isAutoCreated: true);
       dayEntry = daysBox.get(dayKey);
       dayHabits = dayEntry?.habits ?? [];
     }
@@ -1148,6 +1148,7 @@ class HabitProvider extends ChangeNotifier {
   Future<void> saveHabitDay(
     DateTime day, {
     bool resetCompletion = false,
+    bool isAutoCreated = false,
   }) async {
     habitStatsProvider?.clearAll();
     final daySimple = DateTime(day.year, day.month, day.day);
@@ -1170,6 +1171,7 @@ class HabitProvider extends ChangeNotifier {
         date: daySimple,
         habits: scheduledForDay,
         timestamp: DateTime.now().toUtc(),
+        isAutoCreated: isAutoCreated,
       ),
     );
   }

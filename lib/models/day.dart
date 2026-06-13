@@ -6,7 +6,19 @@ class Day extends HiveObject {
   final List<Habit> habits;
   final DateTime? timestamp;
 
-  Day({required this.date, required this.habits, required this.timestamp});
+  /// True when this day was created locally by the day-rollover or backfill
+  /// logic — not by a real user action. Auto-created days always lose the
+  /// merge against incoming backup/delta data regardless of timestamps, so
+  /// that Drive data (with actual completions) is never rejected in favour of
+  /// a blank reset snapshot with a newer wall-clock stamp.
+  final bool isAutoCreated;
+
+  Day({
+    required this.date,
+    required this.habits,
+    required this.timestamp,
+    this.isAutoCreated = false,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -16,6 +28,7 @@ class Day extends HiveObject {
           '${date.day.toString().padLeft(2, '0')}',
       'habits': habits.map((h) => h.toMap()).toList(),
       'timestamp': timestamp?.toIso8601String(),
+      // isAutoCreated intentionally omitted — local-only flag, never synced
     };
   }
 

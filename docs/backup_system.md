@@ -122,7 +122,9 @@ For each field between incoming and local versions:
 4. Tie → local wins (prevents oscillation between devices)
 
 ### Day Merge
-Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Incoming day is skipped if local has real habit data AND the incoming timestamp is older. Otherwise the day's habits are merged using the same per-field logic above.
+Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Incoming day is skipped if local has real habit data AND the local day was **not** auto-created AND the incoming timestamp is older. Otherwise the day's habits are merged using the same per-field logic above.
+
+**`Day.isAutoCreated`** — a local-only boolean (never serialised to backup files) that is set to `true` when a day is created by the day-rollover logic (`checkForNewDay`), the missing-day backfill (`_backfillMissingDays`), or the on-demand hydration path. These days are blank reset snapshots with a current wall-clock timestamp; without this flag they would incorrectly beat backup data timestamped earlier (e.g. actual completions from another device). When `isAutoCreated = true` the timestamp guard is bypassed and the incoming backup data is always merged in. The saved result clears the flag (`isAutoCreated = false`).
 
 ### Deletion
 `isDeleted = true` on a habit acts as a tombstone. Deleted habits are excluded from new backups and not re-added from incoming data.

@@ -1983,10 +1983,17 @@ class BackupProvider extends ChangeNotifier {
       final localTs = existingDay?.timestamp;
       final incomingTs = day.timestamp;
 
-      // Only apply directional skip when the existing day has real habit data.
-      // Placeholder days created after a wipe (habits.isEmpty) should never
-      // block incoming backup or delta data from being applied.
-      if (existingDay != null && existingDay.habits.isNotEmpty) {
+      // Only apply directional skip when the existing day has real habit data
+      // AND was not auto-created by the day-rollover/backfill logic.
+      // Auto-created days (isAutoCreated=true) are blank reset snapshots with
+      // a current wall-clock timestamp — they must always lose to incoming
+      // backup data which may carry actual completions from a prior session or
+      // another device, even if that data is timestamped earlier.
+      // Placeholder days created after a wipe (habits.isEmpty) also never
+      // block incoming data.
+      if (existingDay != null &&
+          existingDay.habits.isNotEmpty &&
+          !existingDay.isAutoCreated) {
         // Skip if incoming has no timestamp (can't be newer).
         if (incomingTs == null) {
           debugPrint(
@@ -2039,7 +2046,7 @@ class BackupProvider extends ChangeNotifier {
               : (localTs ?? incomingTs);
 
       debugPrint(
-        '[SYNC]   day $dayKey: MERGE — local=${existingDay != null ? "${existingDay.habits.length} habits, ts=$localTs" : "none"} '
+        '[SYNC]   day $dayKey: MERGE — local=${existingDay != null ? "${existingDay.habits.length} habits, ts=$localTs, autoCreated=${existingDay.isAutoCreated}" : "none"} '
         '| incoming=${day.habits.length} habits, ts=$incomingTs '
         '| result=${mergedDayHabits.length} habits, ts=$mergedTs',
       );
