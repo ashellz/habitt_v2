@@ -111,19 +111,18 @@ Future<void> main() async {
         ChangeNotifierProvider<ThemeProvider>.value(value: tp),
         ChangeNotifierProvider<LanguageProvider>.value(value: languageProvider),
 
-        // 2. HabitProvider: Depends on StatsProvider.
-        ChangeNotifierProxyProvider<StatsProvider, HabitProvider>(
-          // `create` is called only once to build the initial instance.
-          // The dependency (StatsProvider) is not available here, so we create
-          // HabitProvider in its initial state.
-          create: (_) => HabitProvider(),
+        ChangeNotifierProvider<NotificationsProvider>.value(
+          value: notificationsProvider,
+        ),
 
-          // `update` is called immediately after `create` and whenever
-          // StatsProvider notifies listeners. It reuses the `previous` instance.
-          update: (_, stats, previous) {
-            // The '!' asserts that `previous` will not be null after `create`.
-            // The '..' cascade operator calls the method and returns the object.
-            return previous!..updateDependencies(stats);
+        // 2. HabitProvider: Depends on StatsProvider and NotificationsProvider.
+        ChangeNotifierProxyProvider2<StatsProvider, NotificationsProvider,
+            HabitProvider>(
+          create: (_) => HabitProvider(),
+          update: (_, stats, notifications, previous) {
+            return previous!
+              ..updateDependencies(stats)
+              ..attachNotificationsProvider(notifications);
           },
           lazy: false,
         ),
@@ -154,9 +153,6 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => StateProvider(prefs)),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
-        ChangeNotifierProvider<NotificationsProvider>.value(
-          value: notificationsProvider,
-        ),
 
         // Profile image provider (loads image once at startup)
         ChangeNotifierProvider<ProfileImageProvider>.value(

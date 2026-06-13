@@ -6,6 +6,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/feedback_service.dart';
@@ -37,6 +38,7 @@ class HabitProvider extends ChangeNotifier {
   StatsProvider? statsProvider;
   HabitStatsProvider? habitStatsProvider;
   BackupProvider? backupProvider;
+  NotificationsProvider? notificationsProvider;
 
   HabitProvider({this.statsProvider}) {
     init();
@@ -58,6 +60,10 @@ class HabitProvider extends ChangeNotifier {
     backupProvider = provider;
   }
 
+  void attachNotificationsProvider(NotificationsProvider provider) {
+    notificationsProvider = provider;
+  }
+
   void attachHabitStatsProvider(HabitStatsProvider provider) {
     habitStatsProvider = provider;
   }
@@ -76,6 +82,12 @@ class HabitProvider extends ChangeNotifier {
     // handled by per-habit syncs; the full startup sync only needs to run once
     // per day to roll the 7-day window forward and catch any notifications that
     // fired while the app was closed.
+    final notificationsEnabled =
+        notificationsProvider?.areHabitNotificationsEnabled ?? true;
+    if (!notificationsEnabled) {
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final today =
         _normalizeDate(DateTime.now()).toIso8601String().split('T').first;
@@ -98,7 +110,14 @@ class HabitProvider extends ChangeNotifier {
     await prefs.setString('lastNotificationSyncDate', today);
   }
 
-  Future<void> _syncSingleHabitNotifications(Habit habit) async {
+  Future<void> syncSingleHabitNotifications(Habit habit) async {
+    final notificationsEnabled =
+        notificationsProvider?.areHabitNotificationsEnabled ?? true;
+
+    if (!notificationsEnabled) {
+      return;
+    }
+
     await NotificationService.rescheduleHabitNotifications(
       habit: habit,
       appearsOnDay: appearsOnDay,
@@ -135,7 +154,7 @@ class HabitProvider extends ChangeNotifier {
         }
       } else {
         // Un-completed today: restore notifications for today and future days.
-        await _syncSingleHabitNotifications(habit);
+        await syncSingleHabitNotifications(habit);
       }
     } else {
       // Past day: only weekly/monthly habits within the current period need a
@@ -147,7 +166,7 @@ class HabitProvider extends ChangeNotifier {
           (habit.scheduleType == ScheduleType.monthly &&
               _isSameMonth(daySimple, todaySimple));
       if (affectsCurrentPeriod) {
-        await _syncSingleHabitNotifications(habit);
+        await syncSingleHabitNotifications(habit);
       }
       // Daily/custom past-day toggle: no effect on future notifications, skip.
     }
@@ -726,7 +745,7 @@ class HabitProvider extends ChangeNotifier {
     refreshTodaysHabits(notify: false);
 
     // Scheduels notifications for added habit
-    _syncSingleHabitNotifications(habit);
+    syncSingleHabitNotifications(habit);
 
     notifyListeners();
   }
@@ -851,7 +870,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> unpauseHabit(Habit habit) async {
     await habit.unpauseHabit();
-    _syncSingleHabitNotifications(habit);
+    syncSingleHabitNotifications(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
     notifyListeners();
@@ -992,7 +1011,7 @@ class HabitProvider extends ChangeNotifier {
     persistedHabit.updateHabit(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
-    _syncSingleHabitNotifications(persistedHabit);
+    syncSingleHabitNotifications(persistedHabit);
 
     notifyListeners();
   }

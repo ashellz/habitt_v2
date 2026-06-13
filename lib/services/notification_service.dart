@@ -135,12 +135,18 @@ class NotificationService {
   }) async {
     final allowed = await areNotificationsAllowed();
     if (!allowed) {
+      debugPrint(
+        "[NOTIFICATIONS] Skipping habit notification sync because no permissions",
+      );
       return;
     }
 
     await cancelHabitNotifications(habit, horizonDays: horizonDays);
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
+    debugPrint(
+      "[NOTIFICATIONS] Rescheduling notifications for habit ${habit.name} over next $horizonDays days (skipToday: $skipToday)",
+    );
     await _scheduleHabitNotifications(
       habit: habit,
       appearsOnDay: appearsOnDay,

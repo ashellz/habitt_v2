@@ -349,7 +349,7 @@ class NotificationsProvider extends ChangeNotifier {
   }
 
   /// Habits toggle: enable/disable habit-generated notifications globally
-  bool get areHabitNotificationsEnabled => _habitsEnabled;
+  bool get areHabitNotificationsEnabled => _habitsEnabled && _masterEnabled;
 
   Future<void> toggleHabitNotifications({
     required BuildContext context,
@@ -396,7 +396,7 @@ class NotificationsProvider extends ChangeNotifier {
 
   /// Enable the master and habit toggles when permission is already known to be
   /// granted (no permission prompt needed).
-  Future<void> enableGlobalNotificationToggles() async {
+  Future<void> enableHabitNotificationToggles() async {
     if (!_masterEnabled) {
       _masterEnabled = true;
       await _prefs?.setBool(_masterKey, true);

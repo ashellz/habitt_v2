@@ -136,9 +136,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.habitAmountLabelController.text = habit.amountLabel;
     stateProvider.setIconPathImmediately(habit.iconPath);
     stateProvider.isOptional = habit.optional;
-    stateProvider.timeIntervalEnabled = habit.timeIntervalEnabled;
-    stateProvider.timeIntervalStart = habit.timeIntervalStart;
-    stateProvider.timeIntervalEnd = habit.timeIntervalEnd;
     stateProvider.setScheduleFromHabit(
       scheduleType: habit.scheduleType,
       weeklyTarget: habit.weeklyTarget,
@@ -147,10 +144,14 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       selectedDaysAWeek: habit.selectedDaysAWeek,
       selectedDaysAMonth: habit.selectedDaysAMonth,
     );
+    /*
+    stateProvider.timeIntervalEnabled = habit.timeIntervalEnabled;
+    stateProvider.timeIntervalStart = habit.timeIntervalStart;
+    stateProvider.timeIntervalEnd = habit.timeIntervalEnd;
     stateProvider.habitColorName = habit.colorName;
     stateProvider.habitColor = habit.resolveColor(
       context.read<ThemeProvider>(),
-    );
+    ); */
     stateProvider.selectedPremadeHabitType = habit.premadeHabitType;
     stateProvider.setNotificationsFromHabit(
       enabled: habit.notificationsEnabled,
@@ -190,11 +191,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         sp.selectedHabitTrackingType != habit.trackingType;
     final changedOptionalHabit = sp.isOptional != habit.optional;
     final changedIcon = sp.iconPath != habit.iconPath;
-    final changedTimeIntervalEnabled =
-        sp.timeIntervalEnabled != habit.timeIntervalEnabled;
-    final changedTimeIntervalStart =
-        sp.timeIntervalStart != habit.timeIntervalStart;
-    final changedTimeIntervalEnd = sp.timeIntervalEnd != habit.timeIntervalEnd;
     final changedScheduleType = sp.selectedScheduleOption != habit.scheduleType;
     final changedWeeklyTarget = sp.weeklyTarget != habit.weeklyTarget;
     final changedMonthlyTarget = sp.monthlyTarget != habit.monthlyTarget;
@@ -208,9 +204,16 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         !sp.selectedDaysAMonth.every(
           (d) => habit.selectedDaysAMonth.contains(d),
         );
+    /*
+    final changedTimeIntervalEnabled =
+        sp.timeIntervalEnabled != habit.timeIntervalEnabled;
+    final changedTimeIntervalStart =
+        sp.timeIntervalStart != habit.timeIntervalStart;
+    final changedTimeIntervalEnd = sp.timeIntervalEnd != habit.timeIntervalEnd;
     final changedHabitColor =
         sp.getHabitColor(tp) != habit.resolveColor(tp) ||
         sp.habitColorName != habit.colorName;
+         */
     final changedPremadeHabitType =
         sp.selectedPremadeHabitType != habit.premadeHabitType;
     final changedNotificationsEnabled =
@@ -229,16 +232,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedTrackingType ||
         changedOptionalHabit ||
         changedIcon ||
-        changedTimeIntervalEnabled ||
-        changedTimeIntervalStart ||
-        changedTimeIntervalEnd ||
         changedScheduleType ||
         changedWeeklyTarget ||
         changedMonthlyTarget ||
         changedCustomInterval ||
         changedSelectedWeekDays ||
         changedSelectedMonthDays ||
-        changedHabitColor ||
         changedPremadeHabitType ||
         changedNotificationsEnabled ||
         changedNotificationTimes;
@@ -455,7 +454,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
   // Fire-and-forget after save: request OS permission and disable habit notifications
   // if the user ultimately denies.
-  Future<void> _requestNotificationPermissionOrDisable(
+  // If user accepts, resave habit to trigger notification scheduling with the now-granted permission.
+  Future<void> _checkNotificationPermissions(
     HabitProvider habitProvider,
     Habit habit,
   ) async {
@@ -464,31 +464,51 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     if (allowed && mounted) {
       final notificationsProvider = context.read<NotificationsProvider>();
 
+      if (notificationsProvider.areHabitNotificationsEnabled) {
+        return;
+      }
+
+      // Has app permission but toggles are off
+
       final enabled = await _showEnableNotificationsDialog();
 
       if (!enabled) {
+        habit.notificationsEnabled = false;
+        habitProvider.updateHabit(habit);
         return;
       }
-      await notificationsProvider.enableGlobalNotificationToggles();
+
+      await notificationsProvider.enableHabitNotificationToggles();
+      await habitProvider.syncSingleHabitNotifications(habit);
+
       return;
     }
 
-    final lockedBeforeRequest =
-        await AwesomeNotifications().shouldShowRationaleToRequest();
-    if (lockedBeforeRequest.isNotEmpty) {
-      habit.notificationsEnabled = false;
-      habitProvider.updateHabit(habit);
-      return;
+    if (!allowed) {
+      final lockedBeforeRequest =
+          await AwesomeNotifications().shouldShowRationaleToRequest();
+      if (lockedBeforeRequest.isNotEmpty) {
+        habit.notificationsEnabled = false;
+        habitProvider.updateHabit(habit);
+        return;
+      }
+
+      await AwesomeNotifications().requestPermissionToSendNotifications();
+
+      final allowedAfterRequest =
+          await NotificationService.areNotificationsAllowed();
+      if (!allowedAfterRequest) {
+        habit.notificationsEnabled = false;
+        habitProvider.updateHabit(habit);
+        return;
+      }
+
+      if (!mounted) return;
+
+      final notificationsProvider = context.read<NotificationsProvider>();
+      await notificationsProvider.enableHabitNotificationToggles();
+      await habitProvider.syncSingleHabitNotifications(habit);
     }
-
-    await AwesomeNotifications().requestPermissionToSendNotifications();
-
-    final allowedAfterRequest =
-        await NotificationService.areNotificationsAllowed();
-    if (allowedAfterRequest) return;
-
-    habit.notificationsEnabled = false;
-    habitProvider.updateHabit(habit);
   }
 
   Future<void> _saveHabit(StateProvider sp) async {
@@ -540,14 +560,17 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.colorName = sp.habitColorName;
       habit.color = colorToHex(sp.getHabitColor(tp) ?? tp.primaryColor);
 
+      // Here we save the habit and reschedule its notifications if habit notifications exist
+      // If no permission or disabled in settings we ask the user if they want to enable it via RQ
+      // If so, notification scheduling fails silently
       habitProvider.updateHabit(habit);
-      sp.alertText = "Changes saved";
-      sp.toggleAlert(show: true);
       if (mounted) {
         _popSheet(result: HabitSheetCloseResult.saved);
       }
+
+      // RQ:
       if (habitNotificationsEnabled) {
-        _requestNotificationPermissionOrDisable(habitProvider, habit);
+        _checkNotificationPermissions(habitProvider, habit);
       }
       return;
     }
@@ -599,7 +622,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       _popSheet(result: HabitSheetCloseResult.saved);
     }
     if (habitNotificationsEnabled) {
-      _requestNotificationPermissionOrDisable(habitProvider, newHabit);
+      _checkNotificationPermissions(habitProvider, newHabit);
     }
   }
 
