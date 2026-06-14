@@ -526,6 +526,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
             ? AmountLabelPreset.times.plural
             : habit.amountLabel;
     final loc = AppLocalizations.of(context)!;
+    final customSingulars = context.read<StateProvider>().customSingulars;
     final label = resolveAmountLabelForValue(
       baseLabel,
       habit.completed
@@ -534,6 +535,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
           ? habit.amount
           : habit.amount,
       loc,
+      customSingulars: customSingulars,
     );
     if (habit.completed) {
       return '${habit.amountCompleted} $label';

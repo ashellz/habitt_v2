@@ -633,7 +633,7 @@
   "step": "Schritt",
   "steps": "Schritte",
   "glass": "Glas",
-  "glasses": "Brille",
+  "glasses": "Gläser",
   "page": "Seite",
   "pages": "Seiten",
   "dl": "dl",
@@ -961,5 +961,11 @@
   "syncFailedICloud": "iCloud nicht verfügbar — Einstellungen prüfen",
   "syncFailedICloudQuota": "Nicht genug iCloud-Speicherplatz",
   "syncWarningICloudQuota": "Apple-Speicher voll — Daten nur lokal gespeichert",
-  "syncFailedDriveQuota": "Google Drive-Speicher voll"
+  "syncFailedDriveQuota": "Google Drive-Speicher voll",
+  "singular": "Einzahl",
+  "singularHint": "z. B. Glas",
+  "plural": "Mehrzahl",
+  "pluralHint": "z. B. Gläser",
+  "weekly": "Wöchentlich",
+  "monthly": "Monatlich"
 }

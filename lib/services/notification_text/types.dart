@@ -56,6 +56,7 @@ class HabitNotificationContext {
     required this.appearsOnDay,
     required this.localizations,
     DateTime? now,
+    this.customSingulars,
   }) : now = (now ?? DateTime.now()).toUtc();
 
   final Habit habit;
@@ -63,6 +64,7 @@ class HabitNotificationContext {
   final DateTime now;
   final HabitAppearsOnDay appearsOnDay;
   final AppLocalizations localizations;
+  final Map<String, String>? customSingulars;
 
   DateTime get scheduledDay =>
       DateTime(scheduledAt.year, scheduledAt.month, scheduledAt.day);

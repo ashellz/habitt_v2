@@ -316,6 +316,7 @@ class HabitNotificationTextBuilder {
           habit.amountLabel,
           remaining,
           l,
+          customSingulars: context.customSingulars,
         );
         final remainingText = '$remaining $label';
         return l.notificationCombinedAmountAlmostDone(
@@ -329,6 +330,7 @@ class HabitNotificationTextBuilder {
           habit.amountLabel,
           habit.amount,
           l,
+          customSingulars: context.customSingulars,
         );
         final progressText = '$completed/${habit.amount} $label';
         return l.notificationCombinedAmountInProgress(

@@ -80,6 +80,7 @@
   "goodAfternoon": "Good afternoon",
   "goodEvening": "Good evening",
   "goodMorning": "Good morning",
+  "morning": "Morning",
   "goodMorningTimeToCheckYourHabits": "Good morning! Time to check your habits",
   "goodToSeeYou": "Good to see you",
   "guest": "Guest",
@@ -961,5 +962,11 @@
   "syncFailedICloud": "iCloud unavailable — check Settings",
   "syncFailedICloudQuota": "Not enough iCloud storage",
   "syncWarningICloudQuota": "Apple storage full — data saved locally only",
-  "syncFailedDriveQuota": "Google Drive storage full"
+  "syncFailedDriveQuota": "Google Drive storage full",
+  "singular": "Singular",
+  "singularHint": "e.g. glass",
+  "plural": "Plural",
+  "pluralHint": "e.g. glasses",
+  "weekly": "Weekly",
+  "monthly": "Monthly"
 }

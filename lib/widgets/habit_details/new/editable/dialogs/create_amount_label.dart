@@ -8,7 +8,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 class CreateAmountLabelDialog extends StatefulWidget {
   final String previousSelection;
   final VoidCallback onCancel;
-  final Function(String, bool) onConfirm; // returns: label, wasAdded
+  final Function(String, bool) onConfirm; // returns: label (plural/canonical), wasAdded
 
   const CreateAmountLabelDialog({
     super.key,
@@ -23,17 +23,20 @@ class CreateAmountLabelDialog extends StatefulWidget {
 }
 
 class _CreateAmountLabelDialogState extends State<CreateAmountLabelDialog> {
-  late TextEditingController controller;
+  late TextEditingController singularController;
+  late TextEditingController pluralController;
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController();
+    singularController = TextEditingController();
+    pluralController = TextEditingController();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    singularController.dispose();
+    pluralController.dispose();
     super.dispose();
   }
 
@@ -42,31 +45,48 @@ class _CreateAmountLabelDialogState extends State<CreateAmountLabelDialog> {
     final sp = context.watch<StateProvider>();
     final loc = AppLocalizations.of(context)!;
 
-    return ValueListenableBuilder<TextEditingValue>(
-      valueListenable: controller,
-      builder: (context, value, child) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([singularController, pluralController]),
+      builder: (context, _) {
+        final canCreate =
+            singularController.text.trim().isNotEmpty &&
+            pluralController.text.trim().isNotEmpty;
+
         return NewDefaultDialog(
           title: loc.createAmountLabel,
           desc: loc.addANewAmountLabelYouCanReuseLater,
-          primaryButtonEnabled: value.text.trim().isNotEmpty,
+          primaryButtonEnabled: canCreate,
           onSecondaryButtonPressed: widget.onCancel,
           onPrimaryButtonPressed: () {
-            final normalized = sp.normalizeAmountLabel(controller.text);
-            if (normalized.isEmpty) {
+            final normSingular = sp.normalizeAmountLabel(singularController.text);
+            final normPlural = sp.normalizeAmountLabel(pluralController.text);
+
+            if (normSingular.isEmpty || normPlural.isEmpty) {
               return;
             }
 
-            final added = sp.addCustomAmountLabel(normalized);
+            final added = sp.addCustomAmountLabel(normSingular, normPlural);
             widget.onConfirm(
-              added ? normalized : widget.previousSelection,
+              added ? normPlural : widget.previousSelection,
               added,
             );
           },
-          child: NewDefaultTextField(
-            controller: controller,
-            title: loc.amountName,
-            fontWeight: FontWeight.w500,
-            hint: loc.amountName,
+          child: Column(
+            spacing: 10,
+            children: [
+              NewDefaultTextField(
+                controller: singularController,
+                title: loc.singular,
+                fontWeight: FontWeight.w500,
+                hint: loc.singularHint,
+              ),
+              NewDefaultTextField(
+                controller: pluralController,
+                title: loc.plural,
+                fontWeight: FontWeight.w500,
+                hint: loc.pluralHint,
+              ),
+            ],
           ),
         );
       },

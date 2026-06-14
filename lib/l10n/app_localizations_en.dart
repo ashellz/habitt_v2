@@ -251,6 +251,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goodMorning => 'Good morning';
 
   @override
+  String get morning => 'Morning';
+
+  @override
   String get goodMorningTimeToCheckYourHabits =>
       'Good morning! Time to check your habits';
 
@@ -794,9 +797,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreOptions => 'More options';
-
-  @override
-  String get morning => 'Morning';
 
   @override
   String get never => 'Never';
@@ -2514,4 +2514,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncFailedDriveQuota => 'Google Drive storage full';
+
+  @override
+  String get singular => 'Singular';
+
+  @override
+  String get singularHint => 'e.g. glass';
+
+  @override
+  String get plural => 'Plural';
+
+  @override
+  String get pluralHint => 'e.g. glasses';
 }

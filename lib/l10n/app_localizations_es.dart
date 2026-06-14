@@ -252,6 +252,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get goodMorning => 'Buenos días.';
 
   @override
+  String get morning => 'Buenos días';
+
+  @override
   String get goodMorningTimeToCheckYourHabits =>
       'Buenos días Hora de revisar tus hábitos';
 
@@ -797,9 +800,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get moreOptions => 'Más opciones';
-
-  @override
-  String get morning => 'Buenos días';
 
   @override
   String get never => 'Nunca';
@@ -1554,10 +1554,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get steps => 'pasos';
 
   @override
-  String get glass => 'vidrio';
+  String get glass => 'vaso';
 
   @override
-  String get glasses => 'gafas';
+  String get glasses => 'vasos';
 
   @override
   String get page => 'página';
@@ -1825,7 +1825,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chooseLanguage => 'Elegir idioma';
 
   @override
-  String get weekly => 'Semanal';
+  String get weekly => 'Semanalmente';
 
   @override
   String get week => 'semana';
@@ -2527,4 +2527,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get syncFailedDriveQuota => 'Almacenamiento de Google Drive lleno';
+
+  @override
+  String get singular => 'Singular';
+
+  @override
+  String get singularHint => 'p. ej. vaso';
+
+  @override
+  String get plural => 'Plural';
+
+  @override
+  String get pluralHint => 'p. ej. vasos';
 }

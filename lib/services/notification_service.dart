@@ -6,6 +6,7 @@ import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
+import 'package:habitt/util/custom_amount_label.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -144,6 +145,8 @@ class NotificationService {
     await cancelHabitNotifications(habit, horizonDays: horizonDays);
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
+    final customSingulars =
+        await CustomAmountLabel.loadCustomSingularsFromPrefs();
     debugPrint(
       "[NOTIFICATIONS] Rescheduling notifications for habit ${habit.name} over next $horizonDays days (skipToday: $skipToday)",
     );
@@ -152,6 +155,7 @@ class NotificationService {
       appearsOnDay: appearsOnDay,
       horizonDays: horizonDays,
       localizations: localizations,
+      customSingulars: customSingulars,
       startDayOffset: skipToday ? 1 : 0,
     );
   }
@@ -188,6 +192,8 @@ class NotificationService {
 
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
+    final customSingulars =
+        await CustomAmountLabel.loadCustomSingularsFromPrefs();
 
     // debugPrint('Scheduling notifications for ${habits.length} habits over next $horizonDays days',);
     for (final habit in habits) {
@@ -197,6 +203,7 @@ class NotificationService {
         appearsOnDay: appearsOnDay,
         horizonDays: horizonDays,
         localizations: localizations,
+        customSingulars: customSingulars,
       );
     }
 
@@ -208,6 +215,7 @@ class NotificationService {
     required bool Function(Habit habit, DateTime day) appearsOnDay,
     required int horizonDays,
     required AppLocalizations localizations,
+    Map<String, String>? customSingulars,
     int startDayOffset = 0,
   }) async {
     if (habit.isDeleted == true ||
@@ -252,6 +260,7 @@ class NotificationService {
             appearsOnDay: appearsOnDay,
             localizations: localizations,
             now: now,
+            customSingulars: customSingulars,
           ),
         );
 

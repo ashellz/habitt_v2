@@ -31,10 +31,11 @@ class ScheduleDialogSnapshot {
 
   void restore(StateProvider sp) {
     sp.selectedScheduleOption = selectedScheduleOption;
-    sp.weeklyTarget = weeklyTarget;
-    sp.monthlyTarget = monthlyTarget;
     sp.customIntervalDays = customIntervalDays;
     sp.selectedDaysAWeek = Set<int>.from(selectedDaysAWeek);
     sp.selectedDaysAMonth = Set<int>.from(selectedDaysAMonth);
+    // Set targets last so they win over the auto-sync in the days setters.
+    sp.weeklyTarget = weeklyTarget;
+    sp.monthlyTarget = monthlyTarget;
   }
 }

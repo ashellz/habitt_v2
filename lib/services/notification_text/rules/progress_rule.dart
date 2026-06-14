@@ -24,7 +24,12 @@ class ProgressNotificationRule {
     if (habit.tracksAmount && habit.amount > 0) {
       final completed = habit.amountCompleted.clamp(0, habit.amount);
       final remaining = math.max(0, habit.amount - completed);
-      final label = resolveAmountLabelForValue(habit.amountLabel, remaining, l);
+      final label = resolveAmountLabelForValue(
+        habit.amountLabel,
+        remaining,
+        l,
+        customSingulars: context.customSingulars,
+      );
 
       if (completed <= 0) {
         return ProgressRuleResult(
@@ -55,6 +60,7 @@ class ProgressNotificationRule {
                   habit.amountLabel,
                   completed,
                   l,
+                  customSingulars: context.customSingulars,
                 ),
               },
             ),
@@ -92,6 +98,7 @@ class ProgressNotificationRule {
                 habit.amountLabel,
                 habit.amount,
                 l,
+                customSingulars: context.customSingulars,
               ),
             },
           ),

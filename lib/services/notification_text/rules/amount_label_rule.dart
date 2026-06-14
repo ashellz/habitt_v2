@@ -19,6 +19,7 @@ class AmountLabelNotificationRule {
       habit.amountLabel,
       habit.amount,
       l,
+      customSingulars: context.customSingulars,
     );
     final normalized = label.trim().toLowerCase();
     if (normalized.isEmpty || normalized == 'time' || normalized == 'times') {

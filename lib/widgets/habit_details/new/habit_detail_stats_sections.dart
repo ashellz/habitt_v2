@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/widgets/stats/completion_rate.dart';
@@ -237,10 +238,12 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
       animation: _animation,
       builder: (context, _) {
         final animatedRaw = _animation.value.round();
+        final customSingulars =
+            context.read<StateProvider>().customSingulars;
         final value =
             habit.tracksDuration
                 ? getDurationString(animatedRaw)
-                : '$animatedRaw ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, animatedRaw, loc)}';
+                : '$animatedRaw ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, animatedRaw, loc, customSingulars: customSingulars)}';
 
         return StatCard(
           title: title,

@@ -17,9 +17,9 @@ extension ScheduleOptionTypeAction on ScheduleType {
       case ScheduleType.daily:
         return loc.daily;
       case ScheduleType.weekly:
-        return loc.notificationPeriodWeekly;
+        return loc.weekly;
       case ScheduleType.monthly:
-        return loc.notificationPeriodMonthly;
+        return loc.monthly;
       case ScheduleType.custom:
         return loc.custom;
     }

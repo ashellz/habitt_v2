@@ -30,6 +30,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
   bool? _didInitialScrollToRight;
   bool _isAtRightEdge = true;
   late VoidCallback _habitProviderListener;
+  int _lastDataVersion = -1;
 
   @override
   void initState() {
@@ -46,9 +47,18 @@ class _LastWeekProgressState extends State<LastWeekProgress>
 
   void _attachHabitProviderListener() {
     final habitProvider = context.read<HabitProvider>();
+    _lastDataVersion = habitProvider.dataVersion;
     _habitProviderListener = () {
       if (!mounted) return;
-      _updateChangedDayProgress();
+      final provider = context.read<HabitProvider>();
+      if (provider.dataVersion != _lastDataVersion) {
+        _lastDataVersion = provider.dataVersion;
+        _progressValuesByDate.clear();
+        _previousProgressValuesByDate.clear();
+        _initializeAllProgressValues();
+      } else {
+        _updateChangedDayProgress();
+      }
     };
     habitProvider.addListener(_habitProviderListener);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -74,7 +75,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
   }) {
     final loc = AppLocalizations.of(context)!;
     final labels = sp.allAmountLabels;
-    final customLabels = sp.customAmountLabels.toSet();
+    final customLabels = sp.customAmountLabels.map((l) => l.canonical).toSet();
     final rows = <Widget>[];
 
     // Add button as the last "item"
@@ -105,6 +106,9 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
           );
         } else {
           final isDeletable = customLabels.contains(item);
+          final preset = AmountLabelPreset.fromLabel(item);
+          final displayText =
+              preset != null ? preset.localizedPlural(loc) : item;
           final labelWidget = SizedBox(
             height: 40,
             child: AnimatedContainer(
@@ -171,7 +175,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                   ),
                 ),
                 child: Text(
-                  item,
+                  displayText,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

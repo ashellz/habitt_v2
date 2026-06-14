@@ -23,6 +23,7 @@ class NewBottomNavBar extends StatefulWidget {
 
 class _NewBottomNavBarState extends State<NewBottomNavBar> {
   int _selectedIndex = 0;
+  Locale? _lastLocale;
 
   List<NavItemData> _navItems = const [];
 
@@ -35,7 +36,9 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_navItems.isEmpty) {
+    final currentLocale = Localizations.localeOf(context);
+    if (_navItems.isEmpty || _lastLocale != currentLocale) {
+      _lastLocale = currentLocale;
       _initializeNavItems();
     }
   }
@@ -189,7 +192,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       return Expanded(
         child: CNTabBar(
           key: ValueKey(
-            'cn_tabbar_${cp.isDark}_${cp.main.value}_${widget.supportsLiquidGlass}_$brightness',
+            'cn_tabbar_${cp.isDark}_${cp.main.value}_${widget.supportsLiquidGlass}_${brightness}_${loc.localeName}',
           ),
           tint: cp.main,
           height: widget.supportsLiquidGlass ? 100 : 88,

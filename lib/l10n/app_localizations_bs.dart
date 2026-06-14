@@ -252,6 +252,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get goodMorning => 'Dobro jutro';
 
   @override
+  String get morning => 'Jutro';
+
+  @override
   String get goodMorningTimeToCheckYourHabits =>
       'Dobro jutro! Vrijeme je da provjeriš svoje navike.';
 
@@ -800,9 +803,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get moreOptions => 'Više opcija';
 
   @override
-  String get morning => 'Jutro';
-
-  @override
   String get never => 'Nikada';
 
   @override
@@ -899,7 +899,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String notificationCombinedOneOff(Object encouragement, Object period) {
-    return 'Danas je posljednja $period prilika, $encouragement.';
+    return 'Danas je posljednja prilika za tvoju $period naviku, $encouragement.';
   }
 
   @override
@@ -1153,10 +1153,10 @@ class AppLocalizationsBs extends AppLocalizations {
       'Ovo je danas neobavezno, ali bi li ipak htio probati?|Imaš li malo viška vremena?';
 
   @override
-  String get notificationPeriodMonthly => 'mjesečna';
+  String get notificationPeriodMonthly => 'mjesečnu';
 
   @override
-  String get notificationPeriodWeekly => 'sedmična';
+  String get notificationPeriodWeekly => 'sedmičnu';
 
   @override
   String get notificationPremadeBrushTeeth =>
@@ -1547,13 +1547,13 @@ class AppLocalizationsBs extends AppLocalizations {
   String get step => 'korak';
 
   @override
-  String get steps => 'koraci';
+  String get steps => 'koraka';
 
   @override
-  String get glass => 'staklo';
+  String get glass => 'čaša';
 
   @override
-  String get glasses => 'naočale';
+  String get glasses => 'čaše';
 
   @override
   String get page => 'stranica';
@@ -2512,4 +2512,16 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get syncFailedDriveQuota => 'Google Drive storage je pun';
+
+  @override
+  String get singular => 'Jednina';
+
+  @override
+  String get singularHint => 'npr. čaša';
+
+  @override
+  String get plural => 'Množina';
+
+  @override
+  String get pluralHint => 'npr. čaše';
 }

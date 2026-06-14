@@ -8,6 +8,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/old_color_service.dart';
 import 'package:habitt/services/emoji_service.dart';
 import 'package:habitt/util/amount_label_preset.dart';
+import 'package:habitt/util/custom_amount_label.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -15,7 +16,7 @@ class StateProvider extends ChangeNotifier {
   SharedPreferences? _prefs;
   bool _shouldUpdateStreaks = false;
   static const String _amountLabelsPrefsKey = 'amount_labels';
-  List<String> _customAmountLabels = [];
+  List<CustomAmountLabel> _customAmountLabels = [];
 
   StateProvider(SharedPreferences prefs) {
     _prefs = prefs;
@@ -30,7 +31,12 @@ class StateProvider extends ChangeNotifier {
 
   List<String> get defaultAmountLabels => AmountLabelPreset.defaultLabels;
 
-  List<String> get customAmountLabels => List<String>.from(_customAmountLabels);
+  List<CustomAmountLabel> get customAmountLabels =>
+      List<CustomAmountLabel>.from(_customAmountLabels);
+
+  Map<String, String> get customSingulars => {
+    for (final label in _customAmountLabels) label.canonical: label.singular,
+  };
 
   List<String> get allAmountLabels {
     final labels = <String>[];
@@ -42,8 +48,8 @@ class StateProvider extends ChangeNotifier {
     }
 
     for (final label in _customAmountLabels) {
-      if (!labels.contains(label)) {
-        labels.add(label);
+      if (!labels.contains(label.canonical)) {
+        labels.add(label.canonical);
       }
     }
 
@@ -58,55 +64,78 @@ class StateProvider extends ChangeNotifier {
     return AmountLabelPreset.canonicalize(value);
   }
 
-  bool addCustomAmountLabel(String value) {
-    final normalized = canonicalizeAmountLabel(value);
-    if (normalized.isEmpty) {
+  bool addCustomAmountLabel(String singular, String plural) {
+    final normSingular = normalizeAmountLabel(singular);
+    final normPlural = normalizeAmountLabel(plural);
+
+    if (normSingular.isEmpty || normPlural.isEmpty) {
       return false;
     }
 
-    if (AmountLabelPreset.isPredefinedLabel(normalized) ||
-        _customAmountLabels.contains(normalized)) {
+    if (AmountLabelPreset.isPredefinedLabel(normSingular) ||
+        AmountLabelPreset.isPredefinedLabel(normPlural)) {
       return false;
     }
 
-    _customAmountLabels = [..._customAmountLabels, normalized];
-    _prefs?.setStringList(_amountLabelsPrefsKey, _customAmountLabels);
+    final existingSingulars = _customAmountLabels.map((l) => l.singular);
+    final existingPlurals = _customAmountLabels.map((l) => l.plural);
+    if (existingSingulars.contains(normSingular) ||
+        existingSingulars.contains(normPlural) ||
+        existingPlurals.contains(normSingular) ||
+        existingPlurals.contains(normPlural)) {
+      return false;
+    }
+
+    final entry = CustomAmountLabel(singular: normSingular, plural: normPlural);
+    _customAmountLabels = [..._customAmountLabels, entry];
+    _prefs?.setStringList(
+      _amountLabelsPrefsKey,
+      _customAmountLabels.map((l) => l.toStorageString()).toList(),
+    );
     notifyListeners();
     return true;
   }
 
   bool removeCustomAmountLabel(String value) {
-    final normalized = canonicalizeAmountLabel(value);
+    final normalized = normalizeAmountLabel(value);
     if (normalized.isEmpty || AmountLabelPreset.isPredefinedLabel(normalized)) {
       return false;
     }
 
-    if (!_customAmountLabels.contains(normalized)) {
+    final before = _customAmountLabels.length;
+    _customAmountLabels = _customAmountLabels
+        .where((label) => label.canonical != normalized)
+        .toList();
+    if (_customAmountLabels.length == before) {
       return false;
     }
 
-    _customAmountLabels =
-        _customAmountLabels.where((label) => label != normalized).toList();
-    _prefs?.setStringList(_amountLabelsPrefsKey, _customAmountLabels);
+    _prefs?.setStringList(
+      _amountLabelsPrefsKey,
+      _customAmountLabels.map((l) => l.toStorageString()).toList(),
+    );
     notifyListeners();
     return true;
   }
 
   void _loadAmountLabels() {
     final stored = _prefs?.getStringList(_amountLabelsPrefsKey) ?? [];
-    final normalized = <String>[];
+    final result = <CustomAmountLabel>[];
+    final seenCanonicals = <String>{};
 
-    for (final value in stored) {
-      final label = canonicalizeAmountLabel(value);
-      if (label.isEmpty || AmountLabelPreset.isPredefinedLabel(label)) {
+    for (final raw in stored) {
+      final entry = CustomAmountLabel.fromStorageString(raw);
+      if (entry.canonical.isEmpty ||
+          AmountLabelPreset.isPredefinedLabel(entry.canonical)) {
         continue;
       }
-      if (!normalized.contains(label)) {
-        normalized.add(label);
+      if (!seenCanonicals.contains(entry.canonical)) {
+        seenCanonicals.add(entry.canonical);
+        result.add(entry);
       }
     }
 
-    _customAmountLabels = normalized;
+    _customAmountLabels = result;
   }
 
   bool _showAllHabits = true;

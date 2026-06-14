@@ -253,6 +253,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get goodMorning => 'Guten Morgen!';
 
   @override
+  String get morning => 'Morgen';
+
+  @override
   String get goodMorningTimeToCheckYourHabits =>
       'Guten Morgen! Zeit, Ihre Gewohnheiten zu überprüfen';
 
@@ -798,9 +801,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get moreOptions => 'Mehr Optionen';
-
-  @override
-  String get morning => 'Morgen';
 
   @override
   String get never => 'Niemals';
@@ -1560,7 +1560,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get glass => 'Glas';
 
   @override
-  String get glasses => 'Brille';
+  String get glasses => 'Gläser';
 
   @override
   String get page => 'Seite';
@@ -2534,4 +2534,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get syncFailedDriveQuota => 'Google Drive-Speicher voll';
+
+  @override
+  String get singular => 'Einzahl';
+
+  @override
+  String get singularHint => 'z. B. Glas';
+
+  @override
+  String get plural => 'Mehrzahl';
+
+  @override
+  String get pluralHint => 'z. B. Gläser';
 }

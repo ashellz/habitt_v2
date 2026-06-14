@@ -93,8 +93,8 @@ class _WeeklyScheduleDialogState extends State<WeeklyScheduleDialog> {
             title: loc.exitWithoutSaving,
             primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
-              sp.weeklyTarget = initialWeeklyTarget;
               sp.selectedDaysAWeek = initialWeeklyDays;
+              sp.weeklyTarget = initialWeeklyTarget;
               Navigator.of(dialogContext).pop();
               _returnToSetSchedule(cp);
             },

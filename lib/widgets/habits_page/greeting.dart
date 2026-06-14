@@ -16,6 +16,7 @@ class Greeting extends StatefulWidget {
 
 class _GreetingState extends State<Greeting> {
   static String? _sessionGreeting;
+  static String? _sessionLocale;
   static final _random = Random();
   String? name;
 
@@ -70,8 +71,10 @@ class _GreetingState extends State<Greeting> {
   }
 
   void _ensureGreeting() {
-    if (_sessionGreeting != null) return;
+    final currentLocale = Localizations.localeOf(context).languageCode;
+    if (_sessionGreeting != null && _sessionLocale == currentLocale) return;
 
+    _sessionLocale = currentLocale;
     final loc = AppLocalizations.of(context)!;
     final dayPeriod = _dayPeriodFromHour(DateTime.now().hour);
 
@@ -84,6 +87,7 @@ class _GreetingState extends State<Greeting> {
   List<String> _greetingOptions(AppLocalizations l, _DayPeriod dayPeriod) {
     return [
       _dayPeriodGreeting(l, dayPeriod),
+      _dayPeriodGreetingSimple(l, dayPeriod),
       l.hello,
       l.whatsUp,
       l.goodToSeeYou,
@@ -103,6 +107,17 @@ class _GreetingState extends State<Greeting> {
         return l.goodAfternoon;
       case _DayPeriod.evening:
         return l.goodEvening;
+    }
+  }
+
+  String _dayPeriodGreetingSimple(AppLocalizations l, _DayPeriod period) {
+    switch (period) {
+      case _DayPeriod.morning:
+        return l.morning;
+      case _DayPeriod.afternoon:
+        return l.afternoon;
+      case _DayPeriod.evening:
+        return l.evening;
     }
   }
 

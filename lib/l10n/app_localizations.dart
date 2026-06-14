@@ -554,6 +554,12 @@ abstract class AppLocalizations {
   /// **'Good morning'**
   String get goodMorning;
 
+  /// No description provided for @morning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get morning;
+
   /// No description provided for @goodMorningTimeToCheckYourHabits.
   ///
   /// In en, this message translates to:
@@ -1293,12 +1299,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More options'**
   String get moreOptions;
-
-  /// No description provided for @morning.
-  ///
-  /// In en, this message translates to:
-  /// **'Morning'**
-  String get morning;
 
   /// No description provided for @never.
   ///
@@ -4240,6 +4240,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Google Drive storage full'**
   String get syncFailedDriveQuota;
+
+  /// No description provided for @singular.
+  ///
+  /// In en, this message translates to:
+  /// **'Singular'**
+  String get singular;
+
+  /// No description provided for @singularHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. glass'**
+  String get singularHint;
+
+  /// No description provided for @plural.
+  ///
+  /// In en, this message translates to:
+  /// **'Plural'**
+  String get plural;
+
+  /// No description provided for @pluralHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. glasses'**
+  String get pluralHint;
 }
 
 class _AppLocalizationsDelegate

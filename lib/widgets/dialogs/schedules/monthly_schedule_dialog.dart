@@ -90,8 +90,8 @@ class _MonthlyScheduleDialogState extends State<MonthlyScheduleDialog> {
       builder:
           (dialogContext) => ExitWithoutSavingDialog(
             onExit: () {
-              sp.monthlyTarget = initialMonthlyTarget;
               sp.selectedDaysAMonth = initialMonthlyDays;
+              sp.monthlyTarget = initialMonthlyTarget;
               Navigator.of(dialogContext).pop();
               _returnToSetSchedule(cp);
             },
@@ -313,7 +313,7 @@ class ExitWithoutSavingDialog extends StatelessWidget {
     return NewDefaultDialog(
       title: loc.exitWithoutSaving,
       primaryButtonLabel: loc.exit,
-      onPrimaryButtonPressed: () {},
+      onPrimaryButtonPressed: () => onExit?.call(),
     );
   }
 }

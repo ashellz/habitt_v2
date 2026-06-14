@@ -616,6 +616,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/es.svg
   String get es => 'assets/images/new-svg/es.svg';
 
+  /// File path: assets/images/new-svg/export-backup.svg
+  String get exportBackup => 'assets/images/new-svg/export-backup.svg';
+
   /// File path: assets/images/new-svg/eye-shut.svg
   String get eyeShut => 'assets/images/new-svg/eye-shut.svg';
 
@@ -631,12 +634,18 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/home.svg
   String get home => 'assets/images/new-svg/home.svg';
 
+  /// File path: assets/images/new-svg/import-backup.svg
+  String get importBackup => 'assets/images/new-svg/import-backup.svg';
+
   /// File path: assets/images/new-svg/it.svg
   String get it => 'assets/images/new-svg/it.svg';
 
   /// Directory path: assets/images/new-svg/languages
   $AssetsImagesNewSvgLanguagesGen get languages =>
       const $AssetsImagesNewSvgLanguagesGen();
+
+  /// File path: assets/images/new-svg/local-backup.svg
+  String get localBackup => 'assets/images/new-svg/local-backup.svg';
 
   /// File path: assets/images/new-svg/log-out.svg
   String get logOut => 'assets/images/new-svg/log-out.svg';
@@ -667,6 +676,9 @@ class $AssetsImagesNewSvgGen {
 
   /// File path: assets/images/new-svg/per-session.svg
   String get perSession => 'assets/images/new-svg/per-session.svg';
+
+  /// File path: assets/images/new-svg/pin.svg
+  String get pin => 'assets/images/new-svg/pin.svg';
 
   /// File path: assets/images/new-svg/plus.svg
   String get plus => 'assets/images/new-svg/plus.svg';
@@ -741,12 +753,15 @@ class $AssetsImagesNewSvgGen {
     emptyBox,
     en,
     es,
+    exportBackup,
     eyeShut,
     eye,
     google,
     heatmap,
     home,
+    importBackup,
     it,
+    localBackup,
     logOut,
     longestStreak,
     midDay,
@@ -757,6 +772,7 @@ class $AssetsImagesNewSvgGen {
     notify,
     pause,
     perSession,
+    pin,
     plus,
     privacyPolicy,
     profile,

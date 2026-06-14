@@ -179,7 +179,7 @@ class DayAdapter extends TypeAdapter<Day> {
       date: fields[0] as DateTime,
       habits: (fields[1] as List).cast<Habit>(),
       timestamp: fields[2] as DateTime?,
-      isAutoCreated: (fields[3] as bool?) ?? false,
+      isAutoCreated: fields[3] == null ? false : fields[3] as bool,
     );
   }
 

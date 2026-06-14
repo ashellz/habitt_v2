@@ -252,6 +252,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get goodMorning => 'Buongiorno';
 
   @override
+  String get morning => 'Mattina';
+
+  @override
   String get goodMorningTimeToCheckYourHabits =>
       'Buongiorno! È ora di controllare le vostre abitudini';
 
@@ -797,9 +800,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get moreOptions => 'Altre opzioni';
-
-  @override
-  String get morning => 'Mattina';
 
   @override
   String get never => 'Mai';
@@ -1556,10 +1556,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get steps => 'passi';
 
   @override
-  String get glass => 'vetro';
+  String get glass => 'bicchiere';
 
   @override
-  String get glasses => 'occhiali';
+  String get glasses => 'bicchieri';
 
   @override
   String get page => 'pagina';
@@ -1827,7 +1827,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get chooseLanguage => 'Scegliere la lingua';
 
   @override
-  String get weekly => 'Settimanale';
+  String get weekly => 'Settimanalmente';
 
   @override
   String get week => 'settimana';
@@ -1839,7 +1839,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timesPerMonth => 'Ogni mese:';
 
   @override
-  String get monthly => 'Mensile';
+  String get monthly => 'Mensilmente';
 
   @override
   String get month => 'mese';
@@ -2532,4 +2532,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get syncFailedDriveQuota => 'Spazio Google Drive pieno';
+
+  @override
+  String get singular => 'Singolare';
+
+  @override
+  String get singularHint => 'es. bicchiere';
+
+  @override
+  String get plural => 'Plurale';
+
+  @override
+  String get pluralHint => 'es. bicchieri';
 }

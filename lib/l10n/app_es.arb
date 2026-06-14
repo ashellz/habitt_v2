@@ -632,8 +632,8 @@
   "times": "veces",
   "step": "paso",
   "steps": "pasos",
-  "glass": "vidrio",
-  "glasses": "gafas",
+  "glass": "vaso",
+  "glasses": "vasos",
   "page": "página",
   "pages": "páginas",
   "dl": "dl",
@@ -961,5 +961,11 @@
   "syncFailedICloud": "iCloud no disponible — comprueba los Ajustes",
   "syncFailedICloudQuota": "Almacenamiento de iCloud insuficiente",
   "syncWarningICloudQuota": "Almacenamiento de Apple lleno — datos guardados solo localmente",
-  "syncFailedDriveQuota": "Almacenamiento de Google Drive lleno"
+  "syncFailedDriveQuota": "Almacenamiento de Google Drive lleno",
+  "singular": "Singular",
+  "singularHint": "p. ej. vaso",
+  "plural": "Plural",
+  "pluralHint": "p. ej. vasos",
+  "weekly": "Semanalmente",
+  "monthly": "Mensualmente"
 }

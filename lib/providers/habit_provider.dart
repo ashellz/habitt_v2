@@ -24,6 +24,7 @@ class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
   DateTime? selectedDate;
+  int dataVersion = 0;
 
   void setSelectedDate(DateTime date) {
     selectedDate = date;
@@ -75,6 +76,8 @@ class HabitProvider extends ChangeNotifier {
     await _loadMissingDays();
     _fillToday();
     _syncAllHabitNotifications();
+    dataVersion++;
+    notifyListeners();
   }
 
   Future<void> _syncAllHabitNotifications({bool force = false}) async {

@@ -3,9 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:provider/provider.dart';
 
 class MainHabitInfo extends StatelessWidget {
   const MainHabitInfo({super.key, required this.habit, required this.cp});
@@ -24,6 +26,7 @@ class MainHabitInfo extends StatelessWidget {
 
     String amountText() {
       final loc = AppLocalizations.of(context)!;
+      final sp = context.read<StateProvider>();
       final int amountForLabel =
           hasProgress && !isCompleted
               ? habit.amount
@@ -34,6 +37,7 @@ class MainHabitInfo extends StatelessWidget {
             : habit.amountLabel,
         amountForLabel,
         loc,
+        customSingulars: sp.customSingulars,
       );
 
       if (hasProgress && !isCompleted) {

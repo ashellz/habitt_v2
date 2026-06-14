@@ -43,7 +43,12 @@ class EnterHabitAmount extends StatelessWidget {
           },
           onConfirm: (label) {
             sp.habitAmountLabelController.text = sp.canonicalizeAmountLabel(
-              resolveAmountLabelForValue(label, sp.habitAmount, loc),
+              resolveAmountLabelForValue(
+                label,
+                sp.habitAmount,
+                loc,
+                customSingulars: sp.customSingulars,
+              ),
             );
             Navigator.of(sheetContext).pop();
           },
@@ -90,6 +95,7 @@ class EnterHabitAmount extends StatelessWidget {
       currentLabel,
       sp.habitAmount,
       loc,
+      customSingulars: sp.customSingulars,
     );
     if (resolvedLabel != currentLabel) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
