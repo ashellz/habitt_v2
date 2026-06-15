@@ -2532,9 +2532,9 @@ class AppLocalizationsBs extends AppLocalizations {
       'Postavite prilagođeni naziv navike za svaki jezik. Kada promijenite jezik aplikacije, odgovarajući naziv će se automatski prikazati.';
 
   @override
-  String get autoAssignHabitNames => 'Automatski dodjeli nazive navika';
+  String get autoAssignHabitNames => 'Automatski dodjeli imena navika';
 
   @override
   String get autoAssignHabitNamesDesc =>
-      'Automatski sprema naziv navike za trenutni jezik svaki put kada sačuvate.';
+      'Automatski sprema ime navike za trenutni jezik svaki put kada je sačuvate.';
 }

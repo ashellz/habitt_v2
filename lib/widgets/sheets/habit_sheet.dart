@@ -907,7 +907,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             child:
                 sp.habitNotificationsEnabled
                     ? Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(
+                        top: sp.habitNotificationTimes.isNotEmpty ? 20 : 10,
+                      ),
                       child: Column(
                         key: const ValueKey('notifications-expanded'),
                         spacing: 10,
@@ -941,19 +943,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                                 });
                               },
                               onLongPress: () async {
-                                if (sp.habitNotificationTimes.length <= 1) {
-                                  _statusOverlay.show(
-                                    context: context,
-                                    cp: cp,
-                                    title: loc.thisNotificationCantBeDeleted,
-                                    isError: true,
-                                  );
-                                  setState(() {
-                                    heldNotificationId = null;
-                                  });
-                                  return;
-                                }
-
                                 await _showDeleteNotificationConfirmation(
                                   sp,
                                   slot,

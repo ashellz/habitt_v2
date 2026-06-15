@@ -1,7 +1,9 @@
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/number_picker.dart';
 import 'package:provider/provider.dart';
@@ -113,34 +115,53 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
     if (widget.isHabit) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: GestureDetector(
-          onTapDown: (_) {
-            setState(() {
-              _isHeld = true;
-            });
-            widget.onTapDown?.call();
-          },
-          onTapUp: (_) {
-            setState(() {
-              _isHeld = false;
-            });
-            widget.onTapUp?.call();
-          },
-          onTapCancel: () {
-            setState(() {
-              _isHeld = false;
-            });
-            widget.onTapCancel?.call();
-          },
-          onLongPress: () async {
-            widget.onLongPress?.call();
-          },
-          child: AnimatedScale(
-            duration: const Duration(milliseconds: 120),
-            curve: Curves.easeOut,
-            scale: _isHeld ? 1.04 : 1.0,
-            child: content,
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTapDown: (_) {
+                  setState(() {
+                    _isHeld = true;
+                  });
+                  widget.onTapDown?.call();
+                },
+                onTapUp: (_) {
+                  setState(() {
+                    _isHeld = false;
+                  });
+                  widget.onTapUp?.call();
+                },
+                onTapCancel: () {
+                  setState(() {
+                    _isHeld = false;
+                  });
+                  widget.onTapCancel?.call();
+                },
+                onLongPress: () async {
+                  widget.onLongPress?.call();
+                },
+                child: AnimatedScale(
+                  duration: const Duration(milliseconds: 120),
+                  curve: Curves.easeOut,
+                  scale: _isHeld ? 1.04 : 1.0,
+                  child: content,
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 12),
+            NewCircleButton(
+              svgPath: 'assets/images/new-svg/close.svg',
+              cnIcon: CNSymbol('xmark', size: 16),
+              color: cp.error,
+              textColor: cp.text,
+              width: 46,
+              height: 46,
+              onPressed: () {
+                widget.onLongPress?.call();
+              },
+            ),
+          ],
         ),
       );
     }

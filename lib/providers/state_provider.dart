@@ -103,9 +103,10 @@ class StateProvider extends ChangeNotifier {
     }
 
     final before = _customAmountLabels.length;
-    _customAmountLabels = _customAmountLabels
-        .where((label) => label.canonical != normalized)
-        .toList();
+    _customAmountLabels =
+        _customAmountLabels
+            .where((label) => label.canonical != normalized)
+            .toList();
     if (_customAmountLabels.length == before) {
       return false;
     }
@@ -457,10 +458,6 @@ class StateProvider extends ChangeNotifier {
   }
 
   bool removeHabitNotificationTime(int id) {
-    if (_habitNotificationTimes.length <= 1) {
-      return false;
-    }
-
     final previousLength = _habitNotificationTimes.length;
     _habitNotificationTimes =
         _habitNotificationTimes.where((slot) => slot.id != id).toList();
