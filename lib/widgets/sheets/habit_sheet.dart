@@ -68,7 +68,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   bool _allowPop = false;
   bool _isExitDialogOpen = false;
   bool _isInitializing = true;
-  int? heldNotificationId;
   ScrollController scrollController = ScrollController();
 
   bool get _isEditMode => widget.habit != null;
@@ -927,32 +926,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                               },
                               isHabit: true,
                               minutesOfDay: slot.minutesOfDay,
-                              onTapDown: () {
-                                setState(() {
-                                  heldNotificationId = slot.id;
-                                });
-                              },
-                              onTapUp: () {
-                                setState(() {
-                                  heldNotificationId = null;
-                                });
-                              },
-                              onTapCancel: () {
-                                setState(() {
-                                  heldNotificationId = null;
-                                });
-                              },
-                              onLongPress: () async {
+
+                              onDelete: () async {
                                 await _showDeleteNotificationConfirmation(
                                   sp,
                                   slot,
                                 );
-                                if (!mounted) {
-                                  return;
-                                }
-                                setState(() {
-                                  heldNotificationId = null;
-                                });
                               },
                             ),
                           ),

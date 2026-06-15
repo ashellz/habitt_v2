@@ -14,22 +14,16 @@ class NotificationTimeRow extends StatefulWidget {
     super.key,
     required this.isHabit,
     required this.minutesOfDay,
+    this.onDelete,
     this.onOpenTimeDialog,
     this.onTimeSelected,
-    this.onTapDown,
-    this.onTapUp,
-    this.onTapCancel,
-    this.onLongPress,
   });
 
   final bool isHabit;
   final int minutesOfDay;
+  final VoidCallback? onDelete;
   final Future<void> Function()? onOpenTimeDialog;
   final ValueChanged<int>? onTimeSelected;
-  final VoidCallback? onTapDown;
-  final VoidCallback? onTapUp;
-  final VoidCallback? onTapCancel;
-  final VoidCallback? onLongPress;
 
   @override
   State<NotificationTimeRow> createState() => _NotificationTimeRowState();
@@ -118,34 +112,11 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
         child: Row(
           children: [
             Expanded(
-              child: GestureDetector(
-                onTapDown: (_) {
-                  setState(() {
-                    _isHeld = true;
-                  });
-                  widget.onTapDown?.call();
-                },
-                onTapUp: (_) {
-                  setState(() {
-                    _isHeld = false;
-                  });
-                  widget.onTapUp?.call();
-                },
-                onTapCancel: () {
-                  setState(() {
-                    _isHeld = false;
-                  });
-                  widget.onTapCancel?.call();
-                },
-                onLongPress: () async {
-                  widget.onLongPress?.call();
-                },
-                child: AnimatedScale(
-                  duration: const Duration(milliseconds: 120),
-                  curve: Curves.easeOut,
-                  scale: _isHeld ? 1.04 : 1.0,
-                  child: content,
-                ),
+              child: AnimatedScale(
+                duration: const Duration(milliseconds: 120),
+                curve: Curves.easeOut,
+                scale: _isHeld ? 1.04 : 1.0,
+                child: content,
               ),
             ),
 
@@ -158,7 +129,7 @@ class _NotificationTimeRowState extends State<NotificationTimeRow> {
               width: 46,
               height: 46,
               onPressed: () {
-                widget.onLongPress?.call();
+                widget.onDelete?.call();
               },
             ),
           ],
