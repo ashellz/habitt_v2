@@ -11,8 +11,8 @@ import 'package:habitt/widgets/default/circle_button.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/old/enter_amount_slider.dart';
 import 'package:provider/provider.dart';
 
-void showAmountSliderDialog(BuildContext context, Habit habit, DateTime day) {
-  showGeneralDialog(
+Future<void> showAmountSliderDialog(BuildContext context, Habit habit, DateTime day) {
+  return showGeneralDialog(
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Enter Amount',

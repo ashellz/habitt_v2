@@ -8,6 +8,7 @@
 
 #include <awesome_notifications/awesome_notifications_plugin_c_api.h>
 #include <awesome_notifications_core/awesome_notifications_core_plugin_c_api.h>
+#include <emoji_picker_flutter/emoji_picker_flutter_plugin_c_api.h>
 #include <file_selector_windows/file_selector_windows.h>
 #include <firebase_auth/firebase_auth_plugin_c_api.h>
 #include <firebase_core/firebase_core_plugin_c_api.h>
@@ -19,6 +20,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("AwesomeNotificationsPluginCApi"));
   AwesomeNotificationsCorePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("AwesomeNotificationsCorePluginCApi"));
+  EmojiPickerFlutterPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("EmojiPickerFlutterPluginCApi"));
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   FirebaseAuthPluginCApiRegisterWithRegistrar(

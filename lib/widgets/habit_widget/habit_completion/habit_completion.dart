@@ -15,6 +15,8 @@ import 'package:habitt/widgets/habit_widget/habit_completion/duration_display.da
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
+// DEPRECATED - no longer used, ignore, will delete later, look at NewHabitProgress
+
 class CompletionDisplay extends StatefulWidget {
   const CompletionDisplay({
     super.key,

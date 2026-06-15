@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/util/show_emoji_dialog.dart';
+import 'package:habitt/util/show_emoji_picker_dialog.dart';
 import 'package:provider/provider.dart';
 
 class HabitIcon extends StatelessWidget {
@@ -32,8 +32,7 @@ class HabitIcon extends StatelessWidget {
       enableFeedback: false,
       onTap: () async {
         if (editable) {
-          // Navigator.of(context).push(MaterialPageRoute(builder: (context) => EmojiPickerPage()));
-          final emoji = await showEmojiKeyboardDialog(context, cp);
+          final emoji = await showEmojiPickerDialog(context, cp);
           if (emoji != null && context.mounted) {
             stateProvider.iconPath = emoji;
           }

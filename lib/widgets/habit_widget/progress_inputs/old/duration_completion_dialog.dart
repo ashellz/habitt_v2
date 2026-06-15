@@ -11,12 +11,12 @@ import 'package:habitt/widgets/habit_widget/progress_inputs/old/duration_complet
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-void showDurationCompletionDialog(
+Future<void> showDurationCompletionDialog(
   BuildContext context,
   Habit habit,
   DateTime day,
 ) {
-  showGeneralDialog(
+  return showGeneralDialog(
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Enter Amount',

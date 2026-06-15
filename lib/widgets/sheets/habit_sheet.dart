@@ -18,7 +18,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
-import 'package:habitt/util/show_emoji_dialog.dart';
+import 'package:habitt/util/show_emoji_picker_dialog.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/animated_checkbox.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -1129,7 +1129,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         ),
         NewDefaultButton(
           onPressed: () async {
-            final emoji = await showEmojiKeyboardDialog(context, cp);
+            final emoji = await showEmojiPickerDialog(context, cp);
             if (emoji != null && context.mounted) {
               sp.iconPath = emoji;
             }

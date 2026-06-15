@@ -19,15 +19,15 @@ class EnterHabitAmount extends StatelessWidget {
     String? initialSelection,
   }) async {
     final sp = context.read<StateProvider>();
+    final loc = AppLocalizations.of(context)!;
 
     String selectedLabel =
         initialSelection ??
         (sp.habitAmountLabelController.text.trim().isNotEmpty
             ? sp.canonicalizeAmountLabel(sp.habitAmountLabelController.text)
-            : 'reps');
+            : loc.times);
 
     if (!context.mounted) return;
-    final loc = AppLocalizations.of(context)!;
 
     await showDialogSheet(
       context: context,
@@ -119,7 +119,8 @@ class EnterHabitAmount extends StatelessWidget {
             controller: sp.habitAmountLabelController,
             title: loc.amountName,
             fontWeight: FontWeight.w500,
-            hint: loc.amountName,
+            hint: loc.times,
+            maxLines: 1,
             suffix: GestureDetector(
               onTap: () => _showAmountLabelPicker(context),
               child: Padding(

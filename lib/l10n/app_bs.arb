@@ -897,8 +897,6 @@
   "syncSpeedOptimizedHint": "Promjene se grupišu i prenose nakon kratke pauze radi uštede baterije.",
   "disconnectGoogleDrive": "Prekini vezu s Google Drive",
   "connectGoogleDrive": "Poveži Google Drive",
-  "enterEmojiTitle": "Odaberi emoji",
-  "enterEmojiDesc": "Upiši emoji u polje ispod.",
   "pauseHabit": "Pauziraj naviku",
   "pauseHabitName": "Pauziraj '{name}'",
   "@pauseHabitName": {
@@ -961,5 +959,7 @@
   "habitNames": "Nazivi navika",
   "habitNamesDesc": "Postavite prilagođeni naziv navike za svaki jezik. Kada promijenite jezik aplikacije, odgovarajući naziv će se automatski prikazati.",
   "autoAssignHabitNames": "Automatski dodjeli imena navika",
-  "autoAssignHabitNamesDesc": "Automatski sprema ime navike za trenutni jezik svaki put kada je sačuvate."
+  "autoAssignHabitNamesDesc": "Automatski sprema ime navike za trenutni jezik svaki put kada je sačuvate.",
+  "holdToCompleteTipTitle": "Drži za dovršetak",
+  "holdToCompleteTipBody": "Drži kvačicu pritisnutu da odmah označiš naviku kao urađenu."
 }

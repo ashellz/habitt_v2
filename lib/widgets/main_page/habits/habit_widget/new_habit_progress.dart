@@ -6,6 +6,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/hold_complete_tip.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
@@ -66,63 +67,78 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
     final cp = context.watch<ColorProvider>();
 
     return GestureDetector(
-      onTap: widget.isDemo
-          ? null
-          : () {
-              setState(() {
-                _scale = 0.9;
-              });
-              Future.delayed(const Duration(milliseconds: 150), () {
+      onTap:
+          widget.isDemo
+              ? null
+              : () {
+                setState(() {
+                  _scale = 0.9;
+                });
+                Future.delayed(const Duration(milliseconds: 150), () {
+                  setState(() {
+                    _scale = 1.0;
+                  });
+                });
+
+                if (!widget.habit.hasTrackingType) {
+                  habitProvider.completeHabit(
+                    widget.habit.id,
+                    context,
+                    stateProvider,
+                  );
+                } else {
+                  showDialogSheet(
+                    context: context,
+                    builder: (context) {
+                      return LogProgressDialog(
+                        progressType:
+                            widget.habit.tracksAmount
+                                ? ProgressType.amount
+                                : ProgressType.duration,
+                        habit: widget.habit,
+                      );
+                    },
+                  ).then((_) {
+                    if (mounted) HoldCompleteTip.showIfNeeded(context);
+                  });
+                }
+              },
+      onTapDown:
+          widget.isDemo
+              ? null
+              : (context) {
+                HapticFeedback.selectionClick();
+                setState(() {
+                  _scale = 0.9;
+                });
+              },
+      onTapCancel:
+          widget.isDemo
+              ? null
+              : () {
                 setState(() {
                   _scale = 1.0;
                 });
-              });
-
-              if (!widget.habit.hasTrackingType) {
-                habitProvider.completeHabit(widget.habit.id, context, stateProvider);
-              } else {
-                showDialogSheet(
-                  context: context,
-                  builder: (context) {
-                    return LogProgressDialog(
-                      progressType:
-                          widget.habit.tracksAmount
-                              ? ProgressType.amount
-                              : ProgressType.duration,
-                      habit: widget.habit,
-                    );
-                  },
+              },
+      onTapUp:
+          widget.isDemo
+              ? null
+              : (context) {
+                HapticFeedback.selectionClick();
+                setState(() {
+                  _scale = 1.0;
+                });
+              },
+      onLongPress:
+          widget.isDemo
+              ? null
+              : () {
+                habitProvider.completeHabit(
+                  widget.habit.id,
+                  context,
+                  stateProvider,
                 );
-              }
-            },
-      onTapDown: widget.isDemo
-          ? null
-          : (context) {
-              HapticFeedback.selectionClick();
-              setState(() {
-                _scale = 0.9;
-              });
-            },
-      onTapCancel: widget.isDemo
-          ? null
-          : () {
-              setState(() {
-                _scale = 1.0;
-              });
-            },
-      onTapUp: widget.isDemo
-          ? null
-          : (context) {
-              HapticFeedback.selectionClick();
-              setState(() {
-                _scale = 1.0;
-              });
-            },
-      onLongPress: widget.isDemo
-          ? null
-          : () {
-              habitProvider.completeHabit(widget.habit.id, context, stateProvider);
-            },
+              },
       child: Container(
         color: Colors.transparent,
         width: 24 + (widget.extraTapArea ? 32 : 0),

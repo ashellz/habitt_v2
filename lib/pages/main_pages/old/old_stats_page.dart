@@ -8,14 +8,16 @@ import 'package:habitt/widgets/stats_page/completed_habits.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-class StatsPage extends StatefulWidget {
-  const StatsPage({super.key});
+// DEPRECATED - no longer used, ignore, will delete later
+
+class OldStatsPage extends StatefulWidget {
+  const OldStatsPage({super.key});
 
   @override
-  State<StatsPage> createState() => _StatsPageState();
+  State<OldStatsPage> createState() => _OldStatsPageState();
 }
 
-class _StatsPageState extends State<StatsPage> {
+class _OldStatsPageState extends State<OldStatsPage> {
   final _tooltipController = SuperTooltipController();
 
   @override

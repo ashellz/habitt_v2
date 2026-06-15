@@ -137,6 +137,7 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
           selectedValue: selectedValue,
           onSelect: _onSelect,
           allowDeselect: true,
+          showDeselectHint: true,
         ),
         AnimatedSize(
           duration: const Duration(milliseconds: 250),

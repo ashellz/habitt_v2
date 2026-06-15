@@ -13,6 +13,8 @@ import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
+// DEPRECATED - no longer used, ignore, will delete later
+
 class EnterAmountPage extends StatefulWidget {
   const EnterAmountPage({
     super.key,

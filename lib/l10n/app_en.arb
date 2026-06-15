@@ -910,8 +910,6 @@
   "disconnectGoogleDrive": "Disconnect Google Drive",
   "connectGoogleDrive": "Connect Google Drive",
 
-  "enterEmojiTitle": "Choose an emoji",
-  "enterEmojiDesc": "Type an emoji into the field below.",
   "pauseHabit": "Pause Habit",
   "pauseHabitName": "Pause '{name}'",
   "@pauseHabitName": {
@@ -972,5 +970,7 @@
   "habitNames": "Habit names",
   "habitNamesDesc": "Set a custom habit name for each language. When you switch the app language, the matching name will be shown automatically.",
   "autoAssignHabitNames": "Auto-assign habit names",
-  "autoAssignHabitNamesDesc": "Automatically saves your habit name for the current language each time you save."
+  "autoAssignHabitNamesDesc": "Automatically saves your habit name for the current language each time you save.",
+  "holdToCompleteTipTitle": "Hold to complete",
+  "holdToCompleteTipBody": "Hold the checkmark to instantly log your full target."
 }

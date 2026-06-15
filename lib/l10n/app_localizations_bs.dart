@@ -2362,12 +2362,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get connectGoogleDrive => 'Poveži Google Drive';
 
   @override
-  String get enterEmojiTitle => 'Odaberi emoji';
-
-  @override
-  String get enterEmojiDesc => 'Upiši emoji u polje ispod.';
-
-  @override
   String get pauseHabit => 'Pauziraj naviku';
 
   @override
@@ -2537,4 +2531,11 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get autoAssignHabitNamesDesc =>
       'Automatski sprema ime navike za trenutni jezik svaki put kada je sačuvate.';
+
+  @override
+  String get holdToCompleteTipTitle => 'Drži za dovršetak';
+
+  @override
+  String get holdToCompleteTipBody =>
+      'Drži kvačicu pritisnutu da odmah zabilježiš puni cilj.';
 }

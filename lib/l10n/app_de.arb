@@ -915,9 +915,6 @@
   "disconnectGoogleDrive": "Google Drive trennen",
   "connectGoogleDrive": "Google Drive verbinden",
 
-  "enterEmojiTitle": "Emoji auswählen",
-  "enterEmojiDesc": "Tippe oder füge ein Emoji in das Feld unten ein.",
-
   "unpauseHabit": "Pausierung aufheben",
   "pauseHabitDesc": "Während der Pause erscheint diese Gewohnheit nicht in deiner Tagesliste. Deine Streak und Statistiken bleiben erhalten.",
   "habitPaused": "Gewohnheit pausiert!",
@@ -971,5 +968,7 @@
   "habitNames": "Gewohnheitsnamen",
   "habitNamesDesc": "Legen Sie für jede Sprache einen eigenen Gewohnheitsnamen fest. Wenn Sie die App-Sprache wechseln, wird automatisch der passende Name angezeigt.",
   "autoAssignHabitNames": "Gewohnheitsnamen automatisch zuweisen",
-  "autoAssignHabitNamesDesc": "Speichert bei jedem Speichern automatisch den Gewohnheitsnamen für die aktuelle Sprache."
+  "autoAssignHabitNamesDesc": "Speichert bei jedem Speichern automatisch den Gewohnheitsnamen für die aktuelle Sprache.",
+  "holdToCompleteTipTitle": "Gedrückt halten zum Abschließen",
+  "holdToCompleteTipBody": "Halte das Häkchen gedrückt, um dein Ziel sofort vollständig einzutragen."
 }

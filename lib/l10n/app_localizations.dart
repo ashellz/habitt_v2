@@ -3952,18 +3952,6 @@ abstract class AppLocalizations {
   /// **'Connect Google Drive'**
   String get connectGoogleDrive;
 
-  /// No description provided for @enterEmojiTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose an emoji'**
-  String get enterEmojiTitle;
-
-  /// No description provided for @enterEmojiDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Type an emoji into the field below.'**
-  String get enterEmojiDesc;
-
   /// No description provided for @pauseHabit.
   ///
   /// In en, this message translates to:
@@ -4287,6 +4275,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Automatically saves your habit name for the current language each time you save.'**
   String get autoAssignHabitNamesDesc;
+
+  /// No description provided for @holdToCompleteTipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to complete'**
+  String get holdToCompleteTipTitle;
+
+  /// No description provided for @holdToCompleteTipBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the checkmark to instantly log your full target.'**
+  String get holdToCompleteTipBody;
 }
 
 class _AppLocalizationsDelegate

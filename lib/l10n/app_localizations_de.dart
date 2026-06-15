@@ -2377,13 +2377,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get connectGoogleDrive => 'Google Drive verbinden';
 
   @override
-  String get enterEmojiTitle => 'Emoji auswählen';
-
-  @override
-  String get enterEmojiDesc =>
-      'Tippe oder füge ein Emoji in das Feld unten ein.';
-
-  @override
   String get pauseHabit => 'Gewohnheit pausieren';
 
   @override
@@ -2559,4 +2552,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get autoAssignHabitNamesDesc =>
       'Speichert bei jedem Speichern automatisch den Gewohnheitsnamen für die aktuelle Sprache.';
+
+  @override
+  String get holdToCompleteTipTitle => 'Gedrückt halten zum Abschließen';
+
+  @override
+  String get holdToCompleteTipBody =>
+      'Halte das Häkchen gedrückt, um dein Ziel sofort vollständig einzutragen.';
 }

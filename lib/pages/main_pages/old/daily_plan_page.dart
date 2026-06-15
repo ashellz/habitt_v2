@@ -9,6 +9,8 @@ import 'package:habitt/widgets/default/gradient_background.dart';
 import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
+// DEPRECATED - no longer used, ignore, will delete later
+
 class DailyPlanPage extends StatelessWidget {
   const DailyPlanPage({super.key});
 

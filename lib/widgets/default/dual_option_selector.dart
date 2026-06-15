@@ -12,6 +12,7 @@ class DualOptionSelector<T> extends StatefulWidget {
     required this.selectedValue,
     required this.onSelect,
     this.allowDeselect = true,
+    this.showDeselectHint = false,
     this.alignDuration = const Duration(milliseconds: 250),
   });
 
@@ -22,6 +23,7 @@ class DualOptionSelector<T> extends StatefulWidget {
   final T? selectedValue;
   final void Function(T?) onSelect;
   final bool allowDeselect;
+  final bool showDeselectHint;
   final Duration alignDuration;
 
   @override
@@ -54,8 +56,11 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
 
   Alignment _getIndicatorAlignment() {
     if (widget.selectedValue == widget.firstValue) return Alignment.centerLeft;
-    if (widget.selectedValue == widget.secondValue) return Alignment.centerRight;
-    return _lastSelectedIndex == 0 ? Alignment.centerLeft : Alignment.centerRight;
+    if (widget.selectedValue == widget.secondValue)
+      return Alignment.centerRight;
+    return _lastSelectedIndex == 0
+        ? Alignment.centerLeft
+        : Alignment.centerRight;
   }
 
   void _onTapFirst() {
@@ -127,6 +132,7 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
                     child: _OptionButton(
                       label: widget.firstLabel,
                       isSelected: widget.selectedValue == widget.firstValue,
+                      showDeselectHint: widget.showDeselectHint,
                       onTap: _onTapFirst,
                     ),
                   ),
@@ -134,6 +140,7 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
                     child: _OptionButton(
                       label: widget.secondLabel,
                       isSelected: widget.selectedValue == widget.secondValue,
+                      showDeselectHint: widget.showDeselectHint,
                       onTap: _onTapSecond,
                     ),
                   ),
@@ -152,32 +159,52 @@ class _OptionButton extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onTap,
+    this.showDeselectHint = false,
   });
 
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool showDeselectHint;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final textColor = isSelected ? cp.bg : cp.lightGreyText;
 
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeOutCubic,
-          style: TextStyle(
-            color: isSelected ? cp.bg : cp.lightGreyText,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontFamily: 'Satoshi'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (showDeselectHint)
+                SizedBox(width: 16), // Placeholder for the close icon
+
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontFamily: 'Satoshi'),
+                ),
+              ),
+              if (showDeselectHint)
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 220),
+                  opacity: isSelected ? 0.7 : 0,
+                  child: Icon(Icons.close_rounded, size: 16, color: textColor),
+                ),
+            ],
           ),
         ),
       ),
