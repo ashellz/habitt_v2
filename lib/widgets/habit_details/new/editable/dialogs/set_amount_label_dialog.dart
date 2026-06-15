@@ -81,9 +81,9 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
     // Add button as the last "item"
     final items = [...labels, 'ADD_BUTTON'];
 
-    // Split items into rows of max 3
-    for (int i = 0; i < items.length; i += 3) {
-      final rowItems = items.sublist(i, (i + 3).clamp(0, items.length));
+    // Split items into rows of max 2
+    for (int i = 0; i < items.length; i += 2) {
+      final rowItems = items.sublist(i, (i + 2).clamp(0, items.length));
 
       final rowChildren = <Widget>[];
 
@@ -111,9 +111,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
               preset != null ? preset.localizedPlural(loc) : item;
           final labelWidget = SizedBox(
             height: 40,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
+            child: Container(
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
@@ -136,19 +134,6 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                     selectedLabel = item;
                   });
                 },
-                onLongPress: () {
-                  if (!isDeletable) {
-                    _statusOverlay.show(
-                      context: context,
-                      cp: cp,
-                      title: loc.thisLabelCantBeDeleted,
-                      isError: true,
-                    );
-                    return;
-                  }
-
-                  _showDeleteLabelDialog(context: context, label: item);
-                },
                 style: ButtonStyle(
                   enableFeedback: false,
                   splashFactory: NoSplash.splashFactory,
@@ -170,21 +155,56 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  padding: const WidgetStatePropertyAll(
-                    EdgeInsets.symmetric(horizontal: 16),
+                  padding: WidgetStatePropertyAll(
+                    isDeletable
+                        ? const EdgeInsets.only(left: 8, right: 8)
+                        : const EdgeInsets.symmetric(horizontal: 16),
                   ),
                 ),
-                child: Text(
-                  displayText,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: cp.text,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child:
+                    isDeletable
+                        ? Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Text(
+                                displayText,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: cp.text,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap:
+                                  () => _showDeleteLabelDialog(
+                                    context: context,
+                                    label: item,
+                                  ),
+                              child: Icon(
+                                Icons.close,
+                                size: 16,
+                                color: cp.text.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ],
+                        )
+                        : Text(
+                          displayText,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
               ),
             ),
           );
@@ -198,13 +218,8 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
         }
       }
 
-      // If last row has only 1 label (not button), add empty spacer to fill the space
+      // If last row has only 1 item, add empty spacer to fill the second column
       if (rowItems.length == 1) {
-        rowChildren.add(const SizedBox(width: 8));
-        rowChildren.add(Expanded(child: SizedBox.shrink()));
-        rowChildren.add(const SizedBox(width: 8));
-        rowChildren.add(Expanded(child: SizedBox.shrink()));
-      } else if (rowItems.length == 2) {
         rowChildren.add(const SizedBox(width: 8));
         rowChildren.add(Expanded(child: SizedBox.shrink()));
       }

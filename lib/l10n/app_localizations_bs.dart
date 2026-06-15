@@ -2537,5 +2537,5 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get holdToCompleteTipBody =>
-      'Drži kvačicu pritisnutu da odmah zabilježiš puni cilj.';
+      'Drži kvačicu pritisnutu da odmah označiš naviku kao urađenu.';
 }
