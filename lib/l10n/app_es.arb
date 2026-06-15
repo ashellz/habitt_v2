@@ -661,7 +661,7 @@
   "youHaventAddedAnyHabitsYet": "Aún no has añadido ningún hábito",
   "youWillUseThisPassphraseToDecryptYourDataWhenImportingIt": "Utilizarás esta contraseña para descifrar tus datos al importarlos.",
   "yourName": "Su nombre",
-  "youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow": "Te estás volviendo muy constante con este hábito. Considera la posibilidad de no hacerlo opcional para exigirte un poco más. ¿Quieres actualizar este hábito ahora?",
+  "gettingConsistantMakeNonOptional": "Te estás volviendo muy constante con este hábito. Considera la posibilidad de no hacerlo opcional para exigirte un poco más. ¿Quieres actualizar este hábito ahora?",
   "getPremium": "Conseguir Premium",
   "enjoyAllBenefits": "Disfrute de todas las ventajas de la aplicación",
   "rateUs": "Valóranos",
@@ -967,5 +967,9 @@
   "plural": "Plural",
   "pluralHint": "p. ej. vasos",
   "weekly": "Semanalmente",
-  "monthly": "Mensualmente"
+  "monthly": "Mensualmente",
+  "habitNames": "Nombres de hábitos",
+  "habitNamesDesc": "Establece un nombre de hábito personalizado para cada idioma. Al cambiar el idioma de la app, se mostrará automáticamente el nombre correspondiente.",
+  "autoAssignHabitNames": "Asignar nombres de hábitos automáticamente",
+  "autoAssignHabitNamesDesc": "Guarda automáticamente el nombre del hábito para el idioma actual cada vez que guardas."
 }

@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/timeline/primary_habit_config.dart';
 import 'package:habitt/models/timeline/interval.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit_time_body.dart';
 import 'package:habitt/widgets/habit_widget/habit_name.dart';
@@ -621,7 +622,7 @@ class _HabitTile extends StatelessWidget {
                                           : 220,
                                 ),
                                 child: HabitNameDisplay(
-                                  text: habit.name,
+                                  text: habit.resolvedName(context.read<LanguageProvider>().locale?.languageCode),
                                   completed: habit.completed,
                                   textColor: habit.getNameColor(tp),
                                   skipped: habit.skipped,

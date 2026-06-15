@@ -58,12 +58,15 @@ class HabitStrengthInsightTextService {
     String? fromValue,
     String? toValue,
   }) {
+    final resolvedHabitName = habit.resolvedName(localizations.localeName);
     final title =
         isMotivationOnly
-            ? localizations.insightStrengthKeepPushingTitle(habit.name)
+            ? localizations.insightStrengthKeepPushingTitle(resolvedHabitName)
             : insight == HabitStrengthInsight.startSmall
-            ? localizations.insightStrengthLowerTargetTitle(habit.name)
-            : localizations.insightStrengthIncreaseTargetTitle(habit.name);
+            ? localizations.insightStrengthLowerTargetTitle(resolvedHabitName)
+            : localizations.insightStrengthIncreaseTargetTitle(
+              resolvedHabitName,
+            );
 
     final description = _buildDescription(
       localizations: localizations,

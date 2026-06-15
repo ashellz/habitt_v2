@@ -144,7 +144,8 @@ class _PaywallPageState extends State<PaywallPage> {
     if (!mounted) return;
     setState(() {
       if (offerings.isNotEmpty) {
-        _packages = offerings.first.availablePackages;
+        _packages = offerings.first.availablePackages
+          ..sort((a, b) => _rankOf(a.packageType).compareTo(_rankOf(b.packageType)));
       }
       _isLoadingOffers = false;
     });
@@ -218,16 +219,16 @@ class _PaywallPageState extends State<PaywallPage> {
     if (kDebugMode && _debugShowPlaceholderPlans) {
       return [
         _PlanInfo(
-          name: loc.paywallYearly,
-          price: r'$19.99',
-          period: loc.paywallPerYear,
-          badge: loc.paywallBestValue,
-        ),
-        _PlanInfo(
           name: loc.paywallMonthly,
           price: r'$2.99',
           period: loc.paywallPerMonth,
           badge: loc.paywallMostPopular,
+        ),
+        _PlanInfo(
+          name: loc.paywallYearly,
+          price: r'$19.99',
+          period: loc.paywallPerYear,
+          badge: loc.paywallBestValue,
         ),
         _PlanInfo(
           name: loc.paywallLifetime,

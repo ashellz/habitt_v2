@@ -1,8 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/widgets/habit_widget/habit_desc.dart';
 import 'package:habitt/widgets/habit_widget/habit_name.dart';
+import 'package:provider/provider.dart';
 
 class HabitText extends StatelessWidget {
   const HabitText({
@@ -43,7 +45,9 @@ class HabitText extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HabitNameDisplay(
-                text: habit.name,
+                text: habit.resolvedName(
+                  context.read<LanguageProvider>().locale?.languageCode,
+                ),
                 completed: habit.completed,
                 skipped: habit.skipped,
                 textColor:

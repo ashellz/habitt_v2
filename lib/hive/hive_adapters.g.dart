@@ -63,13 +63,14 @@ class HabitAdapter extends TypeAdapter<Habit> {
       isPaused: fields[43] as bool?,
       timestamps: (fields[23] as Map?)?.cast<String, DateTime>(),
       insightPopstonedUntil: fields[42] as DateTime?,
+      localizedNames: (fields[44] as Map?)?.cast<String, String>(),
     )..color = fields[20] as String?;
   }
 
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(41)
+      ..writeByte(42)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -151,7 +152,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(42)
       ..write(obj.insightPopstonedUntil)
       ..writeByte(43)
-      ..write(obj.isPaused);
+      ..write(obj.isPaused)
+      ..writeByte(44)
+      ..write(obj.localizedNames);
   }
 
   @override

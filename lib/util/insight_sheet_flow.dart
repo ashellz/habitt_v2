@@ -214,7 +214,7 @@ class InsightSheetFlow {
 
     final title =
         isOptionalPushHarder
-            ? 'Ready to level up ${candidate.habit.name}?'
+            ? 'Ready to level up ${candidate.habit.resolvedName(loc.localeName)}?'
             : insightCopy.title;
 
     final desc =

@@ -559,7 +559,9 @@ class HabitNotificationTextBuilder {
   }
 
   static String _resolveTitle(HabitNotificationContext context) {
-    final trimmed = context.habit.name.trim();
+    final trimmed = context.habit
+        .resolvedName(context.localizations.localeName)
+        .trim();
     final name =
         trimmed.isNotEmpty
             ? trimmed

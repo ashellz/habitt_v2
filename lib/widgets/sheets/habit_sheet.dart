@@ -32,7 +32,12 @@ import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:habitt/widgets/notification/notification_time_row.dart';
+import 'package:habitt/providers/language_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/widgets/default/new_circle_button.dart';
+import 'package:habitt/widgets/sheets/habit_name_localization_sheet.dart';
 import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -152,6 +157,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.habitColor = habit.resolveColor(
       context.read<ThemeProvider>(),
     ); */
+    stateProvider.habitLocalizedNames = Map<String, String>.from(
+      habit.localizedNames,
+    );
     stateProvider.selectedPremadeHabitType = habit.premadeHabitType;
     stateProvider.setNotificationsFromHabit(
       enabled: habit.notificationsEnabled,
@@ -204,6 +212,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         !sp.selectedDaysAMonth.every(
           (d) => habit.selectedDaysAMonth.contains(d),
         );
+
     /*
     final changedTimeIntervalEnabled =
         sp.timeIntervalEnabled != habit.timeIntervalEnabled;
@@ -223,6 +232,18 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           sp.habitNotificationTimes,
           habit.notificationTimes,
         );
+    final changedAmountLabel =
+        sp.habitAmountLabelController.text != habit.amountLabel;
+    final changedLocalizations =
+        (() {
+          final a = sp.habitLocalizedNames;
+          final b = habit.localizedNames;
+          if (a.length != b.length) return true;
+          for (final entry in a.entries) {
+            if (b[entry.key] != entry.value) return true;
+          }
+          return false;
+        })();
 
     return changedName ||
         changedDesc ||
@@ -240,7 +261,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedSelectedMonthDays ||
         changedPremadeHabitType ||
         changedNotificationsEnabled ||
-        changedNotificationTimes;
+        changedNotificationTimes ||
+        changedAmountLabel ||
+        changedLocalizations;
   }
 
   bool _hasCreateChanges(StateProvider sp) {
@@ -560,6 +583,17 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.colorName = sp.habitColorName;
       habit.color = colorToHex(sp.getHabitColor(tp) ?? tp.primaryColor);
 
+      final localizedNames = Map<String, String>.from(sp.habitLocalizedNames);
+      final prefs = context.read<PreferencesProvider>();
+      if (prefs.autoSeedHabitNames) {
+        final activeLocale =
+            context.read<LanguageProvider>().locale?.languageCode;
+        if (activeLocale != null) {
+          localizedNames[activeLocale] = habit.name;
+        }
+      }
+      habit.localizedNames = localizedNames;
+
       // Here we save the habit and reschedule its notifications if habit notifications exist
       // If no permission or disabled in settings we ask the user if they want to enable it via RQ
       // If so, notification scheduling fails silently
@@ -576,6 +610,16 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     }
 
     final loc = AppLocalizations.of(context)!;
+
+    final newLocalizedNames = Map<String, String>.from(sp.habitLocalizedNames);
+    final prefsForCreate = context.read<PreferencesProvider>();
+    if (prefsForCreate.autoSeedHabitNames) {
+      final activeLocale =
+          context.read<LanguageProvider>().locale?.languageCode;
+      if (activeLocale != null) {
+        newLocalizedNames[activeLocale] = sp.nameController.text;
+      }
+    }
 
     final newHabit = Habit(
       id: getUniqueId(),
@@ -614,6 +658,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       notificationTimes:
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
       premadeHabitType: sp.selectedPremadeHabitType,
+      localizedNames: newLocalizedNames,
     );
 
     habitProvider.addHabit(newHabit);
@@ -1037,10 +1082,36 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             ),
           ),
         ),
-        NewDefaultTextField(
-          title: loc.habitName,
-          hint: loc.habitName,
-          controller: habitNameController,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          spacing: 10,
+          children: [
+            Expanded(
+              child: NewDefaultTextField(
+                title: loc.habitName,
+                hint: loc.habitName,
+                controller: habitNameController,
+              ),
+            ),
+            NewCircleButton(
+              svgPath: 'assets/images/new-svg/translate.svg',
+              cnIcon: CNSymbol('character.bubble', size: 16),
+              color: cp.field,
+              textColor: cp.text,
+
+              width: 46,
+              height: 46,
+              onPressed: () async {
+                await showModalBottomSheet<void>(
+                  context: context,
+                  backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+                  barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+                  isScrollControlled: true,
+                  builder: (_) => HabitNameLocalizationSheet(cp: cp),
+                );
+              },
+            ),
+          ],
         ),
         NewDefaultTextField(
           title: loc.notes,

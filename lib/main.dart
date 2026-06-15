@@ -116,8 +116,11 @@ Future<void> main() async {
         ),
 
         // 2. HabitProvider: Depends on StatsProvider and NotificationsProvider.
-        ChangeNotifierProxyProvider2<StatsProvider, NotificationsProvider,
-            HabitProvider>(
+        ChangeNotifierProxyProvider2<
+          StatsProvider,
+          NotificationsProvider,
+          HabitProvider
+        >(
           create: (_) => HabitProvider(),
           update: (_, stats, notifications, previous) {
             return previous!

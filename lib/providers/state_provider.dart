@@ -148,6 +148,9 @@ class StateProvider extends ChangeNotifier {
   }
 
   int _selectedHabitId = -1;
+  Map<String, String> habitLocalizedNames = {};
+
+  void notifyHabitLocalizedNamesChanged() => notifyListeners();
 
   int _habitCategoryId = 1;
   int _habitAmount = 0;
@@ -578,6 +581,7 @@ class StateProvider extends ChangeNotifier {
     _selectedDaysAWeek.clear();
     _selectedDaysAMonth.clear();
     _selectedPremadeHabitType = null;
+    habitLocalizedNames = {};
 
     notifyListeners();
   }

@@ -24,6 +24,7 @@ import 'package:habitt/widgets/habit_details/strength_ring.dart';
 import 'package:habitt/widgets/habit_details/new/habit_detail_stats_sections.dart';
 import 'package:habitt/widgets/stats/consistency_calendar.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
+import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -301,7 +302,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
       context: context,
       builder:
           (dialogContext) => NewDefaultDialog(
-            title: loc.pauseHabitName(habit.name),
+            title: loc.pauseHabitName(
+              habit.resolvedName(
+                context.read<LanguageProvider>().locale?.languageCode,
+              ),
+            ),
             desc: loc.pauseHabitDesc,
             primaryButtonLabel: loc.pauseHabit,
             onPrimaryButtonPressed: () {
@@ -466,7 +471,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          habit.name,
+                          habit.resolvedName(
+                            context
+                                .read<LanguageProvider>()
+                                .locale
+                                ?.languageCode,
+                          ),
                           style: TextStyle(
                             color: cp.text,
                             fontSize: 19 / 1.2,

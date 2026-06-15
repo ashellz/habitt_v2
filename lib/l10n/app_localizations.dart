@@ -2620,12 +2620,11 @@ abstract class AppLocalizations {
   /// **'Your name'**
   String get yourName;
 
-  /// No description provided for @youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow.
+  /// No description provided for @gettingConsistantMakeNonOptional.
   ///
   /// In en, this message translates to:
   /// **'You\'re getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?'**
-  String
-  get youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow;
+  String get gettingConsistantMakeNonOptional;
 
   /// No description provided for @getPremium.
   ///
@@ -4264,6 +4263,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g. glasses'**
   String get pluralHint;
+
+  /// No description provided for @habitNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit names'**
+  String get habitNames;
+
+  /// No description provided for @habitNamesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a custom habit name for each language. When you switch the app language, the matching name will be shown automatically.'**
+  String get habitNamesDesc;
+
+  /// No description provided for @autoAssignHabitNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-assign habit names'**
+  String get autoAssignHabitNames;
+
+  /// No description provided for @autoAssignHabitNamesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically saves your habit name for the current language each time you save.'**
+  String get autoAssignHabitNamesDesc;
 }
 
 class _AppLocalizationsDelegate

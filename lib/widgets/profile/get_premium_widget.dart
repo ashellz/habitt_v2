@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/paywall_page.dart';
@@ -16,15 +18,39 @@ class GetPremiumWidget extends StatefulWidget {
   State<GetPremiumWidget> createState() => _GetPremiumWidgetState();
 }
 
-class _GetPremiumWidgetState extends State<GetPremiumWidget> {
+class _GetPremiumWidgetState extends State<GetPremiumWidget>
+    with SingleTickerProviderStateMixin {
   EntitlementInfo? _entitlement;
   PackageType? _packageType;
   bool _hasPro = BillingService.hasPro;
+
+  late AnimationController _shineController;
+  late Animation<double> _shineAnimation;
+  Timer? _shineTimer;
 
   @override
   void initState() {
     super.initState();
     _refreshStatus();
+    _shineController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _shineAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 50),
+    ]).animate(_shineController);
+    _shineController.forward(from: 0);
+    _shineTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (mounted) _shineController.forward(from: 0);
+    });
+  }
+
+  @override
+  void dispose() {
+    _shineController.dispose();
+    _shineTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _refreshStatus() async {
@@ -78,8 +104,10 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
     if (id.contains('annual') || id.contains('yearly') || id.contains('year')) {
       return PackageType.annual;
     }
-    if (id.contains('6month') || id.contains('six')) return PackageType.sixMonth;
-    if (id.contains('3month') || id.contains('three')) return PackageType.threeMonth;
+    if (id.contains('6month') || id.contains('six'))
+      return PackageType.sixMonth;
+    if (id.contains('3month') || id.contains('three'))
+      return PackageType.threeMonth;
     if (id.contains('week')) return PackageType.weekly;
     if (id.contains('month')) return PackageType.monthly;
     return null;
@@ -169,9 +197,33 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget> {
                   SizedBox(
                     height: 56,
                     width: 56,
-                    child: Image.asset(
-                      'assets/images/widget-images/gem.png',
-                      fit: BoxFit.cover,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Image.asset(
+                          'assets/images/widget-images/gem.png',
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          left: 26,
+                          child: AnimatedBuilder(
+                            animation: _shineAnimation,
+                            builder:
+                                (context, child) => Transform.rotate(
+                                  angle: _shineAnimation.value * 0.4,
+                                  child: Transform.scale(
+                                    scale: _shineAnimation.value,
+                                    child: child,
+                                  ),
+                                ),
+                            child: const Icon(
+                              Icons.star,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

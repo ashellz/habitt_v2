@@ -1651,8 +1651,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get yourName => 'Su nombre';
 
   @override
-  String
-  get youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow =>
+  String get gettingConsistantMakeNonOptional =>
       'Te estás volviendo muy constante con este hábito. Considera la posibilidad de no hacerlo opcional para exigirte un poco más. ¿Quieres actualizar este hábito ahora?';
 
   @override
@@ -2539,4 +2538,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pluralHint => 'p. ej. vasos';
+
+  @override
+  String get habitNames => 'Nombres de hábitos';
+
+  @override
+  String get habitNamesDesc =>
+      'Establece un nombre de hábito personalizado para cada idioma. Al cambiar el idioma de la app, se mostrará automáticamente el nombre correspondiente.';
+
+  @override
+  String get autoAssignHabitNames =>
+      'Asignar nombres de hábitos automáticamente';
+
+  @override
+  String get autoAssignHabitNamesDesc =>
+      'Guarda automáticamente el nombre del hábito para el idioma actual cada vez que guardas.';
 }

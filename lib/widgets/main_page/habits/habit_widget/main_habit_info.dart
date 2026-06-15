@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
@@ -63,7 +64,9 @@ class MainHabitInfo extends StatelessWidget {
       spacing: 10,
       children: [
         Text(
-          habit.name,
+          habit.resolvedName(
+            context.watch<LanguageProvider>().locale?.languageCode,
+          ),
           style: TextStyle(
             color: cp.text,
             fontSize: 16,

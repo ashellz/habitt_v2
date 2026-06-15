@@ -41,7 +41,9 @@ class Preferences extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => NotificationSettingsPage()),
+                    MaterialPageRoute(
+                      builder: (_) => NotificationSettingsPage(),
+                    ),
                   );
                 },
                 child: Container(
@@ -86,9 +88,50 @@ class Preferences extends StatelessWidget {
                   ),
                   NewDefaultSwitch(
                     onChanged: (value) {
-                      context.read<PreferencesProvider>().toggleShowStreakBadge();
+                      context
+                          .read<PreferencesProvider>()
+                          .toggleShowStreakBadge();
                     },
                     value: context.watch<PreferencesProvider>().showStreakBadge,
+                  ),
+                ],
+              ),
+              Divider(color: cp.border, height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        Text(
+                          loc.autoAssignHabitNames,
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          loc.autoAssignHabitNamesDesc,
+                          style: TextStyle(
+                            color: cp.lightGreyText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  NewDefaultSwitch(
+                    onChanged: (value) {
+                      context
+                          .read<PreferencesProvider>()
+                          .toggleAutoSeedHabitNames();
+                    },
+                    value:
+                        context.watch<PreferencesProvider>().autoSeedHabitNames,
                   ),
                 ],
               ),

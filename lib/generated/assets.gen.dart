@@ -716,6 +716,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/total-time.svg
   String get totalTime => 'assets/images/new-svg/total-time.svg';
 
+  /// File path: assets/images/new-svg/translate.svg
+  String get translate => 'assets/images/new-svg/translate.svg';
+
   /// File path: assets/images/new-svg/trash.svg
   String get trash => 'assets/images/new-svg/trash.svg';
 
@@ -785,6 +788,7 @@ class $AssetsImagesNewSvgGen {
     streak,
     terms,
     totalTime,
+    translate,
     trash,
     uploadPhoto,
     wrapUp,

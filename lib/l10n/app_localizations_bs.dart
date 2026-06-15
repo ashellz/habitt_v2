@@ -167,10 +167,10 @@ class AppLocalizationsBs extends AppLocalizations {
   String get deleteNotification => 'Obriši obavijest?';
 
   @override
-  String get discard => 'Odbaciti';
+  String get discard => 'Odbaci';
 
   @override
-  String get discardChanges => 'Odbaciti promjene?';
+  String get discardChanges => 'Odbaci promjene?';
 
   @override
   String get done => 'Gotovo';
@@ -1633,7 +1633,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get youHaveUnsavedChangesAreYouSureYouWantToGoBackAndDiscardThem =>
-      'Imate neshčuvane promjene. Jeste li sigurni da želi vratiti se i odbaciti ih?';
+      'Postoje nesačuvane promjene. Jesi li siguran da se želiš vratiti i odbaciti ih?';
 
   @override
   String get youHaventAddedAnyHabitsYet => 'Još niste dodali nijednu naviku.';
@@ -1646,8 +1646,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get yourName => 'Tvoje ime';
 
   @override
-  String
-  get youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow =>
+  String get gettingConsistantMakeNonOptional =>
       'Postaješ zaista dosljedan u ovoj navici. Razmisli o tome da ne činiš obavezno guranje sebe malo više. Želiš li sada ažurirati ovu naviku?';
 
   @override
@@ -2524,4 +2523,18 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get pluralHint => 'npr. čaše';
+
+  @override
+  String get habitNames => 'Nazivi navika';
+
+  @override
+  String get habitNamesDesc =>
+      'Postavite prilagođeni naziv navike za svaki jezik. Kada promijenite jezik aplikacije, odgovarajući naziv će se automatski prikazati.';
+
+  @override
+  String get autoAssignHabitNames => 'Automatski dodjeli nazive navika';
+
+  @override
+  String get autoAssignHabitNamesDesc =>
+      'Automatski sprema naziv navike za trenutni jezik svaki put kada sačuvate.';
 }

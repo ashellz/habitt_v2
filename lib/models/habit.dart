@@ -58,6 +58,7 @@ class Habit extends HiveObject {
   bool? isPaused;
   Map<String, DateTime> timestamps;
   DateTime? insightPopstonedUntil;
+  Map<String, String> localizedNames;
 
   Habit({
     required this.id,
@@ -100,6 +101,7 @@ class Habit extends HiveObject {
     this.isPaused,
     Map<String, DateTime>? timestamps,
     this.insightPopstonedUntil,
+    Map<String, String>? localizedNames,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? [],
        selectedDaysAMonth = selectedDaysAMonth ?? [],
        customAppearance = customAppearance ?? [],
@@ -112,7 +114,8 @@ class Habit extends HiveObject {
              ),
            ],
        createdAt = (createdAt ?? DateTime.now()).toUtc(),
-       timestamps = timestamps ?? {} {
+       timestamps = timestamps ?? {},
+       localizedNames = localizedNames ?? {} {
     trackingType ??= _inferTrackingType(
       amount: this.amount,
       duration: this.duration,
@@ -141,6 +144,13 @@ class Habit extends HiveObject {
     }
     if (color == null) return null;
     return hexToColor(color!);
+  }
+
+  String resolvedName(String? localeCode) {
+    if (localeCode == null) return name;
+    final override = localizedNames[localeCode];
+    if (override != null && override.isNotEmpty) return override;
+    return name;
   }
 
   Habit copy() {
@@ -185,6 +195,7 @@ class Habit extends HiveObject {
       isPaused: isPaused,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
+      localizedNames: Map<String, String>.from(localizedNames),
     );
   }
 
@@ -230,6 +241,7 @@ class Habit extends HiveObject {
       isPaused: isPaused,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
+      localizedNames: Map<String, String>.from(localizedNames),
     );
   }
 
@@ -389,6 +401,10 @@ class Habit extends HiveObject {
       isPaused = habit.isPaused;
       timestamps['isPaused'] = now;
     }
+    if (!_sameStringMap(localizedNames, habit.localizedNames)) {
+      localizedNames = Map<String, String>.from(habit.localizedNames);
+      timestamps['localizedNames'] = now;
+    }
   }
 
   /// Apply the result of a [merge] call directly, preserving the
@@ -436,6 +452,7 @@ class Habit extends HiveObject {
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
     insightPopstonedUntil = merged.insightPopstonedUntil;
+    localizedNames = Map<String, String>.from(merged.localizedNames);
     timestamps
       ..clear()
       ..addAll(merged.timestamps);
@@ -702,6 +719,7 @@ class Habit extends HiveObject {
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
       ),
+      'localizedNames': localizedNames,
     };
   }
 
@@ -774,6 +792,7 @@ class Habit extends HiveObject {
             m['insightPopstonedUntil']?.toString() ?? '',
           )?.toUtc(),
       timestamps: ts,
+      localizedNames: _parseStringMap(m['localizedNames']),
     )..color = m['color'] as String?;
   }
 
@@ -940,6 +959,11 @@ class Habit extends HiveObject {
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       isPaused: resolve('isPaused', isPaused, incoming.isPaused),
       timestamps: mergedTimestamps,
+      localizedNames: resolve(
+        'localizedNames',
+        Map<String, String>.from(localizedNames),
+        Map<String, String>.from(incoming.localizedNames),
+      ),
     );
 
     merged.color = resolve('color', color, incoming.color);
@@ -992,6 +1016,14 @@ class Habit extends HiveObject {
     return true;
   }
 
+  static bool _sameStringMap(Map<String, String> a, Map<String, String> b) {
+    if (a.length != b.length) return false;
+    for (final key in a.keys) {
+      if (a[key] != b[key]) return false;
+    }
+    return true;
+  }
+
   static bool _sameNotificationList(
     List<HabitNotificationTime> a,
     List<HabitNotificationTime> b,
@@ -1016,6 +1048,14 @@ class Habit extends HiveObject {
   static List<String> _parseStringList(dynamic value) {
     if (value is! List) return [];
     return value.map((e) => e.toString()).toList();
+  }
+
+  static Map<String, String> _parseStringMap(dynamic value) {
+    if (value is! Map) return {};
+    return {
+      for (final entry in value.entries)
+        entry.key.toString(): entry.value.toString(),
+    };
   }
 
   static List<HabitNotificationTime> _parseNotificationTimes(dynamic value) {

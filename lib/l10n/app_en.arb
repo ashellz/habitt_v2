@@ -398,7 +398,7 @@
   "youHaventAddedAnyHabitsYet": "You haven’t added any habits yet",
   "youWillUseThisPassphraseToDecryptYourDataWhenImportingIt": "You will use this passphrase to decrypt your data when importing it.",
   "yourName": "Your name",
-  "youreGettingReallyConsistentWithThisHabitConsiderNotMakingItOptionalToPushYourselfABitMoreDoYouWantToUpdateThisHabitNow": "You're getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?",
+  "gettingConsistantMakeNonOptional": "You're getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?",
   "@insightStrengthKeepPushingTitle": {
     "placeholders": {
       "habitName": {}
@@ -968,5 +968,9 @@
   "plural": "Plural",
   "pluralHint": "e.g. glasses",
   "weekly": "Weekly",
-  "monthly": "Monthly"
+  "monthly": "Monthly",
+  "habitNames": "Habit names",
+  "habitNamesDesc": "Set a custom habit name for each language. When you switch the app language, the matching name will be shown automatically.",
+  "autoAssignHabitNames": "Auto-assign habit names",
+  "autoAssignHabitNamesDesc": "Automatically saves your habit name for the current language each time you save."
 }
