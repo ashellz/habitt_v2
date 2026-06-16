@@ -102,7 +102,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    const bottomNavBar = 86;
+    const bottomNavBar = 95;
 
     final habits = context.watch<HabitProvider>().todaysHabits;
     final requiredHabits = habits.where((habit) => !habit.optional);

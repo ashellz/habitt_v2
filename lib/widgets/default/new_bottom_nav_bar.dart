@@ -223,12 +223,12 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       );
     }
 
+    final bottomInset = MediaQuery.of(context).padding.bottom;
     return Expanded(
       child: Container(
-        height: 95,
-
+        height: 95 + bottomInset,
         width: double.infinity,
-        padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 28),
+        padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 28 + bottomInset),
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: cp.border, width: 1)),
           color: cp.bg,
