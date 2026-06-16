@@ -972,5 +972,18 @@
   "autoAssignHabitNames": "Auto-assign habit names",
   "autoAssignHabitNamesDesc": "Automatically saves your habit name for the current language each time you save.",
   "holdToCompleteTipTitle": "Hold to complete",
-  "holdToCompleteTipBody": "Hold the checkmark to instantly log your full target."
+  "holdToCompleteTipBody": "Hold the checkmark to instantly log your full target.",
+  "syncOverlayTitleSyncing": "Syncing",
+  "syncOverlayTitleUploading": "Uploading",
+  "syncOverlayTitleUpToDate": "Up to date",
+  "syncOverlayUpdatesRemaining": "{count} updates remaining...",
+  "@syncOverlayUpdatesRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "syncOverlayDownloadingBackup": "Downloading backup...",
+  "syncOverlayUploadingChanges": "Uploading recent changes to cloud...",
+  "showUploadActivity": "Show upload activity",
+  "showUploadActivityDesc": "When on, a sync overlay appears while changes are being uploaded to the cloud. Turn off to upload silently in the background."
 }

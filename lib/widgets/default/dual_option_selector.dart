@@ -184,18 +184,20 @@ class _OptionButton extends StatelessWidget {
               if (showDeselectHint)
                 SizedBox(width: 16), // Placeholder for the close icon
 
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOutCubic,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontFamily: 'Satoshi'),
+              Expanded(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutCubic,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontFamily: 'Satoshi'),
+                  ),
                 ),
               ),
               if (showDeselectHint)

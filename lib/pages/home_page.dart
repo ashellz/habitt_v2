@@ -8,10 +8,12 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
+import 'package:habitt/util/sync_progress_overlay.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/new_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -99,6 +101,7 @@ class _HomePageState extends State<HomePage>
       _backupListener = () {
         if (!mounted) return;
         _maybeShowBackupNotification(context.read<BackupProvider>());
+        _maybeShowSyncOverlay();
       };
       backupProvider.addListener(_backupListener!);
 
@@ -127,6 +130,23 @@ class _HomePageState extends State<HomePage>
         _lifecycleTick += 1;
       });
     });
+  }
+
+  void _maybeShowSyncOverlay() {
+    if (!mounted) return;
+    final bp = context.read<BackupProvider>();
+    if (bp.syncState != SyncState.syncing) return;
+    final hasIncomingWork = bp.syncTotalDeltas > 0 || bp.syncHasBackup;
+    final showUpload =
+        bp.syncIsUploading &&
+        context.read<PreferencesProvider>().showUploadActivity;
+    if (hasIncomingWork || showUpload) {
+      SyncProgressOverlay.showIfNeeded(
+        context,
+        bp,
+        context.read<ColorProvider>(),
+      );
+    }
   }
 
   void _maybeShowBackupNotification(BackupProvider backupProvider) {
@@ -182,9 +202,6 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-    final backupProvider = context.watch<BackupProvider>();
-    final loading = backupProvider.syncState == SyncState.syncing;
-    final cp = context.watch<ColorProvider>();
 
     final pages = [
       MainPage(isActive: _currentPageIndex == 0, lifecycleTick: _lifecycleTick),
@@ -208,29 +225,6 @@ class _HomePageState extends State<HomePage>
                   key: ValueKey<int>(_currentPageIndex),
                   index: _currentPageIndex,
                   children: pages,
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween<double>(begin: 0, end: loading ? 1.0 : 0.0),
-                  duration: const Duration(milliseconds: 750),
-                  curve: Curves.easeInOut,
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.translate(
-                        offset: Offset(0, -6.0 * (1.0 - value)),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: LinearProgressIndicator(
-                    backgroundColor: cp.habitBg,
-                    valueColor: AlwaysStoppedAnimation<Color>(cp.field),
-                  ),
                 ),
               ),
             ],

@@ -2538,4 +2538,32 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get holdToCompleteTipBody =>
       'Drži kvačicu pritisnutu da odmah označiš naviku kao urađenu.';
+
+  @override
+  String get syncOverlayTitleSyncing => 'Sinkronizacija';
+
+  @override
+  String get syncOverlayTitleUploading => 'Prenos promjena';
+
+  @override
+  String get syncOverlayTitleUpToDate => 'Ažurirano';
+
+  @override
+  String syncOverlayUpdatesRemaining(int count) {
+    return 'Preostalo $count ažuriranja...';
+  }
+
+  @override
+  String get syncOverlayDownloadingBackup => 'Preuzimanje backupa...';
+
+  @override
+  String get syncOverlayUploadingChanges =>
+      'Prenos nedavnih promjena u cloud...';
+
+  @override
+  String get showUploadActivity => 'Prikazivaj prenos promjena';
+
+  @override
+  String get showUploadActivityDesc =>
+      'Prikazivaće overlay za sinkronizaciju tokom prijenosa promjena u cloud. Isključite za prijenos u pozadini.';
 }

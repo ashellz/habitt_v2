@@ -961,5 +961,18 @@
   "autoAssignHabitNames": "Automatski dodjeli imena navika",
   "autoAssignHabitNamesDesc": "Automatski sprema ime navike za trenutni jezik svaki put kada je sačuvate.",
   "holdToCompleteTipTitle": "Drži za dovršetak",
-  "holdToCompleteTipBody": "Drži kvačicu pritisnutu da odmah označiš naviku kao urađenu."
+  "holdToCompleteTipBody": "Drži kvačicu pritisnutu da odmah označiš naviku kao urađenu.",
+  "syncOverlayTitleSyncing": "Sinkronizacija",
+  "syncOverlayTitleUploading": "Prenos promjena",
+  "syncOverlayTitleUpToDate": "Ažurirano",
+  "syncOverlayUpdatesRemaining": "Preostalo {count} ažuriranja...",
+  "@syncOverlayUpdatesRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "syncOverlayDownloadingBackup": "Preuzimanje backupa...",
+  "syncOverlayUploadingChanges": "Prenos nedavnih promjena u cloud...",
+  "showUploadActivity": "Prikazivaj prenos promjena",
+  "showUploadActivityDesc": "Prikazivaće overlay za sinkronizaciju tokom prijenosa promjena u cloud. Isključite za prijenos u pozadini."
 }

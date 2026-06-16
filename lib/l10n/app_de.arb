@@ -970,5 +970,18 @@
   "autoAssignHabitNames": "Gewohnheitsnamen automatisch zuweisen",
   "autoAssignHabitNamesDesc": "Speichert bei jedem Speichern automatisch den Gewohnheitsnamen für die aktuelle Sprache.",
   "holdToCompleteTipTitle": "Gedrückt halten zum Abschließen",
-  "holdToCompleteTipBody": "Halte das Häkchen gedrückt, um dein Ziel sofort vollständig einzutragen."
+  "holdToCompleteTipBody": "Halte das Häkchen gedrückt, um dein Ziel sofort vollständig einzutragen.",
+  "syncOverlayTitleSyncing": "Synchronisieren",
+  "syncOverlayTitleUploading": "Hochladen",
+  "syncOverlayTitleUpToDate": "Aktuell",
+  "syncOverlayUpdatesRemaining": "Noch {count} Aktualisierungen...",
+  "@syncOverlayUpdatesRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "syncOverlayDownloadingBackup": "Backup wird heruntergeladen...",
+  "syncOverlayUploadingChanges": "Letzte Änderungen werden hochgeladen...",
+  "showUploadActivity": "Upload-Aktivität anzeigen",
+  "showUploadActivityDesc": "Wenn aktiviert, wird beim Hochladen von Änderungen in die Cloud ein Synchronisierungsoverlay angezeigt. Deaktivieren für stilles Hochladen im Hintergrund."
 }

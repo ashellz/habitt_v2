@@ -33,18 +33,22 @@ enum Colorfulness {
 }
 
 class PreferencesProvider extends ChangeNotifier {
+  static const String _kShowUploadActivityKey = 'show_upload_activity';
+
   bool _glassFeel = true;
   // colorful interface level
   Colorfulness _colorfulness = Colorfulness.standard;
   bool _americanTimeFormat = false;
   bool _showStreakBadge = true;
   bool _autoSeedHabitNames = false;
+  bool _showUploadActivity = true;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
   bool get americanTimeFormat => _americanTimeFormat;
   bool get showStreakBadge => _showStreakBadge;
   bool get autoSeedHabitNames => _autoSeedHabitNames;
+  bool get showUploadActivity => _showUploadActivity;
 
   SharedPreferences? _prefs;
 
@@ -58,6 +62,7 @@ class PreferencesProvider extends ChangeNotifier {
     _americanTimeFormat = _prefs?.getBool('americanTimeFormat') ?? false;
     _showStreakBadge = _prefs?.getBool('showStreakBadge') ?? false;
     _autoSeedHabitNames = _prefs?.getBool('autoSeedHabitNames') ?? false;
+    _showUploadActivity = _prefs?.getBool(_kShowUploadActivityKey) ?? true;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
     notifyListeners();
@@ -91,6 +96,12 @@ class PreferencesProvider extends ChangeNotifier {
     if (_colorfulness.index == index) return;
     _colorfulness = Colorfulness.values[index];
     _prefs?.setString('colorfulness', _colorfulness.name);
+    notifyListeners();
+  }
+
+  void setShowUploadActivity(bool value) {
+    _showUploadActivity = value;
+    _prefs?.setBool(_kShowUploadActivityKey, value);
     notifyListeners();
   }
 }

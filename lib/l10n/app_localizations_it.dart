@@ -2558,4 +2558,32 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get holdToCompleteTipBody =>
       'Tieni premuto il segno di spunta per registrare istantaneamente il tuo obiettivo completo.';
+
+  @override
+  String get syncOverlayTitleSyncing => 'Sincronizzazione';
+
+  @override
+  String get syncOverlayTitleUploading => 'Caricamento';
+
+  @override
+  String get syncOverlayTitleUpToDate => 'Aggiornato';
+
+  @override
+  String syncOverlayUpdatesRemaining(int count) {
+    return '$count aggiornamenti rimanenti...';
+  }
+
+  @override
+  String get syncOverlayDownloadingBackup => 'Download del backup...';
+
+  @override
+  String get syncOverlayUploadingChanges =>
+      'Caricamento modifiche recenti nel cloud...';
+
+  @override
+  String get showUploadActivity => 'Mostra attività di caricamento';
+
+  @override
+  String get showUploadActivityDesc =>
+      'Quando attivo, viene mostrato un overlay di sincronizzazione durante il caricamento delle modifiche nel cloud. Disattiva per caricare silenziosamente in background.';
 }

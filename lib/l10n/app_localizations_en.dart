@@ -2540,4 +2540,32 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get holdToCompleteTipBody =>
       'Hold the checkmark to instantly log your full target.';
+
+  @override
+  String get syncOverlayTitleSyncing => 'Syncing';
+
+  @override
+  String get syncOverlayTitleUploading => 'Uploading';
+
+  @override
+  String get syncOverlayTitleUpToDate => 'Up to date';
+
+  @override
+  String syncOverlayUpdatesRemaining(int count) {
+    return '$count updates remaining...';
+  }
+
+  @override
+  String get syncOverlayDownloadingBackup => 'Downloading backup...';
+
+  @override
+  String get syncOverlayUploadingChanges =>
+      'Uploading recent changes to cloud...';
+
+  @override
+  String get showUploadActivity => 'Show upload activity';
+
+  @override
+  String get showUploadActivityDesc =>
+      'When on, a sync overlay appears while changes are being uploaded to the cloud. Turn off to upload silently in the background.';
 }

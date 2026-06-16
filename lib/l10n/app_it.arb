@@ -970,5 +970,18 @@
   "autoAssignHabitNames": "Assegna automaticamente i nomi delle abitudini",
   "autoAssignHabitNamesDesc": "Salva automaticamente il nome dell'abitudine per la lingua corrente ogni volta che salvi.",
   "holdToCompleteTipTitle": "Tieni premuto per completare",
-  "holdToCompleteTipBody": "Tieni premuto il segno di spunta per registrare istantaneamente il tuo obiettivo completo."
+  "holdToCompleteTipBody": "Tieni premuto il segno di spunta per registrare istantaneamente il tuo obiettivo completo.",
+  "syncOverlayTitleSyncing": "Sincronizzazione",
+  "syncOverlayTitleUploading": "Caricamento",
+  "syncOverlayTitleUpToDate": "Aggiornato",
+  "syncOverlayUpdatesRemaining": "{count} aggiornamenti rimanenti...",
+  "@syncOverlayUpdatesRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "syncOverlayDownloadingBackup": "Download del backup...",
+  "syncOverlayUploadingChanges": "Caricamento modifiche recenti nel cloud...",
+  "showUploadActivity": "Mostra attività di caricamento",
+  "showUploadActivityDesc": "Quando attivo, viene mostrato un overlay di sincronizzazione durante il caricamento delle modifiche nel cloud. Disattiva per caricare silenziosamente in background."
 }

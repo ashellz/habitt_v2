@@ -2559,4 +2559,32 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get holdToCompleteTipBody =>
       'Halte das Häkchen gedrückt, um dein Ziel sofort vollständig einzutragen.';
+
+  @override
+  String get syncOverlayTitleSyncing => 'Synchronisieren';
+
+  @override
+  String get syncOverlayTitleUploading => 'Hochladen';
+
+  @override
+  String get syncOverlayTitleUpToDate => 'Aktuell';
+
+  @override
+  String syncOverlayUpdatesRemaining(int count) {
+    return 'Noch $count Aktualisierungen...';
+  }
+
+  @override
+  String get syncOverlayDownloadingBackup => 'Backup wird heruntergeladen...';
+
+  @override
+  String get syncOverlayUploadingChanges =>
+      'Letzte Änderungen werden hochgeladen...';
+
+  @override
+  String get showUploadActivity => 'Upload-Aktivität anzeigen';
+
+  @override
+  String get showUploadActivityDesc =>
+      'Wenn aktiviert, wird beim Hochladen von Änderungen in die Cloud ein Synchronisierungsoverlay angezeigt. Deaktivieren für stilles Hochladen im Hintergrund.';
 }

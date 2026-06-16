@@ -4287,6 +4287,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hold the checkmark to instantly log your full target.'**
   String get holdToCompleteTipBody;
+
+  /// No description provided for @syncOverlayTitleSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing'**
+  String get syncOverlayTitleSyncing;
+
+  /// No description provided for @syncOverlayTitleUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading'**
+  String get syncOverlayTitleUploading;
+
+  /// No description provided for @syncOverlayTitleUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get syncOverlayTitleUpToDate;
+
+  /// No description provided for @syncOverlayUpdatesRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} updates remaining...'**
+  String syncOverlayUpdatesRemaining(int count);
+
+  /// No description provided for @syncOverlayDownloadingBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading backup...'**
+  String get syncOverlayDownloadingBackup;
+
+  /// No description provided for @syncOverlayUploadingChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading recent changes to cloud...'**
+  String get syncOverlayUploadingChanges;
+
+  /// No description provided for @showUploadActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Show upload activity'**
+  String get showUploadActivity;
+
+  /// No description provided for @showUploadActivityDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'When on, a sync overlay appears while changes are being uploaded to the cloud. Turn off to upload silently in the background.'**
+  String get showUploadActivityDesc;
 }
 
 class _AppLocalizationsDelegate

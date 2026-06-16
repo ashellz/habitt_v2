@@ -130,6 +130,15 @@ class BackupProvider extends ChangeNotifier {
 
   String? _progressMessage;
 
+  // --- Sync progress tracking ---
+  int _syncTotalDeltas = 0;
+  int _syncCurrentDelta = 0;
+  bool _syncHasBackup = false;
+  bool _syncIsUploading = false;
+  double _syncProgress = 0.0;
+  double _syncTotalWeight = 0.0;
+  double _syncCompletedWeight = 0.0;
+
   // Set when the user is silently signed out due to revoked Drive scope.
   // Consumed once by the UI to show a notification popup.
   String? _pendingNotification;
@@ -174,6 +183,11 @@ class BackupProvider extends ChangeNotifier {
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
   bool get hasPendingSync => _hasPendingSync;
+  int get syncTotalDeltas => _syncTotalDeltas;
+  int get syncCurrentDelta => _syncCurrentDelta;
+  bool get syncHasBackup => _syncHasBackup;
+  bool get syncIsUploading => _syncIsUploading;
+  double get syncProgress => _syncProgress;
   bool get isICloudConnected =>
       _activeBackend == BackupBackend.iCloud && _adapter != null;
 
@@ -220,6 +234,105 @@ class BackupProvider extends ChangeNotifier {
 
   void attachHabitProvider(HabitProvider provider) {
     _habitProvider = provider;
+  }
+
+  // --- Progress helpers --------------------------------------------------
+
+  /// Determines what incoming work this sync cycle will do and sets the
+  /// total weight for the progress bar. For upload-only and full-backup paths
+  /// no network calls are needed; for the delta path we preflight-list files
+  /// (same calls done later in the actual sync methods).
+  Future<void> _computeSyncComposition(bool force, SyncMode mode) async {
+    _syncTotalDeltas = 0;
+    _syncCurrentDelta = 0;
+    _syncHasBackup = false;
+    _syncIsUploading = false;
+    _syncCompletedWeight = 0.0;
+    _syncProgress = 0.0;
+
+    if (mode == SyncMode.uploadOnly) {
+      _syncTotalWeight = 3.0; // 1 overhead + 2 upload
+      notifyListeners();
+      return;
+    }
+
+    final useDelta = !force && _lastSyncTime != null;
+
+    if (!useDelta) {
+      // Full-backup path — always heavy.
+      _syncHasBackup = true;
+      _syncTotalWeight = 13.0; // 1 overhead + 10 backup + 2 upload
+      notifyListeners();
+      return;
+    }
+
+    // Delta path: preflight to count pending deltas and check for a newer backup.
+    double weight = 3.0; // 1 overhead + 2 upload
+
+    if (_adapter == null) {
+      _syncTotalWeight = weight;
+      notifyListeners();
+      return;
+    }
+
+    try {
+      final files = await _adapter!.listFiles(nameContains: 'habitt-backup');
+      if (files.isNotEmpty) {
+        files.sort((a, b) {
+          final ta = b.modifiedTime ?? b.createdTime ?? DateTime(0);
+          final tb = a.modifiedTime ?? a.createdTime ?? DateTime(0);
+          return ta.compareTo(tb);
+        });
+        final latest = files.first;
+        final modifiedTime = latest.modifiedTime ?? latest.createdTime;
+        final prefs = await SharedPreferences.getInstance();
+        final lastAppliedId = prefs.getString(_kLastAppliedBackupIdKey);
+        if (lastAppliedId != latest.id &&
+            modifiedTime != null &&
+            (_lastSyncTime == null || modifiedTime.isAfter(_lastSyncTime!))) {
+          _syncHasBackup = true;
+          weight += 10;
+        }
+      }
+    } catch (_) {}
+
+    try {
+      final allFiles = await _adapter!.listFiles(
+        nameContains: 'habitt-delta',
+        modifiedAfter: _lastSyncTime,
+      );
+      final prefs = await SharedPreferences.getInstance();
+      final appliedRaw = prefs.getString(_kAppliedDeltaIdsKey);
+      final applied =
+          appliedRaw != null
+              ? Set<String>.from(jsonDecode(appliedRaw) as List<dynamic>)
+              : <String>{};
+      final deviceId = _localMetadata?.deviceId ?? '';
+      final shortMyId =
+          deviceId.length >= 8 ? deviceId.substring(0, 8) : deviceId;
+
+      _syncTotalDeltas =
+          allFiles
+              .where(
+                (f) =>
+                    !applied.contains(f.id) &&
+                    !(shortMyId.isNotEmpty && f.name.contains(shortMyId)),
+              )
+              .length;
+      _syncCurrentDelta = _syncTotalDeltas;
+      weight += _syncTotalDeltas.toDouble();
+    } catch (_) {}
+
+    _syncTotalWeight = weight;
+    notifyListeners();
+  }
+
+  void _advanceProgress(double phaseWeight) {
+    if (_syncTotalWeight <= 0) return;
+    _syncCompletedWeight =
+        (_syncCompletedWeight + phaseWeight).clamp(0.0, _syncTotalWeight);
+    _syncProgress = (_syncCompletedWeight / _syncTotalWeight).clamp(0.0, 1.0);
+    notifyListeners();
   }
 
   // --- Auto-sync ---------------------------------------------------------
@@ -1009,11 +1122,14 @@ class BackupProvider extends ChangeNotifier {
     syncState = SyncState.syncing;
     lastError = null;
 
+    await _computeSyncComposition(force, mode);
+
     debugPrint("Starting sync with mode $mode (force: $force)");
 
     try {
       // ── Upload-only path (post-write auto-sync) ──────────────────────────
       if (mode == SyncMode.uploadOnly) {
+        _advanceProgress(1); // overhead
         await _uploadDeltaToCloud(key);
         await _onSyncSuccess();
         return;
@@ -1021,6 +1137,7 @@ class BackupProvider extends ChangeNotifier {
 
       // ── Sync-only path (manual "Sync now" — delta cycle, no backup) ─────
       if (mode == SyncMode.syncOnly) {
+        _advanceProgress(1); // overhead
         if (_lastSyncTime != null) {
           progressMessage = 'Checking for updates...';
           await _downloadAndApplyPendingDeltas(key);
@@ -1037,6 +1154,7 @@ class BackupProvider extends ChangeNotifier {
       final bool useDelta = !force && _lastSyncTime != null;
 
       if (useDelta) {
+        _advanceProgress(1); // overhead
         progressMessage = 'Checking for updates...';
         await _checkAndApplyNewerBackup(key);
         await _downloadAndApplyPendingDeltas(key);
@@ -1118,6 +1236,7 @@ class BackupProvider extends ChangeNotifier {
   Future<void> _fullSyncPath(SecretKey key, {bool force = false}) async {
     progressMessage = 'Fetching cloud metadata...';
     final metadata = await _fetchCloudMetadata(key);
+    _advanceProgress(1); // overhead done
 
     final sameDevice =
         _localMetadata?.deviceId == metadata?.deviceId &&
@@ -1136,11 +1255,21 @@ class BackupProvider extends ChangeNotifier {
         progressMessage = 'Merging...';
         await _mergeBackupData(backupData);
       }
+      _advanceProgress(10); // backup done
       progressMessage = 'Uploading merged backup...';
+      _syncIsUploading = true;
+      notifyListeners();
       await _uploadBackupToCloud(key);
+      _syncIsUploading = false;
+      _advanceProgress(2); // upload done
     } else {
+      _advanceProgress(10); // no backup to download — advance past backup slot
       progressMessage = 'No cloud data. Uploading local backup...';
+      _syncIsUploading = true;
+      notifyListeners();
       await _uploadBackupToCloud(key);
+      _syncIsUploading = false;
+      _advanceProgress(2); // upload done
     }
   }
 
@@ -1199,6 +1328,13 @@ class BackupProvider extends ChangeNotifier {
     }
     syncState = SyncState.success;
     progressMessage = null;
+    _syncProgress = 0.0;
+    _syncTotalDeltas = 0;
+    _syncCurrentDelta = 0;
+    _syncHasBackup = false;
+    _syncIsUploading = false;
+    _syncCompletedWeight = 0.0;
+    _syncTotalWeight = 0.0;
   }
 
   Future<void> _persistLastSyncTime() async {
@@ -1689,6 +1825,7 @@ class BackupProvider extends ChangeNotifier {
         '[SYNC] _checkAndApplyNewerBackup: failed to download/decrypt backup.',
       );
     }
+    _advanceProgress(10); // backup phase done (downloaded or not)
   }
 
   /// Download and apply every delta that was not uploaded by this device and
@@ -1784,6 +1921,8 @@ class BackupProvider extends ChangeNotifier {
         final bytes = await _adapter!.downloadById(f.id);
         if (bytes == null) {
           debugPrint('[SYNC] ERROR: could not download delta ${f.id}');
+          if (_syncCurrentDelta > 0) _syncCurrentDelta--;
+          _advanceProgress(1);
           continue;
         }
         debugPrint(
@@ -1805,6 +1944,8 @@ class BackupProvider extends ChangeNotifier {
             '[SYNC] WARN: delta ${f.name} could not be decrypted — permanently skipping.',
           );
         }
+        if (_syncCurrentDelta > 0) _syncCurrentDelta--;
+        _advanceProgress(1);
       } catch (e) {
         // Network/IO error — do NOT mark applied so we retry next cycle.
         debugPrint('[SYNC] ERROR applying delta ${f.id} (${f.name}): $e');
@@ -1823,8 +1964,14 @@ class BackupProvider extends ChangeNotifier {
   /// Does nothing if there are no changes (delta export returns null) or if
   /// [_lastSyncTime] is null (caller should fall back to a full sync instead).
   Future<void> _uploadDeltaToCloud(SecretKey key) async {
-    if (_lastSyncTime == null || _habitProvider == null || _adapter == null)
+    _syncIsUploading = true;
+    notifyListeners();
+
+    if (_lastSyncTime == null || _habitProvider == null || _adapter == null) {
+      _syncIsUploading = false;
+      _advanceProgress(2);
       return;
+    }
 
     final bytes = await BackupService.exportDeltaForGoogleDrive(
       secretKey: key,
@@ -1835,6 +1982,8 @@ class BackupProvider extends ChangeNotifier {
       debugPrint(
         '[SYNC] _uploadDeltaToCloud: no changes since $_lastSyncTime — skipping.',
       );
+      _syncIsUploading = false;
+      _advanceProgress(2);
       return;
     }
     debugPrint(
@@ -1854,6 +2003,9 @@ class BackupProvider extends ChangeNotifier {
 
     await _adapter!.upload(fileName, bytes);
     debugPrint('Uploaded delta: $fileName');
+
+    _syncIsUploading = false;
+    _advanceProgress(2); // upload done
 
     await _rotateDeltaFiles();
   }

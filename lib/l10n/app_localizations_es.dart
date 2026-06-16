@@ -2554,4 +2554,33 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get holdToCompleteTipBody =>
       'Mantén presionado el marcador para registrar tu objetivo completo al instante.';
+
+  @override
+  String get syncOverlayTitleSyncing => 'Sincronizando';
+
+  @override
+  String get syncOverlayTitleUploading => 'Subiendo';
+
+  @override
+  String get syncOverlayTitleUpToDate => 'Actualizado';
+
+  @override
+  String syncOverlayUpdatesRemaining(int count) {
+    return '$count actualizaciones restantes...';
+  }
+
+  @override
+  String get syncOverlayDownloadingBackup =>
+      'Descargando copia de seguridad...';
+
+  @override
+  String get syncOverlayUploadingChanges =>
+      'Subiendo cambios recientes a la nube...';
+
+  @override
+  String get showUploadActivity => 'Mostrar actividad de subida';
+
+  @override
+  String get showUploadActivityDesc =>
+      'Cuando está activado, aparece un overlay de sincronización mientras se suben cambios a la nube. Desactívalo para subir silenciosamente en segundo plano.';
 }
