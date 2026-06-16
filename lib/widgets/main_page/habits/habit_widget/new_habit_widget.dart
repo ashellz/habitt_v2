@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
@@ -19,11 +21,19 @@ class NewHabitWidget extends StatefulWidget {
 }
 
 class _NewHabitWidgetState extends State<NewHabitWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static const int _segmentCount = 12;
   late AnimationController _controller;
   late List<Animation<double>> _segmentAnimations;
   late bool _previousCompleted;
+
+  late AnimationController _streakEntryController;
+  late Animation<double> _streakFadeAnimation;
+  late Animation<Offset> _streakSlideAnimation;
+  int _lastEpoch = -1;
+  // Epoch already presented (animated) by any instance. Mutated only in a
+  // post-frame callback so all siblings in the same frame read a stable value.
+  static int _displayedEpoch = -1;
 
   @override
   void initState() {
@@ -35,6 +45,26 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
     );
     _buildAnimations();
     _controller.value = widget.habit.completed ? 1.0 : 0.0;
+
+    _streakEntryController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    // Visible by default. Widgets recreated by navigation (page/day switch that
+    // doesn't change the epoch) keep the badge shown without re-animating; the
+    // animate path resets this to 0 before the first paint.
+    _streakEntryController.value = 1.0;
+    _streakFadeAnimation = CurvedAnimation(
+      parent: _streakEntryController,
+      curve: Curves.easeOut,
+    );
+    _streakSlideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _streakEntryController,
+      curve: Curves.easeOut,
+    ));
   }
 
   void _buildAnimations() {
@@ -73,12 +103,70 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
   @override
   void dispose() {
     _controller.dispose();
+    _streakEntryController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final today = DateTime.now();
+    final habitProvider = context.watch<HabitProvider>();
+    final selectedDate = habitProvider.selectedDate ?? today;
+    final isToday =
+        selectedDate.year == today.year &&
+        selectedDate.month == today.month &&
+        selectedDate.day == today.day;
+
+    final categoryProvider = context.watch<CategoryProvider>();
+
+    final currentEpoch = habitProvider.streakEntryEpoch;
+    if (currentEpoch != _lastEpoch) {
+      _lastEpoch = currentEpoch;
+
+      // Animate only the first time this epoch is presented. Navigation that
+      // recreates widgets without bumping the epoch (tab/day switch back) skips
+      // this and leaves the badge visible; cold start and return-to-today bump
+      // the epoch, so they animate.
+      if (isToday && currentEpoch != _displayedEpoch) {
+        // Index by the displayed category order, then habit order within it.
+        final orderedCatIds =
+            categoryProvider.categoriesOrdered.map((c) => c.id).toList();
+        final catRank = {
+          for (int i = 0; i < orderedCatIds.length; i++) orderedCatIds[i]: i,
+        };
+        final sorted = [...habitProvider.todaysHabits]
+          ..sort((a, b) {
+            final ca = catRank[a.categoryId] ?? 999;
+            final cb = catRank[b.categoryId] ?? 999;
+            if (ca != cb) return ca.compareTo(cb);
+            final ao = a.order <= 0 ? 1 << 30 : a.order;
+            final bo = b.order <= 0 ? 1 << 30 : b.order;
+            if (ao != bo) return ao.compareTo(bo);
+            return a.id.compareTo(b.id);
+          });
+        final globalIndex =
+            sorted.indexWhere((h) => h.id == widget.habit.id).clamp(0, 99);
+
+        _streakEntryController.value = 0;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Mark the epoch presented after every sibling in this frame has built,
+          // so they all observe the un-presented value and animate together.
+          _displayedEpoch = currentEpoch;
+          if (!mounted) return;
+          final delayMs = globalIndex * 100;
+          if (delayMs == 0) {
+            _streakEntryController.forward();
+          } else {
+            Future.delayed(Duration(milliseconds: delayMs), () {
+              if (mounted && habitProvider.streakEntryEpoch == currentEpoch) {
+                _streakEntryController.forward();
+              }
+            });
+          }
+        });
+      }
+    }
 
     // Check if completed state changed and trigger animation
     if (widget.habit.completed != _previousCompleted) {
@@ -137,10 +225,20 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
           Row(
             spacing: 4,
             children: [
-              StreakBadge(
-                streak: widget.habit.streak +
-                    (widget.habit.streak > 0 && widget.habit.completed ? 1 : 0),
-              ),
+              if (isToday)
+                FadeTransition(
+                  opacity: _streakFadeAnimation,
+                  child: SlideTransition(
+                    position: _streakSlideAnimation,
+                    child: StreakBadge(
+                      streak:
+                          widget.habit.streak +
+                          (widget.habit.streak > 0 && widget.habit.completed
+                              ? 1
+                              : 0),
+                    ),
+                  ),
+                ),
               NewHabitProgress(habit: widget.habit, isDemo: widget.isDemo),
             ],
           ),

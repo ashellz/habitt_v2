@@ -135,6 +135,9 @@ class BackupProvider extends ChangeNotifier {
   int _syncCurrentDelta = 0;
   bool _syncHasBackup = false;
   bool _syncIsUploading = false;
+  bool _syncIsOptimizing = false;
+  int _syncOptimizingTotal = 0;
+  int _syncOptimizingRemaining = 0;
   double _syncProgress = 0.0;
   double _syncTotalWeight = 0.0;
   double _syncCompletedWeight = 0.0;
@@ -187,6 +190,9 @@ class BackupProvider extends ChangeNotifier {
   int get syncCurrentDelta => _syncCurrentDelta;
   bool get syncHasBackup => _syncHasBackup;
   bool get syncIsUploading => _syncIsUploading;
+  bool get syncIsOptimizing => _syncIsOptimizing;
+  int get syncOptimizingTotal => _syncOptimizingTotal;
+  int get syncOptimizingRemaining => _syncOptimizingRemaining;
   double get syncProgress => _syncProgress;
   bool get isICloudConnected =>
       _activeBackend == BackupBackend.iCloud && _adapter != null;
@@ -1333,6 +1339,9 @@ class BackupProvider extends ChangeNotifier {
     _syncCurrentDelta = 0;
     _syncHasBackup = false;
     _syncIsUploading = false;
+    _syncIsOptimizing = false;
+    _syncOptimizingTotal = 0;
+    _syncOptimizingRemaining = 0;
     _syncCompletedWeight = 0.0;
     _syncTotalWeight = 0.0;
   }
@@ -1964,11 +1973,7 @@ class BackupProvider extends ChangeNotifier {
   /// Does nothing if there are no changes (delta export returns null) or if
   /// [_lastSyncTime] is null (caller should fall back to a full sync instead).
   Future<void> _uploadDeltaToCloud(SecretKey key) async {
-    _syncIsUploading = true;
-    notifyListeners();
-
     if (_lastSyncTime == null || _habitProvider == null || _adapter == null) {
-      _syncIsUploading = false;
       _advanceProgress(2);
       return;
     }
@@ -1982,10 +1987,12 @@ class BackupProvider extends ChangeNotifier {
       debugPrint(
         '[SYNC] _uploadDeltaToCloud: no changes since $_lastSyncTime — skipping.',
       );
-      _syncIsUploading = false;
       _advanceProgress(2);
       return;
     }
+
+    _syncIsUploading = true;
+    notifyListeners();
     debugPrint(
       '[SYNC] _uploadDeltaToCloud: exporting delta with fromTime=$_lastSyncTime',
     );
@@ -2048,9 +2055,24 @@ class BackupProvider extends ChangeNotifier {
   Future<void> _clearAllDeltaFiles() async {
     if (_adapter == null) return;
     final files = await _adapter!.listFiles(nameContains: 'habitt-delta');
+    if (files.isNotEmpty) {
+      _syncIsOptimizing = true;
+      _syncOptimizingTotal = files.length;
+      _syncOptimizingRemaining = files.length;
+      _syncTotalWeight = files.length.toDouble();
+      _syncCompletedWeight = 0.0;
+      _syncProgress = 0.0;
+      notifyListeners();
+    }
     for (final f in files) {
       await _adapter!.delete(f.id);
       debugPrint('Cleared delta after full sync: ${f.id}');
+      _syncOptimizingRemaining--;
+      _advanceProgress(1);
+    }
+    if (files.isNotEmpty) {
+      _syncIsOptimizing = false;
+      notifyListeners();
     }
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_kAppliedDeltaIdsKey);

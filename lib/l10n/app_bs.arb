@@ -974,5 +974,12 @@
   "syncOverlayDownloadingBackup": "Preuzimanje backupa...",
   "syncOverlayUploadingChanges": "Prenos nedavnih promjena u cloud...",
   "showUploadActivity": "Prikazivaj prenos promjena",
-  "showUploadActivityDesc": "Prikazivaće overlay za sinkronizaciju tokom prijenosa promjena u cloud. Isključite za prijenos u pozadini."
+  "showUploadActivityDesc": "Prikazivaće overlay za sinkronizaciju tokom prijenosa promjena u cloud. Isključite za prijenos u pozadini.",
+  "syncOverlayTitleOptimizing": "Optimizacija",
+  "syncOverlayOptimizingRemaining": "Preostalo {count} fajlova...",
+  "@syncOverlayOptimizingRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

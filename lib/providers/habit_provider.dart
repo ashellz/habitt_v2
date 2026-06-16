@@ -25,9 +25,16 @@ class HabitProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
   DateTime? selectedDate;
   int dataVersion = 0;
+  int streakEntryEpoch = 0;
 
   void setSelectedDate(DateTime date) {
     selectedDate = date;
+    final now = DateTime.now();
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      streakEntryEpoch++;
+    }
     notifyListeners();
   }
 
@@ -77,6 +84,7 @@ class HabitProvider extends ChangeNotifier {
     _fillToday();
     _syncAllHabitNotifications();
     dataVersion++;
+    streakEntryEpoch++;
     notifyListeners();
   }
 
@@ -193,7 +201,11 @@ class HabitProvider extends ChangeNotifier {
       // Check if this day already exists in the database
       if (daysBox.get(dayKey) == null) {
         // Save the day with habits that should be scheduled for that day
-        await saveHabitDay(currentDay, resetCompletion: true, isAutoCreated: true);
+        await saveHabitDay(
+          currentDay,
+          resetCompletion: true,
+          isAutoCreated: true,
+        );
       }
 
       // Move to the next day

@@ -4335,6 +4335,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'When on, a sync overlay appears while changes are being uploaded to the cloud. Turn off to upload silently in the background.'**
   String get showUploadActivityDesc;
+
+  /// No description provided for @syncOverlayTitleOptimizing.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimizing'**
+  String get syncOverlayTitleOptimizing;
+
+  /// No description provided for @syncOverlayOptimizingRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} files remaining...'**
+  String syncOverlayOptimizingRemaining(int count);
 }
 
 class _AppLocalizationsDelegate

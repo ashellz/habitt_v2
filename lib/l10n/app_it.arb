@@ -983,5 +983,12 @@
   "syncOverlayDownloadingBackup": "Download del backup...",
   "syncOverlayUploadingChanges": "Caricamento modifiche recenti nel cloud...",
   "showUploadActivity": "Mostra attività di caricamento",
-  "showUploadActivityDesc": "Quando attivo, viene mostrato un overlay di sincronizzazione durante il caricamento delle modifiche nel cloud. Disattiva per caricare silenziosamente in background."
+  "showUploadActivityDesc": "Quando attivo, viene mostrato un overlay di sincronizzazione durante il caricamento delle modifiche nel cloud. Disattiva per caricare silenziosamente in background.",
+  "syncOverlayTitleOptimizing": "Ottimizzazione",
+  "syncOverlayOptimizingRemaining": "{count} file rimanenti...",
+  "@syncOverlayOptimizingRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

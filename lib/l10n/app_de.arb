@@ -983,5 +983,12 @@
   "syncOverlayDownloadingBackup": "Backup wird heruntergeladen...",
   "syncOverlayUploadingChanges": "Letzte Änderungen werden hochgeladen...",
   "showUploadActivity": "Upload-Aktivität anzeigen",
-  "showUploadActivityDesc": "Wenn aktiviert, wird beim Hochladen von Änderungen in die Cloud ein Synchronisierungsoverlay angezeigt. Deaktivieren für stilles Hochladen im Hintergrund."
+  "showUploadActivityDesc": "Wenn aktiviert, wird beim Hochladen von Änderungen in die Cloud ein Synchronisierungsoverlay angezeigt. Deaktivieren für stilles Hochladen im Hintergrund.",
+  "syncOverlayTitleOptimizing": "Optimierung",
+  "syncOverlayOptimizingRemaining": "{count} Dateien verbleibend...",
+  "@syncOverlayOptimizingRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

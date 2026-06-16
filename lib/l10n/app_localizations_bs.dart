@@ -2566,4 +2566,12 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get showUploadActivityDesc =>
       'Prikazivaće overlay za sinkronizaciju tokom prijenosa promjena u cloud. Isključite za prijenos u pozadini.';
+
+  @override
+  String get syncOverlayTitleOptimizing => 'Optimizacija';
+
+  @override
+  String syncOverlayOptimizingRemaining(int count) {
+    return 'Preostalo $count fajlova...';
+  }
 }

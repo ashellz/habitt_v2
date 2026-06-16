@@ -122,6 +122,9 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
     if (_showingSuccess) return '';
     final bp = widget.bp;
     final loc = widget.loc;
+    if (bp.syncIsOptimizing) {
+      return loc.syncOverlayOptimizingRemaining(bp.syncOptimizingRemaining);
+    }
     if (bp.syncIsUploading) return loc.syncOverlayUploadingChanges;
     if (bp.syncCurrentDelta > 0) {
       return loc.syncOverlayUpdatesRemaining(bp.syncCurrentDelta);
@@ -132,6 +135,7 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
 
   String _titleText() {
     if (_showingSuccess) return widget.loc.syncOverlayTitleUpToDate;
+    if (widget.bp.syncIsOptimizing) return widget.loc.syncOverlayTitleOptimizing;
     if (widget.bp.syncIsUploading) return widget.loc.syncOverlayTitleUploading;
     return widget.loc.syncOverlayTitleSyncing;
   }

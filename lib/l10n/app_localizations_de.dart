@@ -2587,4 +2587,12 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get showUploadActivityDesc =>
       'Wenn aktiviert, wird beim Hochladen von Änderungen in die Cloud ein Synchronisierungsoverlay angezeigt. Deaktivieren für stilles Hochladen im Hintergrund.';
+
+  @override
+  String get syncOverlayTitleOptimizing => 'Optimierung';
+
+  @override
+  String syncOverlayOptimizingRemaining(int count) {
+    return '$count Dateien verbleibend...';
+  }
 }

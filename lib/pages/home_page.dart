@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage>
     final showUpload =
         bp.syncIsUploading &&
         context.read<PreferencesProvider>().showUploadActivity;
-    if (hasIncomingWork || showUpload) {
+    if (hasIncomingWork || showUpload || bp.syncIsOptimizing) {
       SyncProgressOverlay.showIfNeeded(
         context,
         bp,

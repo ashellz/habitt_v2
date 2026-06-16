@@ -983,5 +983,12 @@
   "syncOverlayDownloadingBackup": "Descargando copia de seguridad...",
   "syncOverlayUploadingChanges": "Subiendo cambios recientes a la nube...",
   "showUploadActivity": "Mostrar actividad de subida",
-  "showUploadActivityDesc": "Cuando está activado, aparece un overlay de sincronización mientras se suben cambios a la nube. Desactívalo para subir silenciosamente en segundo plano."
+  "showUploadActivityDesc": "Cuando está activado, aparece un overlay de sincronización mientras se suben cambios a la nube. Desactívalo para subir silenciosamente en segundo plano.",
+  "syncOverlayTitleOptimizing": "Optimizando",
+  "syncOverlayOptimizingRemaining": "{count} archivos restantes...",
+  "@syncOverlayOptimizingRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }
