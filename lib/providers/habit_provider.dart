@@ -26,14 +26,27 @@ class HabitProvider extends ChangeNotifier {
   DateTime? selectedDate;
   int dataVersion = 0;
   int streakEntryEpoch = 0;
+  int streakExitEpoch = 0;
 
   void setSelectedDate(DateTime date) {
-    selectedDate = date;
     final now = DateTime.now();
-    if (date.year == now.year &&
+    final previousDate = selectedDate ?? now;
+    final previousWasToday =
+        previousDate.year == now.year &&
+        previousDate.month == now.month &&
+        previousDate.day == now.day;
+    final nextIsToday =
+        date.year == now.year &&
         date.month == now.month &&
-        date.day == now.day) {
+        date.day == now.day;
+
+    selectedDate = date;
+    // Only animate on an actual transition. Re-selecting today while already on
+    // today must not replay the entrance animation.
+    if (nextIsToday && !previousWasToday) {
       streakEntryEpoch++;
+    } else if (!nextIsToday && previousWasToday) {
+      streakExitEpoch++;
     }
     notifyListeners();
   }
@@ -967,6 +980,10 @@ class HabitProvider extends ChangeNotifier {
     );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
 
+    if (daySimple != todaySimple) {
+      await assignStreaks(id);
+    }
+
     if (!wasCompleted && habit.completed) {
       unawaited(_maybeRequestReview());
     }
@@ -1015,7 +1032,10 @@ class HabitProvider extends ChangeNotifier {
     if (context.mounted && daySimple == todaySimple) {
       checkReorderCategories(context, habit);
     }
-    updateHabitInDB(habit, day: day);
+    await updateHabitInDB(habit, day: day);
+    if (daySimple != todaySimple) {
+      await assignStreaks(id);
+    }
     refreshTodaysHabits(notify: false);
     notifyListeners();
   }
