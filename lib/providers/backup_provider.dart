@@ -2247,6 +2247,19 @@ class BackupProvider extends ChangeNotifier {
       }
       mergedDayHabits.addAll(existingById.values);
 
+      // The steps above union the habit lists from both devices. A union can
+      // pull in habits that are not scheduled on this day (and are left
+      // incomplete) — e.g. a habit the other device materialised into its
+      // snapshot at a different time. The home "last week" view filters those
+      // out by schedule, but the raw streak/consistency stats would miscount
+      // them as unmet requirements, breaking streaks. Collapse the snapshot
+      // back to the same schedule-filtered set the app writes natively (see
+      // saveHabitDay) so all read paths agree. Completed habits always survive
+      // the filter, so no real completion is ever dropped.
+      final filteredDayHabits =
+          _habitProvider?.habitsCountingForDay(day.date, mergedDayHabits) ??
+          mergedDayHabits;
+
       // Preserve the most recent modification timestamp from either device.
       final mergedTs =
           (localTs != null && incomingTs != null)
@@ -2256,12 +2269,12 @@ class BackupProvider extends ChangeNotifier {
       debugPrint(
         '[SYNC]   day $dayKey: MERGE — local=${existingDay != null ? "${existingDay.habits.length} habits, ts=$localTs, autoCreated=${existingDay.isAutoCreated}" : "none"} '
         '| incoming=${day.habits.length} habits, ts=$incomingTs '
-        '| result=${mergedDayHabits.length} habits, ts=$mergedTs',
+        '| union=${mergedDayHabits.length} → filtered=${filteredDayHabits.length} habits, ts=$mergedTs',
       );
 
       await daysBox.put(
         dayKey,
-        Day(date: day.date, habits: mergedDayHabits, timestamp: mergedTs),
+        Day(date: day.date, habits: filteredDayHabits, timestamp: mergedTs),
       );
     }
 

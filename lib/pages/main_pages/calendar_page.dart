@@ -26,7 +26,7 @@ class CalendarPage extends StatelessWidget {
     final sp = context.watch<StatsProvider>();
     final hp = context.watch<HabitProvider>();
     final allStats = sp.getAllDaysProgress(hp);
-    final perfectDayCompletion = sp.getPerfectDayCompletion(hp);
+    final dayStatuses = sp.getDayCompletionStatuses(hp);
     final completionRateLastWeek = sp.getCompletionRateLastWeekByDay(hp);
 
     final streak = sp.perfectDaysStreak;
@@ -59,7 +59,7 @@ class CalendarPage extends StatelessWidget {
               streak: streak,
               longestStreak: longestStreak,
               allStats: allStats,
-              perfectDayCompletion: perfectDayCompletion,
+              dayStatuses: dayStatuses,
               isActive: isActive,
               isLoading: hp.isRecalculatingLongestStreak,
             ),
@@ -248,7 +248,7 @@ class StreakCalendarSection extends StatelessWidget {
     required this.streak,
     required this.longestStreak,
     required this.allStats,
-    required this.perfectDayCompletion,
+    required this.dayStatuses,
     this.today,
     this.isActive = true,
     this.isLoading = false,
@@ -257,7 +257,7 @@ class StreakCalendarSection extends StatelessWidget {
   final int streak;
   final int longestStreak;
   final Map<DateTime, double> allStats;
-  final Map<DateTime, bool> perfectDayCompletion;
+  final Map<DateTime, DayCompletionStatus> dayStatuses;
   final DateTime? today;
   final bool isActive;
   final bool isLoading;
@@ -299,7 +299,7 @@ class StreakCalendarSection extends StatelessWidget {
         ),
         StreakCalendar(
           allStats: allStats,
-          perfectDayCompletion: perfectDayCompletion,
+          dayStatuses: dayStatuses,
           today: today,
           isActive: isActive,
         ),
@@ -332,9 +332,12 @@ class _DemoCalendarBody extends StatelessWidget {
       }
     }
 
-    final perfectDayCompletion = <DateTime, bool>{
-      for (final d in completedDays)
-        DateTime(realNow.year, realNow.month, d): true,
+    final dayStatuses = <DateTime, DayCompletionStatus>{
+      for (int d = 1; d <= 9; d++)
+        DateTime(realNow.year, realNow.month, d):
+            completedDays.contains(d)
+                ? DayCompletionStatus.perfect
+                : DayCompletionStatus.miss,
     };
 
     final completionRateLastWeek = List<double>.generate(7, (index) {
@@ -368,7 +371,7 @@ class _DemoCalendarBody extends StatelessWidget {
               streak: streak,
               longestStreak: longestStreak,
               allStats: allStats,
-              perfectDayCompletion: perfectDayCompletion,
+              dayStatuses: dayStatuses,
               today: demoToday,
             ),
             const SizedBox(height: 32),

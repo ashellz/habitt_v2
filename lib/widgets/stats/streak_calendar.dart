@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/stats_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,13 +12,13 @@ class StreakCalendar extends StatefulWidget {
   const StreakCalendar({
     super.key,
     required this.allStats,
-    required this.perfectDayCompletion,
+    required this.dayStatuses,
     this.today,
     this.isActive = true,
   });
 
   final Map<DateTime, double> allStats;
-  final Map<DateTime, bool> perfectDayCompletion;
+  final Map<DateTime, DayCompletionStatus> dayStatuses;
   final DateTime? today;
   final bool isActive;
 
@@ -33,7 +34,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   DateTime? _cachedSelectableFirstDay;
   DateTime? _cachedToday;
   Map<DateTime, double>? _cachedAllStatsReference;
-  Map<DateTime, bool>? _cachedPerfectDayCompletionReference;
+  Map<DateTime, DayCompletionStatus>? _cachedDayStatusesReference;
   int? _activeMonthKey;
   bool _isMonthMetadataReady = false;
   bool _streakCacheReady = false;
@@ -57,7 +58,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     super.didUpdateWidget(oldWidget);
     final dataChanged =
         !identical(oldWidget.allStats, widget.allStats) ||
-        !identical(oldWidget.perfectDayCompletion, widget.perfectDayCompletion);
+        !identical(oldWidget.dayStatuses, widget.dayStatuses);
     final becameActive = !oldWidget.isActive && widget.isActive;
 
     if (becameActive || (widget.isActive && dataChanged)) {
@@ -122,7 +123,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     _cachedRuns = const [];
     _cachedToday = null;
     _cachedAllStatsReference = null;
-    _cachedPerfectDayCompletionReference = null;
+    _cachedDayStatusesReference = null;
     _monthMetadataCache = {};
     _activeMonthKey = null;
     _isMonthMetadataReady = false;
@@ -143,30 +144,26 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
   void _ensureStreakCachesUpToDate(DateTime today) {
     if (identical(_cachedAllStatsReference, widget.allStats) &&
-        identical(
-          _cachedPerfectDayCompletionReference,
-          widget.perfectDayCompletion,
-        ) &&
+        identical(_cachedDayStatusesReference, widget.dayStatuses) &&
         _cachedToday == today &&
         _cachedSelectableFirstDay != null) {
       return;
     }
 
     final selectableFirstDay = _resolveSelectableFirstDay(today);
-    final completedDays = <DateTime>{
-      for (final entry in widget.perfectDayCompletion.entries)
-        if (entry.value) _normalize(entry.key),
-    };
 
     _cachedRuns = _buildToleratedMissRuns(
       selectableFirstDay: selectableFirstDay,
       today: today,
-      completedDays: completedDays,
+      statuses: {
+        for (final entry in widget.dayStatuses.entries)
+          _normalize(entry.key): entry.value,
+      },
     );
     _cachedSelectableFirstDay = selectableFirstDay;
     _cachedToday = today;
     _cachedAllStatsReference = widget.allStats;
-    _cachedPerfectDayCompletionReference = widget.perfectDayCompletion;
+    _cachedDayStatusesReference = widget.dayStatuses;
     _monthMetadataCache = {};
     _activeMonthKey = null;
     _isMonthMetadataReady = false;
@@ -349,7 +346,8 @@ class _StreakCalendarState extends State<StreakCalendar> {
       final normalizedDay = _normalize(day);
       final metadata =
           streakVisualMetadata[normalizedDay] ?? const _StreakVisualDayData();
-      final isPerfectDay = widget.perfectDayCompletion[normalizedDay] == true;
+      final isPerfectDay =
+          widget.dayStatuses[normalizedDay] == DayCompletionStatus.perfect;
       return _dayCell(
         context: context,
         day: day,
@@ -782,7 +780,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   List<_ToleratedMissRun> _buildToleratedMissRuns({
     required DateTime selectableFirstDay,
     required DateTime today,
-    required Set<DateTime> completedDays,
+    required Map<DateTime, DayCompletionStatus> statuses,
   }) {
     final runs = <_ToleratedMissRun>[];
     final currentDays = <DateTime>[];
@@ -794,7 +792,14 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
     while (!cursor.isAfter(today.add(const Duration(days: 1)))) {
       final normalizedCursor = _normalize(cursor);
-      final isCompleted = completedDays.contains(normalizedCursor);
+      final status = statuses[normalizedCursor] ?? DayCompletionStatus.none;
+      final isCompleted = status == DayCompletionStatus.perfect;
+      // Partial / none days are neutral "skips": they neither start, extend,
+      // nor break a run, and they don't consume miss-tolerance. They bridge an
+      // ongoing run (kept in currentDays for connectors) but never on their own.
+      final isNeutral =
+          status == DayCompletionStatus.partial ||
+          status == DayCompletionStatus.none;
 
       if (!hasCompletion) {
         if (isCompleted) {
@@ -807,7 +812,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
           );
         } else {
           debugPrint(
-            '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — skipping (no run yet)',
+            '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — skipping (no run yet, status=${status.name})',
           );
         }
         cursor = cursor.add(const Duration(days: 1));
@@ -821,6 +826,11 @@ class _StreakCalendarState extends State<StreakCalendar> {
         debugPrint(
           '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — COMPLETED',
         );
+      } else if (isNeutral) {
+        currentDays.add(normalizedCursor);
+        debugPrint(
+          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — ${status.name.toUpperCase()} (neutral skip)',
+        );
       } else if (toleratedMissesUsed < 2) {
         currentDays.add(normalizedCursor);
         toleratedMissesUsed++;
@@ -832,9 +842,10 @@ class _StreakCalendarState extends State<StreakCalendar> {
           '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — BREAK (3rd consecutive miss), saving run of ${currentDays.length} days',
         );
         // Third consecutive miss — remove all trailing non-completed days that
-        // were added as tolerated misses but never bridged to a completion.
+        // were added as tolerated misses / neutral skips but never bridged to a
+        // completion.
         while (currentDays.isNotEmpty &&
-            !completedDays.contains(currentDays.last)) {
+            statuses[currentDays.last] != DayCompletionStatus.perfect) {
           currentDays.removeLast();
         }
 
