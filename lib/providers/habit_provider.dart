@@ -36,9 +36,7 @@ class HabitProvider extends ChangeNotifier {
         previousDate.month == now.month &&
         previousDate.day == now.day;
     final nextIsToday =
-        date.year == now.year &&
-        date.month == now.month &&
-        date.day == now.day;
+        date.year == now.year && date.month == now.month && date.day == now.day;
 
     selectedDate = date;
     // Only animate on an actual transition. Re-selecting today while already on
@@ -67,6 +65,10 @@ class HabitProvider extends ChangeNotifier {
 
   // Method to be called by the ProxyProvider's update callback
   void updateDependencies(StatsProvider newStatsProvider) {
+    // Give StatsProvider a back-reference so it can schedule-filter day
+    // snapshots (see habitsCountingForDay). Stable across rebuilds; safe to set
+    // every update.
+    newStatsProvider.attachHabitProvider(this);
     // Only update and notify if the instance has actually changed
     if (statsProvider != newStatsProvider) {
       statsProvider = newStatsProvider;
@@ -95,10 +97,52 @@ class HabitProvider extends ChangeNotifier {
     await _loadDateJoined();
     await _loadMissingDays();
     _fillToday();
+    await _sanitizeDaySnapshots();
     _syncAllHabitNotifications();
     dataVersion++;
     streakEntryEpoch++;
     notifyListeners();
+  }
+
+  /// One-time heal for day snapshots poisoned by the pre-fix sync merge, which
+  /// unioned habit lists across devices and could leave habits in a day that
+  /// aren't scheduled there (and are incomplete). Those strays broke
+  /// streak/consistency stats. Rewrites each stored snapshot to the same
+  /// schedule-filtered set the app writes natively. Timestamps and the
+  /// isAutoCreated flag are preserved so this does not disturb sync ordering.
+  /// Guarded by a SharedPreferences flag so it runs only once.
+  static const String _daySnapshotSanitizedKey = 'daySnapshotsSanitized_v1';
+
+  Future<void> _sanitizeDaySnapshots() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_daySnapshotSanitizedKey) ?? false) {
+      return;
+    }
+
+    final today = _normalizeDate(DateTime.now());
+    final keys = daysBox.keys.toList();
+    for (final key in keys) {
+      final day = daysBox.get(key);
+      if (day == null) continue;
+
+      // Leave today untouched — it tracks the live habit set, not a snapshot.
+      if (_normalizeDate(day.date) == today) continue;
+
+      final filtered = _filteredHabitsForDay(day.date, day.habits);
+      if (filtered.length == day.habits.length) continue; // already clean
+
+      await daysBox.put(
+        key,
+        Day(
+          date: day.date,
+          habits: filtered,
+          timestamp: day.timestamp,
+          isAutoCreated: day.isAutoCreated,
+        ),
+      );
+    }
+
+    await prefs.setBool(_daySnapshotSanitizedKey, true);
   }
 
   Future<void> _syncAllHabitNotifications({bool force = false}) async {
@@ -458,6 +502,19 @@ class HabitProvider extends ChangeNotifier {
 
   bool appearsOnDay(Habit habit, DateTime day) {
     return _appearsOnDay(habit, day);
+  }
+
+  /// Public schedule filter for a stored day snapshot. Returns only the habits
+  /// that actually count for [day] — scheduled (or completed), not paused, not
+  /// deleted — using the exact same rule the home "last week" progress uses.
+  ///
+  /// Stats/streak/consistency reads MUST go through this. The sync merge unions
+  /// habit lists across devices into a day snapshot; without this filter,
+  /// habits that aren't scheduled on a given day (and are left incomplete) would
+  /// be miscounted as unmet requirements, dropping the day below 100% and
+  /// breaking streaks even though the home view shows the day as complete.
+  List<Habit> habitsCountingForDay(DateTime day, List<Habit> source) {
+    return _filteredHabitsForDay(day, source);
   }
 
   // Function to filter habits for a specific day based on their schedule and completion status

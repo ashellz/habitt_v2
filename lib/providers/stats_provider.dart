@@ -11,6 +11,117 @@ enum StatsType {
   perfectDaysStreak,
 }
 
+/// How a single day counts toward streaks. Single source of truth shared by the
+/// streak number ([StatsProvider.refreshPerfectStreak]) and the calendar runs
+/// ([StreakCalendar]) so they can never disagree.
+///
+/// - [perfect] — every required (non-optional) habit is completed or skipped.
+/// - [partial] — not perfect, but EVERY required habit has at least some
+///   progress (completed/skipped or partial amount/duration). Treated as a
+///   neutral "skip": it neither extends nor breaks a streak.
+/// - [miss] — at least one required habit has zero progress. Consumes streak
+///   miss-tolerance.
+/// - [none] — no required habits that day (empty/all-optional). Neutral, like
+///   [partial].
+enum DayCompletionStatus { perfect, partial, miss, none }
+
+/// How many consecutive misses are tolerated within a streak before it breaks.
+/// The (tolerance + 1)th consecutive miss breaks the run. Shared by the streak
+/// number ([computeCurrentStreak]) and the calendar runs so they always agree.
+const int kStreakMissTolerance = 2;
+
+/// Classifies a day's (already schedule-filtered) habits per
+/// [DayCompletionStatus]. A habit "has progress" when it is completed, skipped,
+/// or has any tracked amount/duration logged. The day is [DayCompletionStatus.perfect]
+/// when all required habits are completed/skipped, [DayCompletionStatus.partial]
+/// when *every* required habit has at least some progress (but not all
+/// complete), [DayCompletionStatus.miss] when at least one required habit has no
+/// progress, and [DayCompletionStatus.none] when there are no required habits.
+DayCompletionStatus classifyDayStatus(List<Habit> habits) {
+  int required = 0;
+  int satisfied = 0; // completed or skipped
+  int withProgress = 0; // satisfied, or partial amount/duration
+
+  for (final habit in habits) {
+    if (habit.optional) continue;
+    required++;
+
+    final isSatisfied = habit.completed || habit.skipped;
+    final hasProgress =
+        isSatisfied ||
+        (habit.tracksAmount && habit.amountCompleted > 0) ||
+        (habit.tracksDuration && habit.durationCompleted > 0);
+
+    if (isSatisfied) satisfied++;
+    if (hasProgress) withProgress++;
+  }
+
+  if (required == 0) return DayCompletionStatus.none;
+  if (satisfied >= required) return DayCompletionStatus.perfect;
+  if (withProgress >= required) return DayCompletionStatus.partial;
+  return DayCompletionStatus.miss;
+}
+
+/// Current streak = perfect days in the ongoing run (the run reaching the most
+/// recent day). [chronological] is oldest → newest, excluding today. Walks
+/// newest → oldest: a perfect day extends the run and resets tolerance;
+/// partial/none are neutral skips; a miss consumes tolerance and the run breaks
+/// once tolerance is exhausted.
+int computeCurrentStreak(List<DayCompletionStatus> chronological) {
+  int streak = 0;
+  int missesLeft = kStreakMissTolerance;
+  for (int i = chronological.length - 1; i >= 0; i--) {
+    switch (chronological[i]) {
+      case DayCompletionStatus.perfect:
+        streak++;
+        missesLeft = kStreakMissTolerance;
+      case DayCompletionStatus.partial:
+      case DayCompletionStatus.none:
+        break; // neutral
+      case DayCompletionStatus.miss:
+        if (missesLeft > 0) {
+          missesLeft--;
+        } else {
+          return streak;
+        }
+    }
+  }
+  return streak;
+}
+
+/// Longest streak across all history, using the same run rules as
+/// [computeCurrentStreak]. Leading misses before the first perfect day (no run
+/// yet) are ignored.
+int computeLongestStreak(List<DayCompletionStatus> chronological) {
+  int longest = 0;
+  int current = 0;
+  int missesLeft = kStreakMissTolerance;
+  bool inRun = false;
+
+  for (final status in chronological) {
+    switch (status) {
+      case DayCompletionStatus.perfect:
+        current++;
+        missesLeft = kStreakMissTolerance;
+        inRun = true;
+        if (current > longest) longest = current;
+      case DayCompletionStatus.partial:
+      case DayCompletionStatus.none:
+        break; // neutral
+      case DayCompletionStatus.miss:
+        if (!inRun) break; // no run started yet
+        if (missesLeft > 0) {
+          missesLeft--;
+        } else {
+          current = 0;
+          inRun = false;
+          missesLeft = kStreakMissTolerance;
+        }
+    }
+  }
+  return longest;
+}
+
 class StatsProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
 
@@ -27,7 +138,27 @@ class StatsProvider extends ChangeNotifier {
   int _cachedVersion = -1;
   Object? _cachedHabitsRef;
   Map<DateTime, double>? _cachedAllDaysProgress;
-  Map<DateTime, bool>? _cachedPerfectDayCompletion;
+  Map<DateTime, DayCompletionStatus>? _cachedDayStatuses;
+
+  /// Back-reference set by [HabitProvider.updateDependencies]. Used only to
+  /// schedule-filter day snapshots via [HabitProvider.habitsCountingForDay] so
+  /// that completion stats agree with the home "last week" progress.
+  HabitProvider? _habitProvider;
+
+  void attachHabitProvider(HabitProvider hp) {
+    _habitProvider = hp;
+  }
+
+  /// The habits in [day] that count toward completion stats for that date.
+  /// Filters the raw snapshot through the schedule rule so habits unioned in by
+  /// sync (but not scheduled that day, and left incomplete) are not miscounted
+  /// as unmet requirements. Falls back to the raw list if no HabitProvider is
+  /// attached yet (early startup).
+  List<Habit> _countingHabits(Day day) {
+    final hp = _habitProvider;
+    if (hp == null) return day.habits;
+    return hp.habitsCountingForDay(day.date, day.habits);
+  }
 
   static const String longestPerfectDaysStreakKey = 'longestPerfectDaysStreak';
 
@@ -81,32 +212,11 @@ class StatsProvider extends ChangeNotifier {
     return allDays;
   }
 
-  bool _isPerfectDay(List<Habit> habits) {
-    int requiredHabits = 0;
-    int completedOrSkipped = 0;
-
-    for (final habit in habits) {
-      if (habit.optional) {
-        continue;
-      }
-      requiredHabits++;
-      if (habit.completed || habit.skipped) {
-        completedOrSkipped++;
-      }
-    }
-
-    if (requiredHabits == 0) {
-      return false;
-    }
-
-    return completedOrSkipped >= requiredHabits;
-  }
-
   void _maybeInvalidateMapCache(HabitProvider hp) {
     if (_cachedVersion != _dataVersion ||
         !identical(_cachedHabitsRef, hp.todaysHabits)) {
       _cachedAllDaysProgress = null;
-      _cachedPerfectDayCompletion = null;
+      _cachedDayStatuses = null;
       _cachedVersion = _dataVersion;
       _cachedHabitsRef = hp.todaysHabits;
     }
@@ -119,28 +229,30 @@ class StatsProvider extends ChangeNotifier {
     final allDays = _allDaysIncludingToday(hp);
     final Map<DateTime, double> daysProgress = {};
     for (final day in allDays) {
-      daysProgress[day.date] = getDayProgress(day.date, day.habits);
+      daysProgress[day.date] = getDayProgress(day.date, _countingHabits(day));
     }
     _cachedAllDaysProgress = daysProgress;
     return daysProgress;
   }
 
-  Map<DateTime, bool> getPerfectDayCompletion(HabitProvider hp) {
+  /// Per-day [DayCompletionStatus] for every tracked day (today uses the live
+  /// habit set). Single source of truth for streak visuals + the streak number.
+  Map<DateTime, DayCompletionStatus> getDayCompletionStatuses(HabitProvider hp) {
     _maybeInvalidateMapCache(hp);
-    if (_cachedPerfectDayCompletion != null) return _cachedPerfectDayCompletion!;
+    if (_cachedDayStatuses != null) return _cachedDayStatuses!;
 
     final allDays = _allDaysIncludingToday(hp);
-    final perfectDayCompletion = <DateTime, bool>{};
+    final statuses = <DateTime, DayCompletionStatus>{};
     for (final day in allDays) {
       final normalizedDate = DateTime(
         day.date.year,
         day.date.month,
         day.date.day,
       );
-      perfectDayCompletion[normalizedDate] = _isPerfectDay(day.habits);
+      statuses[normalizedDate] = classifyDayStatus(_countingHabits(day));
     }
-    _cachedPerfectDayCompletion = perfectDayCompletion;
-    return perfectDayCompletion;
+    _cachedDayStatuses = statuses;
+    return statuses;
   }
 
   double getDayProgress(DateTime date, List<Habit> habits) {
@@ -242,59 +354,35 @@ class StatsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Scans all historical days (oldest → newest) to find the true longest
-  /// perfect-days streak. Updates both the in-memory field and SharedPreferences.
-  void recalculateLongestPerfectDaysStreak() {
-    final allDays = daysBox.values.toList();
-    allDays.sort((a, b) => a.date.compareTo(b.date)); // oldest → newest
-
+  /// Per-day (date, status) records (oldest → newest) for every tracked day
+  /// except today, classified through the schedule filter. Today is excluded
+  /// because it is almost never complete at check time.
+  List<({DateTime date, DayCompletionStatus status})>
+  _streakDaysExcludingToday() {
     final now = DateTime.now();
-    allDays.removeWhere(
-      (d) =>
-          d.date.year == now.year &&
-          d.date.month == now.month &&
-          d.date.day == now.day,
-    );
+    final days =
+        daysBox.values
+            .where(
+              (d) =>
+                  !(d.date.year == now.year &&
+                      d.date.month == now.month &&
+                      d.date.day == now.day),
+            )
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
+    return [
+      for (final d in days)
+        (date: d.date, status: classifyDayStatus(_countingHabits(d))),
+    ];
+  }
 
-    int longest = 0;
-    int currentRun = 0;
-    int missedAllowed = 1;
-
-    for (final day in allDays) {
-      int habitsCompleted = 0;
-      int habitsSkipped = 0;
-      int required = 0;
-
-      for (final habit in day.habits) {
-        if (habit.optional) continue;
-        required++;
-        if (habit.completed) {
-          habitsCompleted++;
-        } else if (habit.skipped) {
-          habitsSkipped++;
-        } else if (habit.tracksAmount && habit.amountCompleted > 0) {
-          habitsCompleted++;
-        } else if (habit.tracksDuration && habit.durationCompleted > 0) {
-          habitsCompleted++;
-        }
-      }
-
-      if (required == 0) continue;
-
-      if (habitsCompleted + habitsSkipped >= required) {
-        currentRun++;
-        missedAllowed = 2;
-        if (currentRun > longest) longest = currentRun;
-      } else {
-        if (missedAllowed > 0) {
-          missedAllowed--;
-        } else {
-          currentRun = 0;
-          missedAllowed = 1;
-        }
-      }
-    }
-
+  /// Scans all historical days to find the true longest perfect-days streak.
+  /// Updates both the in-memory field and SharedPreferences.
+  void recalculateLongestPerfectDaysStreak() {
+    final statuses = [
+      for (final d in _streakDaysExcludingToday()) d.status,
+    ];
+    final longest = computeLongestStreak(statuses);
     _longestPerfectDaysStreak = longest;
     prefs?.setInt(longestPerfectDaysStreakKey, longest);
   }
@@ -322,7 +410,7 @@ class StatsProvider extends ChangeNotifier {
     for (int i = 0; i < 7 && i < orderedDays.length; i++) {
       final day = orderedDays[i];
       int tracking = 0;
-      for (final habit in day.habits) {
+      for (final habit in _countingHabits(day)) {
         if (habit.optional) continue;
         tracking++;
       }
@@ -359,7 +447,7 @@ class StatsProvider extends ChangeNotifier {
     // Then we check the last 7 days
     for (int i = 0; i < 6 && i < orderedDays.length; i++) {
       final day = orderedDays[i];
-      for (final habit in day.habits) {
+      for (final habit in _countingHabits(day)) {
         if (habit.optional) continue;
         totalHabits++;
         if (habit.completed) {
@@ -399,7 +487,7 @@ class StatsProvider extends ChangeNotifier {
       int requiredHabits = 0;
       int completedHabits = 0;
 
-      for (final habit in day.habits) {
+      for (final habit in _countingHabits(day)) {
         if (habit.optional) continue;
         requiredHabits++;
         if (habit.completed) {
@@ -426,7 +514,7 @@ class StatsProvider extends ChangeNotifier {
     for (int i = 0; i < 7 && i < orderedDays.length; i++) {
       final day = orderedDays[i];
       double habitsCompleted = 0;
-      for (final habit in day.habits) {
+      for (final habit in _countingHabits(day)) {
         if (habit.optional) continue;
         if (habit.completed) {
           habitsCompleted++;
@@ -456,79 +544,24 @@ class StatsProvider extends ChangeNotifier {
   }
 
   int refreshPerfectStreak() {
-    int allHabitsCompletedStreak = 0;
-    int missedDaysAllowed = 1;
+    final days = _streakDaysExcludingToday();
+    final statuses = [for (final d in days) d.status];
+    final streak = computeCurrentStreak(statuses);
+    final longest = computeLongestStreak(statuses);
 
-    // First we order the days by date
-    final orderedDays = daysBox.values.toList();
-    orderedDays.sort((a, b) => b.date.compareTo(a.date));
-    debugPrint(
-      "Refreshing perfect days streak, first date: ${orderedDays.first.date}, last date: ${orderedDays.last.date}, total days: ${orderedDays.length}",
-    );
-
-    // Check all days from yesterday backwards to the day we started using the app.
-    // Today is excluded because it is almost never completed at check time.
-    // Up to 2 consecutive missed days are tolerated before the streak breaks.
-    int longestStreak = 0;
-
-    for (int i = 1; i < orderedDays.length; i++) {
-      final day = orderedDays[i];
-      int habitsCompleted = 0;
-      int habitsSkipped = 0;
-      int requiredHabits = 0;
-      bool hasPartialProgress = false;
-
-      for (final habit in day.habits) {
-        if (habit.optional) continue;
-        requiredHabits++;
-        if (habit.completed) {
-          habitsCompleted++;
-        } else if (habit.skipped) {
-          habitsSkipped++;
-        } else if (habit.tracksAmount && habit.amountCompleted > 0) {
-          hasPartialProgress = true;
-        } else if (habit.tracksDuration && habit.durationCompleted > 0) {
-          hasPartialProgress = true;
-        }
-      }
-
-      if (requiredHabits == 0) {
-        // debugPrint('[streak] ${day.date.toIso8601String().split("T").first} — SKIPPED (no required habits)');
-        continue;
-      }
-
-      final isPerfect = habitsCompleted + habitsSkipped >= requiredHabits;
+    for (final d in days) {
       debugPrint(
-        '[streak] ${day.date.toIso8601String().split("T").first} — '
-        'required=$requiredHabits completed=$habitsCompleted skipped=$habitsSkipped partial=$hasPartialProgress '
-        '→ ${isPerfect
-            ? "PERFECT (streak=${allHabitsCompletedStreak + 1})"
-            : hasPartialProgress
-            ? "PARTIAL (neutral)"
-            : "MISS (missedLeft=${missedDaysAllowed - 1})"}',
+        '[streak] ${d.date.toIso8601String().split("T").first} — ${d.status.name}',
       );
+    }
+    debugPrint('[streak] current=$streak longest=$longest');
 
-      if (isPerfect) {
-        allHabitsCompletedStreak++;
-        missedDaysAllowed = 2;
-      } else if (hasPartialProgress) {
-        // Some incomplete habits have progress — treat as neutral, don't touch streak or miss count.
-        continue;
-      } else {
-        if (missedDaysAllowed > 0) {
-          missedDaysAllowed--;
-          continue;
-        }
-        // debugPrint('[streak] → BREAK (no misses left)');
-        break;
-      }
+    // Keep longest in sync on the lazy path too (cheap, same data).
+    if (longest > _longestPerfectDaysStreak) {
+      _longestPerfectDaysStreak = longest;
+      prefs?.setInt(longestPerfectDaysStreakKey, longest);
     }
 
-    if (allHabitsCompletedStreak > longestStreak) {
-      longestStreak = allHabitsCompletedStreak;
-      prefs?.setInt(longestPerfectDaysStreakKey, longestStreak);
-    }
-
-    return allHabitsCompletedStreak;
+    return streak;
   }
 }
