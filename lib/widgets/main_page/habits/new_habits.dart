@@ -454,7 +454,7 @@ class _NewHabitsState extends State<NewHabits>
 
     if (habits.isEmpty) {
       return SizedBox(
-        height: habitsListHeight,
+        height: habitsListHeight - MediaQuery.of(context).padding.bottom,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
