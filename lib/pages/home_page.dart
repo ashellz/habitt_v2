@@ -16,6 +16,7 @@ import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/sync_progress_overlay.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:habitt/widgets/default/new_bottom_nav_bar.dart';
+import 'package:habitt/widgets/home_page/thin_sync_indicator.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -135,6 +136,7 @@ class _HomePageState extends State<HomePage>
   void _maybeShowSyncOverlay() {
     if (!mounted) return;
     final bp = context.read<BackupProvider>();
+    if (bp.syncPillDismissed) return;
     if (bp.syncState != SyncState.syncing) return;
     final hasIncomingWork = bp.syncTotalDeltas > 0 || bp.syncHasBackup;
     final showUpload =
@@ -228,6 +230,13 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             ],
+          ),
+
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            child: const ThinSyncIndicator(),
           ),
 
           // Floating nav bar

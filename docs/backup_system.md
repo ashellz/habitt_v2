@@ -257,6 +257,36 @@ This guarantees Device B can always download a complete snapshot containing all 
 
 ---
 
+## Sync Progress UI
+
+Sync progress is surfaced two ways, and they are **mutually exclusive** by construction:
+
+- **Sync pill** (`SyncProgressOverlay`, `lib/util/sync_progress_overlay.dart`) — a floating banner inserted into the root overlay while a meaningful sync is running (incoming work, visible upload activity, or optimizing). Shows title, status text, and a determinate/indeterminate progress bar.
+- **Thin top indicator** (`ThinSyncIndicator`, `lib/widgets/home_page/thin_sync_indicator.dart`) — a hairline `LinearProgressIndicator` pinned just below the status bar on the home page. It is the "minimized" form of the pill.
+
+### Dismissal model (single source of truth)
+
+`BackupProvider` owns one flag, `_syncPillDismissed` (getter `syncPillDismissed`):
+
+- Reset to `false` at the **start of every sync cycle** (`performSync`, where `syncState` becomes `syncing`). This is the only reset point, so a dismissal lasts for the current cycle and the pill returns on the next sync.
+- Set to `true` via `dismissSyncPill()` when the user swipes the pill away.
+
+Visibility is **derived**, never separately stored:
+
+| Condition | Shows |
+|---|---|
+| `syncState == syncing && !syncPillDismissed` (+ pill gating) | Sync pill |
+| `syncState == syncing && syncPillDismissed` | Thin top indicator |
+| otherwise | neither |
+
+Because both views read the same reactive state, there is no race between them: when the sync ends, `syncState` leaves `syncing` and whichever view was showing fades out on its own (no timers/guards needed). `_maybeShowSyncOverlay` in `home_page.dart` also early-returns when `syncPillDismissed`, so a dismissed pill is never re-inserted mid-cycle.
+
+### Swipe-to-dismiss
+
+Both the pill and the hold-to-complete tip wrap their content in `SwipeUpToDismiss` (`lib/widgets/default/swipe_up_to_dismiss.dart`): upward drag translates the banner, a release past the distance/velocity threshold dismisses it (with a light haptic), and a release below the threshold springs it back smoothly (honoring reduce-motion). The pill's swipe path calls `dismissSyncPill()` before animating out; its auto-close paths (success/error/sign-out) do not.
+
+---
+
 ## Data Models
 
 ### `BackupData`

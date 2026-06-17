@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/swipe_up_to_dismiss.dart';
 
 class SyncProgressOverlay {
   static OverlayEntry? _entry;
@@ -34,6 +35,9 @@ class SyncProgressOverlay {
     overlay.insert(_entry!);
   }
 
+  /// Tears down the overlay. Pure teardown — the "user swiped it away" intent
+  /// (which hands off to the thin top indicator) is recorded by the widget via
+  /// [BackupProvider.dismissSyncPill] before it animates out.
   static void _dismiss() {
     _entry?.remove();
     _entry = null;
@@ -101,7 +105,9 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
       _dismissTimer = Timer(const Duration(milliseconds: 1200), _animateOut);
     } else if (state == SyncState.error) {
       _animateOut();
-    } else if (state == SyncState.idle && !bp.isLoggedIn && !bp.isICloudConnected) {
+    } else if (state == SyncState.idle &&
+        !bp.isLoggedIn &&
+        !bp.isICloudConnected) {
       // User disconnected or signed out while sync was in progress.
       _animateOut();
     }
@@ -139,9 +145,20 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
 
   String _titleText() {
     if (_showingSuccess) return widget.loc.syncOverlayTitleUpToDate;
-    if (widget.bp.syncIsOptimizing) return widget.loc.syncOverlayTitleOptimizing;
+    if (widget.bp.syncIsOptimizing) {
+      return widget.loc.syncOverlayTitleOptimizing;
+    }
     if (widget.bp.syncIsUploading) return widget.loc.syncOverlayTitleUploading;
     return widget.loc.syncOverlayTitleSyncing;
+  }
+
+  /// User flicked the pill away: hand off to the thin top indicator (if the
+  /// sync is still running), then animate the pill out.
+  void _onUserDismiss() {
+    if (widget.bp.syncState == SyncState.syncing) {
+      widget.bp.dismissSyncPill();
+    }
+    _animateOut();
   }
 
   @override
@@ -152,8 +169,8 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
       top: widget.topPadding + 10,
       left: 16,
       right: 16,
-      child: IgnorePointer(
-        ignoring: false,
+      child: SwipeUpToDismiss(
+        onDismiss: _onUserDismiss,
         child: FadeTransition(
           opacity: _entryAnimation,
           child: SlideTransition(
@@ -262,6 +279,7 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
                                         widget.bp.syncIsUploading
                                             ? null
                                             : widget.bp.syncProgress,
+                                    semanticsLabel: _titleText(),
                                     minHeight: 3,
                                     backgroundColor: cp.border,
                                     valueColor: AlwaysStoppedAnimation<Color>(

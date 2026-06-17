@@ -142,6 +142,9 @@ class BackupProvider extends ChangeNotifier {
   double _syncTotalWeight = 0.0;
   double _syncCompletedWeight = 0.0;
 
+  // Used when sync pill is dismissed
+  bool _syncPillDismissed = false;
+
   // Set when the user is silently signed out due to revoked Drive scope.
   // Consumed once by the UI to show a notification popup.
   String? _pendingNotification;
@@ -197,6 +200,8 @@ class BackupProvider extends ChangeNotifier {
   bool get isICloudConnected =>
       _activeBackend == BackupBackend.iCloud && _adapter != null;
 
+  bool get syncPillDismissed => _syncPillDismissed;
+
   /// True when the last successful sync was more than 5 minutes ago (or never).
   /// Used by the resume lifecycle handler to decide whether a full sync cycle
   /// is warranted or just an upload flush.
@@ -216,6 +221,11 @@ class BackupProvider extends ChangeNotifier {
     final factor = 1 << _consecutiveSyncFailures.clamp(0, 10);
     final backed = base * factor;
     return backed > _kMaxBackoffDuration ? _kMaxBackoffDuration : backed;
+  }
+
+  void dismissSyncPill() {
+    _syncPillDismissed = true;
+    notifyListeners();
   }
 
   void clearPendingNotification() {
@@ -335,8 +345,10 @@ class BackupProvider extends ChangeNotifier {
 
   void _advanceProgress(double phaseWeight) {
     if (_syncTotalWeight <= 0) return;
-    _syncCompletedWeight =
-        (_syncCompletedWeight + phaseWeight).clamp(0.0, _syncTotalWeight);
+    _syncCompletedWeight = (_syncCompletedWeight + phaseWeight).clamp(
+      0.0,
+      _syncTotalWeight,
+    );
     _syncProgress = (_syncCompletedWeight / _syncTotalWeight).clamp(0.0, 1.0);
     notifyListeners();
   }
@@ -1127,6 +1139,7 @@ class BackupProvider extends ChangeNotifier {
     }
 
     progressMessage = 'Starting sync...';
+    _syncPillDismissed = false;
     syncState = SyncState.syncing;
     lastError = null;
 
@@ -1364,6 +1377,7 @@ class BackupProvider extends ChangeNotifier {
     _syncOptimizingRemaining = 0;
     _syncCompletedWeight = 0.0;
     _syncTotalWeight = 0.0;
+    notifyListeners();
   }
 
   Future<void> _persistLastSyncTime() async {

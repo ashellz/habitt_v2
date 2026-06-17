@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/swipe_up_to_dismiss.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -126,8 +127,11 @@ class _HoldCompleteTipWidgetState extends State<_HoldCompleteTipWidget>
       top: widget.topPadding + 10,
       left: 16,
       right: 16,
-      child: IgnorePointer(
-        ignoring: false,
+      child: SwipeUpToDismiss(
+        onDismiss: _animateOut,
+        onDragStart: () => _timer?.cancel(),
+        onSettle:
+            () => _timer = Timer(const Duration(seconds: 5), _animateOut),
         child: FadeTransition(
           opacity: _animation,
           child: SlideTransition(
