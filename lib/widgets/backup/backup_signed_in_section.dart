@@ -393,12 +393,6 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                       text: loc.restoreFromBackup,
                       onTap: () => _openBackupHistory(context, cp),
                     ),
-                    Divider(color: cp.border, height: 0),
-                    ProfileOption(
-                      cp: cp,
-                      text: loc.localBackups,
-                      onTap: _showLocalBackupSheet,
-                    ),
                   ],
                 ),
               ),
@@ -412,11 +406,22 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                     borderRadius: BorderRadius.circular(24),
                   ),
                 ),
-                child: ProfileOption(
-                  cp: cp,
-                  text: loc.importFromOtherApps,
-                  svgPath: 'assets/images/new-svg/import-apps.svg',
-                  onTap: _showImportFromAppsSheet,
+                child: Column(
+                  children: [
+                    ProfileOption(
+                      cp: cp,
+                      text: loc.localBackups,
+                      svgPath: 'assets/images/new-svg/local-backup.svg',
+                      onTap: _showLocalBackupSheet,
+                    ),
+                    Divider(color: cp.border, height: 0),
+                    ProfileOption(
+                      cp: cp,
+                      text: loc.importFromOtherApps,
+                      svgPath: 'assets/images/new-svg/import-apps.svg',
+                      onTap: _showImportFromAppsSheet,
+                    ),
+                  ],
                 ),
               ),
 

@@ -25,6 +25,7 @@ class _ImportFromAppsSheetState extends State<ImportFromAppsSheet>
     with TickerProviderStateMixin {
   bool _allowPop = false;
   late final StatusOverlayPopupController _overlay;
+  bool _importing = false;
 
   @override
   void initState() {
@@ -55,12 +56,17 @@ class _ImportFromAppsSheetState extends State<ImportFromAppsSheet>
   }
 
   Future<void> _handleHabitKitImport() async {
-    if (!mounted) return;
+    if (!mounted || _importing) return;
     final loc = AppLocalizations.of(context)!;
+
+    setState(() => _importing = true);
 
     // 1. Pick file.
     final filePath = await BackupService.pickImportPath(true);
-    if (filePath == null || !mounted) return;
+    if (filePath == null) {
+      if (mounted) setState(() => _importing = false);
+      return;
+    }
 
     // 2. Read + parse — show error toast immediately on malformed JSON.
     HabitKitImportResult importResult;
@@ -69,6 +75,7 @@ class _ImportFromAppsSheetState extends State<ImportFromAppsSheet>
       importResult = HabitKitImportService.parse(content);
     } catch (_) {
       _showOverlay(title: loc.importFailed, isError: true);
+      if (mounted) setState(() => _importing = false);
       return;
     }
 
@@ -86,7 +93,12 @@ class _ImportFromAppsSheetState extends State<ImportFromAppsSheet>
           ),
     );
 
-    if (!mounted || success == null) return;
+    if (!mounted || success == null) {
+      if (mounted) setState(() => _importing = false);
+      return;
+    }
+
+    setState(() => _importing = false);
 
     _showOverlay(
       title: success ? loc.importSuccess : loc.importFailed,
@@ -188,6 +200,7 @@ class _ImportFromAppsSheetState extends State<ImportFromAppsSheet>
                       ),
                     ),
                     child: _AppRow(
+                      isLoading: _importing,
                       cp: cp,
                       logoPath: 'assets/images/apps/habitkit.png',
                       appName: 'HabitKit',
@@ -210,12 +223,14 @@ class _AppRow extends StatelessWidget {
     required this.logoPath,
     required this.appName,
     required this.onTap,
+    this.isLoading = false,
   });
 
   final ColorProvider cp;
   final String logoPath;
   final String appName;
   final VoidCallback onTap;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -240,13 +255,23 @@ class _AppRow extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            RotatedBox(
-              quarterTurns: 2,
-              child: SvgPicture.asset(
-                'assets/images/new-svg/back.svg',
-                colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+            if (isLoading)
+              SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: cp.text,
+                ),
+              )
+            else
+              RotatedBox(
+                quarterTurns: 2,
+                child: SvgPicture.asset(
+                  'assets/images/new-svg/back.svg',
+                  colorFilter: ColorFilter.mode(cp.text, BlendMode.srcIn),
+                ),
               ),
-            ),
           ],
         ),
       ),
