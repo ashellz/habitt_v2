@@ -133,11 +133,15 @@ class NewDefaultButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-    final Gradient gradient = LinearGradient(
-      begin: Alignment(0.09, 0.11),
-      end: Alignment(0.86, 0.90),
-      colors: [cp.mainButtonLeftGradient, cp.mainButtonRightGradient],
-    );
+    final Gradient? effectiveGradient = isGradient
+        ? LinearGradient(
+            begin: const Alignment(0.09, 0.11),
+            end: const Alignment(0.86, 0.90),
+            colors: color != null
+                ? [color!, color!]
+                : [cp.mainButtonLeftGradient, cp.mainButtonRightGradient],
+          )
+        : null;
 
     Color buttonColor;
     switch (_variant) {
@@ -183,8 +187,8 @@ class NewDefaultButton extends StatelessWidget {
           width: width,
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            gradient: isGradient && color == null ? gradient : null,
-            color: isGradient && color == null ? null : buttonColor,
+            gradient: effectiveGradient,
+            color: isGradient ? null : buttonColor,
             borderRadius: BorderRadius.circular(24),
           ),
           child: IgnorePointer(

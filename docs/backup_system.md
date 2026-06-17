@@ -227,7 +227,9 @@ When the user connects an account for the first time (no prior sync history) or 
 
 This guarantees Device B can always download a complete snapshot containing all changes made before and after the account was connected.
 
-`signOut()` clears `_lastSyncTime` from both memory and SharedPreferences so that re-connection always starts from a clean cursor.
+`signOut()` and `deleteAccount()` clear `_lastSyncTime` from both memory and SharedPreferences so that re-connection always starts from a clean cursor. Both also cancel all pending timers and reset `_hasPendingSync`.
+
+**In-flight sync safety:** if a periodic or auto-sync is already in progress when the user disconnects, `_adapter` is set to `null` by `signOut()`. `_onSyncSuccess()` checks for a null adapter at its entry point and aborts without persisting a sync timestamp or broadcasting `SyncState.success`, so no stale state is left behind. The sync overlay dismisses as soon as it observes `SyncState.idle` with no active backend.
 
 ---
 
@@ -251,6 +253,7 @@ This guarantees Device B can always download a complete snapshot containing all 
 | Decryption failure | Marked applied → skipped permanently (corrupted) |
 | Scope revoked | Silent sign-out + user notification |
 | Transient errors during upload | Silent failure → retried on next timer tick |
+| User disconnects mid-sync | `_onSyncSuccess` aborts (adapter null); no sync cursor persisted; overlay dismisses immediately |
 
 ---
 

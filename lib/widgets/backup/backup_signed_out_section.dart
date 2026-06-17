@@ -9,6 +9,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/dialogs/restore_choice_dialog.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
+import 'package:habitt/widgets/sheets/import_from_apps_sheet.dart';
 import 'package:habitt/widgets/sheets/local_backup_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -61,6 +62,18 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
     );
   }
 
+  _showImportFromAppsSheet() {
+    final cp = context.read<ColorProvider>();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder: (context) => const ImportFromAppsSheet(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
@@ -70,108 +83,137 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: ShapeDecoration(
-          color: cp.field,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: cp.border),
-            borderRadius: BorderRadius.circular(24),
-          ),
-        ),
-        child: Column(
-          children: [
-            // ─── Local Backups ─────────────────────────────────────────────
-            ProfileOption(
-              cp: cp,
-              text: loc.localBackups,
-              svgPath: 'assets/images/new-svg/local-backup.svg',
-              onTap: _showLocalBackupSheet,
-            ),
-            Divider(color: cp.border, height: 0),
-            // ─── Google Drive ──────────────────────────────────────────────
-            GestureDetector(
-              onTap: _signingIn ? null : () => _handleSignIn(bp),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                color: Colors.transparent,
-                child: Row(
-                  spacing: 12,
-                  children: [
-                    Text(
-                      loc.connectGoogleDrive,
-                      style: TextStyle(
-                        color: cp.text,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const Spacer(),
-                    if (_signingIn)
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: cp.text,
-                        ),
-                      )
-                    else
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: SvgPicture.asset(
-                          'assets/images/new-svg/google.svg',
-                          colorFilter: ColorFilter.mode(
-                            cp.lightGreyText,
-                            BlendMode.srcIn,
-                          ),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                  ],
-                ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: ShapeDecoration(
+              color: cp.field,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(width: 1, color: cp.border),
+                borderRadius: BorderRadius.circular(24),
               ),
             ),
-            // ─── iCloud (iOS only) ─────────────────────────────────────────
-            if (showICloud) ...[
-              Divider(color: cp.border, height: 0),
-              GestureDetector(
-                onTap:
-                    _connectingICloud ? null : () => _handleConnectICloud(bp),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  color: Colors.transparent,
-                  child: Row(
-                    spacing: 12,
-                    children: [
-                      Text(
-                        loc.connectICloud,
-                        style: TextStyle(
-                          color: cp.text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      if (_connectingICloud)
-                        SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
+            child: Column(
+              children: [
+                ProfileOption(
+                  cp: cp,
+                  text: loc.localBackups,
+                  svgPath: 'assets/images/new-svg/local-backup.svg',
+                  onTap: _showLocalBackupSheet,
+                ),
+                Divider(color: cp.border, height: 0),
+                ProfileOption(
+                  cp: cp,
+                  text: loc.importFromOtherApps,
+                  svgPath: 'assets/images/new-svg/import-apps.svg',
+                  onTap: _showImportFromAppsSheet,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: ShapeDecoration(
+              color: cp.field,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(width: 1, color: cp.border),
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: _signingIn ? null : () => _handleSignIn(bp),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    color: Colors.transparent,
+                    child: Row(
+                      spacing: 12,
+                      children: [
+                        Text(
+                          loc.connectGoogleDrive,
+                          style: TextStyle(
                             color: cp.text,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
-                        )
-                      else
-                        Icon(Icons.apple, color: cp.lightGreyText, size: 22),
-                    ],
+                        ),
+                        const Spacer(),
+                        if (_signingIn)
+                          SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: cp.text,
+                            ),
+                          )
+                        else
+                          SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: SvgPicture.asset(
+                              'assets/images/new-svg/google.svg',
+                              colorFilter: ColorFilter.mode(
+                                cp.lightGreyText,
+                                BlendMode.srcIn,
+                              ),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ],
-        ),
+                // ─── iCloud (iOS only) ─────────────────────────────────────────
+                if (showICloud) ...[
+                  Divider(color: cp.border, height: 0),
+                  GestureDetector(
+                    onTap:
+                        _connectingICloud
+                            ? null
+                            : () => _handleConnectICloud(bp),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      color: Colors.transparent,
+                      child: Row(
+                        spacing: 12,
+                        children: [
+                          Text(
+                            loc.connectICloud,
+                            style: TextStyle(
+                              color: cp.text,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const Spacer(),
+                          if (_connectingICloud)
+                            SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: cp.text,
+                              ),
+                            )
+                          else
+                            Icon(
+                              Icons.apple,
+                              color: cp.lightGreyText,
+                              size: 22,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

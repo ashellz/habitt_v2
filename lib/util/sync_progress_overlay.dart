@@ -93,12 +93,16 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
 
   void _onBpChanged() {
     if (!mounted) return;
-    final state = widget.bp.syncState;
+    final bp = widget.bp;
+    final state = bp.syncState;
     if (state == SyncState.success && !_showingSuccess) {
       setState(() => _showingSuccess = true);
       _spinController.stop();
       _dismissTimer = Timer(const Duration(milliseconds: 1200), _animateOut);
     } else if (state == SyncState.error) {
+      _animateOut();
+    } else if (state == SyncState.idle && !bp.isLoggedIn && !bp.isICloudConnected) {
+      // User disconnected or signed out while sync was in progress.
       _animateOut();
     }
   }

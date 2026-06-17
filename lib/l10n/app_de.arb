@@ -993,5 +993,24 @@
   },
   "followHabitSchedule": "Gewohnheitsplan folgen",
   "notificationScheduleDependencyTip": "Diese Erinnerung erscheint nur an Tagen, an denen die Gewohnheit geplant ist.",
-  "notificationWeekdaysFixedTip": "Die Gewohnheit erscheint nie an deaktivierten Tagen. Um dies zu ändern, bearbeite deine Planungsoptionen."
+  "notificationWeekdaysFixedTip": "Die Gewohnheit erscheint nie an deaktivierten Tagen. Um dies zu ändern, bearbeite deine Planungsoptionen.",
+
+  "importFromOtherApps": "Import from other apps",
+  "importHabitKitTitle": "{appName}-Daten importieren",
+  "@importHabitKitTitle": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitDesc": "Deine Gewohnheiten und dein Verlauf werden importiert.",
+  "importHabitKitMergeDesc": "Behalte deine Gewohnheiten und füge die aus {appName} hinzu. Gewohnheiten mit gleichem Namen werden zusammengeführt.",
+  "@importHabitKitMergeDesc": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitReplaceDesc": "Lösche zuerst deine aktuellen Gewohnheiten und importiere dann. Dies kann nicht rückgängig gemacht werden.",
+  "importHabitKitNote": "Symbole und Farben können sich ändern, „schlechte Gewohnheiten” werden als normale Gewohnheiten importiert",
+  "replace": "Ersetzen",
+  "backupBeforeImporting": "Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst."
 }

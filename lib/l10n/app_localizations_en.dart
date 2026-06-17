@@ -2587,4 +2587,36 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationWeekdaysFixedTip =>
       'Habit will never appear on disabled days, to change this edit your weekly scheduling options.';
+
+  @override
+  String get importHabitKitDesc => 'Your habits and history will be imported.';
+
+  @override
+  String importHabitKitMergeDesc(String appName) {
+    return 'Keep your habits and add $appName\'s. Habits with the same name combine.';
+  }
+
+  @override
+  String importHabitKitReplaceDesc(Object appName) {
+    return 'Deletes your current habits first, then imports from $appName. This can\'t be undone.';
+  }
+
+  @override
+  String get importHabitKitNote =>
+      'Icons & colors may change, “bad habits” are imported as regular habits';
+
+  @override
+  String get replace => 'Replace';
+
+  @override
+  String get importFromOtherApps => 'Import from other apps';
+
+  @override
+  String importHabitKitTitle(String appName) {
+    return 'Import $appName data';
+  }
+
+  @override
+  String get backupBeforeImporting =>
+      'It\'s strongly recommended to back up your data before proceeding.';
 }

@@ -984,5 +984,23 @@
   },
   "followHabitSchedule": "Prati raspored navike",
   "notificationScheduleDependencyTip": "Notifikacije će se prikazati samo u danima kada je navika zakazana.",
-  "notificationWeekdaysFixedTip": "Navika se nikada neće pojaviti u onemogućenim danima; da to promijenite, uredite sedmični raspored navike."
+  "notificationWeekdaysFixedTip": "Navika se nikada neće pojaviti u onemogućenim danima; da to promijenite, uredite sedmični raspored navike.",
+  "importFromOtherApps": "Učitaj iz drugih aplikacija",
+  "importHabitKitTitle": "Učitaj podatke iz {appName}",
+  "@importHabitKitTitle": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitDesc": "Vaše navike i historija bit će spojene.",
+  "importHabitKitMergeDesc": "Zadržite svoje navike i dodajte one iz {appName}. Navike s istim nazivom se spajaju.",
+  "@importHabitKitMergeDesc": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitReplaceDesc": "Vaše trenutne navike će biti izbrisane i zamijenjene sa navikama iz {appName}. Ovo se ne može poništiti.",
+  "importHabitKitNote": "Ikone i boje se mogu promijeniti, 'loše navike' se računaju kao obične navike",
+  "replace": "Zamijeni",
+  "backupBeforeImporting": "Preporučuje se napraviti backup podataka prije nastavka."
 }

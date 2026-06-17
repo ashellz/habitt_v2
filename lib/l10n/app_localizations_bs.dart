@@ -2585,4 +2585,36 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get notificationWeekdaysFixedTip =>
       'Navika se nikada neće pojaviti u onemogućenim danima; da to promijenite, uredite sedmični raspored navike.';
+
+  @override
+  String get importHabitKitDesc => 'Vaše navike i historija bit će spojene.';
+
+  @override
+  String importHabitKitMergeDesc(String appName) {
+    return 'Zadržite svoje navike i dodajte one iz $appName. Navike s istim nazivom se spajaju.';
+  }
+
+  @override
+  String importHabitKitReplaceDesc(Object appName) {
+    return 'Vaše trenutne navike će biti izbrisane i zamijenjene sa navikama iz $appName. Ovo se ne može poništiti.';
+  }
+
+  @override
+  String get importHabitKitNote =>
+      'Ikone i boje se mogu promijeniti, \'loše navike\' se računaju kao obične navike';
+
+  @override
+  String get replace => 'Zamijeni';
+
+  @override
+  String get importFromOtherApps => 'Učitaj iz drugih aplikacija';
+
+  @override
+  String importHabitKitTitle(String appName) {
+    return 'Učitaj podatke iz $appName';
+  }
+
+  @override
+  String get backupBeforeImporting =>
+      'Preporučuje se napraviti backup podataka prije nastavka.';
 }

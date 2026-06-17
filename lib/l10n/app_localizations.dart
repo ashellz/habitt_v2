@@ -4365,6 +4365,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Habit will never appear on disabled days, to change this edit your weekly scheduling options.'**
   String get notificationWeekdaysFixedTip;
+
+  /// No description provided for @importHabitKitDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your habits and history will be imported.'**
+  String get importHabitKitDesc;
+
+  /// No description provided for @importHabitKitMergeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your habits and add {appName}\'s. Habits with the same name combine.'**
+  String importHabitKitMergeDesc(String appName);
+
+  /// No description provided for @importHabitKitReplaceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deletes your current habits first, then imports from {appName}. This can\'t be undone.'**
+  String importHabitKitReplaceDesc(Object appName);
+
+  /// No description provided for @importHabitKitNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Icons & colors may change, “bad habits” are imported as regular habits'**
+  String get importHabitKitNote;
+
+  /// No description provided for @replace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get replace;
+
+  /// No description provided for @importFromOtherApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from other apps'**
+  String get importFromOtherApps;
+
+  /// No description provided for @importHabitKitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import {appName} data'**
+  String importHabitKitTitle(String appName);
+
+  /// No description provided for @backupBeforeImporting.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s strongly recommended to back up your data before proceeding.'**
+  String get backupBeforeImporting;
 }
 
 class _AppLocalizationsDelegate

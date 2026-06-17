@@ -467,25 +467,32 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       iconPath: habit.iconPath,
                       isCompleted: displayHabit.completed,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          habit.resolvedName(
-                            context
-                                .read<LanguageProvider>()
-                                .locale
-                                ?.languageCode,
-                          ),
-                          style: TextStyle(
-                            color: cp.text,
-                            fontSize: 19 / 1.2,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              habit.resolvedName(
+                                context
+                                    .read<LanguageProvider>()
+                                    .locale
+                                    ?.languageCode,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: cp.text,
+                                fontSize: 19 / 1.2,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            _summaryMeta(cp, displayHabit),
+                          ],
                         ),
-                        const SizedBox(height: 6),
-                        _summaryMeta(cp, displayHabit),
-                      ],
+                      ),
                     ),
                   ],
                 ),

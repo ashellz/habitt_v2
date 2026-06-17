@@ -2606,4 +2606,37 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get notificationWeekdaysFixedTip =>
       'Die Gewohnheit erscheint nie an deaktivierten Tagen. Um dies zu ändern, bearbeite deine Planungsoptionen.';
+
+  @override
+  String get importHabitKitDesc =>
+      'Deine Gewohnheiten und dein Verlauf werden importiert.';
+
+  @override
+  String importHabitKitMergeDesc(String appName) {
+    return 'Behalte deine Gewohnheiten und füge die aus $appName hinzu. Gewohnheiten mit gleichem Namen werden zusammengeführt.';
+  }
+
+  @override
+  String importHabitKitReplaceDesc(Object appName) {
+    return 'Lösche zuerst deine aktuellen Gewohnheiten und importiere dann. Dies kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String get importHabitKitNote =>
+      'Symbole und Farben können sich ändern, „schlechte Gewohnheiten” werden als normale Gewohnheiten importiert';
+
+  @override
+  String get replace => 'Ersetzen';
+
+  @override
+  String get importFromOtherApps => 'Import from other apps';
+
+  @override
+  String importHabitKitTitle(String appName) {
+    return '$appName-Daten importieren';
+  }
+
+  @override
+  String get backupBeforeImporting =>
+      'Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst.';
 }

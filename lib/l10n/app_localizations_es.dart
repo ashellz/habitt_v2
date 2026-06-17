@@ -2602,4 +2602,36 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get notificationWeekdaysFixedTip =>
       'El hábito nunca aparecerá en los días deshabilitados; para cambiarlo, edita tus opciones de programación.';
+
+  @override
+  String get importHabitKitDesc => 'Se importarán tus hábitos y tu historial.';
+
+  @override
+  String importHabitKitMergeDesc(String appName) {
+    return 'Mantén tus hábitos y añade los de $appName. Los hábitos con el mismo nombre se combinan.';
+  }
+
+  @override
+  String importHabitKitReplaceDesc(Object appName) {
+    return 'Elimina primero tus hábitos actuales y luego importa. Esta acción no se puede deshacer.';
+  }
+
+  @override
+  String get importHabitKitNote =>
+      'Los iconos y colores pueden cambiar, los «malos hábitos» se importan como hábitos normales';
+
+  @override
+  String get replace => 'Reemplazar';
+
+  @override
+  String get importFromOtherApps => 'Import from other apps';
+
+  @override
+  String importHabitKitTitle(String appName) {
+    return 'Importar datos de $appName';
+  }
+
+  @override
+  String get backupBeforeImporting =>
+      'Se recomienda encarecidamente hacer una copia de seguridad de tus datos antes de continuar.';
 }

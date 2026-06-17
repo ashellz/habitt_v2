@@ -679,6 +679,7 @@ class BackupProvider extends ChangeNotifier {
     _autoSyncTimer = null;
     _periodicSyncTimer?.cancel();
     _periodicSyncTimer = null;
+    _hasPendingSync = false;
     await _adapter?.dispose();
     _adapter = null;
     await prefs.remove(_kBackupUserEmailKey);
@@ -796,6 +797,7 @@ class BackupProvider extends ChangeNotifier {
       _autoSyncTimer = null;
       _periodicSyncTimer?.cancel();
       _periodicSyncTimer = null;
+      _hasPendingSync = false;
 
       notifyListeners();
     } catch (e) {
@@ -1318,6 +1320,24 @@ class BackupProvider extends ChangeNotifier {
   }
 
   Future<void> _onSyncSuccess({bool clearWarning = true}) async {
+    // Guard: adapter was cleared mid-sync (user signed out or disconnected).
+    // Do not persist the sync cursor or set success state for an aborted sync.
+    if (_adapter == null) {
+      _syncState = SyncState.idle;
+      _progressMessage = null;
+      _syncProgress = 0.0;
+      _syncTotalDeltas = 0;
+      _syncCurrentDelta = 0;
+      _syncHasBackup = false;
+      _syncIsUploading = false;
+      _syncIsOptimizing = false;
+      _syncOptimizingTotal = 0;
+      _syncOptimizingRemaining = 0;
+      _syncCompletedWeight = 0.0;
+      _syncTotalWeight = 0.0;
+      notifyListeners();
+      return;
+    }
     _lastSyncTime = DateTime.now();
     if (clearWarning) _syncWarning = null;
     await _persistLastSyncTime();

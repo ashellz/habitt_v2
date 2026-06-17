@@ -236,9 +236,7 @@ class BackupService {
     );
   }
 
-  static Future<void> deleteLocalBackupPin(
-    FlutterSecureStorage storage,
-  ) async {
+  static Future<void> deleteLocalBackupPin(FlutterSecureStorage storage) async {
     const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
     await storage.delete(key: _kLocalBackupPinKey, aOptions: androidOpts);
   }
@@ -520,11 +518,17 @@ class BackupService {
     return null;
   }
 
-  static Future<String?> pickImportPath() async {
+  static Future<String?> pickImportPath([bool otherApps = false]) async {
+    if (!otherApps) {
+      return FilePicker.pickFiles(
+        dialogTitle: 'Import backup',
+        type: FileType.custom,
+        allowedExtensions: ['habitt'],
+      ).then((result) => result?.files.single.path);
+    }
+
     return FilePicker.pickFiles(
       dialogTitle: 'Import backup',
-      type: FileType.custom,
-      allowedExtensions: ['habitt'],
     ).then((result) => result?.files.single.path);
   }
 

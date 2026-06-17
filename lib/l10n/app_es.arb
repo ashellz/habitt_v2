@@ -993,5 +993,24 @@
   },
   "followHabitSchedule": "Seguir el horario del hábito",
   "notificationScheduleDependencyTip": "Este recordatorio solo se activa los días en que el hábito está programado.",
-  "notificationWeekdaysFixedTip": "El hábito nunca aparecerá en los días deshabilitados; para cambiarlo, edita tus opciones de programación."
+  "notificationWeekdaysFixedTip": "El hábito nunca aparecerá en los días deshabilitados; para cambiarlo, edita tus opciones de programación.",
+
+  "importFromOtherApps": "Import from other apps",
+  "importHabitKitTitle": "Importar datos de {appName}",
+  "@importHabitKitTitle": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitDesc": "Se importarán tus hábitos y tu historial.",
+  "importHabitKitMergeDesc": "Mantén tus hábitos y añade los de {appName}. Los hábitos con el mismo nombre se combinan.",
+  "@importHabitKitMergeDesc": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitReplaceDesc": "Elimina primero tus hábitos actuales y luego importa. Esta acción no se puede deshacer.",
+  "importHabitKitNote": "Los iconos y colores pueden cambiar, los «malos hábitos» se importan como hábitos normales",
+  "replace": "Reemplazar",
+  "backupBeforeImporting": "Se recomienda encarecidamente hacer una copia de seguridad de tus datos antes de continuar."
 }

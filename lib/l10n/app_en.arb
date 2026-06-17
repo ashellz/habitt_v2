@@ -995,5 +995,24 @@
   },
   "followHabitSchedule": "Follow habit schedule",
   "notificationScheduleDependencyTip": "This reminder only fires on days the habit is scheduled to appear.",
-  "notificationWeekdaysFixedTip": "Habit will never appear on disabled days, to change this edit your weekly scheduling options."
+  "notificationWeekdaysFixedTip": "Habit will never appear on disabled days, to change this edit your weekly scheduling options.",
+
+  "importHabitKitDesc": "Your habits and history will be imported.",
+  "importHabitKitMergeDesc": "Keep your habits and add {appName}'s. Habits with the same name combine.",
+  "@importHabitKitMergeDesc": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "importHabitKitReplaceDesc": "Deletes your current habits first, then imports from {appName}. This can't be undone.",
+  "importHabitKitNote": "Icons & colors may change, “bad habits” are imported as regular habits",
+  "replace": "Replace",
+  "importFromOtherApps": "Import from other apps",
+  "importHabitKitTitle": "Import {appName} data",
+  "@importHabitKitTitle": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "backupBeforeImporting": "It's strongly recommended to back up your data before proceeding."
 }

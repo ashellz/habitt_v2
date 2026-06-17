@@ -11,6 +11,7 @@ import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/pin_dialog.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
+import 'package:habitt/widgets/sheets/import_from_apps_sheet.dart';
 import 'package:habitt/widgets/sheets/local_backup_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -96,6 +97,18 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
       barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
       isScrollControlled: true,
       builder: (context) => const LocalBackupSheet(),
+    );
+  }
+
+  _showImportFromAppsSheet() {
+    final cp = context.read<ColorProvider>();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: cp.isDark ? cp.habitBg : cp.bg,
+      barrierColor: cp.greyText.darken().withValues(alpha: 0.3),
+      isScrollControlled: true,
+      builder: (context) => const ImportFromAppsSheet(),
     );
   }
 
@@ -399,9 +412,25 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                     borderRadius: BorderRadius.circular(24),
                   ),
                 ),
+                child: ProfileOption(
+                  cp: cp,
+                  text: loc.importFromOtherApps,
+                  svgPath: 'assets/images/new-svg/import-apps.svg',
+                  onTap: _showImportFromAppsSheet,
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: ShapeDecoration(
+                  color: cp.field,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1, color: cp.border),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
                 child: Column(
                   children: [
-                    // ─── Disconnect ────────────────────────────────────────
                     GestureDetector(
                       onTap:
                           widget.isICloud
