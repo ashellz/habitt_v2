@@ -796,8 +796,10 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   ) async {
     await showNotificationTimeDialog(
       initialMinutes: slot.minutesOfDay,
-      onTimeSelected: (minutesOfDay) {
-        sp.updateHabitNotificationTime(slot.id, minutesOfDay);
+      initialDays: slot.days,
+      isHabit: true,
+      onSaved: (minutesOfDay, days) {
+        sp.updateHabitNotificationTime(slot.id, minutesOfDay, days: days);
       },
       isNew: false,
       context: context,
@@ -813,9 +815,10 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
     await showNotificationTimeDialog(
       isNew: true,
+      isHabit: true,
       initialMinutes: initialMinutes,
-      onTimeSelected: (minutesOfDay) {
-        sp.addHabitNotificationTime(minutesOfDay: minutesOfDay);
+      onSaved: (minutesOfDay, days) {
+        sp.addHabitNotificationTime(minutesOfDay: minutesOfDay, days: days);
       },
       context: context,
     );
@@ -926,6 +929,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                               },
                               isHabit: true,
                               minutesOfDay: slot.minutesOfDay,
+                              days: slot.days,
 
                               onDelete: () async {
                                 await _showDeleteNotificationConfirmation(

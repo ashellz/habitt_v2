@@ -990,5 +990,8 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "followHabitSchedule": "Segui la pianificazione dell'abitudine",
+  "notificationScheduleDependencyTip": "Questo promemoria viene mostrato solo nei giorni in cui l'abitudine è pianificata.",
+  "notificationWeekdaysFixedTip": "L'abitudine non apparirà mai nei giorni disattivati; per modificarlo, modifica le opzioni di pianificazione."
 }

@@ -238,6 +238,11 @@ class NotificationService {
       }
 
       for (final slot in habit.notificationTimes) {
+        // skips notifications that shouldn't fire on the current day based on selected days
+        if (!slot.firesOnWeekday(day.weekday)) {
+          continue;
+        }
+
         final hour = slot.minutesOfDay ~/ 60;
         final minute = slot.minutesOfDay % 60;
         final scheduledAt = DateTime(

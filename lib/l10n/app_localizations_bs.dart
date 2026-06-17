@@ -1270,12 +1270,12 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String notificationProgressNotStartedAmount(Object label) {
-    return 'Počni samo s 1 $label, lahko je!|Ne treba ti motivacija. Samo počni.|Najteži dio je početak. Možeš to!';
+    return 'Počni samo s 1 $label, lahko je!|Evo tvoja doza motivacije: najbolji si, vrijeme je da započneš sa ovom navikom ;)|Najteži dio je početak. Možeš ti to!';
   }
 
   @override
   String get notificationProgressNotStartedDuration =>
-      'Počni barem s kratkom sesijom!|Ne treba ti motivacija. Samo počni.|Najteži dio je započeti. Možeš to!|Za nekoliko minuta bit ćeš sretan što si počeo.';
+      'Počni barem s kratkom sesijom!|Evo tvoja doza motivacije: najbolji si, vrijeme je da započneš sa ovom navikom :)|Najteže je započeti, ali kada započneš sve ide glatko. Možeš ti to!|Za nekoliko minuta bit ćeš sretan što si počeo.|Započeti je već pola urađenog posla. Hajde polahko :)';
 
   @override
   String notificationScheduleCustomEveryDays(Object days) {
@@ -2574,4 +2574,15 @@ class AppLocalizationsBs extends AppLocalizations {
   String syncOverlayOptimizingRemaining(int count) {
     return 'Preostalo $count fajlova...';
   }
+
+  @override
+  String get followHabitSchedule => 'Prati raspored navike';
+
+  @override
+  String get notificationScheduleDependencyTip =>
+      'Notifikacije će se prikazati samo u danima kada je navika zakazana.';
+
+  @override
+  String get notificationWeekdaysFixedTip =>
+      'Navika se nikada neće pojaviti u onemogućenim danima; da to promijenite, uredite sedmični raspored navike.';
 }

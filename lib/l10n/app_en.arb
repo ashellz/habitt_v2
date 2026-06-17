@@ -992,5 +992,8 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "followHabitSchedule": "Follow habit schedule",
+  "notificationScheduleDependencyTip": "This reminder only fires on days the habit is scheduled to appear.",
+  "notificationWeekdaysFixedTip": "Habit will never appear on disabled days, to change this edit your weekly scheduling options."
 }

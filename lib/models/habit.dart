@@ -1030,7 +1030,9 @@ class Habit extends HiveObject {
   ) {
     if (a.length != b.length) return false;
     for (int i = 0; i < a.length; i++) {
-      if (a[i].id != b[i].id || a[i].minutesOfDay != b[i].minutesOfDay) {
+      if (a[i].id != b[i].id ||
+          a[i].minutesOfDay != b[i].minutesOfDay ||
+          !_sameIntList(a[i].days, b[i].days)) {
         return false;
       }
     }

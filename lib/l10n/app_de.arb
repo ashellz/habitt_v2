@@ -990,5 +990,8 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "followHabitSchedule": "Gewohnheitsplan folgen",
+  "notificationScheduleDependencyTip": "Diese Erinnerung erscheint nur an Tagen, an denen die Gewohnheit geplant ist.",
+  "notificationWeekdaysFixedTip": "Die Gewohnheit erscheint nie an deaktivierten Tagen. Um dies zu ändern, bearbeite deine Planungsoptionen."
 }

@@ -990,5 +990,8 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "followHabitSchedule": "Seguir el horario del hábito",
+  "notificationScheduleDependencyTip": "Este recordatorio solo se activa los días en que el hábito está programado.",
+  "notificationWeekdaysFixedTip": "El hábito nunca aparecerá en los días deshabilitados; para cambiarlo, edita tus opciones de programación."
 }

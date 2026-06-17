@@ -2591,4 +2591,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String syncOverlayOptimizingRemaining(int count) {
     return '$count archivos restantes...';
   }
+
+  @override
+  String get followHabitSchedule => 'Seguir el horario del hábito';
+
+  @override
+  String get notificationScheduleDependencyTip =>
+      'Este recordatorio solo se activa los días en que el hábito está programado.';
+
+  @override
+  String get notificationWeekdaysFixedTip =>
+      'El hábito nunca aparecerá en los días deshabilitados; para cambiarlo, edita tus opciones de programación.';
 }

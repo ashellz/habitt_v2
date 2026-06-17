@@ -2594,4 +2594,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String syncOverlayOptimizingRemaining(int count) {
     return '$count file rimanenti...';
   }
+
+  @override
+  String get followHabitSchedule => 'Segui la pianificazione dell\'abitudine';
+
+  @override
+  String get notificationScheduleDependencyTip =>
+      'Questo promemoria viene mostrato solo nei giorni in cui l\'abitudine è pianificata.';
+
+  @override
+  String get notificationWeekdaysFixedTip =>
+      'L\'abitudine non apparirà mai nei giorni disattivati; per modificarlo, modifica le opzioni di pianificazione.';
 }

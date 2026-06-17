@@ -9,6 +9,7 @@ class SelectableWeekdays extends StatelessWidget {
     this.isNotification = false,
     required this.selectedDays,
     required this.onDaySelected,
+    this.disabledDays = const {},
     this.selectionDuration = const Duration(milliseconds: 200),
   });
 
@@ -24,6 +25,7 @@ class SelectableWeekdays extends StatelessWidget {
 
   final Set<String> selectedDays;
   final ValueChanged<String> onDaySelected;
+  final Set<String> disabledDays;
   final Duration selectionDuration;
   final bool isNotification;
 
@@ -35,12 +37,14 @@ class SelectableWeekdays extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children:
           _weekDays(loc).map((day) {
+            final isDisabled = disabledDays.contains(day);
             return _SelectableWeekDayButton(
               label: day,
               isNotification: isNotification,
               isSelected: selectedDays.contains(day),
+              isDisabled: isDisabled,
               selectionDuration: selectionDuration,
-              onPressed: () => onDaySelected(day),
+              onPressed: isDisabled ? null : () => onDaySelected(day),
             );
           }).toList(),
     );
@@ -53,13 +57,15 @@ class _SelectableWeekDayButton extends StatelessWidget {
     required this.isSelected,
     required this.selectionDuration,
     required this.onPressed,
+    this.isDisabled = false,
     this.isNotification = false,
   });
 
   final String label;
   final bool isSelected;
+  final bool isDisabled;
   final Duration selectionDuration;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isNotification;
 
   @override
@@ -67,44 +73,50 @@ class _SelectableWeekDayButton extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
 
-    return AnimatedContainer(
-      duration: selectionDuration,
-      curve: Curves.easeOut,
-      width: isNotification ? 40 : 36,
-      height: isNotification ? 40 : 36,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isSelected ? cp.text : Colors.transparent,
-        border: Border.all(width: 1, color: isSelected ? cp.text : cp.disabled),
-      ),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          splashFactory: isAndroid ? null : NoSplash.splashFactory,
-          elevation: const WidgetStatePropertyAll(0),
-          overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
-            if (!states.contains(WidgetState.pressed)) {
-              return null;
-            }
-
-            if (isAndroid) {
-              return null;
-            }
-
-            return cp.bg.withValues(alpha: 0.2);
-          }),
-          backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
-          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-          shape: const WidgetStatePropertyAll(CircleBorder()),
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+    return Opacity(
+      opacity: isDisabled ? 0.4 : 1.0,
+      child: AnimatedContainer(
+        duration: selectionDuration,
+        curve: Curves.easeOut,
+        width: isNotification ? 40 : 36,
+        height: isNotification ? 40 : 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isSelected ? cp.text : Colors.transparent,
+          border: Border.all(
+            width: 1,
+            color: isSelected ? cp.text : cp.disabled,
+          ),
         ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? cp.bg : cp.text,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+            splashFactory: isAndroid ? null : NoSplash.splashFactory,
+            elevation: const WidgetStatePropertyAll(0),
+            overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
+              if (!states.contains(WidgetState.pressed)) {
+                return null;
+              }
+
+              if (isAndroid) {
+                return null;
+              }
+
+              return cp.bg.withValues(alpha: 0.2);
+            }),
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+            shape: const WidgetStatePropertyAll(CircleBorder()),
+            padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? cp.bg : cp.text,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),

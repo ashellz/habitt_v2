@@ -4347,6 +4347,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} files remaining...'**
   String syncOverlayOptimizingRemaining(int count);
+
+  /// No description provided for @followHabitSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow habit schedule'**
+  String get followHabitSchedule;
+
+  /// No description provided for @notificationScheduleDependencyTip.
+  ///
+  /// In en, this message translates to:
+  /// **'This reminder only fires on days the habit is scheduled to appear.'**
+  String get notificationScheduleDependencyTip;
+
+  /// No description provided for @notificationWeekdaysFixedTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit will never appear on disabled days, to change this edit your weekly scheduling options.'**
+  String get notificationWeekdaysFixedTip;
 }
 
 class _AppLocalizationsDelegate

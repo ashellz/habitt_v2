@@ -424,7 +424,7 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addHabitNotificationTime({int? minutesOfDay}) {
+  void addHabitNotificationTime({int? minutesOfDay, List<int>? days}) {
     final defaultMinutesOfDay = _getDefaultNotificationTimeForCategory(
       _habitCategoryId,
     );
@@ -436,12 +436,17 @@ class StateProvider extends ChangeNotifier {
           0,
           (24 * 60) - 1,
         ),
+        days: days == null ? null : List<int>.from(days),
       ),
     ];
     notifyListeners();
   }
 
-  void updateHabitNotificationTime(int id, int minutesOfDay) {
+  void updateHabitNotificationTime(
+    int id,
+    int minutesOfDay, {
+    List<int>? days,
+  }) {
     _habitNotificationTimes =
         _habitNotificationTimes
             .map(
@@ -450,6 +455,11 @@ class StateProvider extends ChangeNotifier {
                       ? HabitNotificationTime(
                         id: slot.id,
                         minutesOfDay: minutesOfDay.clamp(0, (24 * 60) - 1),
+                        days:
+                            // null shouldnt happen, but to guard it wil default to existing values
+                            days == null
+                                ? List<int>.from(slot.days)
+                                : List<int>.from(days),
                       )
                       : slot,
             )

@@ -102,16 +102,27 @@ class HabitNotificationTimeAdapter extends TypeAdapter<HabitNotificationTime> {
         0,
         (24 * 60) - 1,
       ),
+      // Legacy records (written before per-notification weekdays) have no
+      // field 2; they decode to an empty list = "follow habit schedule".
+      days:
+          (fields[2] as List?)
+              ?.map((e) => (e is num) ? e.toInt() : null)
+              .whereType<int>()
+              .where((d) => d >= 1 && d <= 7)
+              .toList() ??
+          const <int>[],
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitNotificationTime obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.minutesOfDay);
+      ..write(obj.minutesOfDay)
+      ..writeByte(2)
+      ..write(obj.days);
   }
 }

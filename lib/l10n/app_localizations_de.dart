@@ -2595,4 +2595,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String syncOverlayOptimizingRemaining(int count) {
     return '$count Dateien verbleibend...';
   }
+
+  @override
+  String get followHabitSchedule => 'Gewohnheitsplan folgen';
+
+  @override
+  String get notificationScheduleDependencyTip =>
+      'Diese Erinnerung erscheint nur an Tagen, an denen die Gewohnheit geplant ist.';
+
+  @override
+  String get notificationWeekdaysFixedTip =>
+      'Die Gewohnheit erscheint nie an deaktivierten Tagen. Um dies zu ändern, bearbeite deine Planungsoptionen.';
 }
