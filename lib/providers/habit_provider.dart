@@ -60,7 +60,9 @@ class HabitProvider extends ChangeNotifier {
   NotificationsProvider? notificationsProvider;
 
   HabitProvider({this.statsProvider}) {
-    init();
+    // Genuine app cold start is the only init() that should replay the streak
+    // entrance animation. Sync/restore/import reloads call init() without it.
+    init(animateStreakEntry: true);
   }
 
   // Method to be called by the ProxyProvider's update callback
@@ -91,7 +93,13 @@ class HabitProvider extends ChangeNotifier {
     habitStatsProvider = provider;
   }
 
-  Future<void> init() async {
+  /// Reloads all habit/day state from Hive.
+  ///
+  /// [animateStreakEntry] — bumps [streakEntryEpoch] so visible streak badges
+  /// replay their entrance animation. Only the constructor's cold start passes
+  /// `true`; sync, restore, and import reloads leave it `false` so applying a
+  /// delta doesn't re-trigger the animation.
+  Future<void> init({bool animateStreakEntry = false}) async {
     await _loadHabits();
     refreshTodaysHabits(notify: false);
     await _loadDateJoined();
@@ -100,7 +108,7 @@ class HabitProvider extends ChangeNotifier {
     await _sanitizeDaySnapshots();
     _syncAllHabitNotifications();
     dataVersion++;
-    streakEntryEpoch++;
+    if (animateStreakEntry) streakEntryEpoch++;
     notifyListeners();
   }
 

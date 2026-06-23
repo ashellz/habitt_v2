@@ -445,8 +445,7 @@ class Habit extends HiveObject {
     colorName = merged.colorName;
     color = merged.color;
     notificationsEnabled = merged.notificationsEnabled;
-    notificationTimes =
-        merged.notificationTimes.map((s) => s.copy()).toList();
+    notificationTimes = merged.notificationTimes.map((s) => s.copy()).toList();
     premadeHabitType = merged.premadeHabitType;
     trackingType = merged.trackingType;
     isDeleted = merged.isDeleted;
@@ -796,9 +795,80 @@ class Habit extends HiveObject {
     )..color = m['color'] as String?;
   }
 
-  Habit merge(Habit incoming, {DateTime? reference}) {
+  // These are now merged together, they decide on final completion value
+  static const List<String> dayStateKeys = [
+    'completed',
+    'skipped',
+    'amountCompleted',
+    'durationCompleted',
+  ];
+
+  // Function to apply the same habit stats but from daysBox
+  void adoptDayState(Habit source) {
+    completed = source.completed;
+    skipped = source.skipped;
+    amountCompleted = source.amountCompleted;
+    durationCompleted = source.durationCompleted;
+    for (final key in dayStateKeys) {
+      final ts = source.timestamps[key];
+      if (ts != null) {
+        timestamps[key] = ts;
+      } else {
+        timestamps.remove(key);
+      }
+    }
+  }
+
+  /// Latest timestamp among [keys] in [ts], or null if none present.
+  static DateTime? _latestTs(Map<String, DateTime> ts, List<String> keys) {
+    DateTime? latest;
+    for (final key in keys) {
+      final value = ts[key];
+      if (value == null) continue;
+      if (latest == null || value.isAfter(latest)) {
+        latest = value;
+      }
+    }
+    return latest;
+  }
+
+  // preserveLocalDayState == true -> local values win
+  // false -> values with the most recent timestamp win (tie -> local wins)
+  Habit merge(
+    Habit incoming, {
+    DateTime? reference,
+    bool preserveLocalDayState = false,
+  }) {
     final now = (reference ?? DateTime.now()).toUtc();
     final mergedTimestamps = <String, DateTime>{};
+
+    // Resolve the completion tuple as a single unit.
+    final bool useLocalDayState;
+    if (preserveLocalDayState) {
+      useLocalDayState = true;
+    } else {
+      final localTupleTs = _latestTs(timestamps, dayStateKeys);
+      final incomingTupleTs = _latestTs(incoming.timestamps, dayStateKeys);
+      if (localTupleTs == null && incomingTupleTs == null) {
+        useLocalDayState = true; // values equal/default — prefer on-device
+      } else if (incomingTupleTs == null) {
+        useLocalDayState = true;
+      } else if (localTupleTs == null) {
+        useLocalDayState = false;
+      } else {
+        final localDelta = now.difference(localTupleTs).abs();
+        final incomingDelta = now.difference(incomingTupleTs).abs();
+        useLocalDayState = localDelta <= incomingDelta; // tie → local
+      }
+    }
+
+    T pickDayState<T>(String key, T localValue, T incomingValue) {
+      final ts = useLocalDayState ? timestamps[key] : incoming.timestamps[key];
+      if (ts != null) {
+        mergedTimestamps[key] = ts;
+      }
+      return useLocalDayState ? localValue : incomingValue;
+    }
 
     T resolve<T>(String key, T localValue, T incomingValue) {
       if (localValue == incomingValue) {
@@ -843,16 +913,16 @@ class Habit extends HiveObject {
       order: resolve('order', order, incoming.order),
       amountLabel: resolve('amountLabel', amountLabel, incoming.amountLabel),
       tag: resolve('tag', tag, incoming.tag),
-      completed: resolve('completed', completed, incoming.completed),
-      skipped: resolve('skipped', skipped, incoming.skipped),
+      completed: pickDayState('completed', completed, incoming.completed),
+      skipped: pickDayState('skipped', skipped, incoming.skipped),
       amount: resolve('amount', amount, incoming.amount),
-      amountCompleted: resolve(
+      amountCompleted: pickDayState(
         'amountCompleted',
         amountCompleted,
         incoming.amountCompleted,
       ),
       duration: resolve('duration', duration, incoming.duration),
-      durationCompleted: resolve(
+      durationCompleted: pickDayState(
         'durationCompleted',
         durationCompleted,
         incoming.durationCompleted,
@@ -972,6 +1042,9 @@ class Habit extends HiveObject {
 
     for (final key in allTimestampKeys) {
       if (mergedTimestamps.containsKey(key)) continue;
+      // Day-state timestamps are owned by the caluclation and logic explained above
+      // we dont want the per-field resolving to pull each one in independently, would break the logic from before
+      if (dayStateKeys.contains(key)) continue;
 
       final localTs = timestamps[key];
       final incomingTs = incoming.timestamps[key];

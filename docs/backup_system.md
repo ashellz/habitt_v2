@@ -115,11 +115,30 @@ Old passphrase-encrypted local backups are detected by `version: 1`. The user is
 Every editable field on a `Habit` carries its own `DateTime` modification timestamp stored in `timestamps: Map<String, DateTime>`. This enables field-level conflict resolution rather than last-write-wins at the object level.
 
 ### Merge Algorithm (`Habit.merge`)
-For each field between incoming and local versions:
+For each **definition** field between incoming and local versions:
 1. Values identical → no-op
 2. One side has no timestamp → use the timestamped side
 3. Both have timestamps → **the change closer to "now" wins** (most recently modified)
 4. Tie → local wins (prevents oscillation between devices)
+
+### Day-State vs. Definition Fields (important)
+
+A habit's fields fall into two categories that sync differently:
+
+- **Definition fields** (name, icon, schedule, color, order, paused, deleted, notifications, …) — global properties of the habit. Resolved per-field by the rule above.
+- **Day-state / completion tuple** — `completed`, `skipped`, `amountCompleted`, `durationCompleted`. These belong to a **specific calendar day**, not to the habit globally (`Habit.dayStateKeys`).
+
+**Day-state flows only through dated `Day` snapshots.** Completing a habit writes into that day's dated snapshot (`updateHabitInDB` → today's `Day`), and the snapshot is what merges across devices, keyed by date. The dateless live ("master") habit record is **definition-only on receive**: `_mergeBackupData`'s master-record loop calls `existing.merge(incoming, preserveLocalDayState: true)`, so an incoming completion never lands on the live habit. (The completion flag is still *uploaded* inside the habit blob for backward compatibility with not-yet-updated clients — updated clients simply never *act* on it.)
+
+Without this, a completion made on day *N* by a device that has not yet rolled over still carries `completed = true` on its dateless master record; the receiver, now on day *N+1*, would stamp it onto **today**, while day *N* stayed incomplete. Routing day-state exclusively through dated snapshots removes that leak.
+
+**Today is a mirror of today's snapshot.** Because the home view reads today's completion off the live habit, `_mergeBackupData` ends with `_rehydrateTodayFromSnapshot()`: after the day loop it copies the day-state of each habit in **today's** dated snapshot back onto the matching live habit (`Habit.adoptDayState`). The same path runs after a full restore / new-device import (all restore/replace paths wipe then call `_mergeBackupData`), so a fresh restore reads today from today's dated snapshot rather than the stale dateless master flag.
+
+**Completion tuple resolves as a unit.** Within a single day's per-habit merge, the four day-state fields are resolved together: the side whose day-state was modified most recently (latest timestamp among the tuple keys; tie → local) wins all four. They are never resolved independently, so a merge can no longer produce a contradictory `completed = true` with `amountCompleted = 0`.
+
+**Known follow-ups (not yet done):**
+- Weekly/monthly counters (`timesCompletedThisWeek`, `timesCompletedThisMonth`) still sync via the master record on the per-field path — a separate week/month-bound axis not covered by the day-state routing above.
+- The dateless day-state fields are still physically present in the uploaded habit blob (kept for backward compatibility). Stripping them from the upload is deferred until all devices are on the definition-only-on-receive version.
 
 ### Day Merge
 Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Incoming day is skipped if local has real habit data AND the local day was **not** auto-created AND the incoming timestamp is older. Otherwise the day's habits are merged using the same per-field logic above.

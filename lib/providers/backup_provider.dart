@@ -2149,7 +2149,13 @@ class BackupProvider extends ChangeNotifier {
         final beforeCompleted = existing.completed;
         final beforeAmountC = existing.amountCompleted;
         final beforeDurationC = existing.durationCompleted;
-        final merged = existing.merge(incoming);
+        // Definition-only merge: day-state (completed/skipped/amountCompleted/
+        // durationCompleted) belongs to a calendar day and flows ONLY through
+        // the dated Day snapshots below. Never let an incoming dateless
+        // completion leak onto the live habit (it would land on the receiver's
+        // "today"). The live habit's today state is rebuilt from today's
+        // snapshot by _rehydrateTodayFromSnapshot after the day loop.
+        final merged = existing.merge(incoming, preserveLocalDayState: true);
         existing.applyMerge(merged);
         await existing.save();
         // Log only when completion-related fields changed.
@@ -2278,10 +2284,43 @@ class BackupProvider extends ChangeNotifier {
       );
     }
 
+    // Day-state is authoritative in the dated snapshots above; rebuild the live
+    // habits' TODAY state from today's snapshot before init()/refreshTodaysHabits
+    // reads the live records, so the home screen reflects the date-correct merge
+    // rather than the stale dateless master-record flag.
+    await _rehydrateTodayFromSnapshot();
+
     _habitProvider?.importDateJoined(backupData.dateJoined);
     await _habitProvider?.init();
     _pendingStreakRecalc = true;
     notifyListeners();
+  }
+
+  // Sends habits from daysBox of today to todaysHabits after merge
+  Future<void> _rehydrateTodayFromSnapshot() async {
+    final habitsBox = Hive.box<Habit>('habits');
+    final daysBox = Hive.box<Day>('days');
+
+    final now = DateTime.now();
+    final todayKey =
+        DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).toIso8601String().split('T').first;
+
+    final today = daysBox.get(todayKey);
+    if (today == null) return;
+
+    final snapshotById = {for (final h in today.habits) h.id: h};
+    for (final habit in habitsBox.values) {
+      final snapshot = snapshotById[habit.id];
+      if (snapshot == null) continue;
+      habit.adoptDayState(snapshot);
+      if (habit.isInBox) {
+        await habit.save();
+      }
+    }
   }
 
   // --- Version history ---------------------------------------------------
