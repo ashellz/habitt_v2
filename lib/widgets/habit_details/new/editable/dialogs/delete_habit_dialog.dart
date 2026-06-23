@@ -20,7 +20,8 @@ class DeleteHabitDialog extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
 
     return NewDefaultDialog(
-      title: "Delete '${habit.resolvedName(context.read<LanguageProvider>().locale?.languageCode)}'?",
+      title:
+          "Delete '${habit.resolvedName(context.read<LanguageProvider>().locale?.languageCode ?? Localizations.localeOf(context).languageCode)}'?",
       desc: 'Are you sure you want to delete this habit?',
       primaryButtonLabel: 'Delete',
       primaryButtonColor: cp.fail,

@@ -151,6 +151,11 @@ class StateProvider extends ChangeNotifier {
   int _selectedHabitId = -1;
   Map<String, String> habitLocalizedNames = {};
 
+  /// Once the active app language's localized-name row is cleared via the clear
+  /// button, it is no longer auto-filled with the habit name on expand for the
+  /// rest of this habit-sheet session. Reset whenever the habit sheet opens.
+  bool activeNamePrefillCleared = false;
+
   void notifyHabitLocalizedNamesChanged() => notifyListeners();
 
   int _habitCategoryId = 1;
@@ -589,6 +594,7 @@ class StateProvider extends ChangeNotifier {
     _selectedDaysAMonth.clear();
     _selectedPremadeHabitType = null;
     habitLocalizedNames = {};
+    activeNamePrefillCleared = false;
 
     notifyListeners();
   }

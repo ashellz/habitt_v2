@@ -40,14 +40,12 @@ class PreferencesProvider extends ChangeNotifier {
   Colorfulness _colorfulness = Colorfulness.standard;
   bool _americanTimeFormat = false;
   bool _showStreakBadge = true;
-  bool _autoSeedHabitNames = false;
   bool _showUploadActivity = true;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
   bool get americanTimeFormat => _americanTimeFormat;
   bool get showStreakBadge => _showStreakBadge;
-  bool get autoSeedHabitNames => _autoSeedHabitNames;
   bool get showUploadActivity => _showUploadActivity;
 
   SharedPreferences? _prefs;
@@ -61,7 +59,6 @@ class PreferencesProvider extends ChangeNotifier {
     _glassFeel = _prefs?.getBool('glassFeel') ?? true;
     _americanTimeFormat = _prefs?.getBool('americanTimeFormat') ?? false;
     _showStreakBadge = _prefs?.getBool('showStreakBadge') ?? false;
-    _autoSeedHabitNames = _prefs?.getBool('autoSeedHabitNames') ?? false;
     _showUploadActivity = _prefs?.getBool(_kShowUploadActivityKey) ?? true;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
@@ -83,12 +80,6 @@ class PreferencesProvider extends ChangeNotifier {
   void toggleShowStreakBadge() {
     _showStreakBadge = !_showStreakBadge;
     _prefs?.setBool('showStreakBadge', _showStreakBadge);
-    notifyListeners();
-  }
-
-  void toggleAutoSeedHabitNames() {
-    _autoSeedHabitNames = !_autoSeedHabitNames;
-    _prefs?.setBool('autoSeedHabitNames', _autoSeedHabitNames);
     notifyListeners();
   }
 

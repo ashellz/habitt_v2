@@ -39,7 +39,12 @@ class NewDefaultDialog extends StatelessWidget {
     return AnimatedPadding(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 40 + keyboardInset),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        MediaQuery.of(context).padding.bottom + 40 + keyboardInset,
+      ),
       child: SingleChildScrollView(
         child: Container(
           width: double.infinity,

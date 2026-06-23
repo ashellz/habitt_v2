@@ -82,7 +82,12 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
     final showICloud = !kIsWeb && Platform.isIOS;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        0,
+        16,
+        MediaQuery.of(context).padding.bottom + 28,
+      ),
       child: Column(
         children: [
           Container(

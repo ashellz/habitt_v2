@@ -236,7 +236,12 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
     final lastSyncText = _formatLastSync(bp.lastSyncTime, loc);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        0,
+        16,
+        MediaQuery.of(context).padding.bottom + 28,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -32,6 +32,15 @@ class _HabitNameLocalizationSheetState
   final Map<String, FocusNode> _focusNodes = {};
   final Map<String, bool> _buttonReady = {};
 
+  late final StateProvider _sp;
+
+  /// The currently active app locale — the only language whose row is
+  /// auto-filled with the habit name when expanded. Resolved in
+  /// [didChangeDependencies] because it needs the [Localizations] ancestor:
+  /// `LanguageProvider.locale` is null when the app follows the system
+  /// language, so we fall back to the resolved locale like the rest of the app.
+  String? _activeLocale;
+
   /// Working copy — written to StateProvider only on Done.
   late Map<String, String> _localNames;
 
@@ -46,13 +55,21 @@ class _HabitNameLocalizationSheetState
   @override
   void initState() {
     super.initState();
-    final sp = context.read<StateProvider>();
-    _localNames = Map<String, String>.from(sp.habitLocalizedNames);
-    _initialNames = Map<String, String>.from(sp.habitLocalizedNames);
+    _sp = context.read<StateProvider>();
+    _localNames = Map<String, String>.from(_sp.habitLocalizedNames);
+    _initialNames = Map<String, String>.from(_sp.habitLocalizedNames);
     for (final option in LanguageOption.values) {
       _controllers[option.languageCode] = TextEditingController();
       _focusNodes[option.languageCode] = FocusNode();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _activeLocale ??=
+        context.read<LanguageProvider>().locale?.languageCode ??
+        Localizations.localeOf(context).languageCode;
   }
 
   @override
@@ -81,6 +98,20 @@ class _HabitNameLocalizationSheetState
     setState(() {
       _buttonReady.remove(_expandedLocale);
       _expandedLocale = localeCode;
+      // Convenience: expanding the active app language while its entry is empty
+      // (and hasn't been cleared this session) seeds it with the current habit
+      // name so the user doesn't have to retype it.
+      final existing = _localNames[localeCode];
+      final shouldPrefillActive =
+          localeCode == _activeLocale &&
+          (existing == null || existing.isEmpty) &&
+          !_sp.activeNamePrefillCleared;
+      if (shouldPrefillActive) {
+        final habitName = _sp.nameController.text.trim();
+        if (habitName.isNotEmpty) {
+          _localNames[localeCode] = habitName;
+        }
+      }
       _controllers[localeCode]?.text = _localNames[localeCode] ?? '';
       _buttonReady[localeCode] = false;
     });
@@ -107,6 +138,11 @@ class _HabitNameLocalizationSheetState
       _controllers[localeCode]?.clear();
       _buttonReady.remove(localeCode);
       _expandedLocale = null;
+      // A deliberate clear of the active language disables auto-fill on
+      // re-expand for the rest of this habit-sheet session.
+      if (localeCode == _activeLocale) {
+        _sp.activeNamePrefillCleared = true;
+      }
     });
   }
 
@@ -130,9 +166,8 @@ class _HabitNameLocalizationSheetState
   }
 
   void _handleDone() {
-    final sp = context.read<StateProvider>();
-    sp.habitLocalizedNames = Map<String, String>.from(_localNames);
-    sp.notifyHabitLocalizedNamesChanged();
+    _sp.habitLocalizedNames = Map<String, String>.from(_localNames);
+    _sp.notifyHabitLocalizedNamesChanged();
     _forceClose();
   }
 

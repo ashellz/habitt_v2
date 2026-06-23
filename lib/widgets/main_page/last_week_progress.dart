@@ -391,9 +391,13 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                         Theme.of(context).platform == TargetPlatform.android;
 
                     final isLast = index == allDates.length - 1;
+                    final isFirst = index == 0;
 
                     return Padding(
-                      padding: EdgeInsets.only(right: isLast ? 16 : 0),
+                      padding: EdgeInsets.only(
+                        left: isFirst ? 16 : 0,
+                        right: isLast ? 16 : 0,
+                      ),
                       child: SizedBox(
                         width: _dayWidth,
                         child: ElevatedButton(

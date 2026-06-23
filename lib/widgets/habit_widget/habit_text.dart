@@ -46,7 +46,8 @@ class HabitText extends StatelessWidget {
             children: [
               HabitNameDisplay(
                 text: habit.resolvedName(
-                  context.read<LanguageProvider>().locale?.languageCode,
+                  context.read<LanguageProvider>().locale?.languageCode ??
+                      Localizations.localeOf(context).languageCode,
                 ),
                 completed: habit.completed,
                 skipped: habit.skipped,

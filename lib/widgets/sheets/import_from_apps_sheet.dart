@@ -126,7 +126,12 @@ class _ImportFromAppsSheetState extends State<ImportFromAppsSheet>
         constraints: BoxConstraints(maxHeight: maxSheetHeight),
         child: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
+            padding: EdgeInsets.fromLTRB(
+              0,
+              20,
+              0,
+              MediaQuery.of(context).padding.bottom + 28,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

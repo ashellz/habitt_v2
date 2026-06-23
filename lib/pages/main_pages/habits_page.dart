@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -44,6 +46,7 @@ class _HabitsPageState extends State<HabitsPage> {
             ),
             scheduledTodayToggle(cp),
             ReorderingHabits(todaysOnly: _isScheduledTodayOn),
+            if (Platform.isAndroid) SizedBox(height: 24),
           ],
         ),
       ),

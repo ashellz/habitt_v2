@@ -285,7 +285,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                     ),
                     SizedBox(height: 24),
                     ConsistencyCalendar(habitStats: stats),
-                    const SizedBox(height: 24),
+                    SizedBox(
+                      height: MediaQuery.of(context).padding.bottom + 24,
+                    ),
                   ],
                 ),
               ),
@@ -304,7 +306,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
           (dialogContext) => NewDefaultDialog(
             title: loc.pauseHabitName(
               habit.resolvedName(
-                context.read<LanguageProvider>().locale?.languageCode,
+                context.read<LanguageProvider>().locale?.languageCode ??
+                    Localizations.localeOf(context).languageCode,
               ),
             ),
             desc: loc.pauseHabitDesc,
@@ -476,9 +479,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                             Text(
                               habit.resolvedName(
                                 context
-                                    .read<LanguageProvider>()
-                                    .locale
-                                    ?.languageCode,
+                                        .read<LanguageProvider>()
+                                        .locale
+                                        ?.languageCode ??
+                                    Localizations.localeOf(
+                                      context,
+                                    ).languageCode,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

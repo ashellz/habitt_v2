@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/foundation.dart' show listEquals;
@@ -560,6 +562,7 @@ class _NewHabitsState extends State<NewHabits>
             ),
 
             AddHabitButton(),
+            if (Platform.isAndroid) SizedBox(height: 24),
 
             if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
           ],

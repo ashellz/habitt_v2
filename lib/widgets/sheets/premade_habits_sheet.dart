@@ -67,7 +67,12 @@ class PremadeHabitsSheet extends StatelessWidget {
       constraints: BoxConstraints(maxHeight: maxSheetHeight),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            20,
+            16,
+            MediaQuery.of(context).padding.bottom + 28,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,

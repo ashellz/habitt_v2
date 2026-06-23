@@ -32,8 +32,6 @@ import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:habitt/widgets/notification/notification_time_row.dart';
-import 'package:habitt/providers/language_provider.dart';
-import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/sheets/habit_name_localization_sheet.dart';
 import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
@@ -159,6 +157,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.habitLocalizedNames = Map<String, String>.from(
       habit.localizedNames,
     );
+    stateProvider.activeNamePrefillCleared = false;
     stateProvider.selectedPremadeHabitType = habit.premadeHabitType;
     stateProvider.setNotificationsFromHabit(
       enabled: habit.notificationsEnabled,
@@ -582,16 +581,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.colorName = sp.habitColorName;
       habit.color = colorToHex(sp.getHabitColor(tp) ?? tp.primaryColor);
 
-      final localizedNames = Map<String, String>.from(sp.habitLocalizedNames);
-      final prefs = context.read<PreferencesProvider>();
-      if (prefs.autoSeedHabitNames) {
-        final activeLocale =
-            context.read<LanguageProvider>().locale?.languageCode;
-        if (activeLocale != null) {
-          localizedNames[activeLocale] = habit.name;
-        }
-      }
-      habit.localizedNames = localizedNames;
+      habit.localizedNames = Map<String, String>.from(sp.habitLocalizedNames);
 
       // Here we save the habit and reschedule its notifications if habit notifications exist
       // If no permission or disabled in settings we ask the user if they want to enable it via RQ
@@ -611,14 +601,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final loc = AppLocalizations.of(context)!;
 
     final newLocalizedNames = Map<String, String>.from(sp.habitLocalizedNames);
-    final prefsForCreate = context.read<PreferencesProvider>();
-    if (prefsForCreate.autoSeedHabitNames) {
-      final activeLocale =
-          context.read<LanguageProvider>().locale?.languageCode;
-      if (activeLocale != null) {
-        newLocalizedNames[activeLocale] = sp.nameController.text;
-      }
-    }
 
     final newHabit = Habit(
       id: getUniqueId(),

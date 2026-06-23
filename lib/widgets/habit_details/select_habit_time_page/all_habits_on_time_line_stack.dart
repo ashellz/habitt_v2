@@ -622,7 +622,15 @@ class _HabitTile extends StatelessWidget {
                                           : 220,
                                 ),
                                 child: HabitNameDisplay(
-                                  text: habit.resolvedName(context.read<LanguageProvider>().locale?.languageCode),
+                                  text: habit.resolvedName(
+                                    context
+                                            .read<LanguageProvider>()
+                                            .locale
+                                            ?.languageCode ??
+                                        Localizations.localeOf(
+                                          context,
+                                        ).languageCode,
+                                  ),
                                   completed: habit.completed,
                                   textColor: habit.getNameColor(tp),
                                   skipped: habit.skipped,

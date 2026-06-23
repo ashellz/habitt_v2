@@ -65,7 +65,8 @@ class MainHabitInfo extends StatelessWidget {
       children: [
         Text(
           habit.resolvedName(
-            context.watch<LanguageProvider>().locale?.languageCode,
+            context.watch<LanguageProvider>().locale?.languageCode ??
+                Localizations.localeOf(context).languageCode,
           ),
           style: TextStyle(
             color: cp.text,
