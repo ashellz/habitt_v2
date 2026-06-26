@@ -59,7 +59,7 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1100),
+      duration: const Duration(milliseconds: 1300),
     );
     _progress = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     _progress.addListener(_maybeHaptic);
@@ -141,8 +141,40 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
                             ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 31.0),
+                // Glow that blooms behind the fire to the peak then fades out.
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    final pulse = sin(_controller.value * pi).clamp(0.0, 1.0);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 1.0),
+                      child: Opacity(opacity: pulse, child: child),
+                    );
+                  },
+                  child: Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          cp.orange300.withValues(alpha: 0.55),
+                          cp.orange300.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Fire grows to the peak then back to its original size.
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    final pulse = sin(_controller.value * pi).clamp(0.0, 1.0);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 31.0),
+                      child: Transform.scale(scale: 1 + 0.2 * pulse, child: child),
+                    );
+                  },
                   child: SvgPicture.asset(
                     'assets/images/new-svg/streak.svg',
                     width: 80,

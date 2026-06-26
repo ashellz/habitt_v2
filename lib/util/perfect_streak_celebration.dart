@@ -70,7 +70,11 @@ Future<void> maybeShowStreakCelebration(BuildContext context) async {
     final yesterdayPerfect =
         dayStatuses[yesterday] == DayCompletionStatus.perfect;
 
-    final shouldShow = true;
+    final shouldShow =
+        streak >= 1 &&
+        streak > celebrated &&
+        shownDate != today &&
+        yesterdayPerfect;
     if (!shouldShow || !context.mounted) {
       return;
     }
