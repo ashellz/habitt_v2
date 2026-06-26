@@ -492,6 +492,12 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // In-memory only: true while the streak celebration dialog is being evaluated
+  // or shown. Used so the insight sheet defers and never overlaps it. Not
+  // persisted — it must never survive a relaunch, and intentionally does not
+  // notify listeners (it is a transient coordination flag, not UI state).
+  bool streakCelebrationPendingOrActive = false;
+
   toggleOptional() {
     _isOptional = !_isOptional;
     notifyListeners();

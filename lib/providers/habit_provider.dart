@@ -12,6 +12,7 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
+import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -686,6 +687,21 @@ class HabitProvider extends ChangeNotifier {
     statsProvider!.perfectDaysStreak = statsProvider!.refreshPerfectStreak();
   }
 
+  /// Completing/skipping habits on a *past* day can immediately increase the
+  /// perfect-days streak (today is excluded from the streak), so back-filling a
+  /// missed day should celebrate in the same session. Today's own completions
+  /// never bump the streak, so they are not evaluated here.
+  void _maybeCelebratePastDayStreak(
+    BuildContext context,
+    DateTime daySimple,
+    DateTime todaySimple,
+  ) {
+    if (daySimple == todaySimple || !context.mounted) {
+      return;
+    }
+    unawaited(maybeShowStreakCelebration(context));
+  }
+
   Map<DateTime, double> getThisWeekProgress({DateTime? anchorDate}) {
     final baseDate = _normalizeDate(anchorDate ?? DateTime.now());
     final startOfWeek = baseDate.subtract(Duration(days: baseDate.weekday - 1));
@@ -1055,6 +1071,10 @@ class HabitProvider extends ChangeNotifier {
 
     refreshTodaysHabits(notify: false);
     notifyListeners();
+
+    if (!wasCompleted && habit.completed) {
+      _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
+    }
   }
 
   void skipHabit(
@@ -1103,6 +1123,10 @@ class HabitProvider extends ChangeNotifier {
     }
     refreshTodaysHabits(notify: false);
     notifyListeners();
+
+    if (habit.skipped) {
+      _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
+    }
   }
 
   void updateHabit(Habit habit) {
@@ -1195,6 +1219,10 @@ class HabitProvider extends ChangeNotifier {
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
+
+    if (!wasCompleted && isNowCompleted) {
+      _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
+    }
   }
 
   void updateHabitDurationCompleted(
@@ -1243,6 +1271,10 @@ class HabitProvider extends ChangeNotifier {
     _refreshPerfectStreakForDayIfNeeded(daySimple);
     refreshTodaysHabits(notify: false);
     notifyListeners();
+
+    if (!wasCompleted && isNowCompleted) {
+      _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
+    }
   }
 
   Future<void> saveHabitDay(

@@ -7,6 +7,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/habit_strength_insight_text_service.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/habit_strength_calculator.dart';
@@ -66,6 +67,12 @@ class InsightSheetFlow {
     final backupProvider = context.read<BackupProvider>();
     if (!backupProvider.isInitialized ||
         backupProvider.syncState == SyncState.syncing) {
+      return;
+    }
+
+    // The streak celebration dialog takes precedence: defer while it is being
+    // evaluated or shown so the two modal sheets never overlap.
+    if (context.read<StateProvider>().streakCelebrationPendingOrActive) {
       return;
     }
 

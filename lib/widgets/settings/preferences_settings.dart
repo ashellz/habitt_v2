@@ -135,6 +135,47 @@ class Preferences extends StatelessWidget {
                   ),
                 ],
               ),
+              Divider(color: cp.border, height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        Text(
+                          loc.streakCelebration,
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          loc.streakCelebrationDesc,
+                          style: TextStyle(
+                            color: cp.lightGreyText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  NewDefaultSwitch(
+                    onChanged: (value) {
+                      context
+                          .read<PreferencesProvider>()
+                          .setShowStreakCelebration(value);
+                    },
+                    value:
+                        context
+                            .watch<PreferencesProvider>()
+                            .showStreakCelebration,
+                  ),
+                ],
+              ),
             ],
           ),
         ),

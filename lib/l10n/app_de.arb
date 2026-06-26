@@ -1012,5 +1012,10 @@
   "importHabitKitReplaceDesc": "Lösche zuerst deine aktuellen Gewohnheiten und importiere dann. Dies kann nicht rückgängig gemacht werden.",
   "importHabitKitNote": "Symbole und Farben können sich ändern, „schlechte Gewohnheiten” werden als normale Gewohnheiten importiert",
   "replace": "Ersetzen",
-  "backupBeforeImporting": "Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst."
+  "backupBeforeImporting": "Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst.",
+  "streakCelebration": "Serien-Feier",
+  "streakCelebrationDesc": "Zeige eine Feier, wenn deine Serie perfekter Tage wächst.",
+  "greatProgress": "Toller Fortschritt",
+  "buildingRealConsistency": "Du baust echte Beständigkeit auf",
+  "keepGoing": "Weiter so"
 }

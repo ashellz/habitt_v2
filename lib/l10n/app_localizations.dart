@@ -4413,6 +4413,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'It\'s strongly recommended to back up your data before proceeding.'**
   String get backupBeforeImporting;
+
+  /// No description provided for @streakCelebration.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak celebration'**
+  String get streakCelebration;
+
+  /// No description provided for @streakCelebrationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Show a celebration when your perfect-days streak grows.'**
+  String get streakCelebrationDesc;
+
+  /// No description provided for @greatProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress'**
+  String get greatProgress;
+
+  /// No description provided for @buildingRealConsistency.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building real consistency'**
+  String get buildingRealConsistency;
+
+  /// No description provided for @keepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going'**
+  String get keepGoing;
 }
 
 class _AppLocalizationsDelegate

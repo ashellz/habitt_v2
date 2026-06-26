@@ -2638,4 +2638,20 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get backupBeforeImporting =>
       'Si consiglia vivamente di eseguire un backup dei dati prima di procedere.';
+
+  @override
+  String get streakCelebration => 'Celebrazione della serie';
+
+  @override
+  String get streakCelebrationDesc =>
+      'Mostra una celebrazione quando la tua serie di giorni perfetti cresce.';
+
+  @override
+  String get greatProgress => 'Ottimi progressi';
+
+  @override
+  String get buildingRealConsistency => 'Stai costruendo una vera costanza';
+
+  @override
+  String get keepGoing => 'Continua così';
 }

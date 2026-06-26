@@ -1012,5 +1012,10 @@
   "importHabitKitReplaceDesc": "Elimina prima le tue abitudini attuali, poi importa. L'operazione non può essere annullata.",
   "importHabitKitNote": "Icone e colori potrebbero cambiare, le «cattive abitudini» vengono importate come abitudini normali",
   "replace": "Sostituisci",
-  "backupBeforeImporting": "Si consiglia vivamente di eseguire un backup dei dati prima di procedere."
+  "backupBeforeImporting": "Si consiglia vivamente di eseguire un backup dei dati prima di procedere.",
+  "streakCelebration": "Celebrazione della serie",
+  "streakCelebrationDesc": "Mostra una celebrazione quando la tua serie di giorni perfetti cresce.",
+  "greatProgress": "Ottimi progressi",
+  "buildingRealConsistency": "Stai costruendo una vera costanza",
+  "keepGoing": "Continua così"
 }

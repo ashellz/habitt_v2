@@ -1014,5 +1014,10 @@
       "appName": { "type": "String" }
     }
   },
-  "backupBeforeImporting": "It's strongly recommended to back up your data before proceeding."
+  "backupBeforeImporting": "It's strongly recommended to back up your data before proceeding.",
+  "streakCelebration": "Streak celebration",
+  "streakCelebrationDesc": "Show a celebration when your perfect-days streak grows.",
+  "greatProgress": "Great progress",
+  "buildingRealConsistency": "You're building real consistency",
+  "keepGoing": "Keep going"
 }

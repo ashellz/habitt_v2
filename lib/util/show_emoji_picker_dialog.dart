@@ -29,34 +29,46 @@ Future<String?> showEmojiPickerDialog(
       borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
     ),
     builder: (sheetContext) {
-      final bottomInset = MediaQuery.of(sheetContext).padding.bottom;
-      return SizedBox(
-        height: 280 + bottomInset,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: bottomInset),
-          child: EmojiPicker(
-            onEmojiSelected: (_, emoji) {
-              Navigator.of(sheetContext).pop(emoji.emoji);
-            },
-            config: Config(
-              height: 280,
-              emojiViewConfig: EmojiViewConfig(
-                backgroundColor: bgColor,
-                buttonMode:
-                    isIOS ? ButtonMode.CUPERTINO : ButtonMode.MATERIAL,
-              ),
-              categoryViewConfig: CategoryViewConfig(
-                backgroundColor: categoryBgColor,
-                iconColor: iconColor,
-                iconColorSelected: selectedColor,
-                indicatorColor: selectedColor,
-                backspaceColor: accentColor,
-                dividerColor: Colors.transparent,
-              ),
-              bottomActionBarConfig: BottomActionBarConfig(
-                backgroundColor: categoryBgColor,
-                buttonColor: categoryBgColor,
-                buttonIconColor: selectedColor,
+      final mq = MediaQuery.of(sheetContext);
+      final bottomInset = mq.padding.bottom;
+      final keyboardInset = mq.viewInsets.bottom;
+      return Padding(
+        // Lift the whole picker above the keyboard so the (search) list
+        // stays visible while the user is typing.
+        padding: EdgeInsets.only(bottom: keyboardInset),
+        child: SizedBox(
+          height: 280 + bottomInset,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomInset),
+            child: EmojiPicker(
+              onEmojiSelected: (_, emoji) {
+                Navigator.of(sheetContext).pop(emoji.emoji);
+              },
+              config: Config(
+                height: 280,
+                emojiViewConfig: EmojiViewConfig(
+                  backgroundColor: bgColor,
+                  buttonMode:
+                      isIOS ? ButtonMode.CUPERTINO : ButtonMode.MATERIAL,
+                  noRecents: Text(
+                    'No Recents',
+                    style: TextStyle(fontSize: 20, color: iconColor),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                categoryViewConfig: CategoryViewConfig(
+                  backgroundColor: categoryBgColor,
+                  iconColor: iconColor,
+                  iconColorSelected: selectedColor,
+                  indicatorColor: selectedColor,
+                  backspaceColor: accentColor,
+                  dividerColor: Colors.transparent,
+                ),
+                bottomActionBarConfig: BottomActionBarConfig(
+                  backgroundColor: categoryBgColor,
+                  buttonColor: categoryBgColor,
+                  buttonIconColor: selectedColor,
+                ),
               ),
             ),
           ),

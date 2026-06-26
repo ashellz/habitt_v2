@@ -1002,5 +1002,10 @@
   "importHabitKitReplaceDesc": "Vaše trenutne navike će biti izbrisane i zamijenjene sa navikama iz {appName}. Ovo se ne može poništiti.",
   "importHabitKitNote": "Ikone i boje se mogu promijeniti, 'loše navike' se računaju kao obične navike",
   "replace": "Zamijeni",
-  "backupBeforeImporting": "Preporučuje se napraviti backup podataka prije nastavka."
+  "backupBeforeImporting": "Preporučuje se napraviti backup podataka prije nastavka.",
+  "streakCelebration": "Proslava niza",
+  "streakCelebrationDesc": "Prikaži proslavu kada ti niz savršenih dana raste.",
+  "greatProgress": "Odličan napredak",
+  "buildingRealConsistency": "Gradiš pravu konzistentnost",
+  "keepGoing": "Samo nastavi"
 }

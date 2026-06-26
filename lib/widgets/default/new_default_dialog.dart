@@ -1,6 +1,8 @@
+import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +19,8 @@ class NewDefaultDialog extends StatelessWidget {
     this.onPrimaryButtonPressed,
     this.onSecondaryButtonPressed,
     this.primaryButtonColor,
+    this.showCloseButton = false,
+    this.onClose,
   });
 
   final Widget? child;
@@ -29,6 +33,11 @@ class NewDefaultDialog extends StatelessWidget {
   final VoidCallback? onPrimaryButtonPressed;
   final VoidCallback? onSecondaryButtonPressed;
   final Color? primaryButtonColor;
+
+  /// Opt-in top-right close button. Defaults off so existing dialogs are
+  /// visually unchanged.
+  final bool showCloseButton;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +52,7 @@ class NewDefaultDialog extends StatelessWidget {
         16,
         16,
         16,
-        MediaQuery.of(context).padding.bottom + 40 + keyboardInset,
+        MediaQuery.of(context).padding.bottom + keyboardInset,
       ),
       child: SingleChildScrollView(
         child: Container(
@@ -58,23 +67,48 @@ class NewDefaultDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: cp.text,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (desc != null)
+                          Text(
+                            desc!,
+                            style: TextStyle(color: cp.greyText, fontSize: 16),
+                          ),
+                      ],
                     ),
                   ),
-                  if (desc != null)
-                    Text(
-                      desc!,
-                      style: TextStyle(color: cp.greyText, fontSize: 16),
+                  if (showCloseButton)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: NewCircleButton(
+                        width: 48,
+                        height: 48,
+                        padding: const EdgeInsets.all(11),
+                        svgPath: 'assets/images/new-svg/close.svg',
+                        cnIcon: const CNSymbol('xmark', size: 14),
+                        onPressed: () {
+                          if (onClose != null) {
+                            onClose!();
+                          } else if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
                     ),
                 ],
               ),

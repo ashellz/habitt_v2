@@ -11,6 +11,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/sync_progress_overlay.dart';
@@ -74,6 +75,10 @@ class _HomePageState extends State<HomePage>
         setState(() {
           _lifecycleTick += 1;
         });
+
+        if (mounted) {
+          await maybeShowStreakCelebration(context);
+        }
       });
     }
   }
@@ -130,6 +135,10 @@ class _HomePageState extends State<HomePage>
       setState(() {
         _lifecycleTick += 1;
       });
+
+      if (mounted) {
+        await maybeShowStreakCelebration(context);
+      }
     });
   }
 

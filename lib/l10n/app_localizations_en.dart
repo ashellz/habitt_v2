@@ -2619,4 +2619,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get backupBeforeImporting =>
       'It\'s strongly recommended to back up your data before proceeding.';
+
+  @override
+  String get streakCelebration => 'Streak celebration';
+
+  @override
+  String get streakCelebrationDesc =>
+      'Show a celebration when your perfect-days streak grows.';
+
+  @override
+  String get greatProgress => 'Great progress';
+
+  @override
+  String get buildingRealConsistency => 'You\'re building real consistency';
+
+  @override
+  String get keepGoing => 'Keep going';
 }

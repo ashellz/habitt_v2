@@ -2617,4 +2617,20 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get backupBeforeImporting =>
       'Preporučuje se napraviti backup podataka prije nastavka.';
+
+  @override
+  String get streakCelebration => 'Proslava niza';
+
+  @override
+  String get streakCelebrationDesc =>
+      'Prikaži proslavu kada ti niz savršenih dana raste.';
+
+  @override
+  String get greatProgress => 'Odličan napredak';
+
+  @override
+  String get buildingRealConsistency => 'Gradiš pravu konzistentnost';
+
+  @override
+  String get keepGoing => 'Samo nastavi';
 }
