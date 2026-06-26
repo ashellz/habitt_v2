@@ -1,35 +1,46 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:provider/provider.dart';
 
-/// Non-interactive 7-day strip centered on today (today in the middle, three
-/// days on each side). Mirrors the colors/connectors of [StreakCalendar] but as
-/// a fixed, tap-proof row for the streak celebration dialog.
 class StreakDayStrip extends StatelessWidget {
   const StreakDayStrip({
     super.key,
     required this.dayStatuses,
     required this.allStats,
+    required this.progress,
     this.today,
   });
 
   final Map<DateTime, DayCompletionStatus> dayStatuses;
   final Map<DateTime, double> allStats;
+
+  /// Curved 0 → 1 progress driving the slide, hero fill grow and connector fade.
+  final Animation<double> progress;
   final DateTime? today;
 
   static DateTime _normalize(DateTime date) =>
       DateTime(date.year, date.month, date.day);
 
+  /// Eased 0 → 1 value for the hero fill / connector, lagging the slide so the
+  /// hero ignites as it settles into the centre.
+  double _heroReveal(double p) => ((p - 0.45) / 0.55).clamp(0.0, 1.0);
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final todayNorm = _normalize(today ?? DateTime.now());
+    // The celebrated day is always yesterday.
+    final hero = todayNorm.subtract(const Duration(days: 1));
 
-    // 7 days: three before today, today, three after.
+    // Render 8 days [hero-4 .. hero+3]; the visible 7-wide window slides from
+    // [hero-4 .. hero+2] (hero just right of centre) to [hero-3 .. hero+3]
+    // (hero centred) as progress goes 0 → 1.
     final days = List<DateTime>.generate(
-      7,
-      (i) => todayNorm.add(Duration(days: i - 3)),
+      8,
+      (i) => _normalize(hero.add(Duration(days: i - 4))),
     );
 
     final normalizedStatuses = {
@@ -37,109 +48,203 @@ class StreakDayStrip extends StatelessWidget {
         _normalize(entry.key): entry.value,
     };
 
-    // Connectors follow the same tolerated-miss runs as the streak calendar:
-    // any day bridged inside an unbroken run connects to its neighbours, even
-    // if that day itself isn't perfect (a neutral/partial day or a tolerated
-    // miss).
     final connectors = _buildRunConnectors(
       statuses: normalizedStatuses,
       lastDay: days.last,
     );
 
-    return Row(
-      children: List.generate(days.length, (index) {
-        final day = days[index];
-        final isToday = day == todayNorm;
-        final isFuture = day.isAfter(todayNorm);
-        final perfect = normalizedStatuses[day] == DayCompletionStatus.perfect;
-        final progress = allStats[day] ?? 0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxW = constraints.maxWidth;
+        final cellW = maxW / 7;
+        final circle = math.min(cellW * 0.8, 44.0);
 
-        final flags = connectors[day];
-        final connectsLeft = flags?.left ?? false;
-        final connectsRight = flags?.right ?? false;
-
-        late Color fillColor;
-        late Color borderColor;
-        late Color textColor;
-
-        if (isFuture) {
-          fillColor = Colors.transparent;
-          borderColor = Colors.transparent;
-          textColor = cp.text;
-        } else if (perfect) {
-          fillColor = isToday ? cp.orange300 : cp.bg;
-          borderColor = isToday ? cp.orange300 : cp.orange200;
-          textColor = isToday ? Colors.white : cp.text;
-        } else if (progress > 0) {
-          fillColor = cp.bg;
-          borderColor = cp.disabled;
-          textColor = cp.text;
-        } else {
-          fillColor = cp.bg;
-          borderColor = cp.bg;
-          textColor = cp.text;
-        }
-
-        return Expanded(
-          child: SizedBox(
-            height: 38,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Connector halves behind the circle.
-                Positioned.fill(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 38,
-                          color:
-                              connectsLeft ? cp.orange100 : Colors.transparent,
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 38,
-                          color:
-                              connectsRight ? cp.orange100 : Colors.transparent,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: ShapeDecoration(
-                    color: fillColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      side: BorderSide(width: 1, color: borderColor),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${day.day}',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+        return SizedBox(
+          width: maxW,
+          height: circle,
+          child: ClipRect(
+            child: AnimatedBuilder(
+              animation: progress,
+              builder: (context, _) {
+                final p = progress.value;
+                final reveal = _heroReveal(p);
+                return OverflowBox(
+                  alignment: Alignment.centerLeft,
+                  minWidth: 0,
+                  maxWidth: cellW * 8,
+                  child: Transform.translate(
+                    offset: Offset(-p * cellW, 0),
+                    child: SizedBox(
+                      width: cellW * 8,
+                      child: Row(
+                        children: [
+                          for (final day in days)
+                            _cell(
+                              cp: cp,
+                              day: day,
+                              hero: hero,
+                              todayNorm: todayNorm,
+                              cellW: cellW,
+                              circle: circle,
+                              statuses: normalizedStatuses,
+                              connectors: connectors,
+                              reveal: reveal,
+                              p: p,
+                            ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         );
-      }),
+      },
     );
   }
 
-  /// Builds the same tolerated-miss runs the streak calendar uses, then derives
-  /// per-day left/right connector flags. A connector exists between two adjacent
-  /// days when they are consecutive within an unbroken run — so neutral/partial
-  /// days and tolerated misses that don't break the streak still connect.
+  Widget _cell({
+    required ColorProvider cp,
+    required DateTime day,
+    required DateTime hero,
+    required DateTime todayNorm,
+    required double cellW,
+    required double circle,
+    required Map<DateTime, DayCompletionStatus> statuses,
+    required Map<DateTime, ({bool left, bool right})> connectors,
+    required double reveal,
+    required double p,
+  }) {
+    final isHero = day == hero;
+    final isToday = day == todayNorm;
+    final isFuture = day.isAfter(todayNorm);
+    final perfect = statuses[day] == DayCompletionStatus.perfect;
+    final progressValue = allStats[day] ?? 0;
+
+    final flags = connectors[day];
+    var connectsLeft = flags?.left ?? false;
+    var connectsRight = flags?.right ?? false;
+
+    // today is as empty for good design
+    // if it wasnt empty it would look off
+    // because edited days would be after the middle one
+    if (isToday) {
+      connectsLeft = false;
+      connectsRight = false;
+    }
+    if (isHero) {
+      connectsRight = false; // would point at today, same reason as above
+    }
+
+    // animating connections for hero and solid for regular days
+    final heroLeftSegment = day == hero; // left half of hero
+    final heroRightSegment = day == hero.subtract(const Duration(days: 1));
+
+    // most left day removes left connection after animation
+    final leftmostFinal = day == hero.subtract(const Duration(days: 3));
+    double leftConnOpacity = connectsLeft ? 1.0 : 0.0;
+    double rightConnOpacity = connectsRight ? 1.0 : 0.0;
+    if (heroLeftSegment) leftConnOpacity = connectsLeft ? reveal : 0.0;
+    if (heroRightSegment) rightConnOpacity = connectsRight ? reveal : 0.0;
+    if (leftmostFinal) leftConnOpacity = connectsLeft ? (1 - p) : 0.0;
+
+    late Color baseFill;
+    late Color baseBorder;
+    late Color textColor;
+
+    if (isHero) {
+      // solid fill grows from center
+      baseFill = cp.bg;
+      baseBorder = Color.lerp(cp.orange200, cp.orange300, reveal)!;
+      textColor = Color.lerp(cp.text, Colors.white, reveal)!;
+    } else if (isFuture || isToday) {
+      baseFill = Colors.transparent;
+      baseBorder = Colors.transparent;
+      textColor = cp.text;
+    } else if (perfect) {
+      baseFill = cp.bg;
+      baseBorder = cp.orange200;
+      textColor = cp.text;
+    } else if (progressValue > 0) {
+      baseFill = cp.bg;
+      baseBorder = cp.disabled;
+      textColor = cp.text;
+    } else {
+      baseFill = cp.bg;
+      baseBorder = cp.bg;
+      textColor = cp.text;
+    }
+
+    return SizedBox(
+      width: cellW,
+      child: Center(
+        child: SizedBox(
+          width: cellW,
+          height: circle,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned.fill(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: circle,
+                        color: cp.orange100.withValues(alpha: leftConnOpacity),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: circle,
+                        color: cp.orange100.withValues(alpha: rightConnOpacity),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Base circle (ring / fill).
+              Container(
+                width: circle,
+                height: circle,
+                decoration: ShapeDecoration(
+                  color: baseFill,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    side: BorderSide(width: 1, color: baseBorder),
+                  ),
+                ),
+              ),
+              // Hero solid fill, growing from the centre.
+              if (isHero && reveal > 0)
+                Transform.scale(
+                  scale: reveal,
+                  child: Container(
+                    width: circle,
+                    height: circle,
+                    decoration: ShapeDecoration(
+                      color: cp.orange300,
+                      shape: const CircleBorder(),
+                    ),
+                  ),
+                ),
+              Text(
+                '${day.day}',
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // same logic for connectors as streak calc
+  // exceptions adjusted to fit thsi dialog
   static Map<DateTime, ({bool left, bool right})> _buildRunConnectors({
     required Map<DateTime, DayCompletionStatus> statuses,
     required DateTime lastDay,
@@ -149,6 +254,7 @@ class StreakDayStrip extends StatelessWidget {
 
     // Start from the earliest tracked day so run state (ongoing run, tolerated
     // misses used) is established correctly before reaching the visible window.
+    // this is okay becuase its only done once (on init of this build) and you dont see it anymore
     final firstDay = _normalize(
       statuses.keys.reduce((a, b) => a.isBefore(b) ? a : b),
     );
@@ -160,8 +266,10 @@ class StreakDayStrip extends StatelessWidget {
     var cursor = firstDay;
 
     void flushRun() {
-      // Trim trailing non-perfect days (tolerated misses / neutral skips that
-      // never bridged back to a completion).
+      // removes all bridges/connectors that dont end in a perfect day (that fail)
+      // eg. perfect, misssed, missed, missed - originall all missed are assigned a connector
+      // this iteration looks for those and removes connectors
+
       while (currentDays.isNotEmpty &&
           statuses[currentDays.last] != DayCompletionStatus.perfect) {
         currentDays.removeLast();

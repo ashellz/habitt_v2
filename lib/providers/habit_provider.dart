@@ -687,16 +687,22 @@ class HabitProvider extends ChangeNotifier {
     statsProvider!.perfectDaysStreak = statsProvider!.refreshPerfectStreak();
   }
 
-  /// Completing/skipping habits on a *past* day can immediately increase the
-  /// perfect-days streak (today is excluded from the streak), so back-filling a
-  /// missed day should celebrate in the same session. Today's own completions
-  /// never bump the streak, so they are not evaluated here.
+  /// Completing/skipping habits that complete *yesterday* can immediately
+  /// increase the perfect-days streak (today is excluded from the streak), so
+  /// back-filling yesterday should celebrate in the same session. The dialog
+  /// always anchors on yesterday, so completing today (never bumps the streak)
+  /// or any day older than yesterday does not trigger it.
   void _maybeCelebratePastDayStreak(
     BuildContext context,
     DateTime daySimple,
     DateTime todaySimple,
   ) {
-    if (daySimple == todaySimple || !context.mounted) {
+    final yesterday = DateTime(
+      todaySimple.year,
+      todaySimple.month,
+      todaySimple.day - 1,
+    );
+    if (daySimple != yesterday || !context.mounted) {
       return;
     }
     unawaited(maybeShowStreakCelebration(context));

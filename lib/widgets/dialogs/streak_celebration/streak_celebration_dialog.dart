@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -10,6 +12,9 @@ import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/streak_celebration/streak_day_strip.dart';
 import 'package:provider/provider.dart';
 
+/// Celebration shown when the perfect-days streak grows. Presented via
+/// `showDialogSheet` using the shared [NewDefaultDialog] shell, with a custom
+/// fire + animated day-strip body in its `child` slot.
 class StreakCelebrationDialog extends StatefulWidget {
   const StreakCelebrationDialog({
     super.key,
@@ -29,7 +34,15 @@ class StreakCelebrationDialog extends StatefulWidget {
       _StreakCelebrationDialogState();
 }
 
-class _StreakCelebrationDialogState extends State<StreakCelebrationDialog> {
+class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _progress;
+
+  static const int _hapticSteps = 15;
+  int _lastHapticStep = 0;
+  bool _hapticsEnabled = false;
+
   static final _random = Random();
   String? _praise;
 
@@ -42,11 +55,50 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1100),
+    );
+    _progress = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _progress.addListener(_maybeHaptic);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        // reduced motion for accessibility
+        _controller.value = 1.0;
+        return;
+      }
+      _hapticsEnabled = true;
+      // delay to start after sheet slide-in
+      Future.delayed(const Duration(milliseconds: 280), () {
+        if (mounted) _controller.forward();
+      });
+    });
+  }
+
+  void _maybeHaptic() {
+    if (!_hapticsEnabled) return;
+    final step = (_progress.value * _hapticSteps).floor();
+    if (step > _lastHapticStep && step <= _hapticSteps) {
+      _lastHapticStep = step;
+      HapticFeedback.selectionClick();
+    }
+  }
+
+  @override
+  void dispose() {
+    _progress.removeListener(_maybeHaptic);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
-    final streak = widget.streak;
-    final dayWord = streak == 1 ? loc.day : loc.days;
 
     return NewDefaultDialog(
       title: loc.greatProgress,
@@ -97,29 +149,38 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog> {
                     height: 80,
                   ),
                 ),
-
                 Positioned(
                   bottom: -20,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 9,
-                    ),
-                    decoration: ShapeDecoration(
-                      color: cp.bg,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: cp.orange200),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    child: Text(
-                      '$streak $dayWord',
-                      style: TextStyle(
-                        color: cp.orange300,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                  child: // ─── Streak pill (count ticks n-1 → n with the reveal) ──────────
+                      AnimatedBuilder(
+                    animation: _progress,
+                    builder: (context, _) {
+                      final showNew =
+                          widget.streak <= 1 || _progress.value >= 0.55;
+                      final count = showNew ? widget.streak : widget.streak - 1;
+                      final dayWord = count == 1 ? loc.day : loc.days;
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        decoration: ShapeDecoration(
+                          color: cp.bg,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(width: 1, color: cp.orange200),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                        child: Text(
+                          '$count $dayWord',
+                          style: TextStyle(
+                            color: cp.orange300,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -127,11 +188,11 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog> {
           ),
 
           const SizedBox(height: 45),
-
           StreakDayStrip(
             dayStatuses: widget.dayStatuses,
             allStats: widget.allStats,
             today: widget.today,
+            progress: _progress,
           ),
         ],
       ),

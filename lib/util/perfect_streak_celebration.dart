@@ -58,11 +58,19 @@ Future<void> maybeShowStreakCelebration(BuildContext context) async {
 
     final celebrated = prefs.getInt(_kCelebratedStreakKey) ?? 0;
     final shownDate = prefs.getString(_kShownDateKey);
-    final today = dateKey(DateTime.now());
+    final now = DateTime.now();
+    final today = dateKey(now);
+
+    // The dialog always anchors on yesterday, so only celebrate when yesterday
+    // is genuinely a perfect day. This also closes the "silent older-day
+    // increase then restart" leak, where the streak rose without yesterday
+    // being the cause.
+    final dayStatuses = statsProvider.getDayCompletionStatuses(habitProvider);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    final yesterdayPerfect =
+        dayStatuses[yesterday] == DayCompletionStatus.perfect;
 
     final shouldShow = true;
-
-    // streak >= 1 && streak > celebrated && shownDate != today;
     if (!shouldShow || !context.mounted) {
       return;
     }
@@ -75,7 +83,6 @@ Future<void> maybeShowStreakCelebration(BuildContext context) async {
       return;
     }
 
-    final dayStatuses = statsProvider.getDayCompletionStatuses(habitProvider);
     final allStats = statsProvider.getAllDaysProgress(habitProvider);
 
     await showDialogSheet(
@@ -85,6 +92,7 @@ Future<void> maybeShowStreakCelebration(BuildContext context) async {
             streak: streak,
             dayStatuses: dayStatuses,
             allStats: allStats,
+            today: now,
           ),
     );
   } finally {
