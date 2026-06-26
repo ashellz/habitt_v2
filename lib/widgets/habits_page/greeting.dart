@@ -51,7 +51,7 @@ class _GreetingState extends State<Greeting> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _sessionGreeting != null ? "$_sessionGreeting," : "${loc.hello},",
+          _withTrailingPunctuation(_sessionGreeting ?? loc.hello),
           style: TextStyle(
             color: cp.greyText,
             fontSize: 18,
@@ -96,7 +96,17 @@ class _GreetingState extends State<Greeting> {
       l.hi,
       l.hiThere,
       l.howAreYou,
+      l.backAtIt,
+      l.timeForHabits,
     ];
+  }
+
+  String _withTrailingPunctuation(String greeting) {
+    final trimmed = greeting.trimRight();
+    if (trimmed.isEmpty) return trimmed;
+    final last = trimmed[trimmed.length - 1];
+    if (last == '?' || last == '!' || last == ',') return trimmed;
+    return '$trimmed,';
   }
 
   String _dayPeriodGreeting(AppLocalizations l, _DayPeriod period) {

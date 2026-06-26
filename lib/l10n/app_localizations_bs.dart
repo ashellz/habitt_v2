@@ -2619,11 +2619,11 @@ class AppLocalizationsBs extends AppLocalizations {
       'Preporučuje se napraviti backup podataka prije nastavka.';
 
   @override
-  String get streakCelebration => 'Proslava niza';
+  String get streakCelebration => 'Slavlje streaka';
 
   @override
   String get streakCelebrationDesc =>
-      'Prikaži proslavu kada ti niz savršenih dana raste.';
+      'Prikaži proslavu kada ti dnevni streak raste';
 
   @override
   String get greatProgress => 'Odličan napredak';
@@ -2632,5 +2632,35 @@ class AppLocalizationsBs extends AppLocalizations {
   String get buildingRealConsistency => 'Gradiš pravu konzistentnost';
 
   @override
-  String get keepGoing => 'Samo nastavi';
+  String get keepGoing => 'Samo naprijed!';
+
+  @override
+  String get goodJob => 'Svaka čast!';
+
+  @override
+  String get bravo => 'Bravo!';
+
+  @override
+  String get keepItUp => 'Samo tako nastavi!';
+
+  @override
+  String get youreALegend => 'Legenda si!';
+
+  @override
+  String get streakInventYou => 'Da te nema, trebalo bi te izmislit!';
+
+  @override
+  String get streakPraiseExtra1 => 'To majstore!';
+
+  @override
+  String get streakPraiseExtra2 => 'E aferim ti!';
+
+  @override
+  String get streakPraiseExtra3 => 'Ejvallah, svaka čast!';
+
+  @override
+  String get backAtIt => 'Opet u akciji';
+
+  @override
+  String get timeForHabits => 'Vrijeme za navike?';
 }

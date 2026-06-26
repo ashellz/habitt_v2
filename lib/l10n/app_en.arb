@@ -1019,5 +1019,15 @@
   "streakCelebrationDesc": "Show a celebration when your perfect-days streak grows.",
   "greatProgress": "Great progress",
   "buildingRealConsistency": "You're building real consistency",
-  "keepGoing": "Keep going"
+  "keepGoing": "Keep going!",
+  "goodJob": "Good job!",
+  "bravo": "Bravo!",
+  "keepItUp": "Keep it up!",
+  "youreALegend": "You're a legend!",
+  "streakInventYou": "If you didn't exist, we'd have to invent you!",
+  "streakPraiseExtra1": "That's the way, champ!",
+  "streakPraiseExtra2": "Well done, you!",
+  "streakPraiseExtra3": "Hats off to you!",
+  "backAtIt": "Back at it",
+  "timeForHabits": "Time for habits?"
 }

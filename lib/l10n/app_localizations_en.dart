@@ -2634,5 +2634,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get buildingRealConsistency => 'You\'re building real consistency';
 
   @override
-  String get keepGoing => 'Keep going';
+  String get keepGoing => 'Keep going!';
+
+  @override
+  String get goodJob => 'Good job!';
+
+  @override
+  String get bravo => 'Bravo!';
+
+  @override
+  String get keepItUp => 'Keep it up!';
+
+  @override
+  String get youreALegend => 'You\'re a legend!';
+
+  @override
+  String get streakInventYou =>
+      'If you didn\'t exist, we\'d have to invent you!';
+
+  @override
+  String get streakPraiseExtra1 => 'That\'s the way, champ!';
+
+  @override
+  String get streakPraiseExtra2 => 'Well done, you!';
+
+  @override
+  String get streakPraiseExtra3 => 'Hats off to you!';
+
+  @override
+  String get backAtIt => 'Back at it';
+
+  @override
+  String get timeForHabits => 'Time for habits?';
 }

@@ -2653,5 +2653,35 @@ class AppLocalizationsIt extends AppLocalizations {
   String get buildingRealConsistency => 'Stai costruendo una vera costanza';
 
   @override
-  String get keepGoing => 'Continua così';
+  String get keepGoing => 'Continua così!';
+
+  @override
+  String get goodJob => 'Ottimo lavoro!';
+
+  @override
+  String get bravo => 'Bravo!';
+
+  @override
+  String get keepItUp => 'Vai così!';
+
+  @override
+  String get youreALegend => 'Sei una leggenda!';
+
+  @override
+  String get streakInventYou => 'Se non esistessi, bisognerebbe inventarti!';
+
+  @override
+  String get streakPraiseExtra1 => 'Così si fa, campione!';
+
+  @override
+  String get streakPraiseExtra2 => 'Bravo, proprio tu!';
+
+  @override
+  String get streakPraiseExtra3 => 'Tanto di cappello!';
+
+  @override
+  String get backAtIt => 'Di nuovo all\'opera';
+
+  @override
+  String get timeForHabits => 'Ora delle abitudini?';
 }

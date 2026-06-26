@@ -4441,8 +4441,68 @@ abstract class AppLocalizations {
   /// No description provided for @keepGoing.
   ///
   /// In en, this message translates to:
-  /// **'Keep going'**
+  /// **'Keep going!'**
   String get keepGoing;
+
+  /// No description provided for @goodJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Good job!'**
+  String get goodJob;
+
+  /// No description provided for @bravo.
+  ///
+  /// In en, this message translates to:
+  /// **'Bravo!'**
+  String get bravo;
+
+  /// No description provided for @keepItUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up!'**
+  String get keepItUp;
+
+  /// No description provided for @youreALegend.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re a legend!'**
+  String get youreALegend;
+
+  /// No description provided for @streakInventYou.
+  ///
+  /// In en, this message translates to:
+  /// **'If you didn\'t exist, we\'d have to invent you!'**
+  String get streakInventYou;
+
+  /// No description provided for @streakPraiseExtra1.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the way, champ!'**
+  String get streakPraiseExtra1;
+
+  /// No description provided for @streakPraiseExtra2.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done, you!'**
+  String get streakPraiseExtra2;
+
+  /// No description provided for @streakPraiseExtra3.
+  ///
+  /// In en, this message translates to:
+  /// **'Hats off to you!'**
+  String get streakPraiseExtra3;
+
+  /// No description provided for @backAtIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Back at it'**
+  String get backAtIt;
+
+  /// No description provided for @timeForHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for habits?'**
+  String get timeForHabits;
 }
 
 class _AppLocalizationsDelegate

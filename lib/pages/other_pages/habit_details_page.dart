@@ -417,6 +417,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                               : _pauseHabit(habit),
                 ),
                 DefaultPopupMenuItem(
+                  isDestructive: true,
                   label: loc.deleteHabit,
                   svgPath: 'assets/images/new-svg/trash.svg',
                   cnIcon: CNSymbol('trash', size: 16),

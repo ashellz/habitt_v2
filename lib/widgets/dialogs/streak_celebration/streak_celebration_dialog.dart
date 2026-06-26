@@ -1,13 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/streak_praise.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/streak_celebration/streak_day_strip.dart';
 import 'package:provider/provider.dart';
 
-class StreakCelebrationDialog extends StatelessWidget {
+class StreakCelebrationDialog extends StatefulWidget {
   const StreakCelebrationDialog({
     super.key,
     required this.streak,
@@ -22,14 +25,32 @@ class StreakCelebrationDialog extends StatelessWidget {
   final DateTime? today;
 
   @override
+  State<StreakCelebrationDialog> createState() =>
+      _StreakCelebrationDialogState();
+}
+
+class _StreakCelebrationDialogState extends State<StreakCelebrationDialog> {
+  static final _random = Random();
+  String? _praise;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final loc = AppLocalizations.of(context)!;
+    final options = streakPraiseOptions(loc);
+    _praise ??= options[_random.nextInt(options.length)];
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
+    final streak = widget.streak;
     final dayWord = streak == 1 ? loc.day : loc.days;
 
     return NewDefaultDialog(
       title: loc.greatProgress,
-      desc: loc.buildingRealConsistency,
+      desc: _praise ?? loc.buildingRealConsistency,
       showSecondaryButton: false,
       showCloseButton: true,
       primaryButtonLabel: loc.keepGoing,
@@ -108,9 +129,9 @@ class StreakCelebrationDialog extends StatelessWidget {
           const SizedBox(height: 45),
 
           StreakDayStrip(
-            dayStatuses: dayStatuses,
-            allStats: allStats,
-            today: today,
+            dayStatuses: widget.dayStatuses,
+            allStats: widget.allStats,
+            today: widget.today,
           ),
         ],
       ),

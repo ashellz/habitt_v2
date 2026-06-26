@@ -61,6 +61,7 @@ class HabitSheet extends StatefulWidget {
 class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   late final VoidCallback _nameListener;
   late final VoidCallback _descListener;
+  late final VoidCallback _amountLabelListener;
   late final StateProvider _sp;
   late final StatusOverlayPopupController _statusOverlay;
   bool _allowPop = false;
@@ -87,8 +88,14 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         setState(() {});
       }
     };
+    _amountLabelListener = () {
+      if (mounted && !_isInitializing) {
+        setState(() {});
+      }
+    };
     _sp.nameController.addListener(_nameListener);
     _sp.descController.addListener(_descListener);
+    _sp.habitAmountLabelController.addListener(_amountLabelListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
@@ -124,6 +131,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     _statusOverlay.dispose();
     _sp.nameController.removeListener(_nameListener);
     _sp.descController.removeListener(_descListener);
+    _sp.habitAmountLabelController.removeListener(_amountLabelListener);
     super.dispose();
   }
 

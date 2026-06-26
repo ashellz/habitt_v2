@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/streak_praise.dart';
 import 'package:provider/provider.dart';
 
 class NewPerfectDaysStreak extends StatefulWidget {
@@ -14,10 +17,20 @@ class NewPerfectDaysStreak extends StatefulWidget {
 
 class _NewPerfectDaysStreakState extends State<NewPerfectDaysStreak>
     with SingleTickerProviderStateMixin {
+  static String? _sessionPraise;
+  static String? _sessionLocale;
+  static final _random = Random();
+
   late final AnimationController _controller;
   late final Animation<Offset> _fireSlide;
   late final Animation<double> _bulbFade;
   late final Animation<double> _gradientProgress;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _ensurePraise();
+  }
 
   @override
   void initState() {
@@ -53,6 +66,18 @@ class _NewPerfectDaysStreakState extends State<NewPerfectDaysStreak>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _ensurePraise() {
+    final currentLocale = Localizations.localeOf(context).languageCode;
+    if (_sessionPraise != null && _sessionLocale == currentLocale) return;
+
+    _sessionLocale = currentLocale;
+    final loc = AppLocalizations.of(context)!;
+    final options = streakPraiseOptions(loc);
+    setState(() {
+      _sessionPraise = options[_random.nextInt(options.length)];
+    });
   }
 
   @override
@@ -132,7 +157,7 @@ class _NewPerfectDaysStreakState extends State<NewPerfectDaysStreak>
                       ),
                     ),
                     Text(
-                      loc.youreDoingGreat,
+                      _sessionPraise ?? loc.youreDoingGreat,
                       style: TextStyle(
                         color: cp.text.withValues(alpha: 0.7),
                         fontSize: 13,

@@ -1003,9 +1003,19 @@
   "importHabitKitNote": "Ikone i boje se mogu promijeniti, 'loše navike' se računaju kao obične navike",
   "replace": "Zamijeni",
   "backupBeforeImporting": "Preporučuje se napraviti backup podataka prije nastavka.",
-  "streakCelebration": "Proslava niza",
-  "streakCelebrationDesc": "Prikaži proslavu kada ti niz savršenih dana raste.",
+  "streakCelebration": "Slavlje streaka",
+  "streakCelebrationDesc": "Prikaži proslavu kada ti dnevni streak raste",
   "greatProgress": "Odličan napredak",
   "buildingRealConsistency": "Gradiš pravu konzistentnost",
-  "keepGoing": "Samo nastavi"
+  "keepGoing": "Samo naprijed!",
+  "goodJob": "Svaka čast!",
+  "bravo": "Bravo!",
+  "keepItUp": "Samo tako nastavi!",
+  "youreALegend": "Legenda si!",
+  "streakInventYou": "Da te nema, trebalo bi te izmislit!",
+  "streakPraiseExtra1": "To majstore!",
+  "streakPraiseExtra2": "E aferim ti!",
+  "streakPraiseExtra3": "Ejvallah, svaka čast!",
+  "backAtIt": "Opet u akciji",
+  "timeForHabits": "Vrijeme za navike?"
 }

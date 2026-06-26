@@ -10,6 +10,7 @@ class DefaultPopupMenuItem {
     required this.label,
     required this.svgPath,
     required this.onTap,
+    this.isDestructive = false,
     this.icon,
     this.cnIcon,
     this.color,
@@ -19,6 +20,7 @@ class DefaultPopupMenuItem {
   final String svgPath;
   final VoidCallback onTap;
   final Widget? icon;
+  final bool isDestructive;
 
   /// SF Symbol used for the native iOS 26+ popup menu item.
   final CNSymbol? cnIcon;
@@ -168,6 +170,7 @@ class _DefaultPopupMenuState extends State<DefaultPopupMenu>
                 .map(
                   (item) => CNPopupMenuItem(
                     label: item.label,
+                    isDestructive: item.isDestructive,
                     icon:
                         item.cnIcon != null
                             ? CNSymbol(

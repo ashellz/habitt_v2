@@ -60,7 +60,9 @@ Future<void> maybeShowStreakCelebration(BuildContext context) async {
     final shownDate = prefs.getString(_kShownDateKey);
     final today = dateKey(DateTime.now());
 
-    final shouldShow = streak >= 1 && streak > celebrated && shownDate != today;
+    final shouldShow = true;
+
+    // streak >= 1 && streak > celebrated && shownDate != today;
     if (!shouldShow || !context.mounted) {
       return;
     }
