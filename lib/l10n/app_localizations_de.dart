@@ -2712,4 +2712,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get notificationSoundSystemDefault => 'System-Standard';
+
+  @override
+  String get optional => 'Optional';
 }

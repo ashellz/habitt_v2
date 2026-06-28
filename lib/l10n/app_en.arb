@@ -1042,5 +1042,6 @@
     }
   },
   "notificationSoundAppDefault": "App Default",
-  "notificationSoundSystemDefault": "System Default"
+  "notificationSoundSystemDefault": "System Default",
+  "optional": "Optional"
 }

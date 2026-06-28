@@ -58,21 +58,44 @@ class MainHabitInfo extends StatelessWidget {
       return getDurationString(habit.duration);
     }
 
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       spacing: 10,
       children: [
-        Text(
-          habit.resolvedName(
-            context.watch<LanguageProvider>().locale?.languageCode ??
-                Localizations.localeOf(context).languageCode,
-          ),
-          style: TextStyle(
-            color: cp.text,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+        Row(
+          spacing: 8,
+          children: [
+            Text(
+              habit.resolvedName(
+                context.watch<LanguageProvider>().locale?.languageCode ??
+                    Localizations.localeOf(context).languageCode,
+              ),
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            if (habit.optional)
+              Container(
+                decoration: BoxDecoration(
+                  color: cp.habitBg,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: const EdgeInsets.fromLTRB(4, 0, 4, 2),
+                child: Text(
+                  loc.optional,
+                  style: TextStyle(
+                    color: cp.lightGreyText,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+          ],
         ),
         if (isAmount || isDuration)
           Row(

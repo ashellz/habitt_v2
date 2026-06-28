@@ -2710,4 +2710,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationSoundSystemDefault => 'Sistema';
+
+  @override
+  String get optional => 'Optional';
 }

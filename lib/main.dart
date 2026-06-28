@@ -351,7 +351,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (didOnboard == null || !didOnboard) {
         return const OnboardingPages();
       } else {
-        return const OnboardingPages();
+        return const HomePage();
       }
     }
 

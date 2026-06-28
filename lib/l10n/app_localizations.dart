@@ -4551,6 +4551,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'System Default'**
   String get notificationSoundSystemDefault;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
 }
 
 class _AppLocalizationsDelegate
