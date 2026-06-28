@@ -43,7 +43,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
     super.dispose();
   }
 
-  List<Widget> _buildLanguageRows({required ColorProvider cp}) {
+  Widget _buildLanguageRows({required ColorProvider cp}) {
     final loc = AppLocalizations.of(context)!;
     final query = searchController.text.trim().toLowerCase();
     final items =
@@ -54,19 +54,25 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
         }).toList();
 
     if (items.isEmpty) {
-      return [
-        Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: Text(
-            loc.noLanguagesFound,
-            style: TextStyle(
-              color: cp.lightGreyText,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: Column(
+          spacing: 16,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset("assets/images/new-svg/no-languages.svg"),
+            Text(
+              loc.noLanguagesFound,
+              style: TextStyle(
+                color: cp.lightGreyText,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
+          ],
         ),
-      ];
+      );
     }
 
     final rows = <Widget>[];
@@ -97,7 +103,11 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
       rows.add(Row(children: rowChildren));
     }
 
-    return rows;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: rows,
+    );
   }
 
   @override
@@ -172,11 +182,7 @@ class _ChooseAppLanguageState extends State<ChooseAppLanguage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: _buildLanguageRows(cp: cp),
-                      ),
+                      child: _buildLanguageRows(cp: cp),
                     ),
                   ],
                 ),
