@@ -1027,5 +1027,13 @@
   "streakPraiseExtra2": "Gut gemacht, du!",
   "streakPraiseExtra3": "Hut ab vor dir!",
   "backAtIt": "Wieder dabei",
-  "timeForHabits": "Zeit für Gewohnheiten?"
+  "timeForHabits": "Zeit für Gewohnheiten?",
+  "notificationCompleteAction": "Erledigt",
+  "notificationSoundSettingTitle": "Benachrichtigungston",
+  "notificationSoundSettingSubtitle": "Ton für Erinnerungen",
+  "habitSoundTitle": "Erinnerungston",
+  "useGlobalDefaultSound": "Standard verwenden",
+  "soundNumbered": "Ton {number}",
+  "notificationSoundAppDefault": "App-Standard",
+  "notificationSoundSystemDefault": "System-Standard"
 }

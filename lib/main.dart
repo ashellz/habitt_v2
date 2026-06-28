@@ -30,6 +30,9 @@ import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/profile_image_provider.dart';
 import 'package:habitt/services/notification_service.dart';
+import 'package:habitt/services/notification_action_handler.dart';
+import 'package:habitt/services/notification_sounds.dart';
+import 'package:habitt/services/pending_completion_queue.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,8 +74,18 @@ Future<void> main() async {
         channelName: 'Main notifications',
         channelDescription: 'Notification channel for production',
       ),
+      // one channel per sound, required by android
+      for (final key in NotificationSounds.keys)
+        NotificationChannel(
+          channelGroupKey: 'basic_channel_group',
+          channelKey: NotificationSounds.channelKey(key),
+          channelName: 'Reminders ($key)',
+          channelDescription: 'Habit reminders using sound $key',
+          soundSource: NotificationSounds.resource(key),
+          playSound: true,
+        ),
+      // basic channel is used by the system default option, same as this notification update never happened
     ],
-    // Channel groups are only visual and are not required
     channelGroups: [
       NotificationChannelGroup(
         channelGroupKey: 'basic_channel_group',
@@ -82,18 +95,21 @@ Future<void> main() async {
     debug: kDebugMode,
   );
 
+  // registering on tap and button listeners from notification
+  await NotificationActionHandler.registerListeners();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Initialize BackupProvider to restore persisted sign-in state.
-  // Not awaited — runs concurrently so the splash dismisses immediately.
-  // HomePage awaits backupProvider.initializationDone before performSync().
+  // init backup provider, not awaited so it doesn't freeze splash
+  // homepage makes sure its initalized before performing sync
   final backupProvider = BackupProvider();
   backupProvider.initialize();
 
-  // Initialize NotificationsProvider
   final notificationsProvider = NotificationsProvider(prefs);
+  // sync service with provider (user prefs)
+  NotificationService.globalSoundKey = notificationsProvider.globalSoundKey;
 
-  // Initialize ProfileImageProvider and load cached image once
+  // init ProfileImageProvider and load cached image once, needs more work // TODO
   final profileImageProvider = ProfileImageProvider();
   await profileImageProvider.load();
 
@@ -185,11 +201,37 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // finds pending button presses to complete and completes once app opened
+    NotificationActionHandler.drainPending = _drainPendingCompletions;
+
     _scheduleNotifications();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await NotificationActionHandler.handleColdStart();
+      NotificationActionHandler.consumePendingRoute();
+      await _drainPendingCompletions();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    if (NotificationActionHandler.drainPending == _drainPendingCompletions) {
+      NotificationActionHandler.drainPending = null;
+    }
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      NotificationActionHandler.consumePendingRoute();
+      _drainPendingCompletions();
+    }
   }
 
   Future<void> _scheduleNotifications() async {
@@ -200,6 +242,39 @@ class _MyAppState extends State<MyApp> {
     if (isAllowed) {
       await NotificationService.scheduleAllNotifications(notificationsProvider);
     }
+  }
+
+  // for each pending completion from the notification
+  // it completes a habit if it isnt already completed
+  // it does check for which day it was completed on
+  Future<void> _drainPendingCompletions() async {
+    final pending = await PendingCompletionQueue.peek();
+    debugPrint('[NOTIF_DRAIN] peek found ${pending.length} pending');
+    if (pending.isEmpty) return;
+
+    final ctx = NotificationActionHandler.navigatorKey.currentContext;
+    if (ctx == null || !ctx.mounted) {
+      debugPrint('[NOTIF_DRAIN] navigator not ready — keeping queue');
+      return;
+    }
+    final habitProvider = ctx.read<HabitProvider>();
+    if (!habitProvider.isInitialized) {
+      debugPrint('[NOTIF_DRAIN] habits not loaded yet — keeping queue');
+      return;
+    }
+    final stateProvider = ctx.read<StateProvider>();
+    for (final p in pending) {
+      habitProvider.applyDeferredCompletion(
+        p.habitId,
+        p.day,
+        ctx,
+        stateProvider,
+      );
+    }
+
+    // remove pending from prefs
+    await PendingCompletionQueue.removeAll(pending);
+    debugPrint('[NOTIF_DRAIN] processed ${pending.length} entries');
   }
 
   @override
@@ -313,6 +388,7 @@ class _MyAppState extends State<MyApp> {
     final app =
         isIOS
             ? CupertinoApp(
+              navigatorKey: NotificationActionHandler.navigatorKey,
               navigatorObservers: [CNTabBarRouteObserver()],
               title: 'habitt',
               debugShowCheckedModeBanner: false,
@@ -341,6 +417,7 @@ class _MyAppState extends State<MyApp> {
               home: getHomePage(),
             )
             : MaterialApp(
+              navigatorKey: NotificationActionHandler.navigatorKey,
               navigatorObservers: [CNTabBarRouteObserver()],
               title: 'habitt',
               debugShowCheckedModeBanner: false,

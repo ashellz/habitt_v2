@@ -1027,5 +1027,13 @@
   "streakPraiseExtra2": "Bravo, proprio tu!",
   "streakPraiseExtra3": "Tanto di cappello!",
   "backAtIt": "Di nuovo all'opera",
-  "timeForHabits": "Ora delle abitudini?"
+  "timeForHabits": "Ora delle abitudini?",
+  "notificationCompleteAction": "Completa",
+  "notificationSoundSettingTitle": "Suono di notifica",
+  "notificationSoundSettingSubtitle": "Suono per i promemoria",
+  "habitSoundTitle": "Suono del promemoria",
+  "useGlobalDefaultSound": "Usa predefinito",
+  "soundNumbered": "Suono {number}",
+  "notificationSoundAppDefault": "App",
+  "notificationSoundSystemDefault": "Sistema"
 }

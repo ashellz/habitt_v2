@@ -1029,5 +1029,18 @@
   "streakPraiseExtra2": "Well done, you!",
   "streakPraiseExtra3": "Hats off to you!",
   "backAtIt": "Back at it",
-  "timeForHabits": "Time for habits?"
+  "timeForHabits": "Time for habits?",
+  "notificationCompleteAction": "Complete",
+  "notificationSoundSettingTitle": "Notification sound",
+  "notificationSoundSettingSubtitle": "Sound played for reminders",
+  "habitSoundTitle": "Reminder sound",
+  "useGlobalDefaultSound": "Use global default",
+  "soundNumbered": "Sound {number}",
+  "@soundNumbered": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "notificationSoundAppDefault": "App Default",
+  "notificationSoundSystemDefault": "System Default"
 }

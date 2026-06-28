@@ -32,6 +32,8 @@ import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:habitt/widgets/notification/notification_time_row.dart';
+import 'package:habitt/widgets/notification/sound_picker_sheet.dart';
+import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/sheets/habit_name_localization_sheet.dart';
 import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
@@ -170,6 +172,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.setNotificationsFromHabit(
       enabled: habit.notificationsEnabled,
       notificationTimes: habit.notificationTimes,
+      soundKey: habit.soundKey,
     );
   }
 
@@ -250,6 +253,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           }
           return false;
         })();
+    final changedSoundKey = sp.habitSoundKey != habit.soundKey;
 
     return changedName ||
         changedDesc ||
@@ -269,9 +273,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedNotificationsEnabled ||
         changedNotificationTimes ||
         changedAmountLabel ||
-        changedLocalizations;
+        changedLocalizations ||
+        changedSoundKey;
   }
 
+  // Used so if sheet closes without saving, we can check if there are unsaved changes
   bool _hasCreateChanges(StateProvider sp) {
     final changedName = sp.nameController.text.trim().isNotEmpty;
     final changedDesc = sp.descController.text.trim().isNotEmpty;
@@ -299,6 +305,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedNotificationTimes =
         sp.habitNotificationTimes.length != 1 ||
         sp.habitNotificationTimes.first.minutesOfDay != 8 * 60;
+    final changedLocalizations = sp.habitLocalizedNames.isNotEmpty;
+    final changedSoundKey = sp.habitSoundKey != NotificationSounds.inheritKey;
 
     return changedName ||
         changedDesc ||
@@ -321,7 +329,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedColorName ||
         changedPremadeHabitType ||
         changedNotificationsEnabled ||
-        changedNotificationTimes;
+        changedNotificationTimes ||
+        changedLocalizations ||
+        changedSoundKey;
   }
 
   bool _hasUnsavedChanges(StateProvider sp, ThemeProvider tp) {
@@ -578,6 +588,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.notificationsEnabled = habitNotificationsEnabled;
       habit.notificationTimes =
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList();
+      habit.soundKey = sp.habitSoundKey;
 
       if (habit.scheduleType == ScheduleType.custom) {
         habit.customAppearance = buildCustomAppearance(
@@ -646,6 +657,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       notificationsEnabled: habitNotificationsEnabled,
       notificationTimes:
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
+      soundKey: sp.habitSoundKey,
       premadeHabitType: sp.selectedPremadeHabitType,
       localizedNames: newLocalizedNames,
     );
@@ -692,50 +704,53 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           closeResult: HabitSheetCloseResult.dismissed,
         );
       },
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxSheetHeight),
-        child: Padding(
-          padding: EdgeInsets.only(bottom: bottomInset),
-          child: GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    topSection(context, cp, sp, tp, canSave),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 20,
-                        children: [
-                          chooseIcon(cp, sp, context),
-                          habitDetails(cp),
-                          habitScheduling(cp),
-                          habitTypeRow(cp, sp),
-                        ],
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxSheetHeight),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomInset),
+            child: GestureDetector(
+              onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      topSection(context, cp, sp, tp, canSave),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 20,
+                          children: [
+                            chooseIcon(cp, sp, context),
+                            habitDetails(cp),
+                            habitScheduling(cp),
+                            habitTypeRow(cp, sp),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: Column(
-                        children: [
-                          optionalHabitCheck(cp, sp),
-                          Padding(
-                            padding: EdgeInsets.only(right: 16),
-                            child: notificationSection(cp, sp),
-                          ),
-                        ],
+                      Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: Column(
+                          children: [
+                            optionalHabitCheck(cp, sp),
+                            Padding(
+                              padding: EdgeInsets.only(right: 16),
+                              child: notificationSection(cp, sp),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -889,6 +904,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
               ],
             ),
           ),
+          _habitSoundRow(cp, sp),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 220),
             transitionBuilder:
@@ -952,6 +968,61 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                       ),
                     )
                     : const SizedBox.shrink(key: ValueKey('notifications-off')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _habitSoundRow(ColorProvider cp, StateProvider sp) {
+    final loc = AppLocalizations.of(context)!;
+    final key = sp.habitSoundKey;
+    final label =
+        key == null
+            ? loc.useGlobalDefaultSound
+            : notificationSoundDisplayName(loc, key);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              loc.habitSoundTitle,
+              style: TextStyle(
+                color: cp.text,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          NewDefaultButton(
+            height: 46,
+            color: cp.isDark ? cp.habitBg : cp.bg,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              spacing: 16,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            onPressed: () {
+              showSoundPickerSheet(
+                context: context,
+                selectedKey: sp.habitSoundKey ?? NotificationSounds.inheritKey,
+                allowInherit: true,
+                onSelected: (key) {
+                  sp.habitSoundKey =
+                      key == NotificationSounds.inheritKey ? null : key;
+                },
+              );
+            },
           ),
         ],
       ),

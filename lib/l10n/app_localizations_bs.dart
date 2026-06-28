@@ -2663,4 +2663,30 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get timeForHabits => 'Vrijeme za navike?';
+
+  @override
+  String get notificationCompleteAction => 'Završi';
+
+  @override
+  String get notificationSoundSettingTitle => 'Zvuk obavijesti';
+
+  @override
+  String get notificationSoundSettingSubtitle => 'Zvuk za podsjetnike';
+
+  @override
+  String get habitSoundTitle => 'Zvuk podsjetnika';
+
+  @override
+  String get useGlobalDefaultSound => 'Koristi zadani zvuk';
+
+  @override
+  String soundNumbered(int number) {
+    return 'Zvuk $number';
+  }
+
+  @override
+  String get notificationSoundAppDefault => 'Aplikacija';
+
+  @override
+  String get notificationSoundSystemDefault => 'Sistem';
 }

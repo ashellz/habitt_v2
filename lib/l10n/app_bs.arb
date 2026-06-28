@@ -1017,5 +1017,13 @@
   "streakPraiseExtra2": "E aferim ti!",
   "streakPraiseExtra3": "Ejvallah, svaka čast!",
   "backAtIt": "Opet u akciji",
-  "timeForHabits": "Vrijeme za navike?"
+  "timeForHabits": "Vrijeme za navike?",
+  "notificationCompleteAction": "Završi",
+  "notificationSoundSettingTitle": "Zvuk obavijesti",
+  "notificationSoundSettingSubtitle": "Zvuk za podsjetnike",
+  "habitSoundTitle": "Zvuk podsjetnika",
+  "useGlobalDefaultSound": "Koristi zadani zvuk",
+  "soundNumbered": "Zvuk {number}",
+  "notificationSoundAppDefault": "Aplikacija",
+  "notificationSoundSystemDefault": "Sistem"
 }

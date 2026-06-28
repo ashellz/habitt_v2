@@ -4503,6 +4503,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time for habits?'**
   String get timeForHabits;
+
+  /// No description provided for @notificationCompleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get notificationCompleteAction;
+
+  /// No description provided for @notificationSoundSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification sound'**
+  String get notificationSoundSettingTitle;
+
+  /// No description provided for @notificationSoundSettingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound played for reminders'**
+  String get notificationSoundSettingSubtitle;
+
+  /// No description provided for @habitSoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder sound'**
+  String get habitSoundTitle;
+
+  /// No description provided for @useGlobalDefaultSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Use global default'**
+  String get useGlobalDefaultSound;
+
+  /// No description provided for @soundNumbered.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound {number}'**
+  String soundNumbered(int number);
+
+  /// No description provided for @notificationSoundAppDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'App Default'**
+  String get notificationSoundAppDefault;
+
+  /// No description provided for @notificationSoundSystemDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get notificationSoundSystemDefault;
 }
 
 class _AppLocalizationsDelegate

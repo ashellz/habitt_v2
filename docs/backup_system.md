@@ -125,7 +125,7 @@ For each **definition** field between incoming and local versions:
 
 A habit's fields fall into two categories that sync differently:
 
-- **Definition fields** (name, icon, schedule, color, order, paused, deleted, notifications, …) — global properties of the habit. Resolved per-field by the rule above.
+- **Definition fields** (name, icon, schedule, color, order, paused, deleted, notifications, notification sound (`soundKey`), …) — global properties of the habit. Resolved per-field by the rule above. (`soundKey` is serialized in `toMap`/`fromMap`, merged via `resolve('soundKey', …)`, and timestamped under the `soundKey` key.)
 - **Day-state / completion tuple** — `completed`, `skipped`, `amountCompleted`, `durationCompleted`. These belong to a **specific calendar day**, not to the habit globally (`Habit.dayStateKeys`).
 
 **Day-state flows only through dated `Day` snapshots.** Completing a habit writes into that day's dated snapshot (`updateHabitInDB` → today's `Day`), and the snapshot is what merges across devices, keyed by date. The dateless live ("master") habit record is **definition-only on receive**: `_mergeBackupData`'s master-record loop calls `existing.merge(incoming, preserveLocalDayState: true)`, so an incoming completion never lands on the live habit. (The completion flag is still *uploaded* inside the habit blob for backward compatibility with not-yet-updated clients — updated clients simply never *act* on it.)

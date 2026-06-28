@@ -26,6 +26,10 @@ class HabitProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
   DateTime? selectedDate;
   int dataVersion = 0;
+
+  /// True once the initial Hive load has completed at least once. Used to avoid
+  /// draining deferred completions before `habits` is populated.
+  bool get isInitialized => dataVersion > 0;
   int streakEntryEpoch = 0;
   int streakExitEpoch = 0;
 
@@ -1081,6 +1085,39 @@ class HabitProvider extends ChangeNotifier {
     if (!wasCompleted && habit.completed) {
       _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
     }
+  }
+
+  /// Applies a deferred completion captured from a notification "Complete" action.
+  /// Idempotent: does nothing if the habit no longer exists or is already
+  /// completed for [day]. Reuses [completeHabit] so streaks/stats stay correct.
+  void applyDeferredCompletion(
+    int id,
+    DateTime day,
+    BuildContext context,
+    StateProvider stateProvider,
+  ) {
+    final today = DateTime.now();
+    final todaySimple = DateTime(today.year, today.month, today.day);
+    final daySimple = DateTime(day.year, day.month, day.day);
+
+    Habit? habit;
+    final source =
+        daySimple == todaySimple
+            ? habits
+            : getHabitsFromDay(daySimple, hydrateMissing: true);
+    for (final h in source) {
+      if (h.id == id) {
+        habit = h;
+        break;
+      }
+    }
+
+    debugPrint(
+      '[NOTIF_DRAIN] applyDeferredCompletion id=$id day=$daySimple '
+      'found=${habit != null} alreadyCompleted=${habit?.completed}',
+    );
+    if (habit == null || habit.completed) return; // missing or already done
+    completeHabit(id, context, stateProvider, dayOverride: daySimple);
   }
 
   void skipHabit(

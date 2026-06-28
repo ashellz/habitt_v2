@@ -57,6 +57,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       colorName: fields[22] as String?,
       notificationsEnabled: fields[40] == null ? false : fields[40] as bool,
       notificationTimes: (fields[41] as List?)?.cast<HabitNotificationTime>(),
+      soundKey: fields[45] as String?,
       premadeHabitType: fields[38] as PremadeHabitType?,
       trackingType: fields[39] as HabitTrackingType?,
       isDeleted: fields[24] as bool?,
@@ -70,7 +71,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(42)
+      ..writeByte(43)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -154,7 +155,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(43)
       ..write(obj.isPaused)
       ..writeByte(44)
-      ..write(obj.localizedNames);
+      ..write(obj.localizedNames)
+      ..writeByte(45)
+      ..write(obj.soundKey);
   }
 
   @override

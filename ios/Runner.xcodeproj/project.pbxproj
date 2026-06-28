@@ -19,6 +19,16 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		BE8E6AA44D5E48186B826206 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */; };
 		E5561DF12F3F018200C9A6AD /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5561DF02F3F018200C9A6AD /* StoreKit.framework */; };
+		E577240B2FEF7F7F00D55421 /* sound_03.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724012FEF7F7F00D55421 /* sound_03.aiff */; };
+		E577240C2FEF7F7F00D55421 /* sound_06.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724022FEF7F7F00D55421 /* sound_06.aiff */; };
+		E577240D2FEF7F7F00D55421 /* sound_08.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724032FEF7F7F00D55421 /* sound_08.aiff */; };
+		E577240E2FEF7F7F00D55421 /* sound_09.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724042FEF7F7F00D55421 /* sound_09.aiff */; };
+		E577240F2FEF7F7F00D55421 /* sound_05.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724052FEF7F7F00D55421 /* sound_05.aiff */; };
+		E57724102FEF7F7F00D55421 /* sound_01.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724062FEF7F7F00D55421 /* sound_01.aiff */; };
+		E57724112FEF7F7F00D55421 /* sound_02.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724072FEF7F7F00D55421 /* sound_02.aiff */; };
+		E57724122FEF7F7F00D55421 /* sound_07.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724082FEF7F7F00D55421 /* sound_07.aiff */; };
+		E57724132FEF7F7F00D55421 /* sound_10.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724092FEF7F7F00D55421 /* sound_10.aiff */; };
+		E57724142FEF7F7F00D55421 /* sound_04.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E577240A2FEF7F7F00D55421 /* sound_04.aiff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +78,16 @@
 		C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52BC54E2FD903E2008D92AC /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		E5561DF02F3F018200C9A6AD /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		E57724012FEF7F7F00D55421 /* sound_03.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_03.aiff; path = sounds/sound_03.aiff; sourceTree = "<group>"; };
+		E57724022FEF7F7F00D55421 /* sound_06.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_06.aiff; path = sounds/sound_06.aiff; sourceTree = "<group>"; };
+		E57724032FEF7F7F00D55421 /* sound_08.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_08.aiff; path = sounds/sound_08.aiff; sourceTree = "<group>"; };
+		E57724042FEF7F7F00D55421 /* sound_09.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_09.aiff; path = sounds/sound_09.aiff; sourceTree = "<group>"; };
+		E57724052FEF7F7F00D55421 /* sound_05.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_05.aiff; path = sounds/sound_05.aiff; sourceTree = "<group>"; };
+		E57724062FEF7F7F00D55421 /* sound_01.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_01.aiff; path = sounds/sound_01.aiff; sourceTree = "<group>"; };
+		E57724072FEF7F7F00D55421 /* sound_02.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_02.aiff; path = sounds/sound_02.aiff; sourceTree = "<group>"; };
+		E57724082FEF7F7F00D55421 /* sound_07.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_07.aiff; path = sounds/sound_07.aiff; sourceTree = "<group>"; };
+		E57724092FEF7F7F00D55421 /* sound_10.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_10.aiff; path = sounds/sound_10.aiff; sourceTree = "<group>"; };
+		E577240A2FEF7F7F00D55421 /* sound_04.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_04.aiff; path = sounds/sound_04.aiff; sourceTree = "<group>"; };
 		E90A0F55C210C4E21040EF85 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC880FEF948B0C967D675413 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		F6222950B87319FF59E8975C /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -132,6 +152,16 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				E57724062FEF7F7F00D55421 /* sound_01.aiff */,
+				E57724072FEF7F7F00D55421 /* sound_02.aiff */,
+				E57724012FEF7F7F00D55421 /* sound_03.aiff */,
+				E577240A2FEF7F7F00D55421 /* sound_04.aiff */,
+				E57724052FEF7F7F00D55421 /* sound_05.aiff */,
+				E57724022FEF7F7F00D55421 /* sound_06.aiff */,
+				E57724082FEF7F7F00D55421 /* sound_07.aiff */,
+				E57724032FEF7F7F00D55421 /* sound_08.aiff */,
+				E57724042FEF7F7F00D55421 /* sound_09.aiff */,
+				E57724092FEF7F7F00D55421 /* sound_10.aiff */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
@@ -280,6 +310,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E577240B2FEF7F7F00D55421 /* sound_03.aiff in Resources */,
+				E577240C2FEF7F7F00D55421 /* sound_06.aiff in Resources */,
+				E577240D2FEF7F7F00D55421 /* sound_08.aiff in Resources */,
+				E577240E2FEF7F7F00D55421 /* sound_09.aiff in Resources */,
+				E577240F2FEF7F7F00D55421 /* sound_05.aiff in Resources */,
+				E57724102FEF7F7F00D55421 /* sound_01.aiff in Resources */,
+				E57724112FEF7F7F00D55421 /* sound_02.aiff in Resources */,
+				E57724122FEF7F7F00D55421 /* sound_07.aiff in Resources */,
+				E57724132FEF7F7F00D55421 /* sound_10.aiff in Resources */,
+				E57724142FEF7F7F00D55421 /* sound_04.aiff in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,

@@ -2680,4 +2680,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get timeForHabits => '¿Hora de hábitos?';
+
+  @override
+  String get notificationCompleteAction => 'Completar';
+
+  @override
+  String get notificationSoundSettingTitle => 'Sonido de notificación';
+
+  @override
+  String get notificationSoundSettingSubtitle => 'Sonido de los recordatorios';
+
+  @override
+  String get habitSoundTitle => 'Sonido del recordatorio';
+
+  @override
+  String get useGlobalDefaultSound => 'Usar predeterminado';
+
+  @override
+  String soundNumbered(int number) {
+    return 'Sonido $number';
+  }
+
+  @override
+  String get notificationSoundAppDefault => 'App';
+
+  @override
+  String get notificationSoundSystemDefault => 'Sistema';
 }

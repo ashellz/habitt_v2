@@ -89,6 +89,10 @@ The Google Drive backup/sync system is documented in full at [`docs/backup_syste
 
 **Maintenance rule:** Any change to the backup system must also update `docs/backup_system.md`.
 
+### Notification Sounds
+
+Selectable stock notification sounds (global default + per-habit override) are implemented via one channel per sound. To add a new sound or understand the system, see [`docs/notification_sounds.md`](docs/notification_sounds.md).
+
 ### Third-Party Integrations
 
 - **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions

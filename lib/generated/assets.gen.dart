@@ -14,6 +14,9 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// Directory path: assets/images/apps
+  $AssetsImagesAppsGen get apps => const $AssetsImagesAppsGen();
+
   /// File path: assets/images/icon-dark-android.png
   AssetGenImage get iconDarkAndroid =>
       const AssetGenImage('assets/images/icon-dark-android.png');
@@ -80,6 +83,65 @@ class $AssetsImagesGen {
     splashDark,
     splashLight,
   ];
+}
+
+class $AssetsSoundGen {
+  const $AssetsSoundGen();
+
+  /// File path: assets/sound/sound_01.mp3
+  String get sound01 => 'assets/sound/sound_01.mp3';
+
+  /// File path: assets/sound/sound_02.mp3
+  String get sound02 => 'assets/sound/sound_02.mp3';
+
+  /// File path: assets/sound/sound_03.mp3
+  String get sound03 => 'assets/sound/sound_03.mp3';
+
+  /// File path: assets/sound/sound_04.mp3
+  String get sound04 => 'assets/sound/sound_04.mp3';
+
+  /// File path: assets/sound/sound_05.mp3
+  String get sound05 => 'assets/sound/sound_05.mp3';
+
+  /// File path: assets/sound/sound_06.mp3
+  String get sound06 => 'assets/sound/sound_06.mp3';
+
+  /// File path: assets/sound/sound_07.mp3
+  String get sound07 => 'assets/sound/sound_07.mp3';
+
+  /// File path: assets/sound/sound_08.mp3
+  String get sound08 => 'assets/sound/sound_08.mp3';
+
+  /// File path: assets/sound/sound_09.mp3
+  String get sound09 => 'assets/sound/sound_09.mp3';
+
+  /// File path: assets/sound/sound_10.mp3
+  String get sound10 => 'assets/sound/sound_10.mp3';
+
+  /// List of all assets
+  List<String> get values => [
+    sound01,
+    sound02,
+    sound03,
+    sound04,
+    sound05,
+    sound06,
+    sound07,
+    sound08,
+    sound09,
+    sound10,
+  ];
+}
+
+class $AssetsImagesAppsGen {
+  const $AssetsImagesAppsGen();
+
+  /// File path: assets/images/apps/habitkit.png
+  AssetGenImage get habitkit =>
+      const AssetGenImage('assets/images/apps/habitkit.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [habitkit];
 }
 
 class $AssetsImagesIconsGen {
@@ -634,6 +696,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/home.svg
   String get home => 'assets/images/new-svg/home.svg';
 
+  /// File path: assets/images/new-svg/import-apps.svg
+  String get importApps => 'assets/images/new-svg/import-apps.svg';
+
   /// File path: assets/images/new-svg/import-backup.svg
   String get importBackup => 'assets/images/new-svg/import-backup.svg';
 
@@ -762,6 +827,7 @@ class $AssetsImagesNewSvgGen {
     google,
     heatmap,
     home,
+    importApps,
     importBackup,
     it,
     localBackup,
@@ -900,6 +966,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsSoundGen sound = $AssetsSoundGen();
 }
 
 class AssetGenImage {

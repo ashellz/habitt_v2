@@ -1027,5 +1027,13 @@
   "streakPraiseExtra2": "¡Bien hecho, tú!",
   "streakPraiseExtra3": "¡Me quito el sombrero!",
   "backAtIt": "De vuelta a ello",
-  "timeForHabits": "¿Hora de hábitos?"
+  "timeForHabits": "¿Hora de hábitos?",
+  "notificationCompleteAction": "Completar",
+  "notificationSoundSettingTitle": "Sonido de notificación",
+  "notificationSoundSettingSubtitle": "Sonido de los recordatorios",
+  "habitSoundTitle": "Sonido del recordatorio",
+  "useGlobalDefaultSound": "Usar predeterminado",
+  "soundNumbered": "Sonido {number}",
+  "notificationSoundAppDefault": "App",
+  "notificationSoundSystemDefault": "Sistema"
 }

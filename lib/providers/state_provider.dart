@@ -295,6 +295,7 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalStart = 420;
     _timeIntervalEnd = 450;
     _habitNotificationsEnabled = false;
+    _habitSoundKey = null;
     _habitNotificationTimes =
         template.notificationTimesMinutesOfDay.isNotEmpty
             ? _buildNotificationTimesFromMinutes(
@@ -393,6 +394,14 @@ class StateProvider extends ChangeNotifier {
   List<HabitNotificationTime> get habitNotificationTimes =>
       _habitNotificationTimes.map((slot) => slot.copy()).toList();
 
+  // Per-habit notification sound override draft. null = inherit global default.
+  String? _habitSoundKey;
+  String? get habitSoundKey => _habitSoundKey;
+  set habitSoundKey(String? value) {
+    _habitSoundKey = value;
+    notifyListeners();
+  }
+
   set timeIntervalEnabled(bool value) {
     _timeIntervalEnabled = value;
     notifyListeners();
@@ -416,8 +425,10 @@ class StateProvider extends ChangeNotifier {
   void setNotificationsFromHabit({
     required bool enabled,
     required List<HabitNotificationTime> notificationTimes,
+    String? soundKey,
   }) {
     _habitNotificationsEnabled = enabled;
+    _habitSoundKey = soundKey;
     if (notificationTimes.isEmpty) {
       _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
         _habitCategoryId,
@@ -586,6 +597,7 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalStart = 420;
     _timeIntervalEnd = 450;
     _habitNotificationsEnabled = false;
+    _habitSoundKey = null;
     _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
       _habitCategoryId,
     );

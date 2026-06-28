@@ -5,6 +5,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/services/habit_notification_text_builder.dart';
+import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
 import 'package:habitt/util/custom_amount_label.dart';
 
@@ -16,6 +17,33 @@ class NotificationService {
   static const String _habitPayloadKey = 'habit_id';
   static const String _habitPayloadTypeKey = 'notification_type';
   static const String _habitPayloadTypeValue = 'habit';
+  static const String _habitDayKey = 'habit_day';
+
+  /// Action button key for the "Complete" button on habit reminders.
+  static const String completeActionKey = 'COMPLETE';
+
+  /// Stable ISO date string (yyyy-MM-dd) used in the payload so the background
+  /// "Complete" handler knows which day the reminder targeted.
+  static String _dayKeyString(DateTime day) =>
+      '${day.year.toString().padLeft(4, '0')}-'
+      '${day.month.toString().padLeft(2, '0')}-'
+      '${day.day.toString().padLeft(2, '0')}';
+
+  static List<NotificationActionButton> _habitActionButtons(
+    AppLocalizations localizations,
+  ) => [
+    NotificationActionButton(
+      key: completeActionKey,
+      label: localizations.notificationCompleteAction,
+      actionType: ActionType.SilentBackgroundAction,
+      autoDismissible: true,
+    ),
+  ];
+
+  /// App-wide default notification sound key. Kept in sync by NotificationsProvider
+  /// so the static scheduling methods can resolve the correct sound channel without
+  /// threading it through every call site.
+  static String globalSoundKey = NotificationSounds.defaultKey;
 
   /// Request notification permissions
   static Future<bool> requestPermissions(BuildContext context) async {
@@ -59,7 +87,7 @@ class NotificationService {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: notificationId,
-          channelKey: 'basic_channel',
+          channelKey: NotificationSounds.channelForKeyOrDefault(globalSoundKey),
           title: 'Habitt',
           body: period.notificationMessage,
           notificationLayout: NotificationLayout.Default,
@@ -272,7 +300,9 @@ class NotificationService {
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: notificationId,
-            channelKey: 'basic_channel',
+            channelKey: NotificationSounds.channelForKeyOrDefault(
+              habit.soundKey ?? globalSoundKey,
+            ),
             title: text.title,
             body: text.description,
             notificationLayout: NotificationLayout.Default,
@@ -281,8 +311,10 @@ class NotificationService {
             payload: {
               _habitPayloadKey: habit.id.toString(),
               _habitPayloadTypeKey: _habitPayloadTypeValue,
+              _habitDayKey: _dayKeyString(day),
             },
           ),
+          actionButtons: _habitActionButtons(localizations),
           schedule: NotificationCalendar(
             year: day.year,
             month: day.month,

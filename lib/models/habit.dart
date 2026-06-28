@@ -51,6 +51,7 @@ class Habit extends HiveObject {
   String? color;
   bool notificationsEnabled;
   List<HabitNotificationTime> notificationTimes;
+  String? soundKey; // null = inherit the global notification sound
   PremadeHabitType?
   premadeHabitType; // If created from a premade template which type
   HabitTrackingType? trackingType; // amount or duration
@@ -95,6 +96,7 @@ class Habit extends HiveObject {
     this.colorName,
     this.notificationsEnabled = false,
     List<HabitNotificationTime>? notificationTimes,
+    this.soundKey,
     this.premadeHabitType,
     this.trackingType,
     this.isDeleted,
@@ -189,6 +191,7 @@ class Habit extends HiveObject {
       colorName: colorName,
       notificationsEnabled: notificationsEnabled,
       notificationTimes: notificationTimes.map((slot) => slot.copy()).toList(),
+      soundKey: soundKey,
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
@@ -235,6 +238,7 @@ class Habit extends HiveObject {
       colorName: colorName,
       notificationsEnabled: notificationsEnabled,
       notificationTimes: notificationTimes.map((slot) => slot.copy()).toList(),
+      soundKey: soundKey,
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       isDeleted: isDeleted,
@@ -381,6 +385,10 @@ class Habit extends HiveObject {
           habit.notificationTimes.map((slot) => slot.copy()).toList();
       timestamps['notificationTimes'] = now;
     }
+    if (soundKey != habit.soundKey) {
+      soundKey = habit.soundKey;
+      timestamps['soundKey'] = now;
+    }
     if (premadeHabitType != habit.premadeHabitType) {
       premadeHabitType = habit.premadeHabitType;
       timestamps['premadeHabitType'] = now;
@@ -446,6 +454,7 @@ class Habit extends HiveObject {
     color = merged.color;
     notificationsEnabled = merged.notificationsEnabled;
     notificationTimes = merged.notificationTimes.map((s) => s.copy()).toList();
+    soundKey = merged.soundKey;
     premadeHabitType = merged.premadeHabitType;
     trackingType = merged.trackingType;
     isDeleted = merged.isDeleted;
@@ -706,6 +715,7 @@ class Habit extends HiveObject {
       'colorName': colorName,
       'color': color,
       'notificationsEnabled': notificationsEnabled,
+      'soundKey': soundKey,
       'notificationTimes':
           notificationTimes
               .map((notification) => notification.toMap())
@@ -774,6 +784,7 @@ class Habit extends HiveObject {
           DateTime.tryParse(m['lastCustomUpdate']?.toString() ?? '')?.toUtc(),
       colorName: m['colorName'] as String?,
       notificationsEnabled: (m['notificationsEnabled'] as bool?) ?? false,
+      soundKey: m['soundKey'] as String?,
       notificationTimes: _parseNotificationTimes(m['notificationTimes']),
       premadeHabitType: _deserializePremadeHabitType(
         m['premadeHabitType']?.toString(),
@@ -1011,6 +1022,7 @@ class Habit extends HiveObject {
         notificationTimes.map((slot) => slot.copy()).toList(),
         incoming.notificationTimes.map((slot) => slot.copy()).toList(),
       ),
+      soundKey: resolve('soundKey', soundKey, incoming.soundKey),
       premadeHabitType: resolve(
         'premadeHabitType',
         premadeHabitType,

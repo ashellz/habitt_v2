@@ -5,6 +5,7 @@ import 'package:habitt/models/notification.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:habitt/services/notification_service.dart';
+import 'package:habitt/services/notification_sounds.dart';
 
 class NotificationsProvider extends ChangeNotifier {
   SharedPreferences? _prefs;
@@ -18,6 +19,12 @@ class NotificationsProvider extends ChangeNotifier {
   static const String _masterKey = 'notifications_master_enabled';
   static const String _periodsKey = 'notifications_periods_enabled';
   static const String _habitsKey = 'notifications_habits_enabled';
+  static const String _globalSoundKeyPref = 'notifications_global_sound_key';
+
+  // App-wide default notification sound. Applies to any notification (period or
+  // habit) that does not specify its own sound. Habits with a non-null soundKey
+  // override this.
+  String _globalSoundKey = NotificationSounds.defaultKey;
 
   // Settings for each period
   final Map<NotificationPeriod, NotificationSettings> _settings = {
@@ -115,6 +122,9 @@ class NotificationsProvider extends ChangeNotifier {
     _masterEnabled = _prefs?.getBool(_masterKey) ?? true;
     _periodsEnabled = _prefs?.getBool(_periodsKey) ?? true;
     _habitsEnabled = _prefs?.getBool(_habitsKey) ?? true;
+    _globalSoundKey = NotificationSounds.resolveOrDefault(
+      _prefs?.getString(_globalSoundKeyPref),
+    );
 
     for (final period in NotificationPeriod.values) {
       final key = 'notification_${period.name}';
@@ -275,6 +285,48 @@ class NotificationsProvider extends ChangeNotifier {
     _settings[period] = settings;
     await _saveSettings(period);
     notifyListeners();
+  }
+
+  // --- Notification sound API ---
+
+  /// App-wide default notification sound key.
+  String get globalSoundKey => _globalSoundKey;
+
+  /// Effective sound for a habit: its own override if set, else the global default.
+  String effectiveSoundKey(Habit habit) =>
+      NotificationSounds.resolveOrDefault(habit.soundKey ?? _globalSoundKey);
+
+  /// Update the global default sound. Persists, then reschedules period reminders
+  /// and (if provided) habit reminders so future notifications use the new sound's
+  /// channel. Habits with their own override are unaffected by the reschedule.
+  Future<void> setGlobalSoundKey(
+    String key, {
+    Iterable<Habit>? habits,
+    bool Function(Habit, DateTime)? appearsOnDay,
+    int horizonDays = 7,
+  }) async {
+    final resolved = NotificationSounds.resolveOrDefault(key);
+    if (resolved == _globalSoundKey) return;
+
+    _globalSoundKey = resolved;
+    NotificationService.globalSoundKey = resolved;
+    await _prefs?.setString(_globalSoundKeyPref, resolved);
+    notifyListeners();
+
+    // Reschedule so the channel (which carries the sound) is updated.
+    if (_masterEnabled && _periodsEnabled) {
+      await NotificationService.scheduleAllNotifications(this);
+    }
+    if (_masterEnabled &&
+        _habitsEnabled &&
+        habits != null &&
+        appearsOnDay != null) {
+      await NotificationService.scheduleAllHabitNotifications(
+        habits: habits,
+        appearsOnDay: appearsOnDay,
+        horizonDays: horizonDays,
+      );
+    }
   }
 
   // --- Global toggles API ---

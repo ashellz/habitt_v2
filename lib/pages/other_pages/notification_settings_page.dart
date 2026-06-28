@@ -10,6 +10,8 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/notification/notification_card.dart';
+import 'package:habitt/widgets/notification/sound_picker_sheet.dart';
+import 'package:habitt/services/notification_sounds.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
@@ -42,6 +44,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   late bool _draftMasterEnabled;
   late bool _draftPeriodEnabled;
   late bool _draftHabitsEnabled;
+  late String _draftSoundKey;
   final Map<NotificationPeriod, NotificationSettings> _draftSettings = {};
 
   @override
@@ -63,6 +66,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     _draftMasterEnabled = np.isMasterEnabled;
     _draftPeriodEnabled = np.arePeriodNotificationsEnabled;
     _draftHabitsEnabled = np.areHabitNotificationsEnabled;
+    _draftSoundKey = np.globalSoundKey;
     for (final period in NotificationPeriod.values) {
       _draftSettings[period] = np.getSettings(period);
     }
@@ -161,7 +165,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
     if (_draftMasterEnabled != np.isMasterEnabled ||
         _draftPeriodEnabled != np.arePeriodNotificationsEnabled ||
-        _draftHabitsEnabled != np.areHabitNotificationsEnabled) {
+        _draftHabitsEnabled != np.areHabitNotificationsEnabled ||
+        _draftSoundKey != np.globalSoundKey) {
       return true;
     }
 
@@ -268,6 +273,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       }
     }
 
+    if (_draftSoundKey != np.globalSoundKey) {
+      await np.setGlobalSoundKey(
+        _draftSoundKey,
+        habits: habitProvider.habits,
+        appearsOnDay: habitProvider.appearsOnDay,
+      );
+    }
+
     if (!mounted) {
       return;
     }
@@ -330,6 +343,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         await _handleCloseAttempt(np);
       },
       child: Scaffold(
+        backgroundColor: cp.isDark ? cp.bg : cp.habitBg,
         body: ListView(
           children: [
             _topBar(cp, np, hasUnsavedChanges, loc),
@@ -497,6 +511,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                       ),
                     ],
                   ),
+                  _soundSection(cp, np, loc),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -610,6 +625,80 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  // App-wide default notification sound. Applies immediately (no draft) and
+  // reschedules so future reminders use the new sound's channel.
+  Widget _soundSection(
+    ColorProvider cp,
+    NotificationsProvider np,
+    AppLocalizations loc,
+  ) {
+    final currentName = notificationSoundDisplayName(loc, _draftSoundKey);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: [
+        Text(
+          loc.notificationSoundSettingTitle,
+          textAlign: TextAlign.start,
+          style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.only(top: 4, left: 12, right: 4, bottom: 4),
+          clipBehavior: Clip.antiAlias,
+          decoration: ShapeDecoration(
+            color: cp.isDark ? cp.habitBg : cp.bg,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                loc.notificationSoundSettingTitle,
+                style: TextStyle(
+                  color: cp.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              NewDefaultButton(
+                height: 46,
+                color: cp.field,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  spacing: 16,
+                  children: [
+                    Text(
+                      currentName,
+                      style: TextStyle(
+                        color: cp.text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  showSoundPickerSheet(
+                    context: context,
+                    selectedKey: _draftSoundKey,
+                    onSelected: (key) {
+                      if (key == NotificationSounds.inheritKey) return;
+                      setState(() => _draftSoundKey = key);
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

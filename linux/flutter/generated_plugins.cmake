@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_linux
   awesome_notifications
   awesome_notifications_core
   emoji_picker_flutter
