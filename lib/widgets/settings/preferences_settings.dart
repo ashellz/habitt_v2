@@ -74,28 +74,7 @@ class Preferences extends StatelessWidget {
                   ),
                 ),
               ),
-              Divider(color: cp.border, height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    loc.showStreakBadge,
-                    style: TextStyle(
-                      color: cp.text,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  NewDefaultSwitch(
-                    onChanged: (value) {
-                      context
-                          .read<PreferencesProvider>()
-                          .toggleShowStreakBadge();
-                    },
-                    value: context.watch<PreferencesProvider>().showStreakBadge,
-                  ),
-                ],
-              ),
+
               Divider(color: cp.border, height: 32),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

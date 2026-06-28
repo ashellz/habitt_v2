@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/preferences_provider.dart';
 import 'package:provider/provider.dart';
 
 class StreakBadge extends StatelessWidget {
@@ -11,10 +10,9 @@ class StreakBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final show = context.watch<PreferencesProvider>().showStreakBadge;
     final cp = context.watch<ColorProvider>();
 
-    if (!show || streak == 0) return const SizedBox.shrink();
+    if (streak == 0) return const SizedBox.shrink();
 
     return Container(
       decoration: BoxDecoration(

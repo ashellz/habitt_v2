@@ -40,14 +40,12 @@ class PreferencesProvider extends ChangeNotifier {
   // colorful interface level
   Colorfulness _colorfulness = Colorfulness.standard;
   bool _americanTimeFormat = false;
-  bool _showStreakBadge = true;
   bool _showUploadActivity = true;
   bool _showStreakCelebration = true;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
   bool get americanTimeFormat => _americanTimeFormat;
-  bool get showStreakBadge => _showStreakBadge;
   bool get showUploadActivity => _showUploadActivity;
   bool get showStreakCelebration => _showStreakCelebration;
 
@@ -61,7 +59,6 @@ class PreferencesProvider extends ChangeNotifier {
   void init() {
     _glassFeel = _prefs?.getBool('glassFeel') ?? true;
     _americanTimeFormat = _prefs?.getBool('americanTimeFormat') ?? false;
-    _showStreakBadge = _prefs?.getBool('showStreakBadge') ?? false;
     _showUploadActivity = _prefs?.getBool(_kShowUploadActivityKey) ?? true;
     _showStreakCelebration =
         _prefs?.getBool(_kShowStreakCelebrationKey) ?? true;
@@ -79,12 +76,6 @@ class PreferencesProvider extends ChangeNotifier {
   void toggleGlassFeel() {
     _glassFeel = !_glassFeel;
     _prefs?.setBool('glassFeel', _glassFeel);
-    notifyListeners();
-  }
-
-  void toggleShowStreakBadge() {
-    _showStreakBadge = !_showStreakBadge;
-    _prefs?.setBool('showStreakBadge', _showStreakBadge);
     notifyListeners();
   }
 
