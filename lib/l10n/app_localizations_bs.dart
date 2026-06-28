@@ -2691,5 +2691,5 @@ class AppLocalizationsBs extends AppLocalizations {
   String get notificationSoundSystemDefault => 'Sistem';
 
   @override
-  String get optional => 'Optional';
+  String get optional => 'Opcionalno';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -225,71 +226,75 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
       });
     }
 
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final colors = <Color>[];
-        final stops = <double>[];
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            final colors = <Color>[];
+            final stops = <double>[];
 
-        for (int i = 0; i < _segmentCount; i++) {
-          final t = _segmentAnimations[i].value;
-          final color = Color.lerp(cp.widget, cp.main.withOpacity(0.1), t)!;
-          stops.add(i / (_segmentCount - 1));
-          colors.add(color);
-        }
+            for (int i = 0; i < _segmentCount; i++) {
+              final t = _segmentAnimations[i].value;
+              final color = Color.lerp(cp.widget, cp.main.withOpacity(0.1), t)!;
+              stops.add(i / (_segmentCount - 1));
+              colors.add(color);
+            }
 
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
-          decoration: ShapeDecoration(
-            gradient: LinearGradient(colors: colors, stops: stops),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 1,
-                color:
-                    widget.habit.completed
-                        ? cp.main.withOpacity(0.2)
-                        : cp.border,
-              ),
-              borderRadius: BorderRadius.circular(24),
-            ),
-          ),
-          child: child,
-        );
-      },
-      child: Row(
-        spacing: 16,
-        children: [
-          NewHabitIcon(
-            iconPath: widget.habit.iconPath,
-            isCompleted: widget.habit.completed,
-          ),
-          Expanded(child: MainHabitInfo(habit: widget.habit, cp: cp)),
-          Row(
-            spacing: 4,
-            children: [
-              if (isToday || _animatingOut)
-                FadeTransition(
-                  opacity: _streakExitFadeAnimation,
-                  child: FadeTransition(
-                    opacity: _streakFadeAnimation,
-                    child: SlideTransition(
-                      position: _streakSlideAnimation,
-                      child: StreakBadge(
-                        streak:
-                            widget.habit.streak +
-                            (widget.habit.streak > 0 && widget.habit.completed
-                                ? 1
-                                : 0),
-                      ),
-                    ),
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+              decoration: ShapeDecoration(
+                gradient: LinearGradient(colors: colors, stops: stops),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color:
+                        widget.habit.completed
+                            ? cp.main.withOpacity(0.2)
+                            : cp.border,
                   ),
+                  borderRadius: BorderRadius.circular(24),
                 ),
+              ),
+              child: child,
+            );
+          },
+          child: Row(
+            spacing: 16,
+            children: [
+              NewHabitIcon(
+                iconPath: widget.habit.iconPath,
+                isCompleted: widget.habit.completed,
+              ),
+              Expanded(child: MainHabitInfo(habit: widget.habit, cp: cp)),
               NewHabitProgress(habit: widget.habit, isDemo: widget.isDemo),
             ],
           ),
-        ],
-      ),
+        ),
+        if (isToday || _animatingOut)
+          Positioned(
+            top: -8,
+            right: 16,
+            child: FadeTransition(
+              opacity: _streakExitFadeAnimation,
+              child: FadeTransition(
+                opacity: _streakFadeAnimation,
+                child: SlideTransition(
+                  position: _streakSlideAnimation,
+                  child: StreakBadge(
+                    streak:
+                        widget.habit.streak +
+                        (widget.habit.streak > 0 && widget.habit.completed
+                            ? 1
+                            : 0),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -1035,5 +1035,6 @@
   "useGlobalDefaultSound": "Usa predefinito",
   "soundNumbered": "Suono {number}",
   "notificationSoundAppDefault": "App",
-  "notificationSoundSystemDefault": "Sistema"
+  "notificationSoundSystemDefault": "Sistema",
+  "optional": "Facoltativo"
 }

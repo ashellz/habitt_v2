@@ -1025,5 +1025,6 @@
   "useGlobalDefaultSound": "Koristi zadani zvuk",
   "soundNumbered": "Zvuk {number}",
   "notificationSoundAppDefault": "Aplikacija",
-  "notificationSoundSystemDefault": "Sistem"
+  "notificationSoundSystemDefault": "Sistem",
+  "optional": "Opcionalno"
 }
