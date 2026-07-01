@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/profile_image_util.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
@@ -30,6 +31,8 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   final closeResult = false;
   final scrollController = ScrollController();
   late bool hasUnsavedChanges = false;
+
+  bool _unsavedChangesCheck() => hasUnsavedChanges;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -132,6 +135,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   @override
   void initState() {
     super.initState();
+    UnsavedChangesGuard.register(_unsavedChangesCheck);
     _initControllers();
   }
 
@@ -163,6 +167,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
 
   @override
   void dispose() {
+    UnsavedChangesGuard.unregister(_unsavedChangesCheck);
     _nameController.removeListener(_updateUnsavedChanges);
     _emailController.removeListener(_updateUnsavedChanges);
     _nameController.dispose();

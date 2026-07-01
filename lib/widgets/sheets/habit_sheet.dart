@@ -15,6 +15,7 @@ import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/services/emoji_service.dart';
 import 'package:habitt/services/notification_service.dart';
+import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -65,6 +66,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   late final VoidCallback _descListener;
   late final VoidCallback _amountLabelListener;
   late final StateProvider _sp;
+  late final ThemeProvider _tp;
   late final StatusOverlayPopupController _statusOverlay;
   bool _allowPop = false;
   bool _isExitDialogOpen = false;
@@ -78,6 +80,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     super.initState();
 
     _sp = context.read<StateProvider>();
+    _tp = context.read<ThemeProvider>();
+    UnsavedChangesGuard.register(_unsavedChangesCheck);
     _statusOverlay = StatusOverlayPopupController(vsync: this);
 
     _nameListener = () {
@@ -130,6 +134,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    UnsavedChangesGuard.unregister(_unsavedChangesCheck);
     _statusOverlay.dispose();
     _sp.nameController.removeListener(_nameListener);
     _sp.descController.removeListener(_descListener);
@@ -333,6 +338,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedLocalizations ||
         changedSoundKey;
   }
+
+  bool _unsavedChangesCheck() => _hasUnsavedChanges(_sp, _tp);
 
   bool _hasUnsavedChanges(StateProvider sp, ThemeProvider tp) {
     if (_isEditMode) {

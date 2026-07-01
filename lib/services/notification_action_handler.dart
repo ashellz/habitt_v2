@@ -3,8 +3,11 @@ import 'dart:ui' show DartPluginRegistrant;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/other_pages/habit_details_page.dart';
+import 'package:habitt/services/habit_route_tracker.dart';
+import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
+import 'package:habitt/services/unsaved_changes_guard.dart';
 
 @pragma('vm:entry-point')
 class NotificationActionHandler {
@@ -94,19 +97,51 @@ class NotificationActionHandler {
     if (habitId != null) _navigateToHabit(habitId);
   }
 
+  /// Resolves a tap to a fixed target stack (MainPage -> HabitDetails(habitId))
+  /// by reconciling against whatever is currently on screen, rather than
+  /// unconditionally stacking a new page:
+  ///  - a screen with unsaved changes is showing -> ignore the tap entirely
+  ///  - that habit's details page is already showing -> no-op
+  ///  - a different habit's details page is showing -> replace it
+  ///  - anything else -> pop back to the root (MainPage) and push
   static void _navigateToHabit(int habitId) {
+    if (UnsavedChangesGuard.isBlocking) {
+      return;
+    }
+
     final nav = navigatorKey.currentState;
     if (nav == null) {
       _pendingHabitRoute = habitId;
       return;
     }
-    nav.push(
-      MaterialPageRoute(builder: (_) => HabitDetailsPage(habitId: habitId)),
+
+    final currentTopHabitId = HabitRouteTracker.currentTopHabitId;
+    if (currentTopHabitId == habitId) {
+      return;
+    }
+
+    if (currentTopHabitId != null) {
+      nav.pop();
+    } else {
+      MainTabController.resetToMainTab();
+      nav.popUntil((route) => route.isFirst);
+    }
+
+    nav.push(_habitDetailsRoute(habitId));
+  }
+
+  static Route<void> _habitDetailsRoute(int habitId) {
+    return MaterialPageRoute(
+      settings: RouteSettings(arguments: habitId),
+      builder: (_) => HabitDetailsPage(habitId: habitId),
     );
   }
 
   /// Called once the app UI is ready to flush any route captured before the
-  /// navigator existed.
+  /// navigator existed (cold start). Routes back through [_navigateToHabit]
+  /// so the cold-start push gets the same tagging and stack resolution as
+  /// any other tap — at this point the app has just launched, so the top of
+  /// stack is the fresh home page and this resolves to a plain push.
   static void consumePendingRoute() {
     final habitId = _pendingHabitRoute;
     if (habitId == null) return;

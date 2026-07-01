@@ -297,6 +297,7 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
 
                       Navigator.of(context).push(
                         MaterialPageRoute(
+                          settings: RouteSettings(arguments: habit.id),
                           builder: (_) => HabitDetailsPage(habitId: habit.id),
                         ),
                       );

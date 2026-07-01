@@ -237,7 +237,9 @@ class StatsProvider extends ChangeNotifier {
 
   /// Per-day [DayCompletionStatus] for every tracked day (today uses the live
   /// habit set). Single source of truth for streak visuals + the streak number.
-  Map<DateTime, DayCompletionStatus> getDayCompletionStatuses(HabitProvider hp) {
+  Map<DateTime, DayCompletionStatus> getDayCompletionStatuses(
+    HabitProvider hp,
+  ) {
     _maybeInvalidateMapCache(hp);
     if (_cachedDayStatuses != null) return _cachedDayStatuses!;
 
@@ -379,9 +381,7 @@ class StatsProvider extends ChangeNotifier {
   /// Scans all historical days to find the true longest perfect-days streak.
   /// Updates both the in-memory field and SharedPreferences.
   void recalculateLongestPerfectDaysStreak() {
-    final statuses = [
-      for (final d in _streakDaysExcludingToday()) d.status,
-    ];
+    final statuses = [for (final d in _streakDaysExcludingToday()) d.status];
     final longest = computeLongestStreak(statuses);
     _longestPerfectDaysStreak = longest;
     prefs?.setInt(longestPerfectDaysStreakKey, longest);
@@ -548,13 +548,6 @@ class StatsProvider extends ChangeNotifier {
     final statuses = [for (final d in days) d.status];
     final streak = computeCurrentStreak(statuses);
     final longest = computeLongestStreak(statuses);
-
-    for (final d in days) {
-      debugPrint(
-        '[streak] ${d.date.toIso8601String().split("T").first} — ${d.status.name}',
-      );
-    }
-    debugPrint('[streak] current=$streak longest=$longest');
 
     // Keep longest in sync on the lazy path too (cheap, same data).
     if (longest > _longestPerfectDaysStreak) {

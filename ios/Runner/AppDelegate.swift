@@ -39,4 +39,38 @@ import shared_preferences_foundation
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+
+  // awesome_notifications forwards these to its Flutter channel without
+  // guaranteeing main-thread dispatch, and UNUserNotificationCenter does not
+  // guarantee its delegate callbacks fire on the main thread either (most
+  // visible on the iOS Simulator). Force-hop to main before letting
+  // FlutterAppDelegate's plugin forwarding run, so the channel call always
+  // happens on the platform thread.
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    if Thread.isMainThread {
+      super.userNotificationCenter(center, willPresent: notification, withCompletionHandler: completionHandler)
+    } else {
+      DispatchQueue.main.async {
+        super.userNotificationCenter(center, willPresent: notification, withCompletionHandler: completionHandler)
+      }
+    }
+  }
+
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    if Thread.isMainThread {
+      super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
+    } else {
+      DispatchQueue.main.async {
+        super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
+      }
+    }
+  }
 }

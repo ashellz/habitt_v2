@@ -104,10 +104,6 @@ class NotificationService {
           allowWhileIdle: true,
         ),
       );
-
-      debugPrint(
-        'Scheduled ${period.name} notification for weekday $weekday at ${settings.time.hour}:${settings.time.minute}',
-      );
     }
   }
 

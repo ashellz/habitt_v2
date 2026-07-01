@@ -11,6 +11,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
@@ -95,6 +96,8 @@ class _HomePageState extends State<HomePage>
     // Set default to home page (index 0)
     _currentPageIndex = 0;
 
+    MainTabController.register(_resetToMainTab);
+
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
@@ -174,6 +177,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
+    MainTabController.unregister(_resetToMainTab);
     if (_backupListener != null) {
       try {
         context.read<BackupProvider>().removeListener(_backupListener!);
@@ -189,6 +193,14 @@ class _HomePageState extends State<HomePage>
     setState(() {
       _supportsLiquidGlass = supports;
     });
+  }
+
+  void _resetToMainTab() {
+    if (_currentPageIndex != 0 && mounted) {
+      setState(() {
+        _currentPageIndex = 0;
+      });
+    }
   }
 
   void _onPageChangedByNavBar(int index) {

@@ -5,6 +5,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/services/notification_service.dart';
+import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -47,12 +48,22 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   late String _draftSoundKey;
   final Map<NotificationPeriod, NotificationSettings> _draftSettings = {};
 
+  bool _unsavedChangesCheck() =>
+      _hasUnsavedChanges(context.read<NotificationsProvider>());
+
   @override
   void initState() {
     super.initState();
+    UnsavedChangesGuard.register(_unsavedChangesCheck);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _checkPermissionsOnOpen(),
     );
+  }
+
+  @override
+  void dispose() {
+    UnsavedChangesGuard.unregister(_unsavedChangesCheck);
+    super.dispose();
   }
 
   @override

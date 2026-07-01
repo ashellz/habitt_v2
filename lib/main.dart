@@ -33,6 +33,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/notification_action_handler.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
+import 'package:habitt/services/habit_route_tracker.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -389,7 +390,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         isIOS
             ? CupertinoApp(
               navigatorKey: NotificationActionHandler.navigatorKey,
-              navigatorObservers: [CNTabBarRouteObserver()],
+              navigatorObservers: [CNTabBarRouteObserver(), HabitRouteTracker()],
               title: 'habitt',
               debugShowCheckedModeBanner: false,
               theme: cupertinoTheme,
@@ -418,7 +419,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             )
             : MaterialApp(
               navigatorKey: NotificationActionHandler.navigatorKey,
-              navigatorObservers: [CNTabBarRouteObserver()],
+              navigatorObservers: [CNTabBarRouteObserver(), HabitRouteTracker()],
               title: 'habitt',
               debugShowCheckedModeBanner: false,
               theme: theme,

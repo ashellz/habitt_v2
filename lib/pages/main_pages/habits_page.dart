@@ -246,6 +246,7 @@ class _HabitCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: RouteSettings(arguments: habit.id),
             builder: (_) => HabitDetailsPage(habitId: habit.id),
           ),
         );
@@ -276,7 +277,7 @@ class _HabitCard extends StatelessWidget {
                 ),
               ],
             ),
-            MainHabitInfo(habit: habit, cp: cp),
+            MainHabitInfo(habit: habit, cp: cp, habitsPage: true),
           ],
         ),
       ),

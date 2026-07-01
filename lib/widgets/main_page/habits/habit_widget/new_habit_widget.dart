@@ -267,7 +267,13 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
                 iconPath: widget.habit.iconPath,
                 isCompleted: widget.habit.completed,
               ),
-              Expanded(child: MainHabitInfo(habit: widget.habit, cp: cp)),
+              Expanded(
+                child: MainHabitInfo(
+                  habit: widget.habit,
+                  cp: cp,
+                  habitsPage: false,
+                ),
+              ),
               NewHabitProgress(habit: widget.habit, isDemo: widget.isDemo),
             ],
           ),

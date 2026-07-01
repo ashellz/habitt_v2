@@ -11,10 +11,16 @@ import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:provider/provider.dart';
 
 class MainHabitInfo extends StatelessWidget {
-  const MainHabitInfo({super.key, required this.habit, required this.cp});
+  const MainHabitInfo({
+    super.key,
+    required this.habit,
+    required this.cp,
+    required this.habitsPage,
+  });
 
   final Habit habit;
   final ColorProvider cp;
+  final bool habitsPage;
 
   @override
   Widget build(BuildContext context) {
@@ -63,56 +69,53 @@ class MainHabitInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 10,
       children: [
         Row(
           spacing: 8,
           children: [
-            Text(
-              habit.resolvedName(
-                context.watch<LanguageProvider>().locale?.languageCode ??
-                    Localizations.localeOf(context).languageCode,
-              ),
-              style: TextStyle(
-                color: cp.text,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            Flexible(
+              child: Text(
+                habit.resolvedName(
+                  context.watch<LanguageProvider>().locale?.languageCode ??
+                      Localizations.localeOf(context).languageCode,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: cp.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            if (habit.optional)
-              Container(
-                decoration: BoxDecoration(
-                  color: cp.habitBg,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                padding: const EdgeInsets.fromLTRB(4, 0, 4, 2),
-                child: Text(
-                  loc.optional,
-                  style: TextStyle(
-                    color: cp.lightGreyText,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+            if (habit.optional && !habitsPage) optionalTag(loc),
           ],
         ),
+
+        if (habit.optional && habitsPage)
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: optionalTag(loc),
+          ),
         if (isAmount || isDuration)
-          Row(
-            spacing: 8,
-            children: [
-              isAmount
-                  ? Icon(Icons.repeat, size: 14, color: cp.lightGreyText)
-                  : SvgPicture.asset(
-                    "assets/images/new-svg/clock.svg",
-                    width: 14,
-                    height: 14,
-                  ),
-              Text(
-                isAmount ? amountText() : durationText(),
-                style: TextStyle(color: cp.lightGreyText, fontSize: 13),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              spacing: 8,
+              children: [
+                isAmount
+                    ? Icon(Icons.repeat, size: 14, color: cp.lightGreyText)
+                    : SvgPicture.asset(
+                      "assets/images/new-svg/clock.svg",
+                      width: 14,
+                      height: 14,
+                    ),
+                Text(
+                  isAmount ? amountText() : durationText(),
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                ),
+              ],
+            ),
           )
         else if (habit.description != "")
           Text(
@@ -122,6 +125,26 @@ class MainHabitInfo extends StatelessWidget {
             style: TextStyle(color: cp.lightGreyText, fontSize: 13),
           ),
       ],
+    );
+  }
+
+  AnimatedContainer optionalTag(AppLocalizations loc) {
+    return AnimatedContainer(
+      curve: Curves.linear,
+      duration: Duration(milliseconds: 150),
+      decoration: BoxDecoration(
+        color: habit.completed && !habitsPage ? cp.bg : cp.habitBg,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      padding: const EdgeInsets.fromLTRB(4, 0, 4, 2),
+      child: Text(
+        loc.optional,
+        style: TextStyle(
+          color: cp.isDark ? cp.greyText : cp.lightGreyText,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }
