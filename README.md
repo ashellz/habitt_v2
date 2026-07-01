@@ -2,14 +2,14 @@
 
 A privacy-first, local-first habit tracker for iOS and Android — built with Flutter.
 
-All habit data lives on-device. No analytics, no server-side data collection, no accounts required. Optional encrypted backup to your own Google Drive.
+All habit data lives on-device. No analytics, no server-side data collection, no accounts required. Optional encrypted backup to your own Google Drive or iCloud, or a manual local backup file.
 
 ---
 
 ## Available on
 
-Android (latest apk): https://drive.proton.me/urls/D7R9D1QFTR#EkrK7Gt2aXM8
-IOS (early access): https://testflight.apple.com/join/sQyTmewh
+iOS (App Store): https://apps.apple.com/ba/app/habitt-your-habit-tracker/id6745617462
+Android (Google Play): https://play.google.com/store/apps/details?id=com.shellz.habitt&hl=en
 
 ---
 
@@ -22,26 +22,31 @@ IOS (early access): https://testflight.apple.com/join/sQyTmewh
 - Optional time windows — set a start/end hour range for each habit (not available in new design yet)
 - Streaks, longest-streak and many other stat tracking per habit, also for the whole database of habits
 - Optional habits that don't affect your perfect-day streak, good when adding new habits while unsure you're gonna complete them every time
+- Pause a habit — temporarily excludes it from tracking, scheduling and streaks without deleting it (useful for injury, sickness, travel, etc.)
+- Import habits (and their full completion history) from HabitKit's export file, with overwrite or merge-by-name options
 
 **Insights & stats**
 - Habit strength score with personalized coaching messages
 - Recommendations to increase or adjust targets as you build consistency
 - Calendar heatmap view for historical completion
 - Progress charts powered by fl_chart
+- Animated streak celebration dialog when you hit a new perfect-day streak milestone
 
 **Premade templates**
 Quick-start habits: wake up early, go to bed early, brush teeth, skin care, shower, drink water, gym, running, walking, nutrition, medications, studying, reading, work, research and productivity sessions.
 
 **Reminders**
 - Per-habit push notifications with configurable times and personalized texts
-- Morning, Mid-day, Wrap up notifications
+- Morning, Mid-day, Wrap up notifications, schedulable per day of the week
+- Selectable notification sounds — global default plus per-habit override
 
 **Appearance**
 - Dark and light mode
 
 **Backup**
-- Optional Google Drive backup — data stays on your own Drive, never on our servers
-- Client-side AES-256-GCM encryption (PBKDF2-HMAC-SHA256, 200 000 iterations)
+- Optional cloud backup via Google Drive or iCloud — data stays on your own account, never on our servers
+- Manual local backup — export/import a backup file directly on-device, no account needed
+- Client-side AES-256-GCM encryption (PBKDF2-HMAC-SHA256, 200 000 iterations), with optional PIN protection on the encryption key
 - Automatic 15-second debounce sync after any change; manual "Sync Now" available
 - Field-level conflict resolution when syncing across devices
 
@@ -70,7 +75,6 @@ Habits from onboarding:
 
 Other features:
 - Time counter telling you how long you're working on this habit, maybe show a strength graph over time as well
-- Pausing a habit -> completely stops tracking that habit until unpausing, streaks and days missed are paused (in case of injury, sickness, travel...)
 - Urgent habits (like medicine) get an alarm option for notification
 - Widgets
 - Live notifications like duolingo before habits reset if not all are completed
@@ -88,7 +92,7 @@ Other features:
 | Local storage | Hive CE |
 | Notifications | Awesome Notifications |
 | Charts | fl_chart |
-| Backup storage | Google Drive API |
+| Backup storage | Google Drive API, iCloud (`icloud_storage`) |
 | Auth (backup only) | Firebase Auth + Google Sign-In |
 | Subscriptions | RevenueCat |
 | Encryption | `cryptography` package (AES-256-GCM) |

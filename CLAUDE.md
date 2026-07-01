@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Habitt v2** is a privacy-first, local-first habit tracking Flutter app (iOS, Android, web, desktop). All habit data is stored on-device via Hive; Google Drive backup is opt-in and client-side encrypted. No analytics or server-side data collection.
+**Habitt v2** is a privacy-first, local-first habit tracking Flutter app (iOS, Android, web, desktop). All habit data is stored on-device via Hive; Google Drive and iCloud backup are opt-in and client-side encrypted, and a manual local (on-device file) backup/restore option is also available. No analytics or server-side data collection.
 
 - **App ID:** `com.shellz.habitt`
-- **Version:** 2.0.0+53
+- **Version:** 2.3.0+84
 - **Dart SDK:** ^3.7.0
 
 ## Common Commands
@@ -85,7 +85,7 @@ Configured via `l10n.yaml`. ARB files are in `lib/l10n/`. Localized strings are 
 
 ### Backup & Sync System
 
-The Google Drive backup/sync system is documented in full at [`docs/backup_system.md`](docs/backup_system.md). Read it before touching any backup, sync, encryption, or Drive integration code.
+The backup/sync system (Google Drive and iCloud cloud backends, plus local file export/import and PIN-protected key wrapping) is documented in full at [`docs/backup_system.md`](docs/backup_system.md). Read it before touching any backup, sync, encryption, or cloud storage integration code.
 
 **Maintenance rule:** Any change to the backup system must also update `docs/backup_system.md`.
 
@@ -95,9 +95,10 @@ Selectable stock notification sounds (global default + per-habit override) are i
 
 ### Third-Party Integrations
 
-- **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions
-- **Firebase Auth + Google Sign-In** — optional account for backup
+- **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions (currently voluntary support only, no feature gating)
+- **Firebase Auth + Google Sign-In** — optional account for Google Drive backup
 - **Google Drive APIs** — optional encrypted backup/restore
+- **iCloud** (`icloud_storage`) — optional encrypted backup/restore (iOS only), key synced via iCloud Keychain
 - **Awesome Notifications** — local push notification scheduling
 
 ## Code Generation
