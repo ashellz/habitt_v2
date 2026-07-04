@@ -1658,7 +1658,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'State diventando molto costanti con questa abitudine. Considerate la possibilità di non renderla facoltativa per spingervi un po\' di più. Volete aggiornare questa abitudine adesso?';
 
   @override
-  String get getPremium => 'Ottenere il premio';
+  String get getPremium => 'Sostieni il progetto';
 
   @override
   String get enjoyAllBenefits => 'Usufruite di tutti i vantaggi dell\'app';
@@ -1936,7 +1936,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get supportDeveloper =>
-      'Acquistando Premium sostieni lo sviluppatore.';
+      'Aiuta a mantenere l\'app gratuita e in crescita';
 
   @override
   String get autoBackup => 'Sincronizzazione e backup automatici';
@@ -2123,11 +2123,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get discardOldBackupConfirm => 'Elimina';
 
   @override
-  String get paywallUpgradeTo => 'Passa a';
+  String get paywallUpgradeTo => 'Sostieni il progetto';
 
   @override
   String get paywallSupportUs =>
-      'Queste funzionalità sono disponibili gratuitamente – supportaci con un upgrade comunque';
+      'Aiuta Habitt a rimanere gratuita diventando un sostenitore o facendo una donazione una tantum';
 
   @override
   String get paywallCustomScheduling =>
@@ -2150,19 +2150,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get paywallMostPopular => 'Più popolare';
 
   @override
-  String get paywallUpgradeNow => 'Aggiorna ora';
+  String get paywallUpgradeNow => 'Supporta ora';
 
   @override
-  String get paywallManageSubscription => 'Gestisci abbonamento';
+  String get paywallManageSubscription => 'Gestisci il supporto';
 
   @override
-  String get paywallCancel => 'Annulla';
+  String get paywallCancel => 'Smetti di supportare';
 
   @override
-  String get paywallDowngrade => 'Declassa';
+  String get paywallDowngrade => 'Riduci il supporto';
 
   @override
-  String get paywallUpgrade => 'Aggiorna';
+  String get paywallUpgrade => 'Aumenta il supporto';
 
   @override
   String get currentPlan => 'Piano attuale';
@@ -2173,22 +2173,22 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get paywallYearly => 'Annuale';
+  String get paywallYearly => 'Supporter Annuale';
 
   @override
-  String get paywallMonthly => 'Mensile';
+  String get paywallMonthly => 'Supporter Mensile';
 
   @override
-  String get paywallLifetime => 'A vita';
+  String get paywallLifetime => 'Supporter a Vita';
 
   @override
-  String get paywallSixMonths => '6 Mesi';
+  String get paywallSixMonths => 'Supporter Semestrale';
 
   @override
-  String get paywallThreeMonths => '3 Mesi';
+  String get paywallThreeMonths => 'Supporter Trimestrale';
 
   @override
-  String get paywallWeekly => 'Settimanale';
+  String get paywallWeekly => 'Supporter Settimanale';
 
   @override
   String get paywallPerYear => '/ anno';
@@ -2713,4 +2713,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get optional => 'Facoltativo';
+
+  @override
+  String get becomeASupporter => 'Diventa un sostenitore';
 }

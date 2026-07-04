@@ -1659,7 +1659,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie werden mit dieser Gewohnheit sehr konsequent. Überlege dir, ob du sie nicht optional machen solltest, um dich ein bisschen mehr anzustacheln. Willst du diese Gewohnheit jetzt aktualisieren?';
 
   @override
-  String get getPremium => 'Prämie erhalten';
+  String get getPremium => 'Unterstütze das Projekt';
 
   @override
   String get enjoyAllBenefits => 'Genießen Sie alle Vorteile der App';
@@ -1938,7 +1938,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get supportDeveloper =>
-      'Der Kauf von Premium unterstützt den Entwickler.';
+      'Hilf mit, die App kostenlos zu halten und weiterzuentwickeln';
 
   @override
   String get autoBackup => 'Automatische Synchronisierung und Sicherung';
@@ -2123,11 +2123,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get discardOldBackupConfirm => 'Verwerfen';
 
   @override
-  String get paywallUpgradeTo => 'Upgraden auf';
+  String get paywallUpgradeTo => 'Unterstütze das Projekt';
 
   @override
   String get paywallSupportUs =>
-      'Diese Funktionen sind kostenlos verfügbar – unterstütze uns trotzdem mit einem Upgrade';
+      'Hilf mit, Habitt kostenlos zu halten, indem du Unterstützer wirst oder eine einmalige Spende machst';
 
   @override
   String get paywallCustomScheduling => 'Individuelle Gewohnheitsplanung';
@@ -2150,19 +2150,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get paywallMostPopular => 'Am beliebtesten';
 
   @override
-  String get paywallUpgradeNow => 'Jetzt upgraden';
+  String get paywallUpgradeNow => 'Jetzt unterstützen';
 
   @override
-  String get paywallManageSubscription => 'Abonnement verwalten';
+  String get paywallManageSubscription => 'Unterstützung verwalten';
 
   @override
-  String get paywallCancel => 'Kündigen';
+  String get paywallCancel => 'Unterstützung beenden';
 
   @override
-  String get paywallDowngrade => 'Downgrade';
+  String get paywallDowngrade => 'Unterstützung verringern';
 
   @override
-  String get paywallUpgrade => 'Upgrade';
+  String get paywallUpgrade => 'Unterstützung erhöhen';
 
   @override
   String get currentPlan => 'Aktueller Plan';
@@ -2173,22 +2173,22 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get paywallYearly => 'Jährlich';
+  String get paywallYearly => 'Jährlicher Supporter';
 
   @override
-  String get paywallMonthly => 'Monatlich';
+  String get paywallMonthly => 'Monatlicher Supporter';
 
   @override
-  String get paywallLifetime => 'Lebenslang';
+  String get paywallLifetime => 'Lebenslanger Supporter';
 
   @override
-  String get paywallSixMonths => '6 Monate';
+  String get paywallSixMonths => 'Halbjährlicher Supporter';
 
   @override
-  String get paywallThreeMonths => '3 Monate';
+  String get paywallThreeMonths => 'Vierteljährlicher Supporter';
 
   @override
-  String get paywallWeekly => 'Wöchentlich';
+  String get paywallWeekly => 'Wöchentlicher Supporter';
 
   @override
   String get paywallPerYear => '/ Jahr';
@@ -2715,4 +2715,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get optional => 'Optional';
+
+  @override
+  String get becomeASupporter => 'Werde Unterstützer';
 }

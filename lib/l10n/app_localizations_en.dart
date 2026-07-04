@@ -1653,7 +1653,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'re getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?';
 
   @override
-  String get getPremium => 'Get Premium';
+  String get getPremium => 'Support the project';
 
   @override
   String get enjoyAllBenefits => 'Enjoy all the benefits of the app';
@@ -1930,7 +1930,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingDemoHabitPushUps => 'Push ups';
 
   @override
-  String get supportDeveloper => 'Buying Premium supports the developer.';
+  String get supportDeveloper => 'Help keep the app free and growing';
 
   @override
   String get autoBackup => 'Auto sync and backup';
@@ -2113,11 +2113,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discardOldBackupConfirm => 'Discard';
 
   @override
-  String get paywallUpgradeTo => 'Upgrade to';
+  String get paywallUpgradeTo => 'Support the project';
 
   @override
   String get paywallSupportUs =>
-      'These features are available for free - support us by upgrading anyway';
+      'Help keep Habitt free by becoming a supporter or making a one-time donation';
 
   @override
   String get paywallCustomScheduling => 'Custom habit scheduling';
@@ -2138,19 +2138,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallMostPopular => 'Most popular';
 
   @override
-  String get paywallUpgradeNow => 'Upgrade now';
+  String get paywallUpgradeNow => 'Support Now';
 
   @override
-  String get paywallManageSubscription => 'Manage subscription';
+  String get paywallManageSubscription => 'Manage Support';
 
   @override
-  String get paywallCancel => 'Cancel';
+  String get paywallCancel => 'Stop Supporting';
 
   @override
-  String get paywallDowngrade => 'Downgrade';
+  String get paywallDowngrade => 'Support Less';
 
   @override
-  String get paywallUpgrade => 'Upgrade';
+  String get paywallUpgrade => 'Increase Support';
 
   @override
   String get currentPlan => 'Current plan';
@@ -2161,22 +2161,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get paywallYearly => 'Yearly';
+  String get paywallYearly => 'Yearly Supporter';
 
   @override
-  String get paywallMonthly => 'Monthly';
+  String get paywallMonthly => 'Monthly Supporter';
 
   @override
-  String get paywallLifetime => 'Lifetime';
+  String get paywallLifetime => 'Lifetime Supporter';
 
   @override
-  String get paywallSixMonths => '6 Months';
+  String get paywallSixMonths => '6-Month Supporter';
 
   @override
-  String get paywallThreeMonths => '3 Months';
+  String get paywallThreeMonths => '3-Month Supporter';
 
   @override
-  String get paywallWeekly => 'Weekly';
+  String get paywallWeekly => 'Weekly Supporter';
 
   @override
   String get paywallPerYear => '/ year';
@@ -2695,4 +2695,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get optional => 'Optional';
+
+  @override
+  String get becomeASupporter => 'Become a supporter';
 }

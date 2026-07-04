@@ -13,6 +13,12 @@ import 'package:url_launcher/url_launcher.dart';
 // Toggle to show placeholder plans in debug builds without a RevenueCat configuration.
 const bool _debugShowPlaceholderPlans = false;
 
+// Plan cards all share this width/spacing, used both for layout and for
+// computing the scroll offset needed to bring a card into view.
+const double _planCardWidth = 245;
+const double _planCardGap = 9;
+const double _planCardEdgeInset = 16;
+
 enum _ButtonAction { purchase, upgrade, downgrade, cancel, manage }
 
 int _rankOf(PackageType type) => switch (type) {
@@ -61,13 +67,14 @@ class _PaywallPageState extends State<PaywallPage> {
   String? _activeProductId;
   String? _managementUrl;
 
-  final PageController _pageController = PageController(viewportFraction: 0.88);
-  double _pageValue = 0;
+  final ScrollController _scrollController = ScrollController();
+  int _selectedIndex = 0;
+  bool _initialSelectionApplied = false;
 
   Package? get _selectedPackage {
     if (kDebugMode && _debugShowPlaceholderPlans) return null;
     if (_packages.isEmpty) return null;
-    return _packages[_pageValue.round().clamp(0, _packages.length - 1)];
+    return _packages[_selectedIndex.clamp(0, _packages.length - 1)];
   }
 
   PackageType? get _activePackageType {
@@ -113,30 +120,58 @@ class _PaywallPageState extends State<PaywallPage> {
   @override
   void initState() {
     super.initState();
-    _pageController.addListener(_handlePageChanged);
     _refreshSubscriptionStatus();
     _loadOfferings();
   }
 
   @override
   void dispose() {
-    _pageController.removeListener(_handlePageChanged);
-    _pageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  void _handlePageChanged() {
-    if (mounted) {
-      setState(() {
-        _pageValue =
-            _pageController.hasClients ? (_pageController.page ?? 0) : 0;
-      });
+  // Selects the purchased plan (if any) once both the offerings and the
+  // subscription status have finished loading, then scrolls it into view.
+  // Only runs once — later plan taps are left entirely up to the user.
+  void _maybeApplyInitialSelection() {
+    if (!mounted) return;
+    if (_initialSelectionApplied || _isLoadingOffers || _isRefreshing) return;
+    _initialSelectionApplied = true;
+    final activeId = _activeProductId;
+    if (activeId != null) {
+      final idx = _packages.indexWhere(
+        (p) => p.storeProduct.identifier == activeId,
+      );
+      if (idx != -1 && idx != _selectedIndex) {
+        setState(() => _selectedIndex = idx);
+      }
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToSelected());
+  }
+
+  void _scrollToSelected({bool animate = false}) {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    final cardStart =
+        _planCardEdgeInset + _selectedIndex * (_planCardWidth + _planCardGap);
+    final target =
+        cardStart - (position.viewportDimension - _planCardWidth) / 2;
+    final clamped = target.clamp(0.0, position.maxScrollExtent);
+    if (animate) {
+      _scrollController.animateTo(
+        clamped,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _scrollController.jumpTo(clamped);
     }
   }
 
   Future<void> _loadOfferings() async {
     if (kDebugMode && _debugShowPlaceholderPlans) {
       setState(() => _isLoadingOffers = false);
+      _maybeApplyInitialSelection();
       return;
     }
     setState(() => _isLoadingOffers = true);
@@ -144,11 +179,15 @@ class _PaywallPageState extends State<PaywallPage> {
     if (!mounted) return;
     setState(() {
       if (offerings.isNotEmpty) {
-        _packages = offerings.first.availablePackages
-          ..sort((a, b) => _rankOf(a.packageType).compareTo(_rankOf(b.packageType)));
+        _packages =
+            offerings.first.availablePackages..sort(
+              (a, b) =>
+                  _rankOf(a.packageType).compareTo(_rankOf(b.packageType)),
+            );
       }
       _isLoadingOffers = false;
     });
+    _maybeApplyInitialSelection();
   }
 
   Future<void> _refreshSubscriptionStatus() async {
@@ -164,9 +203,11 @@ class _PaywallPageState extends State<PaywallPage> {
         _managementUrl = info.managementURL;
         _isRefreshing = false;
       });
+      _maybeApplyInitialSelection();
     } catch (_) {
       if (!mounted) return;
       setState(() => _isRefreshing = false);
+      _maybeApplyInitialSelection();
     }
   }
 
@@ -273,7 +314,6 @@ class _PaywallPageState extends State<PaywallPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Top section — horizontally padded
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
@@ -304,124 +344,41 @@ class _PaywallPageState extends State<PaywallPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          spacing: 8,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              loc.paywallUpgradeTo,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                              ),
+                        Center(
+                          child: Text(
+                            loc.paywallUpgradeTo,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 9,
-                              ),
-                              decoration: ShapeDecoration(
-                                color: Colors.white.withValues(alpha: 0.16),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    width: 1,
-                                    color: Colors.white.withValues(alpha: 0.20),
-                                  ),
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                              ),
-                              child: Row(
-                                spacing: 8,
-                                children: [
-                                  SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: Image.asset(
-                                      'assets/images/widget-images/gem.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  const Text(
-                                    'Premium',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Center(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.75,
-                            child: Text(
-                              loc.paywallSupportUs,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          child: Text(
+                            loc.paywallSupportUs,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        Column(
-                          spacing: 10,
-                          children: [
-                            PremiumBenefit(
-                              icon: const Icon(
-                                Icons.calendar_month,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              text: loc.paywallCustomScheduling,
-                            ),
-                            PremiumBenefit(
-                              icon: const Icon(
-                                Icons.notifications,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              text: loc.paywallPerHabitNotifications,
-                            ),
-                            PremiumBenefit(
-                              icon: const Icon(
-                                Icons.bar_chart,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              text: loc.paywallImprovementSuggestions,
-                            ),
-                            PremiumBenefit(
-                              icon: const Icon(
-                                Icons.cloud,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              text: loc.paywallCloudBackupSync,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          width: double.infinity,
-                          decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                strokeAlign: BorderSide.strokeAlignCenter,
-                                color: Colors.white.withValues(alpha: 0.40),
-                              ),
-                            ),
-                          ),
-                        ),
+                        const SizedBox(height: 35),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      loc.becomeASupporter,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   // Plan cards — full width, top padding gives badge chip room
@@ -455,34 +412,25 @@ class _PaywallPageState extends State<PaywallPage> {
                             )
                             : Padding(
                               padding: const EdgeInsets.only(top: 15),
-                              child: PageView.builder(
-                                controller: _pageController,
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                scrollDirection: Axis.horizontal,
                                 itemCount: plans.length,
                                 itemBuilder: (context, index) {
-                                  return AnimatedBuilder(
-                                    animation: _pageController,
-                                    child: _PlanCard(
-                                      plan: plans[index],
-                                      isActive:
-                                          plans[index]
-                                              .package
-                                              ?.storeProduct
-                                              .identifier ==
-                                          _activeProductId,
-                                    ),
-                                    builder: (context, child) {
-                                      final distance = (_pageValue - index)
-                                          .abs()
-                                          .clamp(0.0, 1.0);
-                                      final scale = 1.0 - distance * 0.05;
-                                      final translateY = distance * 10.0;
-                                      return Transform.translate(
-                                        offset: Offset(0, translateY),
-                                        child: Transform.scale(
-                                          scale: scale,
-                                          child: child,
-                                        ),
-                                      );
+                                  return _PlanCard(
+                                    plan: plans[index],
+                                    isFirst: index == 0,
+                                    isLast: index == plans.length - 1,
+                                    isActive:
+                                        plans[index]
+                                            .package
+                                            ?.storeProduct
+                                            .identifier ==
+                                        _activeProductId,
+                                    isSelected: _selectedIndex == index,
+                                    onTap: () {
+                                      setState(() => _selectedIndex = index);
+                                      _scrollToSelected(animate: true);
                                     },
                                   );
                                 },
@@ -496,7 +444,7 @@ class _PaywallPageState extends State<PaywallPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 6,
                       children: List.generate(plans.length, (index) {
-                        final isActive = _pageValue.round() == index;
+                        final isActive = _selectedIndex == index;
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeInOut,
@@ -593,170 +541,164 @@ String? _localizedBadgeLabel(PackageType type, AppLocalizations loc) {
 }
 
 class _PlanCard extends StatelessWidget {
-  const _PlanCard({required this.plan, this.isActive = false});
+  const _PlanCard({
+    required this.plan,
+    required this.isSelected,
+    required this.onTap,
+    this.isActive = false,
+    this.isFirst = false,
+    this.isLast = false,
+  });
 
   final _PlanInfo plan;
   final bool isActive;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final bool isFirst;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
     final isOneTime = plan.isOneTimePurchase;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 15),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            height: 140,
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: ShapeDecoration(
-              color: Colors.white.withValues(alpha: 0.16),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 1, color: Colors.white),
-                borderRadius: BorderRadius.circular(24),
+      padding: EdgeInsets.only(
+        left: isFirst ? _planCardEdgeInset : 0,
+        right: isLast ? _planCardEdgeInset : _planCardGap,
+        top: 15,
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              height: 140,
+              width: _planCardWidth,
+              padding: const EdgeInsets.all(16),
+              decoration: ShapeDecoration(
+                color:
+                    isSelected
+                        ? Colors.white.withValues(alpha: 0.16)
+                        : Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color:
+                        isSelected
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.4),
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      plan.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        plan.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeOut,
-                        opacity: isActive ? 1.0 : 0.0,
-                        child: AnimatedScale(
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: AnimatedOpacity(
                           duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOutBack,
-                          scale: isActive ? 1.0 : 0.7,
-                          child: AnimatedRotation(
+                          curve: Curves.easeOut,
+                          opacity: isActive ? 1.0 : 0.0,
+                          child: AnimatedScale(
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.easeOutBack,
-                            turns: isActive ? 0.0 : 0.18,
-                            child: SvgPicture.asset(
-                              'assets/images/new-svg/check-on-light.svg',
+                            scale: isActive ? 1.0 : 0.7,
+                            child: AnimatedRotation(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOutBack,
+                              turns: isActive ? 0.0 : 0.18,
+                              child: SvgPicture.asset(
+                                'assets/images/new-svg/check-on-light.svg',
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      plan.price,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Text(
-                        plan.period,
-                        style: TextStyle(
-                          color: Colors.white.withValues(
-                            alpha: isOneTime ? 0.75 : 1.0,
-                          ),
-                          fontSize: isOneTime ? 13 : 16,
-                          fontWeight: FontWeight.w400,
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    spacing: 12,
+                    children: [
+                      Text(
+                        plan.price,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          if (plan.badge != null)
-            Positioned(
-              left: 16,
-              top: -15,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                clipBehavior: Clip.antiAlias,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      width: 1,
-                      color: Colors.white.withValues(alpha: 0.20),
-                    ),
-                    borderRadius: BorderRadius.circular(24),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: Text(
+                            plan.period,
+                            overflow: TextOverflow.ellipsis,
+
+                            style: TextStyle(
+                              color: Colors.white.withValues(
+                                alpha: isOneTime ? 0.75 : 1.0,
+                              ),
+                              fontSize: isOneTime ? 13 : 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                child: Text(
-                  plan.badge!,
-                  style: const TextStyle(
-                    color: Color(0xFF02D382),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+                ],
+              ),
+            ),
+            if (plan.badge != null)
+              Positioned(
+                left: 16,
+                top: -15,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 1,
+                        color: Colors.white.withValues(alpha: 0.20),
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  child: Text(
+                    plan.badge!,
+                    style: const TextStyle(
+                      color: Color(0xFF02D382),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
-    );
-  }
-}
-
-class PremiumBenefit extends StatelessWidget {
-  const PremiumBenefit({super.key, required this.icon, required this.text});
-
-  final Widget icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 12,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: ShapeDecoration(
-            color: Colors.white.withValues(alpha: 0.16),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 1,
-                color: Colors.white.withValues(alpha: 0.20),
-              ),
-              borderRadius: BorderRadius.circular(24),
-            ),
-          ),
-          child: icon,
-        ),
-        Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 }

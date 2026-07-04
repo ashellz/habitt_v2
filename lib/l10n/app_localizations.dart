@@ -2629,7 +2629,7 @@ abstract class AppLocalizations {
   /// No description provided for @getPremium.
   ///
   /// In en, this message translates to:
-  /// **'Get Premium'**
+  /// **'Support the project'**
   String get getPremium;
 
   /// No description provided for @enjoyAllBenefits.
@@ -3151,7 +3151,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportDeveloper.
   ///
   /// In en, this message translates to:
-  /// **'Buying Premium supports the developer.'**
+  /// **'Help keep the app free and growing'**
   String get supportDeveloper;
 
   /// No description provided for @autoBackup.
@@ -3487,13 +3487,13 @@ abstract class AppLocalizations {
   /// No description provided for @paywallUpgradeTo.
   ///
   /// In en, this message translates to:
-  /// **'Upgrade to'**
+  /// **'Support the project'**
   String get paywallUpgradeTo;
 
   /// No description provided for @paywallSupportUs.
   ///
   /// In en, this message translates to:
-  /// **'These features are available for free - support us by upgrading anyway'**
+  /// **'Help keep Habitt free by becoming a supporter or making a one-time donation'**
   String get paywallSupportUs;
 
   /// No description provided for @paywallCustomScheduling.
@@ -3535,31 +3535,31 @@ abstract class AppLocalizations {
   /// No description provided for @paywallUpgradeNow.
   ///
   /// In en, this message translates to:
-  /// **'Upgrade now'**
+  /// **'Support Now'**
   String get paywallUpgradeNow;
 
   /// No description provided for @paywallManageSubscription.
   ///
   /// In en, this message translates to:
-  /// **'Manage subscription'**
+  /// **'Manage Support'**
   String get paywallManageSubscription;
 
   /// No description provided for @paywallCancel.
   ///
   /// In en, this message translates to:
-  /// **'Cancel'**
+  /// **'Stop Supporting'**
   String get paywallCancel;
 
   /// No description provided for @paywallDowngrade.
   ///
   /// In en, this message translates to:
-  /// **'Downgrade'**
+  /// **'Support Less'**
   String get paywallDowngrade;
 
   /// No description provided for @paywallUpgrade.
   ///
   /// In en, this message translates to:
-  /// **'Upgrade'**
+  /// **'Increase Support'**
   String get paywallUpgrade;
 
   /// No description provided for @currentPlan.
@@ -3577,37 +3577,37 @@ abstract class AppLocalizations {
   /// No description provided for @paywallYearly.
   ///
   /// In en, this message translates to:
-  /// **'Yearly'**
+  /// **'Yearly Supporter'**
   String get paywallYearly;
 
   /// No description provided for @paywallMonthly.
   ///
   /// In en, this message translates to:
-  /// **'Monthly'**
+  /// **'Monthly Supporter'**
   String get paywallMonthly;
 
   /// No description provided for @paywallLifetime.
   ///
   /// In en, this message translates to:
-  /// **'Lifetime'**
+  /// **'Lifetime Supporter'**
   String get paywallLifetime;
 
   /// No description provided for @paywallSixMonths.
   ///
   /// In en, this message translates to:
-  /// **'6 Months'**
+  /// **'6-Month Supporter'**
   String get paywallSixMonths;
 
   /// No description provided for @paywallThreeMonths.
   ///
   /// In en, this message translates to:
-  /// **'3 Months'**
+  /// **'3-Month Supporter'**
   String get paywallThreeMonths;
 
   /// No description provided for @paywallWeekly.
   ///
   /// In en, this message translates to:
-  /// **'Weekly'**
+  /// **'Weekly Supporter'**
   String get paywallWeekly;
 
   /// No description provided for @paywallPerYear.
@@ -4557,6 +4557,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional'**
   String get optional;
+
+  /// No description provided for @becomeASupporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a supporter'**
+  String get becomeASupporter;
 }
 
 class _AppLocalizationsDelegate

@@ -1650,7 +1650,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Postaješ zaista dosljedan u ovoj navici. Razmisli o tome da ne činiš obavezno guranje sebe malo više. Želiš li sada ažurirati ovu naviku?';
 
   @override
-  String get getPremium => 'Nabavite premium';
+  String get getPremium => 'Podrži projekat';
 
   @override
   String get enjoyAllBenefits => 'Uživajte u svim prednostima aplikacije';
@@ -1927,7 +1927,8 @@ class AppLocalizationsBs extends AppLocalizations {
   String get onboardingDemoHabitPushUps => 'Sklekovi';
 
   @override
-  String get supportDeveloper => 'Kupovinom premiuma podržavate programera.';
+  String get supportDeveloper =>
+      'Pomozi da aplikacija ostane besplatna i da raste';
 
   @override
   String get autoBackup => 'Automatska sinkronizacija i backup';
@@ -2110,11 +2111,11 @@ class AppLocalizationsBs extends AppLocalizations {
   String get discardOldBackupConfirm => 'Odbaci';
 
   @override
-  String get paywallUpgradeTo => 'Nabavi';
+  String get paywallUpgradeTo => 'Podrži projekat';
 
   @override
   String get paywallSupportUs =>
-      'Ove funkcije su dostupne besplatno – podrži nas nadogradnjom';
+      'Pomozi da Habitt ostane besplatan tako što ćeš postati supporter ili dati jednokratnu donaciju';
 
   @override
   String get paywallCustomScheduling => 'Prilagođeno raspoređivanje navika';
@@ -2136,19 +2137,19 @@ class AppLocalizationsBs extends AppLocalizations {
   String get paywallMostPopular => 'Najpopularnije';
 
   @override
-  String get paywallUpgradeNow => 'Nadogradi sada';
+  String get paywallUpgradeNow => 'Podrži sada';
 
   @override
-  String get paywallManageSubscription => 'Upravljaj pretplatom';
+  String get paywallManageSubscription => 'Upravljaj podrškom';
 
   @override
-  String get paywallCancel => 'Otkaži';
+  String get paywallCancel => 'Prestani podržavati';
 
   @override
-  String get paywallDowngrade => 'Smanji plan';
+  String get paywallDowngrade => 'Smanji podršku';
 
   @override
-  String get paywallUpgrade => 'Nadogradi';
+  String get paywallUpgrade => 'Povećaj podršku';
 
   @override
   String get currentPlan => 'Trenutni plan';
@@ -2159,22 +2160,22 @@ class AppLocalizationsBs extends AppLocalizations {
   }
 
   @override
-  String get paywallYearly => 'Godišnje';
+  String get paywallYearly => 'Godišnji Supporter';
 
   @override
-  String get paywallMonthly => 'Mjesečno';
+  String get paywallMonthly => 'Mjesečni Supporter';
 
   @override
-  String get paywallLifetime => 'Doživotno';
+  String get paywallLifetime => 'Doživotni Supporter';
 
   @override
-  String get paywallSixMonths => 'Svakih 6 Mjeseci';
+  String get paywallSixMonths => 'Polugodišnji Supporter';
 
   @override
-  String get paywallThreeMonths => 'Svaka 3 Mjeseca';
+  String get paywallThreeMonths => 'Tromjesečni Supporter';
 
   @override
-  String get paywallWeekly => 'Sedmično';
+  String get paywallWeekly => 'Sedmični Supporter';
 
   @override
   String get paywallPerYear => '/ godišnje';
@@ -2692,4 +2693,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get optional => 'Opcionalno';
+
+  @override
+  String get becomeASupporter => 'Postani supporter';
 }

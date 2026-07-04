@@ -1655,7 +1655,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Te estás volviendo muy constante con este hábito. Considera la posibilidad de no hacerlo opcional para exigirte un poco más. ¿Quieres actualizar este hábito ahora?';
 
   @override
-  String get getPremium => 'Conseguir Premium';
+  String get getPremium => 'Apoya el proyecto';
 
   @override
   String get enjoyAllBenefits =>
@@ -1933,7 +1933,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onboardingDemoHabitPushUps => 'Flexiones';
 
   @override
-  String get supportDeveloper => 'Comprar Premium apoya al desarrollador.';
+  String get supportDeveloper =>
+      'Ayuda a mantener la app gratis y en crecimiento';
 
   @override
   String get autoBackup => 'Sincronización y copia de seguridad automática';
@@ -2117,11 +2118,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get discardOldBackupConfirm => 'Descartar';
 
   @override
-  String get paywallUpgradeTo => 'Actualizar a';
+  String get paywallUpgradeTo => 'Apoya el proyecto';
 
   @override
   String get paywallSupportUs =>
-      'Estas funciones están disponibles gratis – apóyanos actualizando de todas formas';
+      'Ayuda a que Habitt siga siendo gratis convirtiéndote en colaborador o haciendo una donación única';
 
   @override
   String get paywallCustomScheduling => 'Programación personalizada de hábitos';
@@ -2144,19 +2145,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paywallMostPopular => 'Más popular';
 
   @override
-  String get paywallUpgradeNow => 'Actualizar ahora';
+  String get paywallUpgradeNow => 'Apoyar ahora';
 
   @override
-  String get paywallManageSubscription => 'Gestionar suscripción';
+  String get paywallManageSubscription => 'Gestionar apoyo';
 
   @override
-  String get paywallCancel => 'Cancelar';
+  String get paywallCancel => 'Dejar de apoyar';
 
   @override
-  String get paywallDowngrade => 'Degradar';
+  String get paywallDowngrade => 'Reducir apoyo';
 
   @override
-  String get paywallUpgrade => 'Mejorar';
+  String get paywallUpgrade => 'Aumentar apoyo';
 
   @override
   String get currentPlan => 'Plan actual';
@@ -2167,22 +2168,22 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get paywallYearly => 'Anual';
+  String get paywallYearly => 'Supporter Anual';
 
   @override
-  String get paywallMonthly => 'Mensual';
+  String get paywallMonthly => 'Supporter Mensual';
 
   @override
-  String get paywallLifetime => 'De por vida';
+  String get paywallLifetime => 'Supporter de por Vida';
 
   @override
-  String get paywallSixMonths => '6 Meses';
+  String get paywallSixMonths => 'Supporter Semestral';
 
   @override
-  String get paywallThreeMonths => '3 Meses';
+  String get paywallThreeMonths => 'Supporter Trimestral';
 
   @override
-  String get paywallWeekly => 'Semanal';
+  String get paywallWeekly => 'Supporter Semanal';
 
   @override
   String get paywallPerYear => '/ año';
@@ -2709,4 +2710,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get optional => 'Opcional';
+
+  @override
+  String get becomeASupporter => 'Conviértete en colaborador';
 }

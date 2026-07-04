@@ -168,6 +168,7 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
               child: Row(
+                spacing: 16,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
@@ -201,11 +202,12 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget>
                       clipBehavior: Clip.none,
                       children: [
                         Image.asset(
-                          'assets/images/widget-images/gem.png',
+                          'assets/images/widget-images/love-bubble.png',
                           fit: BoxFit.cover,
                         ),
                         Positioned(
                           left: 26,
+                          top: 8,
                           child: AnimatedBuilder(
                             animation: _shineAnimation,
                             builder:
