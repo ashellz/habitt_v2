@@ -19,6 +19,8 @@ const double _planCardWidth = 245;
 const double _planCardGap = 9;
 const double _planCardEdgeInset = 16;
 
+const String _kofiUrl = 'https://ko-fi.com/shellzbb';
+
 enum _ButtonAction { purchase, upgrade, downgrade, cancel, manage }
 
 int _rankOf(PackageType type) => switch (type) {
@@ -256,6 +258,14 @@ class _PaywallPageState extends State<PaywallPage> {
     }
   }
 
+  Future<void> _handleDonateTap() async {
+    HapticFeedback.selectionClick();
+    final uri = Uri.parse(_kofiUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   List<_PlanInfo> _buildPlanInfos(AppLocalizations loc) {
     if (kDebugMode && _debugShowPlaceholderPlans) {
       return [
@@ -308,195 +318,285 @@ class _PaywallPageState extends State<PaywallPage> {
               fit: BoxFit.cover,
             ),
           ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).maybePop(),
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              right: 16,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            color: Colors.transparent,
-                            child: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: SvgPicture.asset(
-                                height: 20,
-                                width: 20,
-                                'assets/images/new-svg/back.svg',
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.white,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
+          ListView(
+            children: [
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).maybePop(),
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          right: 16,
+                          top: 8,
+                          bottom: 8,
+                        ),
+                        color: Colors.transparent,
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: SvgPicture.asset(
+                            height: 20,
+                            width: 20,
+                            'assets/images/new-svg/back.svg',
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        Center(
-                          child: Text(
-                            loc.paywallUpgradeTo,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Center(
-                          child: Text(
-                            loc.paywallSupportUs,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 35),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      loc.becomeASupporter,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                  // Plan cards — full width, top padding gives badge chip room
-                  const SizedBox(height: 24 - 15),
-                  SizedBox(
-                    height: 175,
-                    child:
-                        _isLoadingOffers
-                            ? const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                            : plans.isEmpty
-                            ? Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: Text(
-                                  loc.paywallProductsUnavailable,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            )
-                            : Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: ListView.builder(
-                                controller: _scrollController,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: plans.length,
-                                itemBuilder: (context, index) {
-                                  return _PlanCard(
-                                    plan: plans[index],
-                                    isFirst: index == 0,
-                                    isLast: index == plans.length - 1,
-                                    isActive:
-                                        plans[index]
-                                            .package
-                                            ?.storeProduct
-                                            .identifier ==
-                                        _activeProductId,
-                                    isSelected: _selectedIndex == index,
-                                    onTap: () {
-                                      setState(() => _selectedIndex = index);
-                                      _scrollToSelected(animate: true);
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                  ),
-                  // Bottom section — horizontally padded
-                  const SizedBox(height: 16),
-                  if (!_isLoadingOffers && plans.length > 1)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 6,
-                      children: List.generate(plans.length, (index) {
-                        final isActive = _selectedIndex == index;
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                          width: isActive ? 20 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(
-                              alpha: isActive ? 1.0 : 0.4,
-                            ),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        );
-                      }),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 24),
-                        NewDefaultButton(
-                          label: switch (_buttonAction) {
-                            _ButtonAction.purchase => loc.paywallUpgradeNow,
-                            _ButtonAction.upgrade => loc.paywallUpgrade,
-                            _ButtonAction.downgrade => loc.paywallDowngrade,
-                            _ButtonAction.cancel => loc.paywallCancel,
-                            _ButtonAction.manage =>
-                              loc.paywallManageSubscription,
-                          },
-                          onPressed: _isPresenting ? () {} : _handleUpgradeTap,
-                          isLoading: _isRefreshing,
-                          width: double.infinity,
+                    const SizedBox(height: 16),
+                    Center(
+                      child: Text(
+                        loc.paywallUpgradeTo,
+                        style: const TextStyle(
                           color: Colors.white,
-                          textColor: const Color(0xFF02D382),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(height: 12),
-                        GestureDetector(
-                          onTap: _isPresenting ? null : _handleRestorePurchases,
-                          child: Text(
-                            loc.paywallRestorePurchases,
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.7),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: Text(
+                        loc.paywallSupportUs,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 35),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text(
+                  loc.becomeASupporter,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              // Plan cards — full width, top padding gives badge chip room
+              const SizedBox(height: 24 - 15),
+              SizedBox(
+                height: 175,
+                child:
+                    _isLoadingOffers
+                        ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                        : plans.isEmpty
+                        ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              loc.paywallProductsUnavailable,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.7),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
+                        )
+                        : Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: plans.length,
+                            itemBuilder: (context, index) {
+                              return _PlanCard(
+                                plan: plans[index],
+                                isFirst: index == 0,
+                                isLast: index == plans.length - 1,
+                                isActive:
+                                    plans[index]
+                                        .package
+                                        ?.storeProduct
+                                        .identifier ==
+                                    _activeProductId,
+                                isSelected: _selectedIndex == index,
+                                onTap: () {
+                                  setState(() => _selectedIndex = index);
+                                  _scrollToSelected(animate: true);
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
-            ),
+              // Bottom section — horizontally padded
+              const SizedBox(height: 16),
+              if (!_isLoadingOffers && plans.length > 1)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 6,
+                  children: List.generate(plans.length, (index) {
+                    final isActive = _selectedIndex == index;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      width: isActive ? 20 : 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(
+                          alpha: isActive ? 1.0 : 0.4,
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    );
+                  }),
+                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 24),
+                    NewDefaultButton(
+                      label: switch (_buttonAction) {
+                        _ButtonAction.purchase => loc.paywallUpgradeNow,
+                        _ButtonAction.upgrade => loc.paywallUpgrade,
+                        _ButtonAction.downgrade => loc.paywallDowngrade,
+                        _ButtonAction.cancel => loc.paywallCancel,
+                        _ButtonAction.manage => loc.paywallManageSubscription,
+                      },
+                      onPressed: _isPresenting ? () {} : _handleUpgradeTap,
+                      isLoading: _isRefreshing,
+                      width: double.infinity,
+                      color: Colors.white,
+                      textColor: const Color(0xFF02D382),
+                    ),
+                    const SizedBox(height: 12),
+                    GestureDetector(
+                      onTap: _isPresenting ? null : _handleRestorePurchases,
+                      child: Text(
+                        loc.paywallRestorePurchases,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Row(
+                        spacing: 16,
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: Colors.white.withValues(alpha: 0.2),
+                            ),
+                          ),
+                          Text(
+                            loc.or,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              color: Colors.white.withValues(alpha: 0.2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        spacing: 20,
+                        children: [
+                          Row(
+                            spacing: 20,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  spacing: 8,
+                                  children: [
+                                    Text(
+                                      loc.buyMeACoffee,
+                                      style: TextStyle(
+                                        color: Color(0xFF0C0C0C),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      loc.makeOneTimeDonationOfAnyAmount,
+                                      style: TextStyle(
+                                        color: Color(0xFF7A7C81),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Image.asset(
+                                'assets/images/widget-images/coffee.png',
+                              ),
+                            ],
+                          ),
+                          NewDefaultButton(
+                            onPressed: _handleDonateTap,
+                            label: loc.donate,
+                            color: Color(0x1A0CD280),
+                            textColor: Color(0xFF02D382),
+                            width: double.infinity,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Text(
+                        loc.everyDonationHelpsSupportFutureUpdates,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
         ],
       ),

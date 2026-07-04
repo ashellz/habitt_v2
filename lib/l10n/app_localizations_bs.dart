@@ -2696,4 +2696,21 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get becomeASupporter => 'Postani supporter';
+
+  @override
+  String get or => 'ili';
+
+  @override
+  String get buyMeACoffee => 'Časti me kahvom';
+
+  @override
+  String get makeOneTimeDonationOfAnyAmount =>
+      'Pošalji jednokratnu donaciju u bilo kojem iznosu';
+
+  @override
+  String get donate => 'Doniraj';
+
+  @override
+  String get everyDonationHelpsSupportFutureUpdates =>
+      'Svaka donacija pomaže u podršci budućim nadogradnjama';
 }

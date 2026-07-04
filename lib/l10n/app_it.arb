@@ -1037,5 +1037,10 @@
   "notificationSoundAppDefault": "App",
   "notificationSoundSystemDefault": "Sistema",
   "optional": "Facoltativo",
-  "becomeASupporter": "Diventa un sostenitore"
+  "becomeASupporter": "Diventa un sostenitore",
+  "or": "oppure",
+  "buyMeACoffee": "Offrimi un caffè",
+  "makeOneTimeDonationOfAnyAmount": "Fai una donazione una tantum di qualsiasi importo",
+  "donate": "Dona",
+  "everyDonationHelpsSupportFutureUpdates": "Ogni donazione aiuta a sostenere i futuri aggiornamenti"
 }

@@ -2698,4 +2698,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get becomeASupporter => 'Become a supporter';
+
+  @override
+  String get or => 'or';
+
+  @override
+  String get buyMeACoffee => 'Buy me a coffee';
+
+  @override
+  String get makeOneTimeDonationOfAnyAmount =>
+      'Make a one-time donation of any amount';
+
+  @override
+  String get donate => 'Donate';
+
+  @override
+  String get everyDonationHelpsSupportFutureUpdates =>
+      'Every donation helps support future updates';
 }

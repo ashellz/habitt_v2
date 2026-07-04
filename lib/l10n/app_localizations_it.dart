@@ -2716,4 +2716,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get becomeASupporter => 'Diventa un sostenitore';
+
+  @override
+  String get or => 'oppure';
+
+  @override
+  String get buyMeACoffee => 'Offrimi un caffè';
+
+  @override
+  String get makeOneTimeDonationOfAnyAmount =>
+      'Fai una donazione una tantum di qualsiasi importo';
+
+  @override
+  String get donate => 'Dona';
+
+  @override
+  String get everyDonationHelpsSupportFutureUpdates =>
+      'Ogni donazione aiuta a sostenere i futuri aggiornamenti';
 }

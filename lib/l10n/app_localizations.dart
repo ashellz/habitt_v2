@@ -4563,6 +4563,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Become a supporter'**
   String get becomeASupporter;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @buyMeACoffee.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy me a coffee'**
+  String get buyMeACoffee;
+
+  /// No description provided for @makeOneTimeDonationOfAnyAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a one-time donation of any amount'**
+  String get makeOneTimeDonationOfAnyAmount;
+
+  /// No description provided for @donate.
+  ///
+  /// In en, this message translates to:
+  /// **'Donate'**
+  String get donate;
+
+  /// No description provided for @everyDonationHelpsSupportFutureUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Every donation helps support future updates'**
+  String get everyDonationHelpsSupportFutureUpdates;
 }
 
 class _AppLocalizationsDelegate

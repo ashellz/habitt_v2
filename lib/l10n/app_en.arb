@@ -1044,5 +1044,10 @@
   "notificationSoundAppDefault": "App Default",
   "notificationSoundSystemDefault": "System Default",
   "optional": "Optional",
-  "becomeASupporter": "Become a supporter"
+  "becomeASupporter": "Become a supporter",
+  "or": "or",
+  "buyMeACoffee": "Buy me a coffee",
+  "makeOneTimeDonationOfAnyAmount": "Make a one-time donation of any amount",
+  "donate": "Donate",
+  "everyDonationHelpsSupportFutureUpdates": "Every donation helps support future updates"
 }

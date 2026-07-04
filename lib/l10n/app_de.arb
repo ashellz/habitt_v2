@@ -1037,5 +1037,10 @@
   "notificationSoundAppDefault": "App-Standard",
   "notificationSoundSystemDefault": "System-Standard",
   "optional": "Optional",
-  "becomeASupporter": "Werde Unterstützer"
+  "becomeASupporter": "Werde Unterstützer",
+  "or": "oder",
+  "buyMeACoffee": "Spendier mir einen Kaffee",
+  "makeOneTimeDonationOfAnyAmount": "Mach eine einmalige Spende in beliebiger Höhe",
+  "donate": "Spenden",
+  "everyDonationHelpsSupportFutureUpdates": "Jede Spende hilft, zukünftige Updates zu unterstützen"
 }

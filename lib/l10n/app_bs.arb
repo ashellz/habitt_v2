@@ -1027,5 +1027,10 @@
   "notificationSoundAppDefault": "Aplikacija",
   "notificationSoundSystemDefault": "Sistem",
   "optional": "Opcionalno",
-  "becomeASupporter": "Postani supporter"
+  "becomeASupporter": "Postani supporter",
+  "or": "ili",
+  "buyMeACoffee": "Časti me kahvom",
+  "makeOneTimeDonationOfAnyAmount": "Pošalji jednokratnu donaciju u bilo kojem iznosu",
+  "donate": "Doniraj",
+  "everyDonationHelpsSupportFutureUpdates": "Svaka donacija pomaže u podršci budućim nadogradnjama"
 }

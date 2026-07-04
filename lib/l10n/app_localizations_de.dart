@@ -2718,4 +2718,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get becomeASupporter => 'Werde Unterstützer';
+
+  @override
+  String get or => 'oder';
+
+  @override
+  String get buyMeACoffee => 'Spendier mir einen Kaffee';
+
+  @override
+  String get makeOneTimeDonationOfAnyAmount =>
+      'Mach eine einmalige Spende in beliebiger Höhe';
+
+  @override
+  String get donate => 'Spenden';
+
+  @override
+  String get everyDonationHelpsSupportFutureUpdates =>
+      'Jede Spende hilft, zukünftige Updates zu unterstützen';
 }
