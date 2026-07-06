@@ -125,6 +125,10 @@ class Habit extends HiveObject {
     this.timestamps['createdAt'] ??= this.createdAt;
   }
 
+  bool hasAnyProgress() {
+    return completed || amountCompleted > 0 || durationCompleted > 0;
+  }
+
   // convert to getter
   Color? resolveColor(ThemeProvider tp) {
     if (colorName != null) {

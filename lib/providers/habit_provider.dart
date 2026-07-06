@@ -98,12 +98,6 @@ class HabitProvider extends ChangeNotifier {
     habitStatsProvider = provider;
   }
 
-  /// Reloads all habit/day state from Hive.
-  ///
-  /// [animateStreakEntry] — bumps [streakEntryEpoch] so visible streak badges
-  /// replay their entrance animation. Only the constructor's cold start passes
-  /// `true`; sync, restore, and import reloads leave it `false` so applying a
-  /// delta doesn't re-trigger the animation.
   Future<void> init({bool animateStreakEntry = false}) async {
     await _loadHabits();
     refreshTodaysHabits(notify: false);
@@ -117,13 +111,6 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// One-time heal for day snapshots poisoned by the pre-fix sync merge, which
-  /// unioned habit lists across devices and could leave habits in a day that
-  /// aren't scheduled there (and are incomplete). Those strays broke
-  /// streak/consistency stats. Rewrites each stored snapshot to the same
-  /// schedule-filtered set the app writes natively. Timestamps and the
-  /// isAutoCreated flag are preserved so this does not disturb sync ordering.
-  /// Guarded by a SharedPreferences flag so it runs only once.
   static const String _daySnapshotSanitizedKey = 'daySnapshotsSanitized_v1';
 
   Future<void> _sanitizeDaySnapshots() async {
@@ -537,7 +524,7 @@ class HabitProvider extends ChangeNotifier {
           (habit) =>
               (habit.isDeleted != true) &&
               (habit.isPaused != true) &&
-              (_appearsOnDay(habit, day) || habit.completed),
+              (_appearsOnDay(habit, day) || habit.hasAnyProgress()),
         )
         .toList();
   }
