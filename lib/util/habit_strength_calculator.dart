@@ -115,8 +115,16 @@ class HabitStrengthCalculator {
     required double varianceLast30Days,
     required int overPerformanceDaysLast30,
   }) {
+    // if strength dropped too much
     if (recentDropFraction > 0.15) {
-      return HabitStrengthInsight.startSmall;
+      final n = dailyValues.length;
+      final missedTwiceInARow =
+          n >= 2 && dailyValues[n - 1] < 1.0 && dailyValues[n - 2] < 1.0;
+
+      // this is to avoid instant sheet if missed one day, annoying
+      if (missedTwiceInARow) {
+        return HabitStrengthInsight.startSmall;
+      }
     }
 
     final hasThirtyDays = strengthHistory.length >= 30;

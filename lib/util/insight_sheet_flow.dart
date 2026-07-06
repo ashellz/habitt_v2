@@ -234,6 +234,8 @@ class InsightSheetFlow {
 
     _isInsightSheetOpen = true;
     try {
+      if (!context.mounted) return;
+
       await showDialogSheet(
         context: context,
         builder: (dialogContext) {
@@ -244,10 +246,14 @@ class InsightSheetFlow {
             showSecondaryButton: !isMotivationOnly,
             secondaryButtonLabel: 'Later',
             onSecondaryButtonPressed: () {
-              // Update habit insight sheet popstoned until date
-              candidate.habit.insightPopstonedUntil = DateTime.now().add(
-                const Duration(days: 3),
-              );
+              final snoozed =
+                  candidate.habit.copy()
+                    ..insightPopstonedUntil = DateTime.now().add(
+                      const Duration(days: 3),
+                    );
+
+              // save the 3 day snooze
+              context.read<HabitProvider>().updateHabit(snoozed);
               Navigator.pop(dialogContext);
             },
             onPrimaryButtonPressed: () {
@@ -385,6 +391,10 @@ class InsightSheetFlow {
     final habitProvider = context.read<HabitProvider>();
     final updated = habit.copy();
 
+    // ignore all sheeets for 7 days
+    // this is to avoid improvement sheets right after increase target, annoying and makes no sense
+    updated.insightPopstonedUntil = DateTime.now().add(const Duration(days: 7));
+
     if (recommendation.kind == _TargetKind.amount) {
       updated.amount = recommendation.recommendedValue;
       if (updated.amountCompleted >= updated.amount) {
@@ -408,7 +418,10 @@ class InsightSheetFlow {
 
   void _applyOptionalPushHarderUpdate(BuildContext context, Habit habit) {
     final habitProvider = context.read<HabitProvider>();
-    final updated = habit.copy()..optional = false;
+    final updated =
+        habit.copy()
+          ..optional = false
+          ..insightPopstonedUntil = DateTime.now().add(const Duration(days: 7));
     habitProvider.updateHabit(updated);
   }
 

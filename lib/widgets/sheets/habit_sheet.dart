@@ -571,7 +571,17 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
     if (_isEditMode) {
       final tp = context.read<ThemeProvider>();
-      final habit = widget.habit!;
+
+      final habit = widget.habit!.copy();
+
+      if (habit.amount < sp.habitAmount ||
+          habit.duration < sp.habitDuration.inMinutes) {
+        // ignore all sheeets for 7 days
+        // this is to avoid improvement sheets right after increase target, annoying and makes no sense
+        habit.insightPopstonedUntil = DateTime.now().add(
+          const Duration(days: 7),
+        );
+      }
 
       habit.amount = sp.habitAmount;
       habit.duration = sp.habitDuration.inMinutes;
