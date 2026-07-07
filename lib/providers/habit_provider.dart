@@ -750,6 +750,62 @@ class HabitProvider extends ChangeNotifier {
     return daysProgress;
   }
 
+  // DAY PROGRESS CACHE
+
+  final Map<DateTime, double> _dayProgressCache = {}; // 0 to 1
+  int _dayProgressCacheVersion = -1;
+
+  void _ensureDayProgressCacheVersion() {
+    if (_dayProgressCacheVersion != dataVersion) {
+      _dayProgressCache.clear();
+      _dayProgressCacheVersion = dataVersion;
+    }
+  }
+
+  // Cached progress for a day or null if it hasn't been computed yet.
+  double? cachedDayProgress(DateTime day) {
+    _ensureDayProgressCacheVersion();
+    return _dayProgressCache[_normalizeDate(day)];
+  }
+
+  // Progress for day, computing and caching its whole week
+  double dayProgress(DateTime day) {
+    _ensureDayProgressCacheVersion();
+    final normalized = _normalizeDate(day);
+    final cached = _dayProgressCache[normalized];
+    if (cached != null) return cached;
+    _cacheWeekProgress(normalized);
+    return _dayProgressCache[normalized] ?? 0.0;
+  }
+
+  // Ensures every day has a cached progress value
+  void primeDayProgress(Iterable<DateTime> days) {
+    _ensureDayProgressCacheVersion();
+    for (final day in days) {
+      final normalized = _normalizeDate(day);
+      if (!_dayProgressCache.containsKey(normalized)) {
+        _cacheWeekProgress(normalized);
+      }
+    }
+  }
+
+  // Recalculate after data changes
+  double refreshDayProgress(DateTime day) {
+    _ensureDayProgressCacheVersion();
+    final normalized = _normalizeDate(day);
+    _cacheWeekProgress(normalized);
+    return _dayProgressCache[normalized] ?? 0.0;
+  }
+
+  void _cacheWeekProgress(DateTime anchorDay) {
+    final today = _normalizeDate(DateTime.now());
+    final weekProgress = getThisWeekProgress(anchorDate: anchorDay);
+    weekProgress.forEach((date, value) {
+      _dayProgressCache[date] =
+          date.isAfter(today) ? 0.0 : value.clamp(0.0, 1.0);
+    });
+  }
+
   Future<void> updateHabitInDB(Habit habit, {DateTime? day}) async {
     // debugPrint("Updating habit in DB: ${habit.name}");
     habitStatsProvider?.invalidateHabit(habit.id);
@@ -788,9 +844,6 @@ class HabitProvider extends ChangeNotifier {
         debugPrint("Habit not found in day entry");
         dayEntry.habits.add(habit);
       }
-      // Day.timestamp is final, so replace the entry entirely to update the
-      // modification time.  Without this the delta export would never include
-      // changed day data because it filters by d.timestamp.isAfter(fromTime).
       await daysBox.put(
         dayKey,
         Day(

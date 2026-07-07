@@ -4,10 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
+import 'package:habitt/widgets/main_page/downward_drag_gesture_recognizer.dart';
 import 'package:provider/provider.dart';
 
 class LastWeekProgress extends StatefulWidget {
-  const LastWeekProgress({super.key});
+  const LastWeekProgress({super.key, this.expansionController});
+  final CalendarExpansionController? expansionController;
 
   @override
   State<LastWeekProgress> createState() => _LastWeekProgressState();
@@ -16,7 +19,10 @@ class LastWeekProgress extends StatefulWidget {
 class _LastWeekProgressState extends State<LastWeekProgress>
     with AutomaticKeepAliveClientMixin<LastWeekProgress> {
   static const int _visibleDays = 7;
-  static const int _maxPastDays = 30;
+  static const int _initialPastDays = 30;
+  static const int _chunkDays = 15;
+  static const int _backfillTriggerDays = 7;
+  static const int _backfillBufferDays = 7;
   static const double _dayWidth = 45;
 
   @override
@@ -24,25 +30,37 @@ class _LastWeekProgressState extends State<LastWeekProgress>
 
   List<String> _days = const ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   final ScrollController _scrollController = ScrollController();
-  final Map<String, double> _progressValuesByDate = <String, double>{};
   final Map<String, double> _previousProgressValuesByDate = <String, double>{};
   Locale? _lastLocale;
-  bool? _didInitialScrollToRight;
+  bool _didInitialScroll = false;
   bool _isAtRightEdge = true;
   late VoidCallback _habitProviderListener;
   int _lastDataVersion = -1;
+  int _pastDaysLoaded = _initialPastDays;
+  bool _isLoadingChunk = false;
+  double _lastSpacing = 24;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_handleScroll);
+    widget.expansionController?.attachRevealDay(_revealDay);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _checkLocale();
-      _initializeAllProgressValues();
+      _primeProgressValues(_allDates);
       _attachHabitProviderListener();
       _ensureInitialScrollPosition();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant LastWeekProgress oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.expansionController != widget.expansionController) {
+      oldWidget.expansionController?.detachRevealDay(_revealDay);
+      widget.expansionController?.attachRevealDay(_revealDay);
+    }
   }
 
   void _attachHabitProviderListener() {
@@ -53,9 +71,9 @@ class _LastWeekProgressState extends State<LastWeekProgress>
       final provider = context.read<HabitProvider>();
       if (provider.dataVersion != _lastDataVersion) {
         _lastDataVersion = provider.dataVersion;
-        _progressValuesByDate.clear();
         _previousProgressValuesByDate.clear();
-        _initializeAllProgressValues();
+        // The shared cache self-clears on version change; recompute the range.
+        _primeProgressValues(_allDates);
       } else {
         _updateChangedDayProgress();
       }
@@ -63,39 +81,25 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     habitProvider.addListener(_habitProviderListener);
   }
 
-  Future<void> _initializeAllProgressValues() async {
+  /// Fills the shared provider cache for [dates]. The first week is computed
+  /// synchronously so the next frame paints real values; the rest loads in
+  /// background micro-batches.
+  Future<void> _primeProgressValues(List<DateTime> dates) async {
+    if (dates.isEmpty || !mounted) return;
     final habitProvider = context.read<HabitProvider>();
-    final allDates = _allDates;
 
-    if (allDates.isEmpty || !mounted) return;
-
-    // Load only the visible 7 days immediately so the first frame renders fast
-    final visibleStart = (allDates.length - _visibleDays).clamp(
-      0,
-      allDates.length,
-    );
+    final firstEnd = _visibleDays.clamp(0, dates.length);
     setState(() {
-      for (final date in allDates.sublist(visibleStart)) {
-        final key = _dateKey(date);
-        _progressValuesByDate[key] = _progressForDate(habitProvider, date);
-        _previousProgressValuesByDate[key] = 0.0;
-      }
+      habitProvider.primeDayProgress(dates.sublist(0, firstEnd));
     });
 
-    // Load remaining past days in background micro-batches
-    for (int i = 0; i < visibleStart; i += 7) {
+    for (int i = firstEnd; i < dates.length; i += 7) {
       if (!mounted) return;
       await Future.microtask(() {});
       if (!mounted) return;
-      final batchEnd = (i + 7).clamp(0, visibleStart);
+      final batchEnd = (i + 7).clamp(0, dates.length);
       setState(() {
-        for (final date in allDates.sublist(i, batchEnd)) {
-          final key = _dateKey(date);
-          if (!_progressValuesByDate.containsKey(key)) {
-            _progressValuesByDate[key] = _progressForDate(habitProvider, date);
-            _previousProgressValuesByDate[key] = 0.0;
-          }
-        }
+        habitProvider.primeDayProgress(dates.sublist(i, batchEnd));
       });
     }
   }
@@ -104,20 +108,19 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     final habitProvider = context.read<HabitProvider>();
     final today = _normalizeDate(DateTime.now());
 
-    // Update progress for today
     final todayKey = _dateKey(today);
-    final newTodayProgress = _progressForDate(habitProvider, today);
-    final oldTodayProgress = _progressValuesByDate[todayKey] ?? 0.0;
+    final oldTodayProgress = habitProvider.cachedDayProgress(today) ?? 0.0;
+    final newTodayProgress = habitProvider.refreshDayProgress(today);
 
     if ((newTodayProgress - oldTodayProgress).abs() > 0.0001) {
       setState(() {
         _previousProgressValuesByDate[todayKey] = oldTodayProgress;
-        _progressValuesByDate[todayKey] = newTodayProgress;
       });
       return;
     }
 
-    // If today didn't change, check the selected date
+    // if not today check selected date
+
     final selectedDate = _normalizeDate(
       habitProvider.selectedDate ?? DateTime.now(),
     );
@@ -125,13 +128,13 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     if (_isSameDay(selectedDate, today)) return;
 
     final selectedKey = _dateKey(selectedDate);
-    final newSelectedProgress = _progressForDate(habitProvider, selectedDate);
-    final oldSelectedProgress = _progressValuesByDate[selectedKey] ?? 0.0;
+    final oldSelectedProgress =
+        habitProvider.cachedDayProgress(selectedDate) ?? 0.0;
+    final newSelectedProgress = habitProvider.refreshDayProgress(selectedDate);
 
     if ((newSelectedProgress - oldSelectedProgress).abs() > 0.0001) {
       setState(() {
         _previousProgressValuesByDate[selectedKey] = oldSelectedProgress;
-        _progressValuesByDate[selectedKey] = newSelectedProgress;
       });
     }
   }
@@ -151,70 +154,109 @@ class _LastWeekProgressState extends State<LastWeekProgress>
   }
 
   void _ensureInitialScrollPosition() {
-    if (_didInitialScrollToRight == true || !_scrollController.hasClients) {
+    if (_didInitialScroll || !_scrollController.hasClients) {
       return;
     }
+    _didInitialScroll = true;
 
     final habitProvider = context.read<HabitProvider>();
     final selectedDate = habitProvider.selectedDate;
-    final allDates = _allDates;
     final today = _normalizeDate(DateTime.now());
 
-    // Keep today's selection pinned to the latest day instead of centering it.
-    if (selectedDate != null && _isSameDay(selectedDate, today)) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      _didInitialScrollToRight = true;
+    if (selectedDate == null || _isSameDay(selectedDate, today)) {
       _updateRightEdgeState();
       return;
     }
 
-    if (selectedDate != null) {
-      final normalizedSelected = _normalizeDate(selectedDate);
-      final selectedIndex = allDates.indexWhere(
-        (d) => _isSameDay(d, normalizedSelected),
+    _scrollToDate(_normalizeDate(selectedDate), animate: false);
+  }
+
+  void _scrollToDate(DateTime date, {required bool animate}) {
+    if (!_scrollController.hasClients) return;
+    final index = _allDates.indexWhere((d) => _isSameDay(d, date));
+    if (index == -1) return;
+
+    final viewportWidth = _scrollController.position.viewportDimension;
+    final itemCenter = index * (_dayWidth + _lastSpacing) + (_dayWidth / 2);
+    final targetOffset = (itemCenter - (viewportWidth / 2)).clamp(
+      0.0,
+      _scrollController.position.maxScrollExtent,
+    );
+
+    if (animate) {
+      _scrollController.animateTo(
+        targetOffset,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOut,
       );
+    } else {
+      _scrollController.jumpTo(targetOffset);
+    }
+    _updateRightEdgeState();
+  }
 
-      if (selectedIndex != -1) {
-        final viewportWidth = _scrollController.position.viewportDimension;
-        final spacing = ((viewportWidth - 32 - (_dayWidth * _visibleDays)) /
-                (_visibleDays - 1))
-            .clamp(0.0, 24.0);
+  // loads more days to until selected day is reached, also loads 15 days before it
+  // scrolls to center
+  Future<void> _revealDay(DateTime day) async {
+    if (!mounted) return;
+    final today = _normalizeDate(DateTime.now());
+    final target = _normalizeDate(day);
+    final daysBack = today.difference(target).inDays;
+    if (daysBack < 0) return;
 
-        final itemStart = selectedIndex * (_dayWidth + spacing);
-        final itemCenter = itemStart + (_dayWidth / 2);
-        final targetOffset = (itemCenter - (viewportWidth / 2)).clamp(
-          0.0,
-          _scrollController.position.maxScrollExtent,
+    if (daysBack > _pastDaysLoaded) {
+      final previousLength = _allDates.length;
+      setState(() {
+        _pastDaysLoaded = (daysBack + _backfillBufferDays).clamp(
+          0,
+          _maxPastDays,
         );
-
-        _scrollController.jumpTo(targetOffset);
-        _didInitialScrollToRight = true;
-        _updateRightEdgeState();
-        return;
-      }
+      });
+      // first load the new days then scroll later
+      await _primeProgressValues(_allDates.sublist(previousLength));
+      if (!mounted) return;
     }
 
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent + 32);
-    _didInitialScrollToRight = true;
-    _updateRightEdgeState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _scrollToDate(target, animate: true);
+    });
   }
 
   void _handleScroll() {
     if (!_scrollController.hasClients) return;
     _updateRightEdgeState();
+    _maybeLoadMorePastDays();
   }
 
   void _updateRightEdgeState() {
     if (!_scrollController.hasClients || !mounted) return;
 
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final current = _scrollController.offset;
-    final atRightEdge = current >= (maxScroll - 0.5);
+    final atRightEdge = _scrollController.offset <= 0.5;
 
     if (atRightEdge == _isAtRightEdge) return;
 
     setState(() {
       _isAtRightEdge = atRightEdge;
+    });
+  }
+
+  void _maybeLoadMorePastDays() {
+    if (_isLoadingChunk || !_scrollController.hasClients || !mounted) return;
+
+    final position = _scrollController.position;
+    final remaining = position.maxScrollExtent - position.pixels;
+    final threshold = _backfillTriggerDays * (_dayWidth + _lastSpacing);
+    if (remaining > threshold) return;
+    if (_pastDaysLoaded >= _maxPastDays) return;
+
+    _isLoadingChunk = true;
+    final previousLength = _allDates.length;
+    setState(() {
+      _pastDaysLoaded = (_pastDaysLoaded + _chunkDays).clamp(0, _maxPastDays);
+    });
+    _primeProgressValues(_allDates.sublist(previousLength)).whenComplete(() {
+      _isLoadingChunk = false;
     });
   }
 
@@ -232,14 +274,28 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     return _normalizeDate(date).toIso8601String().split('T').first;
   }
 
+  int get _futureFillDays {
+    final today = _normalizeDate(DateTime.now());
+    return (7 - today.weekday).clamp(0, 6);
+  }
+
+  // max number of days based on dateJoined and today
+  // used when loading more days to prevent loading too far back
+  int get _maxPastDays {
+    final habitProvider = context.read<HabitProvider>();
+    final today = _normalizeDate(DateTime.now());
+    final joined = _normalizeDate(habitProvider.dateJoined);
+    final sinceJoined = today.difference(joined).inDays;
+    return max(sinceJoined, _initialPastDays);
+  }
+
   List<DateTime> get _allDates {
     final today = _normalizeDate(DateTime.now());
-    final oldest = today.subtract(Duration(days: _maxPastDays));
-    final futureFillDays = (7 - today.weekday).clamp(0, 6);
+    final fill = _futureFillDays;
 
     return List<DateTime>.generate(
-      _maxPastDays + 1 + futureFillDays,
-      (index) => oldest.add(Duration(days: index)),
+      _pastDaysLoaded + 1 + fill,
+      (index) => DateTime(today.year, today.month, today.day + fill - index),
       growable: false,
     );
   }
@@ -252,19 +308,9 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     return _days[index];
   }
 
-  double _progressForDate(HabitProvider habitProvider, DateTime date) {
-    final day = _normalizeDate(date);
-    final today = _normalizeDate(DateTime.now());
-    if (day.isAfter(today)) {
-      return 0;
-    }
-
-    final weekProgress = habitProvider.getThisWeekProgress(anchorDate: day);
-    return (weekProgress[day] ?? 0.0).clamp(0.0, 1.0);
-  }
-
   @override
   void dispose() {
+    widget.expansionController?.detachRevealDay(_revealDay);
     _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
     try {
@@ -290,7 +336,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     final showRightArrowHint = !_isAtRightEdge;
     final rightFadeWidth = showRightArrowHint ? 96.0 : 32.0;
 
-    return SizedBox(
+    final strip = SizedBox(
       height: 79,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -299,6 +345,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                       (_dayWidth * _visibleDays)) /
                   (_visibleDays - 1))
               .clamp(0.0, 24.0);
+          _lastSpacing = spacing;
 
           final allDates = _allDates;
           final today = _normalizeDate(DateTime.now());
@@ -310,6 +357,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                   controller: _scrollController,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
+                  reverse: true,
                   padding: EdgeInsets.zero,
                   itemCount: allDates.length,
                   separatorBuilder: (_, __) => SizedBox(width: spacing),
@@ -323,7 +371,10 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                     final isToday = _isSameDay(date, today);
 
                     final progressValue =
-                        _progressValuesByDate[dayKey]?.clamp(0.0, 1.0) ?? 0.0;
+                        habitProvider
+                            .cachedDayProgress(date)
+                            ?.clamp(0.0, 1.0) ??
+                        0.0;
                     final previousValue =
                         _previousProgressValuesByDate[dayKey]?.clamp(
                           0.0,
@@ -390,13 +441,14 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                     final isAndroid =
                         Theme.of(context).platform == TargetPlatform.android;
 
-                    final isLast = index == allDates.length - 1;
-                    final isFirst = index == 0;
+                    // index 0 is the newest day, reversed list
+                    final isNewest = index == 0;
+                    final isOldest = index == allDates.length - 1;
 
                     return Padding(
                       padding: EdgeInsets.only(
-                        left: isFirst ? 16 : 0,
-                        right: isLast ? 16 : 0,
+                        left: isOldest ? 16 : 0,
+                        right: isNewest ? 16 : 0,
                       ),
                       child: SizedBox(
                         width: _dayWidth,
@@ -505,7 +557,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                 GestureDetector(
                   onTap:
                       () => _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
+                        0.0,
                         duration: const Duration(milliseconds: 400),
                         curve: Curves.easeOut,
                       ),
@@ -580,6 +632,40 @@ class _LastWeekProgressState extends State<LastWeekProgress>
             ),
           );
         },
+      ),
+    );
+
+    final expansionController = widget.expansionController;
+    if (expansionController == null) {
+      return strip;
+    }
+
+    // downward drag using custom gesture recognizer
+
+    return AnimatedBuilder(
+      animation: expansionController.animation,
+      builder: (context, child) {
+        final t = expansionController.animation.value;
+        return Opacity(opacity: (1 - t / 0.3).clamp(0.0, 1.0), child: child);
+      },
+      child: RawGestureDetector(
+        behavior: HitTestBehavior.translucent,
+        gestures: <Type, GestureRecognizerFactory>{
+          DownwardDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+            DownwardDragGestureRecognizer
+          >(() => DownwardDragGestureRecognizer(debugOwner: this), (
+            recognizer,
+          ) {
+            recognizer.onUpdate =
+                (details) => expansionController.onDragUpdate(details.delta.dy);
+            recognizer.onEnd =
+                (details) => expansionController.onDragEnd(
+                  details.velocity.pixelsPerSecond.dy,
+                );
+            recognizer.onCancel = () => expansionController.onDragEnd(0);
+          }),
+        },
+        child: strip,
       ),
     );
   }
