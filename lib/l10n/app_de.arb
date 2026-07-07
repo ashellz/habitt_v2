@@ -1042,5 +1042,8 @@
   "buyMeACoffee": "Spendier mir einen Kaffee",
   "makeOneTimeDonationOfAnyAmount": "Mach eine einmalige Spende in beliebiger Höhe",
   "donate": "Spenden",
-  "everyDonationHelpsSupportFutureUpdates": "Jede Spende hilft, zukünftige Updates zu unterstützen"
+  "everyDonationHelpsSupportFutureUpdates": "Jede Spende hilft, zukünftige Updates zu unterstützen",
+  "today": "Heute",
+  "showCategoriesOnMainPage": "Gewohnheitskategorien",
+  "showCategoriesOnMainPageDesc": "Über deinen Gewohnheiten auf der Startseite erscheint ein Kategoriefilter."
 }

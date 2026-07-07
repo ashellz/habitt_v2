@@ -1042,5 +1042,8 @@
   "buyMeACoffee": "Invítame un café",
   "makeOneTimeDonationOfAnyAmount": "Haz una donación única de cualquier cantidad",
   "donate": "Donar",
-  "everyDonationHelpsSupportFutureUpdates": "Cada donación ayuda a impulsar futuras actualizaciones"
+  "everyDonationHelpsSupportFutureUpdates": "Cada donación ayuda a impulsar futuras actualizaciones",
+  "today": "Hoy",
+  "showCategoriesOnMainPage": "Categorías de hábitos",
+  "showCategoriesOnMainPageDesc": "Aparecerá un filtro de categorías encima de tus hábitos en la pantalla de inicio."
 }

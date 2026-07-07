@@ -2715,4 +2715,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get everyDonationHelpsSupportFutureUpdates =>
       'Every donation helps support future updates';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get showCategoriesOnMainPage => 'Habit categories';
+
+  @override
+  String get showCategoriesOnMainPageDesc =>
+      'A category filter will appear above your habits on the home screen.';
 }

@@ -1049,5 +1049,8 @@
   "buyMeACoffee": "Buy me a coffee",
   "makeOneTimeDonationOfAnyAmount": "Make a one-time donation of any amount",
   "donate": "Donate",
-  "everyDonationHelpsSupportFutureUpdates": "Every donation helps support future updates"
+  "everyDonationHelpsSupportFutureUpdates": "Every donation helps support future updates",
+  "today": "Today",
+  "showCategoriesOnMainPage": "Habit categories",
+  "showCategoriesOnMainPageDesc": "A category filter will appear above your habits on the home screen."
 }

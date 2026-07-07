@@ -35,6 +35,8 @@ enum Colorfulness {
 class PreferencesProvider extends ChangeNotifier {
   static const String _kShowUploadActivityKey = 'show_upload_activity';
   static const String _kShowStreakCelebrationKey = 'show_streak_celebration';
+  static const String _kShowCategoriesOnMainPageKey =
+      'show_categories_on_main_page';
 
   bool _glassFeel = true;
   // colorful interface level
@@ -42,12 +44,14 @@ class PreferencesProvider extends ChangeNotifier {
   bool _americanTimeFormat = false;
   bool _showUploadActivity = true;
   bool _showStreakCelebration = true;
+  bool _showCategoriesOnMainPage = false;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
   bool get americanTimeFormat => _americanTimeFormat;
   bool get showUploadActivity => _showUploadActivity;
   bool get showStreakCelebration => _showStreakCelebration;
+  bool get showCategoriesOnMainPage => _showCategoriesOnMainPage;
 
   SharedPreferences? _prefs;
 
@@ -62,6 +66,8 @@ class PreferencesProvider extends ChangeNotifier {
     _showUploadActivity = _prefs?.getBool(_kShowUploadActivityKey) ?? true;
     _showStreakCelebration =
         _prefs?.getBool(_kShowStreakCelebrationKey) ?? true;
+    _showCategoriesOnMainPage =
+        _prefs?.getBool(_kShowCategoriesOnMainPageKey) ?? false;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
     notifyListeners();
@@ -95,6 +101,12 @@ class PreferencesProvider extends ChangeNotifier {
   void setShowStreakCelebration(bool value) {
     _showStreakCelebration = value;
     _prefs?.setBool(_kShowStreakCelebrationKey, value);
+    notifyListeners();
+  }
+
+  void setShowCategoriesOnMainPage(bool value) {
+    _showCategoriesOnMainPage = value;
+    _prefs?.setBool(_kShowCategoriesOnMainPageKey, value);
     notifyListeners();
   }
 }

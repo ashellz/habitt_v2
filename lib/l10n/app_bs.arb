@@ -1032,5 +1032,8 @@
   "buyMeACoffee": "Časti me kahvom",
   "makeOneTimeDonationOfAnyAmount": "Pošalji jednokratnu donaciju u bilo kojem iznosu",
   "donate": "Doniraj",
-  "everyDonationHelpsSupportFutureUpdates": "Svaka donacija pomaže u podršci budućim nadogradnjama"
+  "everyDonationHelpsSupportFutureUpdates": "Svaka donacija pomaže u podršci budućim nadogradnjama",
+  "today": "Danas",
+  "showCategoriesOnMainPage": "Kategorije navika",
+  "showCategoriesOnMainPageDesc": "Iznad tvojih navika na početnoj pojaviće se filter kategorija."
 }

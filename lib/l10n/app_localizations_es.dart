@@ -2730,4 +2730,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get everyDonationHelpsSupportFutureUpdates =>
       'Cada donación ayuda a impulsar futuras actualizaciones';
+
+  @override
+  String get today => 'Hoy';
+
+  @override
+  String get showCategoriesOnMainPage => 'Categorías de hábitos';
+
+  @override
+  String get showCategoriesOnMainPageDesc =>
+      'Aparecerá un filtro de categorías encima de tus hábitos en la pantalla de inicio.';
 }

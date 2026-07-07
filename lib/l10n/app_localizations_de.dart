@@ -2735,4 +2735,14 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get everyDonationHelpsSupportFutureUpdates =>
       'Jede Spende hilft, zukünftige Updates zu unterstützen';
+
+  @override
+  String get today => 'Heute';
+
+  @override
+  String get showCategoriesOnMainPage => 'Gewohnheitskategorien';
+
+  @override
+  String get showCategoriesOnMainPageDesc =>
+      'Über deinen Gewohnheiten auf der Startseite erscheint ein Kategoriefilter.';
 }

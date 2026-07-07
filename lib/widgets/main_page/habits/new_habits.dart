@@ -314,7 +314,7 @@ class _NewHabitsState extends State<NewHabits>
 
     return Padding(
       key: ValueKey('category-$dayKey-$categoryId'),
-      padding: const EdgeInsets.only(top: 12),
+      padding: EdgeInsets.only(top: 12),
       child: Transform.translate(
         offset: Offset(0, translateY),
         child: Transform.scale(

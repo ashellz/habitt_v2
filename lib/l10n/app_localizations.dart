@@ -4593,6 +4593,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Every donation helps support future updates'**
   String get everyDonationHelpsSupportFutureUpdates;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @showCategoriesOnMainPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit categories'**
+  String get showCategoriesOnMainPage;
+
+  /// No description provided for @showCategoriesOnMainPageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'A category filter will appear above your habits on the home screen.'**
+  String get showCategoriesOnMainPageDesc;
 }
 
 class _AppLocalizationsDelegate

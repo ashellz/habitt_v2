@@ -1,8 +1,12 @@
 import 'package:confetti/confetti.dart';
+import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/util/get_capitalized_first.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/util/insight_sheet_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
@@ -283,13 +287,44 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     _hasHabitListener = true;
   }
 
+  bool isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
+
+  String _selectedDayLabel(BuildContext context) {
+    final habitProvider = context.watch<HabitProvider>();
+    final now = DateTime.now();
+
+    final selectedDay = habitProvider.selectedDate ?? now;
+
+    if (isToday(selectedDay)) {
+      final loc = AppLocalizations.of(context)!;
+      return loc.today;
+    }
+
+    final locale = Localizations.localeOf(context).toString();
+    final formatted = DateFormat('EEE, d MMM', locale).format(selectedDay);
+    final parts = formatted.split(', ');
+    if (parts.length != 2) {
+      return capitalizeFirst(formatted);
+    }
+
+    final dayPart = capitalizeFirst(parts[0]);
+    final datePart = parts[1].split(' ').map(capitalizeFirst).join(' ');
+    return '$dayPart, $datePart';
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final habitProvider = context.watch<HabitProvider>();
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     const bottomNavBar = 95;
 
-    final habits = context.watch<HabitProvider>().todaysHabits;
+    final habits = habitProvider.todaysHabits;
     final requiredHabits = habits.where((habit) => !habit.optional);
 
     final bool allCompleted =
@@ -325,9 +360,57 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 color: cp.habitBg,
                 child: Column(
                   children: [
-                    NewCategoriesList(),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        return SizeTransition(
+                          sizeFactor: animation,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey(habitProvider.selectedDate),
+                        child:
+                            isToday(
+                                  habitProvider.selectedDate ?? DateTime.now(),
+                                )
+                                ? SizedBox.shrink()
+                                : Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    top: 16,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        _selectedDayLabel(context),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color:
+                                              cp.isDark
+                                                  ? cp.lightGreyText
+                                                  : cp.greyText,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                      ),
+                    ),
+                    if (context
+                        .watch<PreferencesProvider>()
+                        .showCategoriesOnMainPage)
+                      NewCategoriesList(),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 8,
+                      ),
                       child: NewHabits(),
                     ),
                     SizedBox(height: bottomPadding + bottomNavBar),

@@ -2713,4 +2713,14 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get everyDonationHelpsSupportFutureUpdates =>
       'Svaka donacija pomaže u podršci budućim nadogradnjama';
+
+  @override
+  String get today => 'Danas';
+
+  @override
+  String get showCategoriesOnMainPage => 'Kategorije navika';
+
+  @override
+  String get showCategoriesOnMainPageDesc =>
+      'Iznad tvojih navika na početnoj pojaviće se filter kategorija.';
 }
