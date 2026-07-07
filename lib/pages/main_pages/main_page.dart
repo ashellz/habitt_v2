@@ -189,6 +189,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             Positioned.fill(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
+                onVerticalDragUpdate:
+                    (details) => _handleCalendarDragUpdate(details.delta.dy),
+                onVerticalDragEnd:
+                    (details) => _handleCalendarDragEnd(
+                      details.velocity.pixelsPerSecond.dy,
+                    ),
                 onTap: _collapseCalendar,
                 child: ColoredBox(
                   color: cp.greyText.darken().withValues(alpha: 0.3 * t),
