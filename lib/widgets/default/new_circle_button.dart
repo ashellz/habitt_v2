@@ -18,6 +18,7 @@ class NewCircleButton extends StatefulWidget {
     this.textColor,
     this.onPressed,
     this.padding,
+    this.native = true,
   });
 
   final String svgPath;
@@ -28,6 +29,7 @@ class NewCircleButton extends StatefulWidget {
   final double height;
   final EdgeInsets? padding;
   final VoidCallback? onPressed;
+  final bool native;
 
   @override
   State<NewCircleButton> createState() => _NewCircleButtonState();
@@ -53,7 +55,7 @@ class _NewCircleButtonState extends State<NewCircleButton> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
 
-    if (_supportsLiquidGlass) {
+    if (_supportsLiquidGlass && widget.native) {
       return SizedBox(
         height: widget.height,
         width: widget.width,

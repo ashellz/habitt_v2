@@ -56,19 +56,18 @@ class _MainPageTopSectionState extends State<MainPageTopSection>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Greeting(),
-                NewCircleButton(
-                  svgPath: "assets/images/new-svg/settings.svg",
-                  cnIcon: CNSymbol("gearshape", size: 16),
 
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SettingsPage(),
-                      ),
-                    );
-                  },
-                ),
+                if (expansionController == null)
+                  _settingsButton(context, native: true)
+                else
+                  AnimatedBuilder(
+                    animation: expansionController.animation,
+                    builder:
+                        (context, _) => _settingsButton(
+                          context,
+                          native: expansionController.animation.value <= 0.2,
+                        ),
+                  ),
               ],
             ),
           ),
@@ -89,6 +88,20 @@ class _MainPageTopSectionState extends State<MainPageTopSection>
             const SizedBox(height: 4),
         ],
       ),
+    );
+  }
+
+  Widget _settingsButton(BuildContext context, {required bool native}) {
+    return NewCircleButton(
+      svgPath: "assets/images/new-svg/settings.svg",
+      cnIcon: CNSymbol("gearshape", size: 16),
+      native: native,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingsPage()),
+        );
+      },
     );
   }
 }
