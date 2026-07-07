@@ -211,6 +211,14 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
       }
     }
 
+    final liveHabit =
+        isToday
+            ? widget.habit
+            : habitProvider.habits.firstWhere(
+              (h) => h.id == widget.habit.id,
+              orElse: () => widget.habit,
+            );
+
     // Check if completed state changed and trigger animation
     if (widget.habit.completed != _previousCompleted) {
       _previousCompleted = widget.habit.completed;
@@ -288,12 +296,12 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
                 opacity: _streakFadeAnimation,
                 child: SlideTransition(
                   position: _streakSlideAnimation,
+                  // reason for using a live habit streak here is to display it consistently when doing the exit animations
+                  // so it doesnt suddenly just show another streak value or disappear completely if no streak is present on that old habit object
                   child: StreakBadge(
                     streak:
-                        widget.habit.streak +
-                        (widget.habit.streak > 0 && widget.habit.completed
-                            ? 1
-                            : 0),
+                        liveHabit.streak +
+                        (liveHabit.streak > 0 && liveHabit.completed ? 1 : 0),
                   ),
                 ),
               ),
