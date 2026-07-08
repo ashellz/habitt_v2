@@ -316,25 +316,6 @@ class HabitProvider extends ChangeNotifier {
     await _normalizeHabitOrders();
     _sortHabitsByCategoryAndOrder(habits);
     await _hydrateHabitCreatedAtFallbacks();
-    /*
-    bool checkCategory(int category) {
-      return category == 1 || category == 2 || category == 3 || category == 4;
-    }
-
-    // Deletes all habits which category isnt 1,2,3 or 4
-    habits.removeWhere((habit) => !checkCategory(habit.categoryId));
-
-    // Also delete all of those habits from the database
-    for (final habit in habitBox.values) {
-      if (!checkCategory(habit.categoryId)) {
-        await habit.delete();
-      }
-    }
-
-    // Also delete from the days database
-    for (final day in daysBox.values) {
-      day.habits.removeWhere((habit) => !checkCategory(habit.categoryId));
-    }*/
   }
 
   Future<void> _hydrateHabitCreatedAtFallbacks() async {
@@ -412,6 +393,26 @@ class HabitProvider extends ChangeNotifier {
     return _isSameMonth(ts.toLocal(), day) ? habit.timesCompletedThisMonth : 0;
   }
 
+  int _daysLeftInWeek(DateTime day) => 8 - day.weekday;
+
+  int _daysLeftInMonth(DateTime day) {
+    final daysInMonth = DateTime(day.year, day.month + 1, 0).day;
+    return daysInMonth - day.day + 1;
+  }
+
+  bool _isCriticalWeekDay(Habit progressSource, DateTime day, int target) {
+    final owed = target - _effectiveTimesCompletedThisWeek(progressSource, day);
+    if (owed <= 0) return false;
+    return owed >= _daysLeftInWeek(day);
+  }
+
+  bool _isCriticalMonthDay(Habit progressSource, DateTime day, int target) {
+    final owed =
+        target - _effectiveTimesCompletedThisMonth(progressSource, day);
+    if (owed <= 0) return false;
+    return owed >= _daysLeftInMonth(day);
+  }
+
   // Used for building the dates when habit should appear for a habit with custom schedule
   List<String> _buildCustomAppearance({
     required DateTime anchor,
@@ -463,8 +464,8 @@ class HabitProvider extends ChangeNotifier {
     habit.timestamps['lastCustomUpdate'] = now;
   }
 
-  // Here we check if a habit appears on a given day
-  bool _appearsOnDay(Habit habit, DateTime day) {
+  // Here we check if a habit appears on a given day.
+  bool _appearsOnDay(Habit habit, DateTime day, {Habit? progressHabit}) {
     if (habit.isDeleted == true) {
       return false;
     }
@@ -472,6 +473,8 @@ class HabitProvider extends ChangeNotifier {
       return false;
     }
     final normalizedDay = _normalizeDate(day);
+    final today = _normalizeDate(DateTime.now());
+    final isToday = normalizedDay == today;
     switch (habit.scheduleType) {
       case ScheduleType.daily:
         return true;
@@ -479,20 +482,35 @@ class HabitProvider extends ChangeNotifier {
         if (habit.selectedDaysAWeek.isNotEmpty) {
           return habit.selectedDaysAWeek.contains(normalizedDay.weekday);
         }
-        final weeklyCount = _effectiveTimesCompletedThisWeek(
-          habit,
+        if (isToday) {
+          final weeklyCount = _effectiveTimesCompletedThisWeek(
+            habit,
+            normalizedDay,
+          );
+          return weeklyCount < habit.weeklyTarget;
+        }
+
+        return _isCriticalWeekDay(
+          progressHabit ?? habit,
           normalizedDay,
+          habit.weeklyTarget,
         );
-        return weeklyCount < habit.weeklyTarget;
       case ScheduleType.monthly:
         if (habit.selectedDaysAMonth.isNotEmpty) {
           return habit.selectedDaysAMonth.contains(normalizedDay.day);
         }
-        final monthlyCount = _effectiveTimesCompletedThisMonth(
-          habit,
+        if (isToday) {
+          final monthlyCount = _effectiveTimesCompletedThisMonth(
+            habit,
+            normalizedDay,
+          );
+          return monthlyCount < habit.monthlyTarget;
+        }
+        return _isCriticalMonthDay(
+          progressHabit ?? habit,
           normalizedDay,
+          habit.monthlyTarget,
         );
-        return monthlyCount < habit.monthlyTarget;
       case ScheduleType.custom:
         _ensureCustomAppearance(habit, normalizedDay);
         final key = normalizedDay.toIso8601String().split('T').first;
@@ -504,15 +522,7 @@ class HabitProvider extends ChangeNotifier {
     return _appearsOnDay(habit, day);
   }
 
-  /// Public schedule filter for a stored day snapshot. Returns only the habits
-  /// that actually count for [day] — scheduled (or completed), not paused, not
-  /// deleted — using the exact same rule the home "last week" progress uses.
-  ///
-  /// Stats/streak/consistency reads MUST go through this. The sync merge unions
-  /// habit lists across devices into a day snapshot; without this filter,
-  /// habits that aren't scheduled on a given day (and are left incomplete) would
-  /// be miscounted as unmet requirements, dropping the day below 100% and
-  /// breaking streaks even though the home view shows the day as complete.
+  // public verson of filtered habits for day
   List<Habit> habitsCountingForDay(DateTime day, List<Habit> source) {
     return _filteredHabitsForDay(day, source);
   }
@@ -1423,7 +1433,6 @@ class HabitProvider extends ChangeNotifier {
 
       for (final day in sortedDays) {
         final normalizedDay = _normalizeDate(day.date);
-        if (!_appearsOnDay(habit, normalizedDay)) continue;
 
         Habit? dayHabit;
         for (final candidate in day.habits) {
@@ -1433,6 +1442,13 @@ class HabitProvider extends ChangeNotifier {
           }
         }
         if (dayHabit == null) continue;
+
+        final appears = _appearsOnDay(
+          habit,
+          normalizedDay,
+          progressHabit: dayHabit,
+        );
+        if (!appears && !dayHabit.hasAnyProgress()) continue;
 
         if (dayHabit.completed) {
           currentRun++;
@@ -1491,11 +1507,6 @@ class HabitProvider extends ChangeNotifier {
       for (final day in sortedDays) {
         final normalizedDay = _normalizeDate(day.date);
 
-        if (!_appearsOnDay(habit, normalizedDay)) {
-          // If it doenst appear on this day, we skip it, it doesnt affect the streak
-          continue;
-        }
-
         Habit? dayHabit;
         // We get the correct habit
         for (final candidate in day.habits) {
@@ -1506,6 +1517,17 @@ class HabitProvider extends ChangeNotifier {
         }
 
         if (dayHabit == null) {
+          continue;
+        }
+
+        final appears = _appearsOnDay(
+          habit,
+          normalizedDay,
+          progressHabit: dayHabit,
+        );
+        if (!appears && !dayHabit.hasAnyProgress()) {
+          // If it doesn't appear on this day and has no progress, we skip
+          // it, it doesn't affect the streak
           continue;
         }
 
