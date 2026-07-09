@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/language_option.dart';
@@ -7,10 +9,10 @@ class LanguageProvider extends ChangeNotifier {
   LanguageProvider(this._prefs, [Locale? initialLocale])
     : _locale = initialLocale;
 
-  static const String _localeCodeKey = 'app_locale_code';
+  static const String _localeCodeKey = 'app_locale_code_test1';
 
   final SharedPreferences _prefs;
-  Locale? _locale;
+  Locale? _locale; // null if not set or not supported
   LanguageOption? get currentLanguage =>
       _locale == null
           ? null
@@ -18,9 +20,15 @@ class LanguageProvider extends ChangeNotifier {
 
   Locale? get locale => _locale;
 
+  // used before the provider is inited, to get the initial locale from shared preferences
   static LanguageProvider fromPrefs(SharedPreferences prefs) {
+    debugPrint('[LanguageProvider] Loading locale from prefs');
     final localeCode = prefs.getString(_localeCodeKey);
+    debugPrint('[LanguageProvider] locale code: $localeCode');
+
     final locale = _supportedLocaleFromCode(localeCode);
+    debugPrint('[LanguageProvider] locale: $locale');
+    // locale is currently gonna be null if localeCode is not supported
     return LanguageProvider(prefs, locale);
   }
 
@@ -51,16 +59,22 @@ class LanguageProvider extends ChangeNotifier {
   }
 
   static Locale? _supportedLocaleFromCode(String? localeCode) {
+    // if localecode is null or empty it will use system locale
+    // if none of them match suopported locales, it will default to english
+
     if (localeCode == null || localeCode.isEmpty) {
-      return null;
+      localeCode = PlatformDispatcher.instance.locale.languageCode;
     }
 
     for (final locale in AppLocalizations.supportedLocales) {
+      debugPrint(
+        'Checking supported locale: ${locale.languageCode} against $localeCode',
+      );
       if (locale.languageCode == localeCode) {
         return locale;
       }
     }
 
-    return null;
+    return Locale('en');
   }
 }

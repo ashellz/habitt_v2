@@ -16,9 +16,10 @@ class LanguageSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final lp = context.watch<LanguageProvider>();
-    final locale = Localizations.localeOf(context);
-    final lc = locale.languageCode.toUpperCase();
-    final flagPath = LanguageOption.fromLanguageCode(locale.languageCode)?.svgPath;
+
+    final currentLanguage = lp.currentLanguage;
+    final lc = currentLanguage?.languageCode.toUpperCase() ?? 'EN';
+    final flagPath = currentLanguage?.svgPath ?? LanguageOption.english.svgPath;
 
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
 

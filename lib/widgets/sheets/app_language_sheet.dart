@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/settings/lanugage_option_widget.dart';
+import 'package:habitt/widgets/settings/language_option_widget.dart';
 
 class AppLanguageSheet extends StatelessWidget {
   const AppLanguageSheet({

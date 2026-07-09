@@ -348,7 +348,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
 
     Widget getHomePage() {
-      final didOnboard = widget.prefs.getBool('didOnboard');
+      final didOnboard = widget.prefs.getBool('didOnboard_test1');
       if (didOnboard == null || !didOnboard) {
         return const OnboardingPages();
       } else {
@@ -390,7 +390,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         isIOS
             ? CupertinoApp(
               navigatorKey: NotificationActionHandler.navigatorKey,
-              navigatorObservers: [CNTabBarRouteObserver(), HabitRouteTracker()],
+              navigatorObservers: [
+                CNTabBarRouteObserver(),
+                HabitRouteTracker(),
+              ],
               title: 'habitt',
               debugShowCheckedModeBanner: false,
               theme: cupertinoTheme,
@@ -419,7 +422,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             )
             : MaterialApp(
               navigatorKey: NotificationActionHandler.navigatorKey,
-              navigatorObservers: [CNTabBarRouteObserver(), HabitRouteTracker()],
+              navigatorObservers: [
+                CNTabBarRouteObserver(),
+                HabitRouteTracker(),
+              ],
               title: 'habitt',
               debugShowCheckedModeBanner: false,
               theme: theme,

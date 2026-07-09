@@ -1482,7 +1482,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> assignStreaks([int? onlyHabitId]) async {
-    debugPrint("Assigning streaks");
+    // debugPrint("Assigning streaks");
 
     final sortedDays = daysBox.values.toList();
     // Getting all days from the database and sorting them from newest to oldest
