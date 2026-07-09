@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/util/past_day_hint.dart';
+import 'package:habitt/widgets/default/past_day_hint_dot.dart';
 import 'package:habitt/widgets/main_page/last_week_progress.dart'
     show PartialArcPainter;
 import 'package:intl/intl.dart';
@@ -376,6 +379,18 @@ class _MonthProgressCalendarState extends State<MonthProgressCalendar> {
       return cp.disabled;
     }
 
+    final preferencesProvider = context.read<PreferencesProvider>();
+
+    final pastDayHintEligible = isPastDayHintEligible(
+      dateJoined: habitProvider.dateJoined,
+      hasSelectedPastDay: preferencesProvider.hasSelectedPastDay,
+    );
+    final yesterday = _normalize(
+      DateTime.now(),
+    ).subtract(const Duration(days: 1));
+
+    final showHintDot = pastDayHintEligible && _normalize(day) == yesterday;
+
     return Center(
       child: Container(
         width: 45,
@@ -386,28 +401,35 @@ class _MonthProgressCalendarState extends State<MonthProgressCalendar> {
             side: BorderSide(color: getBorderColor(), width: 1),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            Text(
-              '${day.day}',
-              style: TextStyle(
-                color: getDayNumberColor(),
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: 27,
-              child: CustomPaint(
-                painter: PartialArcPainter(
-                  progress: progressValue,
-                  color: progressColor(),
-                  backgroundColor: emptyProgressColor(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${day.day}',
+                  style: TextStyle(
+                    color: getDayNumberColor(),
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: 27,
+                  child: CustomPaint(
+                    painter: PartialArcPainter(
+                      progress: progressValue,
+                      color: progressColor(),
+                      backgroundColor: emptyProgressColor(),
+                    ),
+                  ),
+                ),
+              ],
             ),
+            if (showHintDot)
+              const Positioned(top: 2, right: 2, child: PastDayHintDot()),
           ],
         ),
       ),

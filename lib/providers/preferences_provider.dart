@@ -37,6 +37,7 @@ class PreferencesProvider extends ChangeNotifier {
   static const String _kShowStreakCelebrationKey = 'show_streak_celebration';
   static const String _kShowCategoriesOnMainPageKey =
       'show_categories_on_main_page';
+  static const String _kHasSelectedPastDayKey = 'has_selected_past_day';
 
   bool _glassFeel = true;
   // colorful interface level
@@ -45,6 +46,7 @@ class PreferencesProvider extends ChangeNotifier {
   bool _showUploadActivity = true;
   bool _showStreakCelebration = true;
   bool _showCategoriesOnMainPage = false;
+  bool _hasSelectedPastDay = false;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
@@ -52,6 +54,7 @@ class PreferencesProvider extends ChangeNotifier {
   bool get showUploadActivity => _showUploadActivity;
   bool get showStreakCelebration => _showStreakCelebration;
   bool get showCategoriesOnMainPage => _showCategoriesOnMainPage;
+  bool get hasSelectedPastDay => _hasSelectedPastDay;
 
   SharedPreferences? _prefs;
 
@@ -68,6 +71,7 @@ class PreferencesProvider extends ChangeNotifier {
         _prefs?.getBool(_kShowStreakCelebrationKey) ?? true;
     _showCategoriesOnMainPage =
         _prefs?.getBool(_kShowCategoriesOnMainPageKey) ?? false;
+    _hasSelectedPastDay = _prefs?.getBool(_kHasSelectedPastDayKey) ?? false;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
     notifyListeners();
@@ -107,6 +111,13 @@ class PreferencesProvider extends ChangeNotifier {
   void setShowCategoriesOnMainPage(bool value) {
     _showCategoriesOnMainPage = value;
     _prefs?.setBool(_kShowCategoriesOnMainPageKey, value);
+    notifyListeners();
+  }
+
+  void setHasSelectedPastDay(bool value) {
+    if (_hasSelectedPastDay == value) return;
+    _hasSelectedPastDay = value;
+    _prefs?.setBool(_kHasSelectedPastDayKey, value);
     notifyListeners();
   }
 }

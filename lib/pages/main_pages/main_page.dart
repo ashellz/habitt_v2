@@ -166,6 +166,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void _onCalendarDaySelected(DateTime day) {
+    final now = DateTime.now();
+    final isToday =
+        day.year == now.year && day.month == now.month && day.day == now.day;
+    if (!isToday) {
+      context.read<PreferencesProvider>().setHasSelectedPastDay(true);
+    }
     context.read<HabitProvider>().setSelectedDate(day);
     _calendarExpansion.revealDay(day);
     _collapseCalendar();

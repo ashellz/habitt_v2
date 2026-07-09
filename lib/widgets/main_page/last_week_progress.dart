@@ -4,6 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/util/past_day_hint.dart';
+import 'package:habitt/widgets/default/past_day_hint_dot.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/downward_drag_gesture_recognizer.dart';
 import 'package:provider/provider.dart';
@@ -164,6 +167,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     final today = _normalizeDate(DateTime.now());
 
     if (selectedDate == null || _isSameDay(selectedDate, today)) {
+      _maybeScrollForPastDayHint();
       _updateRightEdgeState();
       return;
     }
@@ -300,6 +304,25 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     );
   }
 
+  void _maybeScrollForPastDayHint() {
+    if (!mounted || !_scrollController.hasClients) return;
+    final habitProvider = context.read<HabitProvider>();
+    final preferencesProvider = context.read<PreferencesProvider>();
+    final eligible = isPastDayHintEligible(
+      dateJoined: habitProvider.dateJoined,
+      hasSelectedPastDay: preferencesProvider.hasSelectedPastDay,
+    );
+    if (!eligible) return;
+
+    final today = _normalizeDate(DateTime.now());
+    final yesterday = today.subtract(const Duration(days: 1));
+    final index = _allDates.indexWhere((d) => _isSameDay(d, yesterday));
+    if (index == -1 || index < _visibleDays) return;
+
+    _scrollController.jumpTo(_dayWidth + _lastSpacing);
+    _updateRightEdgeState();
+  }
+
   String _dayLabel(DateTime date) {
     final index = date.weekday - 1;
     if (index < 0 || index >= _days.length) {
@@ -332,9 +355,17 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     );
 
     final cp = context.watch<ColorProvider>();
+    final preferencesProvider = context.watch<PreferencesProvider>();
     final darkMode = cp.isDark;
     final showRightArrowHint = !_isAtRightEdge;
     final rightFadeWidth = showRightArrowHint ? 96.0 : 32.0;
+    final pastDayHintEligible = isPastDayHintEligible(
+      dateJoined: habitProvider.dateJoined,
+      hasSelectedPastDay: preferencesProvider.hasSelectedPastDay,
+    );
+    final yesterday = _normalizeDate(
+      DateTime.now(),
+    ).subtract(const Duration(days: 1));
 
     final strip = SizedBox(
       height: 79,
@@ -444,6 +475,8 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                     // index 0 is the newest day, reversed list
                     final isNewest = index == 0;
                     final isOldest = index == allDates.length - 1;
+                    final showHintDot =
+                        pastDayHintEligible && _isSameDay(date, yesterday);
 
                     return Padding(
                       padding: EdgeInsets.only(
@@ -452,35 +485,42 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                       ),
                       child: SizedBox(
                         width: _dayWidth,
-                        child: ElevatedButton(
-                          onPressed:
-                              isSelectable
-                                  ? () {
-                                    context
-                                        .read<HabitProvider>()
-                                        .setSelectedDate(date);
-                                  }
-                                  : null,
-                          style: ButtonStyle(
-                            side: WidgetStatePropertyAll(
-                              BorderSide(color: getBorderColor(), width: 1),
-                            ),
-                            minimumSize: const WidgetStatePropertyAll(
-                              Size(45, 79),
-                            ),
-                            maximumSize: const WidgetStatePropertyAll(
-                              Size(45, 79),
-                            ),
-                            fixedSize: const WidgetStatePropertyAll(
-                              Size(45, 79),
-                            ),
-                            splashFactory:
-                                isAndroid ? null : NoSplash.splashFactory,
-                            elevation: const WidgetStatePropertyAll(0),
-                            overlayColor:
-                                WidgetStateProperty.resolveWith<Color?>((
-                                  states,
-                                ) {
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            ElevatedButton(
+                              onPressed:
+                                  isSelectable
+                                      ? () {
+                                        if (!isToday) {
+                                          context
+                                              .read<PreferencesProvider>()
+                                              .setHasSelectedPastDay(true);
+                                        }
+                                        context
+                                            .read<HabitProvider>()
+                                            .setSelectedDate(date);
+                                      }
+                                      : null,
+                              style: ButtonStyle(
+                                side: WidgetStatePropertyAll(
+                                  BorderSide(color: getBorderColor(), width: 1),
+                                ),
+                                minimumSize: const WidgetStatePropertyAll(
+                                  Size(45, 79),
+                                ),
+                                maximumSize: const WidgetStatePropertyAll(
+                                  Size(45, 79),
+                                ),
+                                fixedSize: const WidgetStatePropertyAll(
+                                  Size(45, 79),
+                                ),
+                                splashFactory:
+                                    isAndroid ? null : NoSplash.splashFactory,
+                                elevation: const WidgetStatePropertyAll(0),
+                                overlayColor: WidgetStateProperty.resolveWith<
+                                  Color?
+                                >((states) {
                                   if (!states.contains(WidgetState.pressed)) {
                                     return null;
                                   }
@@ -488,67 +528,82 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                                   return cp.pill.withValues(alpha: 0.2);
                                 }),
 
-                            backgroundColor: WidgetStatePropertyAll(
-                              getBgColor(),
-                            ),
-                            shadowColor: const WidgetStatePropertyAll(
-                              Colors.transparent,
-                            ),
-                            shape: const WidgetStatePropertyAll(
-                              StadiumBorder(),
-                            ),
-                            padding: const WidgetStatePropertyAll(
-                              EdgeInsets.zero,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 9),
-                            child: Column(
-                              children: [
-                                Text(
-                                  _dayLabel(date),
-                                  style: TextStyle(
-                                    color: getWeekdayColor(),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                backgroundColor: WidgetStatePropertyAll(
+                                  getBgColor(),
                                 ),
-                                SizedBox(height: 3),
-                                Text(
-                                  '${date.day}',
-                                  style: TextStyle(
-                                    color: getDayNumberColor(),
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                shadowColor: const WidgetStatePropertyAll(
+                                  Colors.transparent,
                                 ),
-                                SizedBox(height: 15),
-                                SizedBox(
-                                  width: 27,
-                                  child: TweenAnimationBuilder<double>(
-                                    key: ValueKey<String>(dayKey),
-                                    duration: const Duration(
-                                      milliseconds: 1200,
+                                shape: const WidgetStatePropertyAll(
+                                  StadiumBorder(),
+                                ),
+                                padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.zero,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 9,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      _dayLabel(date),
+                                      style: TextStyle(
+                                        color: getWeekdayColor(),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
-                                    curve: Curves.easeOut,
-                                    tween: Tween<double>(
-                                      begin: previousValue,
-                                      end: progressValue,
+                                    SizedBox(height: 3),
+                                    Text(
+                                      '${date.day}',
+                                      style: TextStyle(
+                                        color: getDayNumberColor(),
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                    builder: (context, animatedProgress, _) {
-                                      return CustomPaint(
-                                        painter: PartialArcPainter(
-                                          progress: animatedProgress,
-                                          color: progressColor(),
-                                          backgroundColor: emptyProgressColor(),
+                                    SizedBox(height: 15),
+                                    SizedBox(
+                                      width: 27,
+                                      child: TweenAnimationBuilder<double>(
+                                        key: ValueKey<String>(dayKey),
+                                        duration: const Duration(
+                                          milliseconds: 1200,
                                         ),
-                                      );
-                                    },
-                                  ),
+                                        curve: Curves.easeOut,
+                                        tween: Tween<double>(
+                                          begin: previousValue,
+                                          end: progressValue,
+                                        ),
+                                        builder: (
+                                          context,
+                                          animatedProgress,
+                                          _,
+                                        ) {
+                                          return CustomPaint(
+                                            painter: PartialArcPainter(
+                                              progress: animatedProgress,
+                                              color: progressColor(),
+                                              backgroundColor:
+                                                  emptyProgressColor(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            if (showHintDot)
+                              const Positioned(
+                                top: 2,
+                                right: 2,
+                                child: PastDayHintDot(),
+                              ),
+                          ],
                         ),
                       ),
                     );
