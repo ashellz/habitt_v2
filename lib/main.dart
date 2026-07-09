@@ -348,7 +348,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
 
     Widget getHomePage() {
-      final didOnboard = widget.prefs.getBool('didOnboard_test1');
+      final didOnboard = widget.prefs.getBool('didOnboard');
       if (didOnboard == null || !didOnboard) {
         return const OnboardingPages();
       } else {

@@ -9,7 +9,7 @@ class LanguageProvider extends ChangeNotifier {
   LanguageProvider(this._prefs, [Locale? initialLocale])
     : _locale = initialLocale;
 
-  static const String _localeCodeKey = 'app_locale_code_test1';
+  static const String _localeCodeKey = 'app_locale_code';
 
   final SharedPreferences _prefs;
   Locale? _locale; // null if not set or not supported
