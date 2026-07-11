@@ -1300,10 +1300,9 @@ class HabitProvider extends ChangeNotifier {
     final isNowCompleted = habit.completed;
     if (context.mounted) checkReorderCategories(context, habit);
 
-    final currentHabit = habits.firstWhere((h) => h.id == id);
-    await updateHabitInDB(currentHabit);
+    await updateHabitInDB(habit, day: daySimple);
     await _syncNotificationsOnCompletionChange(
-      habit: currentHabit,
+      habit: habit,
       wasCompleted: wasCompleted,
       isNowCompleted: isNowCompleted,
       daySimple: daySimple,
@@ -1352,10 +1351,9 @@ class HabitProvider extends ChangeNotifier {
 
     if (context.mounted) checkReorderCategories(context, habit);
 
-    final currentHabit = habits.firstWhere((h) => h.id == id);
-    await updateHabitInDB(currentHabit);
+    await updateHabitInDB(habit, day: daySimple);
     await _syncNotificationsOnCompletionChange(
-      habit: currentHabit,
+      habit: habit,
       wasCompleted: wasCompleted,
       isNowCompleted: isNowCompleted,
       daySimple: daySimple,
