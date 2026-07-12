@@ -761,10 +761,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get leaveSetup => '¿Dejar el montaje?';
 
   @override
-  String get logDuration => 'Duración del registro';
+  String get logDuration => 'Registrar duración';
 
   @override
-  String get logProgress => 'Progreso del registro';
+  String get logProgress => 'Registrar progreso';
 
   @override
   String get makesWidgetsLookMoreGlassy =>

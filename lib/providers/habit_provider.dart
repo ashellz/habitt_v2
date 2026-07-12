@@ -1048,13 +1048,12 @@ class HabitProvider extends ChangeNotifier {
   void completeHabit(
     int id,
     BuildContext context,
-    StateProvider stateProvider, {
-    DateTime? dayOverride,
-  }) async {
+    StateProvider stateProvider,
+  ) async {
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = dayOverride ?? selectedDate ?? today;
+    final _selectedDate = selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -1167,7 +1166,7 @@ class HabitProvider extends ChangeNotifier {
       'found=${habit != null} alreadyCompleted=${habit?.completed}',
     );
     if (habit == null || habit.completed) return; // missing or already done
-    completeHabit(id, context, stateProvider, dayOverride: daySimple);
+    completeHabit(id, context, stateProvider);
   }
 
   void skipHabit(
@@ -1270,14 +1269,13 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitAmountCompleted(
     int id,
     int amountCompleted,
-    BuildContext context, {
-    DateTime? dayOverride,
-  }) async {
+    BuildContext context,
+  ) async {
     habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = dayOverride ?? selectedDate ?? today;
+    final _selectedDate = selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -1320,14 +1318,13 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitDurationCompleted(
     int id,
     int durationCompleted,
-    BuildContext context, {
-    DateTime? dayOverride,
-  }) async {
+    BuildContext context,
+  ) async {
     habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = dayOverride ?? selectedDate ?? today;
+    final _selectedDate = selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,

@@ -18,13 +18,10 @@ class LogProgressDialog extends StatelessWidget {
     super.key,
     required this.progressType,
     required this.habit,
-    this.dayOverride,
   });
 
   final ProgressType progressType;
   final Habit habit;
-  final DateTime? dayOverride;
-
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
@@ -58,7 +55,6 @@ class LogProgressDialog extends StatelessWidget {
             habit.id,
             stateProvider.habitAmount,
             context,
-            dayOverride: dayOverride,
           );
         }
 
@@ -76,7 +72,6 @@ class LogProgressDialog extends StatelessWidget {
             habit.id,
             stateProvider.habitDuration.inMinutes,
             context,
-            dayOverride: dayOverride,
           );
         }
 

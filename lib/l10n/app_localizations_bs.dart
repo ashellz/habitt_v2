@@ -762,7 +762,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get leaveSetup => 'Ostaviti podešavanje?';
 
   @override
-  String get logDuration => 'Dužina dnevnika';
+  String get logDuration => 'Zabilježi vrijeme';
 
   @override
   String get logProgress => 'Dodaj napredak';

@@ -7,6 +7,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
+import 'package:habitt/widgets/dialogs/timer_dialog.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
 import 'package:provider/provider.dart';
 
@@ -16,14 +17,11 @@ class HabitPrimaryActionButton extends StatefulWidget {
     required this.habit,
     this.isDemo = false,
     this.onDemoTap,
-    this.dayOverride,
   });
 
   final Habit habit;
   final bool isDemo;
   final VoidCallback? onDemoTap;
-  final DateTime? dayOverride;
-
   @override
   State<HabitPrimaryActionButton> createState() =>
       _HabitPrimaryActionButtonState();
@@ -77,29 +75,23 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
 
     final habitProvider = context.read<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
-    final effectiveDay = widget.dayOverride ?? DateTime.now();
 
     if (!widget.habit.hasTrackingType) {
-      habitProvider.completeHabit(
-        widget.habit.id,
-        context,
-        stateProvider,
-        dayOverride: effectiveDay,
-      );
+      habitProvider.completeHabit(widget.habit.id, context, stateProvider);
       return;
     }
 
     await showDialogSheet(
       context: context,
       builder: (context) {
-        return LogProgressDialog(
-          progressType:
-              widget.habit.tracksAmount
-                  ? ProgressType.amount
-                  : ProgressType.duration,
-          habit: widget.habit,
-          dayOverride: effectiveDay,
-        );
+        if (widget.habit.tracksAmount) {
+          return LogProgressDialog(
+            progressType: ProgressType.amount,
+            habit: widget.habit,
+          );
+        } else {
+          return TimerDialog(habit: widget.habit);
+        }
       },
     );
   }
@@ -120,7 +112,6 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
                   widget.habit.id,
                   context,
                   stateProvider,
-                  dayOverride: widget.dayOverride ?? DateTime.now(),
                 );
               },
       child: NewDefaultButton(

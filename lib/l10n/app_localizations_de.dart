@@ -763,7 +763,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get leaveSetup => 'Einstellung verlassen?';
 
   @override
-  String get logDuration => 'Dauer des Protokolls';
+  String get logDuration => 'Dauer protokollieren';
 
   @override
   String get logProgress => 'Fortschritt protokollieren';

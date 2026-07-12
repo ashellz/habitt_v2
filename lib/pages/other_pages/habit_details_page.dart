@@ -255,13 +255,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       child: Column(
                         children: [
                           const SizedBox(height: 14),
-                          _summaryCard(
-                            cp,
-                            habit,
-                            displayHabit,
-                            effectiveDate,
-                            stats,
-                          ),
+                          _summaryCard(cp, habit, displayHabit, stats),
                           const SizedBox(height: 18),
                           _notesSection(cp),
                           const SizedBox(height: 24),
@@ -445,7 +439,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     ColorProvider cp,
     Habit habit,
     Habit displayHabit,
-    DateTime effectiveDate,
     HabitStatsData stats,
   ) {
     return Container(
@@ -505,10 +498,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 ),
 
                 const SizedBox(height: 16),
-                HabitPrimaryActionButton(
-                  habit: displayHabit,
-                  dayOverride: effectiveDate,
-                ),
+                HabitPrimaryActionButton(habit: displayHabit),
               ],
             ),
           ),

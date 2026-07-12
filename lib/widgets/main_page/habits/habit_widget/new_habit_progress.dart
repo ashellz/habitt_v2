@@ -10,13 +10,13 @@ import 'package:habitt/util/hold_complete_tip.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
+import 'package:habitt/widgets/dialogs/timer_dialog.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitProgress extends StatefulWidget {
   const NewHabitProgress({
     super.key,
     required this.habit,
-    this.focusedDay,
     this.color,
     this.extraTapArea = true,
     this.secondaryCheckmarks = false,
@@ -24,7 +24,6 @@ class NewHabitProgress extends StatefulWidget {
   });
 
   final Habit habit;
-  final DateTime? focusedDay;
   final Color? color;
   final bool extraTapArea;
   final bool secondaryCheckmarks;
@@ -90,13 +89,14 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                   showDialogSheet(
                     context: context,
                     builder: (context) {
-                      return LogProgressDialog(
-                        progressType:
-                            widget.habit.tracksAmount
-                                ? ProgressType.amount
-                                : ProgressType.duration,
-                        habit: widget.habit,
-                      );
+                      if (widget.habit.tracksAmount) {
+                        return LogProgressDialog(
+                          progressType: ProgressType.amount,
+                          habit: widget.habit,
+                        );
+                      } else {
+                        return TimerDialog(habit: widget.habit);
+                      }
                     },
                   ).then((_) {
                     if (mounted) HoldCompleteTip.showIfNeeded(context);
