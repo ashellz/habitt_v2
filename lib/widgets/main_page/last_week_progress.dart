@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -39,6 +40,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
   bool _isAtRightEdge = true;
   late VoidCallback _habitProviderListener;
   int _lastDataVersion = -1;
+  DateTime? _lastSelectedDate;
   int _pastDaysLoaded = _initialPastDays;
   bool _isLoadingChunk = false;
   double _lastSpacing = 24;
@@ -69,9 +71,20 @@ class _LastWeekProgressState extends State<LastWeekProgress>
   void _attachHabitProviderListener() {
     final habitProvider = context.read<HabitProvider>();
     _lastDataVersion = habitProvider.dataVersion;
+    _lastSelectedDate = _normalizeDate(
+      habitProvider.selectedDate ?? DateTime.now(),
+    );
     _habitProviderListener = () {
       if (!mounted) return;
       final provider = context.read<HabitProvider>();
+
+      // if a notification tap happens this still recenters the strip
+      final newSelectedDate = _normalizeDate(
+        provider.selectedDate ?? DateTime.now(),
+      );
+      final selectedDateChanged = newSelectedDate != _lastSelectedDate;
+      _lastSelectedDate = newSelectedDate;
+
       if (provider.dataVersion != _lastDataVersion) {
         _lastDataVersion = provider.dataVersion;
         _previousProgressValuesByDate.clear();
@@ -79,6 +92,10 @@ class _LastWeekProgressState extends State<LastWeekProgress>
         _primeProgressValues(_allDates);
       } else {
         _updateChangedDayProgress();
+      }
+
+      if (selectedDateChanged) {
+        unawaited(_revealDay(newSelectedDate));
       }
     };
     habitProvider.addListener(_habitProviderListener);

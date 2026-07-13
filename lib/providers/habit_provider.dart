@@ -203,17 +203,23 @@ class HabitProvider extends ChangeNotifier {
   }) async {
     if (wasCompleted == isNowCompleted) return;
 
+    // dismiss/cancel that day's notification whenever a habit becomes completed
+    if (isNowCompleted) {
+      await NotificationService.cancelHabitNotificationsForDay(
+        habit,
+        daySimple,
+      );
+    }
+
     if (daySimple == todaySimple) {
       if (isNowCompleted) {
-        // Daily: future schedule unchanged — only cancel today's remaining slots.
+        // Daily: future schedule doesn't change, and today's slots were already
+        // cancelled above, no need to handle anything here
+
         // Weekly/monthly/custom: completing today may satisfy the period target,
-        // so re-evaluate which future days still need notifications.
-        if (habit.scheduleType == ScheduleType.daily) {
-          await NotificationService.cancelHabitNotificationsForDay(
-            habit,
-            daySimple,
-          );
-        } else {
+        // therefore already scheduled notifications for other days may be inapropriate
+        // so recalculation is needed to know which future days still need notifications
+        if (habit.scheduleType != ScheduleType.daily) {
           await NotificationService.rescheduleHabitNotifications(
             habit: habit,
             appearsOnDay: appearsOnDay,
@@ -221,13 +227,13 @@ class HabitProvider extends ChangeNotifier {
           );
         }
       } else {
-        // Un-completed today: restore notifications for today and future days.
+        // if uncompleted - restore notifications for today and future days
         await syncSingleHabitNotifications(habit);
       }
     } else {
-      // Past day: only weekly/monthly habits within the current period need a
-      // reschedule, because toggling changes timesCompletedThisWeek/Month which
-      // affects appearsOnDay for remaining days in that period.
+      // Past day completion change: only weekly/monthly habits within the current period (week/month)
+      // need a reschedule, because toggling changes timesCompletedThisWeek/Month which
+      // affects appearsOnDay for remaining days in that period
       final affectsCurrentPeriod =
           (habit.scheduleType == ScheduleType.weekly &&
               _isSameWeek(daySimple, todaySimple)) ||
@@ -236,7 +242,7 @@ class HabitProvider extends ChangeNotifier {
       if (affectsCurrentPeriod) {
         await syncSingleHabitNotifications(habit);
       }
-      // Daily/custom past-day toggle: no effect on future notifications, skip.
+      // Daily/custom past-day toggle: no effect on future notifications, skipped
     }
   }
 

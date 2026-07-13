@@ -3,11 +3,13 @@ import 'dart:ui' show DartPluginRegistrant;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/other_pages/habit_details_page.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/habit_route_tracker.dart';
 import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
+import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
 class NotificationActionHandler {
@@ -29,6 +31,10 @@ class NotificationActionHandler {
   /// Habit id captured before the navigator was ready (cold start). Consumed by
   /// [consumePendingRoute] once the app is up.
   static int? _pendingHabitRoute;
+
+  /// Notification day paired with [_pendingHabitRoute], so cold-start replay
+  /// still applies the correct `selectedDate`.
+  static DateTime? _pendingHabitDay;
 
   /// Register listeners with awesome_notifications. Call once after initialize().
   static Future<void> registerListeners() async {
@@ -79,7 +85,8 @@ class NotificationActionHandler {
     }
 
     // if user just tapped it takes them to habit details page
-    _navigateToHabit(habitId);
+    final day = _parseDay(payload[_payloadDayKey]);
+    _navigateToHabit(habitId, day);
   }
 
   /// On cold start, route to a habit if the app was launched from a tap.
@@ -94,17 +101,21 @@ class NotificationActionHandler {
       return; // completion handled via the queue, not navigation
     }
     final habitId = int.tryParse(payload[_payloadHabitIdKey] ?? '');
-    if (habitId != null) _navigateToHabit(habitId);
+    if (habitId != null) {
+      final day = _parseDay(payload[_payloadDayKey]);
+      _navigateToHabit(habitId, day);
+    }
   }
 
   /// Resolves a tap to a fixed target stack (MainPage -> HabitDetails(habitId))
   /// by reconciling against whatever is currently on screen, rather than
   /// unconditionally stacking a new page:
   ///  - a screen with unsaved changes is showing -> ignore the tap entirely
-  ///  - that habit's details page is already showing -> no-op
+  ///  - that habit's details page is already showing -> no-op (but the
+  ///    selected date still updates, since the tap targeted a specific day)
   ///  - a different habit's details page is showing -> replace it
   ///  - anything else -> pop back to the root (MainPage) and push
-  static void _navigateToHabit(int habitId) {
+  static void _navigateToHabit(int habitId, DateTime? day) {
     if (UnsavedChangesGuard.isBlocking) {
       return;
     }
@@ -112,7 +123,16 @@ class NotificationActionHandler {
     final nav = navigatorKey.currentState;
     if (nav == null) {
       _pendingHabitRoute = habitId;
+      _pendingHabitDay = day;
       return;
+    }
+
+    // Applied unconditionally (before the no-op check below) so that
+    // re-tapping a different day's notification while this habit's details
+    // page is already open still corrects `selectedDate`, even though no
+    // navigation occurs.
+    if (day != null) {
+      nav.context.read<HabitProvider>().setSelectedDate(day);
     }
 
     final currentTopHabitId = HabitRouteTracker.currentTopHabitId;
@@ -145,8 +165,10 @@ class NotificationActionHandler {
   static void consumePendingRoute() {
     final habitId = _pendingHabitRoute;
     if (habitId == null) return;
+    final day = _pendingHabitDay;
     _pendingHabitRoute = null;
-    _navigateToHabit(habitId);
+    _pendingHabitDay = null;
+    _navigateToHabit(habitId, day);
   }
 
   static DateTime? _parseDay(String? raw) {
