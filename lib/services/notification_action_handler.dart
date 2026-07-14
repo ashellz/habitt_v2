@@ -85,6 +85,7 @@ class NotificationActionHandler {
     }
 
     // if user just tapped it takes them to habit details page
+    // with the correct day when the notification was fired on
     final day = _parseDay(payload[_payloadDayKey]);
     _navigateToHabit(habitId, day);
   }
