@@ -68,16 +68,18 @@ class TimerDialog extends StatelessWidget {
                         colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
                       ),
                     ),
-                    onPressed:
-                        () => showDialogSheet(
-                          context: context,
-                          builder: (context) {
-                            return LogProgressDialog(
-                              progressType: ProgressType.duration,
-                              habit: habit,
-                            );
-                          },
-                        ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      showDialogSheet(
+                        context: context,
+                        builder: (context) {
+                          return LogProgressDialog(
+                            progressType: ProgressType.duration,
+                            habit: habit,
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),

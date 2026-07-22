@@ -1,6 +1,7 @@
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/util/duration_seconds_migration.dart';
 
 class BackupData {
   final int version;
@@ -9,10 +10,11 @@ class BackupData {
   final List<Day> days;
   final DateTime dateJoined;
 
-  /// True when this payload is a delta (only changed entities since the last
-  /// sync) rather than a full database snapshot. The merge logic is identical
-  /// for both — absent entities are simply not touched.
   final bool isDelta;
+
+  // if doesnt exist in payload then its legacy minutes based habit duration
+  // the number will convert to seconds for the current version of the app
+  final int durationSchemaVersion;
 
   BackupData({
     required this.version,
@@ -21,11 +23,16 @@ class BackupData {
     required this.days,
     required this.dateJoined,
     this.isDelta = false,
+    this.durationSchemaVersion = kDurationSecondsDataVersion,
   });
+
+  bool get isLegacyDurationMinutes =>
+      durationSchemaVersion < kDurationSecondsDataVersion;
 
   Map<String, dynamic> toMap() => {
     'version': version,
     'type': isDelta ? 'delta' : 'full',
+    'durationSchemaVersion': durationSchemaVersion,
     'metadata': metadata.toMap(),
     'habits': habits.map((h) => h.toMap()).toList(),
     'days': days.map((d) => d.toMap()).toList(),
@@ -36,6 +43,7 @@ class BackupData {
     return BackupData(
       version: map['version'] as int,
       isDelta: (map['type'] as String?) == 'delta',
+      durationSchemaVersion: (map['durationSchemaVersion'] as int?) ?? 0,
       metadata: BackupMetadata.fromMap(map['metadata']),
       habits:
           (map['habits'] as List<dynamic>? ?? [])

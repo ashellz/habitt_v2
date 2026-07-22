@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
-import 'package:habitt/widgets/habit_widget/habit_widget.dart';
+import 'package:habitt/widgets/habit_widget/old_habit_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+
+// DEPRACATED, LEGACY, NOT USED
 
 class HabitCompletionLineIndicator extends StatelessWidget {
   const HabitCompletionLineIndicator({
@@ -12,7 +14,7 @@ class HabitCompletionLineIndicator extends StatelessWidget {
     required this.tp,
   });
 
-  final HabitWidget widget;
+  final OldHabitWidget widget;
   final ThemeProvider tp;
 
   @override

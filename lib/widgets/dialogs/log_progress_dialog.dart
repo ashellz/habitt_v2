@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
@@ -60,7 +61,7 @@ class LogProgressDialog extends StatelessWidget {
 
         if (progressType == ProgressType.duration) {
           if (habit.durationCompleted ==
-              stateProvider.habitDuration.inMinutes) {
+              stateProvider.habitDuration.inSeconds) {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
@@ -70,7 +71,7 @@ class LogProgressDialog extends StatelessWidget {
 
           habitProvider.updateHabitDurationCompleted(
             habit.id,
-            stateProvider.habitDuration.inMinutes,
+            stateProvider.habitDuration.inSeconds,
             context,
           );
         }
@@ -116,10 +117,7 @@ class LogProgressDialog extends StatelessWidget {
       if (progressType == ProgressType.amount) {
         return "${habit.amount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, habit.amount, loc, customSingulars: customSingulars)}";
       } else {
-        final hours = habit.duration ~/ 60;
-        final minutes = habit.duration % 60;
-
-        return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}";
+        return getDurationString(habit.duration);
       }
     }
 

@@ -17,6 +17,8 @@ import 'package:habitt/widgets/default/nav_back_button.dart';
 import 'package:habitt/widgets/habit_details/select_habit_type_options.dart';
 import 'package:provider/provider.dart';
 
+// DEPRACATED, LEGACY, NOT USED
+
 class AddHabitPage extends StatefulWidget {
   const AddHabitPage({super.key});
 

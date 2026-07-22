@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/schedule_type.dart';
-import 'package:habitt/pages/other_pages/edit_habit_page.dart';
+import 'package:habitt/pages/other_pages/old_edit_habit_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/util/color_converting.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/widgets/default/old_default_button.dart';
+
+// DEPRACATED, LEGACY, NOT USED
 
 class EditHabitButton extends StatelessWidget {
   const EditHabitButton({
@@ -24,7 +26,7 @@ class EditHabitButton extends StatelessWidget {
   final TextEditingController nameController;
   final StateProvider stateProvider;
   final int initialAmount;
-  final EditHabitPage widget;
+  final OldEditHabitPage widget;
   final Duration initialDuration;
   final TextEditingController descController;
   final AppLocalizations localizations;
@@ -53,7 +55,7 @@ class EditHabitButton extends StatelessWidget {
                 widget.habit.amount = stateProvider.habitAmount;
               } else if (stateProvider.habitDuration != initialDuration) {
                 widget.habit.resetCompletion();
-                widget.habit.duration = stateProvider.habitDuration.inMinutes;
+                widget.habit.duration = stateProvider.habitDuration.inSeconds;
               }
 
               widget.habit.name = nameController.text;

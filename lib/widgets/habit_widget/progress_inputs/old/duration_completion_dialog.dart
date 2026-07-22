@@ -11,6 +11,8 @@ import 'package:habitt/widgets/habit_widget/progress_inputs/old/duration_complet
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
+// DEPRACATED, LEGACY, NOT USED
+
 Future<void> showDurationCompletionDialog(
   BuildContext context,
   Habit habit,
@@ -20,17 +22,11 @@ Future<void> showDurationCompletionDialog(
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Enter Amount',
-    transitionDuration: const Duration(
-      milliseconds: 150,
-    ), // Your animation duration
-    // This builder is for the content of the dialog.
-    // We pass the simplified dialog widget here.
+    transitionDuration: const Duration(milliseconds: 150),
     pageBuilder: (context, animation, secondaryAnimation) {
       return DurationCompletionDialog(habit: habit, day: day);
     },
 
-    // This builder is for the transition animation.
-    // This is where we will build the BackdropFilter.
     transitionBuilder: (context, animation, secondaryAnimation, child) {
       // The `animation` object here is an Animation<double> that goes from 0.0 to 1.0
       // over the course of the `transitionDuration`.
@@ -88,18 +84,19 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Sets the initial amount or duration
       final stateProvider = context.read<StateProvider>();
+
       stateProvider.habitDuration = Duration(
-        hours: widget.habit.durationCompleted ~/ 60,
-        minutes: widget.habit.durationCompleted % 60,
+        hours: widget.habit.durationCompleted ~/ 3600,
+        minutes: (widget.habit.durationCompleted % 3600) ~/ 60,
       );
     });
 
     setState(() {
       hoursController = FixedExtentScrollController(
-        initialItem: widget.habit.durationCompleted ~/ 60,
+        initialItem: widget.habit.durationCompleted ~/ 3600,
       );
       minutesController = FixedExtentScrollController(
-        initialItem: widget.habit.durationCompleted % 60,
+        initialItem: (widget.habit.durationCompleted % 3600) ~/ 60,
       );
     });
   }
@@ -128,12 +125,12 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
     final width = screenWidth / 2.75;
     final height = screenHeight / 2.75;
 
-    int minutes = widget.habit.duration % 60;
-    int hours = widget.habit.duration ~/ 60;
+    int minutes = (widget.habit.duration % 3600) ~/ 60;
+    int hours = widget.habit.duration ~/ 3600;
 
     double getProgressValue() {
       if (widget.habit.duration == 0) return 0.0; // Avoid divide by zero
-      final progress = sp.habitDuration.inMinutes / widget.habit.duration;
+      final progress = sp.habitDuration.inSeconds / widget.habit.duration;
       return progress.clamp(0.0, 1.0);
     }
 
@@ -172,7 +169,7 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
                     onPressed: () {
                       // If nothing changed then don't update unnecessarily
                       if (widget.habit.durationCompleted ==
-                          sp.habitDuration.inMinutes) {
+                          sp.habitDuration.inSeconds) {
                         if (Navigator.canPop(context)) {
                           Navigator.pop(context);
                         }
@@ -183,7 +180,7 @@ class _DurationCompletionDialogState extends State<DurationCompletionDialog> {
                       final habitProvider = context.read<HabitProvider>();
                       habitProvider.updateHabitDurationCompleted(
                         widget.habit.id,
-                        sp.habitDuration.inMinutes,
+                        sp.habitDuration.inSeconds,
                         context,
                       );
 

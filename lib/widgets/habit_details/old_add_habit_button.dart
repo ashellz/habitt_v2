@@ -85,7 +85,7 @@ class OldAddHabitButton extends StatelessWidget {
                   amount: stateProvider.habitAmount,
                   amountLabel: stateProvider.habitAmountLabelController.text,
                   amountCompleted: 0,
-                  duration: stateProvider.habitDuration.inMinutes,
+                  duration: stateProvider.habitDuration.inSeconds,
                   durationCompleted: 0,
                   streak: 0,
                   longestStreak: 0,

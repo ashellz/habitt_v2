@@ -149,6 +149,32 @@ This invariant must be read consistently on the stats side too: `StatsProvider` 
 
 **`Day.isAutoCreated`** — a local-only boolean (never serialised to backup files) that is set to `true` when a day is created by the day-rollover logic (`checkForNewDay`), the missing-day backfill (`_backfillMissingDays`), or the on-demand hydration path. These days are blank reset snapshots with a current wall-clock timestamp; without this flag they would incorrectly beat backup data timestamped earlier (e.g. actual completions from another device). When `isAutoCreated = true` the timestamp guard is bypassed and the incoming backup data is always merged in. The saved result clears the flag (`isAutoCreated = false`).
 
+### Duration Schema Version (minutes → seconds)
+
+A habit's `duration` / `durationCompleted` are stored in **seconds** (they were
+minutes before the seconds migration). `BackupData` carries a
+`durationSchemaVersion` (see `kDurationSecondsDataVersion`) so payloads self-describe their unit:
+
+- **New exports** always write `durationSchemaVersion = kDurationSecondsDataVersion` (seconds).
+- **Legacy payloads** — a pre-seconds client writes no such field; `BackupData.fromMap` defaults it to `0` (minutes).
+
+`_mergeBackupData` normalizes at the boundary: when `backupData.isLegacyDurationMinutes`
+is true it multiplies every incoming `duration` / `durationCompleted` (habits and
+embedded day snapshots) by 60 **before** any merge/restore touches local state, so
+all downstream merge logic is unit-consistent and a legacy value is never stored at
+1/60th scale. This single chokepoint covers both delta merges and full restores
+(all restore paths funnel through `_mergeBackupData`). Re-uploading the DB after such
+a merge writes a seconds-era payload, healing the cloud copy over time.
+
+Local device Hive data is migrated once on first launch of the seconds build by
+`migrateDurationToSeconds` (`lib/util/duration_seconds_migration.dart`), guarded by
+per-box `durationSecondsMigrated_*_v1` prefs.
+
+**Rollout note:** while a user still has a not-yet-updated device, a habit *completed*
+on that legacy device echoes its target-in-minutes, which upconverts to an over-target
+seconds value on updated devices — visually over 100% but still `completed`,
+non-destructive, and self-heals on the next write. The window closes once all devices update.
+
 ### Deletion
 `isDeleted = true` on a habit acts as a tombstone. Deleted habits are excluded from new backups and not re-added from incoming data.
 
@@ -314,9 +340,10 @@ Both the pill and the hold-to-complete tip wrap their content in `SwipeUpToDismi
 
 ### `BackupData`
 ```dart
-int version          // 1=legacy, 2=full, 3=delta
-String? type         // "delta" or null (full)
-DateTime? fromTime   // Delta start time
+int version               // 1=legacy, 2=full, 3=delta
+String? type              // "delta" or null (full)
+int durationSchemaVersion // 0=minutes (legacy), >=1=seconds
+DateTime? fromTime        // Delta start time
 BackupMetadata metadata
 List<Habit> habits
 List<Day> days

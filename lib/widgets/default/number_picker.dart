@@ -14,6 +14,9 @@ class NumberPicker extends StatefulWidget {
     this.maxMinutes,
     this.onChangedHours,
     this.onChangedMinutes,
+    this.secondsController,
+    this.maxSeconds,
+    this.onChangedSeconds,
     this.looping = true,
     this.vertical = false,
     this.textStyle,
@@ -29,6 +32,13 @@ class NumberPicker extends StatefulWidget {
   final int? maxMinutes;
   final ValueChanged<int>? onChangedHours;
   final ValueChanged<int>? onChangedMinutes;
+
+  /// Optional third column for seconds. When null, the picker renders only the
+  /// hours:minutes columns (unchanged behavior).
+  final FixedExtentScrollController? secondsController;
+  final int? maxSeconds;
+  final ValueChanged<int>? onChangedSeconds;
+
   final bool looping;
   final bool vertical;
   final TextStyle? textStyle;
@@ -179,24 +189,77 @@ class _NumberPickerState extends State<NumberPicker> {
       );
     }
 
+    Widget secondsPickerCupertino() {
+      return SizedBox(
+        width: 49,
+        height: widget.height,
+        child: CupertinoPicker(
+          looping: widget.looping,
+          scrollController: widget.secondsController!,
+          itemExtent: 67,
+          useMagnifier: false,
+          selectionOverlay: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(color: cp.border, height: 1),
+              Container(color: cp.border, height: 1),
+            ],
+          ),
+          onSelectedItemChanged: (int index) {
+            if (widget.onChangedSeconds != null) {
+              widget.onChangedSeconds!(index);
+            }
+          },
+          children: List<Widget>.generate(
+            widget.maxSeconds != null ? widget.maxSeconds! + 1 : 60,
+            (index) => Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.padZero
+                      ? index.toString().padLeft(2, '0')
+                      : index.toString(),
+                  style:
+                      widget.textStyle ??
+                      TextStyle(
+                        color: cp.text,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget separator() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Text(
+          ":",
+          style: TextStyle(
+            color: cp.text,
+            fontSize: 32,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       spacing: 20,
       children: [
         hoursPickerCupertino(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            ":",
-            style: TextStyle(
-              color: cp.text,
-              fontSize: 32,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-
+        separator(),
         minutesPickerCupertino(),
+        if (widget.secondsController != null) ...[
+          separator(),
+          secondsPickerCupertino(),
+        ],
       ],
     );
   }

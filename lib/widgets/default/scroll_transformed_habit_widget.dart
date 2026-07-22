@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart'; // Ensure this path is correct for your Habit model
-import 'package:habitt/widgets/habit_widget/habit_widget.dart'; // Your original HabitWidget
+import 'package:habitt/widgets/habit_widget/old_habit_widget.dart'; // Your original HabitWidget
+
+// DEPRACATED, LEGACY, NOT USED
 
 class ScrollTransformedHabitWidget extends StatefulWidget {
   final Habit habit;
@@ -39,7 +41,7 @@ class _ScrollTransformedHabitWidgetState
   Widget build(BuildContext context) {
     // This is your actual, original HabitWidget.
     // Ensure it's imported correctly.
-    Widget actualHabitWidgetContent = HabitWidget(
+    Widget actualHabitWidgetContent = OldHabitWidget(
       habit: widget.habit,
       editable: widget.editable,
       isFirstCategory: widget.isFirstCategory,

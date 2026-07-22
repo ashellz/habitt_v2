@@ -207,7 +207,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedName = sp.nameController.text.trim() != habit.name;
     final changedDesc = sp.descController.text.trim() != habit.description;
     final changedCategory = sp.habitCategoryId != habit.categoryId;
-    final changedDuration = sp.habitDuration.inMinutes != habit.duration;
+    final changedDuration = sp.habitDuration.inSeconds != habit.duration;
     final changedAmount = sp.habitAmount != habit.amount;
     final changedTrackingType =
         sp.selectedHabitTrackingType != habit.trackingType;
@@ -575,7 +575,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       final habit = widget.habit!.copy();
 
       if (habit.amount < sp.habitAmount ||
-          habit.duration < sp.habitDuration.inMinutes) {
+          habit.duration < sp.habitDuration.inSeconds) {
         // ignore all sheeets for 7 days
         // this is to avoid improvement sheets right after increase target, annoying and makes no sense
         habit.insightPopstonedUntil = DateTime.now().add(
@@ -584,7 +584,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       }
 
       habit.amount = sp.habitAmount;
-      habit.duration = sp.habitDuration.inMinutes;
+      habit.duration = sp.habitDuration.inSeconds;
       habit.trackingType = sp.selectedHabitTrackingType;
       habit.name = sp.nameController.text;
       habit.description = sp.descController.text;
@@ -650,7 +650,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       amount: sp.habitAmount,
       amountLabel: sp.habitAmountLabelController.text,
       amountCompleted: 0,
-      duration: sp.habitDuration.inMinutes,
+      duration: sp.habitDuration.inSeconds,
       trackingType: sp.selectedHabitTrackingType,
       durationCompleted: 0,
       streak: 0,

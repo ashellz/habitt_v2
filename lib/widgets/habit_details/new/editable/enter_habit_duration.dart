@@ -27,7 +27,7 @@ class EnterHabitDuration extends StatelessWidget {
                 title: loc.setDuration,
                 desc: loc.howLongWillThisHabitTake,
                 child: DurationProgressInput(
-                  duration: sp.habitDuration.inMinutes,
+                  duration: sp.habitDuration.inSeconds,
                 ),
               );
             },
@@ -54,7 +54,7 @@ class EnterHabitDuration extends StatelessWidget {
               spacing: 16,
               children: [
                 Text(
-                  getDurationString(sp.habitDuration.inMinutes),
+                  getDurationString(sp.habitDuration.inSeconds),
                   style: TextStyle(color: cp.text, fontWeight: FontWeight.w500),
                 ),
                 SvgPicture.asset("assets/images/new-svg/clock.svg"),

@@ -9,6 +9,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/habit_strength_insight_text_service.dart';
+import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/habit_strength_calculator.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -377,7 +378,8 @@ class InsightSheetFlow {
     AppLocalizations loc,
   ) {
     if (recommendation.kind == _TargetKind.duration) {
-      return '$value min';
+      // value is in seconds (duration fields are stored in seconds).
+      return getDurationString(value);
     }
 
     return '$value ${resolveAmountLabelForValue(recommendation.unitLabel, value, loc)}';

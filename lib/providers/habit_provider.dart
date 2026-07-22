@@ -12,6 +12,7 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
+import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -99,6 +100,12 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> init({bool animateStreakEntry = false}) async {
+    // one time conversion from minutes to seconds for older versions
+    await migrateDurationToSeconds(
+      habitBox: habitBox,
+      daysBox: daysBox,
+      prefs: await SharedPreferences.getInstance(),
+    );
     await _loadHabits();
     refreshTodaysHabits(notify: false);
     await _loadDateJoined();

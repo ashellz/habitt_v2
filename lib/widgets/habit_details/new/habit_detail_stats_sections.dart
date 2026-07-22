@@ -179,7 +179,7 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
 
   int _rawValueFor(Habit habit, HabitStatsData stats) {
     if (habit.tracksDuration) {
-      return stats.totalDurationCompletedMinutes;
+      return stats.totalDurationCompletedSeconds;
     }
     return stats.totalAmountCompleted;
   }

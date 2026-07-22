@@ -23,16 +23,18 @@ import 'package:habitt/widgets/habit_details/selected_habit_display.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
-class EditHabitPage extends StatefulWidget {
-  const EditHabitPage({super.key, required this.habit});
+// DEPRACATED, LEGACY, NOT USED
+
+class OldEditHabitPage extends StatefulWidget {
+  const OldEditHabitPage({super.key, required this.habit});
 
   final Habit habit;
 
   @override
-  State<EditHabitPage> createState() => _EditHabitPageState();
+  State<OldEditHabitPage> createState() => _OldEditHabitPageState();
 }
 
-class _EditHabitPageState extends State<EditHabitPage> {
+class _OldEditHabitPageState extends State<OldEditHabitPage> {
   late final TextEditingController _nameController;
   late final TextEditingController _descController;
 
@@ -52,7 +54,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.nameController.text = widget.habit.name;
       stateProvider.descController.text = widget.habit.description;
       stateProvider.habitAmount = widget.habit.amount;
-      stateProvider.habitDuration = Duration(minutes: widget.habit.duration);
+      stateProvider.habitDuration = Duration(seconds: widget.habit.duration);
       stateProvider.selectedHabitTrackingType = widget.habit.trackingType;
       stateProvider.habitAmountLabelController.text = widget.habit.amountLabel;
       stateProvider.iconPath = widget.habit.iconPath;
@@ -71,7 +73,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
       stateProvider.habitColorName = widget.habit.colorName;
       stateProvider.habitColor = widget.habit.resolveColor(tp);
 
-      initialDuration = Duration(minutes: widget.habit.duration);
+      initialDuration = Duration(seconds: widget.habit.duration);
       initialAmount = widget.habit.amount;
       initialTrackingType = widget.habit.trackingType;
 
@@ -95,7 +97,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final changedCategory =
         stateProvider.habitCategoryId != widget.habit.categoryId;
     final changedDuration =
-        stateProvider.habitDuration.inMinutes != initialDuration.inMinutes;
+        stateProvider.habitDuration.inSeconds != initialDuration.inSeconds;
     final changedAmount = stateProvider.habitAmount != initialAmount;
     final changedTrackingType =
         stateProvider.selectedHabitTrackingType != initialTrackingType;

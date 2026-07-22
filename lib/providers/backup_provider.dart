@@ -2135,6 +2135,26 @@ class BackupProvider extends ChangeNotifier {
       '[SYNC] _mergeBackupData: merging ${backupData.habits.length} habit(s), ${backupData.days.length} day(s)',
     );
 
+    // if duration is in minutes (old version), convert to seconds
+    if (backupData.isLegacyDurationMinutes) {
+      void toSeconds(Habit h) {
+        h.duration *= 60;
+        h.durationCompleted *= 60;
+      }
+
+      for (final h in backupData.habits) {
+        toSeconds(h);
+      }
+      for (final day in backupData.days) {
+        for (final h in day.habits) {
+          toSeconds(h);
+        }
+      }
+      debugPrint(
+        '[SYNC] _mergeBackupData: upconverted legacy minutes payload to seconds',
+      );
+    }
+
     // ── Habits (master records) ──────────────────────────────────────────────
     for (final incoming in backupData.habits) {
       Habit? existing;

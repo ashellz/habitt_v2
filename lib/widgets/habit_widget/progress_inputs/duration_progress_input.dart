@@ -10,7 +10,10 @@ class DurationProgressInput extends StatefulWidget {
     this.durationCompleted,
   });
 
+  /// Target duration in seconds.
   final int duration;
+
+  /// Progress in seconds, if any.
   final int? durationCompleted;
 
   @override
@@ -22,27 +25,30 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
       FixedExtentScrollController();
   late FixedExtentScrollController minutesController =
       FixedExtentScrollController();
+  late FixedExtentScrollController secondsController =
+      FixedExtentScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    final initialDuration = widget.durationCompleted ?? widget.duration;
+    // Duration fields are stored in seconds.
+    final initialSeconds = widget.durationCompleted ?? widget.duration;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Sets the initial amount or duration
+      // Sets the initial duration for the state provider.
       final stateProvider = context.read<StateProvider>();
-      stateProvider.habitDuration = Duration(
-        hours: initialDuration ~/ 60,
-        minutes: initialDuration % 60,
-      );
+      stateProvider.habitDuration = Duration(seconds: initialSeconds);
     });
 
     hoursController = FixedExtentScrollController(
-      initialItem: initialDuration ~/ 60,
+      initialItem: initialSeconds ~/ 3600,
     );
     minutesController = FixedExtentScrollController(
-      initialItem: initialDuration % 60,
+      initialItem: (initialSeconds % 3600) ~/ 60,
+    );
+    secondsController = FixedExtentScrollController(
+      initialItem: initialSeconds % 60,
     );
   }
 
@@ -50,6 +56,7 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
   void dispose() {
     hoursController.dispose();
     minutesController.dispose();
+    secondsController.dispose();
     super.dispose();
   }
 
@@ -62,21 +69,33 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
       height: 211,
       hoursController: hoursController,
       minutesController: minutesController,
+      secondsController: secondsController,
       width: width,
       padZero: false,
-      onChangedHours:
-          (value) =>
-              sp.habitDuration = Duration(
-                hours: value,
-                minutes: sp.habitDuration.inMinutes % 60,
-              ),
-
-      onChangedMinutes:
-          (value) =>
-              sp.habitDuration = Duration(
-                hours: sp.habitDuration.inMinutes ~/ 60,
-                minutes: value,
-              ),
+      onChangedHours: (value) {
+        final d = sp.habitDuration;
+        sp.habitDuration = Duration(
+          hours: value,
+          minutes: d.inMinutes % 60,
+          seconds: d.inSeconds % 60,
+        );
+      },
+      onChangedMinutes: (value) {
+        final d = sp.habitDuration;
+        sp.habitDuration = Duration(
+          hours: d.inHours,
+          minutes: value,
+          seconds: d.inSeconds % 60,
+        );
+      },
+      onChangedSeconds: (value) {
+        final d = sp.habitDuration;
+        sp.habitDuration = Duration(
+          hours: d.inHours,
+          minutes: d.inMinutes % 60,
+          seconds: value,
+        );
+      },
     );
   }
 }

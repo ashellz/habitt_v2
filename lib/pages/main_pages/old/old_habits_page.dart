@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:habitt/pages/main_pages/old/daily_plan_page.dart';
-import 'package:habitt/pages/other_pages/add_habit_page.dart';
+import 'package:habitt/pages/other_pages/old_add_habit_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/state_provider.dart';

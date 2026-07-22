@@ -32,7 +32,7 @@ class HabitStatsData {
     required this.currentStreak,
     required this.longestStreak,
     required this.totalAmountCompleted,
-    required this.totalDurationCompletedMinutes,
+    required this.totalDurationCompletedSeconds,
     required this.completionRatioLast7Days,
     required this.bestWeekday,
     required this.worstWeekday,
@@ -51,7 +51,7 @@ class HabitStatsData {
   final int currentStreak;
   final int longestStreak;
   final int totalAmountCompleted;
-  final int totalDurationCompletedMinutes;
+  final int totalDurationCompletedSeconds;
   final double completionRatioLast7Days;
   final HabitWeekdayRate bestWeekday;
   final HabitWeekdayRate worstWeekday;
@@ -165,7 +165,7 @@ class HabitStatsProvider extends ChangeNotifier {
     int scheduledInLast7 = 0;
     int completedInLast7 = 0;
     int totalAmountCompleted = 0;
-    int totalDurationCompletedMinutes = 0;
+    int totalDurationCompletedSeconds = 0;
 
     final progressByDay = <DateTime, double>{};
     final strengthEntries = <HabitEntry>[];
@@ -203,7 +203,7 @@ class HabitStatsProvider extends ChangeNotifier {
       }
 
       totalAmountCompleted += dayHabit.amountCompleted;
-      totalDurationCompletedMinutes += dayHabit.durationCompleted;
+      totalDurationCompletedSeconds += dayHabit.durationCompleted;
 
       if (_isWithinRange(dayDate, sevenDayStart, today)) {
         scheduledInLast7 += 1;
@@ -252,7 +252,7 @@ class HabitStatsProvider extends ChangeNotifier {
       currentStreak: habit.streak,
       longestStreak: habit.longestStreak,
       totalAmountCompleted: totalAmountCompleted,
-      totalDurationCompletedMinutes: totalDurationCompletedMinutes,
+      totalDurationCompletedSeconds: totalDurationCompletedSeconds,
       completionRatioLast7Days: ratio7,
       bestWeekday: best,
       worstWeekday: worst,

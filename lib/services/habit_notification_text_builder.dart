@@ -381,16 +381,19 @@ class HabitNotificationTextBuilder {
     return null;
   }
 
-  static String _formatDuration(int minutes) {
-    if (minutes < 60) {
-      return '$minutes min';
-    }
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (remainder == 0) {
-      return '$hours h';
-    }
-    return '$hours h $remainder min';
+  // Input is in seconds (duration fields are stored in seconds).
+  static String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final secs = seconds % 60;
+
+    final parts = <String>[];
+    if (hours > 0) parts.add('$hours h');
+    if (minutes > 0) parts.add('$minutes min');
+    if (secs > 0) parts.add('$secs s');
+
+    if (parts.isEmpty) return '0 min';
+    return parts.join(' ');
   }
 
   static _PremadeFamily _resolveFamily(PremadeHabitType? type) {

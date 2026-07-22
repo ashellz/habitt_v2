@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/pages/other_pages/backup_data_page.dart';
+import 'package:habitt/pages/other_pages/old_backup_data_page.dart';
 import 'package:habitt/pages/other_pages/notifications_page.dart';
 import 'package:habitt/pages/other_pages/subscriptions_page.dart';
 import 'package:habitt/providers/theme_provider.dart';

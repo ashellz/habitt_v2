@@ -3,8 +3,10 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/emoji_service.dart';
-import 'package:habitt/widgets/habit_widget/habit_widget.dart';
+import 'package:habitt/widgets/habit_widget/old_habit_widget.dart';
 import 'package:provider/provider.dart';
+
+// DEPRACATED, LEGACY, NOT USED
 
 class SelectedHabitDisplay extends StatelessWidget {
   const SelectedHabitDisplay({
@@ -29,7 +31,7 @@ class SelectedHabitDisplay extends StatelessWidget {
     final descController = stateProvider.descController;
     final nameController = stateProvider.nameController;
     final amount = stateProvider.habitAmount;
-    final duration = stateProvider.habitDuration.inMinutes;
+    final duration = stateProvider.habitDuration.inSeconds;
     final iconPath = stateProvider.iconPath;
 
     return Padding(
@@ -40,7 +42,7 @@ class SelectedHabitDisplay extends StatelessWidget {
             (context, value, child) => ValueListenableBuilder<TextEditingValue>(
               valueListenable: nameController,
               builder:
-                  (context, value, child) => HabitWidget(
+                  (context, value, child) => OldHabitWidget(
                     isFirstCategory: true,
                     habit: Habit(
                       id: 0,

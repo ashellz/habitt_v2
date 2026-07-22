@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/other_pages/edit_habit_page.dart';
+import 'package:habitt/pages/other_pages/old_edit_habit_page.dart';
 import 'package:habitt/providers/calendar_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -17,8 +17,10 @@ import 'package:habitt/widgets/habit_widget/habit_streak.dart';
 import 'package:habitt/widgets/habit_widget/habit_text.dart';
 import 'package:provider/provider.dart';
 
-class HabitWidget extends StatefulWidget {
-  const HabitWidget({
+// DEPRACATED, LEGACY, NOT USED
+
+class OldHabitWidget extends StatefulWidget {
+  const OldHabitWidget({
     super.key,
     required this.editable,
     required this.habit,
@@ -34,10 +36,10 @@ class HabitWidget extends StatefulWidget {
   static Widget demo() => const _DemoHabitDisplay();
 
   @override
-  State<HabitWidget> createState() => _HabitWidgetState();
+  State<OldHabitWidget> createState() => _OldHabitWidgetState();
 }
 
-class _HabitWidgetState extends State<HabitWidget>
+class _OldHabitWidgetState extends State<OldHabitWidget>
     with TickerProviderStateMixin {
   double _swipeOffset = 0;
 
@@ -169,7 +171,8 @@ class _HabitWidgetState extends State<HabitWidget>
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => EditHabitPage(habit: widget.habit),
+                                (context) =>
+                                    OldEditHabitPage(habit: widget.habit),
                           ),
                         ).whenComplete(() {
                           // Select the saved category
@@ -325,7 +328,7 @@ class _DemoHabitDisplay extends StatelessWidget {
       completed: true,
       trackingType: HabitTrackingType.duration,
     );
-    return HabitWidget(
+    return OldHabitWidget(
       habit: habit,
       editable: false,
       isFirstCategory: true,
