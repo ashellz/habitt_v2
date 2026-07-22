@@ -158,13 +158,22 @@ minutes before the seconds migration). `BackupData` carries a
 - **New exports** always write `durationSchemaVersion = kDurationSecondsDataVersion` (seconds).
 - **Legacy payloads** — a pre-seconds client writes no such field; `BackupData.fromMap` defaults it to `0` (minutes).
 
-`_mergeBackupData` normalizes at the boundary: when `backupData.isLegacyDurationMinutes`
-is true it multiplies every incoming `duration` / `durationCompleted` (habits and
-embedded day snapshots) by 60 **before** any merge/restore touches local state, so
-all downstream merge logic is unit-consistent and a legacy value is never stored at
-1/60th scale. This single chokepoint covers both delta merges and full restores
-(all restore paths funnel through `_mergeBackupData`). Re-uploading the DB after such
-a merge writes a seconds-era payload, healing the cloud copy over time.
+`BackupData.fromMap` normalizes at the boundary: a legacy payload
+(`durationSchemaVersion` absent/below the seconds version) has every `duration` /
+`durationCompleted` (habits and embedded day snapshots) multiplied by 60 during
+deserialization, and the resulting object reports the seconds-era version. This is the
+**single chokepoint every ingest path funnels through** — local file import
+(`importLocalData`, a direct wipe-and-replace that bypasses `_mergeBackupData`), cloud
+download, replace, and delta merge all deserialize via `fromMap` — so a deserialized
+`BackupData` is always seconds regardless of which restore/merge path consumes it.
+Re-uploading the DB afterwards writes a seconds-era payload, healing the cloud copy over time.
+
+**Export paths must tag their payload.** The export builders in `backup_service.dart`
+(`exportDataLocally` v1, `exportDataForGoogleDrive` v2, `exportDeltaForGoogleDrive` v3)
+build the payload map manually rather than via `BackupData.toMap`, so each explicitly
+includes `'durationSchemaVersion': kDurationSecondsDataVersion`. Any new export path
+carrying habits/days MUST include it, or its output would be misread as legacy minutes
+and inflated 60× on restore. (The metadata-only wrapper carries no habits/days and omits it.)
 
 Local device Hive data is migrated once on first launch of the seconds build by
 `migrateDurationToSeconds` (`lib/util/duration_seconds_migration.dart`), guarded by

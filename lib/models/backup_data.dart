@@ -40,19 +40,40 @@ class BackupData {
   };
 
   factory BackupData.fromMap(Map<String, dynamic> map) {
+    final rawDurationVersion = (map['durationSchemaVersion'] as int?) ?? 0;
+
+    final habits =
+        (map['habits'] as List<dynamic>? ?? [])
+            .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
+            .toList();
+    final days =
+        (map['days'] as List<dynamic>? ?? [])
+            .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
+            .toList();
+
+    // duration is in MINUTES for older versions (before 88)
+    // here we convert to seconds in all cases (local import, cloud download, replace, delta merge)
+    // in all backup restore cases, its handled here
+    if (rawDurationVersion < kDurationSecondsDataVersion) {
+      for (final h in habits) {
+        h.duration *= 60;
+        h.durationCompleted *= 60;
+      }
+      for (final day in days) {
+        for (final h in day.habits) {
+          h.duration *= 60;
+          h.durationCompleted *= 60;
+        }
+      }
+    }
+
     return BackupData(
       version: map['version'] as int,
       isDelta: (map['type'] as String?) == 'delta',
-      durationSchemaVersion: (map['durationSchemaVersion'] as int?) ?? 0,
+      durationSchemaVersion: kDurationSecondsDataVersion,
       metadata: BackupMetadata.fromMap(map['metadata']),
-      habits:
-          (map['habits'] as List<dynamic>? ?? [])
-              .map((e) => Habit.fromMap(Map<String, dynamic>.from(e)))
-              .toList(),
-      days:
-          (map['days'] as List<dynamic>? ?? [])
-              .map((e) => Day.fromMap(Map<String, dynamic>.from(e)))
-              .toList(),
+      habits: habits,
+      days: days,
       dateJoined: DateTime.parse(map['dateJoined'] as String),
     );
   }

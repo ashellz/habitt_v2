@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
+
+import '../fixtures/habit_factory.dart';
 
 BackupMetadata _meta() => BackupMetadata(
       deviceId: 'test-device',
@@ -25,20 +28,31 @@ void main() {
     expect(data.toMap()['durationSchemaVersion'], kDurationSecondsDataVersion);
   });
 
-  test('payload without durationSchemaVersion is treated as legacy minutes',
+  test('legacy payload (no durationSchemaVersion) upconverts minutes → seconds',
       () {
+    final legacyHabit = buildTestHabit(
+      id: 3,
+      duration: 10, // minutes on a legacy payload
+      durationCompleted: 3,
+      trackingType: HabitTrackingType.duration,
+    );
     final map = {
       'version': 3,
       'type': 'delta',
+      // durationSchemaVersion intentionally absent ⇒ legacy minutes.
       'metadata': _meta().toMap(),
-      'habits': <dynamic>[],
+      'habits': <dynamic>[legacyHabit.toMap()],
       'days': <dynamic>[],
       'dateJoined': DateTime.utc(2026, 1, 1).toIso8601String(),
     };
 
     final parsed = BackupData.fromMap(map);
-    expect(parsed.durationSchemaVersion, 0);
-    expect(parsed.isLegacyDurationMinutes, isTrue);
+
+    // Values are upconverted, and the object now reports the seconds-era version.
+    expect(parsed.habits.single.duration, 600);
+    expect(parsed.habits.single.durationCompleted, 180);
+    expect(parsed.durationSchemaVersion, kDurationSecondsDataVersion);
+    expect(parsed.isLegacyDurationMinutes, isFalse);
   });
 
   test('seconds-era payload round-trips as non-legacy', () {

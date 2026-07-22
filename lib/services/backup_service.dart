@@ -12,6 +12,7 @@ import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -322,6 +323,7 @@ class BackupService {
 
       final payload = <String, dynamic>{
         'version': 1,
+        'durationSchemaVersion': kDurationSecondsDataVersion,
         'metadata': metadata.toMap(),
         'habits': habitsBox.values.map((h) => h.toMap()).toList(),
         'days': daysBox.values.map((d) => d.toMap()).toList(),
@@ -578,6 +580,7 @@ class BackupService {
 
       final payload = <String, dynamic>{
         'version': 2,
+        'durationSchemaVersion': kDurationSecondsDataVersion,
         'metadata': metadata.toMap(),
         'habits': habitsBox.values.map((h) => h.toMap()).toList(),
         'days': daysBox.values.map((d) => d.toMap()).toList(),
@@ -642,6 +645,7 @@ class BackupService {
       final payload = <String, dynamic>{
         'version': 3,
         'type': 'delta',
+        'durationSchemaVersion': kDurationSecondsDataVersion,
         'fromTime': fromTime.toIso8601String(),
         'metadata': metadata.toMap(),
         'habits': changedHabits.map((h) => h.toMap()).toList(),
