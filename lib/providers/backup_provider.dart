@@ -202,6 +202,15 @@ class BackupProvider extends ChangeNotifier {
 
   bool get syncPillDismissed => _syncPillDismissed;
 
+  // True when the incoming delta is from the minutes-duration version
+  bool _outdatedPeerVersionDetected = false;
+  bool get outdatedPeerVersionDetected => _outdatedPeerVersionDetected;
+
+  /// Cleared by the UI after it has shown the mismatch dialog.
+  void clearOutdatedPeerVersionDetected() {
+    _outdatedPeerVersionDetected = false;
+  }
+
   /// True when the last successful sync was more than 5 minutes ago (or never).
   /// Used by the resume lifecycle handler to decide whether a full sync cycle
   /// is warranted or just an upload flush.
@@ -2136,6 +2145,10 @@ class BackupProvider extends ChangeNotifier {
     );
 
     // legacy minutes to seconds happens in BackupData.fromMap
+
+    if (backupData.isDelta && backupData.wasUpconvertedFromLegacy) {
+      _outdatedPeerVersionDetected = true;
+    }
 
     // ── Habits (master records) ──────────────────────────────────────────────
     for (final incoming in backupData.habits) {

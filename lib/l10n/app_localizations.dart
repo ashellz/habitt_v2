@@ -716,18 +716,6 @@ abstract class AppLocalizations {
   /// **'Apply increase'**
   String get insightStrengthApplyIncrease;
 
-  /// No description provided for @insightStrengthGotItEven.
-  ///
-  /// In en, this message translates to:
-  /// **'Got it'**
-  String get insightStrengthGotItEven;
-
-  /// No description provided for @insightStrengthGotItOdd.
-  ///
-  /// In en, this message translates to:
-  /// **'Got it'**
-  String get insightStrengthGotItOdd;
-
   /// No description provided for @insightStrengthIncreaseBrushTeeth.
   ///
   /// In en, this message translates to:
@@ -4611,6 +4599,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A category filter will appear above your habits on the home screen.'**
   String get showCategoriesOnMainPageDesc;
+
+  /// No description provided for @outdatedDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your other device'**
+  String get outdatedDeviceTitle;
+
+  /// No description provided for @outdatedDeviceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Another devices on your account is running an outdated version of Habitt. Please update it to the latest version to ensure proper syncing.'**
+  String get outdatedDeviceMessage;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotIt;
 }
 
 class _AppLocalizationsDelegate

@@ -110,8 +110,6 @@
   "initialProgressValuesLoadedForAllDays": "Valori di avanzamento iniziali caricati per tutti i giorni",
   "insightStrengthApplyDecrease": "Applicare la riduzione",
   "insightStrengthApplyIncrease": "Applicare l'aumento",
-  "insightStrengthGotItEven": "Capito",
-  "insightStrengthGotItOdd": "Capito",
   "insightStrengthIncreaseBrushTeeth": "State andando alla grande con il lavaggio dei denti. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a crescere ancora di più.|Grande costanza nel lavarsi i denti. La forza è stabile al {strength}%. Aumenta l'obiettivo da {fromValue} a {toValue} e mantieni alto lo slancio.|La tua abitudine di lavarti i denti è forte in questo momento. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} Per il prossimo livello, l'obiettivo consigliato è {fromValue} -> {toValue}. La forza è stabile a {strength}%. Passa da {fromValue} a {toValue} per continuare a migliorare.|Eccellente ritmo di lavaggio dei denti. La forza è stabile al {strength}%. Obiettivo consigliato: {fromValue} -> {toValue} per continuare a migliorare.",
   "@insightStrengthIncreaseBrushTeeth": {
     "placeholders": {
@@ -1045,5 +1043,8 @@
   "everyDonationHelpsSupportFutureUpdates": "Ogni donazione aiuta a sostenere i futuri aggiornamenti",
   "today": "Oggi",
   "showCategoriesOnMainPage": "Categorie delle abitudini",
-  "showCategoriesOnMainPageDesc": "Sopra le tue abitudini nella schermata Casa apparirà un filtro categorie."
+  "showCategoriesOnMainPageDesc": "Sopra le tue abitudini nella schermata Casa apparirà un filtro categorie.",
+  "outdatedDeviceTitle": "Aggiorna il tuo altro dispositivo",
+  "outdatedDeviceMessage": "Un altro dispositivo del tuo account sta usando una versione obsoleta di Habitt. Aggiornalo all'ultima versione per garantire una sincronizzazione corretta.",
+  "gotIt": "Capito"
 }

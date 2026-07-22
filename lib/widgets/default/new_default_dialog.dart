@@ -24,6 +24,8 @@ class NewDefaultDialog extends StatelessWidget {
     this.onClose,
     this.overrideDefaultButtons = false,
     this.tip,
+    this.titleIcon,
+    this.titleIconSvgPath,
   });
 
   final Widget? child;
@@ -41,6 +43,9 @@ class NewDefaultDialog extends StatelessWidget {
   final VoidCallback? onClose;
   final bool overrideDefaultButtons;
   final String? tip;
+
+  final Widget? titleIcon;
+  final String? titleIconSvgPath;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +76,18 @@ class NewDefaultDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,
             children: [
+              if (titleIcon != null || titleIconSvgPath != null)
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.all(10),
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: cp.isDark ? cp.field : cp.bg,
+                    shape: BoxShape.circle,
+                  ),
+                  child: titleIcon ?? SvgPicture.asset(titleIconSvgPath!),
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(

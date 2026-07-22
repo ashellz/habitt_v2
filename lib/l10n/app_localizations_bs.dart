@@ -341,12 +341,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get insightStrengthApplyIncrease => 'Primijeni povećanje';
 
   @override
-  String get insightStrengthGotItEven => 'Razumijem';
-
-  @override
-  String get insightStrengthGotItOdd => 'Razumijem';
-
-  @override
   String insightStrengthIncreaseBrushTeeth(
     Object strength,
     Object fromValue,
@@ -2723,4 +2717,14 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get showCategoriesOnMainPageDesc =>
       'Iznad tvojih navika na početnoj pojaviće se filter kategorija.';
+
+  @override
+  String get outdatedDeviceTitle => 'Ažuriraj svoj drugi uređaj';
+
+  @override
+  String get outdatedDeviceMessage =>
+      'Drugi uređaj na tvom računu koristi zastarjelu verziju Habitt-a. Molimo ažuriraj je na najnoviju verziju kako bi sinhronizacija ispravno funkcionisala.';
+
+  @override
+  String get gotIt => 'Razumijem';
 }

@@ -340,12 +340,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get insightStrengthApplyIncrease => 'Solicitar aumento';
 
   @override
-  String get insightStrengthGotItEven => 'Entendido.';
-
-  @override
-  String get insightStrengthGotItOdd => 'Entendido.';
-
-  @override
   String insightStrengthIncreaseBrushTeeth(
     Object strength,
     Object fromValue,
@@ -2740,4 +2734,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get showCategoriesOnMainPageDesc =>
       'Aparecerá un filtro de categorías encima de tus hábitos en la pantalla de inicio.';
+
+  @override
+  String get outdatedDeviceTitle => 'Actualiza tu otro dispositivo';
+
+  @override
+  String get outdatedDeviceMessage =>
+      'Otro dispositivo de tu cuenta está usando una versión desactualizada de Habitt. Actualízalo a la última versión para garantizar una sincronización correcta.';
+
+  @override
+  String get gotIt => 'Entendido';
 }

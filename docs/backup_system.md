@@ -184,6 +184,15 @@ on that legacy device echoes its target-in-minutes, which upconverts to an over-
 seconds value on updated devices — visually over 100% but still `completed`,
 non-destructive, and self-heals on the next write. The window closes once all devices update.
 
+**Outdated-peer notice.** `BackupData.fromMap` sets a receive-side `wasUpconvertedFromLegacy`
+flag when it upconverts a legacy payload. In `_mergeBackupData`, an applied **delta** with
+that flag (`isDelta && wasUpconvertedFromLegacy`) sets `BackupProvider._outdatedPeerVersionDetected`
+— deltas skip the local device, so this unambiguously means another connected device is still
+on the pre-seconds version (full backups are excluded; they may be this device's own history).
+`home_page.dart`'s backup listener shows a **one-time** dialog (`outdatedDevice*` strings) advising
+the user to update the other device, guarded by an in-memory flag and the
+`outdatedPeerVersionWarningShown_v1` pref.
+
 ### Deletion
 `isDeleted = true` on a habit acts as a tombstone. Deleted habits are excluded from new backups and not re-added from incoming data.
 

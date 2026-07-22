@@ -103,8 +103,6 @@
   "initialProgressValuesLoadedForAllDays": "Početne vrijednosti napretka su učitane za sve dane.",
   "insightStrengthApplyDecrease": "Primijeni smanjenje",
   "insightStrengthApplyIncrease": "Primijeni povećanje",
-  "insightStrengthGotItEven": "Razumijem",
-  "insightStrengthGotItOdd": "Razumijem",
   "insightStrengthIncreaseBrushTeeth": "Odlično se držiš u pranju zuba. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za daljnji rast.|Odlična konzistentnost u pranju zuba. Snaga je stabilna na {strength}%. Povećaj cilj sa {fromValue} na {toValue} i održi zamah visokim.|Pranje zuba ide odlično. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za sljedeći nivo.|Pouzdano se pojavljuješ u pranju zuba. Snaga je stabilna na {strength}%. Pomakni sa {fromValue} na {toValue} da nastaviš napredovati.|Odličan ritam u pranju zuba. Snaga je stabilna na {strength}%. Preporučeni cilj: {fromValue} -> {toValue} za nastavak napretka.",
   "@insightStrengthIncreaseBrushTeeth": {
     "placeholders": {
@@ -1035,5 +1033,8 @@
   "everyDonationHelpsSupportFutureUpdates": "Svaka donacija pomaže u podršci budućim nadogradnjama",
   "today": "Danas",
   "showCategoriesOnMainPage": "Kategorije navika",
-  "showCategoriesOnMainPageDesc": "Iznad tvojih navika na početnoj pojaviće se filter kategorija."
+  "showCategoriesOnMainPageDesc": "Iznad tvojih navika na početnoj pojaviće se filter kategorija.",
+  "outdatedDeviceTitle": "Ažuriraj svoj drugi uređaj",
+  "outdatedDeviceMessage": "Drugi uređaj na tvom računu koristi stariju verziju Habitt-a. Molimo ažuriraj je na najnoviju verziju kako bi sinhronizacija ispravno funkcionisala.",
+  "gotIt": "Razumijem"
 }

@@ -107,8 +107,6 @@
   "initialProgressValuesLoadedForAllDays": "Initial progress values loaded for all days",
   "insightStrengthApplyDecrease": "Apply decrease",
   "insightStrengthApplyIncrease": "Apply increase",
-  "insightStrengthGotItEven": "Got it",
-  "insightStrengthGotItOdd": "Got it",
   "insightStrengthIncreaseBrushTeeth": "You are doing great with brushing your teeth. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.|Great consistency on brushing your teeth. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.|Brushing your teeth is going strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.|You are reliably showing up with brushing your teeth. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.|Excellent rhythm on brushing your teeth. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "insightStrengthIncreaseDrinkWater": "You are doing great with drinking enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.|Great consistency on drinking enough water. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.|Drinking enough water is going strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.|You are reliably showing up with drinking enough water. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.|Excellent rhythm on drinking enough water. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "insightStrengthIncreaseGeneric": "Your consistency is strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.|You are handling this habit well. Strength is stable at {strength}%. Push the target from {fromValue} to {toValue} for more growth.|Momentum is solid here. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to level up.|You built a reliable baseline. Strength is stable at {strength}%. Move from {fromValue} to {toValue} and keep improving.|Great consistency lately. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep your progress rising.",
@@ -1052,5 +1050,8 @@
   "everyDonationHelpsSupportFutureUpdates": "Every donation helps support future updates",
   "today": "Today",
   "showCategoriesOnMainPage": "Habit categories",
-  "showCategoriesOnMainPageDesc": "A category filter will appear above your habits on the home screen."
+  "showCategoriesOnMainPageDesc": "A category filter will appear above your habits on the home screen.",
+  "outdatedDeviceTitle": "Update your other device",
+  "outdatedDeviceMessage": "Another devices on your account is running an outdated version of Habitt. Please update it to the latest version to ensure proper syncing.",
+  "gotIt": "Got it"
 }

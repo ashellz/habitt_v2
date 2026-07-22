@@ -11,8 +11,12 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/dialogs/outdated_other_device_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
 import 'package:habitt/util/sync_progress_overlay.dart';
@@ -35,6 +39,11 @@ class _HomePageState extends State<HomePage>
   bool _supportsLiquidGlass = false;
   late final StatusOverlayPopupController _statusPopup;
   VoidCallback? _backupListener;
+
+  // bools to show dialog no more than once per session
+  bool _outdatedPeerDialogHandled = false;
+  static const String _outdatedPeerWarningShownKey =
+      'outdatedPeerVersionWarningShown_v1';
 
   // Check if app state has changed, therefore run _updateLastOpenedDate
   @override
@@ -111,6 +120,7 @@ class _HomePageState extends State<HomePage>
         if (!mounted) return;
         _maybeShowBackupNotification(context.read<BackupProvider>());
         _maybeShowSyncOverlay();
+        _maybeShowOutdatedPeerDialog(context.read<BackupProvider>());
       };
       backupProvider.addListener(_backupListener!);
 
@@ -161,6 +171,28 @@ class _HomePageState extends State<HomePage>
         context.read<ColorProvider>(),
       );
     }
+  }
+
+  // per session dialog if incoming delta version is outdated
+  Future<void> _maybeShowOutdatedPeerDialog(
+    BackupProvider backupProvider,
+  ) async {
+    if (_outdatedPeerDialogHandled) return;
+    if (!backupProvider.outdatedPeerVersionDetected) return;
+
+    _outdatedPeerDialogHandled = true;
+    backupProvider.clearOutdatedPeerVersionDetected();
+
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_outdatedPeerWarningShownKey) ?? false) return;
+    await prefs.setBool(_outdatedPeerWarningShownKey, true);
+
+    if (!mounted) return;
+    final loc = AppLocalizations.of(context)!;
+    await showDialogSheet(
+      context: context,
+      builder: (dialogContext) => OutdatedOtherDeviceDialog(loc: loc),
+    );
   }
 
   void _maybeShowBackupNotification(BackupProvider backupProvider) {

@@ -110,8 +110,6 @@
   "initialProgressValuesLoadedForAllDays": "Valores de progreso iniciales cargados para todos los días",
   "insightStrengthApplyDecrease": "Aplicar disminución",
   "insightStrengthApplyIncrease": "Solicitar aumento",
-  "insightStrengthGotItEven": "Entendido.",
-  "insightStrengthGotItOdd": "Entendido.",
   "insightStrengthIncreaseBrushTeeth": "Te va muy bien cepillándote los dientes. La fuerza está estable en {strength}%. Objetivo recomendado: {fromValue} -> {toValue} para seguir creciendo aún más. Gran consistencia en cepillarte los dientes. La fuerza se mantiene estable en {strength}%. Aumenta tu objetivo de {fromValue} a {toValue} y mantén el impulso.|Tu hábito de cepillarte los dientes es fuerte ahora mismo. La fuerza es estable en {strength}%. Objetivo recomendado: {fromValue} -> {toValue} para el siguiente nivel. Vas a cepillarte los dientes con regularidad. La fuerza está estable en {strength}%. Pasa de {fromValue} a {toValue} para seguir mejorando. Excelente ritmo al cepillarte los dientes. Fuerza estable en {strength}%. Objetivo recomendado: {fromValue} -> {toValue} para seguir progresando.",
   "@insightStrengthIncreaseBrushTeeth": {
     "placeholders": {
@@ -1045,5 +1043,8 @@
   "everyDonationHelpsSupportFutureUpdates": "Cada donación ayuda a impulsar futuras actualizaciones",
   "today": "Hoy",
   "showCategoriesOnMainPage": "Categorías de hábitos",
-  "showCategoriesOnMainPageDesc": "Aparecerá un filtro de categorías encima de tus hábitos en la pantalla de inicio."
+  "showCategoriesOnMainPageDesc": "Aparecerá un filtro de categorías encima de tus hábitos en la pantalla de inicio.",
+  "outdatedDeviceTitle": "Actualiza tu otro dispositivo",
+  "outdatedDeviceMessage": "Otro dispositivo de tu cuenta está usando una versión desactualizada de Habitt. Actualízalo a la última versión para garantizar una sincronización correcta.",
+  "gotIt": "Entendido"
 }

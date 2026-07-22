@@ -16,6 +16,8 @@ class BackupData {
   // the number will convert to seconds for the current version of the app
   final int durationSchemaVersion;
 
+  final bool wasUpconvertedFromLegacy;
+
   BackupData({
     required this.version,
     required this.metadata,
@@ -24,6 +26,7 @@ class BackupData {
     required this.dateJoined,
     this.isDelta = false,
     this.durationSchemaVersion = kDurationSecondsDataVersion,
+    this.wasUpconvertedFromLegacy = false,
   });
 
   bool get isLegacyDurationMinutes =>
@@ -71,6 +74,8 @@ class BackupData {
       version: map['version'] as int,
       isDelta: (map['type'] as String?) == 'delta',
       durationSchemaVersion: kDurationSecondsDataVersion,
+      wasUpconvertedFromLegacy:
+          rawDurationVersion < kDurationSecondsDataVersion,
       metadata: BackupMetadata.fromMap(map['metadata']),
       habits: habits,
       days: days,

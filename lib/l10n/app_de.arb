@@ -110,8 +110,6 @@
   "initialProgressValuesLoadedForAllDays": "Anfangsfortschrittswerte für alle Tage geladen",
   "insightStrengthApplyDecrease": "Abnehmen",
   "insightStrengthApplyIncrease": "Erhöhung anwenden",
-  "insightStrengthGotItEven": "Verstanden",
-  "insightStrengthGotItOdd": "Verstanden",
   "insightStrengthIncreaseBrushTeeth": "Du machst dich gut beim Zähneputzen. Die Stärke liegt stabil bei {strength}%. Empfohlenes Ziel: {fromValue} -> {toValue}, um noch mehr zu wachsen.|Große Beständigkeit beim Zähneputzen. Die Stärke ist stabil bei {strength}%. Erhöhen Sie Ihr Ziel von {fromValue} auf {toValue} und halten Sie den Schwung hoch.|Ihre Zahnputzgewohnheit ist im Moment stark. Die Stärke liegt stabil bei {strength}%. Empfohlenes Ziel: {fromValue} -> {toValue} für die nächste Stufe.|Sie erscheinen zuverlässig zum Zähneputzen. Die Stärke ist stabil bei {strength}%. Gehen Sie von {fromValue} auf {toValue}, um sich weiter zu verbessern.|Exzellenter Rhythmus beim Zähneputzen. Die Stärke ist stabil bei {strength}%. Empfohlenes Ziel: {fromValue} -> {toValue}, um weiter voranzukommen.",
   "@insightStrengthIncreaseBrushTeeth": {
     "placeholders": {
@@ -1045,5 +1043,8 @@
   "everyDonationHelpsSupportFutureUpdates": "Jede Spende hilft, zukünftige Updates zu unterstützen",
   "today": "Heute",
   "showCategoriesOnMainPage": "Gewohnheitskategorien",
-  "showCategoriesOnMainPageDesc": "Über deinen Gewohnheiten auf der Startseite erscheint ein Kategoriefilter."
+  "showCategoriesOnMainPageDesc": "Über deinen Gewohnheiten auf der Startseite erscheint ein Kategoriefilter.",
+  "outdatedDeviceTitle": "Aktualisiere dein anderes Gerät",
+  "outdatedDeviceMessage": "Ein anderes Gerät in deinem Konto verwendet eine veraltete Version von Habitt. Bitte aktualisiere es auf die neueste Version, um eine ordnungsgemäße Synchronisierung zu gewährleisten.",
+  "gotIt": "Verstanden"
 }

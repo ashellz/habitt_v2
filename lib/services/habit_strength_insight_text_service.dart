@@ -177,10 +177,8 @@ class HabitStrengthInsightTextService {
     final idx = (habitId ^ todayKey.hashCode).abs();
     final even = idx.isEven;
     final emoji = even ? '💪' : '🚀';
-    final text =
-        even
-            ? localizations.insightStrengthGotItEven
-            : localizations.insightStrengthGotItOdd;
+    final text = localizations.gotIt;
+
     return '$emoji $text';
   }
 
