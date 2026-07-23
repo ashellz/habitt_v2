@@ -26,6 +26,7 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/profile_image_provider.dart';
@@ -173,6 +174,15 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => StateProvider(prefs)),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
+
+        ChangeNotifierProxyProvider<HabitProvider, TimerProvider>(
+          create: (_) => TimerProvider(prefs),
+          update: (_, habitProvider, previous) {
+            previous!.attachHabitProvider(habitProvider);
+            habitProvider.onHabitDeactivated = previous.clearTimerIfActive;
+            return previous;
+          },
+        ),
 
         // Profile image provider (loads image once at startup)
         ChangeNotifierProvider<ProfileImageProvider>.value(

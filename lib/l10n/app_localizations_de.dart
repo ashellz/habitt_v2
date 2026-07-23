@@ -2749,4 +2749,42 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get gotIt => 'Verstanden';
+
+  @override
+  String get timerDialogTitle => 'Start a timer';
+
+  @override
+  String get timerCloseHint =>
+      'You can close this screen. The timer will keep running';
+
+  @override
+  String get timerInProgress => 'In progress...';
+
+  @override
+  String get timerPaused => 'Paused';
+
+  @override
+  String get completeHabit => 'Complete habit';
+
+  @override
+  String get timerPauseToEditHint =>
+      'Pause the timer to edit progress manually';
+
+  @override
+  String get timerAlreadyRunningTitle => 'A timer is already running';
+
+  @override
+  String timerSwitchDesc(String name) {
+    return 'Stop the current timer and start one for \"$name\" instead?';
+  }
+
+  @override
+  String get timerStopAndStart => 'Stop & start';
+
+  @override
+  String get habitPausedActionHint =>
+      'This habit is paused. Resume it to track progress.';
+
+  @override
+  String get habitDeletedActionHint => 'This habit has been deleted.';
 }

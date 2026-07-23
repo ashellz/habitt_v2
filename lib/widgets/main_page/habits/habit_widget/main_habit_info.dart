@@ -5,6 +5,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -27,8 +28,15 @@ class MainHabitInfo extends StatelessWidget {
     final bool isAmount = habit.tracksAmount;
     final bool isDuration = habit.tracksDuration;
 
+    // follow the running timer live, same as NewHabitProgress.
+    final liveDurationSeconds = context.select<TimerProvider, int?>(
+      (t) => t.liveProgressFor(habit.id),
+    );
+    final int durationCompletedValue =
+        liveDurationSeconds ?? habit.durationCompleted;
+
     final bool hasProgress =
-        isAmount ? habit.amountCompleted > 0 : habit.durationCompleted > 0;
+        isAmount ? habit.amountCompleted > 0 : durationCompletedValue > 0;
     final bool isCompleted = habit.completed;
 
     String amountText() {
@@ -56,10 +64,11 @@ class MainHabitInfo extends StatelessWidget {
     }
 
     String durationText() {
-      if (hasProgress && !isCompleted) {
-        return "${getDurationString(habit.durationCompleted)} / ${getDurationString(habit.duration)}";
-      } else if (isCompleted) {
-        return getDurationString(habit.durationCompleted);
+      if ((hasProgress && !isCompleted) &&
+          durationCompletedValue < habit.duration) {
+        return "${getDurationString(durationCompletedValue)} / ${getDurationString(habit.duration)}";
+      } else if (isCompleted || durationCompletedValue >= habit.duration) {
+        return getDurationString(durationCompletedValue);
       }
       return getDurationString(habit.duration);
     }

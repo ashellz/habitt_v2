@@ -11,6 +11,7 @@ import 'package:habitt/util/insight_sheet_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
+import 'package:habitt/widgets/main_page/timer_pill_widget.dart';
 import 'package:habitt/widgets/main_page/main_page_top_section.dart';
 import 'package:habitt/widgets/main_page/month_progress_calendar.dart';
 import 'package:provider/provider.dart';
@@ -372,6 +373,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 color: cp.habitBg,
                 child: Column(
                   children: [
+                    const TimerPillWidget(),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       transitionBuilder: (child, animation) {

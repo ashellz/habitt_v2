@@ -1053,5 +1053,21 @@
   "showCategoriesOnMainPageDesc": "A category filter will appear above your habits on the home screen.",
   "outdatedDeviceTitle": "Update your other device",
   "outdatedDeviceMessage": "Another devices on your account is running an outdated version of Habitt. Please update it to the latest version to ensure proper syncing.",
-  "gotIt": "Got it"
+  "gotIt": "Got it",
+  "timerDialogTitle": "Start a timer",
+  "timerCloseHint": "You can close this screen. The timer will keep running",
+  "timerInProgress": "In progress...",
+  "timerPaused": "Paused",
+  "completeHabit": "Complete habit",
+  "timerPauseToEditHint": "Pause the timer to edit progress manually",
+  "timerAlreadyRunningTitle": "A timer is already running",
+  "timerSwitchDesc": "Stop the current timer and start one for \"{name}\" instead?",
+  "@timerSwitchDesc": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "timerStopAndStart": "Stop & start",
+  "habitPausedActionHint": "This habit is paused. Resume it to track progress.",
+  "habitDeletedActionHint": "This habit has been deleted."
 }

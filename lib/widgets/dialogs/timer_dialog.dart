@@ -1,61 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/theme_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/timer_controls/timer_play_pause_button.dart';
+import 'package:habitt/widgets/timer_controls/timer_stop_button.dart';
+import 'package:habitt/widgets/default/timer_progress.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class TimerDialog extends StatelessWidget {
   const TimerDialog({super.key, required this.habit});
 
   final Habit habit;
 
+  static String formatClock(int seconds) {
+    final s = seconds < 0 ? 0 : seconds;
+    final h = s ~/ 3600;
+    final m = (s % 3600) ~/ 60;
+    final sec = s % 60;
+    final mm = m.toString().padLeft(2, '0');
+    final ss = sec.toString().padLeft(2, '0');
+    if (h > 0) return '$h:$mm:$ss';
+    return '$mm:$ss';
+  }
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final tp = context.watch<ThemeProvider>();
+    final timer = context.watch<TimerProvider>();
     final loc = AppLocalizations.of(context)!;
-    // TODO all strings need to be translated
+
+    final isActive = timer.isActiveHabit(habit.id);
+    final isRunning = isActive && timer.isRunning;
+    final isPaused = isActive && timer.isPaused;
+
+    final progressSeconds =
+        timer.liveProgressFor(habit.id) ?? habit.durationCompleted;
+    final target = habit.duration;
+    final isComplete = target > 0 && progressSeconds >= target;
 
     return NewDefaultDialog(
-      title: "Start a timer",
+      title: loc.timerDialogTitle,
       showCloseButton: true,
       overrideDefaultButtons: true,
-      tip: "Your can close this screen. The timer will keep running",
+      tip: loc.timerCloseHint,
       child: Column(
         children: [
           Column(
             spacing: 24,
             children: [
-              _timerCircle(cp),
-              _timerControls(cp),
+              _timerCircle(cp, tp, progressSeconds, target),
+              _timerControls(
+                context: context,
+                cp: cp,
+                progressSeconds: progressSeconds,
+                target: target,
+                isRunning: isRunning,
+                isPaused: isPaused,
+                isActive: isActive,
+              ),
               Column(
                 spacing: 12,
                 children: [
-                  NewDefaultButton(
-                    width: double.infinity,
-                    label: "Complete habit",
-                    prefix: Container(
-                      height: 24,
-                      width: 24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: cp.bg.withValues(alpha: 0.4),
+                  if (!isComplete)
+                    NewDefaultButton(
+                      width: double.infinity,
+                      label: loc.completeHabit,
+                      prefix: Container(
+                        height: 24,
+                        width: 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: cp.bg.withValues(alpha: 0.4),
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/images/new-svg/check.svg",
+                          colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
+                        ),
                       ),
-                      child: SvgPicture.asset(
-                        "assets/images/new-svg/check.svg",
-                        colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
-                      ),
+                      onPressed: () => _completeHabit(context, target),
                     ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
                   NewDefaultButton.secondary(
                     width: double.infinity,
-                    label: "Log progress",
+                    label: loc.logProgress,
                     prefix: Container(
                       height: 24,
                       width: 24,
@@ -68,18 +105,7 @@ class TimerDialog extends StatelessWidget {
                         colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      showDialogSheet(
-                        context: context,
-                        builder: (context) {
-                          return LogProgressDialog(
-                            progressType: ProgressType.duration,
-                            habit: habit,
-                          );
-                        },
-                      );
-                    },
+                    onPressed: () => _onLogProgress(context, isRunning),
                   ),
                 ],
               ),
@@ -90,38 +116,142 @@ class TimerDialog extends StatelessWidget {
     );
   }
 
-  Row _timerControls(ColorProvider cp) {
+  Future<void> _onPlayPause(BuildContext context) async {
+    final timer = context.read<TimerProvider>();
+    final habitProvider = context.read<HabitProvider>();
+
+    if (timer.isActiveHabit(habit.id)) {
+      if (timer.isRunning) {
+        await timer.pause();
+      } else {
+        timer.resume();
+      }
+      return;
+    }
+
+    // another session running, show decission dialog to switch or cancel
+    if (timer.hasActiveTimer) {
+      final switchIt = await _confirmSwitch(context);
+      if (switchIt != true) return;
+      await timer.stop();
+    }
+
+    final day = habitProvider.selectedDate ?? DateTime.now();
+    timer.start(
+      habitId: habit.id,
+      day: day,
+      durationCompleted: habit.durationCompleted,
+    );
+  }
+
+  Future<void> _onStop(BuildContext context) async {
+    await context.read<TimerProvider>().stop();
+  }
+
+  Future<void> _completeHabit(BuildContext context, int target) async {
+    final timer = context.read<TimerProvider>();
+    final habitProvider = context.read<HabitProvider>();
+    if (timer.isActiveHabit(habit.id)) {
+      await timer.completeToTarget(target);
+    } else {
+      habitProvider.completeHabit(
+        habit.id,
+        context,
+        context.read<StateProvider>(),
+      );
+    }
+  }
+
+  Future<void> _onLogProgress(BuildContext context, bool isRunning) async {
+    if (isRunning) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.timerPauseToEditHint),
+        ),
+      );
+      return;
+    }
+
+    final timer = context.read<TimerProvider>();
+    Navigator.pop(context);
+    await showDialogSheet(
+      context: context,
+      builder:
+          (context) => LogProgressDialog(
+            progressType: ProgressType.duration,
+            habit: habit,
+          ),
+    );
+
+    if (timer.isActiveHabit(habit.id)) {
+      timer.rebaseline(habit.durationCompleted);
+    }
+  }
+
+  Future<bool?> _confirmSwitch(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    return showDialogSheet<bool>(
+      context: context,
+      builder:
+          (context) => NewDefaultDialog(
+            title: loc.timerAlreadyRunningTitle,
+            desc: loc.timerSwitchDesc(habit.name),
+            primaryButtonLabel: loc.timerStopAndStart,
+            secondaryButtonLabel: loc.cancel,
+            onPrimaryButtonPressed: () => Navigator.pop(context, true),
+            onSecondaryButtonPressed: () => Navigator.pop(context, false),
+          ),
+    );
+  }
+
+  Widget _timerControls({
+    required BuildContext context,
+    required ColorProvider cp,
+    required int progressSeconds,
+    required int target,
+    required bool isRunning,
+    required bool isPaused,
+    required bool isActive,
+  }) {
+    final loc = AppLocalizations.of(context)!;
+    final statusText =
+        isRunning
+            ? loc.timerInProgress
+            : isPaused
+            ? loc.timerPaused
+            : "";
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                // timer status indicator - red dot
-                Container(
-                  height: 10,
-                  width: 10,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: cp.error,
+                if (isRunning || isPaused)
+                  Container(
+                    height: 10,
+                    width: 10,
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isRunning ? cp.error : cp.greyText,
+                    ),
                   ),
-                ),
-                SizedBox(width: 8),
-
                 Text(
-                  "18:24", // TODO timer value
+                  formatClock(progressSeconds),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w500,
                     color: cp.text,
                   ),
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0),
                   child: Text(
-                    "/30:00", // TODO habit duration
+                    "/${formatClock(target)}",
                     style: TextStyle(
                       fontSize: 14,
                       color: cp.isDark ? cp.lightGreyText : cp.greyText,
@@ -130,68 +260,32 @@ class TimerDialog extends StatelessWidget {
                 ),
               ],
             ),
-
-            Text(
-              "In progress...", // TODO visible only if timer is in progress or paused with text "Paused"
-              style: TextStyle(
-                fontSize: 14,
-                color: cp.isDark ? cp.lightGreyText : cp.greyText,
+            if (statusText.isNotEmpty)
+              Text(
+                statusText,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: cp.isDark ? cp.lightGreyText : cp.greyText,
+                ),
               ),
-            ),
           ],
         ),
-        // controls
         Row(
           spacing: 8,
           children: [
-            // start or puase timer TODO
-            Container(
-              height: 52,
-              width: 52,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: cp.main.withValues(alpha: 0.2),
-              ),
-              padding: const EdgeInsets.all(6.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: const Alignment(0.09, 0.11),
-                    end: const Alignment(0.86, 0.90),
-                    colors: [
-                      cp.mainButtonLeftGradient,
-                      cp.mainButtonRightGradient,
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.all(10),
-
-                child: Center(
-                  child: SvgPicture.asset(
-                    "assets/images/new-svg/pause-timer.svg", // TODO start-timer.svg if not paused or not started
-                    width: 24,
-                    height: 24,
-                  ),
-                ),
-              ),
+            TimerPlayPauseButton(
+              isRunning: isRunning,
+              onTap: () => _onPlayPause(context),
+              size: 52,
+              outerPadding: 6,
+              innerPadding: 10,
+              iconSize: 24,
             ),
-            // stop timer TODO
-            Container(
-              height: 52,
-              width: 52,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: cp.error.withValues(alpha: 0.1),
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/images/new-svg/stop-timer.svg",
-                  width: 24,
-                  height: 24,
-                ),
-              ),
+            TimerStopButton(
+              onTap: isActive ? () => _onStop(context) : null,
+              enabled: isActive,
+              size: 52,
+              iconSize: 24,
             ),
           ],
         ),
@@ -199,15 +293,31 @@ class TimerDialog extends StatelessWidget {
     );
   }
 
-  Center _timerCircle(ColorProvider cp) {
+  Widget _timerCircle(
+    ColorProvider cp,
+    ThemeProvider tp,
+    int progressSeconds,
+    int target,
+  ) {
+    final progress = target > 0 ? progressSeconds / target : 0.0;
     return Center(
-      child: Container(
-        color: cp.habitBg,
+      child: SizedBox(
         height: 240,
         width: 240,
         child: Stack(
           alignment: Alignment.center,
           children: [
+            SizedBox(
+              height: 240,
+              width: 240,
+              child: TimerRingIndicator(
+                progress: progress,
+                color: cp.main,
+                trackColor: cp.main.withValues(alpha: 0.12),
+                lapSeconds: target.toDouble(),
+                isDark: cp.isDark,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 56.0),
               child: Column(

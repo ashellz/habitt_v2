@@ -1,1 +1,57 @@
-{}
+{
+  "bs": [
+    "timerDialogTitle",
+    "timerCloseHint",
+    "timerInProgress",
+    "timerPaused",
+    "completeHabit",
+    "timerPauseToEditHint",
+    "timerAlreadyRunningTitle",
+    "timerSwitchDesc",
+    "timerStopAndStart",
+    "habitPausedActionHint",
+    "habitDeletedActionHint"
+  ],
+
+  "de": [
+    "timerDialogTitle",
+    "timerCloseHint",
+    "timerInProgress",
+    "timerPaused",
+    "completeHabit",
+    "timerPauseToEditHint",
+    "timerAlreadyRunningTitle",
+    "timerSwitchDesc",
+    "timerStopAndStart",
+    "habitPausedActionHint",
+    "habitDeletedActionHint"
+  ],
+
+  "es": [
+    "timerDialogTitle",
+    "timerCloseHint",
+    "timerInProgress",
+    "timerPaused",
+    "completeHabit",
+    "timerPauseToEditHint",
+    "timerAlreadyRunningTitle",
+    "timerSwitchDesc",
+    "timerStopAndStart",
+    "habitPausedActionHint",
+    "habitDeletedActionHint"
+  ],
+
+  "it": [
+    "timerDialogTitle",
+    "timerCloseHint",
+    "timerInProgress",
+    "timerPaused",
+    "completeHabit",
+    "timerPauseToEditHint",
+    "timerAlreadyRunningTitle",
+    "timerSwitchDesc",
+    "timerStopAndStart",
+    "habitPausedActionHint",
+    "habitDeletedActionHint"
+  ]
+}

@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
@@ -56,9 +57,23 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
     return 0;
   }
 
-  String _label() {
+  // running timer that has reached (or passed) the duration target counts
+  // as completed too, same as NewHabitProgress's checkmark.
+  bool _isEffectivelyCompleted(BuildContext context) {
+    if (widget.habit.completed) return true;
+    if (!widget.habit.tracksDuration || widget.habit.duration <= 0) {
+      return false;
+    }
+    final liveDurationSeconds = context.select<TimerProvider, int?>(
+      (t) => t.liveProgressFor(widget.habit.id),
+    );
+    return liveDurationSeconds != null &&
+        liveDurationSeconds >= widget.habit.duration;
+  }
+
+  String _label(bool effectiveCompleted) {
     final loc = AppLocalizations.of(context)!;
-    if (widget.habit.completed) {
+    if (effectiveCompleted) {
       return loc.completed;
     }
     if (!widget.isDemo && widget.habit.hasTrackingType) {
@@ -73,6 +88,20 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
       return;
     }
 
+    if (widget.habit.isPaused == true || widget.habit.isDeleted == true) {
+      final loc = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.habit.isPaused == true
+                ? loc.habitPausedActionHint
+                : loc.habitDeletedActionHint,
+          ),
+        ),
+      );
+      return;
+    }
+
     final habitProvider = context.read<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
 
@@ -80,6 +109,14 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
       habitProvider.completeHabit(widget.habit.id, context, stateProvider);
       return;
     }
+
+    final selected = habitProvider.selectedDate;
+    final now = DateTime.now();
+    final isToday =
+        selected == null ||
+        (selected.year == now.year &&
+            selected.month == now.month &&
+            selected.day == now.day);
 
     await showDialogSheet(
       context: context,
@@ -89,8 +126,13 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
             progressType: ProgressType.amount,
             habit: widget.habit,
           );
-        } else {
+        } else if (isToday) {
           return TimerDialog(habit: widget.habit);
+        } else {
+          return LogProgressDialog(
+            progressType: ProgressType.duration,
+            habit: widget.habit,
+          );
         }
       },
     );
@@ -99,6 +141,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    final effectiveCompleted = _isEffectivelyCompleted(context);
 
     return GestureDetector(
       onTap: _onMainTap,
@@ -115,7 +158,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
                 );
               },
       child: NewDefaultButton(
-        color: widget.habit.completed ? cp.habitBg : cp.main,
+        color: effectiveCompleted ? cp.habitBg : cp.main,
         height: 41,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onPressed: () => _onMainTap(),
@@ -130,9 +173,9 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
             ),
             const SizedBox(width: 10),
             Text(
-              _label(),
+              _label(effectiveCompleted),
               style: TextStyle(
-                color: widget.habit.completed ? cp.lightGreyText : cp.bg,
+                color: effectiveCompleted ? cp.lightGreyText : cp.bg,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),

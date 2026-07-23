@@ -4617,6 +4617,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it'**
   String get gotIt;
+
+  /// No description provided for @timerDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a timer'**
+  String get timerDialogTitle;
+
+  /// No description provided for @timerCloseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can close this screen. The timer will keep running'**
+  String get timerCloseHint;
+
+  /// No description provided for @timerInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress...'**
+  String get timerInProgress;
+
+  /// No description provided for @timerPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get timerPaused;
+
+  /// No description provided for @completeHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete habit'**
+  String get completeHabit;
+
+  /// No description provided for @timerPauseToEditHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause the timer to edit progress manually'**
+  String get timerPauseToEditHint;
+
+  /// No description provided for @timerAlreadyRunningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A timer is already running'**
+  String get timerAlreadyRunningTitle;
+
+  /// No description provided for @timerSwitchDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop the current timer and start one for \"{name}\" instead?'**
+  String timerSwitchDesc(String name);
+
+  /// No description provided for @timerStopAndStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop & start'**
+  String get timerStopAndStart;
+
+  /// No description provided for @habitPausedActionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This habit is paused. Resume it to track progress.'**
+  String get habitPausedActionHint;
+
+  /// No description provided for @habitDeletedActionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This habit has been deleted.'**
+  String get habitDeletedActionHint;
 }
 
 class _AppLocalizationsDelegate

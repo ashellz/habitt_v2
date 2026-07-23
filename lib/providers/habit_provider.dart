@@ -25,12 +25,18 @@ class HabitProvider extends ChangeNotifier {
   DateTime get dateJoined => _dateJoined ?? DateTime.now();
   final habitBox = Hive.box<Habit>('habits');
   final daysBox = Hive.box<Day>('days');
+
+  // called when a habit is deleted or paused
+  // so an active timer session for it can be cleared
+  void Function(int habitId)? onHabitDeactivated;
   DateTime? selectedDate;
   int dataVersion = 0;
 
-  /// True once the initial Hive load has completed at least once. Used to avoid
-  /// draining deferred completions before `habits` is populated.
+  // true after provider has initialized
+  // used to avoid draining deferred completions (from notifications)
+  // before habits list is populated
   bool get isInitialized => dataVersion > 0;
+
   int streakEntryEpoch = 0;
   int streakExitEpoch = 0;
 
@@ -66,8 +72,6 @@ class HabitProvider extends ChangeNotifier {
   NotificationsProvider? notificationsProvider;
 
   HabitProvider({this.statsProvider}) {
-    // Genuine app cold start is the only init() that should replay the streak
-    // entrance animation. Sync/restore/import reloads call init() without it.
     init(animateStreakEntry: true);
   }
 
@@ -153,10 +157,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> _syncAllHabitNotifications({bool force = false}) async {
-    // Skip if already synced today unless forced. Individual habit changes are
-    // handled by per-habit syncs; the full startup sync only needs to run once
-    // per day to roll the 7-day window forward and catch any notifications that
-    // fired while the app was closed.
+    // runs through all habits and schedules notifications for each habit properly
     final notificationsEnabled =
         notificationsProvider?.areHabitNotificationsEnabled ?? true;
     if (!notificationsEnabled) {
@@ -199,8 +200,6 @@ class HabitProvider extends ChangeNotifier {
     );
   }
 
-  // Syncs notifications after a completion-state change, skipping work that
-  // has no effect on the scheduled notification set.
   Future<void> _syncNotificationsOnCompletionChange({
     required Habit habit,
     required bool wasCompleted,
@@ -625,7 +624,6 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  // Getting habits for a certain day with extra logic
   List<Habit> getHabitsForDate(DateTime day) {
     final normalizedDay = _normalizeDate(day);
     final today = _normalizeDate(DateTime.now());
@@ -635,7 +633,6 @@ class HabitProvider extends ChangeNotifier {
     return getHabitsFromDay(normalizedDay);
   }
 
-  // Refreshing todays habits
   void refreshTodaysHabits({bool notify = true}) {
     final today = _normalizeDate(DateTime.now());
     todaysHabits = _filteredHabitsForDay(today, habits);
@@ -1032,6 +1029,7 @@ class HabitProvider extends ChangeNotifier {
 
     habits.removeWhere((h) => h.id == habit.id);
     habitStatsProvider?.removeHabit(habit.id);
+    onHabitDeactivated?.call(habit.id);
     await habit.deleteHabit();
     // Cancels deleted habit notifications
     await NotificationService.cancelHabitNotifications(habit);
@@ -1043,6 +1041,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> pauseHabit(Habit habit) async {
+    onHabitDeactivated?.call(habit.id);
     await habit.pauseHabit();
     await NotificationService.cancelHabitNotifications(habit);
     updateHabitInDB(habit);
@@ -1149,9 +1148,7 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  /// Applies a deferred completion captured from a notification "Complete" action.
-  /// Idempotent: does nothing if the habit no longer exists or is already
-  /// completed for [day]. Reuses [completeHabit] so streaks/stats stay correct.
+  // completes a habit noted by the notification complete button
   void applyDeferredCompletion(
     int id,
     DateTime day,
@@ -1326,6 +1323,48 @@ class HabitProvider extends ChangeNotifier {
     if (!wasCompleted && isNowCompleted) {
       _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
     }
+  }
+
+  // used by the timer provider to commit timer progress to the habit
+  // after pausing or stopping the timer
+  Future<void> commitTimerDuration(
+    int id,
+    int durationCompleted, {
+    required DateTime day,
+  }) async {
+    habitStatsProvider?.invalidateHabit(id);
+
+    final now = DateTime.now();
+    final todaySimple = DateTime(now.year, now.month, now.day);
+    final daySimple = DateTime(day.year, day.month, day.day);
+
+    late Habit habit;
+    if (daySimple == todaySimple) {
+      final match = habits.where((h) => h.id == id);
+      if (match.isEmpty) return;
+      habit = match.first;
+    } else {
+      final dayHabits = getHabitsFromDay(daySimple, hydrateMissing: true);
+      final match = dayHabits.where((h) => h.id == id);
+      if (match.isEmpty) return;
+      habit = match.first;
+    }
+
+    final wasCompleted = habit.completed;
+    habit.updateHabitDurationCompleted(durationCompleted);
+    final isNowCompleted = habit.completed;
+
+    await updateHabitInDB(habit, day: daySimple);
+    await _syncNotificationsOnCompletionChange(
+      habit: habit,
+      wasCompleted: wasCompleted,
+      isNowCompleted: isNowCompleted,
+      daySimple: daySimple,
+      todaySimple: todaySimple,
+    );
+    _refreshPerfectStreakForDayIfNeeded(daySimple);
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
   }
 
   void updateHabitDurationCompleted(

@@ -9,6 +9,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -561,11 +562,20 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   }
 
   String _durationLine(Habit habit) {
-    if (habit.completed) {
-      return getDurationString(habit.durationCompleted);
-    }
-    if (habit.durationCompleted > 0) {
-      return '${getDurationString(habit.durationCompleted)} / ${getDurationString(habit.duration)}';
+    final liveDurationSeconds = context.select<TimerProvider, int?>(
+      (t) => t.liveProgressFor(habit.id),
+    );
+
+    final int durationCompletedValue =
+        liveDurationSeconds ?? habit.durationCompleted;
+    final hasProgress = durationCompletedValue > 0;
+    final isCompleted = habit.completed;
+
+    if ((hasProgress && !isCompleted) &&
+        durationCompletedValue < habit.duration) {
+      return "${getDurationString(durationCompletedValue)} / ${getDurationString(habit.duration)}";
+    } else if (isCompleted || durationCompletedValue >= habit.duration) {
+      return getDurationString(durationCompletedValue);
     }
     return getDurationString(habit.duration);
   }
