@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/insight_sheet_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
@@ -334,6 +335,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final habitProvider = context.watch<HabitProvider>();
+    final hasActiveTimer = context.watch<TimerProvider>().hasActiveTimer;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     const bottomNavBar = 95;
 
@@ -373,7 +375,27 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 color: cp.habitBg,
                 child: Column(
                   children: [
-                    const TimerPillWidget(),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      switchInCurve: Curves.easeOutBack,
+                      switchOutCurve: Curves.easeIn,
+                      transitionBuilder: (child, animation) {
+                        return SizeTransition(
+                          sizeFactor: animation,
+                          alignment: Alignment.topCenter,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child:
+                          hasActiveTimer
+                              ? const TimerPillWidget(
+                                key: ValueKey('timer-pill'),
+                              )
+                              : const SizedBox.shrink(),
+                    ),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       transitionBuilder: (child, animation) {

@@ -4672,17 +4672,17 @@ abstract class AppLocalizations {
   /// **'Stop & start'**
   String get timerStopAndStart;
 
-  /// No description provided for @habitPausedActionHint.
+  /// No description provided for @habitPausedDesc.
   ///
   /// In en, this message translates to:
-  /// **'This habit is paused. Resume it to track progress.'**
-  String get habitPausedActionHint;
+  /// **'This habit is currently paused. To add any progress you must unpause it first.'**
+  String get habitPausedDesc;
 
-  /// No description provided for @habitDeletedActionHint.
+  /// No description provided for @habitDeletedDesc.
   ///
   /// In en, this message translates to:
-  /// **'This habit has been deleted.'**
-  String get habitDeletedActionHint;
+  /// **'This habit has been deleted. To add any progress you must restore it first.'**
+  String get habitDeletedDesc;
 }
 
 class _AppLocalizationsDelegate

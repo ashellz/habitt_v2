@@ -41,7 +41,7 @@ class TimerProvider extends ChangeNotifier {
     if (s == null) return 0;
     var elapsed = s.accumulatedSeconds;
     if (s.isRunning && s.lastResumedAt != null) {
-      elapsed += _guardedDelta(s.lastResumedAt!);
+      elapsed += _guardedDelta(s);
     }
     return elapsed;
   }
@@ -59,15 +59,21 @@ class TimerProvider extends ChangeNotifier {
 
   bool get hasPendingRecoveryPrompt => _pendingRecoveryPrompt;
 
-  int _guardedDelta(DateTime lastResumedAt) {
-    final raw = DateTime.now().toUtc().difference(lastResumedAt).inSeconds;
+  // Elapsed seconds since [s.lastResumedAt], clamped so total live progress
+  // (baselineDurationCompleted + accumulatedSeconds + this running window)
+  // never exceeds [sanityCeilingSeconds]. Headroom is computed from the
+  // pre-update accumulated value, so a single window can't push the total
+  // past the ceiling and repeated resumes can't each re-add a full window.
+  int _guardedDelta(ActiveTimerSession s) {
+    final resumedAt = s.lastResumedAt;
+    if (resumedAt == null) return 0;
+    final raw = DateTime.now().toUtc().difference(resumedAt).inSeconds;
     if (raw < 0) return 0; // clock moved back, add nothing
-    if (raw > sanityCeilingSeconds) {
-      // sanity cieling hit, user should be prompted to keep or discard the session TODO
-      return sanityCeilingSeconds;
-    }
-    // normal case, adding the elapsed seconds since last resumed
-    return raw;
+    final headroom =
+        sanityCeilingSeconds - s.baselineDurationCompleted - s.accumulatedSeconds;
+    // ceiling already reached (e.g. large same-day baseline) -> add nothing
+    if (headroom <= 0) return 0;
+    return raw > headroom ? headroom : raw;
   }
 
   void _startTicker() {
@@ -110,8 +116,7 @@ class TimerProvider extends ChangeNotifier {
   Future<void> pause() async {
     final s = _session;
     if (s == null || s.isPaused) return;
-    s.accumulatedSeconds +=
-        s.lastResumedAt != null ? _guardedDelta(s.lastResumedAt!) : 0;
+    s.accumulatedSeconds += _guardedDelta(s);
     s.lastResumedAt = null;
     s.status = TimerStatus.paused;
     _stopTicker();
@@ -135,7 +140,7 @@ class TimerProvider extends ChangeNotifier {
     final s = _session;
     if (s == null) return;
     if (s.isRunning && s.lastResumedAt != null) {
-      s.accumulatedSeconds += _guardedDelta(s.lastResumedAt!);
+      s.accumulatedSeconds += _guardedDelta(s);
       s.lastResumedAt = null;
     }
     await _flush();

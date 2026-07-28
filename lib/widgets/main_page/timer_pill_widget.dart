@@ -19,10 +19,14 @@ class TimerPillWidget extends StatelessWidget {
     final timer = context.watch<TimerProvider>();
     final cp = context.watch<ColorProvider>();
 
-    if (!timer.hasActiveTimer) return const SizedBox.shrink();
+    // Visibility is gated by the parent's AnimatedSwitcher. When the timer is
+    // stopped this widget is retained as the switcher's outgoing (frozen) child
+    // for the exit transition, so we render its last known state rather than
+    // collapsing to an empty frame.
+    final id = timer.activeHabitId;
+    if (id == null) return const SizedBox.shrink();
 
     final habitProvider = context.read<HabitProvider>();
-    final id = timer.activeHabitId!;
     Habit? habit;
     for (final h in habitProvider.habits) {
       if (h.id == id) {

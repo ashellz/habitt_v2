@@ -9,8 +9,8 @@
     "timerAlreadyRunningTitle",
     "timerSwitchDesc",
     "timerStopAndStart",
-    "habitPausedActionHint",
-    "habitDeletedActionHint"
+    "habitPausedDesc",
+    "habitDeletedDesc"
   ],
 
   "de": [
@@ -23,8 +23,8 @@
     "timerAlreadyRunningTitle",
     "timerSwitchDesc",
     "timerStopAndStart",
-    "habitPausedActionHint",
-    "habitDeletedActionHint"
+    "habitPausedDesc",
+    "habitDeletedDesc"
   ],
 
   "es": [
@@ -37,8 +37,8 @@
     "timerAlreadyRunningTitle",
     "timerSwitchDesc",
     "timerStopAndStart",
-    "habitPausedActionHint",
-    "habitDeletedActionHint"
+    "habitPausedDesc",
+    "habitDeletedDesc"
   ],
 
   "it": [
@@ -51,7 +51,7 @@
     "timerAlreadyRunningTitle",
     "timerSwitchDesc",
     "timerStopAndStart",
-    "habitPausedActionHint",
-    "habitDeletedActionHint"
+    "habitPausedDesc",
+    "habitDeletedDesc"
   ]
 }

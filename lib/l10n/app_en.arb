@@ -1068,6 +1068,7 @@
     }
   },
   "timerStopAndStart": "Stop & start",
-  "habitPausedActionHint": "This habit is paused. Resume it to track progress.",
-  "habitDeletedActionHint": "This habit has been deleted."
+  "habitPausedDesc": "This habit is currently paused. To add any progress you must unpause it first.",
+  "habitDeletedDesc": "This habit has been deleted. To add any progress you must restore it first.",
+  "restore": "Restore"
 }

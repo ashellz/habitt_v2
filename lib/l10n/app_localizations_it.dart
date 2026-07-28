@@ -2780,9 +2780,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timerStopAndStart => 'Stop & start';
 
   @override
-  String get habitPausedActionHint =>
-      'This habit is paused. Resume it to track progress.';
+  String get habitPausedDesc =>
+      'This habit is currently paused. To add any progress you must unpause it first.';
 
   @override
-  String get habitDeletedActionHint => 'This habit has been deleted.';
+  String get habitDeletedDesc =>
+      'This habit has been deleted. To add any progress you must restore it first.';
 }

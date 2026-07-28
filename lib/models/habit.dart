@@ -485,6 +485,11 @@ class Habit extends HiveObject {
     timestamps['isPaused'] = DateTime.now().toUtc();
   }
 
+  Future<void> restore() async {
+    isDeleted = false;
+    timestamps['isDeleted'] = DateTime.now().toUtc();
+  }
+
   Future<void> completeHabit() async {
     if (skipped) {
       completed = false;

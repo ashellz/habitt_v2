@@ -133,7 +133,10 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
     final cp = context.watch<ColorProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
 
-    final scopedHabits = widget.todaysOnly ? hp.todaysHabits : hp.habits;
+    final scopedHabits =
+        widget.todaysOnly
+            ? hp.todaysHabits
+            : hp.habits.where((habit) => habit.isDeleted != true).toList();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
     final categories = categoryProvider.categories;
     final showCategoryTitles = selectedCategoryId == 0;
