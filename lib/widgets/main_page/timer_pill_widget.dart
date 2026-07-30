@@ -11,41 +11,56 @@ import 'package:habitt/widgets/default/timer_progress.dart';
 import 'package:habitt/widgets/dialogs/timer_dialog.dart';
 import 'package:provider/provider.dart';
 
-class TimerPillWidget extends StatelessWidget {
+class TimerPillWidget extends StatefulWidget {
   const TimerPillWidget({super.key});
+
+  @override
+  State<TimerPillWidget> createState() => _TimerPillWidgetState();
+}
+
+class _TimerPillWidgetState extends State<TimerPillWidget> {
+  Habit? _lastHabit;
+  bool _lastIsRunning = false;
+  int _lastProgressSeconds = 0;
 
   @override
   Widget build(BuildContext context) {
     final timer = context.watch<TimerProvider>();
     final cp = context.watch<ColorProvider>();
 
-    // Visibility is gated by the parent's AnimatedSwitcher. When the timer is
-    // stopped this widget is retained as the switcher's outgoing (frozen) child
-    // for the exit transition, so we render its last known state rather than
-    // collapsing to an empty frame.
     final id = timer.activeHabitId;
-    if (id == null) return const SizedBox.shrink();
-
-    final habitProvider = context.read<HabitProvider>();
     Habit? habit;
-    for (final h in habitProvider.habits) {
-      if (h.id == id) {
-        habit = h;
-        break;
+    if (id != null) {
+      final habitProvider = context.read<HabitProvider>();
+      for (final h in habitProvider.habits) {
+        if (h.id == id) {
+          habit = h;
+          break;
+        }
       }
     }
-    if (habit == null) return const SizedBox.shrink();
 
-    final isRunning = timer.isRunning;
-    final progressSeconds = timer.liveProgressSeconds;
-    final target = habit.duration;
+    if (habit != null) {
+      _lastHabit = habit;
+      _lastIsRunning = timer.isRunning;
+      _lastProgressSeconds = timer.liveProgressSeconds;
+    }
+
+    final displayHabit = habit ?? _lastHabit;
+    if (displayHabit == null) return const SizedBox.shrink();
+
+    final isRunning = habit != null ? timer.isRunning : _lastIsRunning;
+    final progressSeconds =
+        habit != null ? timer.liveProgressSeconds : _lastProgressSeconds;
+    final target = displayHabit.duration;
     final progress = target > 0 ? progressSeconds / target : 0.0;
+    final atCap = target > 0 && progressSeconds == target;
 
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
       child: GestureDetector(
         onTap: () {
-          final h = habit!;
+          final h = displayHabit;
           showDialogSheet(
             context: context,
             builder: (_) => TimerDialog(habit: h),
@@ -132,6 +147,7 @@ class TimerPillWidget extends StatelessWidget {
                   inset: 2,
                   lapSeconds: target.toDouble(),
                   isDark: cp.isDark,
+                  atCap: atCap,
                 ),
               ),
             ),

@@ -59,19 +59,19 @@ class TimerProvider extends ChangeNotifier {
 
   bool get hasPendingRecoveryPrompt => _pendingRecoveryPrompt;
 
-  // Elapsed seconds since [s.lastResumedAt], clamped so total live progress
-  // (baselineDurationCompleted + accumulatedSeconds + this running window)
-  // never exceeds [sanityCeilingSeconds]. Headroom is computed from the
-  // pre-update accumulated value, so a single window can't push the total
-  // past the ceiling and repeated resumes can't each re-add a full window.
+  // used for calculating elapsed time
+  // uses time elapsed, lastResumedAt, duration completed and guards it all with the 24h cap
+  // guards against clock manipulation too
   int _guardedDelta(ActiveTimerSession s) {
     final resumedAt = s.lastResumedAt;
     if (resumedAt == null) return 0;
     final raw = DateTime.now().toUtc().difference(resumedAt).inSeconds;
     if (raw < 0) return 0; // clock moved back, add nothing
     final headroom =
-        sanityCeilingSeconds - s.baselineDurationCompleted - s.accumulatedSeconds;
-    // ceiling already reached (e.g. large same-day baseline) -> add nothing
+        sanityCeilingSeconds -
+        s.baselineDurationCompleted -
+        s.accumulatedSeconds;
+    // ceiling already reached, add nothing
     if (headroom <= 0) return 0;
     return raw > headroom ? headroom : raw;
   }
@@ -121,11 +121,14 @@ class TimerProvider extends ChangeNotifier {
     s.status = TimerStatus.paused;
     _stopTicker();
     _persist();
-    await _flush();
+    await _commit(
+      s.habitId,
+      s.dayKey,
+      s.baselineDurationCompleted + s.accumulatedSeconds,
+    );
     notifyListeners();
   }
 
-  /// Resume a paused session.
   void resume() {
     final s = _session;
     if (s == null || s.isRunning) return;
@@ -143,8 +146,17 @@ class TimerProvider extends ChangeNotifier {
       s.accumulatedSeconds += _guardedDelta(s);
       s.lastResumedAt = null;
     }
-    await _flush();
-    _clear();
+    final habitId = s.habitId;
+    final dayKey = s.dayKey;
+    final durationCompleted =
+        s.baselineDurationCompleted + s.accumulatedSeconds;
+
+    _stopTicker();
+    _session = null;
+    notifyListeners();
+
+    await _commit(habitId, dayKey, durationCompleted);
+    _prefs.remove(_prefsKey);
   }
 
   // complete habit while timer is running
@@ -157,7 +169,7 @@ class TimerProvider extends ChangeNotifier {
     s.status = TimerStatus.paused;
     _stopTicker();
     _persist();
-    await _commit(targetDuration);
+    await _commit(s.habitId, s.dayKey, targetDuration);
     notifyListeners();
   }
 
@@ -183,20 +195,17 @@ class TimerProvider extends ChangeNotifier {
     _pendingRecoveryPrompt = false;
   }
 
-  Future<void> _flush() async {
-    final s = _session;
-    if (s == null) return;
-    await _commit(s.baselineDurationCompleted + s.accumulatedSeconds);
-  }
-
   // saves timer to durationCompleted of the habit
-  Future<void> _commit(int durationCompleted) async {
-    final s = _session;
-    if (s == null || _habitProvider == null) return;
+  Future<void> _commit(
+    int habitId,
+    String dayKey,
+    int durationCompleted,
+  ) async {
+    if (_habitProvider == null) return;
     await _habitProvider!.commitTimerDuration(
-      s.habitId,
+      habitId,
       durationCompleted,
-      day: DateTime.parse(s.dayKey),
+      day: DateTime.parse(dayKey),
     );
   }
 

@@ -34,6 +34,7 @@ class TimerRingIndicator extends StatelessWidget {
     required this.isDark,
     this.strokeWidth = 10,
     this.lapSeconds = 60,
+    this.atCap = false,
   });
 
   final double progress;
@@ -42,6 +43,7 @@ class TimerRingIndicator extends StatelessWidget {
   final double strokeWidth;
   final double lapSeconds;
   final bool isDark;
+  final bool atCap;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,7 @@ class TimerRingIndicator extends StatelessWidget {
             strokeWidth: strokeWidth,
             lapSeconds: lapSeconds,
             isDark: isDark,
+            atCap: atCap,
           ),
         );
       },
@@ -73,6 +76,7 @@ class _RingPainter extends CustomPainter {
     required this.strokeWidth,
     required this.lapSeconds,
     required this.isDark,
+    this.atCap = false,
   });
 
   final double progress;
@@ -81,6 +85,7 @@ class _RingPainter extends CustomPainter {
   final double lapSeconds;
   final double strokeWidth;
   final bool isDark;
+  final bool atCap;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -99,6 +104,17 @@ class _RingPainter extends CustomPainter {
     canvas.drawCircle(center, radius, strokePaint()..color = trackColor);
 
     if (progress <= 0) return;
+
+    if (atCap && progress >= 1.0) {
+      canvas.drawArc(
+        rect,
+        start,
+        2 * math.pi,
+        false,
+        strokePaint()..color = color,
+      );
+      return;
+    }
 
     final laps = progress.floor();
     final fraction = progress - laps;
@@ -215,7 +231,8 @@ class _RingPainter extends CustomPainter {
       old.trackColor != trackColor ||
       old.strokeWidth != strokeWidth ||
       old.lapSeconds != lapSeconds ||
-      old.isDark != isDark;
+      old.isDark != isDark ||
+      old.atCap != atCap;
 }
 
 class TimerStadiumIndicator extends StatelessWidget {
@@ -228,6 +245,7 @@ class TimerStadiumIndicator extends StatelessWidget {
     this.strokeWidth = 3,
     this.inset = 2,
     this.lapSeconds = 60,
+    this.atCap = false,
   });
 
   final double progress;
@@ -237,6 +255,7 @@ class TimerStadiumIndicator extends StatelessWidget {
   final double inset;
   final double lapSeconds;
   final bool isDark;
+  final bool atCap;
 
   @override
   Widget build(BuildContext context) {
@@ -254,6 +273,7 @@ class TimerStadiumIndicator extends StatelessWidget {
             inset: inset,
             lapSeconds: lapSeconds,
             isDark: isDark,
+            atCap: atCap,
           ),
         );
       },
@@ -270,6 +290,7 @@ class _StadiumPainter extends CustomPainter {
     required this.inset,
     required this.lapSeconds,
     required this.isDark,
+    this.atCap = false,
   });
 
   final double progress;
@@ -279,6 +300,7 @@ class _StadiumPainter extends CustomPainter {
   final double inset;
   final double lapSeconds;
   final bool isDark;
+  final bool atCap;
 
   Path _stadiumPath(Rect rect) {
     final radius = rect.shortestSide / 2;
@@ -309,6 +331,11 @@ class _StadiumPainter extends CustomPainter {
     canvas.drawPath(path, strokePaint()..color = trackColor);
 
     if (progress <= 0) return;
+
+    if (atCap && progress >= 1.0) {
+      canvas.drawPath(path, strokePaint()..color = color);
+      return;
+    }
 
     final metrics = path.computeMetrics().toList();
     if (metrics.isEmpty) return;
@@ -411,5 +438,6 @@ class _StadiumPainter extends CustomPainter {
       old.strokeWidth != strokeWidth ||
       old.inset != inset ||
       old.lapSeconds != lapSeconds ||
-      old.isDark != isDark;
+      old.isDark != isDark ||
+      old.atCap != atCap;
 }

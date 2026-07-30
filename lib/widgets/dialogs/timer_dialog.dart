@@ -5,7 +5,6 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -36,8 +35,8 @@ class TimerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final tp = context.watch<ThemeProvider>();
     final timer = context.watch<TimerProvider>();
+    context.watch<HabitProvider>();
     final loc = AppLocalizations.of(context)!;
 
     final isActive = timer.isActiveHabit(habit.id);
@@ -59,7 +58,7 @@ class TimerDialog extends StatelessWidget {
           Column(
             spacing: 24,
             children: [
-              _timerCircle(cp, tp, progressSeconds, target),
+              _timerCircle(cp, progressSeconds, target),
               _timerControls(
                 context: context,
                 cp: cp,
@@ -293,13 +292,9 @@ class TimerDialog extends StatelessWidget {
     );
   }
 
-  Widget _timerCircle(
-    ColorProvider cp,
-    ThemeProvider tp,
-    int progressSeconds,
-    int target,
-  ) {
+  Widget _timerCircle(ColorProvider cp, int progressSeconds, int target) {
     final progress = target > 0 ? progressSeconds / target : 0.0;
+    final atCap = target > 0 && progressSeconds == target;
     return Center(
       child: SizedBox(
         height: 240,
@@ -316,6 +311,7 @@ class TimerDialog extends StatelessWidget {
                 trackColor: cp.main.withValues(alpha: 0.12),
                 lapSeconds: target.toDouble(),
                 isDark: cp.isDark,
+                atCap: atCap,
               ),
             ),
             Padding(

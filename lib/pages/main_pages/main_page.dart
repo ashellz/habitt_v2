@@ -377,7 +377,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   children: [
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
-                      switchInCurve: Curves.easeOutBack,
+                      switchInCurve: Curves.easeOut,
                       switchOutCurve: Curves.easeIn,
                       transitionBuilder: (child, animation) {
                         return SizeTransition(
@@ -407,35 +407,31 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           ),
                         );
                       },
-                      child: KeyedSubtree(
-                        key: ValueKey(habitProvider.selectedDate),
-                        child:
-                            isToday(
-                                  habitProvider.selectedDate ?? DateTime.now(),
-                                )
-                                ? SizedBox.shrink()
-                                : Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 16,
-                                    right: 16,
-                                    top: 16,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        _selectedDayLabel(context),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color:
-                                              cp.isDark
-                                                  ? cp.lightGreyText
-                                                  : cp.greyText,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                      child:
+                          isToday(habitProvider.selectedDate ?? DateTime.now())
+                              ? const SizedBox.shrink()
+                              : Padding(
+                                key: const ValueKey('selected-day-label'),
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                  top: 16,
                                 ),
-                      ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      _selectedDayLabel(context),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            cp.isDark
+                                                ? cp.lightGreyText
+                                                : cp.greyText,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                     ),
                     if (context
                         .watch<PreferencesProvider>()
