@@ -10,6 +10,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/show_new_habit_creation_flow.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
@@ -101,15 +102,48 @@ class _HabitsPageState extends State<HabitsPage> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          NewCircleButton(
-            svgPath: "assets/images/new-svg/plus.svg",
-            cnIcon: CNSymbol("plus", size: 16, color: cp.bg),
-            width: 36,
-            height: 36,
-            textColor: cp.bg,
-            padding: EdgeInsets.all(10),
-            color: cp.main,
-            onPressed: () => showNewHabitCreationFlow(context),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8,
+            children: [
+              NewDefaultButton.secondarySmall(
+                width: null,
+                prefix: SvgPicture.asset(
+                  "assets/images/new-svg/trash.svg",
+                  colorFilter: ColorFilter.mode(
+                    cp.isDark ? cp.lightGreyText : cp.greyText,
+                    BlendMode.srcIn,
+                  ),
+                  width: 16,
+                  height: 16,
+                ),
+                color: cp.bg,
+                textColor: cp.isDark ? cp.lightGreyText : cp.greyText,
+                onPressed: () => showNewHabitCreationFlow(context),
+                borderColor: cp.border,
+                child: Transform.translate(
+                  offset: const Offset(0, -2),
+                  child: Text(
+                    "Deleted",
+                    style: TextStyle(
+                      color: cp.isDark ? cp.lightGreyText : cp.greyText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              NewCircleButton(
+                svgPath: "assets/images/new-svg/plus.svg",
+                cnIcon: CNSymbol("plus", size: 16, color: cp.bg),
+                width: 36,
+                height: 36,
+                textColor: cp.bg,
+                padding: EdgeInsets.all(10),
+                color: cp.main,
+                onPressed: () => showNewHabitCreationFlow(context),
+              ),
+            ],
           ),
         ],
       ),

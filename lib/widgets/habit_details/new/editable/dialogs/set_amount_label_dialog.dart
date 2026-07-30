@@ -94,6 +94,7 @@ class _SetAmountLabelDialogState extends State<SetAmountLabelDialog>
           rowChildren.add(
             Expanded(
               child: NewDefaultButton.secondarySmall(
+                width: null,
                 height: 40,
                 onPressed: widget.onAddPressed,
                 label: loc.add,

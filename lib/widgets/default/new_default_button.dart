@@ -27,6 +27,7 @@ class NewDefaultButton extends StatelessWidget {
     this.isGradient = true,
     this.child,
     this.padding,
+    this.borderColor,
   }) : _variant = _ButtonVariant.custom;
 
   const NewDefaultButton.primary({
@@ -43,6 +44,7 @@ class NewDefaultButton extends StatelessWidget {
     this.textStyle,
     this.color,
     this.width,
+    this.borderColor,
   }) : isGradient = true,
        _variant = _ButtonVariant.primary;
 
@@ -59,6 +61,7 @@ class NewDefaultButton extends StatelessWidget {
     this.textColor,
     this.textStyle,
     this.width,
+    this.borderColor,
   }) : color = null,
        isGradient = false,
        _variant = _ButtonVariant.secondary;
@@ -76,6 +79,7 @@ class NewDefaultButton extends StatelessWidget {
     this.textColor,
     this.textStyle,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
+    this.borderColor,
   }) : color = null,
        isGradient = true,
        _variant = _ButtonVariant.primarySmall;
@@ -93,8 +97,9 @@ class NewDefaultButton extends StatelessWidget {
     this.textColor,
     this.textStyle,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8.5),
-  }) : color = null,
-       isGradient = false,
+    this.color,
+    this.borderColor,
+  }) : isGradient = false,
        _variant = _ButtonVariant.secondarySmall;
 
   const NewDefaultButton.circle({
@@ -110,6 +115,7 @@ class NewDefaultButton extends StatelessWidget {
     this.textColor,
     this.textStyle,
     this.padding = const EdgeInsets.all(10),
+    this.borderColor,
   }) : color = null,
        isGradient = false,
        _variant = _ButtonVariant.circle;
@@ -128,20 +134,23 @@ class NewDefaultButton extends StatelessWidget {
   final bool isGradient;
   final Widget? child;
   final EdgeInsetsGeometry? padding;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-    final Gradient? effectiveGradient = isGradient
-        ? LinearGradient(
-            begin: const Alignment(0.09, 0.11),
-            end: const Alignment(0.86, 0.90),
-            colors: color != null
-                ? [color!, color!]
-                : [cp.mainButtonLeftGradient, cp.mainButtonRightGradient],
-          )
-        : null;
+    final Gradient? effectiveGradient =
+        isGradient
+            ? LinearGradient(
+              begin: const Alignment(0.09, 0.11),
+              end: const Alignment(0.86, 0.90),
+              colors:
+                  color != null
+                      ? [color!, color!]
+                      : [cp.mainButtonLeftGradient, cp.mainButtonRightGradient],
+            )
+            : null;
 
     Color buttonColor;
     switch (_variant) {
@@ -158,7 +167,7 @@ class NewDefaultButton extends StatelessWidget {
         buttonColor = cp.main;
         break;
       case _ButtonVariant.secondarySmall:
-        buttonColor = cp.secondaryButton;
+        buttonColor = color ?? cp.secondaryButton;
         break;
       case _ButtonVariant.circle:
         buttonColor = cp.main;
@@ -190,6 +199,10 @@ class NewDefaultButton extends StatelessWidget {
             gradient: effectiveGradient,
             color: isGradient ? null : buttonColor,
             borderRadius: BorderRadius.circular(24),
+            border:
+                borderColor != null
+                    ? Border.all(color: borderColor!, width: 1)
+                    : null,
           ),
           child: IgnorePointer(
             ignoring: !enabled,
@@ -242,7 +255,14 @@ class NewDefaultButton extends StatelessWidget {
                         children: [
                           if (prefix != null) ...[
                             prefix!,
-                            const SizedBox(width: 10),
+                            SizedBox(
+                              width:
+                                  _variant == _ButtonVariant.secondarySmall ||
+                                          _variant ==
+                                              _ButtonVariant.primarySmall
+                                      ? 8
+                                      : 10,
+                            ),
                           ],
                           if (child != null)
                             child!
