@@ -69,29 +69,56 @@ class TimerDialog extends StatelessWidget {
                 isActive: isActive,
               ),
               Column(
-                spacing: 12,
                 children: [
-                  if (!isComplete)
-                    NewDefaultButton(
-                      width: double.infinity,
-                      label: loc.completeHabit,
-                      prefix: Container(
-                        height: 24,
-                        width: 24,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: cp.bg.withValues(alpha: 0.4),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeOut,
+                    switchOutCurve: Curves.easeIn,
+                    transitionBuilder: (child, animation) {
+                      return SizeTransition(
+                        sizeFactor: animation,
+                        alignment: Alignment.topCenter,
+                        child: FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(
+                            scale: animation,
+                            child: child,
+                          ),
                         ),
-                        child: SvgPicture.asset(
-                          "assets/images/new-svg/check.svg",
-                          colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
-                        ),
-                      ),
-                      onPressed: () => _completeHabit(context, target),
-                    ),
+                      );
+                    },
+                    child:
+                        !isComplete
+                            ? Padding(
+                              padding: EdgeInsets.only(bottom: 12),
+                              child: NewDefaultButton(
+                                width: double.infinity,
+                                label: loc.completeHabit,
+                                prefix: Container(
+                                  height: 24,
+                                  width: 24,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: cp.bg.withValues(alpha: 0.4),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    "assets/images/new-svg/check.svg",
+                                    colorFilter: ColorFilter.mode(
+                                      cp.bg,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                                onPressed:
+                                    () => _completeHabit(context, target),
+                              ),
+                            )
+                            : const SizedBox.shrink(),
+                  ),
                   NewDefaultButton.secondary(
                     width: double.infinity,
                     label: loc.logProgress,
+                    enabled: !isRunning,
                     prefix: Container(
                       height: 24,
                       width: 24,
@@ -104,7 +131,7 @@ class TimerDialog extends StatelessWidget {
                         colorFilter: ColorFilter.mode(cp.bg, BlendMode.srcIn),
                       ),
                     ),
-                    onPressed: () => _onLogProgress(context, isRunning),
+                    onPressed: () => _onLogProgress(context),
                   ),
                 ],
               ),
@@ -161,16 +188,7 @@ class TimerDialog extends StatelessWidget {
     }
   }
 
-  Future<void> _onLogProgress(BuildContext context, bool isRunning) async {
-    if (isRunning) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.timerPauseToEditHint),
-        ),
-      );
-      return;
-    }
-
+  Future<void> _onLogProgress(BuildContext context) async {
     final timer = context.read<TimerProvider>();
     Navigator.pop(context);
     await showDialogSheet(
@@ -294,7 +312,7 @@ class TimerDialog extends StatelessWidget {
 
   Widget _timerCircle(ColorProvider cp, int progressSeconds, int target) {
     final progress = target > 0 ? progressSeconds / target : 0.0;
-    final atCap = target > 0 && progressSeconds == target;
+    final atCap = target > 0 && progressSeconds % target == 0;
     return Center(
       child: SizedBox(
         height: 240,

@@ -385,7 +385,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           alignment: Alignment.topCenter,
                           child: FadeTransition(
                             opacity: animation,
-                            child: child,
+                            child: ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            ),
                           ),
                         );
                       },

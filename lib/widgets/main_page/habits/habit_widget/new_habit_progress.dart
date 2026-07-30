@@ -63,17 +63,17 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
     final stateProvider = context.read<StateProvider>();
-    // Only rebuild this row on tick when *this* habit owns the timer — other
-    // rows see a stable null and are not repainted every second.
+
+    // rebuild progress every second
     final liveDurationSeconds = context.select<TimerProvider, int?>(
       (t) => t.liveProgressFor(widget.habit.id),
     );
+
     final isActiveTimer = liveDurationSeconds != null;
     final progress = getProgressValue(liveDurationSeconds: liveDurationSeconds);
     final cp = context.watch<ColorProvider>();
 
-    // timer ran past (or reached) the duration target: treat as complete
-    // even though the habit isn't committed as completed yet.
+    // style as completed if timer target reached
     final timerReachedTarget =
         isActiveTimer &&
         widget.habit.tracksDuration &&
@@ -124,7 +124,6 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                           habit: widget.habit,
                         );
                       } else if (isToday) {
-                        // Timer only makes sense for today; past days log directly.
                         return TimerDialog(habit: widget.habit);
                       } else {
                         return LogProgressDialog(

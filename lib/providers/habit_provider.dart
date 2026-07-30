@@ -1363,15 +1363,21 @@ class HabitProvider extends ChangeNotifier {
     final isNowCompleted = habit.completed;
 
     await updateHabitInDB(habit, day: daySimple);
-    await _syncNotificationsOnCompletionChange(
-      habit: habit,
-      wasCompleted: wasCompleted,
-      isNowCompleted: isNowCompleted,
-      daySimple: daySimple,
-      todaySimple: todaySimple,
-    );
-    _refreshPerfectStreakForDayIfNeeded(daySimple);
-    refreshTodaysHabits(notify: false);
+
+    // notification rescheduling, perfect-streak recompute, and the today's-list
+    // resort are only relevant when this tick actually crossed the completion
+    // threshold — a mid-progress pause/stop changes nothing they depend on.
+    if (wasCompleted != isNowCompleted) {
+      await _syncNotificationsOnCompletionChange(
+        habit: habit,
+        wasCompleted: wasCompleted,
+        isNowCompleted: isNowCompleted,
+        daySimple: daySimple,
+        todaySimple: todaySimple,
+      );
+      _refreshPerfectStreakForDayIfNeeded(daySimple);
+      refreshTodaysHabits(notify: false);
+    }
     notifyListeners();
   }
 

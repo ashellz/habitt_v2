@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/timer_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 void _paintTipShadow(
@@ -47,21 +49,34 @@ class TimerRingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tp = context.watch<TimerProvider>();
+    final inProgress = tp.isRunning;
+    final atCapAndPaused = atCap && !inProgress;
+
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(end: progress),
       duration: const Duration(milliseconds: 1000),
       curve: Curves.linear,
       builder: (context, value, _) {
-        return CustomPaint(
-          painter: _RingPainter(
-            progress: value,
-            color: color,
-            trackColor: trackColor,
-            strokeWidth: strokeWidth,
-            lapSeconds: lapSeconds,
-            isDark: isDark,
-            atCap: atCap,
-          ),
+        return TweenAnimationBuilder<double>(
+          tween: Tween<double>(end: atCapAndPaused ? 1.0 : 0.0),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          builder: (context, capT, _) {
+            return CustomPaint(
+              painter: _RingPainter(
+                progress: value,
+                color: color,
+                trackColor: trackColor,
+                strokeWidth: strokeWidth,
+                lapSeconds: lapSeconds,
+                isDark: isDark,
+                atCap: atCap,
+                inProgress: inProgress,
+                capT: capT,
+              ),
+            );
+          },
         );
       },
     );
@@ -76,7 +91,9 @@ class _RingPainter extends CustomPainter {
     required this.strokeWidth,
     required this.lapSeconds,
     required this.isDark,
+    this.inProgress = false,
     this.atCap = false,
+    this.capT = 0.0,
   });
 
   final double progress;
@@ -85,7 +102,9 @@ class _RingPainter extends CustomPainter {
   final double lapSeconds;
   final double strokeWidth;
   final bool isDark;
+  final bool inProgress;
   final bool atCap;
+  final double capT;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -100,21 +119,21 @@ class _RingPainter extends CustomPainter {
           ..strokeWidth = strokeWidth
           ..strokeCap = StrokeCap.round;
 
-    // track circle (background ring)
-    canvas.drawCircle(center, radius, strokePaint()..color = trackColor);
+    // track circle (background ring) — once capped and paused, ease the
+    // ring into the fill color (capT, driven by an implicit animation in
+    // the widget above) instead of popping a solid arc on top
+    final atCapAndPaused = atCap && !inProgress;
+    final effectiveTrackColor =
+        Color.lerp(trackColor, color, capT) ?? trackColor;
+    canvas.drawCircle(
+      center,
+      radius,
+      strokePaint()..color = effectiveTrackColor,
+    );
 
     if (progress <= 0) return;
 
-    if (atCap && progress >= 1.0) {
-      canvas.drawArc(
-        rect,
-        start,
-        2 * math.pi,
-        false,
-        strokePaint()..color = color,
-      );
-      return;
-    }
+    if (atCapAndPaused) return;
 
     final laps = progress.floor();
     final fraction = progress - laps;
@@ -232,7 +251,9 @@ class _RingPainter extends CustomPainter {
       old.strokeWidth != strokeWidth ||
       old.lapSeconds != lapSeconds ||
       old.isDark != isDark ||
-      old.atCap != atCap;
+      old.atCap != atCap ||
+      old.inProgress != inProgress ||
+      old.capT != capT;
 }
 
 class TimerStadiumIndicator extends StatelessWidget {
@@ -332,7 +353,7 @@ class _StadiumPainter extends CustomPainter {
 
     if (progress <= 0) return;
 
-    if (atCap && progress >= 1.0) {
+    if (atCap && progress % 1 == 0) {
       canvas.drawPath(path, strokePaint()..color = color);
       return;
     }

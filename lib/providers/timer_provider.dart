@@ -116,10 +116,13 @@ class TimerProvider extends ChangeNotifier {
   Future<void> pause() async {
     final s = _session;
     if (s == null || s.isPaused) return;
-    s.accumulatedSeconds += _guardedDelta(s);
-    s.lastResumedAt = null;
     s.status = TimerStatus.paused;
     _stopTicker();
+    notifyListeners();
+
+    s.accumulatedSeconds += _guardedDelta(s);
+    s.lastResumedAt = null;
+
     _persist();
     await _commit(
       s.habitId,
