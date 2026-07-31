@@ -1027,7 +1027,6 @@ class HabitProvider extends ChangeNotifier {
       statsProvider!.addShouldRefresh(StatsType.highestAmountOfHabitsLastWeek);
     }
 
-    habits.removeWhere((h) => h.id == habit.id);
     habitStatsProvider?.removeHabit(habit.id);
     onHabitDeactivated?.call(habit.id);
     await habit.deleteHabit();

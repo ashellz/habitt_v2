@@ -23,6 +23,7 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20),
         child: ListView(
           children: [
+            const SizedBox(height: 20),
             SettingsTopSection(),
             Padding(
               padding: EdgeInsets.only(top: 26),

@@ -4,8 +4,7 @@ import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
-import 'package:habitt/models/habit.dart';
-import 'package:habitt/pages/other_pages/habit_details_page.dart';
+import 'package:habitt/pages/other_pages/deleted_habits_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
@@ -13,9 +12,8 @@ import 'package:habitt/util/show_new_habit_creation_flow.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
-import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
+import 'package:habitt/widgets/habit_widget/habit_card.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
-import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
@@ -39,6 +37,7 @@ class _HabitsPageState extends State<HabitsPage> {
         padding: const EdgeInsets.only(bottom: 20),
         child: ListView(
           children: [
+            const SizedBox(height: 20),
             topSection(context, cp),
             NewCategoriesList(
               padding: null,
@@ -119,7 +118,13 @@ class _HabitsPageState extends State<HabitsPage> {
                 ),
                 color: cp.bg,
                 textColor: cp.isDark ? cp.lightGreyText : cp.greyText,
-                onPressed: () => showNewHabitCreationFlow(context),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const DeletedHabitsPage(),
+                      ),
+                    ),
                 borderColor: cp.border,
                 child: Transform.translate(
                   offset: const Offset(0, -2),
@@ -247,7 +252,7 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                   },
                   children: [
                     for (int index = 0; index < categoryHabits.length; index++)
-                      _HabitCard(
+                      HabitCard(
                         key: ValueKey(categoryHabits[index].id),
                         habit: categoryHabits[index],
                         cp: cp,
@@ -260,63 +265,6 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
           ],
           SizedBox(height: 50),
         ],
-      ),
-    );
-  }
-}
-
-class _HabitCard extends StatelessWidget {
-  const _HabitCard({
-    required this.habit,
-    required this.cp,
-    required this.size,
-    required Key key,
-  }) : super(key: key);
-
-  final Habit habit;
-  final ColorProvider cp;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            settings: RouteSettings(arguments: habit.id),
-            builder: (_) => HabitDetailsPage(habitId: habit.id),
-          ),
-        );
-      },
-      child: Container(
-        alignment: Alignment.topLeft,
-        width: size,
-        height: size,
-        padding: const EdgeInsets.all(16),
-        decoration: ShapeDecoration(
-          color: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: cp.border),
-            borderRadius: BorderRadius.circular(24),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                NewHabitIcon(iconPath: habit.iconPath, isCompleted: false),
-                SvgPicture.asset(
-                  "assets/images/new-svg/reorder.svg",
-                  colorFilter: ColorFilter.mode(cp.disabled, BlendMode.srcIn),
-                ),
-              ],
-            ),
-            MainHabitInfo(habit: habit, cp: cp, habitsPage: true),
-          ],
-        ),
       ),
     );
   }
