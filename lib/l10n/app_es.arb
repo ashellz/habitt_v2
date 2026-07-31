@@ -1046,5 +1046,26 @@
   "showCategoriesOnMainPageDesc": "Aparecerá un filtro de categorías encima de tus hábitos en la pantalla de inicio.",
   "outdatedDeviceTitle": "Actualiza tu otro dispositivo",
   "outdatedDeviceMessage": "Otro dispositivo de tu cuenta está usando una versión desactualizada de Habitt. Actualízalo a la última versión para garantizar una sincronización correcta.",
-  "gotIt": "Entendido"
+  "gotIt": "Entendido",
+  "timerDialogTitle": "Iniciar un temporizador",
+  "timerCloseHint": "Puedes cerrar esta pantalla. El temporizador seguirá funcionando",
+  "timerInProgress": "En curso...",
+  "timerPaused": "Pausado",
+  "completeHabit": "Completar hábito",
+  "timerPauseToEditHint": "Pausa el temporizador para editar el progreso manualmente",
+  "timerAlreadyRunningTitle": "Ya hay un temporizador en marcha",
+  "timerSwitchDesc": "¿Detener el temporizador actual e iniciar uno para «{name}»?",
+  "@timerSwitchDesc": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "timerStopAndStart": "Detener e iniciar",
+  "habitPausedDesc": "Este hábito está actualmente pausado. Para añadir progreso, primero debes reanudarlo.",
+  "habitDeletedDesc": "Este hábito ha sido eliminado. Para añadir progreso, primero debes restaurarlo.",
+  "deleted": "Eliminado",
+  "noDeletedHabits": "No hay hábitos eliminados",
+  "deletedHabits": "Hábitos eliminados",
+  "unpause": "Reanudar",
+  "habitRestored": "¡Hábito restaurado!"
 }

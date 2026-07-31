@@ -1046,5 +1046,26 @@
   "showCategoriesOnMainPageDesc": "Sopra le tue abitudini nella schermata Casa apparirà un filtro categorie.",
   "outdatedDeviceTitle": "Aggiorna il tuo altro dispositivo",
   "outdatedDeviceMessage": "Un altro dispositivo del tuo account sta usando una versione obsoleta di Habitt. Aggiornalo all'ultima versione per garantire una sincronizzazione corretta.",
-  "gotIt": "Capito"
+  "gotIt": "Capito",
+  "timerDialogTitle": "Avvia un timer",
+  "timerCloseHint": "Puoi chiudere questa schermata. Il timer continuerà a funzionare",
+  "timerInProgress": "In corso...",
+  "timerPaused": "In pausa",
+  "completeHabit": "Completa l'abitudine",
+  "timerPauseToEditHint": "Metti in pausa il timer per modificare manualmente i progressi",
+  "timerAlreadyRunningTitle": "C'è già un timer in esecuzione",
+  "timerSwitchDesc": "Interrompere il timer attuale e avviarne uno per \"{name}\"?",
+  "@timerSwitchDesc": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "timerStopAndStart": "Interrompi e avvia",
+  "habitPausedDesc": "Questa abitudine è attualmente in pausa. Per aggiungere progressi devi prima riprenderla.",
+  "habitDeletedDesc": "Questa abitudine è stata cancellata. Per aggiungere progressi devi prima ripristinarla.",
+  "deleted": "Cancellata",
+  "noDeletedHabits": "Nessuna abitudine cancellata",
+  "deletedHabits": "Abitudini cancellate",
+  "unpause": "Riprendi",
+  "habitRestored": "Abitudine ripristinata!"
 }

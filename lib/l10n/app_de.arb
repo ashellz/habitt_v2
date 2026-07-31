@@ -1046,5 +1046,26 @@
   "showCategoriesOnMainPageDesc": "Über deinen Gewohnheiten auf der Startseite erscheint ein Kategoriefilter.",
   "outdatedDeviceTitle": "Aktualisiere dein anderes Gerät",
   "outdatedDeviceMessage": "Ein anderes Gerät in deinem Konto verwendet eine veraltete Version von Habitt. Bitte aktualisiere es auf die neueste Version, um eine ordnungsgemäße Synchronisierung zu gewährleisten.",
-  "gotIt": "Verstanden"
+  "gotIt": "Verstanden",
+  "timerDialogTitle": "Timer starten",
+  "timerCloseHint": "Du kannst diesen Bildschirm schließen. Der Timer läuft weiter",
+  "timerInProgress": "Läuft...",
+  "timerPaused": "Pausiert",
+  "completeHabit": "Gewohnheit abschließen",
+  "timerPauseToEditHint": "Pausiere den Timer, um den Fortschritt manuell zu bearbeiten",
+  "timerAlreadyRunningTitle": "Ein Timer läuft bereits",
+  "timerSwitchDesc": "Aktuellen Timer stoppen und stattdessen einen für „{name}“ starten?",
+  "@timerSwitchDesc": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "timerStopAndStart": "Stoppen & starten",
+  "habitPausedDesc": "Diese Gewohnheit ist derzeit pausiert. Um Fortschritt hinzuzufügen, musst du sie zuerst fortsetzen.",
+  "habitDeletedDesc": "Diese Gewohnheit wurde gelöscht. Um Fortschritt hinzuzufügen, musst du sie zuerst wiederherstellen.",
+  "deleted": "Gelöscht",
+  "noDeletedHabits": "Keine gelöschten Gewohnheiten",
+  "deletedHabits": "Gelöschte Gewohnheiten",
+  "unpause": "Fortsetzen",
+  "habitRestored": "Gewohnheit wiederhergestellt!"
 }

@@ -1036,5 +1036,26 @@
   "showCategoriesOnMainPageDesc": "Iznad tvojih navika na početnoj pojaviće se filter kategorija.",
   "outdatedDeviceTitle": "Ažuriraj svoj drugi uređaj",
   "outdatedDeviceMessage": "Drugi uređaj na tvom računu koristi stariju verziju Habitt-a. Molimo ažuriraj je na najnoviju verziju kako bi sinhronizacija ispravno funkcionisala.",
-  "gotIt": "Razumijem"
+  "gotIt": "Razumijem",
+  "timerDialogTitle": "Pokreni tajmer",
+  "timerCloseHint": "Možeš zatvoriti ovaj ekran. Tajmer će nastaviti raditi",
+  "timerInProgress": "U toku...",
+  "timerPaused": "Pauzirano",
+  "completeHabit": "Završi naviku",
+  "timerPauseToEditHint": "Pauziraj tajmer da ručno urediš napredak",
+  "timerAlreadyRunningTitle": "Tajmer je već pokrenut",
+  "timerSwitchDesc": "Zaustaviti trenutni tajmer i pokrenuti ga za \"{name}\" umjesto toga?",
+  "@timerSwitchDesc": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "timerStopAndStart": "Zaustavi i pokreni",
+  "habitPausedDesc": "Ova navika je trenutno pauzirana. Da bi dodao napredak, prvo je moraš nastaviti.",
+  "habitDeletedDesc": "Ova navika je izbrisana. Da bi dodao napredak, prvo je moraš vratiti.",
+  "deleted": "Izbrisano",
+  "noDeletedHabits": "Nema izbrisanih navika",
+  "deletedHabits": "Izbrisane navike",
+  "unpause": "Nastavi",
+  "habitRestored": "Navika vraćena!"
 }

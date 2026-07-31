@@ -4683,6 +4683,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This habit has been deleted. To add any progress you must restore it first.'**
   String get habitDeletedDesc;
+
+  /// No description provided for @deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get deleted;
+
+  /// No description provided for @noDeletedHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'No deleted habits'**
+  String get noDeletedHabits;
+
+  /// No description provided for @deletedHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted habits'**
+  String get deletedHabits;
+
+  /// No description provided for @unpause.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpause'**
+  String get unpause;
+
+  /// No description provided for @habitRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit restored!'**
+  String get habitRestored;
 }
 
 class _AppLocalizationsDelegate

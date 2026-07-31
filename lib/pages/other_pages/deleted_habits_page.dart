@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
-import 'package:habitt/pages/main_pages/habits_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/habit_widget/habit_card.dart';
 import 'package:provider/provider.dart';
 
-class DeletedHabitsPage extends StatelessWidget {
+class DeletedHabitsPage extends StatefulWidget {
   const DeletedHabitsPage({super.key});
+
+  @override
+  State<DeletedHabitsPage> createState() => _DeletedHabitsPageState();
+}
+
+class _DeletedHabitsPageState extends State<DeletedHabitsPage>
+    with TickerProviderStateMixin {
+  late final StatusOverlayPopupController _statusOverlay;
+
+  @override
+  void initState() {
+    super.initState();
+    _statusOverlay = StatusOverlayPopupController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _statusOverlay.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +39,8 @@ class DeletedHabitsPage extends StatelessWidget {
             .habits
             .where((habit) => habit.isDeleted == true)
             .toList();
+
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -35,6 +57,30 @@ class DeletedHabitsPage extends StatelessWidget {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final cardSize = (constraints.maxWidth - 10) / 2;
+
+                  if (habits.isEmpty) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/new-svg/no-trash.svg",
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            loc.noDeletedHabits,
+                            style: TextStyle(
+                              color: cp.isDark ? cp.lightGreyText : cp.greyText,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,6 +93,14 @@ class DeletedHabitsPage extends StatelessWidget {
                           habit: habits[index],
                           cp: cp,
                           size: cardSize,
+                          onRestored: () {
+                            _statusOverlay.show(
+                              context: context,
+                              cp: cp,
+                              title: loc.habitRestored,
+                              isError: false,
+                            );
+                          },
                         ),
                     ],
                   );
@@ -98,7 +152,7 @@ class DeletedHabitsPage extends StatelessWidget {
           ),
           Center(
             child: Text(
-              "Recently deleted",
+              loc.deletedHabits,
               style: TextStyle(
                 color: cp.text,
                 fontSize: 22,

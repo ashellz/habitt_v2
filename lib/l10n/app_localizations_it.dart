@@ -2749,41 +2749,56 @@ class AppLocalizationsIt extends AppLocalizations {
   String get gotIt => 'Capito';
 
   @override
-  String get timerDialogTitle => 'Start a timer';
+  String get timerDialogTitle => 'Avvia un timer';
 
   @override
   String get timerCloseHint =>
-      'You can close this screen. The timer will keep running';
+      'Puoi chiudere questa schermata. Il timer continuerà a funzionare';
 
   @override
-  String get timerInProgress => 'In progress...';
+  String get timerInProgress => 'In corso...';
 
   @override
-  String get timerPaused => 'Paused';
+  String get timerPaused => 'In pausa';
 
   @override
-  String get completeHabit => 'Complete habit';
+  String get completeHabit => 'Completa l\'abitudine';
 
   @override
   String get timerPauseToEditHint =>
-      'Pause the timer to edit progress manually';
+      'Metti in pausa il timer per modificare manualmente i progressi';
 
   @override
-  String get timerAlreadyRunningTitle => 'A timer is already running';
+  String get timerAlreadyRunningTitle => 'C\'è già un timer in esecuzione';
 
   @override
   String timerSwitchDesc(String name) {
-    return 'Stop the current timer and start one for \"$name\" instead?';
+    return 'Interrompere il timer attuale e avviarne uno per \"$name\"?';
   }
 
   @override
-  String get timerStopAndStart => 'Stop & start';
+  String get timerStopAndStart => 'Interrompi e avvia';
 
   @override
   String get habitPausedDesc =>
-      'This habit is currently paused. To add any progress you must unpause it first.';
+      'Questa abitudine è attualmente in pausa. Per aggiungere progressi devi prima riprenderla.';
 
   @override
   String get habitDeletedDesc =>
-      'This habit has been deleted. To add any progress you must restore it first.';
+      'Questa abitudine è stata cancellata. Per aggiungere progressi devi prima ripristinarla.';
+
+  @override
+  String get deleted => 'Cancellata';
+
+  @override
+  String get noDeletedHabits => 'Nessuna abitudine cancellata';
+
+  @override
+  String get deletedHabits => 'Abitudini cancellate';
+
+  @override
+  String get unpause => 'Riprendi';
+
+  @override
+  String get habitRestored => 'Abitudine ripristinata!';
 }

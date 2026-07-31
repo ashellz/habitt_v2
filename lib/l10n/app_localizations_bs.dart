@@ -2729,41 +2729,55 @@ class AppLocalizationsBs extends AppLocalizations {
   String get gotIt => 'Razumijem';
 
   @override
-  String get timerDialogTitle => 'Start a timer';
+  String get timerDialogTitle => 'Pokreni tajmer';
 
   @override
   String get timerCloseHint =>
-      'You can close this screen. The timer will keep running';
+      'Možeš zatvoriti ovaj ekran. Tajmer će nastaviti raditi';
 
   @override
-  String get timerInProgress => 'In progress...';
+  String get timerInProgress => 'U toku...';
 
   @override
-  String get timerPaused => 'Paused';
+  String get timerPaused => 'Pauzirano';
 
   @override
-  String get completeHabit => 'Complete habit';
+  String get completeHabit => 'Završi naviku';
 
   @override
-  String get timerPauseToEditHint =>
-      'Pause the timer to edit progress manually';
+  String get timerPauseToEditHint => 'Pauziraj tajmer da ručno urediš napredak';
 
   @override
-  String get timerAlreadyRunningTitle => 'A timer is already running';
+  String get timerAlreadyRunningTitle => 'Tajmer je već pokrenut';
 
   @override
   String timerSwitchDesc(String name) {
-    return 'Stop the current timer and start one for \"$name\" instead?';
+    return 'Zaustaviti trenutni tajmer i pokrenuti ga za \"$name\" umjesto toga?';
   }
 
   @override
-  String get timerStopAndStart => 'Stop & start';
+  String get timerStopAndStart => 'Zaustavi i pokreni';
 
   @override
   String get habitPausedDesc =>
-      'This habit is currently paused. To add any progress you must unpause it first.';
+      'Ova navika je trenutno pauzirana. Da bi dodao napredak, prvo je moraš nastaviti.';
 
   @override
   String get habitDeletedDesc =>
-      'This habit has been deleted. To add any progress you must restore it first.';
+      'Ova navika je izbrisana. Da bi dodao napredak, prvo je moraš vratiti.';
+
+  @override
+  String get deleted => 'Izbrisano';
+
+  @override
+  String get noDeletedHabits => 'Nema izbrisanih navika';
+
+  @override
+  String get deletedHabits => 'Izbrisane navike';
+
+  @override
+  String get unpause => 'Nastavi';
+
+  @override
+  String get habitRestored => 'Navika vraćena!';
 }

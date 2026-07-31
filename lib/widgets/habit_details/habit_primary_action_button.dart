@@ -7,9 +7,9 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
-import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/dialogs/timer_dialog.dart';
+import 'package:habitt/widgets/dialogs/unpause_restore_habit_dialog.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
 import 'package:provider/provider.dart';
 
@@ -97,25 +97,18 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
       final String title = isPaused ? loc.habitPaused : loc.habitDeleted;
       final String desc = isPaused ? loc.habitPausedDesc : loc.habitDeletedDesc;
 
-      final buttonText = isPaused ? loc.unpauseHabit : loc.restore;
+      final buttonText = isPaused ? loc.unpause : loc.restore;
 
       await showDialogSheet(
         context: context,
         builder:
-            (context) => NewDefaultDialog(
+            (context) => UnpauseRestoreHabitDialog(
               title: title,
               desc: desc,
-              primaryButtonLabel: buttonText,
-              secondaryButtonLabel: loc.cancel,
-              onPrimaryButtonPressed: () {
-                Navigator.of(context).pop();
-                isPaused
-                    ? context.read<HabitProvider>().unpauseHabit(widget.habit)
-                    : context.read<HabitProvider>().restoreHabit(widget.habit);
-              },
-              onSecondaryButtonPressed: () {
-                Navigator.of(context).pop();
-              },
+              buttonText: buttonText,
+              loc: loc,
+              isPaused: isPaused,
+              widget: widget,
             ),
       );
 

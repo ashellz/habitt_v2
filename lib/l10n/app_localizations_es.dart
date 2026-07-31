@@ -2746,41 +2746,56 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gotIt => 'Entendido';
 
   @override
-  String get timerDialogTitle => 'Start a timer';
+  String get timerDialogTitle => 'Iniciar un temporizador';
 
   @override
   String get timerCloseHint =>
-      'You can close this screen. The timer will keep running';
+      'Puedes cerrar esta pantalla. El temporizador seguirá funcionando';
 
   @override
-  String get timerInProgress => 'In progress...';
+  String get timerInProgress => 'En curso...';
 
   @override
-  String get timerPaused => 'Paused';
+  String get timerPaused => 'Pausado';
 
   @override
-  String get completeHabit => 'Complete habit';
+  String get completeHabit => 'Completar hábito';
 
   @override
   String get timerPauseToEditHint =>
-      'Pause the timer to edit progress manually';
+      'Pausa el temporizador para editar el progreso manualmente';
 
   @override
-  String get timerAlreadyRunningTitle => 'A timer is already running';
+  String get timerAlreadyRunningTitle => 'Ya hay un temporizador en marcha';
 
   @override
   String timerSwitchDesc(String name) {
-    return 'Stop the current timer and start one for \"$name\" instead?';
+    return '¿Detener el temporizador actual e iniciar uno para «$name»?';
   }
 
   @override
-  String get timerStopAndStart => 'Stop & start';
+  String get timerStopAndStart => 'Detener e iniciar';
 
   @override
   String get habitPausedDesc =>
-      'This habit is currently paused. To add any progress you must unpause it first.';
+      'Este hábito está actualmente pausado. Para añadir progreso, primero debes reanudarlo.';
 
   @override
   String get habitDeletedDesc =>
-      'This habit has been deleted. To add any progress you must restore it first.';
+      'Este hábito ha sido eliminado. Para añadir progreso, primero debes restaurarlo.';
+
+  @override
+  String get deleted => 'Eliminado';
+
+  @override
+  String get noDeletedHabits => 'No hay hábitos eliminados';
+
+  @override
+  String get deletedHabits => 'Hábitos eliminados';
+
+  @override
+  String get unpause => 'Reanudar';
+
+  @override
+  String get habitRestored => '¡Hábito restaurado!';
 }

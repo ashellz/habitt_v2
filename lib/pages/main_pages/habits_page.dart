@@ -129,7 +129,7 @@ class _HabitsPageState extends State<HabitsPage> {
                 child: Transform.translate(
                   offset: const Offset(0, -2),
                   child: Text(
-                    "Deleted",
+                    loc.deleted,
                     style: TextStyle(
                       color: cp.isDark ? cp.lightGreyText : cp.greyText,
                       fontSize: 14,

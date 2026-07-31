@@ -2768,4 +2768,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get habitDeletedDesc =>
       'This habit has been deleted. To add any progress you must restore it first.';
+
+  @override
+  String get deleted => 'Deleted';
+
+  @override
+  String get noDeletedHabits => 'No deleted habits';
+
+  @override
+  String get deletedHabits => 'Deleted habits';
+
+  @override
+  String get unpause => 'Unpause';
+
+  @override
+  String get habitRestored => 'Habit restored!';
 }

@@ -1070,5 +1070,10 @@
   "timerStopAndStart": "Stop & start",
   "habitPausedDesc": "This habit is currently paused. To add any progress you must unpause it first.",
   "habitDeletedDesc": "This habit has been deleted. To add any progress you must restore it first.",
-  "restore": "Restore"
+  "restore": "Restore",
+  "deleted": "Deleted",
+  "noDeletedHabits": "No deleted habits",
+  "deletedHabits": "Deleted habits",
+  "unpause": "Unpause",
+  "habitRestored": "Habit restored!"
 }

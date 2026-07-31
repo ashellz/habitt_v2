@@ -1058,6 +1058,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> restoreHabit(Habit habit) async {
     await habit.restore();
+    notifyListeners();
     syncSingleHabitNotifications(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
