@@ -4,7 +4,6 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
@@ -58,23 +57,9 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
     return 0;
   }
 
-  // running timer that has reached (or passed) the duration target counts
-  // as completed too, same as NewHabitProgress's checkmark.
-  bool _isEffectivelyCompleted(BuildContext context) {
-    if (widget.habit.completed) return true;
-    if (!widget.habit.tracksDuration || widget.habit.duration <= 0) {
-      return false;
-    }
-    final liveDurationSeconds = context.select<TimerProvider, int?>(
-      (t) => t.liveProgressFor(widget.habit.id),
-    );
-    return liveDurationSeconds != null &&
-        liveDurationSeconds >= widget.habit.duration;
-  }
-
-  String _label(bool effectiveCompleted) {
+  String _label(bool isCompleted) {
     final loc = AppLocalizations.of(context)!;
-    if (effectiveCompleted) {
+    if (isCompleted) {
       return loc.completed;
     }
     if (!widget.isDemo && widget.habit.hasTrackingType) {
@@ -154,7 +139,10 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
-    final effectiveCompleted = _isEffectivelyCompleted(context);
+    // the timer provider completes the habit itself once the target is
+    // reached, so watching the habit provider is enough to stay in sync
+    context.watch<HabitProvider>();
+    final isCompleted = widget.habit.completed;
 
     return GestureDetector(
       onTap: _onMainTap,
@@ -171,7 +159,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
                 );
               },
       child: NewDefaultButton(
-        color: effectiveCompleted ? cp.habitBg : cp.main,
+        color: isCompleted ? cp.habitBg : cp.main,
         height: 41,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onPressed: () => _onMainTap(),
@@ -186,9 +174,9 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
             ),
             const SizedBox(width: 10),
             Text(
-              _label(effectiveCompleted),
+              _label(isCompleted),
               style: TextStyle(
-                color: effectiveCompleted ? cp.lightGreyText : cp.bg,
+                color: isCompleted ? cp.lightGreyText : cp.bg,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),

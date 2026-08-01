@@ -3,7 +3,6 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
-import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/widgets/habit_widget/new_habit_icon.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/main_habit_info.dart';
 import 'package:habitt/widgets/main_page/habits/habit_widget/new_habit_progress.dart';
@@ -220,24 +219,16 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
               orElse: () => widget.habit,
             );
 
-    // a running timer that has reached (or passed) the duration target
-    // should look completed too, same as NewHabitProgress's checkmark.
-    final liveDurationSeconds = context.select<TimerProvider, int?>(
-      (t) => t.liveProgressFor(widget.habit.id),
-    );
-    final timerReachedTarget =
-        liveDurationSeconds != null &&
-        widget.habit.tracksDuration &&
-        widget.habit.duration > 0 &&
-        liveDurationSeconds >= widget.habit.duration;
-    final effectiveCompleted = widget.habit.completed || timerReachedTarget;
+    // a running timer that reaches its target marks the habit completed in the
+    // timer provider, so this only has to follow habit.completed
+    final isCompleted = widget.habit.completed;
 
     // Check if completed state changed and trigger animation
-    if (effectiveCompleted != _previousCompleted) {
-      _previousCompleted = effectiveCompleted;
+    if (isCompleted != _previousCompleted) {
+      _previousCompleted = isCompleted;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          if (effectiveCompleted) {
+          if (isCompleted) {
             _controller.forward();
           } else {
             _controller.reverse();
@@ -271,7 +262,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
                   side: BorderSide(
                     width: 1,
                     color:
-                        effectiveCompleted
+                        isCompleted
                             ? cp.main.withOpacity(0.2)
                             : cp.border,
                   ),
@@ -286,7 +277,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
             children: [
               NewHabitIcon(
                 iconPath: widget.habit.iconPath,
-                isCompleted: effectiveCompleted,
+                isCompleted: isCompleted,
               ),
               Expanded(
                 child: MainHabitInfo(

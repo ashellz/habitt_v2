@@ -21,6 +21,12 @@ class TimerProvider extends ChangeNotifier {
   ActiveTimerSession? _session;
   Timer? _ticker;
 
+  // true once the running session has been committed at/over the habit's
+  // target, so the auto-complete commit fires once per crossing instead of
+  // every tick
+  bool _autoCompleted = false;
+  bool _autoCompleteInFlight = false;
+
   // prompt the user to keep or discard the session TODO
   bool _pendingRecoveryPrompt = false;
 
@@ -80,6 +86,7 @@ class TimerProvider extends ChangeNotifier {
     _ticker?.cancel();
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       notifyListeners();
+      unawaited(_maybeAutoComplete());
     });
   }
 
@@ -107,11 +114,51 @@ class TimerProvider extends ChangeNotifier {
       lastResumedAt: DateTime.now().toUtc(),
       status: TimerStatus.running,
     );
+    _autoCompleted = false;
     _persist();
     _startTicker();
     notifyListeners();
     return true;
   }
+
+  Future<void> _maybeAutoComplete() async {
+    final s = _session;
+    final habitProvider = _habitProvider;
+    if (s == null || habitProvider == null) return;
+    if (!s.isRunning || _autoCompleteInFlight) return;
+
+    final target = habitProvider.timerTargetDuration(
+      s.habitId,
+      day: DateTime.parse(s.dayKey),
+    );
+    if (target == null || target <= 0) {
+      // habit was deleted, paused, or target removed while timer was running, so stop the timer
+      forceStop();
+      return;
+    }
+
+    final progress = s.baselineDurationCompleted + sessionElapsedSeconds;
+
+    if (progress >= target) {
+      if (_autoCompleted) return;
+      _autoCompleted = true;
+    } else {
+      // target was raised past the progress we already committed, so commit
+      // again to let the habit fall back to uncompleted
+      if (!_autoCompleted) return;
+      _autoCompleted = false;
+    }
+
+    _autoCompleteInFlight = true;
+    try {
+      await _commit(s.habitId, s.dayKey, progress);
+    } finally {
+      _autoCompleteInFlight = false;
+    }
+    notifyListeners();
+  }
+
+  Future<void> syncOnResume() => _maybeAutoComplete();
 
   Future<void> pause() async {
     final s = _session;
@@ -142,6 +189,14 @@ class TimerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void forceStop() {
+    _stopTicker();
+    _session = null;
+    _autoCompleted = false;
+    _prefs.remove(_prefsKey);
+    notifyListeners();
+  }
+
   Future<void> stop() async {
     final s = _session;
     if (s == null) return;
@@ -156,6 +211,7 @@ class TimerProvider extends ChangeNotifier {
 
     _stopTicker();
     _session = null;
+    _autoCompleted = false;
     notifyListeners();
 
     await _commit(habitId, dayKey, durationCompleted);
@@ -170,6 +226,7 @@ class TimerProvider extends ChangeNotifier {
     s.accumulatedSeconds = 0;
     s.lastResumedAt = null;
     s.status = TimerStatus.paused;
+    _autoCompleted = true;
     _stopTicker();
     _persist();
     await _commit(s.habitId, s.dayKey, targetDuration);
@@ -183,6 +240,8 @@ class TimerProvider extends ChangeNotifier {
     if (s == null) return;
     s.baselineDurationCompleted = durationCompleted;
     s.accumulatedSeconds = 0;
+    // the manual log decides completion on its own, let the next tick re-decide
+    _autoCompleted = false;
     _persist();
     notifyListeners();
   }
@@ -215,6 +274,7 @@ class TimerProvider extends ChangeNotifier {
   void _clear() {
     _stopTicker();
     _session = null;
+    _autoCompleted = false;
     _prefs.remove(_prefsKey);
     notifyListeners();
   }

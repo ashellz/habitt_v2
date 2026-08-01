@@ -60,7 +60,7 @@ class NewDefaultDialog extends StatelessWidget {
         16,
         16,
         16,
-        MediaQuery.of(context).padding.bottom + keyboardInset,
+        MediaQuery.of(context).padding.bottom + keyboardInset + 16,
       ),
       child: SingleChildScrollView(
         child: Container(
@@ -83,7 +83,7 @@ class NewDefaultDialog extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: cp.isDark ? cp.field : cp.bg,
+                    color: cp.isDark ? cp.field : cp.habitBg,
                     shape: BoxShape.circle,
                   ),
                   child: titleIcon ?? SvgPicture.asset(titleIconSvgPath!),

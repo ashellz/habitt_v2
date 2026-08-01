@@ -500,12 +500,12 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String insightStrengthKeepPushingTitle(Object habitName) {
-    return 'Potrudi se za $habitName';
+    return 'Potrudi se za \'$habitName\'';
   }
 
   @override
   String insightStrengthLowerTargetTitle(Object habitName) {
-    return 'Niži cilj za $habitName';
+    return 'Tvoj cilj za \'$habitName\' je možda previsok';
   }
 
   @override
@@ -1976,7 +1976,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get restoreWithDeltasSkip => 'Samo vrati';
 
   @override
-  String get restoreConfirmTitle => 'Vratiti backup?';
+  String get restoreConfirmTitle => 'Učitaj backup?';
 
   @override
   String get restoreConfirmDesc =>
@@ -1985,6 +1985,9 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get restoreConfirmDescription =>
       'Ovo će spojiti cloud backup s tvojim lokalnim podacima. Konflikti će biti riješeni koristeći najnovije izmjene.';
+
+  @override
+  String get restoreBackup => 'Učitaj';
 
   @override
   String get restore => 'Vrati';
@@ -2780,4 +2783,20 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get habitRestored => 'Navika vraćena!';
+
+  @override
+  String get later => 'Kasnije';
+
+  @override
+  String get consistencyMessage =>
+      'Oslabio si u zadnje vrijeme. Poguraj to malo!';
+
+  @override
+  String get current => 'Trenutno';
+
+  @override
+  String get suggested => 'Predloženo';
+
+  @override
+  String get needed => 'Potrebno';
 }

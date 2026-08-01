@@ -1333,6 +1333,22 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  int? timerTargetDuration(int id, {required DateTime day}) {
+    final normalizedDay = _normalizeDate(day);
+    final List<Habit> source;
+    if (normalizedDay == _normalizeDate(DateTime.now())) {
+      source = todaysHabits;
+    } else {
+      final dayKey = normalizedDay.toIso8601String().split('T').first;
+      source = daysBox.get(dayKey)?.habits ?? const <Habit>[];
+    }
+
+    for (final h in source) {
+      if (h.id == id) return h.tracksDuration ? h.duration : null;
+    }
+    return null;
+  }
+
   // used by the timer provider to commit timer progress to the habit
   // after pausing or stopping the timer
   Future<void> commitTimerDuration(

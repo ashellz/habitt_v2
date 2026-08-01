@@ -895,13 +895,13 @@ abstract class AppLocalizations {
   /// No description provided for @insightStrengthKeepPushingTitle.
   ///
   /// In en, this message translates to:
-  /// **'Keep pushing {habitName}'**
+  /// **'Keep pushing \'{habitName}\''**
   String insightStrengthKeepPushingTitle(Object habitName);
 
   /// No description provided for @insightStrengthLowerTargetTitle.
   ///
   /// In en, this message translates to:
-  /// **'Lower target for {habitName}'**
+  /// **'Your target for \'{habitName}\' may be too high'**
   String insightStrengthLowerTargetTitle(Object habitName);
 
   /// No description provided for @insightStrengthStartSmallType1BrushTeeth.
@@ -3256,6 +3256,12 @@ abstract class AppLocalizations {
   /// **'This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.'**
   String get restoreConfirmDescription;
 
+  /// No description provided for @restoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restoreBackup;
+
   /// No description provided for @restore.
   ///
   /// In en, this message translates to:
@@ -4713,6 +4719,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Habit restored!'**
   String get habitRestored;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @consistencyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been lacking consistency in recent sessions. Get back on track!'**
+  String get consistencyMessage;
+
+  /// No description provided for @current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get current;
+
+  /// No description provided for @suggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get suggested;
+
+  /// No description provided for @needed.
+  ///
+  /// In en, this message translates to:
+  /// **'Needed'**
+  String get needed;
 }
 
 class _AppLocalizationsDelegate

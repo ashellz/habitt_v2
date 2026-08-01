@@ -15,7 +15,7 @@ class ConfirmRestoreBackupDialog extends StatelessWidget {
     return NewDefaultDialog(
       title: loc.restoreConfirmTitle,
       desc: loc.restoreConfirmDesc,
-      primaryButtonLabel: loc.restore,
+      primaryButtonLabel: loc.restoreBackup,
       primaryButtonColor: cp.error,
       onPrimaryButtonPressed: () => Navigator.of(context).pop(true),
       secondaryButtonLabel: loc.cancel,

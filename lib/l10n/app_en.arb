@@ -125,8 +125,8 @@
   "insightStrengthIncreaseWakeUpEarly": "You are doing great with waking up early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.|Great consistency on waking up early. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.|Waking up early is going strong. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.|You are reliably showing up with waking up early. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.|Excellent rhythm on waking up early. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "insightStrengthIncreaseWalk": "You are doing great with your walking routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.|Great consistency on your walking routine. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.|Your walking routine is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.|You are reliably showing up for your walking routine. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.|Excellent rhythm on your walking routine. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
   "insightStrengthIncreaseWork": "You are doing great with your work habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to keep growing.|Great consistency on your work habit. Strength is stable at {strength}%. Increase your target from {fromValue} to {toValue} and keep momentum high.|Your work habit is strong right now. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} for the next level.|You are reliably showing up for your work habit. Strength is stable at {strength}%. Move from {fromValue} to {toValue} to keep improving.|Excellent rhythm on your work habit. Strength is stable at {strength}%. Recommended target: {fromValue} -> {toValue} to continue progress.",
-  "insightStrengthKeepPushingTitle": "Keep pushing {habitName}",
-  "insightStrengthLowerTargetTitle": "Lower target for {habitName}",
+  "insightStrengthKeepPushingTitle": "Keep pushing '{habitName}'",
+  "insightStrengthLowerTargetTitle": "Your target for '{habitName}' may be too high",
   "insightStrengthStartSmallType1BrushTeeth": "Your brush your teeth habit is slipping. Do not let this routine fall off now.|You have been off track with brushing your teeth. Brush your teeth today and protect the habit.|Momentum on brushing your teeth is fading. Keep it alive by brushing your teeth today.|Do not let brushing your teeth become inconsistent. Lock in and brush them today.|You wanted to start brushing your teeth for a reason. Stay disciplined and keep it from slipping.",
   "insightStrengthStartSmallType1DrinkWater": "Your drink water habit is slipping. Do not let this routine fall off now.|You have been off track with drinking enough water. Drink a glass of water today and protect the habit.|Momentum on drinking enough water is fading. Keep it alive by drinking your water today.|Do not let drinking enough water become inconsistent. Lock in and hydrate today.|You wanted to start drinking enough water for a reason. Stay disciplined and keep it from slipping.",
   "insightStrengthStartSmallType1Generic": "You added this habit for a reason. Do not let it slip now.|Momentum is fading on this habit. Show up today and keep it alive.|You are falling behind on this habit. Lock in and get your rep done.|Do not negotiate with laziness here. Protect this habit today.|You came too far to let this habit drift. Stay consistent today.",
@@ -764,6 +764,7 @@
   "restoreConfirmTitle": "Restore from backup?",
   "restoreConfirmDesc": "Your data will be completely replaced with this backup. Everything you've tracked since this backup was made will be lost. This cannot be undone.",
   "restoreConfirmDescription": "This will merge the cloud backup with your local data. Any conflicts will be resolved using the most recent changes.",
+  "restoreBackup": "Restore",
   "restore": "Restore",
   "backupHistory": "Backup history",
   "noBackupsFound": "No backups found",
@@ -1075,5 +1076,10 @@
   "noDeletedHabits": "No deleted habits",
   "deletedHabits": "Deleted habits",
   "unpause": "Unpause",
-  "habitRestored": "Habit restored!"
+  "habitRestored": "Habit restored!",
+  "later": "Later",
+  "consistencyMessage": "You have been lacking consistency in recent sessions. Get back on track!",
+  "current": "Current",
+  "suggested": "Suggested",
+  "needed": "Needed"
 }

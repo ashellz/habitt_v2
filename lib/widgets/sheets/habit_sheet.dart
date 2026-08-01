@@ -148,7 +148,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.nameController.text = habit.name;
     stateProvider.descController.text = habit.description;
     stateProvider.habitAmount = habit.amount;
-    stateProvider.habitDuration = Duration(minutes: habit.duration);
+    stateProvider.habitDuration = Duration(seconds: habit.duration);
     stateProvider.selectedHabitTrackingType = habit.trackingType;
     stateProvider.habitAmountLabelController.text = habit.amountLabel;
     stateProvider.setIconPathImmediately(habit.iconPath);

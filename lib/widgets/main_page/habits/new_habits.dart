@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
@@ -456,7 +456,7 @@ class _NewHabitsState extends State<NewHabits>
 
     if (habits.isEmpty) {
       return SizedBox(
-        height: habitsListHeight - MediaQuery.of(context).padding.bottom,
+        height: habitsListHeight,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -501,12 +501,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String insightStrengthKeepPushingTitle(Object habitName) {
-    return 'Weiter schieben $habitName';
+    return 'Weiter schieben \'$habitName\'';
   }
 
   @override
   String insightStrengthLowerTargetTitle(Object habitName) {
-    return 'Unteres Ziel für $habitName';
+    return 'Dein Ziel für \'$habitName\' ist möglicherweise zu hoch';
   }
 
   @override
@@ -1997,6 +1997,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dabei wird die Cloud-Sicherung mit deinen lokalen Daten zusammengeführt. Konflikte werden anhand der neuesten Änderungen aufgelöst.';
 
   @override
+  String get restoreBackup => 'Wiederherstellen';
+
+  @override
   String get restore => 'Wiederherstellen';
 
   @override
@@ -2803,4 +2806,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get habitRestored => 'Gewohnheit wiederhergestellt!';
+
+  @override
+  String get later => 'Später';
+
+  @override
+  String get consistencyMessage =>
+      'Du hast in letzter Zeit nachgelassen. Gib nochmal richtig Gas!';
+
+  @override
+  String get current => 'Aktuell';
+
+  @override
+  String get suggested => 'Vorgeschlagen';
+
+  @override
+  String get needed => 'Benötigt';
 }

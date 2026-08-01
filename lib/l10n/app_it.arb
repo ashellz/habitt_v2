@@ -252,13 +252,13 @@
       "toValue": {}
     }
   },
-  "insightStrengthKeepPushingTitle": "Continua a spingere {habitName}",
+  "insightStrengthKeepPushingTitle": "Continua a spingere '{habitName}'",
   "@insightStrengthKeepPushingTitle": {
     "placeholders": {
       "habitName": {}
     }
   },
-  "insightStrengthLowerTargetTitle": "Obiettivo inferiore per {habitName}",
+  "insightStrengthLowerTargetTitle": "Il tuo obiettivo per '{habitName}' potrebbe essere troppo alto",
   "@insightStrengthLowerTargetTitle": {
     "placeholders": {
       "habitName": {}
@@ -1067,5 +1067,11 @@
   "noDeletedHabits": "Nessuna abitudine cancellata",
   "deletedHabits": "Abitudini cancellate",
   "unpause": "Riprendi",
-  "habitRestored": "Abitudine ripristinata!"
+  "habitRestored": "Abitudine ripristinata!",
+  "later": "Più tardi",
+  "consistencyMessage": "Ultimamente hai rallentato. Dai una spinta!",
+  "current": "Attuale",
+  "suggested": "Suggerito",
+  "needed": "Necessario",
+  "restoreBackup": "Ripristina"
 }

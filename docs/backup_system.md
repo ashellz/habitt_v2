@@ -132,7 +132,11 @@ A habit's fields fall into two categories that sync differently:
 
 Without this, a completion made on day *N* by a device that has not yet rolled over still carries `completed = true` on its dateless master record; the receiver, now on day *N+1*, would stamp it onto **today**, while day *N* stayed incomplete. Routing day-state exclusively through dated snapshots removes that leak.
 
-**Today is a mirror of today's snapshot.** Because the home view reads today's completion off the live habit, `_mergeBackupData` ends with `_rehydrateTodayFromSnapshot()`: after the day loop it copies the day-state of each habit in **today's** dated snapshot back onto the matching live habit (`Habit.adoptDayState`). The same path runs after a full restore / new-device import (all restore/replace paths wipe then call `_mergeBackupData`), so a fresh restore reads today from today's dated snapshot rather than the stale dateless master flag.
+**Today is a mirror of today's snapshot.** Because the home view reads today's completion off the live habit, `_mergeBackupData` ends with `BackupService.rehydrateTodayFromSnapshot()`: after the day loop it copies the day-state of each habit in **today's** dated snapshot back onto the matching live habit (`Habit.adoptDayState`). The same path runs after a full restore / new-device import (all cloud restore/replace paths wipe then call `_mergeBackupData`), so a fresh restore reads today from today's dated snapshot rather than the stale dateless master flag.
+
+**Local file restore applies the same rule.** `importLocalData` bypasses `_mergeBackupData` (it is a direct wipe-and-replace), so it enforces the rule itself: each habit from the file is written with `Habit.clearDayState()` applied (values zeroed, day-state timestamps dropped), and today is then rebuilt by `rehydrateTodayFromSnapshot()` after the days are restored. The file's dateless day-state is therefore never used at all — no progress is lost by dropping it, because every completion is written into that day's dated `Day` snapshot as it happens (including the day the file was exported on), so the restored days already carry the full history.
+
+Without this, importing a file exported on day *N* onto a device now on day *N+1* pre-filled today with day *N*'s progress: the file has no snapshot for day *N+1*, but every master habit record still carried day *N*'s `completed`/`amountCompleted`/`durationCompleted`.
 
 **Completion tuple resolves as a unit.** Within a single day's per-habit merge, the four day-state fields are resolved together: the side whose day-state was modified most recently (latest timestamp among the tuple keys; tie → local) wins all four. They are never resolved independently, so a merge can no longer produce a contradictory `completed = true` with `amountCompleted = 0`.
 
@@ -194,7 +198,12 @@ the user to update the other device, guarded by an in-memory flag and the
 `outdatedPeerVersionWarningShown_v1` pref.
 
 ### Deletion
-`isDeleted = true` on a habit acts as a tombstone. Deleted habits are excluded from new backups and not re-added from incoming data.
+`isDeleted = true` on a habit acts as a tombstone, and deleted habits are recoverable via the Deleted Habits / trash page (`lib/pages/other_pages/deleted_habits_page.dart`), so the tombstone itself must sync like any other field.
+
+- **Export** (`exportDataForGoogleDrive`, `exportDeltaForGoogleDrive`, `exportDataLocally`) never filters by `isDeleted` — deleted habits are included in every backup exactly like active ones.
+- **Incremental merge** (`_mergeBackupData`, existing local record found): `deleted` is a definition field, resolved by the normal per-field timestamp rule like any other (§ Merge Algorithm) — whichever side deleted/restored most recently wins.
+- **New-to-this-device merge** (`_mergeBackupData`, no local record): the incoming habit — deleted or not — is always added as-is. A deleted habit lands as a tombstone rather than being skipped. This matters most right after a full wipe (cloud "Replace" via `_replaceFromCloud`, or a fresh device's first merge), where every incoming habit looks "new": if the tombstone were skipped there, a later delta/backup from a stale device that never learned about the deletion would re-add the habit as active with no local tombstone to out-rank it.
+- **Local file restore** (`importLocalData`) is a full wipe-and-replace: every habit in the file — including deleted ones — is re-added verbatim (only the day-state is rebuilt from today's snapshot, see § Day-State vs. Definition Fields), so the trash list survives a restore intact.
 
 ---
 

@@ -357,9 +357,6 @@ class BackupService {
     }
   }
 
-  /// Import data from a local backup file.
-  /// When [passphrase] is non-null it is used for decryption; when null the
-  /// file must have `"encrypted": false` or [BackupOperationResult.wrongPassphrase] is returned.
   static Future<BackupOperationResult> importLocalData({
     required BuildContext context,
     String? passphrase,
@@ -397,14 +394,16 @@ class BackupService {
         final habitsBox = Hive.box<Habit>('habits');
         final daysBox = Hive.box<Day>('days');
 
-        // Full replace: wipe device data and write exactly what the file contains.
+        // full replacing by deleting everything
         await habitsBox.clear();
         await daysBox.clear();
 
         for (final habit in payload.habits) {
-          if (!(habit.isDeleted ?? false)) {
-            await habitsBox.add(habit);
-          }
+          // fills habitbox with all the needed habits from the backup file
+          // clears their completion and stuff, it will be rehydrated later from daysBox
+          // of the backup
+          habit.clearDayState();
+          await habitsBox.add(habit);
         }
 
         for (final day in payload.days) {
@@ -416,6 +415,8 @@ class BackupService {
               ).toIso8601String().split('T').first;
           await daysBox.put(dayKey, day);
         }
+
+        await rehydrateTodayFromSnapshot();
 
         if (context.mounted) {
           await context.read<HabitProvider>().importDateJoined(
@@ -432,7 +433,12 @@ class BackupService {
         return BackupOperationResult.success;
       }
 
-      await context.read<HabitProvider>().init();
+      final habitProvider = context.read<HabitProvider>();
+      await habitProvider.init();
+
+      await habitProvider.assignStreaks();
+      await habitProvider.recalculateLongestStreaks();
+      habitProvider.statsProvider?.refreshStats(force: true);
 
       return BackupOperationResult.success;
     } catch (e, st) {
@@ -441,7 +447,32 @@ class BackupService {
     }
   }
 
-  // --- Helpers ------------------------------------------------------------
+  // updates todays habits with the real day habits from backup
+  static Future<void> rehydrateTodayFromSnapshot() async {
+    final habitsBox = Hive.box<Habit>('habits');
+    final daysBox = Hive.box<Day>('days');
+
+    final now = DateTime.now();
+    final todayKey =
+        DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).toIso8601String().split('T').first;
+
+    final today = daysBox.get(todayKey);
+    if (today == null) return;
+
+    final snapshotById = {for (final h in today.habits) h.id: h};
+    for (final habit in habitsBox.values) {
+      final snapshot = snapshotById[habit.id];
+      if (snapshot == null) continue;
+      habit.adoptDayState(snapshot);
+      if (habit.isInBox) {
+        await habit.save();
+      }
+    }
+  }
 
   static List<int> _randomBytes(int length) {
     return List<int>.generate(length, (_) => _rng.nextInt(256));

@@ -252,13 +252,13 @@
       "toValue": {}
     }
   },
-  "insightStrengthKeepPushingTitle": "Weiter schieben {habitName}",
+  "insightStrengthKeepPushingTitle": "Weiter schieben '{habitName}'",
   "@insightStrengthKeepPushingTitle": {
     "placeholders": {
       "habitName": {}
     }
   },
-  "insightStrengthLowerTargetTitle": "Unteres Ziel für {habitName}",
+  "insightStrengthLowerTargetTitle": "Dein Ziel für '{habitName}' ist möglicherweise zu hoch",
   "@insightStrengthLowerTargetTitle": {
     "placeholders": {
       "habitName": {}
@@ -1067,5 +1067,11 @@
   "noDeletedHabits": "Keine gelöschten Gewohnheiten",
   "deletedHabits": "Gelöschte Gewohnheiten",
   "unpause": "Fortsetzen",
-  "habitRestored": "Gewohnheit wiederhergestellt!"
+  "habitRestored": "Gewohnheit wiederhergestellt!",
+  "later": "Später",
+  "consistencyMessage": "Du hast in letzter Zeit nachgelassen. Gib nochmal richtig Gas!",
+  "current": "Aktuell",
+  "suggested": "Vorgeschlagen",
+  "needed": "Benötigt",
+  "restoreBackup": "Wiederherstellen"
 }

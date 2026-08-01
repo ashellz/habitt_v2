@@ -499,12 +499,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String insightStrengthKeepPushingTitle(Object habitName) {
-    return 'Continua a spingere $habitName';
+    return 'Continua a spingere \'$habitName\'';
   }
 
   @override
   String insightStrengthLowerTargetTitle(Object habitName) {
-    return 'Obiettivo inferiore per $habitName';
+    return 'Il tuo obiettivo per \'$habitName\' potrebbe essere troppo alto';
   }
 
   @override
@@ -1996,6 +1996,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo unirà il backup cloud con i tuoi dati locali. I conflitti saranno risolti usando le modifiche più recenti.';
 
   @override
+  String get restoreBackup => 'Ripristina';
+
+  @override
   String get restore => 'Ripristina';
 
   @override
@@ -2801,4 +2804,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get habitRestored => 'Abitudine ripristinata!';
+
+  @override
+  String get later => 'Più tardi';
+
+  @override
+  String get consistencyMessage =>
+      'Ultimamente hai rallentato. Dai una spinta!';
+
+  @override
+  String get current => 'Attuale';
+
+  @override
+  String get suggested => 'Suggerito';
+
+  @override
+  String get needed => 'Necessario';
 }

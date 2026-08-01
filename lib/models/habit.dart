@@ -256,6 +256,11 @@ class Habit extends HiveObject {
   void updateHabit(Habit habit) {
     final now = DateTime.now().toUtc();
 
+    final trackingTypeChanged = trackingType != habit.trackingType;
+    final amountGoalChanged = amount != habit.amount;
+    final durationGoalChanged = duration != habit.duration;
+    final newTrackingType = habit.trackingType;
+
     if (name != habit.name) {
       name = habit.name;
       timestamps['name'] = now;
@@ -416,6 +421,31 @@ class Habit extends HiveObject {
     if (!_sameStringMap(localizedNames, habit.localizedNames)) {
       localizedNames = Map<String, String>.from(habit.localizedNames);
       timestamps['localizedNames'] = now;
+    }
+
+    if (trackingTypeChanged) {
+      if (completed || amountCompleted != 0 || durationCompleted != 0) {
+        completed = false;
+        amountCompleted = 0;
+        durationCompleted = 0;
+        timestamps['completed'] = now;
+        timestamps['amountCompleted'] = now;
+        timestamps['durationCompleted'] = now;
+      }
+    } else if (newTrackingType == HabitTrackingType.duration &&
+        durationGoalChanged) {
+      final shouldBeCompleted = durationCompleted >= duration;
+      if (completed != shouldBeCompleted) {
+        completed = shouldBeCompleted;
+        timestamps['completed'] = now;
+      }
+    } else if (newTrackingType == HabitTrackingType.amount &&
+        amountGoalChanged) {
+      final shouldBeCompleted = amountCompleted >= amount;
+      if (completed != shouldBeCompleted) {
+        completed = shouldBeCompleted;
+        timestamps['completed'] = now;
+      }
     }
   }
 
@@ -836,6 +866,19 @@ class Habit extends HiveObject {
       } else {
         timestamps.remove(key);
       }
+    }
+  }
+
+  // clears a habit completely
+  // used on backup restoring for habits that have no entry in today snapshot
+  // their stored day-state belongs to the day the backup was made.
+  void clearDayState() {
+    completed = false;
+    skipped = false;
+    amountCompleted = 0;
+    durationCompleted = 0;
+    for (final key in dayStateKeys) {
+      timestamps.remove(key);
     }
   }
 

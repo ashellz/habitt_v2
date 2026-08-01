@@ -14,7 +14,7 @@ import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/habit_strength_calculator.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
-import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/dialogs/adjust_target_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -93,17 +93,33 @@ class InsightSheetFlow {
       _InsightCandidate? bestCandidate;
 
       for (final habit in todaysHabits) {
+        debugPrint('Evaluating habit ${habit.name} for insight sheet');
+        if (habit.optional) {
+          continue;
+        }
         final stats = statsProvider.statsForHabit(
           habit,
           locale: Localizations.localeOf(context),
         );
         final insight = stats.actionableInsight;
         if (insight == HabitStrengthInsight.stayConsistent) {
+          debugPrint(
+            'Habit ${habit.name} has no actionable insight '
+            '(tracksAmount=${habit.tracksAmount}, tracksDuration=${habit.tracksDuration}, '
+            'currentStrength=${stats.currentStrength}, '
+            'dropLast5Days=${stats.strengthDropLast5Days}, '
+            'varianceLast30Days=${stats.strengthVarianceLast30Days}, '
+            'historyLength=${stats.strengthHistory.length}, '
+            'dailyProgressDays=${stats.dailyProgress.length})',
+          );
           continue;
         }
 
         if (habit.insightPopstonedUntil != null &&
             habit.insightPopstonedUntil!.isAfter(DateTime.now())) {
+          debugPrint(
+            'Habit ${habit.name} is insight-popstoned until ${habit.insightPopstonedUntil}',
+          );
           continue;
         }
 
@@ -111,15 +127,15 @@ class InsightSheetFlow {
             HabitStrengthInsightTextService.shouldSuppressImprovementInsight(
               habit,
             )) {
+          debugPrint('Habit ${habit.name} has suppressed improvement insight');
           continue;
         }
 
         if (insight == HabitStrengthInsight.pushHarder &&
             !habit.hasTrackingType) {
-          continue;
-        }
-
-        if (insight == HabitStrengthInsight.startSmall && habit.optional) {
+          debugPrint(
+            'Habit ${habit.name} has no tracking type, skipping pushHarder insight',
+          );
           continue;
         }
 
@@ -128,6 +144,9 @@ class InsightSheetFlow {
         final sessionKey = '$storageKey|$todayKey';
         final shownToday = prefs.getString(storageKey) == todayKey;
         if (shownToday || _shownInsightSessionKeys.contains(sessionKey)) {
+          debugPrint(
+            'Habit ${habit.name} has already shown insight for $insight today',
+          );
           continue;
         }
 
@@ -186,9 +205,6 @@ class InsightSheetFlow {
     // For pushHarder Getting recommendation if needed (from 1 to 3 times jump)
     final recommendation = _buildTargetRecommendation(candidate);
     final isMotivationOnly = recommendation == null;
-    final isOptionalPushHarder =
-        candidate.insight == HabitStrengthInsight.pushHarder &&
-        candidate.habit.optional;
 
     final loc = AppLocalizations.of(context)!;
     final fromValue =
@@ -220,18 +236,11 @@ class InsightSheetFlow {
       toValue: toValue,
     );
 
-    final title =
-        isOptionalPushHarder
-            ? 'Ready to level up ${candidate.habit.resolvedName(loc.localeName)}?'
-            : insightCopy.title;
+    final title = insightCopy.title;
 
-    final desc =
-        isOptionalPushHarder
-            ? "You're getting really consistent with this habit. Consider not making it optional to push yourself a bit more. Do you want to update this habit now?"
-            : insightCopy.description;
+    final desc = loc.consistencyMessage;
 
-    final primaryLabel =
-        isOptionalPushHarder ? 'Update now' : insightCopy.primaryLabel;
+    final primaryLabel = insightCopy.primaryLabel;
 
     _isInsightSheetOpen = true;
     try {
@@ -240,12 +249,15 @@ class InsightSheetFlow {
       await showDialogSheet(
         context: context,
         builder: (dialogContext) {
-          return NewDefaultDialog(
+          return AdjustTargetDialog(
             title: title,
             desc: desc,
-            primaryButtonLabel: primaryLabel,
+            trackingType: candidate.habit.trackingType,
+            currentAmount: recommendation?.currentValue,
+            suggestedAmount: recommendation?.recommendedValue,
+            label: candidate.habit.amountLabel,
+            primaryLabel: primaryLabel,
             showSecondaryButton: !isMotivationOnly,
-            secondaryButtonLabel: 'Later',
             onSecondaryButtonPressed: () {
               final snoozed =
                   candidate.habit.copy()
@@ -260,10 +272,6 @@ class InsightSheetFlow {
             onPrimaryButtonPressed: () {
               Navigator.pop(dialogContext);
               if (!_canProceed(context, isActive)) {
-                return;
-              }
-              if (isOptionalPushHarder) {
-                _applyOptionalPushHarderUpdate(context, candidate.habit);
                 return;
               }
               if (recommendation != null) {
@@ -417,7 +425,7 @@ class InsightSheetFlow {
 
     habitProvider.updateHabit(updated);
   }
-
+  /*
   void _applyOptionalPushHarderUpdate(BuildContext context, Habit habit) {
     final habitProvider = context.read<HabitProvider>();
     final updated =
@@ -425,7 +433,7 @@ class InsightSheetFlow {
           ..optional = false
           ..insightPopstonedUntil = DateTime.now().add(const Duration(days: 7));
     habitProvider.updateHabit(updated);
-  }
+  } */
 
   bool _canProceed(BuildContext context, bool Function() isActive) {
     return context.mounted && isActive();

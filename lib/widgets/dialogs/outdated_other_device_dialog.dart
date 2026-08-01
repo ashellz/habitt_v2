@@ -16,8 +16,7 @@ class OutdatedOtherDeviceDialog extends StatelessWidget {
 
     return NewDefaultDialog(
       title: loc.outdatedDeviceTitle,
-      desc:
-          "Another devices on your account is running an outdated version of Habitt. Please update it to the latest version to ensure proper syncing.",
+      desc: loc.outdatedDeviceMessage,
       showSecondaryButton: false,
       primaryButtonLabel: loc.gotIt,
       onPrimaryButtonPressed: () => Navigator.pop(context),
@@ -35,7 +34,7 @@ class OutdatedOtherDeviceDialog extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "Current",
+                    loc.current,
                     style: TextStyle(
                       color: cp.isDark ? cp.lightGreyText : cp.greyText,
                       fontSize: 13,
@@ -68,7 +67,7 @@ class OutdatedOtherDeviceDialog extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "Needed",
+                    loc.needed,
                     style: TextStyle(
                       color: cp.main,
                       fontSize: 13,

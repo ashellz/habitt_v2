@@ -11,6 +11,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
@@ -40,12 +41,10 @@ class _HomePageState extends State<HomePage>
   late final StatusOverlayPopupController _statusPopup;
   VoidCallback? _backupListener;
 
-  // bools to show dialog no more than once per session
   bool _outdatedPeerDialogHandled = false;
   static const String _outdatedPeerWarningShownKey =
       'outdatedPeerVersionWarningShown_v1';
 
-  // Check if app state has changed, therefore run _updateLastOpenedDate
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -59,12 +58,15 @@ class _HomePageState extends State<HomePage>
     if (state == AppLifecycleState.resumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final backupProvider = context.read<BackupProvider>();
-        // Update last opened date, reset habit completion
+
+        await context.read<TimerProvider>().syncOnResume();
+
         await updateLastOpenedDate(
           context.read<HabitProvider>(),
           context.read<StateProvider>(),
           context.read<StatsProvider>(),
         );
+
         categoryProvider.reorderCategoriesBasedOnTime();
 
         // If the app was only briefly backgrounded, we skip the full Drive check

@@ -69,23 +69,12 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
       (t) => t.liveProgressFor(widget.habit.id),
     );
 
-    final isActiveTimer = liveDurationSeconds != null;
     final progress = getProgressValue(liveDurationSeconds: liveDurationSeconds);
     final cp = context.watch<ColorProvider>();
 
-    // style as completed if timer target reached
-    final timerReachedTarget =
-        isActiveTimer &&
-        widget.habit.tracksDuration &&
-        widget.habit.duration > 0 &&
-        liveDurationSeconds >= widget.habit.duration;
-
-    final showPie =
-        (progress > 0 && progress < 1) ||
-        (isActiveTimer &&
-            !widget.habit.completed &&
-            progress > 0 &&
-            !timerReachedTarget);
+    // the timer provider marks the habit completed itself once the target is
+    // reached, so habit.completed is all this needs to look at
+    final showPie = progress > 0 && progress < 1;
 
     return GestureDetector(
       onTap:
@@ -206,7 +195,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                             },
                           )
                           : Checkmark(
-                            value: widget.habit.completed || timerReachedTarget,
+                            value: widget.habit.completed,
                             secondaryCheckmarks: widget.secondaryCheckmarks,
                           ),
                 ),
