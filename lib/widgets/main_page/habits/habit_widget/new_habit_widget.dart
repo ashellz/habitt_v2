@@ -306,6 +306,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
                     streak:
                         liveHabit.streak +
                         (liveHabit.streak > 0 && liveHabit.completed ? 1 : 0),
+                    health: habitProvider.streakHealthFor(liveHabit),
                   ),
                 ),
               ),

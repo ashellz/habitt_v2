@@ -530,12 +530,6 @@ abstract class AppLocalizations {
   /// **'Glass Feel'**
   String get glassFeel;
 
-  /// No description provided for @showStreakBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'Show streak badge'**
-  String get showStreakBadge;
-
   /// No description provided for @goodAfternoon.
   ///
   /// In en, this message translates to:
@@ -4749,6 +4743,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Needed'**
   String get needed;
+
+  /// No description provided for @streakFadingNudge1.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t let yourself down'**
+  String get streakFadingNudge1;
+
+  /// No description provided for @streakFadingNudge2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your streak is slipping'**
+  String get streakFadingNudge2;
+
+  /// No description provided for @streakFadingNudge3.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to get back on track'**
+  String get streakFadingNudge3;
+
+  /// No description provided for @streakFadingPartial1.
+  ///
+  /// In en, this message translates to:
+  /// **'Good start, now finish it'**
+  String get streakFadingPartial1;
+
+  /// No description provided for @streakFadingPartial2.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there, finish it off'**
+  String get streakFadingPartial2;
+
+  /// No description provided for @streakCriticalWarning1.
+  ///
+  /// In en, this message translates to:
+  /// **'Last chance to save your streak!'**
+  String get streakCriticalWarning1;
+
+  /// No description provided for @streakCriticalWarning2.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t miss today!'**
+  String get streakCriticalWarning2;
+
+  /// No description provided for @streakCriticalPartial1.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish today to increase your streak'**
+  String get streakCriticalPartial1;
+
+  /// No description provided for @streakCriticalPartial2.
+  ///
+  /// In en, this message translates to:
+  /// **'So close, finish and it grows'**
+  String get streakCriticalPartial2;
 }
 
 class _AppLocalizationsDelegate

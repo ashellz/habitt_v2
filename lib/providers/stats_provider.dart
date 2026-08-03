@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,31 +63,35 @@ DayCompletionStatus classifyDayStatus(List<Habit> habits) {
   return DayCompletionStatus.miss;
 }
 
-/// Current streak = perfect days in the ongoing run (the run reaching the most
-/// recent day). [chronological] is oldest → newest, excluding today. Walks
-/// newest → oldest: a perfect day extends the run and resets tolerance;
-/// partial/none are neutral skips; a miss consumes tolerance and the run breaks
-/// once tolerance is exhausted.
-int computeCurrentStreak(List<DayCompletionStatus> chronological) {
+({int streak, int tailMisses}) computeCurrentStreak(
+  List<DayCompletionStatus> chronological,
+) {
   int streak = 0;
   int missesLeft = kStreakMissTolerance;
+  int tailMisses = 0;
+  bool tailSettled = false;
+
+  // going from newest to oldest
   for (int i = chronological.length - 1; i >= 0; i--) {
     switch (chronological[i]) {
       case DayCompletionStatus.perfect:
         streak++;
         missesLeft = kStreakMissTolerance;
+        // found a perfect day, tailmisses will stop counting after this point
+        tailSettled = true;
       case DayCompletionStatus.partial:
       case DayCompletionStatus.none:
         break; // neutral
       case DayCompletionStatus.miss:
+        if (!tailSettled) tailMisses++;
         if (missesLeft > 0) {
           missesLeft--;
         } else {
-          return streak;
+          return (streak: streak, tailMisses: tailMisses);
         }
     }
   }
-  return streak;
+  return (streak: streak, tailMisses: tailMisses);
 }
 
 /// Longest streak across all history, using the same run rules as
@@ -131,6 +136,11 @@ class StatsProvider extends ChangeNotifier {
   List<double> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
   int _perfectDaysStreak = -1;
   int _longestPerfectDaysStreak = -1;
+
+  /// Miss tolerance already spent on the current run. Derived, never persisted —
+  /// [refreshPerfectStreak] is its only writer, so it is refreshed on exactly
+  /// the paths that refresh [_perfectDaysStreak].
+  int _perfectDaysTailMisses = 0;
   List<StatsType> _refreshList = [];
   SharedPreferences? prefs;
 
@@ -173,6 +183,28 @@ class StatsProvider extends ChangeNotifier {
   get completionRateLastWeek => getCompletionRateLastWeek();
   int get perfectDaysStreak => getPerfectStreak();
   int get longestPerfectDaysStreak => _longestPerfectDaysStreak;
+
+  // Perfect streak health stuff
+
+  int get perfectDaysTailMisses {
+    getPerfectStreak();
+    return _perfectDaysTailMisses;
+  }
+
+  /// Today's live completion status
+  DayCompletionStatus get todayCompletionStatus {
+    final hp = _habitProvider;
+    if (hp == null) return DayCompletionStatus.none;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return getDayCompletionStatuses(hp)[today] ?? DayCompletionStatus.none;
+  }
+
+  StreakHealth get perfectDaysHealth => resolveStreakHealth(
+    streak: perfectDaysStreak,
+    tailMisses: perfectDaysTailMisses,
+    todayIsSecure: todayCompletionStatus == DayCompletionStatus.perfect,
+  );
 
   set perfectDaysStreak(int value) {
     _perfectDaysStreak = value;
@@ -546,7 +578,9 @@ class StatsProvider extends ChangeNotifier {
   int refreshPerfectStreak() {
     final days = _streakDaysExcludingToday();
     final statuses = [for (final d in days) d.status];
-    final streak = computeCurrentStreak(statuses);
+    final current = computeCurrentStreak(statuses);
+    final streak = current.streak;
+    _perfectDaysTailMisses = current.tailMisses;
     final longest = computeLongestStreak(statuses);
 
     // Keep longest in sync on the lazy path too (cheap, same data).

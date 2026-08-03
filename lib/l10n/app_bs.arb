@@ -72,7 +72,6 @@
   "from": "Od",
   "getRemindedAboutYourHabit": "Neka te podsjeti na tvoju naviku",
   "glassFeel": "Stakleni interfejs",
-  "showStreakBadge": "Prikaži streak navike",
   "goodAfternoon": "Dobar dan",
   "goodEvening": "Dobro veče",
   "goodMorning": "Dobro jutro",
@@ -1063,5 +1062,14 @@
   "consistencyMessage": "Oslabio si u zadnje vrijeme. Poguraj to malo!",
   "current": "Trenutno",
   "suggested": "Predloženo",
-  "needed": "Potrebno"
+  "needed": "Potrebno",
+  "streakFadingNudge1": "Nemoj iznevjeriti sebe",
+  "streakFadingNudge2": "Streak ti se pomalo gubi",
+  "streakFadingNudge3": "Vrijeme je da se vratiš u formu",
+  "streakFadingPartial1": "Dobar početak, sad završi sve",
+  "streakFadingPartial2": "Skoro pa gotovo, privedi kraju",
+  "streakCriticalWarning1": "Zadnja šansa da spasiš streak!",
+  "streakCriticalWarning2": "Nemoj propustiti danas!",
+  "streakCriticalPartial1": "Završi danas da povećaš streak",
+  "streakCriticalPartial2": "Blizu si, završi i nastavi streak"
 }

@@ -79,7 +79,6 @@
   "from": "Von",
   "getRemindedAboutYourHabit": "Erinnern Sie sich an Ihre Gewohnheit",
   "glassFeel": "Glas Gefühl",
-  "showStreakBadge": "Streak-Abzeichen anzeigen",
   "goodAfternoon": "Guten Tag",
   "goodEvening": "Guten Abend",
   "goodMorning": "Guten Morgen!",
@@ -1073,5 +1072,14 @@
   "current": "Aktuell",
   "suggested": "Vorgeschlagen",
   "needed": "Benötigt",
-  "restoreBackup": "Wiederherstellen"
+  "restoreBackup": "Wiederherstellen",
+  "streakFadingNudge1": "Lass dich nicht hängen",
+  "streakFadingNudge2": "Dein Streak schwächelt",
+  "streakFadingNudge3": "Zeit, wieder einzusteigen",
+  "streakFadingPartial1": "Guter Anfang, jetzt zu Ende bringen",
+  "streakFadingPartial2": "Fast geschafft, mach es fertig",
+  "streakCriticalWarning1": "Letzte Chance, deinen Streak zu retten!",
+  "streakCriticalWarning2": "Verpass heute nicht!",
+  "streakCriticalPartial1": "Heute abschließen und deinen Streak verlängern",
+  "streakCriticalPartial2": "So nah dran, mach fertig und er wächst"
 }

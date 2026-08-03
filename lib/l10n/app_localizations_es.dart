@@ -240,9 +240,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get glassFeel => 'Sensación de vidrio';
 
   @override
-  String get showStreakBadge => 'Mostrar insignia de racha';
-
-  @override
   String get goodAfternoon => 'Buenas tardes';
 
   @override
@@ -2817,4 +2814,32 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get needed => 'Necesario';
+
+  @override
+  String get streakFadingNudge1 => 'No te falles a ti mismo';
+
+  @override
+  String get streakFadingNudge2 => 'Tu racha se está apagando';
+
+  @override
+  String get streakFadingNudge3 => 'Hora de volver al ritmo';
+
+  @override
+  String get streakFadingPartial1 => 'Buen comienzo, ahora termínalo';
+
+  @override
+  String get streakFadingPartial2 => 'Ya casi, remátalo';
+
+  @override
+  String get streakCriticalWarning1 =>
+      '¡Última oportunidad para salvar tu racha!';
+
+  @override
+  String get streakCriticalWarning2 => '¡No falles hoy!';
+
+  @override
+  String get streakCriticalPartial1 => 'Termina hoy para aumentar tu racha';
+
+  @override
+  String get streakCriticalPartial2 => 'Muy cerca, termina y seguirá creciendo';
 }

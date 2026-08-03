@@ -240,9 +240,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get glassFeel => 'Stakleni interfejs';
 
   @override
-  String get showStreakBadge => 'Prikaži streak navike';
-
-  @override
   String get goodAfternoon => 'Dobar dan';
 
   @override
@@ -2799,4 +2796,31 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get needed => 'Potrebno';
+
+  @override
+  String get streakFadingNudge1 => 'Nemoj iznevjeriti sebe';
+
+  @override
+  String get streakFadingNudge2 => 'Streak ti se pomalo gubi';
+
+  @override
+  String get streakFadingNudge3 => 'Vrijeme je da se vratiš u formu';
+
+  @override
+  String get streakFadingPartial1 => 'Dobar početak, sad završi sve';
+
+  @override
+  String get streakFadingPartial2 => 'Skoro pa gotovo, privedi kraju';
+
+  @override
+  String get streakCriticalWarning1 => 'Zadnja šansa da spasiš streak!';
+
+  @override
+  String get streakCriticalWarning2 => 'Nemoj propustiti danas!';
+
+  @override
+  String get streakCriticalPartial1 => 'Završi danas da povećaš streak';
+
+  @override
+  String get streakCriticalPartial2 => 'Blizu si, završi i nastavi streak';
 }

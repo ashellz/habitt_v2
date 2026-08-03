@@ -76,7 +76,6 @@
   "from": "From",
   "getRemindedAboutYourHabit": "Get reminded about your habit",
   "glassFeel": "Glass Feel",
-  "showStreakBadge": "Show streak badge",
   "goodAfternoon": "Good afternoon",
   "goodEvening": "Good evening",
   "goodMorning": "Good morning",
@@ -1081,5 +1080,14 @@
   "consistencyMessage": "You have been lacking consistency in recent sessions. Get back on track!",
   "current": "Current",
   "suggested": "Suggested",
-  "needed": "Needed"
+  "needed": "Needed",
+  "streakFadingNudge1": "Don't let yourself down",
+  "streakFadingNudge2": "Your streak is slipping",
+  "streakFadingNudge3": "Time to get back on track",
+  "streakFadingPartial1": "Good start, now finish it",
+  "streakFadingPartial2": "Almost there, finish it off",
+  "streakCriticalWarning1": "Last chance to save your streak!",
+  "streakCriticalWarning2": "Don't miss today!",
+  "streakCriticalPartial1": "Finish today to increase your streak",
+  "streakCriticalPartial2": "So close, finish and it grows"
 }

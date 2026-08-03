@@ -14,6 +14,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
+import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +40,24 @@ class HabitProvider extends ChangeNotifier {
 
   int streakEntryEpoch = 0;
   int streakExitEpoch = 0;
+
+  // Habit health stuff
+
+  final Map<int, int> _habitConsecutiveMisses = {};
+
+  int consecutiveMissesFor(int habitId) =>
+      _habitConsecutiveMisses[habitId] ?? 0;
+
+  StreakHealth streakHealthFor(Habit habit) {
+    final today = _normalizeDate(DateTime.now());
+    if (!_appearsOnDay(habit, today)) return StreakHealth.healthy;
+
+    return resolveStreakHealth(
+      streak: habit.streak,
+      tailMisses: consecutiveMissesFor(habit.id),
+      todayIsSecure: habit.completed,
+    );
+  }
 
   void setSelectedDate(DateTime date) {
     final now = DateTime.now();
@@ -1581,6 +1600,10 @@ class HabitProvider extends ChangeNotifier {
       int longestStreak = habit.longestStreak;
       int consecutiveMisses = 0;
 
+      // Misses since the most recent day that reset tolerance, stopped counting after 3 consecutive misses
+      int tailMisses = 0;
+      bool tailSettled = false;
+
       for (final day in sortedDays) {
         final normalizedDay = _normalizeDate(day.date);
 
@@ -1612,6 +1635,7 @@ class HabitProvider extends ChangeNotifier {
         if (dayHabit.completed) {
           streak++;
           consecutiveMisses = 0;
+          tailSettled = true;
           if (streak >= longestStreak) {
             longestStreak = streak;
           }
@@ -1622,17 +1646,20 @@ class HabitProvider extends ChangeNotifier {
             if (dayHabit.tracksAmount) {
               if (dayHabit.amountCompleted > 0) {
                 consecutiveMisses = 0;
+                tailSettled = true;
                 continue;
               }
             } else if (dayHabit.tracksDuration) {
               if (dayHabit.durationCompleted > 0) {
                 consecutiveMisses = 0;
+                tailSettled = true;
                 continue;
               }
             }
           }
 
           consecutiveMisses++;
+          if (!tailSettled) tailMisses++;
           if (consecutiveMisses >= 3) {
             // If there are 3 or more consecutive misses, we break the loop
             break;
@@ -1640,6 +1667,7 @@ class HabitProvider extends ChangeNotifier {
         }
       }
 
+      _habitConsecutiveMisses[habit.id] = tailMisses;
       habit.updateStreak(streak: streak, longestStreak: longestStreak);
       // debugPrint("Streak: $streak, Longest Streak: $longestStreak");
       await habit.save();

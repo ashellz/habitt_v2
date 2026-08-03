@@ -79,7 +79,6 @@
   "from": "En",
   "getRemindedAboutYourHabit": "Recuerda tu hábito",
   "glassFeel": "Sensación de vidrio",
-  "showStreakBadge": "Mostrar insignia de racha",
   "goodAfternoon": "Buenas tardes",
   "goodEvening": "Buenas noches",
   "goodMorning": "Buenos días.",
@@ -1073,5 +1072,14 @@
   "current": "Actual",
   "suggested": "Sugerido",
   "needed": "Necesario",
-  "restoreBackup": "Restaurar"
+  "restoreBackup": "Restaurar",
+  "streakFadingNudge1": "No te falles a ti mismo",
+  "streakFadingNudge2": "Tu racha se está apagando",
+  "streakFadingNudge3": "Hora de volver al ritmo",
+  "streakFadingPartial1": "Buen comienzo, ahora termínalo",
+  "streakFadingPartial2": "Ya casi, remátalo",
+  "streakCriticalWarning1": "¡Última oportunidad para salvar tu racha!",
+  "streakCriticalWarning2": "¡No falles hoy!",
+  "streakCriticalPartial1": "Termina hoy para aumentar tu racha",
+  "streakCriticalPartial2": "Muy cerca, termina y seguirá creciendo"
 }

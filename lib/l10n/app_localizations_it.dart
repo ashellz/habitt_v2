@@ -240,9 +240,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get glassFeel => 'Sensazione di vetro';
 
   @override
-  String get showStreakBadge => 'Mostra badge serie';
-
-  @override
   String get goodAfternoon => 'Buon pomeriggio';
 
   @override
@@ -2820,4 +2817,34 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get needed => 'Necessario';
+
+  @override
+  String get streakFadingNudge1 => 'Non deluderti';
+
+  @override
+  String get streakFadingNudge2 => 'La tua serie si sta spegnendo';
+
+  @override
+  String get streakFadingNudge3 => 'È ora di rimetterti in carreggiata';
+
+  @override
+  String get streakFadingPartial1 => 'Buon inizio, ora finisci';
+
+  @override
+  String get streakFadingPartial2 => 'Ci sei quasi, portalo a termine';
+
+  @override
+  String get streakCriticalWarning1 =>
+      'Ultima occasione per salvare la tua serie!';
+
+  @override
+  String get streakCriticalWarning2 => 'Non saltare oggi!';
+
+  @override
+  String get streakCriticalPartial1 =>
+      'Finisci oggi per allungare la tua serie';
+
+  @override
+  String get streakCriticalPartial2 =>
+      'Ci sei quasi, finisci e continuerà a crescere';
 }

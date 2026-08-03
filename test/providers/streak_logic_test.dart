@@ -74,31 +74,34 @@ void main() {
 
     test('counts only perfect days in the ongoing run', () {
       // oldest → newest
-      expect(computeCurrentStreak([perfect, perfect, perfect]), 3);
+      expect(computeCurrentStreak([perfect, perfect, perfect]).streak, 3);
     });
 
     test('tolerates up to 2 misses, breaks on the 3rd', () {
       // newest-side: p, miss, miss, p  → both perfects count (1 miss gap), =2
-      expect(computeCurrentStreak([perfect, miss, miss, perfect]), 2);
+      expect(computeCurrentStreak([perfect, miss, miss, perfect]).streak, 2);
       // 3 consecutive misses before the older perfect breaks the run
       expect(
-        computeCurrentStreak([perfect, miss, miss, miss, perfect]),
+        computeCurrentStreak([perfect, miss, miss, miss, perfect]).streak,
         1, // only the most-recent perfect; older one is cut off
       );
     });
 
     test('partial and none are neutral (do not break or count)', () {
       expect(
-        computeCurrentStreak([perfect, partial, none, perfect]),
+        computeCurrentStreak([perfect, partial, none, perfect]).streak,
         2,
       );
     });
 
     test('trailing misses adjacent to today still bridge to the run', () {
       // newest two are misses (e.g. yesterday/day-before), then a perfect run
-      expect(computeCurrentStreak([perfect, perfect, miss, miss]), 2);
+      expect(computeCurrentStreak([perfect, perfect, miss, miss]).streak, 2);
       // 3 trailing misses break it → 0
-      expect(computeCurrentStreak([perfect, perfect, miss, miss, miss]), 0);
+      expect(
+        computeCurrentStreak([perfect, perfect, miss, miss, miss]).streak,
+        0,
+      );
     });
 
     test('regression: a long tolerated chain does NOT balloon', () {
@@ -106,7 +109,59 @@ void main() {
       final statuses = <DayCompletionStatus>[
         perfect, perfect, miss, perfect, perfect, miss, perfect,
       ];
-      expect(computeCurrentStreak(statuses), 5);
+      expect(computeCurrentStreak(statuses).streak, 5);
+    });
+  });
+
+  group('computeCurrentStreak tailMisses', () {
+    const perfect = DayCompletionStatus.perfect;
+    const miss = DayCompletionStatus.miss;
+    const partial = DayCompletionStatus.partial;
+    const none = DayCompletionStatus.none;
+
+    test('most recent day is perfect → no tolerance spent', () {
+      expect(computeCurrentStreak([perfect, perfect, perfect]).tailMisses, 0);
+    });
+
+    test('one miss since the last perfect day', () {
+      expect(computeCurrentStreak([perfect, miss]).tailMisses, 1);
+    });
+
+    test('neutral days do not reset the count', () {
+      // partial neither increments nor clears spent tolerance
+      expect(computeCurrentStreak([perfect, miss, partial, miss]).tailMisses, 2);
+      expect(computeCurrentStreak([perfect, miss, none, miss]).tailMisses, 2);
+    });
+
+    test('neutral days alone spend nothing', () {
+      expect(computeCurrentStreak([perfect, partial, none]).tailMisses, 0);
+    });
+
+    test('older perfect days do not lower the count', () {
+      // The walk's leftover missesLeft here is 2 (reset by the older perfects),
+      // which would wrongly report 0. The tail is what matters: 2.
+      final result = computeCurrentStreak([perfect, perfect, miss, miss]);
+      expect(result.streak, 2);
+      expect(result.tailMisses, 2);
+    });
+
+    test('tolerance exhausted → streak gone, all three misses counted', () {
+      final result = computeCurrentStreak([perfect, perfect, miss, miss, miss]);
+      expect(result.streak, 0);
+      expect(result.tailMisses, 3);
+    });
+
+    test('misses older than the run do not count toward the tail', () {
+      // Tail is clean; the misses sit behind the most recent perfect day.
+      final result = computeCurrentStreak([miss, miss, perfect, perfect]);
+      expect(result.streak, 2);
+      expect(result.tailMisses, 0);
+    });
+
+    test('empty history', () {
+      final result = computeCurrentStreak([]);
+      expect(result.streak, 0);
+      expect(result.tailMisses, 0);
     });
   });
 

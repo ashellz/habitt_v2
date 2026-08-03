@@ -241,9 +241,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get glassFeel => 'Glas Gefühl';
 
   @override
-  String get showStreakBadge => 'Streak-Abzeichen anzeigen';
-
-  @override
   String get goodAfternoon => 'Guten Tag';
 
   @override
@@ -2822,4 +2819,33 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get needed => 'Benötigt';
+
+  @override
+  String get streakFadingNudge1 => 'Lass dich nicht hängen';
+
+  @override
+  String get streakFadingNudge2 => 'Dein Streak schwächelt';
+
+  @override
+  String get streakFadingNudge3 => 'Zeit, wieder einzusteigen';
+
+  @override
+  String get streakFadingPartial1 => 'Guter Anfang, jetzt zu Ende bringen';
+
+  @override
+  String get streakFadingPartial2 => 'Fast geschafft, mach es fertig';
+
+  @override
+  String get streakCriticalWarning1 =>
+      'Letzte Chance, deinen Streak zu retten!';
+
+  @override
+  String get streakCriticalWarning2 => 'Verpass heute nicht!';
+
+  @override
+  String get streakCriticalPartial1 =>
+      'Heute abschließen und deinen Streak verlängern';
+
+  @override
+  String get streakCriticalPartial2 => 'So nah dran, mach fertig und er wächst';
 }

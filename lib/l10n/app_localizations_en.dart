@@ -239,9 +239,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get glassFeel => 'Glass Feel';
 
   @override
-  String get showStreakBadge => 'Show streak badge';
-
-  @override
   String get goodAfternoon => 'Good afternoon';
 
   @override
@@ -2802,4 +2799,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get needed => 'Needed';
+
+  @override
+  String get streakFadingNudge1 => 'Don\'t let yourself down';
+
+  @override
+  String get streakFadingNudge2 => 'Your streak is slipping';
+
+  @override
+  String get streakFadingNudge3 => 'Time to get back on track';
+
+  @override
+  String get streakFadingPartial1 => 'Good start, now finish it';
+
+  @override
+  String get streakFadingPartial2 => 'Almost there, finish it off';
+
+  @override
+  String get streakCriticalWarning1 => 'Last chance to save your streak!';
+
+  @override
+  String get streakCriticalWarning2 => 'Don\'t miss today!';
+
+  @override
+  String get streakCriticalPartial1 => 'Finish today to increase your streak';
+
+  @override
+  String get streakCriticalPartial2 => 'So close, finish and it grows';
 }

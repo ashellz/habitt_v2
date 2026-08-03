@@ -79,7 +79,6 @@
   "from": "Da",
   "getRemindedAboutYourHabit": "Ricordatevi della vostra abitudine",
   "glassFeel": "Sensazione di vetro",
-  "showStreakBadge": "Mostra badge serie",
   "goodAfternoon": "Buon pomeriggio",
   "goodEvening": "Buona sera",
   "goodMorning": "Buongiorno",
@@ -1073,5 +1072,14 @@
   "current": "Attuale",
   "suggested": "Suggerito",
   "needed": "Necessario",
-  "restoreBackup": "Ripristina"
+  "restoreBackup": "Ripristina",
+  "streakFadingNudge1": "Non deluderti",
+  "streakFadingNudge2": "La tua serie si sta spegnendo",
+  "streakFadingNudge3": "È ora di rimetterti in carreggiata",
+  "streakFadingPartial1": "Buon inizio, ora finisci",
+  "streakFadingPartial2": "Ci sei quasi, portalo a termine",
+  "streakCriticalWarning1": "Ultima occasione per salvare la tua serie!",
+  "streakCriticalWarning2": "Non saltare oggi!",
+  "streakCriticalPartial1": "Finisci oggi per allungare la tua serie",
+  "streakCriticalPartial2": "Ci sei quasi, finisci e continuerà a crescere"
 }

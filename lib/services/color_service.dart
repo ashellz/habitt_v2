@@ -40,6 +40,14 @@ class Light {
   static const Color orange100 = Color(0xFFFFECCE);
   static const Color orange200 = Color(0xFFFED8A2);
   static const Color orange300 = Color(0xFFFF9700);
+
+  static const Color leftFadingOrangeGraident = Color(0xFFFFFEEE);
+  static const Color rightFadingOrangeGradient = Color(0xFFFFF2CF);
+  static const Color fadingOrangeCircle = Color(0xFFFFB331); // 40%
+
+  static const Color leftBlueGraident = Color(0xFFE5F0FB);
+  static const Color rightBlueGradient = Color(0xFFDFE9FF);
+  static const Color blueCircle = Color(0xFF96C5FF);
 }
 
 class Dark {
@@ -73,4 +81,12 @@ class Dark {
   static const Color orange100 = Color(0xFF443725);
   static const Color orange200 = Color(0xFF7C5B2C);
   static const Color orange300 = Color(0xFFFFAF3C);
+
+  static const Color leftFadingOrangeGraident = Color(0xFF4C2E0E);
+  static const Color rightFadingOrangeGradient = Color(0xFF75471F);
+  static const Color fadingOrangeCircle = Color(0xFFD1761C); // 90%
+
+  static const Color leftBlueGraident = Color(0xFF0F4E8D);
+  static const Color rightBlueGradient = Color(0xFF243966);
+  static const Color blueCircle = Color(0xFF86B9F9);
 }

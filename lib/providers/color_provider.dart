@@ -28,6 +28,12 @@ class _ColSet {
       orange300,
       mainButtonLeftGradient,
       mainButtonRightGradient,
+      leftFadingOrangeGraident,
+      rightFadingOrangeGradient,
+      fadingOrangeCircle,
+      leftBlueGraident,
+      rightBlueGradient,
+      blueCircle,
       field,
       habitIconBg,
       widgetColor,
@@ -56,6 +62,12 @@ class _ColSet {
     required this.orange300,
     required this.mainButtonLeftGradient,
     required this.mainButtonRightGradient,
+    required this.leftFadingOrangeGraident,
+    required this.rightFadingOrangeGradient,
+    required this.fadingOrangeCircle,
+    required this.leftBlueGraident,
+    required this.rightBlueGradient,
+    required this.blueCircle,
     required this.field,
     required this.habitIconBg,
     required this.widgetColor,
@@ -76,35 +88,34 @@ class _ColSet {
     lightGreyText: Color.lerp(a.lightGreyText, b.lightGreyText, t)!,
     disabled: Color.lerp(a.disabled, b.disabled, t)!,
     glassButtonBg: Color.lerp(a.glassButtonBg, b.glassButtonBg, t)!,
-    progressBarSelected: Color.lerp(
-      a.progressBarSelected,
-      b.progressBarSelected,
-      t,
-    )!,
-    leftOrangeGraident: Color.lerp(
-      a.leftOrangeGraident,
-      b.leftOrangeGraident,
-      t,
-    )!,
-    rightOrangeGradient: Color.lerp(
-      a.rightOrangeGradient,
-      b.rightOrangeGradient,
-      t,
-    )!,
+    progressBarSelected:
+        Color.lerp(a.progressBarSelected, b.progressBarSelected, t)!,
+    leftOrangeGraident:
+        Color.lerp(a.leftOrangeGraident, b.leftOrangeGraident, t)!,
+    rightOrangeGradient:
+        Color.lerp(a.rightOrangeGradient, b.rightOrangeGradient, t)!,
+
     orange: Color.lerp(a.orange, b.orange, t)!,
     orange100: Color.lerp(a.orange100, b.orange100, t)!,
     orange200: Color.lerp(a.orange200, b.orange200, t)!,
     orange300: Color.lerp(a.orange300, b.orange300, t)!,
-    mainButtonLeftGradient: Color.lerp(
-      a.mainButtonLeftGradient,
-      b.mainButtonLeftGradient,
-      t,
-    )!,
-    mainButtonRightGradient: Color.lerp(
-      a.mainButtonRightGradient,
-      b.mainButtonRightGradient,
-      t,
-    )!,
+    mainButtonLeftGradient:
+        Color.lerp(a.mainButtonLeftGradient, b.mainButtonLeftGradient, t)!,
+    mainButtonRightGradient:
+        Color.lerp(a.mainButtonRightGradient, b.mainButtonRightGradient, t)!,
+    leftFadingOrangeGraident:
+        Color.lerp(a.leftFadingOrangeGraident, b.leftFadingOrangeGraident, t)!,
+    rightFadingOrangeGradient:
+        Color.lerp(
+          a.rightFadingOrangeGradient,
+          b.rightFadingOrangeGradient,
+          t,
+        )!,
+    fadingOrangeCircle:
+        Color.lerp(a.fadingOrangeCircle, b.fadingOrangeCircle, t)!,
+    leftBlueGraident: Color.lerp(a.leftBlueGraident, b.leftBlueGraident, t)!,
+    rightBlueGradient: Color.lerp(a.rightBlueGradient, b.rightBlueGradient, t)!,
+    blueCircle: Color.lerp(a.blueCircle, b.blueCircle, t)!,
     field: Color.lerp(a.field, b.field, t)!,
     habitIconBg: Color.lerp(a.habitIconBg, b.habitIconBg, t)!,
     widgetColor: Color.lerp(a.widgetColor, b.widgetColor, t)!,
@@ -140,8 +151,19 @@ class ColorProvider extends ChangeNotifier {
   late Color disabled;
   late Color glassButtonBg;
   late Color progressBarSelected;
+
+  // Perfect days streak gradient colors adapted to dark and light modes
   late Color leftOrangeGraident;
   late Color rightOrangeGradient;
+
+  late Color leftFadingOrangeGraident;
+  late Color rightFadingOrangeGradient;
+  late Color fadingOrangeCircle;
+
+  late Color leftBlueGraident;
+  late Color rightBlueGradient;
+  late Color blueCircle;
+
   late Color orange;
   late Color orange100;
   late Color orange200;
@@ -183,13 +205,15 @@ class ColorProvider extends ChangeNotifier {
 
     _previousBrightnessCallback =
         WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged;
-    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-        () {
-          _previousBrightnessCallback?.call();
-          if (_mode == ColorMode.system) {
-            _startTransition();
-          }
-        };
+    WidgetsBinding
+        .instance
+        .platformDispatcher
+        .onPlatformBrightnessChanged = () {
+      _previousBrightnessCallback?.call();
+      if (_mode == ColorMode.system) {
+        _startTransition();
+      }
+    };
   }
 
   void setMode(ColorMode newMode) {
@@ -212,8 +236,7 @@ class ColorProvider extends ChangeNotifier {
   }
 
   void _onTick(Duration elapsed) {
-    final raw =
-        elapsed.inMilliseconds / _kAnimDuration.inMilliseconds;
+    final raw = elapsed.inMilliseconds / _kAnimDuration.inMilliseconds;
     final t = raw.clamp(0.0, 1.0);
     final curved = Curves.easeInOut.transform(t);
 
@@ -253,6 +276,12 @@ class ColorProvider extends ChangeNotifier {
         orange300: Dark.orange300,
         mainButtonLeftGradient: Dark.mainButtonLeftGradient,
         mainButtonRightGradient: Dark.mainButtonRightGradient,
+        leftFadingOrangeGraident: Dark.leftFadingOrangeGraident,
+        rightFadingOrangeGradient: Dark.rightFadingOrangeGradient,
+        fadingOrangeCircle: Dark.fadingOrangeCircle,
+        leftBlueGraident: Dark.leftBlueGraident,
+        rightBlueGradient: Dark.rightBlueGradient,
+        blueCircle: Dark.blueCircle,
         field: Dark.field,
         habitIconBg: Dark.border,
         widgetColor: Dark.field,
@@ -282,6 +311,12 @@ class ColorProvider extends ChangeNotifier {
         orange300: Light.orange300,
         mainButtonLeftGradient: Light.mainButtonLeftGradient,
         mainButtonRightGradient: Light.mainButtonRightGradient,
+        leftFadingOrangeGraident: Light.leftFadingOrangeGraident,
+        rightFadingOrangeGradient: Light.rightFadingOrangeGradient,
+        fadingOrangeCircle: Light.fadingOrangeCircle,
+        leftBlueGraident: Light.leftBlueGraident,
+        rightBlueGradient: Light.rightBlueGradient,
+        blueCircle: Light.blueCircle,
         field: Light.field,
         habitIconBg: Light.white10,
         widgetColor: Light.bg,
@@ -313,6 +348,12 @@ class ColorProvider extends ChangeNotifier {
     orange300 = s.orange300;
     mainButtonLeftGradient = s.mainButtonLeftGradient;
     mainButtonRightGradient = s.mainButtonRightGradient;
+    leftFadingOrangeGraident = s.leftFadingOrangeGraident;
+    rightFadingOrangeGradient = s.rightFadingOrangeGradient;
+    fadingOrangeCircle = s.fadingOrangeCircle;
+    leftBlueGraident = s.leftBlueGraident;
+    rightBlueGradient = s.rightBlueGradient;
+    blueCircle = s.blueCircle;
     field = s.field;
     habitIconBg = s.habitIconBg;
     widget = s.widgetColor;
@@ -342,6 +383,12 @@ class ColorProvider extends ChangeNotifier {
     orange300: orange300,
     mainButtonLeftGradient: mainButtonLeftGradient,
     mainButtonRightGradient: mainButtonRightGradient,
+    leftFadingOrangeGraident: leftFadingOrangeGraident,
+    rightFadingOrangeGradient: rightFadingOrangeGradient,
+    fadingOrangeCircle: fadingOrangeCircle,
+    leftBlueGraident: leftBlueGraident,
+    rightBlueGradient: rightBlueGradient,
+    blueCircle: blueCircle,
     field: field,
     habitIconBg: habitIconBg,
     widgetColor: widget,
