@@ -1645,14 +1645,10 @@ class HabitProvider extends ChangeNotifier {
           if (dayHabit.hasTrackingType) {
             if (dayHabit.tracksAmount) {
               if (dayHabit.amountCompleted > 0) {
-                consecutiveMisses = 0;
-                tailSettled = true;
                 continue;
               }
             } else if (dayHabit.tracksDuration) {
               if (dayHabit.durationCompleted > 0) {
-                consecutiveMisses = 0;
-                tailSettled = true;
                 continue;
               }
             }
