@@ -60,8 +60,8 @@ class TimerRingIndicator extends StatelessWidget {
       builder: (context, value, _) {
         return TweenAnimationBuilder<double>(
           tween: Tween<double>(end: atCapAndPaused ? 1.0 : 0.0),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 650),
+          curve: Curves.easeOutCubic,
           builder: (context, capT, _) {
             return CustomPaint(
               painter: _RingPainter(
@@ -119,21 +119,27 @@ class _RingPainter extends CustomPainter {
           ..strokeWidth = strokeWidth
           ..strokeCap = StrokeCap.round;
 
-    // track circle (background ring) — once capped and paused, ease the
-    // ring into the fill color (capT, driven by an implicit animation in
-    // the widget above) instead of popping a solid arc on top
-    final atCapAndPaused = atCap && !inProgress;
-    final effectiveTrackColor =
-        Color.lerp(trackColor, color, capT) ?? trackColor;
-    canvas.drawCircle(
-      center,
-      radius,
-      strokePaint()..color = effectiveTrackColor,
-    );
+    // track circle (background ring)
+    canvas.drawCircle(center, radius, strokePaint()..color = trackColor);
 
     if (progress <= 0) return;
 
-    if (atCapAndPaused) return;
+    // once capped and paused, sweep the ring closed into a full solid
+    // circle (capT, driven by an implicit animation in the widget above)
+    // instead of popping/cross-fading it straight to the fill color
+    final atCapAndPaused = atCap && !inProgress;
+    if (atCapAndPaused) {
+      if (capT > 0) {
+        canvas.drawArc(
+          rect,
+          start,
+          2 * math.pi * capT,
+          false,
+          strokePaint()..color = color,
+        );
+      }
+      return;
+    }
 
     final laps = progress.floor();
     final fraction = progress - laps;
@@ -146,16 +152,14 @@ class _RingPainter extends CustomPainter {
     // if you can't understand the complexity of this code message me directly
     // it is too complex to be written down lol
 
-    const glowSeconds = 1.85;
-    const gradientSeconds = 1.30;
-    final glowWindow =
-        lapSeconds > 0 ? (glowSeconds / lapSeconds).clamp(0.0, 0.9) : 0.06;
-    final gradientWindow =
-        lapSeconds > 0 ? (gradientSeconds / lapSeconds).clamp(0.0, 0.9) : 0.06;
+    // blend the arc from a tip-toned gradient into the flat fill color
+    // across the first tenth of progress — both when the timer first
+    // starts and at the top of every overtime lap — so it doesn't pop in.
+    const glowWindow = 0.1;
+    const gradientWindow = 0.15;
     final glowT = (fraction / glowWindow).clamp(0.0, 1.0);
     final gradientT = (fraction / gradientWindow).clamp(0.0, 1.0);
-    final arcStartColor =
-        overtime ? Color.lerp(tipColor, color, gradientT)! : color;
+    final arcStartColor = Color.lerp(tipColor, color, gradientT)!;
 
     // gradient for the progress arc, brighter/darker at the tip
     final gradient =
@@ -371,16 +375,14 @@ class _StadiumPainter extends CustomPainter {
 
     final tipColor = isDark ? color.darken(20) : color.lighten(20);
 
-    const glowSeconds = 0.35;
-    const gradientSeconds = 0.35;
-    final glowWindow =
-        lapSeconds > 0 ? (glowSeconds / lapSeconds).clamp(0.0, 0.9) : 0.06;
-    final gradientWindow =
-        lapSeconds > 0 ? (gradientSeconds / lapSeconds).clamp(0.0, 0.9) : 0.06;
+    // blend the arc from a tip-toned gradient into the flat fill color
+    // across the first tenth of progress — both when the timer first
+    // starts and at the top of every overtime lap — so it doesn't pop in.
+    const glowWindow = 0.1;
+    const gradientWindow = 0.07;
     final glowT = (fraction / glowWindow).clamp(0.0, 1.0);
     final gradientT = (fraction / gradientWindow).clamp(0.0, 1.0);
-    final arcStartColor =
-        overtime ? Color.lerp(tipColor, color, gradientT)! : color;
+    final arcStartColor = Color.lerp(tipColor, color, gradientT)!;
 
     final gradient =
         strokePaint()

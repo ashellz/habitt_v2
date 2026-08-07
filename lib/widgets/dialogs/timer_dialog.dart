@@ -312,7 +312,8 @@ class TimerDialog extends StatelessWidget {
 
   Widget _timerCircle(ColorProvider cp, int progressSeconds, int target) {
     final progress = target > 0 ? progressSeconds / target : 0.0;
-    final atCap = target > 0 && progressSeconds % target == 0;
+    final atCap =
+        target > 0 && progressSeconds > 0 && progressSeconds % target == 0;
     return Center(
       child: SizedBox(
         height: 240,

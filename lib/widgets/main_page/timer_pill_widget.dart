@@ -54,7 +54,8 @@ class _TimerPillWidgetState extends State<TimerPillWidget> {
         habit != null ? timer.liveProgressSeconds : _lastProgressSeconds;
     final target = displayHabit.duration;
     final progress = target > 0 ? progressSeconds / target : 0.0;
-    final atCap = target > 0 && progressSeconds % target == 0;
+    final atCap =
+        target > 0 && progressSeconds > 0 && progressSeconds % target == 0;
 
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
