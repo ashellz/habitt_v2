@@ -38,6 +38,18 @@ class AdjustTargetDialog extends StatelessWidget {
     final cp = context.read<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
 
+    String getIcon() {
+      if (currentAmount == null || suggestedAmount == null) {
+        return 'assets/images/new-svg/decrease.svg';
+      }
+
+      if (suggestedAmount! > currentAmount!) {
+        return 'assets/images/new-svg/increase.svg';
+      } else {
+        return 'assets/images/new-svg/decrease.svg';
+      }
+    }
+
     return NewDefaultDialog(
       title: title,
       desc: desc,
@@ -46,7 +58,7 @@ class AdjustTargetDialog extends StatelessWidget {
       secondaryButtonLabel: loc.later,
       onSecondaryButtonPressed: onSecondaryButtonPressed,
       onPrimaryButtonPressed: onPrimaryButtonPressed,
-      titleIconSvgPath: 'assets/images/new-svg/decrease.svg',
+      titleIconSvgPath: getIcon(),
       child:
           showSecondaryButton &&
                   currentAmount != null &&

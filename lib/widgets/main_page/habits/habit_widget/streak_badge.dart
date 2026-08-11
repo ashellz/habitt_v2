@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/models/streak_health.dart';
 import 'package:provider/provider.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 
 class StreakBadge extends StatelessWidget {
   const StreakBadge({
@@ -49,7 +48,7 @@ class StreakBadge extends StatelessWidget {
       return switch (health) {
         StreakHealth.healthy || StreakHealth.dormant => cp.orange300,
         StreakHealth.fading => cp.orange300,
-        StreakHealth.critical => cp.blueCircle.lighten(),
+        StreakHealth.critical => cp.blueCircle,
       };
     }
 

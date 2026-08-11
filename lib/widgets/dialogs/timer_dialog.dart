@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -48,6 +49,8 @@ class TimerDialog extends StatelessWidget {
     final target = habit.duration;
     final isComplete = target > 0 && progressSeconds >= target;
 
+    String? localeCode = context.watch<LanguageProvider>().locale?.languageCode;
+
     return NewDefaultDialog(
       title: loc.timerDialogTitle,
       showCloseButton: true,
@@ -58,7 +61,7 @@ class TimerDialog extends StatelessWidget {
           Column(
             spacing: 24,
             children: [
-              _timerCircle(cp, progressSeconds, target),
+              _timerCircle(cp, progressSeconds, target, localeCode),
               _timerControls(
                 context: context,
                 cp: cp,
@@ -310,7 +313,12 @@ class TimerDialog extends StatelessWidget {
     );
   }
 
-  Widget _timerCircle(ColorProvider cp, int progressSeconds, int target) {
+  Widget _timerCircle(
+    ColorProvider cp,
+    int progressSeconds,
+    int target,
+    String? localeCode,
+  ) {
     final progress = target > 0 ? progressSeconds / target : 0.0;
     final atCap =
         target > 0 && progressSeconds > 0 && progressSeconds % target == 0;
@@ -342,7 +350,7 @@ class TimerDialog extends StatelessWidget {
                 children: [
                   TextIcon(habit.iconPath, size: 32),
                   Text(
-                    habit.name,
+                    habit.resolvedName(localeCode),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 22,
