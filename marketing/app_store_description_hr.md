@@ -1,0 +1,78 @@
+# Habitt — App Store Listing (Hrvatski)
+
+---
+
+## App Name (30 chars max)
+Habitt Privatni Tracker Navika
+*(30 chars)*
+
+---
+
+## Subtitle (30 chars max)
+Streaks, Ciljevi i Zdravlje
+*(27 chars)*
+
+---
+
+## Promotional Text (170 chars max — NOT indexed, conversion only)
+Izgradi navike koje stvarno traju. Habitt zna da imaš loše dane - pomaže ti prilagoditi cilj, ne odustati. Bez računa. Bez reklama. Tvoji podaci, tvoj uređaj.
+*(160 chars)*
+
+---
+
+## Play Store Short Description (80 chars max — indexed)
+Izgradi navike koje traju. Pomaže kroz loše dane. Bez profila, bez reklama.
+*(75 chars)*
+
+---
+
+## Keywords (100 chars max — indexed)
+produktivnost,offline,backup,podsjetnik,dnevno,coaching,snaga,disciplina,selfimprovement,meditacija
+*(100 chars)*
+
+> Removed: "navike", "rutine", "streaks", "zdravlje", "ciljevi", "tracker" — now covered by Name/Subtitle.
+> Added: "dnevno" (daily), "coaching", "snaga" (strength), "disciplina", "selfimprovement" (loanword commonly searched in HR App Store).
+
+---
+
+## Description
+
+Habitt je aplikacija za praćenje navika izgrađena oko jedne ideje: tvoji podaci pripadaju tebi.
+Nije potreban profil. Nije potreban internet. Nema analitike, nema reklama.
+
+PRATI NA SVOJ NAČIN
+Odaberi kako se mjeri svaka navika: po količini (čaše vode, pročitane stranice, ponavljanja) ili po vremenu (minute vježbanja, sati učenja). Postavi cilj koji odgovara tvom životu i povećavaj ga kako napreduješ.
+
+Prilagodite navike za određene dane, a ne svaki dan:
+• Dnevno, sedmično, mjesečno ili svaki određeni dan
+• Određeni odabrani dani u sedmici ili mjesecu
+• Organiziraj po dijelu dana: Jutro, Poslijepodne, Večer ili Bilo Kada
+
+OSTANI MOTIVIRAN
+Habitt prati tvoj streak i najduži streak za svaku naviku. Ali nije strog.
+
+Snaga navike prati tvoju konzistentnost i djeluje kao osobni trener. Ako izostagneš nekoliko dana, reći će ti da je tvoj cilj možda preambiciozan i predložiti da ga smanjiš. Ako te ide odlično, potaknut će te da povećaš cilj. Susreće te tamo gdje jesi, ne tamo gdje misliš da bi trebao biti.
+
+VIDI NAPREDAK
+• Heatmapa i kalendar dovršetka za svaku naviku
+• Povijest streakova i statistike
+• Snaga navike s analizom napretka
+
+PODSJETNICI
+Dodaj više obavijesti bilo kojoj navici. Konfiguriraj ih tačno kada trebaš i u kojem danu u sedmici, nema više zaboravljanja.
+
+BACKUP
+Habitt sve čuva na tvom uređaju. Ako želiš kopiju u cloudu, poveži Google račun i aplikacija automatski sinkronizira enkriptovanu sigurnosnu kopiju na tvoj vlastiti Google Drive. Podaci su enkriptovani na uređaju s AES-256 prije nego što se ikad prenesu. Mi ih ne možemo čitati, niti itko drugi.
+
+BRZI POČETAK
+Prebaci sve navike iz drugih aplikacija poput HabitKit-a. Koristi spremne navike za početak za samo nekoliko sekundi: rano ustajanje, rano lijeganje, teretana, trčanje, hodanje, pijenje vode, pranje zuba, njega kože, prehrana, učenje, čitanje, lijekovi, produktivne sesije i još mnogo toga.
+
+IZGLED
+Tamni i svijetli način prikaza.
+
+NAPRAVIO JEDAN DEVELOPER
+Habitt izrađuje i održava jedan developer. Svaka funkcija dostupna je bez ograničenja. Pretplate podržavaju daljnji razvoj aplikacije — svaki pretplatnik stvarno čini razliku.
+
+Povratne informacije, ideje ili prijave grešaka su dobrodošle. Ostavi recenziju ili kontaktiraj nas. Pomaže više nego što misliš.
+
+Uvjeti korištenja: https://ashellz.github.io/habitt_v2/tos.html

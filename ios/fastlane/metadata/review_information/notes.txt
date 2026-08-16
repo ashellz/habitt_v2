@@ -1,0 +1,19 @@
+1. App flow (it doesn't let me attach as attachment below for some reason, says wrong format): https://drive.google.com/file/d/1IzxtFO2YAcLiOOD6J_UUJKo-esjEOeW2/view?usp=sharing
+2. A list of the device models and operating systems the app was tested on:
+	1. iPhone 15
+	2. iPhone 16 Pro Max
+	3. iPhone 11 Pro
+	4. iPhone 15 Pro
+	5. iPhone 11
+	6. iPhone 13
+	7. iPhone 13 Pro
+	8. iPhone 16
+	9. Simulators: iPhone 17, iPad (A16)
+	Tested both with glass UI and version before it
+3. A description of the app's purpose and target audience, including the problem it solves and the value it provides: It's a privacy-first habit tracking app that helps users build and stick to daily routines without giving up their data, restricting everything with paywalls or show ads. Unlike most of the competition that need accounts and collect user behavior and data, Habitt stores everything locally. No sign-up, no analytics, no servers needed. You can track habits by count or time spent, set flexible schedules (daily, weekly, monthly, or custom - every X days), and organize them by time of day. Built-in streaks, progress charts, a habit strength score, and personalized coaching messages keep users motivated as they grow. If they want to back up or sync across devices, they can opt in and connect their own Google Drive — but data is encrypted on their phone before it goes to their gdrive, so even we intercept can't read it nor can google. With premade templates for things like hydration, sleep, workouts, reading, and medications, its easy for users to start. Available in English, German, Spanish, Italian, and Bosnian. It's is built for anyone who wants a simple, honest ap that respects their privacy and helps them show up for themselves every day and build real habits that stick.
+4. Instructions for setting up and accessing the app's main features, including any required login credentials or sample files: It's designed conveniently so it's really easy to use: You can add habits by the add new habit button, set it up and customize habit as you wish by the sheet you're given and you're done. You can see all of habits including not scheduled today ones in habits page, your progress and stats in calendar page and in profile page you can setup backup, check privacy policy, terms of service, report bugs, rate us, edit your profile. On the main page you have settings where you manage appearance and notfications.
+5. A list of the external services, tools, or platforms the app uses to deliver its core functionality: We use firebase for authentication via google, google drive apis to connect users to their google drive and revenuecat for voluntary subscriptions.
+6. Describe any regional differences in the app’s features or content, or confirm that the app functions consistently across all regions: App functions the same across all regions, except the price difference adjusted automatically by apple.
+7. We don't have any highly regulated industry and protected third-party material stuff.
+
+Extra info: No features are behind a paywall. Only restricted feature is cloud backup and sync because it requires a user to login with their google account.

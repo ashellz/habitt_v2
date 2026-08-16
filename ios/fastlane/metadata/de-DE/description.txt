@@ -1,0 +1,39 @@
+Habitt ist ein Gewohnheits-Tracker, der auf einer Idee basiert: Deine Daten gehören dir.
+Kein Account erforderlich. Kein Internet nötig. Keine Analysen, keine Werbung.
+
+VERFOLGE AUF DEINE ART
+Wähle, wie jede Gewohnheit gemessen wird: nach Anzahl (Gläser Wasser, gelesene Seiten, Wiederholungen) oder nach Zeit (Minuten Sport, Stunden Lernen). Setze ein Ziel, das zu deinem Leben passt, und steigere es, wenn du besser wirst.
+
+Die Planung ist flexibel, damit deine Gewohnheiten deinem Rhythmus folgen:
+• Täglich, wöchentlich, monatlich oder benutzerdefinierte Intervalle
+• Bestimmte Wochentage oder Tage im Monat
+• Organisiere nach Tageszeit: Morgen, Nachmittag, Abend oder Jederzeit
+
+BLEIB MOTIVIERT
+Habitt verfolgt deine Streak und die längste Streak aller Zeiten für jede Gewohnheit. Aber es ist nicht streng.
+
+Habit Strength überwacht deine aktuelle Konsistenz und agiert wie ein persönlicher Coach. Wenn du ein paar Tage aussetzt, sagt es dir, dass dein Ziel möglicherweise zu ehrgeizig ist, und schlägt vor, es zu reduzieren. Wenn du auf der Welle reitest, motiviert es dich, höher zu zielen. Es trifft dich dort, wo du bist - nicht dort, wo du glaubst sein zu müssen.
+
+SIEH DEINEN FORTSCHRITT
+• Heatmap und Abschlusskalender für jede Gewohnheit
+• Streak-Verlauf und Statistiken
+• Strength-Score mit Trendanalysen
+
+ERINNERUNGEN
+Füge mehrere Benachrichtigungen zu jeder Gewohnheit hinzu. Konfiguriere sie genau dann, wenn du sie brauchst, und an welchen Wochentagen - kein Vergessen mehr.
+
+BACKUP
+Habitt speichert alles auf deinem Gerät. Wenn du eine Cloud-Kopie möchtest, verbinde deinen Google-Account und die App synchronisiert automatisch ein verschlüsseltes Backup in dein eigenes Google Drive. Die Daten werden auf deinem Gerät mit AES-256 verschlüsselt, bevor sie übertragen werden. Wir können sie nicht lesen, und sonst auch niemand.
+
+SCHNELLSTART
+Importiere all deine Gewohnheiten aus anderen Apps wie HabitKit. Nutze eine vorgefertigte Vorlage, um in Sekunden loszulegen: früh aufstehen, früh ins Bett, Fitnessstudio, Laufen, Spazieren, Wasser trinken, Zähne putzen, Hautpflege, Ernährung, Lernen, Lesen, Medikamente, Produktivitätssessions und mehr.
+
+ERSCHEINUNGSBILD
+Dunkler und heller Modus.
+
+VON EINEM ENTWICKLER
+Habitt wird von einem einzelnen Entwickler erstellt und gepflegt. Jede Funktion ist ohne Einschränkungen bei der Anzahl der verfolgbaren Gewohnheiten verfügbar. Abonnements unterstützen die Weiterentwicklung der App - jeder Abonnent macht wirklich einen Unterschied.
+
+Feedback, Ideen oder Fehlerberichte sind willkommen. Hinterlasse eine Bewertung oder melde dich - es hilft mehr als du denkst.
+
+Nutzungsbedingungen: https://ashellz.github.io/habitt_v2/tos.html

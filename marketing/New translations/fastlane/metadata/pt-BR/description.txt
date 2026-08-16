@@ -1,0 +1,41 @@
+O Habitt é um app de hábitos construído em torno de uma ideia: seus dados pertencem a você.
+Sem conta. Sem internet. Sem rastreamento, sem anúncios.
+
+DO SEU JEITO
+Escolha como cada hábito é medido: por quantidade (copos de água, páginas lidas, repetições) ou por tempo (minutos de exercício, horas de estudo). Defina uma meta que caiba na sua vida e aumente conforme você melhora.
+
+O agendamento é flexível para que seus hábitos sigam o seu ritmo:
+• Diário, semanal, mensal ou intervalos personalizados
+• Dias específicos da semana ou do mês
+• Organize por período do dia: Manhã, Tarde, Noite ou Qualquer Hora
+
+MANTENHA A MOTIVAÇÃO
+O Habitt acompanha sua sequência atual e a maior sequência de todos os tempos para cada hábito. Mas sem ser duro com você.
+
+A Força do Hábito monitora sua consistência recente e age como um treinador pessoal. Se você falhar alguns dias, ele avisa que a meta pode estar ambiciosa demais e sugere reduzi-la. Se você estiver mandando bem, ele te incentiva a aumentar. Ele te encontra onde você está, não onde você acha que deveria estar.
+
+VEJA SEU PROGRESSO
+• Mapa de calor e calendário de conclusão por hábito
+• Histórico de sequências e estatísticas
+• Pontuação de força com análise de tendências
+
+LEMBRETES
+Adicione várias notificações a qualquer hábito. Configure exatamente quando precisar e em quais dias da semana — chega de esquecer.
+
+BACKUP
+O Habitt guarda tudo no seu aparelho. Quando quiser uma cópia na nuvem, conecte sua conta Google e o app sincroniza automaticamente um backup criptografado no seu próprio Google Drive. Os dados são criptografados no aparelho com AES-256 antes de qualquer transferência. Nós não conseguimos ler, e ninguém mais também.
+
+COMEÇO RÁPIDO
+Importe todos os seus hábitos de outros apps como o HabitKit. Use um modelo pronto para começar em segundos: acordar cedo, dormir cedo, academia, corrida, caminhada, beber água, escovar os dentes, cuidados com a pele, alimentação, estudo, leitura, medicamentos, sessões de produtividade e mais.
+
+APARÊNCIA
+Modo escuro e claro.
+
+FEITO POR UM DESENVOLVEDOR
+O Habitt é criado e mantido por uma única pessoa. Todos os recursos estão disponíveis, sem limite de quantos hábitos você pode acompanhar. As assinaturas sustentam o desenvolvimento contínuo do app — cada assinante faz diferença de verdade.
+
+Comentários, ideias ou relatos de bugs são bem-vindos. Deixe uma avaliação ou entre em contato — ajuda mais do que você imagina.
+
+Termos de Uso: https://ashellz.github.io/habitt_v2/tos.html
+
+A interface do app está atualmente disponível em inglês, alemão, espanhol, italiano e bósnio. Mais idiomas em breve.

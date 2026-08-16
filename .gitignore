@@ -57,6 +57,13 @@ macos/Runner/GoogleService-Info.plist
 android/app/keystore/
 android/key.properties
 
+# Google Play service account key (fastlane supply)
+android/fastlane/key.json
+
+# fastlane generated artifacts (not secrets, just churn)
+ios/fastlane/Preview.html
+fastlane/report.xml
+
 # App secrets (RevenueCat keys etc.) — copy app_secrets.example.dart instead
 lib/config/app_secrets.dart
 

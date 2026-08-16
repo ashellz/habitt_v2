@@ -9,6 +9,14 @@ plugins {
 }
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
 
 android {
     namespace = "com.shellz.habitt"
@@ -35,17 +43,17 @@ android {
    
     signingConfigs {
         getByName("debug") {
-            storeFile = file("keystore/debug.keystore")
-            storePassword = "2005JimsH"
-            keyAlias = "androiddebugkey"
-            keyPassword = "2005JimsH"
+            storeFile = file(keystoreProperties["debugStoreFile"] as String)
+            storePassword = keystoreProperties["debugStorePassword"] as String
+            keyAlias = keystoreProperties["debugKeyAlias"] as String
+            keyPassword = keystoreProperties["debugKeyPassword"] as String
         }
 
         create("release") {
-            storeFile = file("keystore/habitt-release-key.keystore")
-            storePassword = "2005JimsH"
-            keyAlias = "habitt-key-alias"
-            keyPassword = "2005JimsH"
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
         }
     }
 

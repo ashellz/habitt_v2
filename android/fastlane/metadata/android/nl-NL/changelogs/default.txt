@@ -1,0 +1,1 @@
+Bugfixes in de nieuwe interface voor reeksen en gewoonteverbetering.
