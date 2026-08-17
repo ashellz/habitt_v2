@@ -46,12 +46,24 @@ class _DeletedHabitsPageState extends State<DeletedHabitsPage>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: cp.isDark ? cp.bg : cp.habitBg,
+        color: cp.bg,
 
         child: ListView(
           children: [
             const SizedBox(height: 20),
             topSection(context, cp, false),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                loc.deletedHabitsPageDesc,
+                style: TextStyle(
+                  color: cp.greyText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(top: 24, left: 16, right: 16),
               child: LayoutBuilder(

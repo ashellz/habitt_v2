@@ -30,6 +30,14 @@ class HabitCard extends StatefulWidget {
   State<HabitCard> createState() => _HabitCardState();
 }
 
+String _deletedTimeAgoLabel(AppLocalizations loc, DateTime? deletedAt) {
+  if (deletedAt == null) return loc.deletedToday;
+  final days = DateTime.now().toUtc().difference(deletedAt).inDays;
+  if (days <= 0) return loc.deletedToday;
+  if (days == 1) return loc.deletedOneDayAgo;
+  return loc.deletedDaysAgoLabel(days);
+}
+
 class _HabitCardState extends State<HabitCard> {
   bool isRestoring = false;
 
@@ -73,7 +81,7 @@ class _HabitCardState extends State<HabitCard> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "Deleted",
+                        loc.deleted,
                         style: TextStyle(
                           color:
                               widget.cp.isDark
@@ -84,7 +92,7 @@ class _HabitCardState extends State<HabitCard> {
                         ),
                       ),
                       Text(
-                        "2 days ago",
+                        _deletedTimeAgoLabel(loc, widget.habit.deletedAt),
                         style: TextStyle(
                           color:
                               widget.cp.isDark

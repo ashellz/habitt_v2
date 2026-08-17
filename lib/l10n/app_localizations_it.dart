@@ -2847,4 +2847,23 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get streakCriticalPartial2 =>
       'Ci sei quasi, finisci e continuerà a crescere';
+
+  @override
+  String get deletedToday => 'Today';
+
+  @override
+  String get deletedOneDayAgo => '1 day ago';
+
+  @override
+  String deletedDaysAgoLabel(Object days) {
+    return '$days days ago';
+  }
+
+  @override
+  String get deletedHabitsPageDesc =>
+      'Deleted habits stay here for 30 days, then they\'re permanently removed.';
+
+  @override
+  String get restoreDeletedHabitConfirm =>
+      'Restore this habit? Its streak will reflect any days it missed while deleted.';
 }

@@ -1089,5 +1089,10 @@
   "streakCriticalWarning1": "Last chance to save your streak!",
   "streakCriticalWarning2": "Don't miss today!",
   "streakCriticalPartial1": "Finish today to increase your streak",
-  "streakCriticalPartial2": "So close, finish and it grows"
+  "streakCriticalPartial2": "So close, finish and it grows",
+  "deletedToday": "Today",
+  "deletedOneDayAgo": "1 day ago",
+  "deletedDaysAgoLabel": "{days} days ago",
+  "deletedHabitsPageDesc": "Deleted habits stay here for 30 days, then they're permanently removed.",
+  "restoreDeletedHabitConfirm": "Restore this habit? Its streak will reflect any days it missed while deleted."
 }

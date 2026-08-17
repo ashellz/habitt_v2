@@ -57,6 +57,7 @@ class Habit extends HiveObject {
   HabitTrackingType? trackingType; // amount or duration
   bool? isDeleted;
   bool? isPaused;
+  DateTime? deletedAt;
   Map<String, DateTime> timestamps;
   DateTime? insightPopstonedUntil;
   Map<String, String> localizedNames;
@@ -101,6 +102,7 @@ class Habit extends HiveObject {
     this.trackingType,
     this.isDeleted,
     this.isPaused,
+    this.deletedAt,
     Map<String, DateTime>? timestamps,
     this.insightPopstonedUntil,
     Map<String, String>? localizedNames,
@@ -200,6 +202,7 @@ class Habit extends HiveObject {
       trackingType: trackingType,
       isDeleted: isDeleted,
       isPaused: isPaused,
+      deletedAt: deletedAt,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
       localizedNames: Map<String, String>.from(localizedNames),
@@ -247,6 +250,7 @@ class Habit extends HiveObject {
       trackingType: trackingType,
       isDeleted: isDeleted,
       isPaused: isPaused,
+      deletedAt: deletedAt,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
       localizedNames: Map<String, String>.from(localizedNames),
@@ -408,6 +412,7 @@ class Habit extends HiveObject {
     }
     if (isDeleted != habit.isDeleted) {
       isDeleted = habit.isDeleted;
+      deletedAt = habit.isDeleted == true ? now : null;
       timestamps['isDeleted'] = now;
     }
     if (insightPopstonedUntil != habit.insightPopstonedUntil) {
@@ -493,6 +498,7 @@ class Habit extends HiveObject {
     trackingType = merged.trackingType;
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
+    deletedAt = merged.deletedAt;
     insightPopstonedUntil = merged.insightPopstonedUntil;
     localizedNames = Map<String, String>.from(merged.localizedNames);
     timestamps
@@ -502,7 +508,8 @@ class Habit extends HiveObject {
 
   Future<void> deleteHabit() async {
     isDeleted = true;
-    timestamps['isDeleted'] = DateTime.now().toUtc();
+    deletedAt = DateTime.now().toUtc();
+    timestamps['isDeleted'] = deletedAt!;
   }
 
   Future<void> pauseHabit() async {
@@ -517,6 +524,7 @@ class Habit extends HiveObject {
 
   Future<void> restore() async {
     isDeleted = false;
+    deletedAt = null;
     timestamps['isDeleted'] = DateTime.now().toUtc();
   }
 
@@ -763,6 +771,7 @@ class Habit extends HiveObject {
       'trackingType': _serializeTrackingType(trackingType),
       'isDeleted': isDeleted,
       'isPaused': isPaused,
+      'deletedAt': deletedAt?.toIso8601String(),
       'insightPopstonedUntil': insightPopstonedUntil?.toIso8601String(),
       'timestamps': timestamps.map(
         (key, value) => MapEntry(key, value.toIso8601String()),
@@ -836,6 +845,7 @@ class Habit extends HiveObject {
           ),
       isDeleted: m['isDeleted'] as bool?,
       isPaused: m['isPaused'] as bool?,
+      deletedAt: DateTime.tryParse(m['deletedAt']?.toString() ?? '')?.toUtc(),
       insightPopstonedUntil:
           DateTime.tryParse(
             m['insightPopstonedUntil']?.toString() ?? '',
@@ -1091,6 +1101,9 @@ class Habit extends HiveObject {
         incoming.trackingType,
       ),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
+      // Resolved under the same 'isDeleted' timestamp so it always tracks
+      // whichever side's isDeleted value wins, never possible to disagree.
+      deletedAt: resolve('isDeleted', deletedAt, incoming.deletedAt),
       isPaused: resolve('isPaused', isPaused, incoming.isPaused),
       timestamps: mergedTimestamps,
       localizedNames: resolve(

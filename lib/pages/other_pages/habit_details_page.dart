@@ -340,6 +340,34 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     );
   }
 
+  Future<void> _restoreHabit(Habit habit) async {
+    final loc = AppLocalizations.of(context)!;
+    final confirmed = await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: loc.habitDeleted,
+            desc: loc.restoreDeletedHabitConfirm,
+            primaryButtonLabel: loc.restore,
+            onPrimaryButtonPressed: () {
+              Navigator.of(dialogContext).pop(true);
+            },
+          ),
+    );
+    if (confirmed != true || !mounted) return;
+    await context.read<HabitProvider>().restoreHabit(habit);
+    if (!mounted) return;
+    final cp = context.read<ColorProvider>();
+    _statusOverlay.show(
+      context: context,
+      cp: cp,
+      title: loc.habitRestored,
+      isError: false,
+      iconPath: 'assets/images/new-svg/restore-habit.svg',
+      iconColor: cp.text,
+    );
+  }
+
   Widget _topBar(ColorProvider cp, Habit habit) {
     final loc = AppLocalizations.of(context)!;
 
@@ -382,54 +410,65 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
 
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: DefaultPopupMenu(
-              buttonIcon: CNSymbol('ellipsis', size: 14),
-              items: [
-                DefaultPopupMenuItem(
-                  label: loc.editHabit,
-                  svgPath: 'assets/images/new-svg/edit.svg',
-                  cnIcon: CNSymbol('pencil', size: 16),
-                  onTap: () => _openEditSheet(habit),
-                ),
-                DefaultPopupMenuItem(
-                  label:
-                      habit.isPaused == true
-                          ? loc.unpauseHabit
-                          : loc.pauseHabit,
-                  icon:
-                      habit.isPaused == true
-                          ? Icon(Icons.play_arrow_rounded, size: 18)
-                          : null,
-                  cnIcon:
-                      habit.isPaused == true
-                          ? CNSymbol('play.fill', size: 16)
-                          : CNSymbol('pause.fill', size: 16),
-                  svgPath: 'assets/images/new-svg/pause.svg',
-                  onTap:
-                      () =>
-                          habit.isPaused == true
-                              ? _unpauseHabit(habit)
-                              : _pauseHabit(habit),
-                ),
-                DefaultPopupMenuItem(
-                  isDestructive: true,
-                  label: loc.deleteHabit,
-                  svgPath: 'assets/images/new-svg/trash.svg',
-                  cnIcon: CNSymbol('trash', size: 16),
-                  color: cp.error,
-                  onTap: () => showDeleteHabitFlow(habit, context),
-                ),
-              ],
-              child: NewCircleButton(
-                onPressed: () {},
-                svgPath: 'assets/images/new-svg/more.svg',
-                cnIcon: CNSymbol('ellipsis', size: 14),
-                width: 44,
-                height: 44,
-                color: cp.bg,
-                padding: const EdgeInsets.all(13),
-              ),
-            ),
+            child:
+                habit.isDeleted == true
+                    ? NewCircleButton(
+                      onPressed: () => _restoreHabit(habit),
+                      svgPath: 'assets/images/new-svg/restore.svg',
+                      cnIcon: CNSymbol('arrow.uturn.backward', size: 16),
+                      width: 44,
+                      height: 44,
+                      color: cp.bg,
+                      padding: const EdgeInsets.all(13),
+                    )
+                    : DefaultPopupMenu(
+                      buttonIcon: CNSymbol('ellipsis', size: 14),
+                      items: [
+                        DefaultPopupMenuItem(
+                          label: loc.editHabit,
+                          svgPath: 'assets/images/new-svg/edit.svg',
+                          cnIcon: CNSymbol('pencil', size: 16),
+                          onTap: () => _openEditSheet(habit),
+                        ),
+                        DefaultPopupMenuItem(
+                          label:
+                              habit.isPaused == true
+                                  ? loc.unpauseHabit
+                                  : loc.pauseHabit,
+                          icon:
+                              habit.isPaused == true
+                                  ? Icon(Icons.play_arrow_rounded, size: 18)
+                                  : null,
+                          cnIcon:
+                              habit.isPaused == true
+                                  ? CNSymbol('play.fill', size: 16)
+                                  : CNSymbol('pause.fill', size: 16),
+                          svgPath: 'assets/images/new-svg/pause.svg',
+                          onTap:
+                              () =>
+                                  habit.isPaused == true
+                                      ? _unpauseHabit(habit)
+                                      : _pauseHabit(habit),
+                        ),
+                        DefaultPopupMenuItem(
+                          isDestructive: true,
+                          label: loc.deleteHabit,
+                          svgPath: 'assets/images/new-svg/trash.svg',
+                          cnIcon: CNSymbol('trash', size: 16),
+                          color: cp.error,
+                          onTap: () => showDeleteHabitFlow(habit, context),
+                        ),
+                      ],
+                      child: NewCircleButton(
+                        onPressed: () {},
+                        svgPath: 'assets/images/new-svg/more.svg',
+                        cnIcon: CNSymbol('ellipsis', size: 14),
+                        width: 44,
+                        height: 44,
+                        color: cp.bg,
+                        padding: const EdgeInsets.all(13),
+                      ),
+                    ),
           ),
         ],
       ),

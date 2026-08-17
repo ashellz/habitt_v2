@@ -130,6 +130,8 @@ class HabitProvider extends ChangeNotifier {
       prefs: await SharedPreferences.getInstance(),
     );
     await _loadHabits();
+    await _seedDeletedAtTimestamps();
+    await _purgeExpiredDeletedHabits();
     refreshTodaysHabits(notify: false);
     await _loadDateJoined();
     await _loadMissingDays();
@@ -158,7 +160,7 @@ class HabitProvider extends ChangeNotifier {
       // Leave today untouched — it tracks the live habit set, not a snapshot.
       if (_normalizeDate(day.date) == today) continue;
 
-      final filtered = _filteredHabitsForDay(day.date, day.habits);
+      final filtered = _scheduledHabitsForDaySnapshot(day.date, day.habits);
       if (filtered.length == day.habits.length) continue; // already clean
 
       await daysBox.put(
@@ -349,6 +351,54 @@ class HabitProvider extends ChangeNotifier {
     await _hydrateHabitCreatedAtFallbacks();
   }
 
+  static const String _deletedAtSeededKey = 'deletedAtSeeded_v1';
+
+  // one time function for old deleted habits with no
+  // deletedAt timestamp to be given a deletedAt timestamp
+  Future<void> _seedDeletedAtTimestamps() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_deletedAtSeededKey) ?? false) {
+      return;
+    }
+
+    for (final habit in habits) {
+      if (habit.isDeleted == true && habit.deletedAt == null) {
+        habit.deletedAt =
+            habit.timestamps['isDeleted'] ?? DateTime.now().toUtc();
+        if (habit.isInBox) {
+          await habit.save();
+        }
+      }
+    }
+
+    await prefs.setBool(_deletedAtSeededKey, true);
+  }
+
+  // habits stay in trash for 30 days before purging completely
+  static const int deletedHabitPurgeDays = 30;
+
+  // delete habits older than 30 days
+  Future<void> _purgeExpiredDeletedHabits() async {
+    final now = DateTime.now().toUtc();
+    final expired =
+        habits.where((habit) {
+          if (habit.isDeleted != true) return false;
+          final deletedAt = habit.deletedAt;
+          if (deletedAt == null) return false;
+          return now.difference(deletedAt).inDays >= deletedHabitPurgeDays;
+        }).toList();
+
+    if (expired.isEmpty) return;
+
+    for (final habit in expired) {
+      habitStatsProvider?.removeHabit(habit.id);
+      habits.remove(habit);
+      if (habit.isInBox) {
+        await habit.delete();
+      }
+    }
+  }
+
   Future<void> _hydrateHabitCreatedAtFallbacks() async {
     final now = DateTime.now().toUtc();
 
@@ -495,11 +545,13 @@ class HabitProvider extends ChangeNotifier {
     habit.timestamps['lastCustomUpdate'] = now;
   }
 
-  // Here we check if a habit appears on a given day.
+  // Here we check if a habit's schedule (daily/weekly/monthly/custom) puts it
+  // on a given day. Deliberately ignores isDeleted — a deleted habit keeps
+  // "appearing" on its schedule so a restored habit's streak reflects the
+  // days it missed while gone, same as any other miss (see assignStreaks).
+  // Visibility (hiding deleted/paused habits from the UI) is a separate
+  // concern, handled by _filteredHabitsForDay.
   bool _appearsOnDay(Habit habit, DateTime day, {Habit? progressHabit}) {
-    if (habit.isDeleted == true) {
-      return false;
-    }
     if (habit.isPaused == true) {
       return false;
     }
@@ -559,11 +611,27 @@ class HabitProvider extends ChangeNotifier {
   }
 
   // Function to filter habits for a specific day based on their schedule and completion status
+  // Display facing: what actually gets shown in the UI
   List<Habit> _filteredHabitsForDay(DateTime day, List<Habit> source) {
     return source
         .where(
           (habit) =>
               (habit.isDeleted != true) &&
+              (habit.isPaused != true) &&
+              (_appearsOnDay(habit, day) || habit.hasAnyProgress()),
+        )
+        .toList();
+  }
+
+  // Persistence-facing: what actually gets written into a Day snapshot.
+  // Deliberately keeps deleted-but-scheduled habits (excluded only from the
+  // display variant above) so the day is recorded as a miss and the streak
+  // decays normally if the habit is later restored. Paused habits are still
+  // excluded — pause remains a full freeze, unlike deletion.
+  List<Habit> _scheduledHabitsForDaySnapshot(DateTime day, List<Habit> source) {
+    return source
+        .where(
+          (habit) =>
               (habit.isPaused != true) &&
               (_appearsOnDay(habit, day) || habit.hasAnyProgress()),
         )
@@ -677,7 +745,7 @@ class HabitProvider extends ChangeNotifier {
         todayKey,
         Day(
           date: today,
-          habits: _filteredHabitsForDay(today, habits),
+          habits: _scheduledHabitsForDaySnapshot(today, habits),
           timestamp: DateTime.now().toUtc(),
         ),
       );
@@ -1081,6 +1149,8 @@ class HabitProvider extends ChangeNotifier {
     syncSingleHabitNotifications(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
+
+    await recalculateHabitStreaks(habit.id);
     notifyListeners();
   }
 
@@ -1484,7 +1554,10 @@ class HabitProvider extends ChangeNotifier {
       clonedHabits = habits.map((h) => h.copy()).toList();
     }
 
-    final scheduledForDay = _filteredHabitsForDay(daySimple, clonedHabits);
+    final scheduledForDay = _scheduledHabitsForDaySnapshot(
+      daySimple,
+      clonedHabits,
+    );
 
     daysBox.put(
       dayKey,

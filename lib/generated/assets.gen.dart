@@ -608,6 +608,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/arrow-left.svg
   String get arrowLeft => 'assets/images/new-svg/arrow-left.svg';
 
+  /// File path: assets/images/new-svg/arrow.svg
+  String get arrow => 'assets/images/new-svg/arrow.svg';
+
   /// File path: assets/images/new-svg/back.svg
   String get back => 'assets/images/new-svg/back.svg';
 
@@ -663,6 +666,12 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/de.svg
   String get de => 'assets/images/new-svg/de.svg';
 
+  /// File path: assets/images/new-svg/decrease.svg
+  String get decrease => 'assets/images/new-svg/decrease.svg';
+
+  /// File path: assets/images/new-svg/drag.svg
+  String get drag => 'assets/images/new-svg/drag.svg';
+
   /// File path: assets/images/new-svg/dropdown.svg
   String get dropdown => 'assets/images/new-svg/dropdown.svg';
 
@@ -696,11 +705,20 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/home.svg
   String get home => 'assets/images/new-svg/home.svg';
 
+  /// File path: assets/images/new-svg/ice-left.svg
+  String get iceLeft => 'assets/images/new-svg/ice-left.svg';
+
+  /// File path: assets/images/new-svg/ice-over.svg
+  String get iceOver => 'assets/images/new-svg/ice-over.svg';
+
   /// File path: assets/images/new-svg/import-apps.svg
   String get importApps => 'assets/images/new-svg/import-apps.svg';
 
   /// File path: assets/images/new-svg/import-backup.svg
   String get importBackup => 'assets/images/new-svg/import-backup.svg';
+
+  /// File path: assets/images/new-svg/increase.svg
+  String get increase => 'assets/images/new-svg/increase.svg';
 
   /// File path: assets/images/new-svg/it.svg
   String get it => 'assets/images/new-svg/it.svg';
@@ -730,11 +748,20 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/morning.svg
   String get morning => 'assets/images/new-svg/morning.svg';
 
+  /// File path: assets/images/new-svg/no-languages.svg
+  String get noLanguages => 'assets/images/new-svg/no-languages.svg';
+
+  /// File path: assets/images/new-svg/no-trash.svg
+  String get noTrash => 'assets/images/new-svg/no-trash.svg';
+
   /// File path: assets/images/new-svg/notifications.svg
   String get notifications => 'assets/images/new-svg/notifications.svg';
 
   /// File path: assets/images/new-svg/notify.svg
   String get notify => 'assets/images/new-svg/notify.svg';
+
+  /// File path: assets/images/new-svg/pause-timer.svg
+  String get pauseTimer => 'assets/images/new-svg/pause-timer.svg';
 
   /// File path: assets/images/new-svg/pause.svg
   String get pause => 'assets/images/new-svg/pause.svg';
@@ -760,6 +787,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/reorder.svg
   String get reorder => 'assets/images/new-svg/reorder.svg';
 
+  /// File path: assets/images/new-svg/restore-habit.svg
+  String get restoreHabit => 'assets/images/new-svg/restore-habit.svg';
+
   /// File path: assets/images/new-svg/search.svg
   String get search => 'assets/images/new-svg/search.svg';
 
@@ -769,14 +799,26 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/skipped.svg
   String get skipped => 'assets/images/new-svg/skipped.svg';
 
+  /// File path: assets/images/new-svg/start-timer.svg
+  String get startTimer => 'assets/images/new-svg/start-timer.svg';
+
   /// File path: assets/images/new-svg/stats.svg
   String get stats => 'assets/images/new-svg/stats.svg';
+
+  /// File path: assets/images/new-svg/stop-timer.svg
+  String get stopTimer => 'assets/images/new-svg/stop-timer.svg';
+
+  /// File path: assets/images/new-svg/streak-fade.svg
+  String get streakFade => 'assets/images/new-svg/streak-fade.svg';
 
   /// File path: assets/images/new-svg/streak.svg
   String get streak => 'assets/images/new-svg/streak.svg';
 
   /// File path: assets/images/new-svg/terms.svg
   String get terms => 'assets/images/new-svg/terms.svg';
+
+  /// File path: assets/images/new-svg/tip.svg
+  String get tip => 'assets/images/new-svg/tip.svg';
 
   /// File path: assets/images/new-svg/total-time.svg
   String get totalTime => 'assets/images/new-svg/total-time.svg';
@@ -786,6 +828,9 @@ class $AssetsImagesNewSvgGen {
 
   /// File path: assets/images/new-svg/trash.svg
   String get trash => 'assets/images/new-svg/trash.svg';
+
+  /// File path: assets/images/new-svg/update.svg
+  String get update => 'assets/images/new-svg/update.svg';
 
   /// File path: assets/images/new-svg/upload-photo.svg
   String get uploadPhoto => 'assets/images/new-svg/upload-photo.svg';
@@ -799,6 +844,7 @@ class $AssetsImagesNewSvgGen {
     allHabits,
     amount,
     arrowLeft,
+    arrow,
     back,
     backup,
     calendar,
@@ -816,6 +862,8 @@ class $AssetsImagesNewSvgGen {
     completed,
     completionRate,
     de,
+    decrease,
+    drag,
     dropdown,
     edit,
     emptyBox,
@@ -827,8 +875,11 @@ class $AssetsImagesNewSvgGen {
     google,
     heatmap,
     home,
+    iceLeft,
+    iceOver,
     importApps,
     importBackup,
+    increase,
     it,
     localBackup,
     logOut,
@@ -837,8 +888,11 @@ class $AssetsImagesNewSvgGen {
     minus,
     more,
     morning,
+    noLanguages,
+    noTrash,
     notifications,
     notify,
+    pauseTimer,
     pause,
     perSession,
     pin,
@@ -847,15 +901,21 @@ class $AssetsImagesNewSvgGen {
     profile,
     rate,
     reorder,
+    restoreHabit,
     search,
     settings,
     skipped,
+    startTimer,
     stats,
+    stopTimer,
+    streakFade,
     streak,
     terms,
+    tip,
     totalTime,
     translate,
     trash,
+    update,
     uploadPhoto,
     wrapUp,
   ];
@@ -928,16 +988,24 @@ class $AssetsImagesSvgGen {
 class $AssetsImagesWidgetImagesGen {
   const $AssetsImagesWidgetImagesGen();
 
+  /// File path: assets/images/widget-images/coffee.png
+  AssetGenImage get coffee =>
+      const AssetGenImage('assets/images/widget-images/coffee.png');
+
   /// File path: assets/images/widget-images/gem.png
   AssetGenImage get gem =>
       const AssetGenImage('assets/images/widget-images/gem.png');
+
+  /// File path: assets/images/widget-images/love-bubble.png
+  AssetGenImage get loveBubble =>
+      const AssetGenImage('assets/images/widget-images/love-bubble.png');
 
   /// File path: assets/images/widget-images/premium-widget.png
   AssetGenImage get premiumWidget =>
       const AssetGenImage('assets/images/widget-images/premium-widget.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [gem, premiumWidget];
+  List<AssetGenImage> get values => [coffee, gem, loveBubble, premiumWidget];
 }
 
 class $AssetsImagesNewSvgLanguagesGen {

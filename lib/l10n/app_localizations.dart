@@ -4797,6 +4797,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'So close, finish and it grows'**
   String get streakCriticalPartial2;
+
+  /// No description provided for @deletedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get deletedToday;
+
+  /// No description provided for @deletedOneDayAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day ago'**
+  String get deletedOneDayAgo;
+
+  /// No description provided for @deletedDaysAgoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days ago'**
+  String deletedDaysAgoLabel(Object days);
+
+  /// No description provided for @deletedHabitsPageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted habits stay here for 30 days, then they\'re permanently removed.'**
+  String get deletedHabitsPageDesc;
+
+  /// No description provided for @restoreDeletedHabitConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore this habit? Its streak will reflect any days it missed while deleted.'**
+  String get restoreDeletedHabitConfirm;
 }
 
 class _AppLocalizationsDelegate

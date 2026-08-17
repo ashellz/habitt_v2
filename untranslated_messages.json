@@ -1,1 +1,33 @@
-{}
+{
+  "bs": [
+    "deletedToday",
+    "deletedOneDayAgo",
+    "deletedDaysAgoLabel",
+    "deletedHabitsPageDesc",
+    "restoreDeletedHabitConfirm"
+  ],
+
+  "de": [
+    "deletedToday",
+    "deletedOneDayAgo",
+    "deletedDaysAgoLabel",
+    "deletedHabitsPageDesc",
+    "restoreDeletedHabitConfirm"
+  ],
+
+  "es": [
+    "deletedToday",
+    "deletedOneDayAgo",
+    "deletedDaysAgoLabel",
+    "deletedHabitsPageDesc",
+    "restoreDeletedHabitConfirm"
+  ],
+
+  "it": [
+    "deletedToday",
+    "deletedOneDayAgo",
+    "deletedDaysAgoLabel",
+    "deletedHabitsPageDesc",
+    "restoreDeletedHabitConfirm"
+  ]
+}
