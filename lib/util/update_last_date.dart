@@ -55,6 +55,22 @@ void checkForNewDay(
       lastOpenedDate.year != today.year) {
     debugPrint("New day, resetting completion");
     await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
+
+    DateTime gapDay = DateTime(
+      lastOpenedDate.year,
+      lastOpenedDate.month,
+      lastOpenedDate.day,
+    ).add(const Duration(days: 1));
+    final normalizedToday = DateTime(today.year, today.month, today.day);
+    while (gapDay.isBefore(normalizedToday)) {
+      await habitProvider.saveHabitDay(
+        gapDay,
+        resetCompletion: true,
+        isAutoCreated: true,
+      );
+      gapDay = gapDay.add(const Duration(days: 1));
+    }
+
     await habitProvider.resetCompletion();
     await habitProvider.resetScheduleCountersIfNeeded(
       resetWeekly: crossedWeekBoundary,

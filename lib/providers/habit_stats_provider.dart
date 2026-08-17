@@ -183,6 +183,10 @@ class HabitStatsProvider extends ChangeNotifier {
         continue;
       }
 
+      if (dayHabit.isDeleted == true) {
+        continue;
+      }
+
       earliestDayWithHabit =
           earliestDayWithHabit == null || dayDate.isBefore(earliestDayWithHabit)
               ? dayDate

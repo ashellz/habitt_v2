@@ -1,1 +1,1 @@
-Fehler in der neuen Oberfläche für Serien und Gewohnheitsverbesserung behoben.
+Fehlerbehebungen und Verbesserungen bei gelöschten Gewohnheiten.

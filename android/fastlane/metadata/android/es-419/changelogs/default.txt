@@ -1,1 +1,1 @@
-Corrección de errores en la nueva interfaz de rachas y mejora de hábitos.
+Corrección de errores y mejoras relacionadas con los hábitos eliminados.

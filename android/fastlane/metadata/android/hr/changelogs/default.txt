@@ -1,1 +1,1 @@
-Ispravke grešaka u novom interfejsu za streakove i poboljšanje navika.
+Ispravci grešaka i poboljšanja vezana uz izbrisane navike.

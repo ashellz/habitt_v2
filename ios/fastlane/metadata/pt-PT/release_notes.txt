@@ -1,1 +1,1 @@
-Correção de erros na nova interface de sequências e melhoria de hábitos.
+Correções de erros e melhorias relacionadas com os hábitos eliminados.

@@ -1,1 +1,1 @@
-Yeni seri ve alışkanlık geliştirme arayüzündeki hatalar giderildi.
+Silinen alışkanlıklarla ilgili hata düzeltmeleri ve iyileştirmeler.

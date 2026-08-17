@@ -1,1 +1,1 @@
-Sửa lỗi ở giao diện mới cho chuỗi ngày và cải thiện thói quen.
+Sửa lỗi và cải tiến liên quan đến thói quen đã xóa.

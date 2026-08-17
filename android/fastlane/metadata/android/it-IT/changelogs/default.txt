@@ -1,1 +1,1 @@
-Risolti alcuni bug nella nuova interfaccia di serie e miglioramento delle abitudini.
+Correzioni di bug e miglioramenti relativi alle abitudini eliminate.

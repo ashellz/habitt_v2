@@ -1,1 +1,1 @@
-Bugfixes in de nieuwe interface voor reeksen en gewoonteverbetering.
+Bugfixes en verbeteringen met betrekking tot verwijderde gewoontes.

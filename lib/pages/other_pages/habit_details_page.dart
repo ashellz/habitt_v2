@@ -363,8 +363,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
       cp: cp,
       title: loc.habitRestored,
       isError: false,
-      iconPath: 'assets/images/new-svg/restore-habit.svg',
-      iconColor: cp.text,
     );
   }
 
