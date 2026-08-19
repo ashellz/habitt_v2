@@ -300,6 +300,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               statusBarBrightness: Brightness.dark,
               systemNavigationBarColor: Colors.transparent,
               systemNavigationBarIconBrightness: Brightness.light,
+              systemNavigationBarContrastEnforced: false,
             )
             : const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
@@ -307,6 +308,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               statusBarBrightness: Brightness.light,
               systemNavigationBarColor: Colors.transparent,
               systemNavigationBarIconBrightness: Brightness.dark,
+              systemNavigationBarContrastEnforced: false,
             );
 
     // Choose base ColorScheme based on theme provider state
