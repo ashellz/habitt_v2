@@ -21,6 +21,7 @@ class DefaultAnnotatedRegion extends StatelessWidget {
         systemNavigationBarColor: Colors.transparent,
         systemNavigationBarIconBrightness:
             tp.isDark ? Brightness.light : Brightness.dark,
+        systemNavigationBarContrastEnforced: false,
       ),
       child: child,
     );
