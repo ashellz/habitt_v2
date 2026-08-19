@@ -1223,7 +1223,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
+                onTapDown: () {
                   _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
                 },
                 child: Container(
