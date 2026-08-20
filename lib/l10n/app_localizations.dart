@@ -4827,6 +4827,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore this habit? Its streak will reflect any days it missed while deleted.'**
   String get restoreDeletedHabitConfirm;
+
+  /// No description provided for @healthSyncSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync from Health'**
+  String get healthSyncSectionTitle;
+
+  /// No description provided for @healthSyncSectionDescApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Update this habit\'s progress automatically from Apple Health each time you open Habitt.'**
+  String get healthSyncSectionDescApple;
+
+  /// No description provided for @healthSyncSectionDescAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Update this habit\'s progress automatically from Health Connect each time you open Habitt.'**
+  String get healthSyncSectionDescAndroid;
+
+  /// No description provided for @healthMetricSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get healthMetricSteps;
+
+  /// No description provided for @healthMetricSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get healthMetricSleep;
+
+  /// No description provided for @healthMetricExerciseMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise minutes'**
+  String get healthMetricExerciseMinutes;
+
+  /// No description provided for @healthMetricMindfulMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Mindful minutes'**
+  String get healthMetricMindfulMinutes;
+
+  /// No description provided for @healthMetricActiveCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Active calories'**
+  String get healthMetricActiveCalories;
+
+  /// No description provided for @healthMetricTotalCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Total calories'**
+  String get healthMetricTotalCalories;
+
+  /// No description provided for @healthPermissionDeniedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt doesn\'t have permission to read this data. You can enable access in Settings.'**
+  String get healthPermissionDeniedMessage;
+
+  /// No description provided for @calorie.
+  ///
+  /// In en, this message translates to:
+  /// **'calorie'**
+  String get calorie;
+
+  /// No description provided for @calories.
+  ///
+  /// In en, this message translates to:
+  /// **'calories'**
+  String get calories;
 }
 
 class _AppLocalizationsDelegate

@@ -33,7 +33,10 @@ class DriveStorageAdapter implements CloudStorageAdapter {
 
   Future<drive_api.DriveApi?> _getDrive() async {
     try {
-      final headers = await _account.authHeaders;
+      final headers = await _account.authorizationClient.authorizationHeaders(
+        [drive_api.DriveApi.driveFileScope],
+      );
+      if (headers == null) return null;
       return drive_api.DriveApi(_GoogleAuthClient(headers));
     } catch (e) {
       debugPrint('[Drive] _getDrive error: $e');

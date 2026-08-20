@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:habitt/models/habit_notification_time.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -55,6 +56,8 @@ class Habit extends HiveObject {
   PremadeHabitType?
   premadeHabitType; // If created from a premade template which type
   HabitTrackingType? trackingType; // amount or duration
+  HealthMetricType?
+  healthMetric; // if set, progress is synced from this Health metric
   bool? isDeleted;
   bool? isPaused;
   DateTime? deletedAt;
@@ -100,6 +103,7 @@ class Habit extends HiveObject {
     this.soundKey,
     this.premadeHabitType,
     this.trackingType,
+    this.healthMetric,
     this.isDeleted,
     this.isPaused,
     this.deletedAt,
@@ -200,6 +204,7 @@ class Habit extends HiveObject {
       soundKey: soundKey,
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
+      healthMetric: healthMetric,
       isDeleted: isDeleted,
       isPaused: isPaused,
       deletedAt: deletedAt,
@@ -248,6 +253,7 @@ class Habit extends HiveObject {
       soundKey: soundKey,
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
+      healthMetric: healthMetric,
       isDeleted: isDeleted,
       isPaused: isPaused,
       deletedAt: deletedAt,
@@ -410,6 +416,10 @@ class Habit extends HiveObject {
       trackingType = habit.trackingType;
       timestamps['trackingType'] = now;
     }
+    if (healthMetric != habit.healthMetric) {
+      healthMetric = habit.healthMetric;
+      timestamps['healthMetric'] = now;
+    }
     if (isDeleted != habit.isDeleted) {
       isDeleted = habit.isDeleted;
       deletedAt = habit.isDeleted == true ? now : null;
@@ -496,6 +506,7 @@ class Habit extends HiveObject {
     soundKey = merged.soundKey;
     premadeHabitType = merged.premadeHabitType;
     trackingType = merged.trackingType;
+    healthMetric = merged.healthMetric;
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
     deletedAt = merged.deletedAt;
@@ -769,6 +780,7 @@ class Habit extends HiveObject {
               .toList(),
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'trackingType': _serializeTrackingType(trackingType),
+      'healthMetric': _serializeHealthMetricType(healthMetric),
       'isDeleted': isDeleted,
       'isPaused': isPaused,
       'deletedAt': deletedAt?.toIso8601String(),
@@ -843,6 +855,9 @@ class Habit extends HiveObject {
             amount: (m['amount'] as int?) ?? 0,
             duration: (m['duration'] as int?) ?? 0,
           ),
+      healthMetric: _deserializeHealthMetricType(
+        m['healthMetric']?.toString(),
+      ),
       isDeleted: m['isDeleted'] as bool?,
       isPaused: m['isPaused'] as bool?,
       deletedAt: DateTime.tryParse(m['deletedAt']?.toString() ?? '')?.toUtc(),
@@ -1100,6 +1115,11 @@ class Habit extends HiveObject {
         trackingType,
         incoming.trackingType,
       ),
+      healthMetric: resolve(
+        'healthMetric',
+        healthMetric,
+        incoming.healthMetric,
+      ),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       // Resolved under the same 'isDeleted' timestamp so it always tracks
       // whichever side's isDeleted value wins, never possible to disagree.
@@ -1283,6 +1303,24 @@ class Habit extends HiveObject {
     }
 
     for (final type in HabitTrackingType.values) {
+      if (type.name == value) {
+        return type;
+      }
+    }
+
+    return null;
+  }
+
+  static String? _serializeHealthMetricType(HealthMetricType? type) {
+    return type?.name;
+  }
+
+  static HealthMetricType? _deserializeHealthMetricType(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    for (final type in HealthMetricType.values) {
       if (type.name == value) {
         return type;
       }

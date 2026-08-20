@@ -60,6 +60,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       soundKey: fields[45] as String?,
       premadeHabitType: fields[38] as PremadeHabitType?,
       trackingType: fields[39] as HabitTrackingType?,
+      healthMetric: fields[47] as HealthMetricType?,
       isDeleted: fields[24] as bool?,
       isPaused: fields[43] as bool?,
       deletedAt: fields[46] as DateTime?,
@@ -72,7 +73,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(44)
+      ..writeByte(45)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -160,7 +161,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(45)
       ..write(obj.soundKey)
       ..writeByte(46)
-      ..write(obj.deletedAt);
+      ..write(obj.deletedAt)
+      ..writeByte(47)
+      ..write(obj.healthMetric);
   }
 
   @override

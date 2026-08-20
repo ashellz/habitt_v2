@@ -7,6 +7,7 @@ enum AmountLabelPreset {
   dl(singular: 'dl', plural: 'dl'),
   km(singular: 'km', plural: 'km'),
   meals(singular: 'meal', plural: 'meals'),
+  calories(singular: 'calorie', plural: 'calories'),
   times(singular: 'time', plural: 'times');
 
   static const String defaultAmountLabel = 'times';
@@ -63,6 +64,8 @@ enum AmountLabelPreset {
         return l.km;
       case AmountLabelPreset.meals:
         return l.meal;
+      case AmountLabelPreset.calories:
+        return l.calorie;
       case AmountLabelPreset.times:
         return l.time;
     }
@@ -82,6 +85,8 @@ enum AmountLabelPreset {
         return l.km;
       case AmountLabelPreset.meals:
         return l.meals;
+      case AmountLabelPreset.calories:
+        return l.calories;
       case AmountLabelPreset.times:
         return l.times;
     }

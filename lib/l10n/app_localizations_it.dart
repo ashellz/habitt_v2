@@ -2866,4 +2866,43 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get restoreDeletedHabitConfirm =>
       'Restore this habit? Its streak will reflect any days it missed while deleted.';
+
+  @override
+  String get healthSyncSectionTitle => 'Sync from Health';
+
+  @override
+  String get healthSyncSectionDescApple =>
+      'Update this habit\'s progress automatically from Apple Health each time you open Habitt.';
+
+  @override
+  String get healthSyncSectionDescAndroid =>
+      'Update this habit\'s progress automatically from Health Connect each time you open Habitt.';
+
+  @override
+  String get healthMetricSteps => 'Steps';
+
+  @override
+  String get healthMetricSleep => 'Sleep';
+
+  @override
+  String get healthMetricExerciseMinutes => 'Exercise minutes';
+
+  @override
+  String get healthMetricMindfulMinutes => 'Mindful minutes';
+
+  @override
+  String get healthMetricActiveCalories => 'Active calories';
+
+  @override
+  String get healthMetricTotalCalories => 'Total calories';
+
+  @override
+  String get healthPermissionDeniedMessage =>
+      'Habitt doesn\'t have permission to read this data. You can enable access in Settings.';
+
+  @override
+  String get calorie => 'calorie';
+
+  @override
+  String get calories => 'calories';
 }

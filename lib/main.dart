@@ -22,6 +22,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
@@ -60,6 +61,9 @@ Future<void> main() async {
   }
   if (!Hive.isAdapterRegistered(7)) {
     Hive.registerAdapter(HabitNotificationTimeAdapter());
+  }
+  if (!Hive.isAdapterRegistered(8)) {
+    Hive.registerAdapter(HealthMetricTypeAdapter());
   }
   if (!Hive.isAdapterRegistered(34)) {
     Hive.registerAdapter(LegacyHabitTrackingTypeAdapter());
@@ -180,6 +184,16 @@ Future<void> main() async {
           update: (_, habitProvider, previous) {
             previous!.attachHabitProvider(habitProvider);
             habitProvider.onHabitDeactivated = previous.clearTimerIfActive;
+            return previous;
+          },
+        ),
+
+        // HealthProvider: reads from HabitProvider one-way, same shape as
+        // TimerProvider above. HabitProvider has no dependency back on it.
+        ChangeNotifierProxyProvider<HabitProvider, HealthProvider>(
+          create: (_) => HealthProvider(),
+          update: (_, habitProvider, previous) {
+            previous!.attachHabitProvider(habitProvider);
             return previous;
           },
         ),

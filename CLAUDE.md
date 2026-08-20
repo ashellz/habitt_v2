@@ -93,6 +93,12 @@ The backup/sync system (Google Drive and iCloud cloud backends, plus local file 
 
 Selectable stock notification sounds (global default + per-habit override) are implemented via one channel per sound. To add a new sound or understand the system, see [`docs/notification_sounds.md`](docs/notification_sounds.md).
 
+### Health Sync
+
+Habits can optionally sync progress from Apple Health / Google Health Connect (steps, sleep, exercise minutes, mindful minutes, calories), read-only, on app open/resume. Documented in full at [`docs/health_sync.md`](docs/health_sync.md). Read it before touching `HealthService`, `HealthProvider`, or `Habit.healthMetric`.
+
+**Maintenance rule:** Any change to Health sync must also update `docs/health_sync.md`.
+
 ### Third-Party Integrations
 
 - **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions (currently voluntary support only, no feature gating)
@@ -100,6 +106,7 @@ Selectable stock notification sounds (global default + per-habit override) are i
 - **Google Drive APIs** — optional encrypted backup/restore
 - **iCloud** (`icloud_storage`) — optional encrypted backup/restore (iOS only), key synced via iCloud Keychain
 - **Awesome Notifications** — local push notification scheduling
+- **`health`** — read-only Apple HealthKit / Google Health Connect access for habit progress sync (see Health Sync above)
 
 ## Code Generation
 

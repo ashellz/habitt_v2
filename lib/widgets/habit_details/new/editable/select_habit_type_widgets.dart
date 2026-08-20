@@ -23,13 +23,17 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
   double entryOpacity = 1;
   int _entryOpacityTicket = 0;
   Offset slideBeginOffset = Offset.zero;
+  StateProvider? _stateProvider;
+  VoidCallback? _stateProviderListener;
 
   @override
   void initState() {
     super.initState();
+    final sp = context.read<StateProvider>();
+    _stateProvider = sp;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final sp = context.read<StateProvider>();
       final trackingType = sp.selectedHabitTrackingType;
 
       setState(() {
@@ -41,6 +45,35 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
                 : HabitType.none;
       });
     });
+
+    // Tracking type can also change from outside this widget (e.g. linking
+    // the habit to a Health metric elsewhere in the sheet) — stay in sync.
+    _stateProviderListener = () {
+      if (!mounted) return;
+      final externalTrackingType = sp.selectedHabitTrackingType;
+      final mappedType =
+          externalTrackingType == HabitTrackingType.amount
+              ? HabitType.amount
+              : externalTrackingType == HabitTrackingType.duration
+              ? HabitType.duration
+              : HabitType.none;
+      if (mappedType == selectedType) return;
+
+      setState(() {
+        useSlideTransition = false;
+        _setEntryOpacityState(selectedType, mappedType);
+        selectedType = mappedType;
+      });
+    };
+    sp.addListener(_stateProviderListener!);
+  }
+
+  @override
+  void dispose() {
+    if (_stateProviderListener != null) {
+      _stateProvider?.removeListener(_stateProviderListener!);
+    }
+    super.dispose();
   }
 
   void _setEntryOpacityState(HabitType previousType, HabitType nextType) {

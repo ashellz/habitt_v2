@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -5,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/habit_notification_time.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -103,6 +107,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     _sp.descController.addListener(_descListener);
     _sp.habitAmountLabelController.addListener(_amountLabelListener);
 
+    unawaited(context.read<HealthProvider>().ensureAvailabilityChecked());
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
         return;
@@ -150,6 +156,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.habitAmount = habit.amount;
     stateProvider.habitDuration = Duration(seconds: habit.duration);
     stateProvider.selectedHabitTrackingType = habit.trackingType;
+    stateProvider.selectedHealthMetric = habit.healthMetric;
     stateProvider.habitAmountLabelController.text = habit.amountLabel;
     stateProvider.setIconPathImmediately(habit.iconPath);
     stateProvider.isOptional = habit.optional;
@@ -211,6 +218,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedAmount = sp.habitAmount != habit.amount;
     final changedTrackingType =
         sp.selectedHabitTrackingType != habit.trackingType;
+    final changedHealthMetric = sp.selectedHealthMetric != habit.healthMetric;
     final changedOptionalHabit = sp.isOptional != habit.optional;
     final changedIcon = sp.iconPath != habit.iconPath;
     final changedScheduleType = sp.selectedScheduleOption != habit.scheduleType;
@@ -266,6 +274,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedDuration ||
         changedAmount ||
         changedTrackingType ||
+        changedHealthMetric ||
         changedOptionalHabit ||
         changedIcon ||
         changedScheduleType ||
@@ -290,6 +299,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedAmount = sp.habitAmount != 0;
     final changedDuration = sp.habitDuration != Duration.zero;
     final changedTrackingType = sp.selectedHabitTrackingType != null;
+    final changedHealthMetric = sp.selectedHealthMetric != null;
     final changedAmountLabel =
         sp.habitAmountLabelController.text != AmountLabelPreset.times.plural;
     final changedIcon =
@@ -319,6 +329,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedAmount ||
         changedDuration ||
         changedTrackingType ||
+        changedHealthMetric ||
         changedAmountLabel ||
         changedIcon ||
         changedOptional ||
@@ -586,6 +597,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.amount = sp.habitAmount;
       habit.duration = sp.habitDuration.inSeconds;
       habit.trackingType = sp.selectedHabitTrackingType;
+      habit.healthMetric = sp.selectedHealthMetric;
       habit.name = sp.nameController.text;
       habit.description = sp.descController.text;
       habit.categoryId = sp.habitCategoryId;
@@ -652,6 +664,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       amountCompleted: 0,
       duration: sp.habitDuration.inSeconds,
       trackingType: sp.selectedHabitTrackingType,
+      healthMetric: sp.selectedHealthMetric,
       durationCompleted: 0,
       streak: 0,
       longestStreak: 0,
@@ -750,6 +763,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                             chooseIcon(cp, sp, context),
                             habitDetails(cp),
                             habitScheduling(cp),
+                            healthSyncSection(cp, sp),
                             habitTypeRow(cp, sp),
                           ],
                         ),
@@ -1087,6 +1101,171 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     );
   }
 
+  Widget healthSyncSection(ColorProvider cp, StateProvider sp) {
+    if (!Platform.isIOS && !Platform.isAndroid) return const SizedBox.shrink();
+
+    final loc = AppLocalizations.of(context)!;
+    final healthProvider = context.watch<HealthProvider>();
+    if (!healthProvider.isAvailable) return const SizedBox.shrink();
+
+    final enabled = sp.selectedHealthMetric != null;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: cp.field,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 14,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 10,
+            children: [
+              Container(
+                width: 46,
+                padding: const EdgeInsets.all(13),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: cp.blueCircle.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: cp.blueCircle, width: 1),
+                ),
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: cp.blueCircle,
+                  size: 20,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  spacing: 8,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      loc.healthSyncSectionTitle,
+                      style: TextStyle(
+                        color: cp.text,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      Platform.isIOS
+                          ? loc.healthSyncSectionDescApple
+                          : loc.healthSyncSectionDescAndroid,
+                      style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              NewDefaultSwitch(
+                value: enabled,
+                onChanged: (value) async {
+                  if (!value) {
+                    sp.selectedHealthMetric = null;
+                    return;
+                  }
+                  final granted =
+                      await healthProvider.requestPermissionIfNeeded();
+                  if (!mounted) return;
+                  if (!granted) {
+                    await _showHealthPermissionDeniedDialog(loc);
+                    return;
+                  }
+                  sp.selectedHealthMetric =
+                      healthProvider.supportedMetrics.first;
+                },
+              ),
+            ],
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            transitionBuilder:
+                (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SizeTransition(sizeFactor: animation, child: child),
+                ),
+            child:
+                enabled
+                    ? Wrap(
+                      key: const ValueKey('health-metric-picker'),
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                          healthProvider.supportedMetrics.map((metric) {
+                            final selected = sp.selectedHealthMetric == metric;
+                            return GestureDetector(
+                              onTap: () => sp.selectedHealthMetric = metric,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 150),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      selected
+                                          ? cp.main
+                                          : (cp.isDark ? cp.habitBg : cp.bg),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: selected ? cp.main : cp.border,
+                                  ),
+                                ),
+                                child: Text(
+                                  _healthMetricLabel(loc, metric),
+                                  style: TextStyle(
+                                    color: selected ? cp.bg : cp.text,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                    )
+                    : const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _healthMetricLabel(AppLocalizations loc, HealthMetricType metric) {
+    switch (metric) {
+      case HealthMetricType.steps:
+        return loc.healthMetricSteps;
+      case HealthMetricType.sleep:
+        return loc.healthMetricSleep;
+      case HealthMetricType.exerciseMinutes:
+        return loc.healthMetricExerciseMinutes;
+      case HealthMetricType.mindfulMinutes:
+        return loc.healthMetricMindfulMinutes;
+      case HealthMetricType.activeCalories:
+        return loc.healthMetricActiveCalories;
+      case HealthMetricType.totalCalories:
+        return loc.healthMetricTotalCalories;
+    }
+  }
+
+  Future<void> _showHealthPermissionDeniedDialog(AppLocalizations loc) async {
+    await showDialogSheet(
+      context: context,
+      builder:
+          (dialogContext) => NewDefaultDialog(
+            title: loc.healthSyncSectionTitle,
+            desc: loc.healthPermissionDeniedMessage,
+            showSecondaryButton: false,
+            primaryButtonLabel: loc.gotIt,
+          ),
+    );
+  }
+
   Column habitScheduling(ColorProvider cp) {
     final loc = AppLocalizations.of(context)!;
 
@@ -1223,7 +1402,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTapDown: () {
+                onTapDown: (details) {
                   _handleCloseAttempt(sp, tp, closeResult: _topBackCloseResult);
                 },
                 child: Container(

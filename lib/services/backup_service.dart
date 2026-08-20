@@ -4,7 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:habitt/models/backup_data.dart';
@@ -46,7 +46,7 @@ class BackupService {
   /// using [storeKeyBytes] before this is called.
   static Future<SecretKey> getOrCreateKey(FlutterSecureStorage storage) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
 
     // getting stored key if exists and returning it
     final stored = await storage.read(
@@ -74,7 +74,7 @@ class BackupService {
   /// Used to gate Drive download — local always wins over Drive on existing devices.
   static Future<bool> hasStoredKey(FlutterSecureStorage storage) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     final stored = await storage.read(
       key: _kBackupKeyStorageKey,
       iOptions: iOSOpts,
@@ -91,7 +91,7 @@ class BackupService {
     List<int> keyBytes,
   ) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.write(
       key: _kBackupKeyStorageKey,
       value: base64Encode(keyBytes),
@@ -131,7 +131,7 @@ class BackupService {
     String pin,
   ) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
 
     final storedJson = await storage.read(
       key: _kPinDataStorageKey,
@@ -165,7 +165,7 @@ class BackupService {
     Map<String, String> wrapped,
   ) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.write(
       key: _kPinDataStorageKey,
       value: jsonEncode(wrapped),
@@ -176,7 +176,7 @@ class BackupService {
 
   static Future<void> clearPinData(FlutterSecureStorage storage) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.delete(
       key: _kPinDataStorageKey,
       iOptions: iOSOpts,
@@ -187,7 +187,7 @@ class BackupService {
   /// Persists the raw PIN string so it can be used automatically on next launch.
   static Future<void> storePin(FlutterSecureStorage storage, String pin) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.write(
       key: _kPinValueStorageKey,
       value: pin,
@@ -198,7 +198,7 @@ class BackupService {
 
   static Future<String?> readStoredPin(FlutterSecureStorage storage) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     return storage.read(
       key: _kPinValueStorageKey,
       iOptions: iOSOpts,
@@ -208,7 +208,7 @@ class BackupService {
 
   static Future<void> clearStoredPin(FlutterSecureStorage storage) async {
     const iOSOpts = IOSOptions(synchronizable: true);
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.delete(
       key: _kPinValueStorageKey,
       iOptions: iOSOpts,
@@ -221,7 +221,7 @@ class BackupService {
   static Future<String?> readLocalBackupPin(
     FlutterSecureStorage storage,
   ) async {
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     return storage.read(key: _kLocalBackupPinKey, aOptions: androidOpts);
   }
 
@@ -229,7 +229,7 @@ class BackupService {
     FlutterSecureStorage storage,
     String pin,
   ) async {
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.write(
       key: _kLocalBackupPinKey,
       value: pin,
@@ -238,7 +238,7 @@ class BackupService {
   }
 
   static Future<void> deleteLocalBackupPin(FlutterSecureStorage storage) async {
-    const androidOpts = AndroidOptions(encryptedSharedPreferences: true);
+    const androidOpts = AndroidOptions();
     await storage.delete(key: _kLocalBackupPinKey, aOptions: androidOpts);
   }
 
@@ -532,37 +532,34 @@ class BackupService {
     );
   }
 
-  static Future<String?> _pickSavePath(Uint8List bytes) async {
+  static Future<Uri?> _pickSavePath(Uint8List bytes) async {
     final now = DateTime.now();
     final day = now.day.toString().padLeft(2, '0');
     final month = now.month.toString().padLeft(2, '0');
     final year = now.year.toString().substring(2);
     final suggestedName = '$day-$month-$year-habitt-backup.habitt';
 
-    final path = await FilePicker.saveFile(
+    return file_picker.FilePicker.saveFile(
       bytes: bytes,
       dialogTitle: 'Export backup',
       fileName: suggestedName,
     );
-
-    if (path != null) return path;
-
-    // Fallback: save to documents directory
-    return null;
   }
 
   static Future<String?> pickImportPath([bool otherApps = false]) async {
     if (!otherApps) {
-      return FilePicker.pickFiles(
+      final file = await file_picker.FilePicker.pickFile(
         dialogTitle: 'Import backup',
-        type: FileType.custom,
+        type: file_picker.FileType.custom,
         allowedExtensions: ['habitt'],
-      ).then((result) => result?.files.single.path);
+      );
+      return file?.path;
     }
 
-    return FilePicker.pickFiles(
+    final file = await file_picker.FilePicker.pickFile(
       dialogTitle: 'Import backup',
-    ).then((result) => result?.files.single.path);
+    );
+    return file?.path;
   }
 
   static Future<String?> _pickImportPath() => pickImportPath();

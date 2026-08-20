@@ -539,12 +539,7 @@ class BackupProvider extends ChangeNotifier {
   // --- Initialization ----------------------------------------------------
 
   Future<void> initialize() async {
-    _googleSignIn = GoogleSignIn(
-      scopes: [drive_api.DriveApi.driveFileScope],
-      clientId: DefaultFirebaseOptions.ios.iosClientId,
-      serverClientId:
-          '752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com',
-    );
+    _googleSignIn = GoogleSignIn.instance;
 
     _secureStorage = const FlutterSecureStorage(
       aOptions: AndroidOptions(
@@ -555,6 +550,12 @@ class BackupProvider extends ChangeNotifier {
     );
 
     try {
+      await _googleSignIn.initialize(
+        clientId: DefaultFirebaseOptions.ios.iosClientId,
+        serverClientId:
+            '752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com',
+      );
+
       final prefs = await SharedPreferences.getInstance();
       _isAutoSyncEnabled = prefs.getBool(_kAutoSyncEnabledKey) ?? true;
       _isPinEnabled = prefs.getBool(_kPinEnabledKey) ?? false;
@@ -609,19 +610,16 @@ class BackupProvider extends ChangeNotifier {
 
       // ── Restore Google Drive sign-in ───────────────────────────────────────
       if (savedEmail != null) {
-        final user = await _googleSignIn.signInSilently();
+        final lightweightFuture =
+            _googleSignIn.attemptLightweightAuthentication();
+        final user =
+            lightweightFuture != null ? await lightweightFuture : null;
         if (user != null) {
           // If the user revoked Drive scope (e.g. from Google account settings),
           // silently sign out so they're prompted to re-authorize on next sign-in.
-          bool hasScope;
-          try {
-            hasScope = await _googleSignIn.canAccessScopes([
-              drive_api.DriveApi.driveFileScope,
-            ]);
-          } on UnimplementedError {
-            hasScope = true; // Android enforces scope during sign-in
-          }
-          if (!hasScope) {
+          final authorization = await user.authorizationClient
+              .authorizationForScopes([drive_api.DriveApi.driveFileScope]);
+          if (authorization == null) {
             await _googleSignIn.signOut();
             await FirebaseAuth.instance.signOut();
             _pendingNotification =
@@ -710,48 +708,48 @@ class BackupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns Drive-scope authorization for [user], silently if already
+  /// granted, otherwise by prompting the user. Throws [GoogleSignInException]
+  /// if the user declines.
+  Future<GoogleSignInClientAuthorization> _ensureDriveAuthorization(
+    GoogleSignInAccount user,
+  ) async {
+    final existing = await user.authorizationClient.authorizationForScopes([
+      drive_api.DriveApi.driveFileScope,
+    ]);
+    if (existing != null) return existing;
+    return user.authorizationClient.authorizeScopes([
+      drive_api.DriveApi.driveFileScope,
+    ]);
+  }
+
   Future<void> signIn(BuildContext context) async {
     try {
-      final user = await _googleSignIn.signIn();
-      if (user == null) return;
+      final GoogleSignInAccount user;
+      try {
+        user = await _googleSignIn.authenticate();
+      } on GoogleSignInException catch (e) {
+        if (e.code == GoogleSignInExceptionCode.canceled) return;
+        rethrow;
+      }
 
       // Verify Drive scope was granted — on Android 12+ users can selectively
       // deny scopes while still completing sign-in.
-      bool hasScope;
+      final GoogleSignInClientAuthorization authorization;
       try {
-        hasScope = await _googleSignIn.canAccessScopes([
-          drive_api.DriveApi.driveFileScope,
-        ]);
-      } on UnimplementedError {
-        hasScope = true; // Android enforces scope during sign-in
+        authorization = await _ensureDriveAuthorization(user);
+      } on GoogleSignInException {
+        await _googleSignIn.signOut();
+        _lastError =
+            'Google Drive access is required for backup. Please sign in again and allow Drive access when prompted.';
+        _pendingNotification = 'Google Drive sync failed';
+        notifyListeners();
+        return;
       }
-      if (!hasScope) {
-        bool granted;
-        try {
-          granted = await _googleSignIn.requestScopes([
-            drive_api.DriveApi.driveFileScope,
-          ]);
-        } on UnimplementedError {
-          granted = true;
-        }
-        if (!granted) {
-          await _googleSignIn.signOut();
-          _lastError =
-              'Google Drive access is required for backup. Please sign in again and allow Drive access when prompted.';
-          _pendingNotification = 'Google Drive sync failed';
-          notifyListeners();
-          return;
-        }
-      }
-
-      final auth = await user.authentication.timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Google auth timed out'),
-      );
 
       final credential = GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
-        idToken: auth.idToken,
+        accessToken: authorization.accessToken,
+        idToken: user.authentication.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
 
@@ -846,15 +844,19 @@ class BackupProvider extends ChangeNotifier {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'requires-recent-login') {
           // Token too old — reauthenticate with Google then retry.
-          final googleUser = await _googleSignIn.signIn();
-          if (googleUser == null) return false;
-          final auth = await googleUser.authentication.timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Google auth timed out'),
-          );
+          final GoogleSignInAccount googleUser;
+          try {
+            googleUser = await _googleSignIn.authenticate();
+          } on GoogleSignInException catch (authError) {
+            if (authError.code == GoogleSignInExceptionCode.canceled) {
+              return false;
+            }
+            rethrow;
+          }
+          final authorization = await _ensureDriveAuthorization(googleUser);
           final credential = GoogleAuthProvider.credential(
-            accessToken: auth.accessToken,
-            idToken: auth.idToken,
+            accessToken: authorization.accessToken,
+            idToken: googleUser.authentication.idToken,
           );
           await firebaseUser.reauthenticateWithCredential(credential);
           await firebaseUser.delete();

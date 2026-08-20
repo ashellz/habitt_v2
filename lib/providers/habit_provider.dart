@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
@@ -1472,6 +1473,59 @@ class HabitProvider extends ChangeNotifier {
     // notification rescheduling, perfect-streak recompute, and the today's-list
     // resort are only relevant when this tick actually crossed the completion
     // threshold — a mid-progress pause/stop changes nothing they depend on.
+    if (wasCompleted != isNowCompleted) {
+      await _syncNotificationsOnCompletionChange(
+        habit: habit,
+        wasCompleted: wasCompleted,
+        isNowCompleted: isNowCompleted,
+        daySimple: daySimple,
+        todaySimple: todaySimple,
+      );
+      _refreshPerfectStreakForDayIfNeeded(daySimple);
+      refreshTodaysHabits(notify: false);
+    }
+    notifyListeners();
+  }
+
+  // applies a value read from Health to the habit it's linked to
+  Future<void> syncHabitFromHealth(
+    int id,
+    HealthMetricType metric,
+    int rawValue, {
+    required DateTime day,
+  }) async {
+    habitStatsProvider?.invalidateHabit(id);
+
+    final now = DateTime.now();
+    final todaySimple = DateTime(now.year, now.month, now.day);
+    final daySimple = DateTime(day.year, day.month, day.day);
+
+    late Habit habit;
+    if (daySimple == todaySimple) {
+      final match = habits.where((h) => h.id == id);
+      if (match.isEmpty) return;
+      habit = match.first;
+    } else {
+      final dayHabits = getHabitsFromDay(daySimple, hydrateMissing: true);
+      final match = dayHabits.where((h) => h.id == id);
+      if (match.isEmpty) return;
+      habit = match.first;
+    }
+
+    // if habit got unlinked by user, dont apply wrongly,
+    // instead wait for next sync to reapply if linked differently
+    if (habit.healthMetric != metric) return;
+
+    final wasCompleted = habit.completed;
+    if (metric.trackingType == HabitTrackingType.amount) {
+      habit.updateHabitAmountCompleted(rawValue);
+    } else {
+      habit.updateHabitDurationCompleted(rawValue);
+    }
+    final isNowCompleted = habit.completed;
+
+    await updateHabitInDB(habit, day: daySimple);
+
     if (wasCompleted != isNowCompleted) {
       await _syncNotificationsOnCompletionChange(
         habit: habit,

@@ -51,24 +51,24 @@ dependencies:
   table_calendar: ^3.2.0
   inner_glow: ^1.0.0
   awesome_notifications_core: ^0.10.1
-  awesome_notifications: ^0.10.1
+  awesome_notifications: ^0.12.1
   cupertino_native_better: ^1.5.4
-  device_info_plus: ^12.3.0
-  confetti: ^0.7.0
+  device_info_plus:
+  confetti: ^0.8.0
   cryptography: ^2.7.0
-  file_picker: ^11.0.2
+  file_picker: ^12.0.0
   path_provider: ^2.1.4
-  googleapis_auth: ^1.4.1
-  googleapis: ^11.4.0
+  googleapis_auth: ^2.3.3
+  googleapis: ^16.0.0
   firebase_core: ^4.3.0
   firebase_auth: ^6.1.3
-  google_sign_in: ^6.1.0
-  flutter_secure_storage: ^10.0.0
+  google_sign_in: ^7.2.0
+  flutter_secure_storage: ^11.0.0
   uuid: ^4.5.2
   http: ^1.6.0
-  package_info_plus: ^9.0.0
-  purchases_flutter: ^9.11.0
-  purchases_ui_flutter: ^9.11.0
+  package_info_plus: ^10.2.1
+  purchases_flutter: ^10.9.1
+  purchases_ui_flutter: ^10.9.1
   reorderables: ^0.6.0
   url_launcher: ^6.3.0
   in_app_review: ^2.0.11
@@ -77,6 +77,8 @@ dependencies:
   shimmer: ^3.0.0
   icloud_storage: ^2.1.0
   audioplayers: ^6.8.0
+  health: 
+  permission_handler: ^13.0.1
 
 
 dev_dependencies:
@@ -91,7 +93,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   hive_ce_generator: ^1.8.2
 
 # For information on the generic Dart part of this file, see the

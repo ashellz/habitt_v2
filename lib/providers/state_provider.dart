@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/habit_notification_time.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
@@ -162,6 +163,7 @@ class StateProvider extends ChangeNotifier {
   int _habitAmount = 0;
   Duration _habitDuration = Duration.zero;
   HabitTrackingType? _selectedHabitTrackingType;
+  HealthMetricType? _selectedHealthMetric;
   TextEditingController habitAmountLabelController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController descController = TextEditingController();
@@ -191,6 +193,7 @@ class StateProvider extends ChangeNotifier {
   PremadeHabitType? get selectedPremadeHabitType => _selectedPremadeHabitType;
   HabitTrackingType? get selectedHabitTrackingType =>
       _selectedHabitTrackingType;
+  HealthMetricType? get selectedHealthMetric => _selectedHealthMetric;
 
   String get scheduleSummary {
     switch (_selectedScheduleOption) {
@@ -257,6 +260,30 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set selectedHealthMetric(HealthMetricType? value) {
+    _selectedHealthMetric = value;
+    if (value != null) {
+      // updates habit tracking type
+      selectedHabitTrackingType = value.trackingType;
+
+      // updates amount label based on the metric
+      switch (value) {
+        case HealthMetricType.steps:
+          habitAmountLabelController.text = AmountLabelPreset.steps.plural;
+          break;
+        case HealthMetricType.activeCalories:
+        case HealthMetricType.totalCalories:
+          habitAmountLabelController.text = AmountLabelPreset.calories.plural;
+          break;
+        case HealthMetricType.sleep:
+        case HealthMetricType.exerciseMinutes:
+        case HealthMetricType.mindfulMinutes:
+          break;
+      }
+    }
+    notifyListeners();
+  }
+
   void clearSelectedPremadeHabitType() {
     _selectedPremadeHabitType = null;
     notifyListeners();
@@ -280,6 +307,7 @@ class StateProvider extends ChangeNotifier {
 
     _habitAmount = template.amount;
     _habitDuration = Duration(minutes: template.durationMinutes);
+    _selectedHealthMetric = null;
     _selectedHabitTrackingType =
         template.amount >= 1
             ? HabitTrackingType.amount
@@ -585,6 +613,7 @@ class StateProvider extends ChangeNotifier {
 
     _habitDuration = Duration.zero;
     _selectedHabitTrackingType = null;
+    _selectedHealthMetric = null;
 
     _habitCategoryId = 1;
     habitAmountLabelController.text = AmountLabelPreset.times.plural;

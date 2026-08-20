@@ -787,8 +787,8 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/reorder.svg
   String get reorder => 'assets/images/new-svg/reorder.svg';
 
-  /// File path: assets/images/new-svg/restore-habit.svg
-  String get restoreHabit => 'assets/images/new-svg/restore-habit.svg';
+  /// File path: assets/images/new-svg/restore.svg
+  String get restore => 'assets/images/new-svg/restore.svg';
 
   /// File path: assets/images/new-svg/search.svg
   String get search => 'assets/images/new-svg/search.svg';
@@ -901,7 +901,7 @@ class $AssetsImagesNewSvgGen {
     profile,
     rate,
     reorder,
-    restoreHabit,
+    restore,
     search,
     settings,
     skipped,
@@ -1030,9 +1030,7 @@ class $AssetsImagesNewSvgLanguagesGen {
   List<String> get values => [ba, de, en, es, it];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsSoundGen sound = $AssetsSoundGen();
 }

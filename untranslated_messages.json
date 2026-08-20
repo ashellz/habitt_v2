@@ -4,7 +4,19 @@
     "deletedOneDayAgo",
     "deletedDaysAgoLabel",
     "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm"
+    "restoreDeletedHabitConfirm",
+    "healthSyncSectionTitle",
+    "healthSyncSectionDescApple",
+    "healthSyncSectionDescAndroid",
+    "healthMetricSteps",
+    "healthMetricSleep",
+    "healthMetricExerciseMinutes",
+    "healthMetricMindfulMinutes",
+    "healthMetricActiveCalories",
+    "healthMetricTotalCalories",
+    "healthPermissionDeniedMessage",
+    "calorie",
+    "calories"
   ],
 
   "de": [
@@ -12,7 +24,19 @@
     "deletedOneDayAgo",
     "deletedDaysAgoLabel",
     "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm"
+    "restoreDeletedHabitConfirm",
+    "healthSyncSectionTitle",
+    "healthSyncSectionDescApple",
+    "healthSyncSectionDescAndroid",
+    "healthMetricSteps",
+    "healthMetricSleep",
+    "healthMetricExerciseMinutes",
+    "healthMetricMindfulMinutes",
+    "healthMetricActiveCalories",
+    "healthMetricTotalCalories",
+    "healthPermissionDeniedMessage",
+    "calorie",
+    "calories"
   ],
 
   "es": [
@@ -20,7 +44,19 @@
     "deletedOneDayAgo",
     "deletedDaysAgoLabel",
     "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm"
+    "restoreDeletedHabitConfirm",
+    "healthSyncSectionTitle",
+    "healthSyncSectionDescApple",
+    "healthSyncSectionDescAndroid",
+    "healthMetricSteps",
+    "healthMetricSleep",
+    "healthMetricExerciseMinutes",
+    "healthMetricMindfulMinutes",
+    "healthMetricActiveCalories",
+    "healthMetricTotalCalories",
+    "healthPermissionDeniedMessage",
+    "calorie",
+    "calories"
   ],
 
   "it": [
@@ -28,6 +64,18 @@
     "deletedOneDayAgo",
     "deletedDaysAgoLabel",
     "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm"
+    "restoreDeletedHabitConfirm",
+    "healthSyncSectionTitle",
+    "healthSyncSectionDescApple",
+    "healthSyncSectionDescAndroid",
+    "healthMetricSteps",
+    "healthMetricSleep",
+    "healthMetricExerciseMinutes",
+    "healthMetricMindfulMinutes",
+    "healthMetricActiveCalories",
+    "healthMetricTotalCalories",
+    "healthPermissionDeniedMessage",
+    "calorie",
+    "calories"
   ]
 }

@@ -1094,5 +1094,17 @@
   "deletedOneDayAgo": "1 day ago",
   "deletedDaysAgoLabel": "{days} days ago",
   "deletedHabitsPageDesc": "Deleted habits stay here for 30 days, then they're permanently removed.",
-  "restoreDeletedHabitConfirm": "Restore this habit? Its streak will reflect any days it missed while deleted."
+  "restoreDeletedHabitConfirm": "Restore this habit? Its streak will reflect any days it missed while deleted.",
+  "healthSyncSectionTitle": "Sync from Health",
+  "healthSyncSectionDescApple": "Update this habit's progress automatically from Apple Health each time you open Habitt.",
+  "healthSyncSectionDescAndroid": "Update this habit's progress automatically from Health Connect each time you open Habitt.",
+  "healthMetricSteps": "Steps",
+  "healthMetricSleep": "Sleep",
+  "healthMetricExerciseMinutes": "Exercise minutes",
+  "healthMetricMindfulMinutes": "Mindful minutes",
+  "healthMetricActiveCalories": "Active calories",
+  "healthMetricTotalCalories": "Total calories",
+  "healthPermissionDeniedMessage": "Habitt doesn't have permission to read this data. You can enable access in Settings.",
+  "calorie": "calorie",
+  "calories": "calories"
 }

@@ -22,10 +22,6 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera for profile pictures.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to location services to determine language on app first launch.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -43,29 +39,14 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera for profile pictures.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>If this app had access to your health data, it would use it to automatically log progress to habits based on your health information. This includes sleeping, walking, running, steps and similar.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to location services to determine language on app first launch.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to your folders when saving and importing local encrypted data.</string>
-	<key>_UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
-		<key>UISceneConfigurations</key>
-		<dict>
-			<key>UIWindowSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneClassName</key>
-					<string>UIWindowScene</string>
-					<key>UISceneConfigurationName</key>
-					<string>flutter</string>
-					<key>UISceneDelegateClassName</key>
-					<string>FlutterSceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
-				</dict>
-			</array>
-		</dict>
-	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -105,5 +86,26 @@
 			</dict>
 		</dict>
 	</array>
+	<key>_UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneDelegateClassName</key>
+					<string>FlutterSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 </dict>
 </plist>

@@ -1,6 +1,7 @@
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/habit_notification_time.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/util/amount_label_preset.dart';
@@ -82,6 +83,22 @@ class LegacyHabitTrackingTypeAdapter extends TypeAdapter<dynamic> {
   void write(BinaryWriter writer, dynamic obj) {
     final value = obj is HabitTrackingType ? obj : HabitTrackingType.amount;
     writer.writeByte(value.index);
+  }
+}
+
+class HealthMetricTypeAdapter extends TypeAdapter<HealthMetricType> {
+  @override
+  int get typeId => 8;
+
+  @override
+  HealthMetricType read(BinaryReader reader) {
+    final index = reader.readByte();
+    return HealthMetricType.values[index];
+  }
+
+  @override
+  void write(BinaryWriter writer, HealthMetricType obj) {
+    writer.writeByte(obj.index);
   }
 }
 

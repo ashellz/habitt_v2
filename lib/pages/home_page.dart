@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/main_pages/calendar_page.dart';
@@ -8,6 +9,7 @@ import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
@@ -66,6 +68,8 @@ class _HomePageState extends State<HomePage>
           context.read<StateProvider>(),
           context.read<StatsProvider>(),
         );
+
+        unawaited(context.read<HealthProvider>().syncNow());
 
         categoryProvider.reorderCategoriesBasedOnTime();
 
@@ -134,6 +138,7 @@ class _HomePageState extends State<HomePage>
         stateProvider,
         statsProvider,
       );
+      unawaited(context.read<HealthProvider>().syncNow());
       await backupProvider.initializationDone;
       await backupProvider.performSync();
 
