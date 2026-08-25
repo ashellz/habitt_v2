@@ -1,5 +1,13 @@
 # Habitt
 
+<p align="center">
+  <img src="docs/screenshots/01-habit-details.png" width="155" alt="Build habits that actually stick" />
+  <img src="docs/screenshots/02-consistency.png" width="155" alt="See your real consistency" />
+  <img src="docs/screenshots/03-themes.png" width="155" alt="Designed for any mood" />
+  <img src="docs/screenshots/04-reminders.png" width="155" alt="Never miss a habit" />
+  <img src="docs/screenshots/05-tracking.png" width="155" alt="Track habits your way" />
+</p>
+
 A privacy-first, local-first habit tracker for iOS and Android, built with Flutter.
 
 All data lives on your device. No analytics, no server-side data collection, no accounts required. Optional encrypted backup to your own Google Drive or iCloud, or a manual local backup file.
