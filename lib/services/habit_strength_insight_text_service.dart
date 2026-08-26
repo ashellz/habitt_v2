@@ -242,6 +242,20 @@ class HabitStrengthInsightTextService {
         return l.insightStrengthStartSmallType1ProductivitySession;
       case PremadeHabitType.read:
         return l.insightStrengthStartSmallType1Read;
+      case PremadeHabitType.workoutWalking:
+      case PremadeHabitType.workoutRunning:
+      case PremadeHabitType.workoutCycling:
+      case PremadeHabitType.workoutSwimming:
+      case PremadeHabitType.workoutHiking:
+      case PremadeHabitType.workoutFlexibility:
+      case PremadeHabitType.workoutDancing:
+      case PremadeHabitType.workoutRowing:
+      case PremadeHabitType.workoutCombined:
+      case PremadeHabitType.mindfulness:
+      case PremadeHabitType.sleepTime:
+      case PremadeHabitType.activeCalories:
+      case PremadeHabitType.totalCalories:
+      case PremadeHabitType.steps:
       case null:
         return l.insightStrengthStartSmallType1Generic;
     }
@@ -357,6 +371,20 @@ class HabitStrengthInsightTextService {
           fromValue,
           toValue,
         );
+      case PremadeHabitType.workoutWalking:
+      case PremadeHabitType.workoutRunning:
+      case PremadeHabitType.workoutCycling:
+      case PremadeHabitType.workoutSwimming:
+      case PremadeHabitType.workoutHiking:
+      case PremadeHabitType.workoutFlexibility:
+      case PremadeHabitType.workoutDancing:
+      case PremadeHabitType.workoutRowing:
+      case PremadeHabitType.workoutCombined:
+      case PremadeHabitType.mindfulness:
+      case PremadeHabitType.sleepTime:
+      case PremadeHabitType.activeCalories:
+      case PremadeHabitType.totalCalories:
+      case PremadeHabitType.steps:
       case null:
         return l.insightStrengthStartSmallType2Generic(
           dropPercent,
@@ -473,6 +501,20 @@ class HabitStrengthInsightTextService {
         );
       case PremadeHabitType.medications:
         return "Invalid";
+      case PremadeHabitType.workoutWalking:
+      case PremadeHabitType.workoutRunning:
+      case PremadeHabitType.workoutCycling:
+      case PremadeHabitType.workoutSwimming:
+      case PremadeHabitType.workoutHiking:
+      case PremadeHabitType.workoutFlexibility:
+      case PremadeHabitType.workoutDancing:
+      case PremadeHabitType.workoutRowing:
+      case PremadeHabitType.workoutCombined:
+      case PremadeHabitType.mindfulness:
+      case PremadeHabitType.sleepTime:
+      case PremadeHabitType.activeCalories:
+      case PremadeHabitType.totalCalories:
+      case PremadeHabitType.steps:
       case null:
         return l.insightStrengthIncreaseGeneric(
           strengthPercent,

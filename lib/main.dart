@@ -65,6 +65,12 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(8)) {
     Hive.registerAdapter(HealthMetricTypeAdapter());
   }
+  if (!Hive.isAdapterRegistered(9)) {
+    Hive.registerAdapter(HealthWorkoutTypeAdapter());
+  }
+  if (!Hive.isAdapterRegistered(10)) {
+    Hive.registerAdapter(HealthSessionDetailAdapter());
+  }
   if (!Hive.isAdapterRegistered(34)) {
     Hive.registerAdapter(LegacyHabitTrackingTypeAdapter());
   }

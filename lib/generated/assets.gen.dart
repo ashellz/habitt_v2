@@ -147,450 +147,24 @@ class $AssetsImagesAppsGen {
 class $AssetsImagesIconsGen {
   const $AssetsImagesIconsGen();
 
-  /// File path: assets/images/icons/apple.png
-  AssetGenImage get apple =>
-      const AssetGenImage('assets/images/icons/apple.png');
-
-  /// File path: assets/images/icons/art.png
-  AssetGenImage get art => const AssetGenImage('assets/images/icons/art.png');
-
-  /// File path: assets/images/icons/bag.png
-  AssetGenImage get bag => const AssetGenImage('assets/images/icons/bag.png');
-
-  /// File path: assets/images/icons/basketball.png
-  AssetGenImage get basketball =>
-      const AssetGenImage('assets/images/icons/basketball.png');
-
-  /// File path: assets/images/icons/battery.png
-  AssetGenImage get battery =>
-      const AssetGenImage('assets/images/icons/battery.png');
-
-  /// File path: assets/images/icons/battery2.png
-  AssetGenImage get battery2 =>
-      const AssetGenImage('assets/images/icons/battery2.png');
-
-  /// File path: assets/images/icons/bed.png
-  AssetGenImage get bed => const AssetGenImage('assets/images/icons/bed.png');
-
-  /// File path: assets/images/icons/bedding.png
-  AssetGenImage get bedding =>
-      const AssetGenImage('assets/images/icons/bedding.png');
-
-  /// File path: assets/images/icons/blur.png
-  AssetGenImage get blur => const AssetGenImage('assets/images/icons/blur.png');
-
-  /// File path: assets/images/icons/book.png
-  AssetGenImage get book => const AssetGenImage('assets/images/icons/book.png');
-
-  /// File path: assets/images/icons/bread.png
-  AssetGenImage get bread =>
-      const AssetGenImage('assets/images/icons/bread.png');
-
-  /// File path: assets/images/icons/breakfast.png
-  AssetGenImage get breakfast =>
-      const AssetGenImage('assets/images/icons/breakfast.png');
-
-  /// File path: assets/images/icons/breakfast2.png
-  AssetGenImage get breakfast2 =>
-      const AssetGenImage('assets/images/icons/breakfast2.png');
-
-  /// File path: assets/images/icons/broom.png
-  AssetGenImage get broom =>
-      const AssetGenImage('assets/images/icons/broom.png');
-
-  /// File path: assets/images/icons/cake.png
-  AssetGenImage get cake => const AssetGenImage('assets/images/icons/cake.png');
-
-  /// File path: assets/images/icons/cake2.png
-  AssetGenImage get cake2 =>
-      const AssetGenImage('assets/images/icons/cake2.png');
-
-  /// File path: assets/images/icons/candy.png
-  AssetGenImage get candy =>
-      const AssetGenImage('assets/images/icons/candy.png');
-
-  /// File path: assets/images/icons/car.png
-  AssetGenImage get car => const AssetGenImage('assets/images/icons/car.png');
-
-  /// File path: assets/images/icons/chocolate.png
-  AssetGenImage get chocolate =>
-      const AssetGenImage('assets/images/icons/chocolate.png');
-
-  /// File path: assets/images/icons/church.png
-  AssetGenImage get church =>
-      const AssetGenImage('assets/images/icons/church.png');
-
-  /// File path: assets/images/icons/church2.png
-  AssetGenImage get church2 =>
-      const AssetGenImage('assets/images/icons/church2.png');
-
-  /// File path: assets/images/icons/clock.png
-  AssetGenImage get clock =>
-      const AssetGenImage('assets/images/icons/clock.png');
-
-  /// File path: assets/images/icons/coffee.png
-  AssetGenImage get coffee =>
-      const AssetGenImage('assets/images/icons/coffee.png');
-
-  /// File path: assets/images/icons/color-wheel.png
-  AssetGenImage get colorWheel =>
-      const AssetGenImage('assets/images/icons/color-wheel.png');
-
-  /// File path: assets/images/icons/colorful.png
-  AssetGenImage get colorful =>
-      const AssetGenImage('assets/images/icons/colorful.png');
-
-  /// File path: assets/images/icons/compass.png
-  AssetGenImage get compass =>
-      const AssetGenImage('assets/images/icons/compass.png');
-
-  /// File path: assets/images/icons/computer.png
-  AssetGenImage get computer =>
-      const AssetGenImage('assets/images/icons/computer.png');
-
-  /// File path: assets/images/icons/controller.png
-  AssetGenImage get controller =>
-      const AssetGenImage('assets/images/icons/controller.png');
-
-  /// File path: assets/images/icons/cookie.png
-  AssetGenImage get cookie =>
-      const AssetGenImage('assets/images/icons/cookie.png');
-
   /// File path: assets/images/icons/counter.png
   AssetGenImage get counter =>
       const AssetGenImage('assets/images/icons/counter.png');
-
-  /// File path: assets/images/icons/dog.png
-  AssetGenImage get dog => const AssetGenImage('assets/images/icons/dog.png');
-
-  /// File path: assets/images/icons/dog2.png
-  AssetGenImage get dog2 => const AssetGenImage('assets/images/icons/dog2.png');
-
-  /// File path: assets/images/icons/dog_food.png
-  AssetGenImage get dogFood =>
-      const AssetGenImage('assets/images/icons/dog_food.png');
-
-  /// File path: assets/images/icons/double-bed.png
-  AssetGenImage get doubleBed =>
-      const AssetGenImage('assets/images/icons/double-bed.png');
 
   /// File path: assets/images/icons/duration.png
   AssetGenImage get duration =>
       const AssetGenImage('assets/images/icons/duration.png');
 
-  /// File path: assets/images/icons/export.png
-  AssetGenImage get export =>
-      const AssetGenImage('assets/images/icons/export.png');
-
-  /// File path: assets/images/icons/food.png
-  AssetGenImage get food => const AssetGenImage('assets/images/icons/food.png');
-
-  /// File path: assets/images/icons/football.png
-  AssetGenImage get football =>
-      const AssetGenImage('assets/images/icons/football.png');
-
-  /// File path: assets/images/icons/fries.png
-  AssetGenImage get fries =>
-      const AssetGenImage('assets/images/icons/fries.png');
-
-  /// File path: assets/images/icons/google-drive.png
-  AssetGenImage get googleDrive =>
-      const AssetGenImage('assets/images/icons/google-drive.png');
-
-  /// File path: assets/images/icons/hamburger.png
-  AssetGenImage get hamburger =>
-      const AssetGenImage('assets/images/icons/hamburger.png');
-
-  /// File path: assets/images/icons/horse.png
-  AssetGenImage get horse =>
-      const AssetGenImage('assets/images/icons/horse.png');
-
-  /// File path: assets/images/icons/horse_man.png
-  AssetGenImage get horseMan =>
-      const AssetGenImage('assets/images/icons/horse_man.png');
-
-  /// File path: assets/images/icons/horse_woman.png
-  AssetGenImage get horseWoman =>
-      const AssetGenImage('assets/images/icons/horse_woman.png');
-
-  /// File path: assets/images/icons/ice_cream.png
-  AssetGenImage get iceCream =>
-      const AssetGenImage('assets/images/icons/ice_cream.png');
-
-  /// File path: assets/images/icons/ice_cream2.png
-  AssetGenImage get iceCream2 =>
-      const AssetGenImage('assets/images/icons/ice_cream2.png');
-
-  /// File path: assets/images/icons/import.png
-  AssetGenImage get import =>
-      const AssetGenImage('assets/images/icons/import.png');
-
-  /// File path: assets/images/icons/joystick.png
-  AssetGenImage get joystick =>
-      const AssetGenImage('assets/images/icons/joystick.png');
-
-  /// File path: assets/images/icons/juice.png
-  AssetGenImage get juice =>
-      const AssetGenImage('assets/images/icons/juice.png');
-
-  /// File path: assets/images/icons/juice2.png
-  AssetGenImage get juice2 =>
-      const AssetGenImage('assets/images/icons/juice2.png');
-
-  /// File path: assets/images/icons/laptop.png
-  AssetGenImage get laptop =>
-      const AssetGenImage('assets/images/icons/laptop.png');
-
-  /// File path: assets/images/icons/macbook.png
-  AssetGenImage get macbook =>
-      const AssetGenImage('assets/images/icons/macbook.png');
-
-  /// File path: assets/images/icons/moon.png
-  AssetGenImage get moon => const AssetGenImage('assets/images/icons/moon.png');
-
-  /// File path: assets/images/icons/mosque.png
-  AssetGenImage get mosque =>
-      const AssetGenImage('assets/images/icons/mosque.png');
-
-  /// File path: assets/images/icons/note.png
-  AssetGenImage get note => const AssetGenImage('assets/images/icons/note.png');
-
-  /// File path: assets/images/icons/notebook.png
-  AssetGenImage get notebook =>
-      const AssetGenImage('assets/images/icons/notebook.png');
-
-  /// File path: assets/images/icons/notification.png
-  AssetGenImage get notification =>
-      const AssetGenImage('assets/images/icons/notification.png');
-
-  /// File path: assets/images/icons/office.png
-  AssetGenImage get office =>
-      const AssetGenImage('assets/images/icons/office.png');
-
-  /// File path: assets/images/icons/pen.png
-  AssetGenImage get pen => const AssetGenImage('assets/images/icons/pen.png');
-
-  /// File path: assets/images/icons/pencil.png
-  AssetGenImage get pencil =>
-      const AssetGenImage('assets/images/icons/pencil.png');
-
-  /// File path: assets/images/icons/phone.png
-  AssetGenImage get phone =>
-      const AssetGenImage('assets/images/icons/phone.png');
-
-  /// File path: assets/images/icons/pie.png
-  AssetGenImage get pie => const AssetGenImage('assets/images/icons/pie.png');
-
-  /// File path: assets/images/icons/ping_pong.png
-  AssetGenImage get pingPong =>
-      const AssetGenImage('assets/images/icons/ping_pong.png');
-
-  /// File path: assets/images/icons/pizza.png
-  AssetGenImage get pizza =>
-      const AssetGenImage('assets/images/icons/pizza.png');
-
-  /// File path: assets/images/icons/plate.png
-  AssetGenImage get plate =>
-      const AssetGenImage('assets/images/icons/plate.png');
-
-  /// File path: assets/images/icons/pray.png
-  AssetGenImage get pray => const AssetGenImage('assets/images/icons/pray.png');
-
-  /// File path: assets/images/icons/pray2.png
-  AssetGenImage get pray2 =>
-      const AssetGenImage('assets/images/icons/pray2.png');
-
-  /// File path: assets/images/icons/pray3.png
-  AssetGenImage get pray3 =>
-      const AssetGenImage('assets/images/icons/pray3.png');
-
-  /// File path: assets/images/icons/pushup.png
-  AssetGenImage get pushup =>
-      const AssetGenImage('assets/images/icons/pushup.png');
-
-  /// File path: assets/images/icons/quran.png
-  AssetGenImage get quran =>
-      const AssetGenImage('assets/images/icons/quran.png');
-
-  /// File path: assets/images/icons/run.png
-  AssetGenImage get run => const AssetGenImage('assets/images/icons/run.png');
-
-  /// File path: assets/images/icons/shirt.png
-  AssetGenImage get shirt =>
-      const AssetGenImage('assets/images/icons/shirt.png');
-
-  /// File path: assets/images/icons/squat.png
-  AssetGenImage get squat =>
-      const AssetGenImage('assets/images/icons/squat.png');
-
-  /// File path: assets/images/icons/stadium.png
-  AssetGenImage get stadium =>
-      const AssetGenImage('assets/images/icons/stadium.png');
-
-  /// File path: assets/images/icons/strawberry.png
-  AssetGenImage get strawberry =>
-      const AssetGenImage('assets/images/icons/strawberry.png');
-
   /// File path: assets/images/icons/streak.png
   AssetGenImage get streak =>
       const AssetGenImage('assets/images/icons/streak.png');
-
-  /// File path: assets/images/icons/subscription.png
-  AssetGenImage get subscription =>
-      const AssetGenImage('assets/images/icons/subscription.png');
-
-  /// File path: assets/images/icons/swim.png
-  AssetGenImage get swim => const AssetGenImage('assets/images/icons/swim.png');
-
-  /// File path: assets/images/icons/tie.png
-  AssetGenImage get tie => const AssetGenImage('assets/images/icons/tie.png');
-
-  /// File path: assets/images/icons/tooth.png
-  AssetGenImage get tooth =>
-      const AssetGenImage('assets/images/icons/tooth.png');
-
-  /// File path: assets/images/icons/toothbrush.png
-  AssetGenImage get toothbrush =>
-      const AssetGenImage('assets/images/icons/toothbrush.png');
-
-  /// File path: assets/images/icons/vacum.png
-  AssetGenImage get vacum =>
-      const AssetGenImage('assets/images/icons/vacum.png');
-
-  /// File path: assets/images/icons/walk.png
-  AssetGenImage get walk => const AssetGenImage('assets/images/icons/walk.png');
 
   /// File path: assets/images/icons/water.png
   AssetGenImage get water =>
       const AssetGenImage('assets/images/icons/water.png');
 
-  /// File path: assets/images/icons/water2.png
-  AssetGenImage get water2 =>
-      const AssetGenImage('assets/images/icons/water2.png');
-
-  /// File path: assets/images/icons/workout.png
-  AssetGenImage get workout =>
-      const AssetGenImage('assets/images/icons/workout.png');
-
-  /// File path: assets/images/icons/workout2.png
-  AssetGenImage get workout2 =>
-      const AssetGenImage('assets/images/icons/workout2.png');
-
-  /// File path: assets/images/icons/workout3.png
-  AssetGenImage get workout3 =>
-      const AssetGenImage('assets/images/icons/workout3.png');
-
-  /// File path: assets/images/icons/workout4.png
-  AssetGenImage get workout4 =>
-      const AssetGenImage('assets/images/icons/workout4.png');
-
-  /// File path: assets/images/icons/workout5.png
-  AssetGenImage get workout5 =>
-      const AssetGenImage('assets/images/icons/workout5.png');
-
-  /// File path: assets/images/icons/wrench.png
-  AssetGenImage get wrench =>
-      const AssetGenImage('assets/images/icons/wrench.png');
-
-  /// File path: assets/images/icons/write.png
-  AssetGenImage get write =>
-      const AssetGenImage('assets/images/icons/write.png');
-
   /// List of all assets
-  List<AssetGenImage> get values => [
-    apple,
-    art,
-    bag,
-    basketball,
-    battery,
-    battery2,
-    bed,
-    bedding,
-    blur,
-    book,
-    bread,
-    breakfast,
-    breakfast2,
-    broom,
-    cake,
-    cake2,
-    candy,
-    car,
-    chocolate,
-    church,
-    church2,
-    clock,
-    coffee,
-    colorWheel,
-    colorful,
-    compass,
-    computer,
-    controller,
-    cookie,
-    counter,
-    dog,
-    dog2,
-    dogFood,
-    doubleBed,
-    duration,
-    export,
-    food,
-    football,
-    fries,
-    googleDrive,
-    hamburger,
-    horse,
-    horseMan,
-    horseWoman,
-    iceCream,
-    iceCream2,
-    import,
-    joystick,
-    juice,
-    juice2,
-    laptop,
-    macbook,
-    moon,
-    mosque,
-    note,
-    notebook,
-    notification,
-    office,
-    pen,
-    pencil,
-    phone,
-    pie,
-    pingPong,
-    pizza,
-    plate,
-    pray,
-    pray2,
-    pray3,
-    pushup,
-    quran,
-    run,
-    shirt,
-    squat,
-    stadium,
-    strawberry,
-    streak,
-    subscription,
-    swim,
-    tie,
-    tooth,
-    toothbrush,
-    vacum,
-    walk,
-    water,
-    water2,
-    workout,
-    workout2,
-    workout3,
-    workout4,
-    workout5,
-    wrench,
-    write,
-  ];
+  List<AssetGenImage> get values => [counter, duration, streak, water];
 }
 
 class $AssetsImagesNewSvgGen {
@@ -988,6 +562,9 @@ class $AssetsImagesSvgGen {
 class $AssetsImagesWidgetImagesGen {
   const $AssetsImagesWidgetImagesGen();
 
+  /// File path: assets/images/widget-images/apple-health.svg
+  String get appleHealth => 'assets/images/widget-images/apple-health.svg';
+
   /// File path: assets/images/widget-images/coffee.png
   AssetGenImage get coffee =>
       const AssetGenImage('assets/images/widget-images/coffee.png');
@@ -995,6 +572,10 @@ class $AssetsImagesWidgetImagesGen {
   /// File path: assets/images/widget-images/gem.png
   AssetGenImage get gem =>
       const AssetGenImage('assets/images/widget-images/gem.png');
+
+  /// File path: assets/images/widget-images/health-connect.png
+  AssetGenImage get healthConnect =>
+      const AssetGenImage('assets/images/widget-images/health-connect.png');
 
   /// File path: assets/images/widget-images/love-bubble.png
   AssetGenImage get loveBubble =>
@@ -1005,7 +586,14 @@ class $AssetsImagesWidgetImagesGen {
       const AssetGenImage('assets/images/widget-images/premium-widget.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [coffee, gem, loveBubble, premiumWidget];
+  List<dynamic> get values => [
+    appleHealth,
+    coffee,
+    gem,
+    healthConnect,
+    loveBubble,
+    premiumWidget,
+  ];
 }
 
 class $AssetsImagesNewSvgLanguagesGen {

@@ -61,6 +61,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       premadeHabitType: fields[38] as PremadeHabitType?,
       trackingType: fields[39] as HabitTrackingType?,
       healthMetric: fields[47] as HealthMetricType?,
+      healthWorkoutFilter: fields[48] as HealthWorkoutType?,
+      toleranceMinutes: fields[49] == null ? 0 : (fields[49] as num).toInt(),
+      healthSessions: (fields[50] as List?)?.cast<HealthSessionDetail>(),
       isDeleted: fields[24] as bool?,
       isPaused: fields[43] as bool?,
       deletedAt: fields[46] as DateTime?,
@@ -73,7 +76,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(45)
+      ..writeByte(48)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -163,7 +166,13 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(46)
       ..write(obj.deletedAt)
       ..writeByte(47)
-      ..write(obj.healthMetric);
+      ..write(obj.healthMetric)
+      ..writeByte(48)
+      ..write(obj.healthWorkoutFilter)
+      ..writeByte(49)
+      ..write(obj.toleranceMinutes)
+      ..writeByte(50)
+      ..write(obj.healthSessions);
   }
 
   @override

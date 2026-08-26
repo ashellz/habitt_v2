@@ -73,6 +73,31 @@ opened, not the instant new Health data appears.
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
 
+## Workouts/mindfulness tracking mode
+
+`workouts` and `mindfulness` are the only two metrics where a habit's own
+`trackingType` can diverge from the metric's fixed default (`workouts`/
+`mindfulness` both default to `duration`, but the habit editor lets the user
+choose Amount instead — a session count — for either one, for any workout
+filter including "Any"). `HealthMetricTypeMapping.supportsTrackingChoice`
+marks these two metrics; `HealthService.fetchValueForDay` already reads the
+right raw value for either mode (session count in Amount mode, summed
+seconds in Duration mode), and `HabitProvider.syncHabitFromHealth` routes
+that value into `amountCompleted` or `durationCompleted` by the *habit's*
+`trackingType`, not the metric's fixed one — this is the one place that
+must read `habit.trackingType` instead of `metric.trackingType` for these
+two metrics; every other metric keeps using the fixed mapping.
+
+A workout/mindfulness habit with no target set (`amount == 0` in Amount
+mode, or `duration == 0` in Duration mode) is a valid, intentional state —
+it means "any logged session counts," not "always complete." Because the
+normal `amountCompleted/durationCompleted >= target` comparison is
+vacuously true against a target of 0, `syncHabitFromHealth` overrides
+`habit.completed` in that case to `sessions.isNotEmpty` instead — complete
+only if at least one matching session was logged that day, using the same
+`sessions` list already fetched via `fetchSessionsForDay` for that sync
+pass (no extra Health read).
+
 ## Platform differences
 
 Health Connect (Android) has no mindfulness record type and no direct

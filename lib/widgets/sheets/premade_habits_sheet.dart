@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
@@ -88,8 +89,43 @@ class PremadeHabitsSheet extends StatelessWidget {
               ...PremadeHabitCatalog.sections.map(
                 (section) => _buildCategorySection(context, section),
               ),
+              _requestHabitFooter(context, cp, l10n),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _requestHabitFooter(
+    BuildContext context,
+    ColorProvider cp,
+    AppLocalizations l10n,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Center(
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 4,
+          children: [
+            Text(
+              l10n.premadeRequestHabitPrompt,
+              style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+            ),
+            GestureDetector(
+              onTap: () => FeedbackService.sendHabitRequest(),
+              child: Text(
+                l10n.premadeRequestHabitLink,
+                style: TextStyle(
+                  color: cp.main,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

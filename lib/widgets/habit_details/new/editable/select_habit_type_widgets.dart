@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/dual_option_selector.dart';
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_amount.dart';
@@ -158,6 +159,15 @@ class _SelectHabitTypeWidgetsState extends State<SelectHabitTypeWidgets> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final selectedValue = selectedType == HabitType.none ? null : selectedType;
+    // Every bit of target-value entry for a Health-linked habit lives inside
+    // HealthWidget instead — this widget is purely for plain, non-Health
+    // habits, so it hides entirely the moment any Health metric is linked.
+    final healthMetric = context.select<StateProvider, HealthMetricType?>(
+      (sp) => sp.selectedHealthMetric,
+    );
+    if (healthMetric != null) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       spacing: 10,

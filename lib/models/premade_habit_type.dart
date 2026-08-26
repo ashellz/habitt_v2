@@ -1,4 +1,5 @@
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/util/get_capitalized_first.dart';
 
 enum PremadeHabitType {
   goToBedEarly,
@@ -18,6 +19,20 @@ enum PremadeHabitType {
   research,
   productivitySession,
   read,
+  workoutWalking,
+  workoutRunning,
+  workoutCycling,
+  workoutSwimming,
+  workoutHiking,
+  workoutFlexibility,
+  workoutDancing,
+  workoutRowing,
+  workoutCombined,
+  mindfulness,
+  sleepTime,
+  activeCalories,
+  totalCalories,
+  steps,
 }
 
 extension PremadeHabitTypeLabel on PremadeHabitType {
@@ -57,6 +72,34 @@ extension PremadeHabitTypeLabel on PremadeHabitType {
         return 'Productivity session';
       case PremadeHabitType.read:
         return 'Read';
+      case PremadeHabitType.workoutWalking:
+        return 'Walking';
+      case PremadeHabitType.workoutRunning:
+        return 'Running';
+      case PremadeHabitType.workoutCycling:
+        return 'Cycling';
+      case PremadeHabitType.workoutSwimming:
+        return 'Swimming';
+      case PremadeHabitType.workoutHiking:
+        return 'Hiking';
+      case PremadeHabitType.workoutFlexibility:
+        return 'Flexibility';
+      case PremadeHabitType.workoutDancing:
+        return 'Dancing';
+      case PremadeHabitType.workoutRowing:
+        return 'Rowing';
+      case PremadeHabitType.workoutCombined:
+        return 'Workout';
+      case PremadeHabitType.mindfulness:
+        return 'Mindfulness';
+      case PremadeHabitType.sleepTime:
+        return 'Sleep time';
+      case PremadeHabitType.activeCalories:
+        return 'Active calories';
+      case PremadeHabitType.totalCalories:
+        return 'Total calories';
+      case PremadeHabitType.steps:
+        return 'Steps';
     }
   }
 }
@@ -98,6 +141,34 @@ extension PremadeHabitTypeLocalizedName on PremadeHabitType {
         return l10n.premadeHabitProductivitySession;
       case PremadeHabitType.read:
         return l10n.premadeHabitRead;
+      case PremadeHabitType.workoutWalking:
+        return l10n.premadeHabitWorkoutWalking;
+      case PremadeHabitType.workoutRunning:
+        return l10n.premadeHabitWorkoutRunning;
+      case PremadeHabitType.workoutCycling:
+        return l10n.premadeHabitWorkoutCycling;
+      case PremadeHabitType.workoutSwimming:
+        return l10n.premadeHabitWorkoutSwimming;
+      case PremadeHabitType.workoutHiking:
+        return l10n.premadeHabitWorkoutHiking;
+      case PremadeHabitType.workoutFlexibility:
+        return l10n.premadeHabitWorkoutFlexibility;
+      case PremadeHabitType.workoutDancing:
+        return l10n.premadeHabitWorkoutDancing;
+      case PremadeHabitType.workoutRowing:
+        return l10n.premadeHabitWorkoutRowing;
+      case PremadeHabitType.workoutCombined:
+        return l10n.premadeHabitWorkoutCombined;
+      case PremadeHabitType.mindfulness:
+        return l10n.premadeHabitMindfulness;
+      case PremadeHabitType.sleepTime:
+        return l10n.premadeHabitSleepTime;
+      case PremadeHabitType.activeCalories:
+        return l10n.premadeHabitActiveCalories;
+      case PremadeHabitType.totalCalories:
+        return l10n.premadeHabitTotalCalories;
+      case PremadeHabitType.steps:
+        return capitalizeFirst(l10n.steps);
     }
   }
 }
@@ -143,6 +214,34 @@ extension PremadeHabitTypeArbSuffix on PremadeHabitType {
         return 'ProductivitySession';
       case PremadeHabitType.read:
         return 'Read';
+      case PremadeHabitType.workoutWalking:
+        return 'WorkoutWalking';
+      case PremadeHabitType.workoutRunning:
+        return 'WorkoutRunning';
+      case PremadeHabitType.workoutCycling:
+        return 'WorkoutCycling';
+      case PremadeHabitType.workoutSwimming:
+        return 'WorkoutSwimming';
+      case PremadeHabitType.workoutHiking:
+        return 'WorkoutHiking';
+      case PremadeHabitType.workoutFlexibility:
+        return 'WorkoutFlexibility';
+      case PremadeHabitType.workoutDancing:
+        return 'WorkoutDancing';
+      case PremadeHabitType.workoutRowing:
+        return 'WorkoutRowing';
+      case PremadeHabitType.workoutCombined:
+        return 'WorkoutCombined';
+      case PremadeHabitType.mindfulness:
+        return 'Mindfulness';
+      case PremadeHabitType.sleepTime:
+        return 'SleepTime';
+      case PremadeHabitType.activeCalories:
+        return 'ActiveCalories';
+      case PremadeHabitType.totalCalories:
+        return 'TotalCalories';
+      case PremadeHabitType.steps:
+        return 'Steps';
     }
   }
 }

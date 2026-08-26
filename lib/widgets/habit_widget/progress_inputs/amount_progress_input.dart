@@ -13,11 +13,13 @@ class AmountProgressInput extends StatefulWidget {
     required this.amount,
     this.amountCompleted,
     this.minValue = 0,
+    this.color,
   });
 
   final int amount;
   final int? amountCompleted;
   final int minValue;
+  final Color? color;
 
   @override
   State<AmountProgressInput> createState() => _AmountProgressInputState();
@@ -99,6 +101,7 @@ class _AmountProgressInputState extends State<AmountProgressInput> {
       height: 72,
       width: double.infinity,
       child: IncrementDecrementTextField(
+        color: widget.color,
         fontWeight: FontWeight.w500,
         title: loc.amount,
         controller: controller,

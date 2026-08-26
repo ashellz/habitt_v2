@@ -128,6 +128,23 @@ class NotificationTemplateCatalog {
         return const NotificationTemplateToken(
           key: NotificationTemplateKey.premadeRead,
         );
+      case PremadeHabitType.workoutWalking:
+      case PremadeHabitType.workoutRunning:
+      case PremadeHabitType.workoutCycling:
+      case PremadeHabitType.workoutSwimming:
+      case PremadeHabitType.workoutHiking:
+      case PremadeHabitType.workoutFlexibility:
+      case PremadeHabitType.workoutDancing:
+      case PremadeHabitType.workoutRowing:
+      case PremadeHabitType.workoutCombined:
+      case PremadeHabitType.mindfulness:
+      case PremadeHabitType.sleepTime:
+      case PremadeHabitType.activeCalories:
+      case PremadeHabitType.totalCalories:
+      case PremadeHabitType.steps:
+        return const NotificationTemplateToken(
+          key: NotificationTemplateKey.fallbackGeneric,
+        );
     }
   }
 

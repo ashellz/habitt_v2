@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
 class EnterHabitAmount extends StatelessWidget {
-  const EnterHabitAmount({super.key});
+  const EnterHabitAmount({super.key, this.color});
+
+  final Color? color;
 
   Future<void> _showAmountLabelPicker(
     BuildContext context, {
@@ -112,10 +114,15 @@ class EnterHabitAmount extends StatelessWidget {
       spacing: 10,
       children: [
         Expanded(
-          child: AmountProgressInput(amount: sp.habitAmount, minValue: 1),
+          child: AmountProgressInput(
+            amount: sp.habitAmount,
+            minValue: 1,
+            color: color,
+          ),
         ),
         Expanded(
           child: NewDefaultTextField(
+            color: color,
             controller: sp.habitAmountLabelController,
             title: loc.amountName,
             fontWeight: FontWeight.w500,

@@ -2,6 +2,8 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_session_detail.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/util/amount_label_preset.dart';
@@ -99,6 +101,70 @@ class HealthMetricTypeAdapter extends TypeAdapter<HealthMetricType> {
   @override
   void write(BinaryWriter writer, HealthMetricType obj) {
     writer.writeByte(obj.index);
+  }
+}
+
+class HealthWorkoutTypeAdapter extends TypeAdapter<HealthWorkoutType> {
+  @override
+  int get typeId => 9;
+
+  @override
+  HealthWorkoutType read(BinaryReader reader) {
+    final index = reader.readByte();
+    if (index < 0 || index >= HealthWorkoutType.values.length) {
+      return HealthWorkoutType.other;
+    }
+    return HealthWorkoutType.values[index];
+  }
+
+  @override
+  void write(BinaryWriter writer, HealthWorkoutType obj) {
+    writer.writeByte(obj.index);
+  }
+}
+
+class HealthSessionDetailAdapter extends TypeAdapter<HealthSessionDetail> {
+  @override
+  int get typeId => 10;
+
+  @override
+  HealthSessionDetail read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+
+    final workoutTypeIndex = (fields[2] as num?)?.toInt();
+    HealthWorkoutType? workoutType;
+    if (workoutTypeIndex != null &&
+        workoutTypeIndex >= 0 &&
+        workoutTypeIndex < HealthWorkoutType.values.length) {
+      workoutType = HealthWorkoutType.values[workoutTypeIndex];
+    }
+
+    return HealthSessionDetail(
+      start: DateTime.fromMillisecondsSinceEpoch(
+        (fields[0] as num?)?.toInt() ?? 0,
+        isUtc: true,
+      ),
+      end: DateTime.fromMillisecondsSinceEpoch(
+        (fields[1] as num?)?.toInt() ?? 0,
+        isUtc: true,
+      ),
+      workoutType: workoutType,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HealthSessionDetail obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.start.toUtc().millisecondsSinceEpoch)
+      ..writeByte(1)
+      ..write(obj.end.toUtc().millisecondsSinceEpoch)
+      ..writeByte(2)
+      ..write(obj.workoutType?.index);
   }
 }
 

@@ -1,6 +1,7 @@
+import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
-import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 
 class PremadeHabitCatalog {
@@ -13,9 +14,11 @@ class PremadeHabitCatalog {
           name: 'Go to bed early',
           iconPath: '🛌',
           categoryId: 4,
-          amount: 0,
+          amount: 22 * 60, // target bedtime, minutes-since-midnight
           durationMinutes: 0,
           notificationTimesMinutesOfDay: [22 * 60],
+          defaultHealthMetric: HealthMetricType.bedtime,
+          toleranceMinutes: 30,
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.brushTeeth,
@@ -40,9 +43,11 @@ class PremadeHabitCatalog {
           name: 'Wake up early',
           iconPath: '⏰',
           categoryId: 2,
-          amount: 0,
+          amount: 7 * 60, // target wake time, minutes-since-midnight
           durationMinutes: 0,
           notificationTimesMinutesOfDay: [7 * 60],
+          defaultHealthMetric: HealthMetricType.wakeTime,
+          toleranceMinutes: 30,
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.shower,
@@ -53,43 +58,66 @@ class PremadeHabitCatalog {
           durationMinutes: 10,
           notificationTimesMinutesOfDay: [(7 * 60) + 5],
         ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.mindfulness,
+          name: 'Mindfulness',
+          iconPath: '🧠',
+          categoryId: 4,
+          amount: 0,
+          durationMinutes: 10,
+          defaultHealthMetric: HealthMetricType.mindfulness,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.sleepTime,
+          name: 'Sleep time',
+          iconPath: '😴',
+          categoryId: 4,
+          amount: 8 * 60, // target sleep duration, minutes
+          durationMinutes: 0,
+          defaultHealthMetric: HealthMetricType.sleep,
+        ),
       ],
     ),
     PremadeHabitCategorySection(
       title: 'Health & Fitness',
       habits: [
         PremadeHabitTemplate(
-          type: PremadeHabitType.running,
-          name: 'Running',
-          iconPath: '🏃',
-          categoryId: 1,
-          amount: 3,
-          amountLabelPreset: AmountLabelPreset.km,
-          durationMinutes: 15,
-          scheduleType: ScheduleType.weekly,
-          weeklyTarget: 3,
-          notificationTimesMinutesOfDay: [17 * 60],
-        ),
-        PremadeHabitTemplate(
-          type: PremadeHabitType.walk,
-          name: 'Walk',
-          iconPath: '🚶',
-          categoryId: 1,
-          amount: 1,
-          amountLabelPreset: AmountLabelPreset.km,
-          durationMinutes: 15,
-          notificationTimesMinutesOfDay: [15 * 60],
-        ),
-        PremadeHabitTemplate(
-          type: PremadeHabitType.gym,
-          name: 'Gym',
-          iconPath: '🏋️',
+          type: PremadeHabitType.workoutCombined,
+          name: 'Workout',
+          iconPath: '💪',
           categoryId: 1,
           amount: 0,
-          durationMinutes: 60,
-          scheduleType: ScheduleType.weekly,
-          weeklyTarget: 3,
-          notificationTimesMinutesOfDay: [18 * 60],
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.activeCalories,
+          name: 'Active calories',
+          iconPath: '🔥',
+          categoryId: 1,
+          amount: 230,
+          amountLabelPreset: AmountLabelPreset.calories,
+          durationMinutes: 0,
+          defaultHealthMetric: HealthMetricType.activeCalories,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.totalCalories,
+          name: 'Total calories',
+          iconPath: '🍽️',
+          categoryId: 1,
+          amount: 1700,
+          amountLabelPreset: AmountLabelPreset.calories,
+          durationMinutes: 0,
+          defaultHealthMetric: HealthMetricType.totalCalories,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.steps,
+          name: 'Steps',
+          iconPath: '👟',
+          categoryId: 1,
+          amount: 6000,
+          durationMinutes: 0,
+          defaultHealthMetric: HealthMetricType.steps,
         ),
         PremadeHabitTemplate(
           type: PremadeHabitType.nutrition,
@@ -119,6 +147,91 @@ class PremadeHabitCatalog {
           durationMinutes: 0,
           amountLabelPreset: AmountLabelPreset.dl,
           notificationTimesMinutesOfDay: [9 * 60, 14 * 60, 19 * 60],
+        ),
+      ],
+    ),
+    PremadeHabitCategorySection(
+      title: 'Workouts',
+      habits: [
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutWalking,
+          name: 'Walking',
+          iconPath: '🚶',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.walking,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutRunning,
+          name: 'Running',
+          iconPath: '🏃',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.running,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutCycling,
+          name: 'Cycling',
+          iconPath: '🚴',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.cycling,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutSwimming,
+          name: 'Swimming',
+          iconPath: '🏊',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.swimming,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutHiking,
+          name: 'Hiking',
+          iconPath: '🥾',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 60,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.hiking,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutFlexibility,
+          name: 'Flexibility',
+          iconPath: '🧘',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 20,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.flexibility,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutDancing,
+          name: 'Dancing',
+          iconPath: '💃',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.dancing,
+        ),
+        PremadeHabitTemplate(
+          type: PremadeHabitType.workoutRowing,
+          name: 'Rowing',
+          iconPath: '🚣',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.workouts,
+          defaultWorkoutFilter: HealthWorkoutType.rowing,
         ),
       ],
     ),
@@ -160,7 +273,6 @@ class PremadeHabitCatalog {
           amount: 5,
           amountLabelPreset: AmountLabelPreset.pages,
           durationMinutes: 0,
-          scheduleType: ScheduleType.daily,
           notificationTimesMinutesOfDay: [(7 * 60) + 30, 17 * 60],
         ),
         PremadeHabitTemplate(
@@ -180,6 +292,23 @@ class PremadeHabitCatalog {
     for (final section in sections) {
       for (final habit in section.habits) {
         if (habit.type == type) {
+          return habit;
+        }
+      }
+    }
+    return null;
+  }
+
+  static PremadeHabitTemplate? byHealthConfig(
+    HealthMetricType metric,
+    HealthWorkoutType? workoutFilter,
+  ) {
+    for (final section in sections) {
+      for (final habit in section.habits) {
+        if (habit.defaultHealthMetric != metric) continue;
+        if (metric == HealthMetricType.workouts) {
+          if (habit.defaultWorkoutFilter == workoutFilter) return habit;
+        } else {
           return habit;
         }
       }

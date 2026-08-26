@@ -14,6 +14,7 @@ class DualOptionSelector<T> extends StatefulWidget {
     this.allowDeselect = true,
     this.showDeselectHint = false,
     this.alignDuration = const Duration(milliseconds: 250),
+    this.color,
   });
 
   final String firstLabel;
@@ -25,6 +26,7 @@ class DualOptionSelector<T> extends StatefulWidget {
   final bool allowDeselect;
   final bool showDeselectHint;
   final Duration alignDuration;
+  final Color? color;
 
   @override
   State<DualOptionSelector<T>> createState() => _DualOptionSelectorState<T>();
@@ -56,8 +58,9 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
 
   Alignment _getIndicatorAlignment() {
     if (widget.selectedValue == widget.firstValue) return Alignment.centerLeft;
-    if (widget.selectedValue == widget.secondValue)
+    if (widget.selectedValue == widget.secondValue) {
       return Alignment.centerRight;
+    }
     return _lastSelectedIndex == 0
         ? Alignment.centerLeft
         : Alignment.centerRight;
@@ -102,7 +105,7 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
       height: 46,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: cp.field,
+        color: widget.color ?? cp.field,
         borderRadius: BorderRadius.circular(100),
       ),
       child: LayoutBuilder(

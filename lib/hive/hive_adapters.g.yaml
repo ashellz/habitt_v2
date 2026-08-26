@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 48
+    nextIndex: 51
     fields:
       id:
         index: 0
@@ -97,6 +97,12 @@ types:
         index: 46
       healthMetric:
         index: 47
+      healthWorkoutFilter:
+        index: 48
+      toleranceMinutes:
+        index: 49
+      healthSessions:
+        index: 50
   Day:
     typeId: 1
     nextIndex: 4

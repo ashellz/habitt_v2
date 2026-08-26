@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_session_detail.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -13,7 +15,16 @@ import 'package:habitt/widgets/habit_details/select_habit_time_page/select_habit
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-enum HabitTrackingType { amount, duration }
+enum HabitTrackingType {
+  amount,
+  duration,
+  // A single point in time, minutes-since-midnight, stored in amount/
+  // amountCompleted like an amount goal — but "earlier is better":
+  // completed = amountCompleted <= amount + toleranceMinutes.
+  // amount = target (bedtime goal - 10pm = 1320),
+  // amountCompleted = actual (bedtime logged - 10:15pm = 1335)
+  timeOfDay,
+}
 
 class Habit extends HiveObject {
   final int id;
@@ -58,6 +69,11 @@ class Habit extends HiveObject {
   HabitTrackingType? trackingType; // amount or duration
   HealthMetricType?
   healthMetric; // if set, progress is synced from this Health metric
+  HealthWorkoutType?
+  healthWorkoutFilter; // narrows healthMetric == workouts to one workout type; null = any (all)
+  int toleranceMinutes; // forgiveness for amount/timeOfDay goals — 15m/30m/60m presets; 0 = none
+  List<HealthSessionDetail>
+  healthSessions; // individual workout or sleep sessions Health returned in a day
   bool? isDeleted;
   bool? isPaused;
   DateTime? deletedAt;
@@ -104,6 +120,9 @@ class Habit extends HiveObject {
     this.premadeHabitType,
     this.trackingType,
     this.healthMetric,
+    this.healthWorkoutFilter,
+    this.toleranceMinutes = 0, // no forgiveness unless explicitly set
+    List<HealthSessionDetail>? healthSessions,
     this.isDeleted,
     this.isPaused,
     this.deletedAt,
@@ -121,12 +140,14 @@ class Habit extends HiveObject {
                minutesOfDay: 8 * 60,
              ),
            ],
+       healthSessions = healthSessions ?? [],
        createdAt = (createdAt ?? DateTime.now()).toUtc(),
        timestamps = timestamps ?? {},
        localizedNames = localizedNames ?? {} {
     trackingType ??= _inferTrackingType(
-      amount: this.amount,
-      duration: this.duration,
+      amount: amount,
+      duration: duration,
+      healthMetric: healthMetric,
     );
     this.timestamps['createdAt'] ??= this.createdAt;
   }
@@ -205,6 +226,9 @@ class Habit extends HiveObject {
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       healthMetric: healthMetric,
+      healthWorkoutFilter: healthWorkoutFilter,
+      toleranceMinutes: toleranceMinutes,
+      healthSessions: healthSessions.map((s) => s.copy()).toList(),
       isDeleted: isDeleted,
       isPaused: isPaused,
       deletedAt: deletedAt,
@@ -254,6 +278,9 @@ class Habit extends HiveObject {
       premadeHabitType: premadeHabitType,
       trackingType: trackingType,
       healthMetric: healthMetric,
+      healthWorkoutFilter: healthWorkoutFilter,
+      toleranceMinutes: toleranceMinutes,
+      healthSessions: const [],
       isDeleted: isDeleted,
       isPaused: isPaused,
       deletedAt: deletedAt,
@@ -269,6 +296,7 @@ class Habit extends HiveObject {
     final trackingTypeChanged = trackingType != habit.trackingType;
     final amountGoalChanged = amount != habit.amount;
     final durationGoalChanged = duration != habit.duration;
+    final toleranceChanged = toleranceMinutes != habit.toleranceMinutes;
     final newTrackingType = habit.trackingType;
 
     if (name != habit.name) {
@@ -420,6 +448,14 @@ class Habit extends HiveObject {
       healthMetric = habit.healthMetric;
       timestamps['healthMetric'] = now;
     }
+    if (healthWorkoutFilter != habit.healthWorkoutFilter) {
+      healthWorkoutFilter = habit.healthWorkoutFilter;
+      timestamps['healthWorkoutFilter'] = now;
+    }
+    if (toleranceMinutes != habit.toleranceMinutes) {
+      toleranceMinutes = habit.toleranceMinutes;
+      timestamps['toleranceMinutes'] = now;
+    }
     if (isDeleted != habit.isDeleted) {
       isDeleted = habit.isDeleted;
       deletedAt = habit.isDeleted == true ? now : null;
@@ -457,6 +493,13 @@ class Habit extends HiveObject {
     } else if (newTrackingType == HabitTrackingType.amount &&
         amountGoalChanged) {
       final shouldBeCompleted = amountCompleted >= amount;
+      if (completed != shouldBeCompleted) {
+        completed = shouldBeCompleted;
+        timestamps['completed'] = now;
+      }
+    } else if (newTrackingType == HabitTrackingType.timeOfDay &&
+        (amountGoalChanged || toleranceChanged)) {
+      final shouldBeCompleted = amountCompleted <= amount + toleranceMinutes;
       if (completed != shouldBeCompleted) {
         completed = shouldBeCompleted;
         timestamps['completed'] = now;
@@ -507,6 +550,9 @@ class Habit extends HiveObject {
     premadeHabitType = merged.premadeHabitType;
     trackingType = merged.trackingType;
     healthMetric = merged.healthMetric;
+    healthWorkoutFilter = merged.healthWorkoutFilter;
+    toleranceMinutes = merged.toleranceMinutes;
+    healthSessions = merged.healthSessions.map((s) => s.copy()).toList();
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
     deletedAt = merged.deletedAt;
@@ -563,9 +609,14 @@ class Habit extends HiveObject {
     timestamps['skipped'] = DateTime.now().toUtc();
   }
 
+  /// completed = amountCompleted >= amount - toleranceMinutes. toleranceMinutes
+  /// defaults to 0 for every habit that doesn't explicitly set one (see the
+  /// Habit constructor), so this reduces to the plain `>=` comparison for
+  /// ordinary amount habits — the tolerance is currently only ever set by
+  /// the `sleep` Health metric.
   void updateHabitAmountCompleted(int amountCompleted) {
     final bool wasCompleted = completed;
-    if (amountCompleted >= amount) {
+    if (amountCompleted >= amount - toleranceMinutes) {
       completed = true;
     } else if (completed) {
       completed = false;
@@ -591,14 +642,36 @@ class Habit extends HiveObject {
     timestamps['durationCompleted'] = DateTime.now().toUtc();
   }
 
+  /// For [HabitTrackingType.timeOfDay] habits (bedtime/wake-time)
+  /// Unlike amount/duration, earlier is better: completed if [minutesOfDay] is at
+  /// or before the target plus [toleranceMinutes]
+  void updateHabitTimeOfDayCompleted(int minutesOfDay) {
+    final bool wasCompleted = completed;
+    // minutesOfDay is minutes since midnight based on real health data
+    // eg. 4am is 4*60 = 240
+
+    // if minutesOfDay (22pm) is smaller or equal to amount (22pm) + tolerance (30m) = 22:30pm, then completed = true
+    // if for example minutesOfDay is 23:00pm (1380) and amount is 22:00pm (1320) and tolerance is 30m, then completed = false
+    if (minutesOfDay <= amount + toleranceMinutes) {
+      completed = true;
+    } else if (completed) {
+      completed = false;
+    }
+    if (completed != wasCompleted) {
+      timestamps['completed'] = DateTime.now().toUtc();
+    }
+    amountCompleted = minutesOfDay;
+    timestamps['amountCompleted'] = DateTime.now().toUtc();
+  }
+
   Future<void> resetCompletion() async {
     completed = false;
     skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
-    // Do NOT update timestamps — this is a local day-boundary reset, not a
-    // user action. Updating timestamps here would cause the reset to win over
-    // genuine completions from another device when the merge runs later.
+    healthSessions = [];
+    // not updating timestamp because this is an auto reset, not user action
+    // updating timestamps would cause bad syncing
   }
 
   Future<void> resetScheduleCounters({
@@ -781,6 +854,9 @@ class Habit extends HiveObject {
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'trackingType': _serializeTrackingType(trackingType),
       'healthMetric': _serializeHealthMetricType(healthMetric),
+      'healthWorkoutFilter': healthWorkoutFilter?.name,
+      'toleranceMinutes': toleranceMinutes,
+      'healthSessions': healthSessions.map((s) => s.toMap()).toList(),
       'isDeleted': isDeleted,
       'isPaused': isPaused,
       'deletedAt': deletedAt?.toIso8601String(),
@@ -803,6 +879,10 @@ class Habit extends HiveObject {
         }
       });
     }
+
+    final parsedHealthMetric = _deserializeHealthMetricType(
+      m['healthMetric']?.toString(),
+    );
 
     return Habit(
       id: m['id'] as int,
@@ -854,10 +934,14 @@ class Habit extends HiveObject {
           _inferTrackingType(
             amount: (m['amount'] as int?) ?? 0,
             duration: (m['duration'] as int?) ?? 0,
+            healthMetric: parsedHealthMetric,
           ),
-      healthMetric: _deserializeHealthMetricType(
-        m['healthMetric']?.toString(),
+      healthMetric: parsedHealthMetric,
+      healthWorkoutFilter: _deserializeHealthWorkoutType(
+        m['healthWorkoutFilter']?.toString(),
       ),
+      toleranceMinutes: (m['toleranceMinutes'] as num?)?.toInt() ?? 0,
+      healthSessions: _parseHealthSessions(m['healthSessions']),
       isDeleted: m['isDeleted'] as bool?,
       isPaused: m['isPaused'] as bool?,
       deletedAt: DateTime.tryParse(m['deletedAt']?.toString() ?? '')?.toUtc(),
@@ -884,6 +968,8 @@ class Habit extends HiveObject {
     skipped = source.skipped;
     amountCompleted = source.amountCompleted;
     durationCompleted = source.durationCompleted;
+    healthSessions = source.healthSessions.map((s) => s.copy()).toList();
+
     for (final key in dayStateKeys) {
       final ts = source.timestamps[key];
       if (ts != null) {
@@ -902,6 +988,7 @@ class Habit extends HiveObject {
     skipped = false;
     amountCompleted = 0;
     durationCompleted = 0;
+    healthSessions = [];
     for (final key in dayStateKeys) {
       timestamps.remove(key);
     }
@@ -1015,6 +1102,13 @@ class Habit extends HiveObject {
         durationCompleted,
         incoming.durationCompleted,
       ),
+      // No dedicated timestamp key, uses the same tuple decision as
+      // amountCompleted/durationCompleted
+      healthSessions: pickDayState(
+        'healthSessions',
+        healthSessions.map((s) => s.copy()).toList(),
+        incoming.healthSessions.map((s) => s.copy()).toList(),
+      ),
       streak: resolve('streak', streak, incoming.streak),
       longestStreak: resolve(
         'longestStreak',
@@ -1119,6 +1213,16 @@ class Habit extends HiveObject {
         'healthMetric',
         healthMetric,
         incoming.healthMetric,
+      ),
+      healthWorkoutFilter: resolve(
+        'healthWorkoutFilter',
+        healthWorkoutFilter,
+        incoming.healthWorkoutFilter,
+      ),
+      toleranceMinutes: resolve(
+        'toleranceMinutes',
+        toleranceMinutes,
+        incoming.toleranceMinutes,
       ),
       isDeleted: resolve('isDeleted', isDeleted, incoming.isDeleted),
       // Resolved under the same 'isDeleted' timestamp so it always tracks
@@ -1262,6 +1366,17 @@ class Habit extends HiveObject {
     return parsed;
   }
 
+  static List<HealthSessionDetail> _parseHealthSessions(dynamic value) {
+    if (value is! List) return [];
+    return value
+        .whereType<Map>()
+        .map(
+          (entry) =>
+              HealthSessionDetail.fromMap(Map<String, dynamic>.from(entry)),
+        )
+        .toList();
+  }
+
   /// Serialize ScheduleType to String for Hive storage
   static String _serializeScheduleType(ScheduleType scheduleType) {
     return scheduleType.name;
@@ -1315,12 +1430,36 @@ class Habit extends HiveObject {
     return type?.name;
   }
 
+  // Backup files (.habitt/.habittd) serialize this enum by name — a backup
+  // written before exerciseMinutes/mindfulMinutes were renamed to workouts/
+  // mindfulness would otherwise silently unlink the habit from Health on
+  // restore, since no current member's `.name` would match the old string.
+  static const Map<String, String> _legacyHealthMetricNames = {
+    'exerciseMinutes': 'workouts',
+    'mindfulMinutes': 'mindfulness',
+  };
+
   static HealthMetricType? _deserializeHealthMetricType(String? value) {
     if (value == null || value.isEmpty) {
       return null;
     }
 
+    final resolved = _legacyHealthMetricNames[value] ?? value;
     for (final type in HealthMetricType.values) {
+      if (type.name == resolved) {
+        return type;
+      }
+    }
+
+    return null;
+  }
+
+  static HealthWorkoutType? _deserializeHealthWorkoutType(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    for (final type in HealthWorkoutType.values) {
       if (type.name == value) {
         return type;
       }
@@ -1332,7 +1471,16 @@ class Habit extends HiveObject {
   static HabitTrackingType? _inferTrackingType({
     required int amount,
     required int duration,
+    HealthMetricType? healthMetric,
   }) {
+    // amount/duration alone can't distinguish an amount goal from a
+    // timeOfDay target (both just store a positive int in `amount`) — the
+    // only reliable signal is the linked Health metric, so check it first.
+    if (healthMetric == HealthMetricType.bedtime ||
+        healthMetric == HealthMetricType.wakeTime) {
+      return HabitTrackingType.timeOfDay;
+    }
+
     if (amount >= 1) {
       return HabitTrackingType.amount;
     }

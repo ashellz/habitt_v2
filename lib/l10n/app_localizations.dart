@@ -4828,22 +4828,28 @@ abstract class AppLocalizations {
   /// **'Restore this habit? Its streak will reflect any days it missed while deleted.'**
   String get restoreDeletedHabitConfirm;
 
-  /// No description provided for @healthSyncSectionTitle.
+  /// No description provided for @healthSyncSectionTitleApple.
   ///
   /// In en, this message translates to:
-  /// **'Sync from Health'**
-  String get healthSyncSectionTitle;
+  /// **'Sync with Apple Health'**
+  String get healthSyncSectionTitleApple;
+
+  /// No description provided for @healthSyncSectionTitleAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with Health Connect'**
+  String get healthSyncSectionTitleAndroid;
 
   /// No description provided for @healthSyncSectionDescApple.
   ///
   /// In en, this message translates to:
-  /// **'Update this habit\'s progress automatically from Apple Health each time you open Habitt.'**
+  /// **'Update this habit\'s progress automatically from Apple Health'**
   String get healthSyncSectionDescApple;
 
   /// No description provided for @healthSyncSectionDescAndroid.
   ///
   /// In en, this message translates to:
-  /// **'Update this habit\'s progress automatically from Health Connect each time you open Habitt.'**
+  /// **'Update this habit\'s progress automatically from Health Connect'**
   String get healthSyncSectionDescAndroid;
 
   /// No description provided for @healthMetricSteps.
@@ -4861,13 +4867,13 @@ abstract class AppLocalizations {
   /// No description provided for @healthMetricExerciseMinutes.
   ///
   /// In en, this message translates to:
-  /// **'Exercise minutes'**
+  /// **'Workout'**
   String get healthMetricExerciseMinutes;
 
   /// No description provided for @healthMetricMindfulMinutes.
   ///
   /// In en, this message translates to:
-  /// **'Mindful minutes'**
+  /// **'Mindfulness'**
   String get healthMetricMindfulMinutes;
 
   /// No description provided for @healthMetricActiveCalories.
@@ -4899,6 +4905,462 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'calories'**
   String get calories;
+
+  /// No description provided for @premadeSectionWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get premadeSectionWorkouts;
+
+  /// No description provided for @premadeHabitWorkoutWalking.
+  ///
+  /// In en, this message translates to:
+  /// **'Walking'**
+  String get premadeHabitWorkoutWalking;
+
+  /// No description provided for @premadeHabitWorkoutRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get premadeHabitWorkoutRunning;
+
+  /// No description provided for @premadeHabitWorkoutCycling.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycling'**
+  String get premadeHabitWorkoutCycling;
+
+  /// No description provided for @premadeHabitWorkoutSwimming.
+  ///
+  /// In en, this message translates to:
+  /// **'Swimming'**
+  String get premadeHabitWorkoutSwimming;
+
+  /// No description provided for @premadeHabitWorkoutHiking.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiking'**
+  String get premadeHabitWorkoutHiking;
+
+  /// No description provided for @premadeHabitWorkoutFlexibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Stretching'**
+  String get premadeHabitWorkoutFlexibility;
+
+  /// No description provided for @premadeHabitWorkoutDancing.
+  ///
+  /// In en, this message translates to:
+  /// **'Dancing'**
+  String get premadeHabitWorkoutDancing;
+
+  /// No description provided for @premadeHabitWorkoutRowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Rowing'**
+  String get premadeHabitWorkoutRowing;
+
+  /// No description provided for @premadeHabitWorkoutCombined.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get premadeHabitWorkoutCombined;
+
+  /// No description provided for @healthConnectedStatusApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to Apple Health'**
+  String get healthConnectedStatusApple;
+
+  /// No description provided for @healthConnectedStatusAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to Health Connect'**
+  String get healthConnectedStatusAndroid;
+
+  /// No description provided for @healthTrackByDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get healthTrackByDuration;
+
+  /// No description provided for @healthTrackByCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get healthTrackByCount;
+
+  /// No description provided for @healthTargetBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Target bedtime'**
+  String get healthTargetBedtime;
+
+  /// No description provided for @healthTargetWakeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Target wake time'**
+  String get healthTargetWakeTime;
+
+  /// No description provided for @healthToleranceLoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Loose'**
+  String get healthToleranceLoose;
+
+  /// No description provided for @healthToleranceRegular.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular'**
+  String get healthToleranceRegular;
+
+  /// No description provided for @healthToleranceStrict.
+  ///
+  /// In en, this message translates to:
+  /// **'Strict'**
+  String get healthToleranceStrict;
+
+  /// No description provided for @healthLastNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Last night'**
+  String get healthLastNight;
+
+  /// No description provided for @healthMetricPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what to sync'**
+  String get healthMetricPickerTitle;
+
+  /// No description provided for @premadeRequestHabitPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t see your habit?'**
+  String get premadeRequestHabitPrompt;
+
+  /// No description provided for @premadeRequestHabitLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest one'**
+  String get premadeRequestHabitLink;
+
+  /// No description provided for @habitRequestEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit Request'**
+  String get habitRequestEmailSubject;
+
+  /// No description provided for @healthToleranceMinutesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String healthToleranceMinutesValue(Object minutes);
+
+  /// No description provided for @healthToleranceHourValue.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get healthToleranceHourValue;
+
+  /// No description provided for @healthToleranceDescBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Going to bed earlier than your target is always fine. You can also go up to {duration} late and it still counts'**
+  String healthToleranceDescBedtime(Object duration);
+
+  /// No description provided for @healthToleranceDescWakeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Waking up earlier than your target is always fine. You can also wake up to {duration} late and it still counts'**
+  String healthToleranceDescWakeTime(Object duration);
+
+  /// No description provided for @healthToleranceDescSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleeping more than your target is always fine. You can also sleep up to {duration} less and it still counts'**
+  String healthToleranceDescSleep(Object duration);
+
+  /// No description provided for @healthMetricDescSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks your steps'**
+  String get healthMetricDescSteps;
+
+  /// No description provided for @healthMetricDescSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks your sleep time'**
+  String get healthMetricDescSleep;
+
+  /// No description provided for @healthMetricDescWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks all your workouts'**
+  String get healthMetricDescWorkouts;
+
+  /// No description provided for @healthMetricDescMindfulness.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks your mindfulness sessions'**
+  String get healthMetricDescMindfulness;
+
+  /// No description provided for @healthMetricDescActiveCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks your active calories burned'**
+  String get healthMetricDescActiveCalories;
+
+  /// No description provided for @healthMetricDescTotalCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks your total calories burned'**
+  String get healthMetricDescTotalCalories;
+
+  /// No description provided for @healthMetricDescBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks when you went to sleep'**
+  String get healthMetricDescBedtime;
+
+  /// No description provided for @healthMetricDescWakeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks when you woke up'**
+  String get healthMetricDescWakeTime;
+
+  /// No description provided for @premadeHabitMindfulness.
+  ///
+  /// In en, this message translates to:
+  /// **'Mindfulness'**
+  String get premadeHabitMindfulness;
+
+  /// No description provided for @premadeHabitSleepTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep time'**
+  String get premadeHabitSleepTime;
+
+  /// No description provided for @premadeHabitActiveCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Active calories'**
+  String get premadeHabitActiveCalories;
+
+  /// No description provided for @premadeHabitTotalCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Total calories'**
+  String get premadeHabitTotalCalories;
+
+  /// No description provided for @healthWorkoutTypePickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a workout type'**
+  String get healthWorkoutTypePickerTitle;
+
+  /// No description provided for @healthWorkoutFilterAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get healthWorkoutFilterAny;
+
+  /// No description provided for @healthWorkoutLabelAnySingular.
+  ///
+  /// In en, this message translates to:
+  /// **'workout'**
+  String get healthWorkoutLabelAnySingular;
+
+  /// No description provided for @healthWorkoutLabelAnyPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'workouts'**
+  String get healthWorkoutLabelAnyPlural;
+
+  /// No description provided for @healthWorkoutLabelOtherSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'workout'**
+  String get healthWorkoutLabelOtherSingular;
+
+  /// No description provided for @healthWorkoutLabelOtherPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'workouts'**
+  String get healthWorkoutLabelOtherPlural;
+
+  /// No description provided for @healthWorkoutLabelWalkingSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'walk'**
+  String get healthWorkoutLabelWalkingSingular;
+
+  /// No description provided for @healthWorkoutLabelWalkingPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'walks'**
+  String get healthWorkoutLabelWalkingPlural;
+
+  /// No description provided for @healthWorkoutLabelRunningSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'run'**
+  String get healthWorkoutLabelRunningSingular;
+
+  /// No description provided for @healthWorkoutLabelRunningPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'runs'**
+  String get healthWorkoutLabelRunningPlural;
+
+  /// No description provided for @healthWorkoutLabelCyclingSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'ride'**
+  String get healthWorkoutLabelCyclingSingular;
+
+  /// No description provided for @healthWorkoutLabelCyclingPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'rides'**
+  String get healthWorkoutLabelCyclingPlural;
+
+  /// No description provided for @healthWorkoutLabelSwimmingSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'swim'**
+  String get healthWorkoutLabelSwimmingSingular;
+
+  /// No description provided for @healthWorkoutLabelSwimmingPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'swims'**
+  String get healthWorkoutLabelSwimmingPlural;
+
+  /// No description provided for @healthWorkoutLabelHikingSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'hike'**
+  String get healthWorkoutLabelHikingSingular;
+
+  /// No description provided for @healthWorkoutLabelHikingPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'hikes'**
+  String get healthWorkoutLabelHikingPlural;
+
+  /// No description provided for @healthWorkoutLabelFlexibilitySingular.
+  ///
+  /// In en, this message translates to:
+  /// **'session'**
+  String get healthWorkoutLabelFlexibilitySingular;
+
+  /// No description provided for @healthWorkoutLabelFlexibilityPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'sessions'**
+  String get healthWorkoutLabelFlexibilityPlural;
+
+  /// No description provided for @healthWorkoutLabelDancingSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'dance'**
+  String get healthWorkoutLabelDancingSingular;
+
+  /// No description provided for @healthWorkoutLabelDancingPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'dances'**
+  String get healthWorkoutLabelDancingPlural;
+
+  /// No description provided for @healthWorkoutLabelRowingSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'row'**
+  String get healthWorkoutLabelRowingSingular;
+
+  /// No description provided for @healthWorkoutLabelRowingPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'rows'**
+  String get healthWorkoutLabelRowingPlural;
+
+  /// No description provided for @healthMindfulnessLabelSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'session'**
+  String get healthMindfulnessLabelSingular;
+
+  /// No description provided for @healthMindfulnessLabelPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'sessions'**
+  String get healthMindfulnessLabelPlural;
+
+  /// No description provided for @overrideFieldsDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what to update'**
+  String get overrideFieldsDialogTitle;
+
+  /// No description provided for @overrideFieldsDialogDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick which parts of your habit should update to match this template. Anything left unchecked keeps its current value.'**
+  String get overrideFieldsDialogDesc;
+
+  /// No description provided for @overrideFieldsSelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get overrideFieldsSelectAll;
+
+  /// No description provided for @overrideFieldsDeselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect all'**
+  String get overrideFieldsDeselectAll;
+
+  /// No description provided for @overrideFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get overrideFieldName;
+
+  /// No description provided for @overrideFieldIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get overrideFieldIcon;
+
+  /// No description provided for @overrideFieldCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get overrideFieldCategory;
+
+  /// No description provided for @overrideFieldTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get overrideFieldTarget;
+
+  /// No description provided for @overrideFieldHealthSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Health sync'**
+  String get overrideFieldHealthSync;
+
+  /// No description provided for @overrideFieldSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get overrideFieldSchedule;
+
+  /// No description provided for @overrideFieldNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get overrideFieldNotifications;
 }
 
 class _AppLocalizationsDelegate

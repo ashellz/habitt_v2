@@ -7,6 +7,9 @@ class FeedbackService {
   static const String bugReportTemplate =
       'Name:\nDescription/summary:\nEnvironment/platform:\nVisual proof/screenshot/video:\nSteps to reproduce:\nExpected result vs. actual result:';
 
+  static const String habitRequestTemplate =
+      'Habit name:\nWhy it\'d be useful:\nSuggested tracking (amount/duration/count):\nPlatform:';
+
   static const String supportEmail = 'ibrsboy32@proton.me';
 
   static const String _reviewLastRequestedKey = 'review_last_requested_ms';
@@ -67,6 +70,21 @@ class FeedbackService {
       scheme: 'mailto',
       path: supportEmail,
       queryParameters: {'subject': 'Bug Report', 'body': bugReportTemplate},
+    );
+
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch email client');
+    }
+  }
+
+  static Future<void> sendHabitRequest() async {
+    final Uri uri = Uri(
+      scheme: 'mailto',
+      path: supportEmail,
+      queryParameters: {
+        'subject': 'Habit Request',
+        'body': habitRequestTemplate,
+      },
     );
 
     if (!await launchUrl(uri)) {

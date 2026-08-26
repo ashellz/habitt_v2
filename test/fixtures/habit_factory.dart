@@ -1,5 +1,7 @@
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_session_detail.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 
@@ -13,6 +15,9 @@ Habit buildTestHabit({
   int durationCompleted = 0,
   HabitTrackingType? trackingType = HabitTrackingType.amount,
   HealthMetricType? healthMetric,
+  HealthWorkoutType? healthWorkoutFilter,
+  int toleranceMinutes = 0,
+  List<HealthSessionDetail>? healthSessions,
   ScheduleType scheduleType = ScheduleType.daily,
   int weeklyTarget = 1,
   int monthlyTarget = 1,
@@ -35,6 +40,9 @@ Habit buildTestHabit({
     durationCompleted: durationCompleted,
     trackingType: trackingType,
     healthMetric: healthMetric,
+    healthWorkoutFilter: healthWorkoutFilter,
+    toleranceMinutes: toleranceMinutes,
+    healthSessions: healthSessions,
     scheduleType: scheduleType,
     weeklyTarget: weeklyTarget,
     monthlyTarget: monthlyTarget,

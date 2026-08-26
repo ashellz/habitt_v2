@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
@@ -164,6 +165,8 @@ class StateProvider extends ChangeNotifier {
   Duration _habitDuration = Duration.zero;
   HabitTrackingType? _selectedHabitTrackingType;
   HealthMetricType? _selectedHealthMetric;
+  HealthWorkoutType? _selectedHealthWorkoutFilter;
+  int _toleranceMinutes = 0;
   TextEditingController habitAmountLabelController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController descController = TextEditingController();
@@ -194,6 +197,9 @@ class StateProvider extends ChangeNotifier {
   HabitTrackingType? get selectedHabitTrackingType =>
       _selectedHabitTrackingType;
   HealthMetricType? get selectedHealthMetric => _selectedHealthMetric;
+  HealthWorkoutType? get selectedHealthWorkoutFilter =>
+      _selectedHealthWorkoutFilter;
+  int get toleranceMinutes => _toleranceMinutes;
 
   String get scheduleSummary {
     switch (_selectedScheduleOption) {
@@ -260,27 +266,65 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set selectedHealthMetric(HealthMetricType? value) {
-    _selectedHealthMetric = value;
-    if (value != null) {
-      // updates habit tracking type
-      selectedHabitTrackingType = value.trackingType;
+  void hydrateHealthMetricFromHabit(HealthMetricType? metric) {
+    _selectedHealthMetric = metric;
+    notifyListeners();
+  }
 
-      // updates amount label based on the metric
+  set selectedHealthMetric(HealthMetricType? value) {
+    if (value == _selectedHealthMetric) {
+      return;
+    }
+    _selectedHealthMetric = value;
+
+    if (value != null) {
+      if (value == HealthMetricType.workouts ||
+          value == HealthMetricType.mindfulness) {
+        selectedHabitTrackingType ??= HabitTrackingType.duration;
+      } else {
+        selectedHabitTrackingType = value.trackingType;
+      }
+
       switch (value) {
         case HealthMetricType.steps:
           habitAmountLabelController.text = AmountLabelPreset.steps.plural;
+          _habitAmount = 6000;
           break;
         case HealthMetricType.activeCalories:
+          habitAmountLabelController.text = AmountLabelPreset.calories.plural;
+          _habitAmount = 230;
+          break;
         case HealthMetricType.totalCalories:
           habitAmountLabelController.text = AmountLabelPreset.calories.plural;
+          _habitAmount = 2100;
           break;
         case HealthMetricType.sleep:
-        case HealthMetricType.exerciseMinutes:
-        case HealthMetricType.mindfulMinutes:
+          _habitAmount = 8 * 60;
+          _toleranceMinutes = 30;
+
+          break;
+        case HealthMetricType.bedtime:
+          _habitAmount = 22 * 60;
+          break;
+        case HealthMetricType.wakeTime:
+          _habitAmount = 7 * 60;
+          break;
+        case HealthMetricType.workouts:
+        case HealthMetricType.mindfulness:
+          _habitAmount = 1;
           break;
       }
     }
+    notifyListeners();
+  }
+
+  set selectedHealthWorkoutFilter(HealthWorkoutType? value) {
+    _selectedHealthWorkoutFilter = value;
+    notifyListeners();
+  }
+
+  set toleranceMinutes(int value) {
+    _toleranceMinutes = value.clamp(0, 24 * 60);
     notifyListeners();
   }
 
@@ -307,13 +351,20 @@ class StateProvider extends ChangeNotifier {
 
     _habitAmount = template.amount;
     _habitDuration = Duration(minutes: template.durationMinutes);
-    _selectedHealthMetric = null;
-    _selectedHabitTrackingType =
-        template.amount >= 1
-            ? HabitTrackingType.amount
-            : template.durationMinutes > 0
-            ? HabitTrackingType.duration
-            : null;
+    _selectedHealthWorkoutFilter = template.defaultWorkoutFilter;
+    _toleranceMinutes = template.toleranceMinutes;
+    if (template.defaultHealthMetric != null) {
+      _selectedHealthMetric = template.defaultHealthMetric;
+      _selectedHabitTrackingType = template.defaultHealthMetric!.trackingType;
+    } else {
+      _selectedHealthMetric = null;
+      _selectedHabitTrackingType =
+          template.amount >= 1
+              ? HabitTrackingType.amount
+              : template.durationMinutes > 0
+              ? HabitTrackingType.duration
+              : null;
+    }
     habitAmountLabelController.text = canonicalizeAmountLabel(
       template.resolvedAmountLabel,
     );
@@ -345,6 +396,79 @@ class StateProvider extends ChangeNotifier {
     _selectedDaysAMonth
       ..clear()
       ..addAll(template.selectedDaysAMonth.where((d) => d >= 1 && d <= 31));
+
+    notifyListeners();
+  }
+
+  void applyPremadeHabitTemplateSelectively(
+    PremadeHabitTemplate template, {
+    required Set<PremadeTemplateField> fields,
+    String? localizedName,
+  }) {
+    _selectedPremadeHabitType = template.type;
+
+    if (fields.contains(PremadeTemplateField.name)) {
+      nameController.text = localizedName ?? template.name;
+      descController.clear();
+    }
+    if (fields.contains(PremadeTemplateField.icon)) {
+      _iconPath = template.iconPath;
+      _habitColor = null;
+      _habitColorName = null;
+    }
+    if (fields.contains(PremadeTemplateField.category)) {
+      _habitCategoryId = template.categoryId;
+    }
+
+    final applyTarget = fields.contains(PremadeTemplateField.target);
+    final applyHealth = fields.contains(PremadeTemplateField.healthSync);
+
+    if (applyHealth && template.defaultHealthMetric != null) {
+      _selectedHealthMetric = template.defaultHealthMetric;
+      _selectedHealthWorkoutFilter = template.defaultWorkoutFilter;
+      _toleranceMinutes = template.toleranceMinutes;
+    }
+    if (applyTarget) {
+      _habitAmount = template.amount;
+      _habitDuration = Duration(minutes: template.durationMinutes);
+      habitAmountLabelController.text = canonicalizeAmountLabel(
+        template.resolvedAmountLabel,
+      );
+    }
+
+    if (applyTarget || applyHealth) {
+      _selectedHabitTrackingType =
+          _selectedHealthMetric != null
+              ? _selectedHealthMetric!.trackingType
+              : _habitAmount >= 1
+              ? HabitTrackingType.amount
+              : _habitDuration.inMinutes > 0
+              ? HabitTrackingType.duration
+              : null;
+    }
+
+    if (fields.contains(PremadeTemplateField.schedule)) {
+      _selectedScheduleOption = template.scheduleType;
+      _weeklyTarget = template.weeklyTarget.clamp(1, 6);
+      _monthlyTarget = template.monthlyTarget.clamp(1, 30);
+      _customIntervalDays = template.customIntervalDays.clamp(1, 365);
+      _selectedDaysAWeek
+        ..clear()
+        ..addAll(template.selectedDaysAWeek.where((d) => d >= 1 && d <= 7));
+      _selectedDaysAMonth
+        ..clear()
+        ..addAll(template.selectedDaysAMonth.where((d) => d >= 1 && d <= 31));
+    }
+    if (fields.contains(PremadeTemplateField.notifications)) {
+      _habitNotificationsEnabled = false;
+      _habitSoundKey = null;
+      _habitNotificationTimes =
+          template.notificationTimesMinutesOfDay.isNotEmpty
+              ? _buildNotificationTimesFromMinutes(
+                template.notificationTimesMinutesOfDay,
+              )
+              : _buildDefaultNotificationTimesForCategory(_habitCategoryId);
+    }
 
     notifyListeners();
   }
@@ -614,6 +738,8 @@ class StateProvider extends ChangeNotifier {
     _habitDuration = Duration.zero;
     _selectedHabitTrackingType = null;
     _selectedHealthMetric = null;
+    _selectedHealthWorkoutFilter = null;
+    _toleranceMinutes = 0;
 
     _habitCategoryId = 1;
     habitAmountLabelController.text = AmountLabelPreset.times.plural;

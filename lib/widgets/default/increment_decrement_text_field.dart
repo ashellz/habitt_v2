@@ -18,6 +18,7 @@ class IncrementDecrementTextField extends StatelessWidget {
     this.minValue,
     this.maxValue,
     this.onValueChanged,
+    this.color,
   });
 
   final String? title;
@@ -31,6 +32,7 @@ class IncrementDecrementTextField extends StatelessWidget {
   final int? minValue;
   final int? maxValue;
   final ValueChanged<int>? onValueChanged;
+  final Color? color;
 
   void _onTextChanged(String value) {
     if (value.isEmpty) {
@@ -63,6 +65,7 @@ class IncrementDecrementTextField extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
 
     return NewDefaultTextField(
+      color: color,
       fontWeight: fontWeight,
       title: title,
       digitsOnly: true,

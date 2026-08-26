@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
 class EnterHabitDuration extends StatelessWidget {
-  const EnterHabitDuration({super.key});
+  const EnterHabitDuration({super.key, this.color});
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class EnterHabitDuration extends StatelessWidget {
             height: 46,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
-              color: cp.field,
+              color: color ?? cp.field,
               shape: StadiumBorder(),
             ),
             child: Row(

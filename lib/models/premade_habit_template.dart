@@ -1,7 +1,19 @@
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/util/amount_label_preset.dart';
+
+enum PremadeTemplateField {
+  name,
+  icon,
+  category,
+  target,
+  healthSync,
+  schedule,
+  notifications,
+}
 
 class PremadeHabitTemplate {
   const PremadeHabitTemplate({
@@ -20,6 +32,9 @@ class PremadeHabitTemplate {
     List<int>? notificationTimesMinutesOfDay,
     Set<int>? selectedDaysAWeek,
     Set<int>? selectedDaysAMonth,
+    this.defaultHealthMetric,
+    this.defaultWorkoutFilter,
+    this.toleranceMinutes = 0,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? const <int>{},
        selectedDaysAMonth = selectedDaysAMonth ?? const <int>{},
        notificationTimesMinutesOfDay =
@@ -40,6 +55,12 @@ class PremadeHabitTemplate {
   final List<int> notificationTimesMinutesOfDay;
   final Set<int> selectedDaysAWeek;
   final Set<int> selectedDaysAMonth;
+
+  final HealthMetricType? defaultHealthMetric;
+
+  final HealthWorkoutType? defaultWorkoutFilter;
+
+  final int toleranceMinutes;
 
   String get resolvedAmountLabel => amountLabelPreset?.plural ?? amountLabel;
 
@@ -63,6 +84,8 @@ class PremadeHabitCategorySection {
         return l10n.premadeSectionHealthFitness;
       case 'Productivity & Growth':
         return l10n.premadeSectionProductivityGrowth;
+      case 'Workouts':
+        return l10n.premadeSectionWorkouts;
       default:
         return title;
     }

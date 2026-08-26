@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
@@ -15,6 +16,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
+import 'package:habitt/util/premade_habit_type_migration.dart';
 import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -125,11 +127,21 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> init({bool animateStreakEntry = false}) async {
     // one time conversion from minutes to seconds for older versions
+    final prefs = await SharedPreferences.getInstance();
     await migrateDurationToSeconds(
       habitBox: habitBox,
       daysBox: daysBox,
-      prefs: await SharedPreferences.getInstance(),
+      prefs: prefs,
     );
+
+    // one time migration of the removed Running/Walk/Gym premade types
+    // into their Workouts-section equivalents
+    await migratePremadeWorkoutTypes(
+      habitBox: habitBox,
+      daysBox: daysBox,
+      prefs: prefs,
+    );
+
     await _loadHabits();
     await _seedDeletedAtTimestamps();
     await _purgeExpiredDeletedHabits();
@@ -1493,6 +1505,7 @@ class HabitProvider extends ChangeNotifier {
     HealthMetricType metric,
     int rawValue, {
     required DateTime day,
+    List<HealthSessionDetail> sessions = const [],
   }) async {
     habitStatsProvider?.invalidateHabit(id);
 
@@ -1517,11 +1530,43 @@ class HabitProvider extends ChangeNotifier {
     if (habit.healthMetric != metric) return;
 
     final wasCompleted = habit.completed;
-    if (metric.trackingType == HabitTrackingType.amount) {
-      habit.updateHabitAmountCompleted(rawValue);
-    } else {
-      habit.updateHabitDurationCompleted(rawValue);
+    // Workouts/mindfulness let the habit's own trackingType (Amount vs.
+    // Duration) diverge from the metric's fixed default — route by the
+    // habit's actual choice for those, everyone else keeps the fixed mapping.
+    final effectiveTrackingType =
+        metric.supportsTrackingChoice
+            ? (habit.trackingType ?? metric.trackingType)
+            : metric.trackingType;
+    switch (effectiveTrackingType) {
+      case HabitTrackingType.amount:
+        habit.updateHabitAmountCompleted(rawValue);
+        break;
+      case HabitTrackingType.duration:
+        habit.updateHabitDurationCompleted(rawValue);
+        break;
+      case HabitTrackingType.timeOfDay:
+        habit.updateHabitTimeOfDayCompleted(rawValue);
+        break;
     }
+    habit.healthSessions = sessions.map((s) => s.copy()).toList();
+
+    // A workout/mindfulness habit with no target set (0) would otherwise
+    // always read as "complete" via the plain >= comparison above, even with
+    // zero sessions logged. Override: complete only if something was logged.
+    if (metric.supportsTrackingChoice) {
+      final target =
+          effectiveTrackingType == HabitTrackingType.amount
+              ? habit.amount
+              : habit.duration;
+      if (target == 0) {
+        final zeroTargetCompleted = sessions.isNotEmpty;
+        if (habit.completed != zeroTargetCompleted) {
+          habit.completed = zeroTargetCompleted;
+          habit.timestamps['completed'] = DateTime.now().toUtc();
+        }
+      }
+    }
+
     final isNowCompleted = habit.completed;
 
     await updateHabitInDB(habit, day: daySimple);

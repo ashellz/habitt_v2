@@ -421,6 +421,20 @@ class HabitNotificationTextBuilder {
       case PremadeHabitType.research:
       case PremadeHabitType.productivitySession:
       case PremadeHabitType.read:
+      case PremadeHabitType.workoutWalking:
+      case PremadeHabitType.workoutRunning:
+      case PremadeHabitType.workoutCycling:
+      case PremadeHabitType.workoutSwimming:
+      case PremadeHabitType.workoutHiking:
+      case PremadeHabitType.workoutFlexibility:
+      case PremadeHabitType.workoutDancing:
+      case PremadeHabitType.workoutRowing:
+      case PremadeHabitType.workoutCombined:
+      case PremadeHabitType.mindfulness:
+      case PremadeHabitType.sleepTime:
+      case PremadeHabitType.activeCalories:
+      case PremadeHabitType.totalCalories:
+      case PremadeHabitType.steps:
         return _PremadeFamily.activityGroup;
       case PremadeHabitType.praying:
         return _PremadeFamily.none;
@@ -551,6 +565,20 @@ class HabitNotificationTextBuilder {
           l.notificationEncourageRead3,
         ];
       case PremadeHabitType.praying:
+      case PremadeHabitType.workoutWalking:
+      case PremadeHabitType.workoutRunning:
+      case PremadeHabitType.workoutCycling:
+      case PremadeHabitType.workoutSwimming:
+      case PremadeHabitType.workoutHiking:
+      case PremadeHabitType.workoutFlexibility:
+      case PremadeHabitType.workoutDancing:
+      case PremadeHabitType.workoutRowing:
+      case PremadeHabitType.workoutCombined:
+      case PremadeHabitType.mindfulness:
+      case PremadeHabitType.sleepTime:
+      case PremadeHabitType.activeCalories:
+      case PremadeHabitType.totalCalories:
+      case PremadeHabitType.steps:
       case null:
         return [
           l.notificationEncourageGeneric1,
@@ -562,9 +590,8 @@ class HabitNotificationTextBuilder {
   }
 
   static String _resolveTitle(HabitNotificationContext context) {
-    final trimmed = context.habit
-        .resolvedName(context.localizations.localeName)
-        .trim();
+    final trimmed =
+        context.habit.resolvedName(context.localizations.localeName).trim();
     final name =
         trimmed.isNotEmpty
             ? trimmed
