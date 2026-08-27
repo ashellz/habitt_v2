@@ -1,1 +1,1 @@
-Bug fixes and improvements regarding deleted habits.
+Health connect integration to habits and bug fixes.

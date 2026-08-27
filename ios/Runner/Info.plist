@@ -43,6 +43,8 @@
 	<string>This app requires access to the camera for profile pictures.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>If this app had access to your health data, it would use it to automatically log progress to habits based on your health information. This includes sleeping, walking, running, steps and similar.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>If this app had access to your health data, it would use it to automatically log progress to habits based on your health information. This includes sleeping, walking, running, steps and similar.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to location services to determine language on app first launch.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
