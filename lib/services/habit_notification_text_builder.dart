@@ -580,11 +580,13 @@ class HabitNotificationTextBuilder {
       case PremadeHabitType.totalCalories:
       case PremadeHabitType.steps:
       case null:
+        // notificationProgressNoTracking is pipe-separated and already offered
+        // by _pickCombinedGeneral; listing it raw here leaked every variant
+        // into a single notification.
         return [
           l.notificationEncourageGeneric1,
           l.notificationEncourageGeneric2,
           l.notificationEncourageGeneric3,
-          l.notificationProgressNoTracking,
         ];
     }
   }

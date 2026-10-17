@@ -155,4 +155,46 @@ void main() {
       expect(text.description, isNot(contains('Target reached already')));
     },
   );
+  test('never leaks pipe-separated variants into the description', () {
+    final scheduledAt = DateTime(2026, 4, 16, 9, 0);
+    final habits = [
+      // Custom habit (e.g. push-ups): no premade type.
+      buildTestHabit(
+        name: 'Push ups',
+        amount: 50,
+        amountCompleted: 10,
+        amountLabel: 'push-ups',
+        trackingType: HabitTrackingType.amount,
+        createdAt: DateTime(2026, 3, 1),
+      ),
+      // Premade types that share the generic encouragement list.
+      buildTestHabit(
+        amount: 50,
+        amountCompleted: 10,
+        trackingType: HabitTrackingType.amount,
+        premadeHabitType: PremadeHabitType.workoutCombined,
+        createdAt: DateTime(2026, 3, 1),
+      ),
+      buildTestHabit(
+        amount: 10000,
+        amountCompleted: 0,
+        trackingType: HabitTrackingType.amount,
+        premadeHabitType: PremadeHabitType.steps,
+        createdAt: DateTime(2026, 4, 15),
+      ),
+    ];
+
+    for (final habit in habits) {
+      for (var i = 0; i < 200; i++) {
+        final text = HabitNotificationTextBuilder.build(
+          buildContext(
+            habit,
+            scheduledAt: scheduledAt,
+            appearsOnDay: (_, __) => true,
+          ),
+        );
+        expect(text.description, isNot(contains('|')));
+      }
+    }
+  });
 }
