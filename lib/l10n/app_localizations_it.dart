@@ -2641,6 +2641,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Mostra una celebrazione quando la tua serie di giorni perfetti cresce.';
 
   @override
+  String get completionSound => 'Suono di completamento';
+
+  @override
+  String get completionSoundDesc =>
+      'Riproduci un breve suono quando completi un\'abitudine.';
+
+  @override
   String get greatProgress => 'Ottimi progressi';
 
   @override

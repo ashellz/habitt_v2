@@ -9,8 +9,10 @@ import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/services/completion_sound_player.dart';
 import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
@@ -19,6 +21,7 @@ import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/premade_habit_type_migration.dart';
 import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HabitProvider extends ChangeNotifier {
@@ -786,6 +789,14 @@ class HabitProvider extends ChangeNotifier {
     return requiredHabits > 0 && satisfiedHabits >= requiredHabits;
   }
 
+  /// Plays the completion sound for a user-driven completion (tap, amount or
+  /// duration entry), if enabled in preferences. Health sync and timer
+  /// auto-completion stay silent.
+  void _playCompletionSound(BuildContext context) {
+    if (!context.read<PreferencesProvider>().playCompletionSound) return;
+    unawaited(CompletionSoundPlayer.instance.play());
+  }
+
   void _refreshPerfectStreakForDayIfNeeded(DateTime day) {
     if (statsProvider == null) {
       return;
@@ -1170,8 +1181,9 @@ class HabitProvider extends ChangeNotifier {
   void completeHabit(
     int id,
     BuildContext context,
-    StateProvider stateProvider,
-  ) async {
+    StateProvider stateProvider, {
+    bool playSound = true,
+  }) async {
     late Habit habit;
 
     final today = DateTime.now();
@@ -1201,6 +1213,9 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
+    if (playSound && !wasCompleted && habit.completed && context.mounted) {
+      _playCompletionSound(context);
+    }
     final currentHabit = habits.firstWhere((h) => h.id == id);
     // Check if habit is within the current week or month dependng on scheudle tpye
     final shouldAffectCurrentPeriod =
@@ -1286,7 +1301,8 @@ class HabitProvider extends ChangeNotifier {
       'found=${habit != null} alreadyCompleted=${habit?.completed}',
     );
     if (habit == null || habit.completed) return; // missing or already done
-    completeHabit(id, context, stateProvider);
+    // Completed from the notification's button, not in-app — stay silent.
+    completeHabit(id, context, stateProvider, playSound: false);
   }
 
   void skipHabit(
@@ -1416,6 +1432,7 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     habit.updateHabitAmountCompleted(amountCompleted);
     final isNowCompleted = habit.completed;
+    if (!wasCompleted && isNowCompleted) _playCompletionSound(context);
     if (context.mounted) checkReorderCategories(context, habit);
 
     await updateHabitInDB(habit, day: daySimple);
@@ -1615,6 +1632,7 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
+    if (!wasCompleted && isNowCompleted) _playCompletionSound(context);
 
     if (context.mounted) checkReorderCategories(context, habit);
 

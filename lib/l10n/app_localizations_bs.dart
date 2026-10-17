@@ -2621,6 +2621,12 @@ class AppLocalizationsBs extends AppLocalizations {
       'Prikaži proslavu kada ti dnevni streak raste';
 
   @override
+  String get completionSound => 'Zvuk završetka';
+
+  @override
+  String get completionSoundDesc => 'Pusti kratak zvuk kada završiš naviku.';
+
+  @override
   String get greatProgress => 'Odličan napredak';
 
   @override

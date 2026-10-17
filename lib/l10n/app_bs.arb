@@ -1003,6 +1003,8 @@
   "backupBeforeImporting": "Preporučuje se napraviti backup podataka prije nastavka.",
   "streakCelebration": "Slavlje streaka",
   "streakCelebrationDesc": "Prikaži proslavu kada ti dnevni streak raste",
+  "completionSound": "Zvuk završetka",
+  "completionSoundDesc": "Pusti kratak zvuk kada završiš naviku.",
   "greatProgress": "Odličan napredak",
   "buildingRealConsistency": "Gradiš pravu konzistentnost",
   "keepGoing": "Samo naprijed!",

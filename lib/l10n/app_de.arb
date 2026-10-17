@@ -1012,6 +1012,8 @@
   "backupBeforeImporting": "Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst.",
   "streakCelebration": "Serien-Feier",
   "streakCelebrationDesc": "Zeige eine Feier, wenn deine Serie perfekter Tage wächst.",
+  "completionSound": "Abschluss-Sound",
+  "completionSoundDesc": "Spiele einen kurzen Sound ab, wenn du eine Gewohnheit abschließt.",
   "greatProgress": "Toller Fortschritt",
   "buildingRealConsistency": "Du baust echte Beständigkeit auf",
   "keepGoing": "Weiter so!",

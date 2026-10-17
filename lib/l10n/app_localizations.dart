@@ -4414,6 +4414,18 @@ abstract class AppLocalizations {
   /// **'Show a celebration when your perfect-days streak grows.'**
   String get streakCelebrationDesc;
 
+  /// No description provided for @completionSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion sound'**
+  String get completionSound;
+
+  /// No description provided for @completionSoundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a short sound when you complete a habit.'**
+  String get completionSoundDesc;
+
   /// No description provided for @greatProgress.
   ///
   /// In en, this message translates to:
