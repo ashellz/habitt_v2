@@ -599,20 +599,21 @@ class _StreakCalendarState extends State<StreakCalendar> {
       textColor = outsideDisabledText;
       borderColor = outsideDisabledFill;
     } else {
-      // Fill + border: orange for perfect days, gray for partial progress,
-      // background otherwise.
+      // fill and border orange for perfect days
+      // gray border and bg fill for partial progress ,
+      // bg both otherwise
       if (isPerfectDay) {
         fillColor = cp.orange300;
         borderColor = cp.orange300;
       } else if (progress > 0) {
-        fillColor = cp.disabled;
+        fillColor = cp.bg;
         borderColor = cp.disabled;
       } else {
         fillColor = cp.bg;
         borderColor = cp.bg;
       }
 
-      // Text: white on orange fill, otherwise default.
+      // text: white on orange fill, otherwise default
       textColor =
           isPerfectDay || isOngoingStreakStartCompletedDay
               ? Colors.white
