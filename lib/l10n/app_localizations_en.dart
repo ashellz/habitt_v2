@@ -831,9 +831,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String notificationCombinedAmountCompleted(Object encouragement) {
-    return 'Target already reached, well done.|You\'ve completed today\'s target, congratulations!|You\'ve already hit your goal today — great job!|The target has already been met, awesome!|You\'ve already reached today\'s target, excellent work!';
-  }
+  String get notificationCombinedAmountCompleted =>
+      'Target already reached, well done.|You\'ve completed today\'s target, congratulations!|You\'ve already hit your goal today — great job!|The target has already been met, awesome!|You\'ve already reached today\'s target, excellent work!';
 
   @override
   String notificationCombinedAmountInProgress(

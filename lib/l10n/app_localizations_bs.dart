@@ -782,7 +782,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Vrijeme za podnevni pregled tvojih navika';
 
   @override
-  String get minutes => 'Zapisnik';
+  String get minutes => 'Minute';
 
   @override
   String get missingPermissions => 'Nedostaju dozvole';
@@ -835,9 +835,8 @@ class AppLocalizationsBs extends AppLocalizations {
   }
 
   @override
-  String notificationCombinedAmountCompleted(Object encouragement) {
-    return 'Cilj je već dostignut, svaka čast.|Ispunio si današnji cilj, čestitam!|Danas si već postigao cilj, odlično!|Cilj je već ispunjen, sjajno!|Već si dostigao cilj za danas, odličan posao!';
-  }
+  String get notificationCombinedAmountCompleted =>
+      'Cilj je već dostignut, svaka čast.|Ispunio si današnji cilj, čestitam!|Danas si već postigao cilj, odlično!|Cilj je već ispunjen, sjajno!|Već si dostigao cilj za danas, odličan posao!';
 
   @override
   String notificationCombinedAmountInProgress(
@@ -1219,7 +1218,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String notificationProgressAlmostDoneAmount(Object label, Object remaining) {
-    return 'Tako si blizu. Preostalo je samo $remaining $label.|Preostalo je samo $remaining $label. Ovo je tvoj ritam — prepusti mu se.|Preostalo je samo $remaining $label. Već si obavio većinu. Skoro si gotov — $remaining $label te dijeli od završetka. Si $remaining $label korak od cilja. Završi snažno. Ciljna linija je blizu. Samo $remaining $label da završiš.';
+    return 'Tako si blizu. Preostalo je samo $remaining $label.|Preostalo je samo $remaining $label. Ovo je tvoj ritam — prepusti mu se.|Preostalo je samo $remaining $label. Već si obavio većinu.|Skoro si gotov — $remaining $label te dijeli od završetka.|Još $remaining $label do cilja. Završi snažno.|Ciljna linija je blizu. Samo $remaining $label da završiš.';
   }
 
   @override
