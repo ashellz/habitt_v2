@@ -3156,7 +3156,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get overrideFieldSchedule => 'Programma';
 
   @override
-  String get overrideFieldNotifications => 'Notifications';
+  String get overrideFieldNotifications => 'Notifiche';
 
   @override
   String get timerCompletedNotificationTitle => 'Obiettivo raggiunto';
@@ -3165,5 +3165,4 @@ class AppLocalizationsIt extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' ha raggiunto l\'obiettivo.';
   }
-  String get overrideFieldNotifications => 'Notifiche';
 }

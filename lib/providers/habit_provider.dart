@@ -22,7 +22,6 @@ import 'package:habitt/util/premade_habit_type_migration.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HabitProvider extends ChangeNotifier {
@@ -1480,6 +1479,7 @@ class HabitProvider extends ChangeNotifier {
     final isNowCompleted = habit.completed;
     if (!wasCompleted && isNowCompleted) {
       playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
+    }
     debugPrint("Habit is now completed: $isNowCompleted");
     if (wasCompleted != isNowCompleted) {
       _updatePeriodCountersOnCompletionChange(
@@ -1734,6 +1734,7 @@ class HabitProvider extends ChangeNotifier {
     final isNowCompleted = habit.completed;
     if (!wasCompleted && isNowCompleted) {
       playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
+    }
     if (wasCompleted != isNowCompleted) {
       _updatePeriodCountersOnCompletionChange(
         currentHabit: habits.firstWhere((h) => h.id == id),

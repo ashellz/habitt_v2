@@ -3126,7 +3126,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get overrideFieldSchedule => 'Raspored';
 
   @override
-  String get overrideFieldNotifications => 'Notifications';
+  String get overrideFieldNotifications => 'Obavijesti';
 
   @override
   String get timerCompletedNotificationTitle => 'Cilj dostignut';
@@ -3135,5 +3135,4 @@ class AppLocalizationsBs extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' je dostigao cilj.';
   }
-  String get overrideFieldNotifications => 'Obavijesti';
 }

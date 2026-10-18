@@ -1091,7 +1091,7 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
   "deletedToday": "Heute",
   "deletedOneDayAgo": "Vor 1 Tag",
   "deletedDaysAgoLabel": "Vor {days} Tagen",

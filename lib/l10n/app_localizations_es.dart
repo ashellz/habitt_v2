@@ -3149,7 +3149,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get overrideFieldSchedule => 'Horario';
 
   @override
-  String get overrideFieldNotifications => 'Notifications';
+  String get overrideFieldNotifications => 'Notificaciones';
 
   @override
   String get timerCompletedNotificationTitle => 'Objetivo alcanzado';
@@ -3158,5 +3158,4 @@ class AppLocalizationsEs extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' alcanzó su objetivo.';
   }
-  String get overrideFieldNotifications => 'Notificaciones';
 }

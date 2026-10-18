@@ -1081,7 +1081,7 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
   "deletedToday": "Danas",
   "deletedOneDayAgo": "Prije 1 dan",
   "deletedDaysAgoLabel": "Prije {days} dana",

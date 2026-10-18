@@ -2636,11 +2636,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst.';
 
   @override
-  String get streakCelebration => 'Streak-Feier';
+  String get streakCelebration => 'Serien-Feier';
 
   @override
   String get streakCelebrationDesc =>
-      'Zeige eine Feier, wenn dein Perfekte-Tage-Streak wächst.';
+      'Zeige eine Feier, wenn deine Serie perfekter Tage wächst.';
 
   @override
   String get completionSound => 'Abschluss-Sound';
@@ -3158,7 +3158,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get overrideFieldSchedule => 'Zeitplan';
 
   @override
-  String get overrideFieldNotifications => 'Notifications';
+  String get overrideFieldNotifications => 'Benachrichtigungen';
 
   @override
   String get timerCompletedNotificationTitle => 'Ziel erreicht';
@@ -3167,5 +3167,4 @@ class AppLocalizationsDe extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' hat das Ziel erreicht.';
   }
-  String get overrideFieldNotifications => 'Benachrichtigungen';
 }
