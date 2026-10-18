@@ -52,7 +52,7 @@ dependencies:
   inner_glow: ^1.0.0
   awesome_notifications_core: ^0.10.1
   awesome_notifications: ^0.12.1
-  cupertino_native_better: ^1.5.4
+  cupertino_native_better: ^1.6.0
   device_info_plus:
   confetti: ^0.8.0
   cryptography: ^2.7.0
@@ -104,6 +104,8 @@ dev_dependencies:
 dependency_overrides:
   icloud_storage:
     path: packages/icloud_storage
+  cupertino_native_better:
+    path: packages/cupertino_native_better
 
 # The following section is specific to Flutter packages.
 flutter:

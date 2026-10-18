@@ -813,6 +813,8 @@ class Habit extends HiveObject {
 
   bool get tracksDuration => trackingType == HabitTrackingType.duration;
 
+  bool get tracksTimeOfDay => trackingType == HabitTrackingType.timeOfDay;
+
   bool get hasTrackingType => trackingType != null;
 
   Map<String, dynamic> toMap() {

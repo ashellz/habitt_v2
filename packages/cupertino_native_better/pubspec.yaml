@@ -1,0 +1,44 @@
+name: cupertino_native_better
+description: Native iOS Liquid Glass widgets for Flutter with pixel-perfect fidelity. Includes Button, Icon, TabBar, Slider, Switch, and more with reliable version detection.
+version: 1.6.0
+homepage: https://github.com/gunumdogdu/cupertino_native_better
+repository: https://github.com/gunumdogdu/cupertino_native_better
+issue_tracker: https://github.com/gunumdogdu/cupertino_native_better/issues
+documentation: https://gunumdogdu.com/docs
+
+topics:
+  - ios
+  - macos
+  - cupertino
+  - liquid-glass
+  - native-widgets
+
+screenshots:
+  - description: 'iOS 26 Liquid Glass buttons with native blur effects'
+    path: screenshots/button_preview.png
+  - description: 'Native tab bar with badges and glass styling'
+    path: screenshots/tab_bar_preview.png
+  - description: 'Native iOS slider with glass thumb effect'
+    path: screenshots/slider_preview.jpg
+
+environment:
+  sdk: ^3.9.0
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: CupertinoNativePlugin
+      macos:
+        pluginClass: CupertinoNativePlugin

@@ -1355,7 +1355,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Target already reached, well done.|You\'ve completed today\'s target, congratulations!|You\'ve already hit your goal today — great job!|The target has already been met, awesome!|You\'ve already reached today\'s target, excellent work!'**
-  String notificationCombinedAmountCompleted(Object encouragement);
+  String get notificationCombinedAmountCompleted;
 
   /// No description provided for @notificationCombinedAmountInProgress.
   ///

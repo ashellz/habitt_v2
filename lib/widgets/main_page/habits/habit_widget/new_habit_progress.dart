@@ -35,11 +35,25 @@ class NewHabitProgress extends StatefulWidget {
   State<NewHabitProgress> createState() => _NewHabitProgressState();
 }
 
+// how far past target + tolerance the pie stays empty for timeOfDay habits
+const int _timeOfDayProgressWindowMinutes = 240;
+
 class _NewHabitProgressState extends State<NewHabitProgress> {
   double getProgressValue({int? liveDurationSeconds}) {
     final habit = widget.habit;
 
     if (habit.completed || habit.skipped) return 1.0;
+
+    // timeOfDay (bedtime/wake time): earlier is better, values are minutes of
+    // day. Nothing logged = no progress; otherwise the pie fills as the logged
+    // time gets closer to target + tolerance (completed is handled above).
+    if (habit.tracksTimeOfDay) {
+      if (habit.amountCompleted <= 0) return 0.0;
+      final lateness =
+          habit.amountCompleted - (habit.amount + habit.toleranceMinutes);
+      if (lateness <= 0) return 1.0;
+      return (1 - lateness / _timeOfDayProgressWindowMinutes).clamp(0.0, 1.0);
+    }
 
     if (habit.tracksAmount) {
       if (habit.amount <= 0) return 0.0; // avoiding division by zero
