@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-/// A small one-shot confetti pop, drawn in the root overlay so it isn't
+/// confetti burts, used on complete habit button, drawn in the root overlay so it isn't
 /// clipped by cards or lists. Pieces fly out of [origin] (global
 /// coordinates) in a cone around
 /// [direction] (radians, screen coordinates: 0 = right, -pi/2 = up), travel at
