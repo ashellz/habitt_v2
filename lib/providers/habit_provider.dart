@@ -768,7 +768,7 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  bool _isDayFullyCompleted(DateTime day) {
+  bool isDayFullyCompleted(DateTime day) {
     final normalizedDay = _normalizeDate(day);
     final dayHabits = getHabitsFromDay(normalizedDay, hydrateMissing: true);
 
@@ -789,12 +789,17 @@ class HabitProvider extends ChangeNotifier {
     return requiredHabits > 0 && satisfiedHabits >= requiredHabits;
   }
 
-  /// Plays the completion sound for a user-driven completion (tap, amount or
-  /// duration entry), if enabled in preferences. Health sync and timer
-  /// auto-completion stay silent.
-  void _playCompletionSound(BuildContext context) {
+  /// Plays the completion sound for a user-driven completion (tap, amount,
+  /// duration entry, or finishing a timer), if enabled in preferences. Plays
+  /// the bigger celebration sound instead when this completion also finishes
+  /// every required habit for [day].
+  void playCompletionSound(BuildContext context, DateTime day) {
     if (!context.read<PreferencesProvider>().playCompletionSound) return;
-    unawaited(CompletionSoundPlayer.instance.play());
+    unawaited(
+      CompletionSoundPlayer.instance.play(
+        allHabitsCompleted: isDayFullyCompleted(day),
+      ),
+    );
   }
 
   void _refreshPerfectStreakForDayIfNeeded(DateTime day) {
@@ -804,7 +809,7 @@ class HabitProvider extends ChangeNotifier {
 
     // Always recompute after a completion-state transition. This keeps the
     // streak correct when a day becomes perfect and when it loses perfection.
-    _isDayFullyCompleted(day);
+    isDayFullyCompleted(day);
 
     statsProvider!.perfectDaysStreak = statsProvider!.refreshPerfectStreak();
   }
@@ -1214,7 +1219,7 @@ class HabitProvider extends ChangeNotifier {
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
     if (playSound && !wasCompleted && habit.completed && context.mounted) {
-      _playCompletionSound(context);
+      playCompletionSound(context, daySimple);
     }
     final currentHabit = habits.firstWhere((h) => h.id == id);
     // Check if habit is within the current week or month dependng on scheudle tpye
@@ -1432,7 +1437,9 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     habit.updateHabitAmountCompleted(amountCompleted);
     final isNowCompleted = habit.completed;
-    if (!wasCompleted && isNowCompleted) _playCompletionSound(context);
+    if (!wasCompleted && isNowCompleted) {
+      playCompletionSound(context, daySimple);
+    }
     if (context.mounted) checkReorderCategories(context, habit);
 
     await updateHabitInDB(habit, day: daySimple);
@@ -1632,7 +1639,9 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
-    if (!wasCompleted && isNowCompleted) _playCompletionSound(context);
+    if (!wasCompleted && isNowCompleted) {
+      playCompletionSound(context, daySimple);
+    }
 
     if (context.mounted) checkReorderCategories(context, habit);
 

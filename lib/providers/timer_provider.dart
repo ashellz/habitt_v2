@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:habitt/models/active_timer_session.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/services/completion_sound_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerProvider extends ChangeNotifier {
@@ -12,6 +14,7 @@ class TimerProvider extends ChangeNotifier {
 
   final SharedPreferences _prefs;
   HabitProvider? _habitProvider;
+  PreferencesProvider? _preferencesProvider;
 
   static const String _prefsKey = 'activeTimerSession_v1';
 
@@ -27,11 +30,21 @@ class TimerProvider extends ChangeNotifier {
   bool _autoCompleted = false;
   bool _autoCompleteInFlight = false;
 
+  // true right after restoring a session that was left running: the first
+  // auto-complete check may cross the target purely from time elapsed while
+  // the app was closed, so that one check stays silent (no sound/confetti
+  // just from opening the app) and only live ticks after it can play.
+  bool _suppressNextTickSound = false;
+
   // prompt the user to keep or discard the session TODO
   bool _pendingRecoveryPrompt = false;
 
   void attachHabitProvider(HabitProvider habitProvider) {
     _habitProvider = habitProvider;
+  }
+
+  void attachPreferencesProvider(PreferencesProvider preferencesProvider) {
+    _preferencesProvider = preferencesProvider;
   }
 
   ActiveTimerSession? get session => _session;
@@ -86,7 +99,7 @@ class TimerProvider extends ChangeNotifier {
     _ticker?.cancel();
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       notifyListeners();
-      unawaited(_maybeAutoComplete());
+      unawaited(_maybeAutoComplete(playSound: true));
     });
   }
 
@@ -121,11 +134,14 @@ class TimerProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<void> _maybeAutoComplete() async {
+  Future<void> _maybeAutoComplete({bool playSound = false}) async {
     final s = _session;
     final habitProvider = _habitProvider;
     if (s == null || habitProvider == null) return;
     if (!s.isRunning || _autoCompleteInFlight) return;
+
+    final effectivePlaySound = playSound && !_suppressNextTickSound;
+    _suppressNextTickSound = false;
 
     final target = habitProvider.timerTargetDuration(
       s.habitId,
@@ -139,9 +155,11 @@ class TimerProvider extends ChangeNotifier {
 
     final progress = s.baselineDurationCompleted + sessionElapsedSeconds;
 
+    bool justCompleted = false;
     if (progress >= target) {
       if (_autoCompleted) return;
       _autoCompleted = true;
+      justCompleted = true;
     } else {
       // target was raised past the progress we already committed, so commit
       // again to let the habit fall back to uncompleted
@@ -155,9 +173,30 @@ class TimerProvider extends ChangeNotifier {
     } finally {
       _autoCompleteInFlight = false;
     }
+
+    if (justCompleted && effectivePlaySound) {
+      _playTimerCompletionSound(s.dayKey);
+    }
+
     notifyListeners();
   }
 
+  void _playTimerCompletionSound(String dayKey) {
+    final preferences = _preferencesProvider;
+    final habitProvider = _habitProvider;
+    if (preferences == null || habitProvider == null) return;
+    if (!preferences.playCompletionSound) return;
+    unawaited(
+      CompletionSoundPlayer.instance.play(
+        allHabitsCompleted: habitProvider.isDayFullyCompleted(
+          DateTime.parse(dayKey),
+        ),
+      ),
+    );
+  }
+
+  // called on app resume to reconcile elapsed time; always silent (default
+  // playSound: false) since this is a catch-up check, not a live tick.
   Future<void> syncOnResume() => _maybeAutoComplete();
 
   Future<void> pause() async {
@@ -293,6 +332,7 @@ class TimerProvider extends ChangeNotifier {
       _session = s;
       if (s.isRunning && s.lastResumedAt != null) {
         _pendingRecoveryPrompt = true;
+        _suppressNextTickSound = true;
         _startTicker();
       }
     } catch (e) {

@@ -181,7 +181,12 @@ class TimerDialog extends StatelessWidget {
     final timer = context.read<TimerProvider>();
     final habitProvider = context.read<HabitProvider>();
     if (timer.isActiveHabit(habit.id)) {
+      final wasCompleted = habit.completed;
       await timer.completeToTarget(target);
+      if (!wasCompleted && habit.completed && context.mounted) {
+        final day = habitProvider.selectedDate ?? DateTime.now();
+        habitProvider.playCompletionSound(context, day);
+      }
     } else {
       habitProvider.completeHabit(
         habit.id,

@@ -1,22 +1,21 @@
 import 'package:audioplayers/audioplayers.dart';
 
-/// Plays the short "habit completed" sound.
-///
-/// Uses a sonification/ambient audio context so it mixes with whatever the
+/// Uses a ambient audio context so it mixes with whatever the
 /// user is listening to (no audio-focus grab on Android) and respects the
 /// iOS silent switch.
 class CompletionSoundPlayer {
   CompletionSoundPlayer._();
   static final CompletionSoundPlayer instance = CompletionSoundPlayer._();
 
-  // Placeholder: reuses a stock notification tone until a dedicated
-  // completion sound asset is added.
-  static const String _assetSourcePath = 'sound/sound_02.mp3';
+  static const String _habitAssetPath = 'sound/completion.mp3';
+  static const String _allHabitsAssetPath = 'sound/completion_all.mp3';
 
   final AudioPlayer _player = AudioPlayer(playerId: 'completion_sound');
   bool _configured = false;
 
-  Future<void> play() async {
+  // plays the sound
+  // plays the big sound if allHabitsCompleted is true
+  Future<void> play({bool allHabitsCompleted = false}) async {
     try {
       if (!_configured) {
         await _player.setAudioContext(
@@ -33,7 +32,9 @@ class CompletionSoundPlayer {
         _configured = true;
       }
       await _player.stop();
-      await _player.play(AssetSource(_assetSourcePath));
+      await _player.play(
+        AssetSource(allHabitsCompleted ? _allHabitsAssetPath : _habitAssetPath),
+      );
     } catch (_) {
       // A sound failure must never break completing a habit.
     }

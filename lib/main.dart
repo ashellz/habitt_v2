@@ -185,10 +185,15 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
 
-        ChangeNotifierProxyProvider<HabitProvider, TimerProvider>(
+        ChangeNotifierProxyProvider2<
+          HabitProvider,
+          PreferencesProvider,
+          TimerProvider
+        >(
           create: (_) => TimerProvider(prefs),
-          update: (_, habitProvider, previous) {
+          update: (_, habitProvider, preferencesProvider, previous) {
             previous!.attachHabitProvider(habitProvider);
+            previous.attachPreferencesProvider(preferencesProvider);
             habitProvider.onHabitDeactivated = previous.clearTimerIfActive;
             return previous;
           },
