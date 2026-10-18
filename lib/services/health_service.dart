@@ -336,6 +336,18 @@ class HealthService {
     }
   }
 
+  /// The calendar day a sync run on [today] should write [metric]'s value
+  /// to. Bedtime is attributed to the night it starts on, so last night's
+  /// bedtime only becomes known after waking up and lands on yesterday;
+  /// every other metric lands on [today].
+  DateTime syncDayFor(HealthMetricType metric, DateTime today) {
+    final dayStart = DateTime(today.year, today.month, today.day);
+    if (metric == HealthMetricType.bedtime) {
+      return DateTime(dayStart.year, dayStart.month, dayStart.day - 1);
+    }
+    return dayStart;
+  }
+
   int _bedtimeMinutesOfDay(DateTime dateTime) {
     final minutes = dateTime.hour * 60 + dateTime.minute;
     return minutes < 12 * 60 ? minutes + 24 * 60 : minutes;
@@ -346,8 +358,13 @@ class HealthService {
     DateTime day,
   ) {
     final dayStart = DateTime(day.year, day.month, day.day);
+    if (metric == HealthMetricType.bedtime) {
+      // Bedtime belongs to the day the person went to bed on — query the
+      // night that starts on this day, from this noon through the next.
+      final start = dayStart.add(const Duration(hours: 12));
+      return (start: start, end: start.add(const Duration(hours: 24)));
+    }
     if (metric == HealthMetricType.sleep ||
-        metric == HealthMetricType.bedtime ||
         metric == HealthMetricType.wakeTime) {
       // A night's sleep is attributed to the day the person wakes up on —
       // query from the previous noon through this noon rather than

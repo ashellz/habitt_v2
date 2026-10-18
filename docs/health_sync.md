@@ -73,6 +73,21 @@ opened, not the instant new Health data appears.
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
 
+## Day attribution (sleep windows)
+
+Most metrics are read midnight-to-midnight for the day being synced. The
+sleep-derived metrics use noon-to-noon windows instead
+(`HealthService._windowFor`), and each lands on a specific day:
+
+- `sleep` and `wakeTime` belong to the day the person **wakes up** on —
+  the window runs from the previous noon to this day's noon.
+- `bedtime` belongs to the day the person **went to bed** on — the window
+  runs from this day's noon to the next day's noon. Since that night is
+  only finished after waking up, `HealthService.syncDayFor` shifts a
+  bedtime sync run today to write to **yesterday**; `syncNow()` uses the
+  shifted day for the read, the session list and `syncHabitFromHealth`.
+  If the habit didn't exist yesterday, the value is simply dropped.
+
 ## Workouts/mindfulness tracking mode
 
 `workouts` and `mindfulness` are the only two metrics where a habit's own
