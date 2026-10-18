@@ -346,8 +346,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         requiredHabits.isNotEmpty &&
         requiredHabits.every((habit) => habit.completed);
     if (!_initializedCompletionState) {
-      _wasAllCompleted = allCompleted;
-      _initializedCompletionState = true;
+      // Habits load asynchronously, so the very first build or two can see
+      // an empty list before the real data arrives. Wait for a build with
+      // actual habits before locking in the baseline, otherwise that
+      // empty-to-loaded jump can look like a real completion and fire
+      // confetti right after opening the app.
+      if (requiredHabits.isNotEmpty) {
+        _wasAllCompleted = allCompleted;
+        _initializedCompletionState = true;
+      }
     } else {
       if (allCompleted && !_wasAllCompleted) {
         _confettiController.play();
