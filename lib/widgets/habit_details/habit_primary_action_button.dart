@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
@@ -47,18 +45,10 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
   void _burstConfetti() {
     final box = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
     if (box == null || !box.attached) return;
-    final cp = context.read<ColorProvider>();
     ConfettiBurst.show(
       context,
       origin: box.localToGlobal(Offset(box.size.width, 0)),
-      direction: -math.pi / 4,
-      colors: [
-        cp.main,
-        cp.orange300,
-        cp.mid,
-        const Color(0xFF4FC3F7),
-        const Color(0xFFF06292),
-      ],
+      direction: ConfettiDirection.topRight,
     );
   }
 

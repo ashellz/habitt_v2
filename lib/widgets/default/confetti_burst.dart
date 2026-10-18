@@ -1,18 +1,54 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/color_provider.dart';
+import 'package:provider/provider.dart';
+
+/// compass direction a confetti burst flies toward, converted to the angle
+/// [ConfettiBurst.show] needs (radians, screen coordinates: 0 = right,
+/// -pi/2 = up).
+enum ConfettiDirection {
+  top,
+  topRight,
+  right,
+  bottomRight,
+  bottom,
+  bottomLeft,
+  left,
+  topLeft;
+
+  double get angle {
+    switch (this) {
+      case ConfettiDirection.right:
+        return 0;
+      case ConfettiDirection.bottomRight:
+        return math.pi / 4;
+      case ConfettiDirection.bottom:
+        return math.pi / 2;
+      case ConfettiDirection.bottomLeft:
+        return 3 * math.pi / 4;
+      case ConfettiDirection.left:
+        return math.pi;
+      case ConfettiDirection.topLeft:
+        return -3 * math.pi / 4;
+      case ConfettiDirection.top:
+        return -math.pi / 2;
+      case ConfettiDirection.topRight:
+        return -math.pi / 4;
+    }
+  }
+}
 
 /// confetti burts, used on complete habit button, drawn in the root overlay so it isn't
 /// clipped by cards or lists. Pieces fly out of [origin] (global
-/// coordinates) in a cone around
-/// [direction] (radians, screen coordinates: 0 = right, -pi/2 = up), travel at
-/// most [maxDistance] px, then fade out.
+/// coordinates) in a cone around [direction], travel at most [maxDistance]
+/// px, then fade out.
 class ConfettiBurst {
   static void show(
     BuildContext context, {
     required Offset origin,
-    required List<Color> colors,
-    double direction = -3 * math.pi / 4,
+    List<Color>? colors,
+    ConfettiDirection direction = ConfettiDirection.topLeft,
     double maxDistance = 100,
   }) {
     if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) return;
@@ -26,8 +62,8 @@ class ConfettiBurst {
       builder:
           (_) => _ConfettiBurstOverlay(
             origin: localOrigin,
-            colors: colors,
-            direction: direction,
+            colors: colors ?? _defaultColors(context),
+            direction: direction.angle,
             maxDistance: maxDistance,
             onDone: () {
               entry.remove();
@@ -36,6 +72,17 @@ class ConfettiBurst {
           ),
     );
     overlay.insert(entry);
+  }
+
+  static List<Color> _defaultColors(BuildContext context) {
+    final cp = context.read<ColorProvider>();
+    return [
+      cp.main,
+      cp.orange300,
+      cp.mid,
+      const Color(0xFF4FC3F7),
+      const Color(0xFFF06292),
+    ];
   }
 }
 
