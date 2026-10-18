@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -27,6 +28,10 @@ class MainHabitInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isAmount = habit.tracksAmount;
     final bool isDuration = habit.tracksDuration;
+    final bool isTimeOfDay = habit.tracksTimeOfDay;
+    // sleep is an amount goal, but its values are seconds of sleep, so it
+    // reads as a duration rather than a count
+    final bool isSleep = habit.healthMetric == HealthMetricType.sleep;
 
     // follow the running timer live, same as NewHabitProgress.
     final liveDurationSeconds = context.select<TimerProvider, int?>(
@@ -36,7 +41,9 @@ class MainHabitInfo extends StatelessWidget {
         liveDurationSeconds ?? habit.durationCompleted;
 
     final bool hasProgress =
-        isAmount ? habit.amountCompleted > 0 : durationCompletedValue > 0;
+        isAmount || isTimeOfDay
+            ? habit.amountCompleted > 0
+            : durationCompletedValue > 0;
     final bool isCompleted = habit.completed;
 
     String amountText() {
@@ -73,6 +80,45 @@ class MainHabitInfo extends StatelessWidget {
       return getDurationString(habit.duration);
     }
 
+    String timeOfDayText() {
+      final materialLoc = MaterialLocalizations.of(context);
+      String format(int minutes) {
+        final normalized = minutes % (24 * 60);
+        return materialLoc.formatTimeOfDay(
+          TimeOfDay(hour: normalized ~/ 60, minute: normalized % 60),
+        );
+      }
+
+      // show the real logged start bedtime or wake time once there is one, otherwise the target
+      return format(hasProgress ? habit.amountCompleted : habit.amount);
+    }
+
+    String sleepText() {
+      final int target = habit.amount;
+      final int slept = habit.amountCompleted;
+
+      if (hasProgress && !isCompleted && slept < target) {
+        return "${getDurationString(slept)} / ${getDurationString(target)}";
+      } else if (isCompleted) {
+        return getDurationString(slept);
+      }
+      return getDurationString(target);
+    }
+
+    String getText() {
+      if (isSleep && isAmount) return sleepText();
+      switch (habit.trackingType) {
+        case HabitTrackingType.amount:
+          return amountText();
+        case HabitTrackingType.duration:
+          return durationText();
+        case HabitTrackingType.timeOfDay:
+          return timeOfDayText();
+        default:
+          return "";
+      }
+    }
+
     final loc = AppLocalizations.of(context)!;
 
     return Column(
@@ -106,13 +152,13 @@ class MainHabitInfo extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4.0),
             child: optionalTag(loc),
           ),
-        if (isAmount || isDuration)
+        if (isAmount || isDuration || isTimeOfDay)
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Row(
               spacing: 8,
               children: [
-                isAmount
+                isAmount && !isSleep
                     ? Icon(Icons.repeat, size: 14, color: cp.lightGreyText)
                     : SvgPicture.asset(
                       "assets/images/new-svg/clock.svg",
@@ -120,7 +166,7 @@ class MainHabitInfo extends StatelessWidget {
                       height: 14,
                     ),
                 Text(
-                  isAmount ? amountText() : durationText(),
+                  getText(),
                   style: TextStyle(color: cp.lightGreyText, fontSize: 13),
                 ),
               ],

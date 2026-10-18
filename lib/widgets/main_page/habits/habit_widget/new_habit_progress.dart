@@ -10,6 +10,7 @@ import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/hold_complete_tip.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
+import 'package:habitt/widgets/default/confetti_burst.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/dialogs/timer_dialog.dart';
 import 'package:provider/provider.dart';
@@ -34,11 +35,25 @@ class NewHabitProgress extends StatefulWidget {
   State<NewHabitProgress> createState() => _NewHabitProgressState();
 }
 
+// how far past target + tolerance the pie stays empty for timeOfDay habits
+const int _timeOfDayProgressWindowMinutes = 240;
+
 class _NewHabitProgressState extends State<NewHabitProgress> {
   double getProgressValue({int? liveDurationSeconds}) {
     final habit = widget.habit;
 
     if (habit.completed || habit.skipped) return 1.0;
+
+    // timeOfDay (bedtime/wake time): earlier is better, values are minutes of
+    // day. Nothing logged = no progress; otherwise the pie fills as the logged
+    // time gets closer to target + tolerance (completed is handled above).
+    if (habit.tracksTimeOfDay) {
+      if (habit.amountCompleted <= 0) return 0.0;
+      final lateness =
+          habit.amountCompleted - (habit.amount + habit.toleranceMinutes);
+      if (lateness <= 0) return 1.0;
+      return (1 - lateness / _timeOfDayProgressWindowMinutes).clamp(0.0, 1.0);
+    }
 
     if (habit.tracksAmount) {
       if (habit.amount <= 0) return 0.0; // avoiding division by zero
@@ -59,9 +74,51 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
 
   double _scale = 1.0;
 
+  final _checkmarkKey = GlobalKey();
+  late bool _lastCompleted;
+  // set when the user taps/holds to complete, so completions from elsewhere
+  // (Health sync, notification actions) don't pop confetti
+  bool _confettiArmed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastCompleted = widget.habit.completed;
+  }
+
+  void _burstConfetti() {
+    final box = _checkmarkKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.attached) return;
+    final cp = context.read<ColorProvider>();
+    ConfettiBurst.show(
+      context,
+      origin: box.localToGlobal(box.size.center(Offset.zero)),
+      colors: [
+        widget.color ?? cp.main,
+        cp.orange300,
+        cp.mid,
+        const Color(0xFF4FC3F7),
+        const Color(0xFFF06292),
+      ],
+    );
+  }
+
+  void _trackCompletion() {
+    final completed = widget.habit.completed;
+    if (completed == _lastCompleted) return;
+    _lastCompleted = completed;
+    if (completed && _confettiArmed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _burstConfetti();
+      });
+    }
+    _confettiArmed = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final habitProvider = context.watch<HabitProvider>();
+    _trackCompletion();
     final stateProvider = context.read<StateProvider>();
 
     // rebuild progress every second
@@ -91,6 +148,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                 });
 
                 if (!widget.habit.hasTrackingType) {
+                  _confettiArmed = !widget.habit.completed;
                   habitProvider.completeHabit(
                     widget.habit.id,
                     context,
@@ -104,6 +162,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                       (selected.year == now.year &&
                           selected.month == now.month &&
                           selected.day == now.day);
+                  final wasCompleted = widget.habit.completed;
                   showDialogSheet(
                     context: context,
                     builder: (context) {
@@ -122,6 +181,11 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                       }
                     },
                   ).then((_) {
+                    if (!mounted) return;
+                    // completed inside the dialog: pop once it's out of the way
+                    if (!wasCompleted && widget.habit.completed) {
+                      _burstConfetti();
+                    }
                     if (mounted) HoldCompleteTip.showIfNeeded(context);
                   });
                 }
@@ -156,6 +220,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
           widget.isDemo
               ? null
               : () {
+                _confettiArmed = !widget.habit.completed;
                 habitProvider.completeHabit(
                   widget.habit.id,
                   context,
@@ -171,6 +236,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
             scale: _scale,
             duration: const Duration(milliseconds: 150),
             child: SizedBox(
+              key: _checkmarkKey,
               width: 24,
               height: 24,
               child: AnimatedSwitcher(

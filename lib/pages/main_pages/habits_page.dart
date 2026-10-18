@@ -8,12 +8,14 @@ import 'package:habitt/pages/other_pages/deleted_habits_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/util/show_new_habit_creation_flow.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/habit_widget/habit_card.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
+import 'package:habitt/widgets/main_page/habits/demo_habits_grid.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
@@ -45,6 +47,8 @@ class _HabitsPageState extends State<HabitsPage> {
               showAll: !_isScheduledTodayOn,
             ),
             scheduledTodayToggle(cp),
+            if (context.watch<PreferencesProvider>().showDemoHabits)
+              const DemoHabitsGrid(),
             ReorderingHabits(todaysOnly: _isScheduledTodayOn),
             if (Platform.isAndroid) SizedBox(height: 24),
           ],

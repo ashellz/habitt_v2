@@ -11,6 +11,7 @@ import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/insight_sheet_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
+import 'package:habitt/widgets/main_page/habits/demo_habits_section.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/main_page/timer_pill_widget.dart';
 import 'package:habitt/widgets/main_page/main_page_top_section.dart';
@@ -447,6 +448,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         .watch<PreferencesProvider>()
                         .showCategoriesOnMainPage)
                       NewCategoriesList(),
+                    if (context.watch<PreferencesProvider>().showDemoHabits)
+                      const DemoHabitsSection(),
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 16,

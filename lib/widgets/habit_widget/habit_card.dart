@@ -18,6 +18,7 @@ class HabitCard extends StatefulWidget {
     required Key key,
     this.deleted = false,
     this.onRestored,
+    this.isDemo = false,
   }) : super(key: key);
 
   final Habit habit;
@@ -25,6 +26,7 @@ class HabitCard extends StatefulWidget {
   final double size;
   final bool deleted;
   final VoidCallback? onRestored;
+  final bool isDemo;
 
   @override
   State<HabitCard> createState() => _HabitCardState();
@@ -45,14 +47,17 @@ class _HabitCardState extends State<HabitCard> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            settings: RouteSettings(arguments: widget.habit.id),
-            builder: (_) => HabitDetailsPage(habitId: widget.habit.id),
-          ),
-        );
-      },
+      onTap:
+          widget.isDemo
+              ? null
+              : () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    settings: RouteSettings(arguments: widget.habit.id),
+                    builder: (_) => HabitDetailsPage(habitId: widget.habit.id),
+                  ),
+                );
+              },
       child: Container(
         alignment: Alignment.topLeft,
         width: widget.size,
