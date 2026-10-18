@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage>
   bool _supportsLiquidGlass = false;
   late final StatusOverlayPopupController _statusPopup;
   VoidCallback? _backupListener;
+  VoidCallback? _timerListener;
 
   bool _outdatedPeerDialogHandled = false;
   static const String _outdatedPeerWarningShownKey =
@@ -130,6 +131,11 @@ class _HomePageState extends State<HomePage>
       };
       backupProvider.addListener(_backupListener!);
 
+      final timerProvider = context.read<TimerProvider>();
+      _maybeShowTimerCompletionToast(timerProvider);
+      _timerListener = () => _maybeShowTimerCompletionToast(timerProvider);
+      timerProvider.addListener(_timerListener!);
+
       final stateProvider = context.read<StateProvider>();
       final statsProvider = context.read<StatsProvider>();
 
@@ -214,12 +220,34 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  void _maybeShowTimerCompletionToast(TimerProvider timerProvider) {
+    final habitName = timerProvider.pendingCompletionToastHabitName;
+    if (habitName == null) return;
+    final icon = timerProvider.pendingCompletionToastIcon ?? '';
+    timerProvider.clearPendingCompletionToast();
+    if (!mounted) return;
+    final body = AppLocalizations.of(
+      context,
+    )!.timerCompletedNotificationBody(habitName);
+    _statusPopup.show(
+      context: context,
+      cp: context.read<ColorProvider>(),
+      title: icon.isNotEmpty ? '$icon $body' : body,
+      isError: false,
+    );
+  }
+
   @override
   void dispose() {
     MainTabController.unregister(_resetToMainTab);
     if (_backupListener != null) {
       try {
         context.read<BackupProvider>().removeListener(_backupListener!);
+      } catch (_) {}
+    }
+    if (_timerListener != null) {
+      try {
+        context.read<TimerProvider>().removeListener(_timerListener!);
       } catch (_) {}
     }
     _statusPopup.dispose();

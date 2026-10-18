@@ -1012,6 +1012,8 @@
   "backupBeforeImporting": "Se recomienda encarecidamente hacer una copia de seguridad de tus datos antes de continuar.",
   "streakCelebration": "Celebración de racha",
   "streakCelebrationDesc": "Muestra una celebración cuando crece tu racha de días perfectos.",
+  "completionSound": "Sonido al completar",
+  "completionSoundDesc": "Reproduce un sonido corto al completar un hábito.",
   "greatProgress": "Gran progreso",
   "buildingRealConsistency": "Estás creando una constancia real",
   "keepGoing": "¡Sigue así!",
@@ -1082,6 +1084,14 @@
   "streakCriticalWarning2": "¡No falles hoy!",
   "streakCriticalPartial1": "Termina hoy para aumentar tu racha",
   "streakCriticalPartial2": "Muy cerca, termina y seguirá creciendo",
+
+  "timerCompletedNotificationTitle": "Objetivo alcanzado",
+  "timerCompletedNotificationBody": "'{name}' alcanzó su objetivo.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
   "deletedToday": "Hoy",
   "deletedOneDayAgo": "Hace 1 día",
   "deletedDaysAgoLabel": "Hace {days} días",

@@ -4414,6 +4414,18 @@ abstract class AppLocalizations {
   /// **'Show a celebration when your perfect-days streak grows.'**
   String get streakCelebrationDesc;
 
+  /// No description provided for @completionSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion sound'**
+  String get completionSound;
+
+  /// No description provided for @completionSoundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a short sound when you complete a habit.'**
+  String get completionSoundDesc;
+
   /// No description provided for @greatProgress.
   ///
   /// In en, this message translates to:
@@ -5361,6 +5373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications'**
   String get overrideFieldNotifications;
+
+  /// No description provided for @timerCompletedNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Target reached'**
+  String get timerCompletedNotificationTitle;
+
+  /// No description provided for @timerCompletedNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'\'{name}\' reached its target.'**
+  String timerCompletedNotificationBody(String name);
 }
 
 class _AppLocalizationsDelegate

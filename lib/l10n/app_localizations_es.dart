@@ -2637,6 +2637,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Muestra una celebración cuando crece tu racha de días perfectos.';
 
   @override
+  String get completionSound => 'Sonido al completar';
+
+  @override
+  String get completionSoundDesc =>
+      'Reproduce un sonido corto al completar un hábito.';
+
+  @override
   String get greatProgress => 'Gran progreso';
 
   @override
@@ -3142,5 +3149,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get overrideFieldSchedule => 'Horario';
 
   @override
+  String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get timerCompletedNotificationTitle => 'Objetivo alcanzado';
+
+  @override
+  String timerCompletedNotificationBody(String name) {
+    return '\'$name\' alcanzó su objetivo.';
+  }
   String get overrideFieldNotifications => 'Notificaciones';
 }

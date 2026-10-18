@@ -1010,8 +1010,10 @@
   "importHabitKitNote": "Symbole und Farben können sich ändern, „schlechte Gewohnheiten” werden als normale Gewohnheiten importiert",
   "replace": "Ersetzen",
   "backupBeforeImporting": "Es wird dringend empfohlen, deine Daten zu sichern, bevor du fortfährst.",
-  "streakCelebration": "Streak-Feier",
-  "streakCelebrationDesc": "Zeige eine Feier, wenn dein Perfekte-Tage-Streak wächst.",
+  "streakCelebration": "Serien-Feier",
+  "streakCelebrationDesc": "Zeige eine Feier, wenn deine Serie perfekter Tage wächst.",
+  "completionSound": "Abschluss-Sound",
+  "completionSoundDesc": "Spiele einen kurzen Sound ab, wenn du eine Gewohnheit abschließt.",
   "greatProgress": "Toller Fortschritt",
   "buildingRealConsistency": "Du baust echte Beständigkeit auf",
   "keepGoing": "Weiter so!",
@@ -1082,6 +1084,14 @@
   "streakCriticalWarning2": "Verpass heute nicht!",
   "streakCriticalPartial1": "Heute abschließen und deinen Streak verlängern",
   "streakCriticalPartial2": "So nah dran, mach fertig und er wächst",
+
+  "timerCompletedNotificationTitle": "Ziel erreicht",
+  "timerCompletedNotificationBody": "'{name}' hat das Ziel erreicht.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
   "deletedToday": "Heute",
   "deletedOneDayAgo": "Vor 1 Tag",
   "deletedDaysAgoLabel": "Vor {days} Tagen",

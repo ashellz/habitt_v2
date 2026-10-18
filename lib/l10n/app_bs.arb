@@ -1003,6 +1003,8 @@
   "backupBeforeImporting": "Preporučuje se napraviti backup podataka prije nastavka.",
   "streakCelebration": "Slavlje streaka",
   "streakCelebrationDesc": "Prikaži proslavu kada ti dnevni streak raste",
+  "completionSound": "Zvuk završetka",
+  "completionSoundDesc": "Pusti kratak zvuk kada završiš naviku.",
   "greatProgress": "Odličan napredak",
   "buildingRealConsistency": "Gradiš pravu konzistentnost",
   "keepGoing": "Samo naprijed!",
@@ -1072,6 +1074,14 @@
   "streakCriticalWarning2": "Nemoj propustiti danas!",
   "streakCriticalPartial1": "Završi danas da povećaš streak",
   "streakCriticalPartial2": "Blizu si, završi i nastavi streak",
+
+  "timerCompletedNotificationTitle": "Cilj dostignut",
+  "timerCompletedNotificationBody": "'{name}' je dostigao cilj.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
   "deletedToday": "Danas",
   "deletedOneDayAgo": "Prije 1 dan",
   "deletedDaysAgoLabel": "Prije {days} dana",

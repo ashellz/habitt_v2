@@ -2620,6 +2620,12 @@ class AppLocalizationsBs extends AppLocalizations {
       'Prikaži proslavu kada ti dnevni streak raste';
 
   @override
+  String get completionSound => 'Zvuk završetka';
+
+  @override
+  String get completionSoundDesc => 'Pusti kratak zvuk kada završiš naviku.';
+
+  @override
   String get greatProgress => 'Odličan napredak';
 
   @override
@@ -3120,5 +3126,14 @@ class AppLocalizationsBs extends AppLocalizations {
   String get overrideFieldSchedule => 'Raspored';
 
   @override
+  String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get timerCompletedNotificationTitle => 'Cilj dostignut';
+
+  @override
+  String timerCompletedNotificationBody(String name) {
+    return '\'$name\' je dostigao cilj.';
+  }
   String get overrideFieldNotifications => 'Obavijesti';
 }

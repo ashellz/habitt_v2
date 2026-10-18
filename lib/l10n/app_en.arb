@@ -1015,6 +1015,8 @@
   "backupBeforeImporting": "It's strongly recommended to back up your data before proceeding.",
   "streakCelebration": "Streak celebration",
   "streakCelebrationDesc": "Show a celebration when your perfect-days streak grows.",
+  "completionSound": "Completion sound",
+  "completionSoundDesc": "Play a short sound when you complete a habit.",
   "greatProgress": "Great progress",
   "buildingRealConsistency": "You're building real consistency",
   "keepGoing": "Keep going!",
@@ -1186,5 +1188,13 @@
   "overrideFieldTarget": "Target",
   "overrideFieldHealthSync": "Health sync",
   "overrideFieldSchedule": "Schedule",
-  "overrideFieldNotifications": "Notifications"
+  "overrideFieldNotifications": "Notifications",
+
+  "timerCompletedNotificationTitle": "Target reached",
+  "timerCompletedNotificationBody": "'{name}' reached its target.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }

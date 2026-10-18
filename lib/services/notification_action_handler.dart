@@ -18,7 +18,11 @@ class NotificationActionHandler {
   static const String _payloadHabitIdKey = 'habit_id';
   static const String _payloadTypeKey = 'notification_type';
   static const String _payloadTypeHabit = 'habit';
+  static const String _payloadTypeTimerComplete = 'timer_complete';
   static const String _payloadDayKey = 'habit_day';
+
+  static bool _isHandledType(String? type) =>
+      type == _payloadTypeHabit || type == _payloadTypeTimerComplete;
 
   /// Global navigator key so notifications can route without a widget context.
   static final GlobalKey<NavigatorState> navigatorKey =
@@ -60,7 +64,7 @@ class NotificationActionHandler {
     );
 
     // other type of notif, just ignore inputs
-    if (payload[_payloadTypeKey] != _payloadTypeHabit) return;
+    if (!_isHandledType(payload[_payloadTypeKey])) return;
 
     final habitId = int.tryParse(payload[_payloadHabitIdKey] ?? '');
     if (habitId == null) return;
@@ -97,7 +101,7 @@ class NotificationActionHandler {
     );
     if (action == null) return;
     final payload = action.payload ?? const {};
-    if (payload[_payloadTypeKey] != _payloadTypeHabit) return;
+    if (!_isHandledType(payload[_payloadTypeKey])) return;
     if (action.buttonKeyPressed == NotificationService.completeActionKey) {
       return; // completion handled via the queue, not navigation
     }

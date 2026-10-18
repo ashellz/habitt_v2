@@ -38,6 +38,7 @@ class PreferencesProvider extends ChangeNotifier {
   static const String _kShowCategoriesOnMainPageKey =
       'show_categories_on_main_page';
   static const String _kHasSelectedPastDayKey = 'has_selected_past_day';
+  static const String _kPlayCompletionSoundKey = 'play_completion_sound';
   static const String _kShowDemoHabitsKey = 'show_demo_habits';
 
   bool _glassFeel = true;
@@ -48,6 +49,7 @@ class PreferencesProvider extends ChangeNotifier {
   bool _showStreakCelebration = true;
   bool _showCategoriesOnMainPage = false;
   bool _hasSelectedPastDay = false;
+  bool _playCompletionSound = true;
   bool _showDemoHabits = false;
 
   bool get glassFeel => _glassFeel;
@@ -57,6 +59,7 @@ class PreferencesProvider extends ChangeNotifier {
   bool get showStreakCelebration => _showStreakCelebration;
   bool get showCategoriesOnMainPage => _showCategoriesOnMainPage;
   bool get hasSelectedPastDay => _hasSelectedPastDay;
+  bool get playCompletionSound => _playCompletionSound;
   bool get showDemoHabits => _showDemoHabits;
 
   SharedPreferences? _prefs;
@@ -75,6 +78,7 @@ class PreferencesProvider extends ChangeNotifier {
     _showCategoriesOnMainPage =
         _prefs?.getBool(_kShowCategoriesOnMainPageKey) ?? false;
     _hasSelectedPastDay = _prefs?.getBool(_kHasSelectedPastDayKey) ?? false;
+    _playCompletionSound = _prefs?.getBool(_kPlayCompletionSoundKey) ?? true;
     _showDemoHabits = _prefs?.getBool(_kShowDemoHabitsKey) ?? false;
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
@@ -109,6 +113,12 @@ class PreferencesProvider extends ChangeNotifier {
   void setShowStreakCelebration(bool value) {
     _showStreakCelebration = value;
     _prefs?.setBool(_kShowStreakCelebrationKey, value);
+    notifyListeners();
+  }
+
+  void setPlayCompletionSound(bool value) {
+    _playCompletionSound = value;
+    _prefs?.setBool(_kPlayCompletionSoundKey, value);
     notifyListeners();
   }
 
