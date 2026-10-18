@@ -2860,11 +2860,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get restoreDeletedHabitConfirm =>
       '¿Restaurar este hábito? Su racha reflejará los días que se perdió mientras estaba eliminado.';
-      'Los hábitos eliminados permanecen aquí durante 30 días y luego se borran de forma permanente.';
-
-  @override
-  String get restoreDeletedHabitConfirm =>
-      '¿Restaurar este hábito? Su racha reflejará los días que se haya saltado mientras estuvo eliminado.';
 
   @override
   String get healthSyncSectionTitleApple => 'Sincronizar con Apple Health';
@@ -3148,12 +3143,4 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notificaciones';
-  String get overrideFieldNotifications => 'Notifications';
-
-  @override
-  String get demoMode => 'Demo mode';
-
-  @override
-  String get demoModeDesc =>
-      'Show a set of sample habits with progress on the home and habits screens.';
 }

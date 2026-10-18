@@ -5361,18 +5361,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications'**
   String get overrideFieldNotifications;
-
-  /// No description provided for @demoMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Demo mode'**
-  String get demoMode;
-
-  /// No description provided for @demoModeDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Show a set of sample habits with progress on the home and habits screens.'**
-  String get demoModeDesc;
 }
 
 class _AppLocalizationsDelegate
