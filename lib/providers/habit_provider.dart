@@ -1530,9 +1530,8 @@ class HabitProvider extends ChangeNotifier {
     if (habit.healthMetric != metric) return;
 
     final wasCompleted = habit.completed;
-    // Workouts/mindfulness let the habit's own trackingType (Amount vs.
-    // Duration) diverge from the metric's fixed default — route by the
-    // habit's actual choice for those, everyone else keeps the fixed mapping.
+
+    // assign tracking type based on selected or default one
     final effectiveTrackingType =
         metric.supportsTrackingChoice
             ? (habit.trackingType ?? metric.trackingType)
@@ -1550,9 +1549,9 @@ class HabitProvider extends ChangeNotifier {
     }
     habit.healthSessions = sessions.map((s) => s.copy()).toList();
 
-    // A workout/mindfulness habit with no target set (0) would otherwise
-    // always read as "complete" via the plain >= comparison above, even with
-    // zero sessions logged. Override: complete only if something was logged.
+    // a workout/mindfulness habit with no target set (0) would
+    // always read as complete even with no sessions logged
+    // override: complete only if anything was logged
     if (metric.supportsTrackingChoice) {
       final target =
           effectiveTrackingType == HabitTrackingType.amount

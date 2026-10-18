@@ -1,10 +1,5 @@
 {
   "bs": [
-    "deletedToday",
-    "deletedOneDayAgo",
-    "deletedDaysAgoLabel",
-    "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm",
     "healthSyncSectionTitleApple",
     "healthSyncSectionTitleAndroid",
     "healthSyncSectionDescApple",
@@ -93,15 +88,12 @@
     "overrideFieldTarget",
     "overrideFieldHealthSync",
     "overrideFieldSchedule",
-    "overrideFieldNotifications"
+    "overrideFieldNotifications",
+    "demoMode",
+    "demoModeDesc"
   ],
 
   "de": [
-    "deletedToday",
-    "deletedOneDayAgo",
-    "deletedDaysAgoLabel",
-    "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm",
     "healthSyncSectionTitleApple",
     "healthSyncSectionTitleAndroid",
     "healthSyncSectionDescApple",
@@ -190,15 +182,12 @@
     "overrideFieldTarget",
     "overrideFieldHealthSync",
     "overrideFieldSchedule",
-    "overrideFieldNotifications"
+    "overrideFieldNotifications",
+    "demoMode",
+    "demoModeDesc"
   ],
 
   "es": [
-    "deletedToday",
-    "deletedOneDayAgo",
-    "deletedDaysAgoLabel",
-    "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm",
     "healthSyncSectionTitleApple",
     "healthSyncSectionTitleAndroid",
     "healthSyncSectionDescApple",
@@ -287,15 +276,12 @@
     "overrideFieldTarget",
     "overrideFieldHealthSync",
     "overrideFieldSchedule",
-    "overrideFieldNotifications"
+    "overrideFieldNotifications",
+    "demoMode",
+    "demoModeDesc"
   ],
 
   "it": [
-    "deletedToday",
-    "deletedOneDayAgo",
-    "deletedDaysAgoLabel",
-    "deletedHabitsPageDesc",
-    "restoreDeletedHabitConfirm",
     "healthSyncSectionTitleApple",
     "healthSyncSectionTitleAndroid",
     "healthSyncSectionDescApple",
@@ -384,6 +370,8 @@
     "overrideFieldTarget",
     "overrideFieldHealthSync",
     "overrideFieldSchedule",
-    "overrideFieldNotifications"
+    "overrideFieldNotifications",
+    "demoMode",
+    "demoModeDesc"
   ]
 }

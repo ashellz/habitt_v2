@@ -1071,5 +1071,10 @@
   "streakCriticalWarning1": "Zadnja šansa da spasiš streak!",
   "streakCriticalWarning2": "Nemoj propustiti danas!",
   "streakCriticalPartial1": "Završi danas da povećaš streak",
-  "streakCriticalPartial2": "Blizu si, završi i nastavi streak"
+  "streakCriticalPartial2": "Blizu si, završi i nastavi streak",
+  "deletedToday": "Danas",
+  "deletedOneDayAgo": "Prije 1 dan",
+  "deletedDaysAgoLabel": "Prije {days} dana",
+  "deletedHabitsPageDesc": "Izbrisane navike ostaju ovdje 30 dana, a zatim se trajno uklanjaju.",
+  "restoreDeletedHabitConfirm": "Vratiti ovu naviku? Njen streak će odražavati sve dane koje je propustila dok je bila izbrisana."
 }

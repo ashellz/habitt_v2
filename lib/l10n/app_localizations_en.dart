@@ -3126,4 +3126,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get demoMode => 'Demo mode';
+
+  @override
+  String get demoModeDesc =>
+      'Show a set of sample habits with progress on the home and habits screens.';
 }

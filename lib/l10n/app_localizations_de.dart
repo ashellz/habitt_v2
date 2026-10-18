@@ -2850,23 +2850,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get streakCriticalPartial2 => 'So nah dran, mach fertig und er wächst';
 
   @override
-  String get deletedToday => 'Today';
+  String get deletedToday => 'Heute';
 
   @override
-  String get deletedOneDayAgo => '1 day ago';
+  String get deletedOneDayAgo => 'Vor 1 Tag';
 
   @override
   String deletedDaysAgoLabel(Object days) {
-    return '$days days ago';
+    return 'Vor $days Tagen';
   }
 
   @override
   String get deletedHabitsPageDesc =>
-      'Deleted habits stay here for 30 days, then they\'re permanently removed.';
+      'Gelöschte Gewohnheiten bleiben hier 30 Tage lang erhalten und werden dann endgültig entfernt.';
 
   @override
   String get restoreDeletedHabitConfirm =>
-      'Restore this habit? Its streak will reflect any days it missed while deleted.';
+      'Diese Gewohnheit wiederherstellen? Ihr Streak berücksichtigt alle Tage, die sie im gelöschten Zustand verpasst hat.';
 
   @override
   String get healthSyncSectionTitleApple => 'Sync with Apple Health';
@@ -3148,4 +3148,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get demoMode => 'Demo mode';
+
+  @override
+  String get demoModeDesc =>
+      'Show a set of sample habits with progress on the home and habits screens.';
 }

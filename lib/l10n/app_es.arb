@@ -1081,5 +1081,10 @@
   "streakCriticalWarning1": "¡Última oportunidad para salvar tu racha!",
   "streakCriticalWarning2": "¡No falles hoy!",
   "streakCriticalPartial1": "Termina hoy para aumentar tu racha",
-  "streakCriticalPartial2": "Muy cerca, termina y seguirá creciendo"
+  "streakCriticalPartial2": "Muy cerca, termina y seguirá creciendo",
+  "deletedToday": "Hoy",
+  "deletedOneDayAgo": "Hace 1 día",
+  "deletedDaysAgoLabel": "Hace {days} días",
+  "deletedHabitsPageDesc": "Los hábitos eliminados permanecen aquí durante 30 días y luego se borran de forma permanente.",
+  "restoreDeletedHabitConfirm": "¿Restaurar este hábito? Su racha reflejará los días que se haya saltado mientras estuvo eliminado."
 }

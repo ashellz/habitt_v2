@@ -1081,5 +1081,10 @@
   "streakCriticalWarning1": "Letzte Chance, deinen Streak zu retten!",
   "streakCriticalWarning2": "Verpass heute nicht!",
   "streakCriticalPartial1": "Heute abschließen und deinen Streak verlängern",
-  "streakCriticalPartial2": "So nah dran, mach fertig und er wächst"
+  "streakCriticalPartial2": "So nah dran, mach fertig und er wächst",
+  "deletedToday": "Heute",
+  "deletedOneDayAgo": "Vor 1 Tag",
+  "deletedDaysAgoLabel": "Vor {days} Tagen",
+  "deletedHabitsPageDesc": "Gelöschte Gewohnheiten bleiben hier 30 Tage lang erhalten und werden dann endgültig entfernt.",
+  "restoreDeletedHabitConfirm": "Diese Gewohnheit wiederherstellen? Ihr Streak berücksichtigt alle Tage, die sie im gelöschten Zustand verpasst hat."
 }
