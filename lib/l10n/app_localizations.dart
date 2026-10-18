@@ -5373,6 +5373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications'**
   String get overrideFieldNotifications;
+
+  /// No description provided for @timerCompletedNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Target reached'**
+  String get timerCompletedNotificationTitle;
+
+  /// No description provided for @timerCompletedNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'\'{name}\' reached its target.'**
+  String timerCompletedNotificationBody(String name);
 }
 
 class _AppLocalizationsDelegate

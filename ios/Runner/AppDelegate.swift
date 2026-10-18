@@ -5,19 +5,18 @@ import awesome_notifications
 import shared_preferences_foundation
 
 @main
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    // Classic (pre-UIScene) registration: plugins register against the app
-    // delegate, so awesome_notifications' addApplicationDelegate hooks into
-    // FlutterAppDelegate's UNUserNotificationCenter forwarding and notification
-    // taps / action buttons reach Dart. (UIScene is opted out in Info.plist via
-    // _UIApplicationSceneManifest because awesome_notifications 0.10.1 has no
-    // scene-delegate support.)
-    GeneratedPluginRegistrant.register(with: self)
-
+    // UIScene lifecycle (required when building with the iOS 27 SDK — without
+    // it UIKit traps at launch). Plugins register in
+    // didInitializeImplicitFlutterEngine below, once FlutterSceneDelegate has
+    // created the engine. awesome_notifications >= 0.12.1 (IosAwnCore 0.12.1)
+    // claims the UNUserNotificationCenter delegate itself at registration and
+    // resolves the initial action on first activation, so taps / action
+    // buttons still reach Dart under UIScene.
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self
     }
@@ -38,6 +37,10 @@ import shared_preferences_foundation
     }
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+    GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
   }
 
   // awesome_notifications forwards these to its Flutter channel without

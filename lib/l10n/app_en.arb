@@ -1188,5 +1188,13 @@
   "overrideFieldTarget": "Target",
   "overrideFieldHealthSync": "Health sync",
   "overrideFieldSchedule": "Schedule",
-  "overrideFieldNotifications": "Notifications"
+  "overrideFieldNotifications": "Notifications",
+
+  "timerCompletedNotificationTitle": "Target reached",
+  "timerCompletedNotificationBody": "'{name}' reached its target.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }

@@ -107,13 +107,6 @@ dependency_overrides:
 
 # The following section is specific to Flutter packages.
 flutter:
-  # Opt out of the iOS UIScene migration (Flutter 3.38+). awesome_notifications
-  # 0.10.1 only registers via addApplicationDelegate (no addSceneDelegate), so
-  # under UIScene it never receives notification tap/action callbacks. Re-enable
-  # once the package adds scene-delegate support. See ios/Runner/Info.plist
-  # (_UIApplicationSceneManifest) and AppDelegate.swift.
-  config:
-    enable-uiscene-migration: false
   generate: true
 
   # The following line ensures that the Material Icons font is

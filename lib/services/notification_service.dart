@@ -19,6 +19,12 @@ class NotificationService {
   static const String _habitPayloadTypeValue = 'habit';
   static const String _habitDayKey = 'habit_day';
 
+  /// Payload type for target reached alert on timer
+  /// distinct from [_habitPayloadTypeValue] so it isn't canceled  by
+  /// [cancelAllHabitNotifications], which only targets scheduled reminders.
+  static const String _timerCompletePayloadTypeValue = 'timer_complete';
+  static const String _timerCompletedChannelKey = 'timer_completed_channel';
+
   /// Action button key for the "Complete" button on habit reminders.
   static const String completeActionKey = 'COMPLETE';
 
@@ -388,6 +394,87 @@ class NotificationService {
     final raw = (habitId * 31) ^ (slotId * 17) ^ dayKey;
     final normalized = raw.abs() % 900000000;
     return 1000000000 + normalized;
+  }
+
+  // doesn't match the habit-reminder id range (one timer can be
+  // active at a time, so one pending id per habit is enough).
+  static int _timerCompletionNotificationId(int habitId) =>
+      1900000000 + (habitId.abs() % 90000000);
+
+  // time before the scheduled completion notification fires, to give the in-app
+  // completion handler a chance to cancel it first if the app is still alive
+  static const Duration _completionNotificationBuffer = Duration(seconds: 3);
+
+  static Future<void> scheduleTimerCompletionNotification({
+    required Habit habit,
+    required DateTime fireAt,
+    required DateTime day,
+  }) => _createTimerCompletionNotification(
+    habit: habit,
+    day: day,
+    schedule: NotificationCalendar.fromDate(
+      date: fireAt.add(_completionNotificationBuffer),
+      allowWhileIdle: true,
+      preciseAlarm: true,
+    ),
+  );
+
+  /// Fires the alert immediately instead of scheduling it — used when the
+  /// completion is detected while the app is backgrounded (a live tick that
+  /// still managed to run, rather than the originally scheduled time), so
+  /// the user is notified immediately instead of waiting on a schedule this
+  /// call's caller has already cancelled.
+  static Future<void> fireTimerCompletionNotificationNow({
+    required Habit habit,
+    required DateTime day,
+  }) => _createTimerCompletionNotification(
+    habit: habit,
+    day: day,
+    schedule: null,
+  );
+
+  static Future<void> _createTimerCompletionNotification({
+    required Habit habit,
+    required DateTime day,
+    required NotificationCalendar? schedule,
+  }) async {
+    try {
+      if (!await AwesomeNotifications().isNotificationAllowed()) return;
+      final localizations =
+          await HabitNotificationLocaleResolver.resolveFromPreferences();
+      final icon = habit.iconPath.trim();
+      final title =
+          icon.isNotEmpty
+              ? '$icon ${localizations.timerCompletedNotificationTitle}'
+              : localizations.timerCompletedNotificationTitle;
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: _timerCompletionNotificationId(habit.id),
+          channelKey: _timerCompletedChannelKey,
+          title: title,
+          body: localizations.timerCompletedNotificationBody(habit.name),
+          notificationLayout: NotificationLayout.Default,
+          category: NotificationCategory.Reminder,
+          payload: {
+            _habitPayloadKey: habit.id.toString(),
+            _habitPayloadTypeKey: _timerCompletePayloadTypeValue,
+            _habitDayKey: _dayKeyString(day),
+          },
+        ),
+        schedule: schedule,
+      );
+    } catch (e) {
+      // A missed notification must never break the timer itself.
+      debugPrint('timer completion notification failed: $e');
+    }
+  }
+
+  /// Cancels the pending timer-completion alert for [habitId], e.g. once the
+  /// timer is paused/stopped or the completion already happened live.
+  static Future<void> cancelTimerCompletionNotification(int habitId) async {
+    await AwesomeNotifications().cancel(
+      _timerCompletionNotificationId(habitId),
+    );
   }
 
   /// List all scheduled notifications (for debugging)

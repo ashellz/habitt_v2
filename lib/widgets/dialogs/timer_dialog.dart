@@ -185,7 +185,11 @@ class TimerDialog extends StatelessWidget {
       await timer.completeToTarget(target);
       if (!wasCompleted && habit.completed && context.mounted) {
         final day = habitProvider.selectedDate ?? DateTime.now();
-        habitProvider.playCompletionSound(context, day);
+        habitProvider.playCompletionSound(
+          context,
+          day,
+          isOptionalHabit: habit.optional,
+        );
       }
     } else {
       habitProvider.completeHabit(

@@ -789,15 +789,15 @@ class HabitProvider extends ChangeNotifier {
     return requiredHabits > 0 && satisfiedHabits >= requiredHabits;
   }
 
-  /// Plays the completion sound for a user-driven completion (tap, amount,
-  /// duration entry, or finishing a timer), if enabled in preferences. Plays
-  /// the bigger celebration sound instead when this completion also finishes
-  /// every required habit for [day].
-  void playCompletionSound(BuildContext context, DateTime day) {
+  void playCompletionSound(
+    BuildContext context,
+    DateTime day, {
+    required bool isOptionalHabit,
+  }) {
     if (!context.read<PreferencesProvider>().playCompletionSound) return;
     unawaited(
       CompletionSoundPlayer.instance.play(
-        allHabitsCompleted: isDayFullyCompleted(day),
+        allHabitsCompleted: !isOptionalHabit && isDayFullyCompleted(day),
       ),
     );
   }
@@ -1219,7 +1219,7 @@ class HabitProvider extends ChangeNotifier {
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
     if (playSound && !wasCompleted && habit.completed && context.mounted) {
-      playCompletionSound(context, daySimple);
+      playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
     }
     final currentHabit = habits.firstWhere((h) => h.id == id);
     // Check if habit is within the current week or month dependng on scheudle tpye
@@ -1438,7 +1438,7 @@ class HabitProvider extends ChangeNotifier {
     habit.updateHabitAmountCompleted(amountCompleted);
     final isNowCompleted = habit.completed;
     if (!wasCompleted && isNowCompleted) {
-      playCompletionSound(context, daySimple);
+      playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
     }
     if (context.mounted) checkReorderCategories(context, habit);
 
@@ -1471,6 +1471,24 @@ class HabitProvider extends ChangeNotifier {
 
     for (final h in source) {
       if (h.id == id) return h.tracksDuration ? h.duration : null;
+    }
+    return null;
+  }
+
+  /// Looks up a single habit by id for [day]. Used by the timer to resolve
+  /// the habit's name when scheduling its completion notification.
+  Habit? habitForDay(int id, {required DateTime day}) {
+    final normalizedDay = _normalizeDate(day);
+    final List<Habit> source;
+    if (normalizedDay == _normalizeDate(DateTime.now())) {
+      source = todaysHabits;
+    } else {
+      final dayKey = normalizedDay.toIso8601String().split('T').first;
+      source = daysBox.get(dayKey)?.habits ?? const <Habit>[];
+    }
+
+    for (final h in source) {
+      if (h.id == id) return h;
     }
     return null;
   }
@@ -1640,7 +1658,7 @@ class HabitProvider extends ChangeNotifier {
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
     if (!wasCompleted && isNowCompleted) {
-      playCompletionSound(context, daySimple);
+      playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
     }
 
     if (context.mounted) checkReorderCategories(context, habit);

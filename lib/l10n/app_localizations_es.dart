@@ -3149,4 +3149,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get timerCompletedNotificationTitle => 'Objetivo alcanzado';
+
+  @override
+  String timerCompletedNotificationBody(String name) {
+    return '\'$name\' alcanzó su objetivo.';
+  }
 }

@@ -1073,5 +1073,13 @@
   "streakCriticalWarning1": "Zadnja šansa da spasiš streak!",
   "streakCriticalWarning2": "Nemoj propustiti danas!",
   "streakCriticalPartial1": "Završi danas da povećaš streak",
-  "streakCriticalPartial2": "Blizu si, završi i nastavi streak"
+  "streakCriticalPartial2": "Blizu si, završi i nastavi streak",
+
+  "timerCompletedNotificationTitle": "Cilj dostignut",
+  "timerCompletedNotificationBody": "'{name}' je dostigao cilj.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }

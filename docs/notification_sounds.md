@@ -95,3 +95,12 @@ The per-habit picker prepends a "Use global default" option (stored as
 The default is `NotificationSounds.defaultKey`. Changing it only affects new
 installs / users who never picked a sound; existing users keep their stored
 `globalSoundKey`.
+
+## Timer-completion sound (not a picker sound)
+
+The `timer_completed_channel` (background timer-finished alert) is a fixed
+channel outside the catalog above: it always plays the completion sound and is
+not user-selectable. It uses `resource://raw/completion`, backed by
+`android/app/src/main/res/raw/completion.mp3` (Android), `ios/sounds/completion.aiff`
+(iOS, added to Copy Bundle Resources) and `assets/sound/completion.mp3` (in-app
+playback). Same iOS `.aiff` constraint as above applies.

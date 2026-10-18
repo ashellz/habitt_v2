@@ -3129,4 +3129,12 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get timerCompletedNotificationTitle => 'Cilj dostignut';
+
+  @override
+  String timerCompletedNotificationBody(String name) {
+    return '\'$name\' je dostigao cilj.';
+  }
 }

@@ -1083,5 +1083,13 @@
   "streakCriticalWarning1": "Letzte Chance, deinen Streak zu retten!",
   "streakCriticalWarning2": "Verpass heute nicht!",
   "streakCriticalPartial1": "Heute abschließen und deinen Streak verlängern",
-  "streakCriticalPartial2": "So nah dran, mach fertig und er wächst"
+  "streakCriticalPartial2": "So nah dran, mach fertig und er wächst",
+
+  "timerCompletedNotificationTitle": "Ziel erreicht",
+  "timerCompletedNotificationBody": "'{name}' hat das Ziel erreicht.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }

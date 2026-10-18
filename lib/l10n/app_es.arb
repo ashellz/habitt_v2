@@ -1083,5 +1083,13 @@
   "streakCriticalWarning1": "¡Última oportunidad para salvar tu racha!",
   "streakCriticalWarning2": "¡No falles hoy!",
   "streakCriticalPartial1": "Termina hoy para aumentar tu racha",
-  "streakCriticalPartial2": "Muy cerca, termina y seguirá creciendo"
+  "streakCriticalPartial2": "Muy cerca, termina y seguirá creciendo",
+
+  "timerCompletedNotificationTitle": "Objetivo alcanzado",
+  "timerCompletedNotificationBody": "'{name}' alcanzó su objetivo.",
+  "@timerCompletedNotificationBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }
