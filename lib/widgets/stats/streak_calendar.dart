@@ -599,24 +599,24 @@ class _StreakCalendarState extends State<StreakCalendar> {
       textColor = outsideDisabledText;
       borderColor = outsideDisabledFill;
     } else {
-      // Fill: orange only for today when perfect, otherwise background.
-      fillColor = (isPerfectDay && isToday) ? cp.orange300 : cp.bg;
-
-      // Border: orange only for perfect days, gray for partial progress, none otherwise.
+      // Fill + border: orange for perfect days, gray for partial progress,
+      // background otherwise.
       if (isPerfectDay) {
-        borderColor = isToday ? cp.orange300 : cp.orange200;
+        fillColor = cp.orange300;
+        borderColor = cp.orange300;
       } else if (progress > 0) {
+        fillColor = cp.disabled;
         borderColor = cp.disabled;
       } else {
+        fillColor = cp.bg;
         borderColor = cp.bg;
       }
 
       // Text: white on orange fill, otherwise default.
       textColor =
-          isOngoingStreakStartCompletedDay
+          isPerfectDay || isOngoingStreakStartCompletedDay
               ? Colors.white
-              : _colorForProgress(cp, progress, isToday, isText: true) ??
-                  cp.text;
+              : cp.text;
 
       if (isOngoingStreakStartCompletedDay) {
         fillColor =
@@ -894,43 +894,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
   static bool _isOutsideMonth(DateTime day, DateTime focusedDay) {
     return day.year != focusedDay.year || day.month != focusedDay.month;
-  }
-
-  Color? _colorForProgress(
-    ColorProvider cp,
-    double progress,
-    bool isToday, {
-    bool isBorder = false,
-    bool isText = false,
-  }) {
-    if (progress <= 0) {
-      return null;
-    }
-    final clamped = progress.clamp(0.0, 1.0);
-
-    if (isText) {
-      if (clamped == 1 && isToday) {
-        return Colors.white;
-      }
-      return cp.text;
-    }
-
-    if (isBorder) {
-      if (clamped == 1) {
-        if (isToday) {
-          return cp.orange300;
-        }
-        return cp.orange200;
-      } else if (clamped != 0) {
-        return cp.disabled;
-      }
-      return cp.bg;
-    }
-
-    if (clamped == 1 && isToday) {
-      return cp.orange300;
-    }
-    return cp.bg;
   }
 
   static DateTime _normalize(DateTime date) {
