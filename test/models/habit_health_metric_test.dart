@@ -280,6 +280,7 @@ void main() {
     test('earlier than target completes regardless of tolerance', () {
       final habit = buildTestHabit(
         trackingType: HabitTrackingType.timeOfDay,
+        healthMetric: HealthMetricType.bedtime,
         amount: 22 * 60, // 10:00 PM target
         toleranceMinutes: 15,
       );
@@ -293,6 +294,7 @@ void main() {
     test('within tolerance still completes', () {
       final habit = buildTestHabit(
         trackingType: HabitTrackingType.timeOfDay,
+        healthMetric: HealthMetricType.bedtime,
         amount: 22 * 60,
         toleranceMinutes: 30,
       );
@@ -305,6 +307,7 @@ void main() {
     test('past tolerance does not complete', () {
       final habit = buildTestHabit(
         trackingType: HabitTrackingType.timeOfDay,
+        healthMetric: HealthMetricType.bedtime,
         amount: 22 * 60,
         toleranceMinutes: 30,
       );
@@ -317,6 +320,7 @@ void main() {
     test('a tighter tolerance can un-complete a previously-met target', () {
       final habit = buildTestHabit(
         trackingType: HabitTrackingType.timeOfDay,
+        healthMetric: HealthMetricType.bedtime,
         amount: 22 * 60,
         toleranceMinutes: 60,
       );
@@ -383,6 +387,96 @@ void main() {
       habit.updateHabitAmountCompleted(9 * 60);
 
       expect(habit.completed, isTrue);
+    });
+  });
+
+  group('Tolerance only applies to sleep, bedtime and wake time', () {
+    test('supportsTolerance is true only for the three sleep metrics', () {
+      for (final metric in HealthMetricType.values) {
+        final expected =
+            metric == HealthMetricType.sleep ||
+            metric == HealthMetricType.bedtime ||
+            metric == HealthMetricType.wakeTime;
+        expect(metric.supportsTolerance, expected, reason: metric.name);
+      }
+    });
+
+    test('stray tolerance on a plain amount habit is ignored and it can uncomplete', () {
+      final habit = buildTestHabit(amount: 10, toleranceMinutes: 30);
+      expect(habit.effectiveToleranceMinutes, 0);
+
+      habit.updateHabitAmountCompleted(10);
+      expect(habit.completed, isTrue);
+
+      habit.updateHabitAmountCompleted(3);
+      expect(habit.completed, isFalse);
+
+      habit.updateHabitAmountCompleted(0);
+      expect(habit.completed, isFalse);
+    });
+
+    test('stray tolerance on a non-sleep health metric is ignored', () {
+      final habit = buildTestHabit(
+        healthMetric: HealthMetricType.steps,
+        amount: 6000,
+        toleranceMinutes: 30,
+      );
+
+      habit.updateHabitAmountCompleted(5990);
+
+      expect(habit.completed, isFalse);
+    });
+
+    test('sleep keeps its tolerance', () {
+      final habit = buildTestHabit(
+        healthMetric: HealthMetricType.sleep,
+        amount: 8 * 60,
+        toleranceMinutes: 30,
+      );
+      expect(habit.effectiveToleranceMinutes, 30);
+    });
+
+    test('time-of-day goal without a tolerance-capable metric gets no margin', () {
+      final habit = buildTestHabit(
+        trackingType: HabitTrackingType.timeOfDay,
+        amount: 22 * 60,
+        toleranceMinutes: 30,
+      );
+
+      habit.updateHabitTimeOfDayCompleted(22 * 60 + 25);
+
+      expect(habit.completed, isFalse);
+    });
+
+    test('editing a sleep target uses the same tolerance as logging progress', () {
+      final habit = buildTestHabit(
+        healthMetric: HealthMetricType.sleep,
+        amount: 7 * 60,
+        toleranceMinutes: 60,
+        amountCompleted: 6 * 60 + 30,
+      )..completed = true;
+
+      // 6h30 is exactly 1h short of 7h30: only complete if tolerance applies
+      final edited = habit.copy()..amount = 7 * 60 + 30;
+      habit.updateHabit(edited);
+      expect(habit.completed, isTrue);
+
+      final stricter = habit.copy()..amount = 9 * 60;
+      habit.updateHabit(stricter);
+      expect(habit.completed, isFalse);
+    });
+
+    test('editing a plain amount habit target ignores a stray tolerance', () {
+      final habit = buildTestHabit(
+        amount: 10,
+        toleranceMinutes: 30,
+        amountCompleted: 10,
+      )..completed = true;
+
+      final edited = habit.copy()..amount = 20;
+      habit.updateHabit(edited);
+
+      expect(habit.completed, isFalse);
     });
   });
 }
