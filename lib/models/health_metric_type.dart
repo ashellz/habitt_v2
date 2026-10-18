@@ -18,6 +18,12 @@ extension HealthMetricTypeMapping on HealthMetricType {
   bool get supportsTrackingChoice =>
       this == HealthMetricType.workouts || this == HealthMetricType.mindfulness;
 
+  // for updating habit amount if tolerance will be accounted for
+  bool get supportsTolerance =>
+      this == HealthMetricType.sleep ||
+      this == HealthMetricType.bedtime ||
+      this == HealthMetricType.wakeTime;
+
   HabitTrackingType get trackingType {
     switch (this) {
       case HealthMetricType.steps:

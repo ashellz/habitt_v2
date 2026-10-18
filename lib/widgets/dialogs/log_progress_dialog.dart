@@ -48,7 +48,7 @@ class LogProgressDialog extends StatelessWidget {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
-            ;
+
             return;
           }
 

@@ -17,6 +17,7 @@ import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/premade_habit_type_migration.dart';
+import 'package:provider/provider.dart';
 import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1202,31 +1203,13 @@ class HabitProvider extends ChangeNotifier {
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
     final currentHabit = habits.firstWhere((h) => h.id == id);
-    // Check if habit is within the current week or month dependng on scheudle tpye
-    final shouldAffectCurrentPeriod =
-        (currentHabit.scheduleType == ScheduleType.weekly &&
-            _isSameWeek(daySimple, todaySimple)) ||
-        (currentHabit.scheduleType == ScheduleType.monthly &&
-            _isSameMonth(daySimple, todaySimple));
-
-    if (shouldAffectCurrentPeriod) {
-      // If it affects current period we update habit schedule counters
-      final weeklyBaseCount =
-          currentHabit.scheduleType == ScheduleType.weekly
-              ? _effectiveTimesCompletedThisWeek(currentHabit, daySimple)
-              : null;
-      final monthlyBaseCount =
-          currentHabit.scheduleType == ScheduleType.monthly
-              ? _effectiveTimesCompletedThisMonth(currentHabit, daySimple)
-              : null;
-
-      currentHabit.updateScheduleCountersOnCompletionToggle(
-        wasCompleted: wasCompleted,
-        isCompleted: habit.completed,
-        weeklyBaseCount: weeklyBaseCount,
-        monthlyBaseCount: monthlyBaseCount,
-      );
-    }
+    _updatePeriodCountersOnCompletionChange(
+      currentHabit: currentHabit,
+      wasCompleted: wasCompleted,
+      isCompleted: habit.completed,
+      daySimple: daySimple,
+      todaySimple: todaySimple,
+    );
     if (context.mounted && daySimple == todaySimple) {
       // Reordering categories if today
       checkReorderCategories(context, habit);
@@ -1386,6 +1369,63 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // weekly/monthly habits track how many times they were completed in the period
+  // needs to be called on every completion flip to keep the counters accurate
+  void _updatePeriodCountersOnCompletionChange({
+    required Habit currentHabit,
+    required bool wasCompleted,
+    required bool isCompleted,
+    required DateTime daySimple,
+    required DateTime todaySimple,
+  }) {
+    // check if in current period (week/month)
+    // this is because user can complete a habit from a past day
+    final shouldAffectCurrentPeriod =
+        (currentHabit.scheduleType == ScheduleType.weekly &&
+            _isSameWeek(daySimple, todaySimple)) ||
+        (currentHabit.scheduleType == ScheduleType.monthly &&
+            _isSameMonth(daySimple, todaySimple));
+
+    if (!shouldAffectCurrentPeriod) return;
+
+    // If it affects current period we update habit schedule counters
+    final weeklyBaseCount =
+        currentHabit.scheduleType == ScheduleType.weekly
+            ? _effectiveTimesCompletedThisWeek(currentHabit, daySimple)
+            : null;
+    final monthlyBaseCount =
+        currentHabit.scheduleType == ScheduleType.monthly
+            ? _effectiveTimesCompletedThisMonth(currentHabit, daySimple)
+            : null;
+
+    currentHabit.updateScheduleCountersOnCompletionToggle(
+      wasCompleted: wasCompleted,
+      isCompleted: isCompleted,
+      weeklyBaseCount: weeklyBaseCount,
+      monthlyBaseCount: monthlyBaseCount,
+    );
+  }
+
+  /// Same as [_updatePeriodCountersOnCompletionChange] for callers that only
+  // have an id and whose day habit may not be the real habit (past days).
+  void _updatePeriodCountersForId(
+    int id, {
+    required bool wasCompleted,
+    required bool isCompleted,
+    required DateTime daySimple,
+    required DateTime todaySimple,
+  }) {
+    final real = habits.where((h) => h.id == id);
+    if (real.isEmpty) return;
+    _updatePeriodCountersOnCompletionChange(
+      currentHabit: real.first,
+      wasCompleted: wasCompleted,
+      isCompleted: isCompleted,
+      daySimple: daySimple,
+      todaySimple: todaySimple,
+    );
+  }
+
   void updateHabitAmountCompleted(
     int id,
     int amountCompleted,
@@ -1414,8 +1454,22 @@ class HabitProvider extends ChangeNotifier {
     }
 
     final wasCompleted = habit.completed;
+    debugPrint("Habit was completed: $wasCompleted");
     habit.updateHabitAmountCompleted(amountCompleted);
     final isNowCompleted = habit.completed;
+    debugPrint("Habit is now completed: $isNowCompleted");
+    if (wasCompleted != isNowCompleted) {
+      _updatePeriodCountersOnCompletionChange(
+        currentHabit: habits.firstWhere((h) => h.id == id),
+        wasCompleted: wasCompleted,
+        isCompleted: isNowCompleted,
+        daySimple: daySimple,
+        todaySimple: todaySimple,
+      );
+      if (daySimple != todaySimple) {
+        context.read<StateProvider>().shouldUpdateStreaks = true;
+      }
+    }
     if (context.mounted) checkReorderCategories(context, habit);
 
     await updateHabitInDB(habit, day: daySimple);
@@ -1427,6 +1481,9 @@ class HabitProvider extends ChangeNotifier {
       todaySimple: todaySimple,
     );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
+    if (wasCompleted != isNowCompleted && daySimple != todaySimple) {
+      await assignStreaks(id);
+    }
     refreshTodaysHabits(notify: false);
     notifyListeners();
 
@@ -1479,6 +1536,15 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
+    if (wasCompleted != isNowCompleted) {
+      _updatePeriodCountersForId(
+        id,
+        wasCompleted: wasCompleted,
+        isCompleted: isNowCompleted,
+        daySimple: daySimple,
+        todaySimple: todaySimple,
+      );
+    }
 
     await updateHabitInDB(habit, day: daySimple);
 
@@ -1494,6 +1560,7 @@ class HabitProvider extends ChangeNotifier {
         todaySimple: todaySimple,
       );
       _refreshPerfectStreakForDayIfNeeded(daySimple);
+      if (daySimple != todaySimple) await assignStreaks(id);
       refreshTodaysHabits(notify: false);
     }
     notifyListeners();
@@ -1567,6 +1634,15 @@ class HabitProvider extends ChangeNotifier {
     }
 
     final isNowCompleted = habit.completed;
+    if (wasCompleted != isNowCompleted) {
+      _updatePeriodCountersForId(
+        id,
+        wasCompleted: wasCompleted,
+        isCompleted: isNowCompleted,
+        daySimple: daySimple,
+        todaySimple: todaySimple,
+      );
+    }
 
     await updateHabitInDB(habit, day: daySimple);
 
@@ -1579,6 +1655,7 @@ class HabitProvider extends ChangeNotifier {
         todaySimple: todaySimple,
       );
       _refreshPerfectStreakForDayIfNeeded(daySimple);
+      if (daySimple != todaySimple) await assignStreaks(id);
       refreshTodaysHabits(notify: false);
     }
     notifyListeners();
@@ -1614,6 +1691,18 @@ class HabitProvider extends ChangeNotifier {
     final wasCompleted = habit.completed;
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
+    if (wasCompleted != isNowCompleted) {
+      _updatePeriodCountersOnCompletionChange(
+        currentHabit: habits.firstWhere((h) => h.id == id),
+        wasCompleted: wasCompleted,
+        isCompleted: isNowCompleted,
+        daySimple: daySimple,
+        todaySimple: todaySimple,
+      );
+      if (daySimple != todaySimple) {
+        context.read<StateProvider>().shouldUpdateStreaks = true;
+      }
+    }
 
     if (context.mounted) checkReorderCategories(context, habit);
 
@@ -1626,6 +1715,9 @@ class HabitProvider extends ChangeNotifier {
       todaySimple: todaySimple,
     );
     _refreshPerfectStreakForDayIfNeeded(daySimple);
+    if (wasCompleted != isNowCompleted && daySimple != todaySimple) {
+      await assignStreaks(id);
+    }
     refreshTodaysHabits(notify: false);
     notifyListeners();
 
