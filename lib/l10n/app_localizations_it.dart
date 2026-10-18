@@ -2849,302 +2849,303 @@ class AppLocalizationsIt extends AppLocalizations {
       'Ci sei quasi, finisci e continuerà a crescere';
 
   @override
-  String get deletedToday => 'Today';
+  String get deletedToday => 'Oggi';
 
   @override
-  String get deletedOneDayAgo => '1 day ago';
+  String get deletedOneDayAgo => '1 giorno fa';
 
   @override
   String deletedDaysAgoLabel(Object days) {
-    return '$days days ago';
+    return '$days giorni fa';
   }
 
   @override
   String get deletedHabitsPageDesc =>
-      'Deleted habits stay here for 30 days, then they\'re permanently removed.';
+      'Le abitudini eliminate restano qui per 30 giorni, poi vengono rimosse definitivamente.';
 
   @override
   String get restoreDeletedHabitConfirm =>
-      'Restore this habit? Its streak will reflect any days it missed while deleted.';
+      'Ripristinare questa abitudine? La sua serie terrà conto dei giorni persi mentre era eliminata.';
 
   @override
-  String get healthSyncSectionTitleApple => 'Sync with Apple Health';
+  String get healthSyncSectionTitleApple => 'Sincronizza con Apple Health';
 
   @override
-  String get healthSyncSectionTitleAndroid => 'Sync with Health Connect';
+  String get healthSyncSectionTitleAndroid => 'Sincronizza con Health Connect';
 
   @override
   String get healthSyncSectionDescApple =>
-      'Update this habit\'s progress automatically from Apple Health';
+      'Aggiorna automaticamente i progressi di questa abitudine da Apple Health';
 
   @override
   String get healthSyncSectionDescAndroid =>
-      'Update this habit\'s progress automatically from Health Connect';
+      'Aggiorna automaticamente i progressi di questa abitudine da Health Connect';
 
   @override
-  String get healthMetricSteps => 'Steps';
+  String get healthMetricSteps => 'Passi';
 
   @override
-  String get healthMetricSleep => 'Sleep';
+  String get healthMetricSleep => 'Sonno';
 
   @override
-  String get healthMetricExerciseMinutes => 'Workout';
+  String get healthMetricExerciseMinutes => 'Allenamento';
 
   @override
   String get healthMetricMindfulMinutes => 'Mindfulness';
 
   @override
-  String get healthMetricActiveCalories => 'Active calories';
+  String get healthMetricActiveCalories => 'Calorie attive';
 
   @override
-  String get healthMetricTotalCalories => 'Total calories';
+  String get healthMetricTotalCalories => 'Calorie totali';
 
   @override
   String get healthPermissionDeniedMessage =>
-      'Habitt doesn\'t have permission to read this data. You can enable access in Settings.';
+      'Habitt non ha l\'autorizzazione per leggere questi dati. Puoi consentire l\'accesso nelle Impostazioni.';
 
   @override
-  String get calorie => 'calorie';
+  String get calorie => 'caloria';
 
   @override
-  String get calories => 'calories';
+  String get calories => 'calorie';
 
   @override
-  String get premadeSectionWorkouts => 'Workouts';
+  String get premadeSectionWorkouts => 'Allenamenti';
 
   @override
-  String get premadeHabitWorkoutWalking => 'Walking';
+  String get premadeHabitWorkoutWalking => 'Camminata';
 
   @override
-  String get premadeHabitWorkoutRunning => 'Running';
+  String get premadeHabitWorkoutRunning => 'Corsa';
 
   @override
-  String get premadeHabitWorkoutCycling => 'Cycling';
+  String get premadeHabitWorkoutCycling => 'Ciclismo';
 
   @override
-  String get premadeHabitWorkoutSwimming => 'Swimming';
+  String get premadeHabitWorkoutSwimming => 'Nuoto';
 
   @override
-  String get premadeHabitWorkoutHiking => 'Hiking';
+  String get premadeHabitWorkoutHiking => 'Escursionismo';
 
   @override
   String get premadeHabitWorkoutFlexibility => 'Stretching';
 
   @override
-  String get premadeHabitWorkoutDancing => 'Dancing';
+  String get premadeHabitWorkoutDancing => 'Ballo';
 
   @override
-  String get premadeHabitWorkoutRowing => 'Rowing';
+  String get premadeHabitWorkoutRowing => 'Canottaggio';
 
   @override
-  String get premadeHabitWorkoutCombined => 'Workout';
+  String get premadeHabitWorkoutCombined => 'Allenamento';
 
   @override
-  String get healthConnectedStatusApple => 'Connected to Apple Health';
+  String get healthConnectedStatusApple => 'Collegato ad Apple Health';
 
   @override
-  String get healthConnectedStatusAndroid => 'Connected to Health Connect';
+  String get healthConnectedStatusAndroid => 'Collegato a Health Connect';
 
   @override
-  String get healthTrackByDuration => 'Duration';
+  String get healthTrackByDuration => 'Durata';
 
   @override
-  String get healthTrackByCount => 'Count';
+  String get healthTrackByCount => 'Numero';
 
   @override
-  String get healthTargetBedtime => 'Target bedtime';
+  String get healthTargetBedtime => 'Orario obiettivo per dormire';
 
   @override
-  String get healthTargetWakeTime => 'Target wake time';
+  String get healthTargetWakeTime => 'Orario obiettivo per svegliarsi';
 
   @override
-  String get healthToleranceLoose => 'Loose';
+  String get healthToleranceLoose => 'Flessibile';
 
   @override
-  String get healthToleranceRegular => 'Regular';
+  String get healthToleranceRegular => 'Normale';
 
   @override
-  String get healthToleranceStrict => 'Strict';
+  String get healthToleranceStrict => 'Rigido';
 
   @override
-  String get healthLastNight => 'Last night';
+  String get healthLastNight => 'Stanotte';
 
   @override
-  String get healthMetricPickerTitle => 'Choose what to sync';
+  String get healthMetricPickerTitle => 'Scegli cosa sincronizzare';
 
   @override
-  String get premadeRequestHabitPrompt => 'Don\'t see your habit?';
+  String get premadeRequestHabitPrompt => 'Non trovi la tua abitudine?';
 
   @override
-  String get premadeRequestHabitLink => 'Suggest one';
+  String get premadeRequestHabitLink => 'Suggeriscine una';
 
   @override
-  String get habitRequestEmailSubject => 'Habit Request';
+  String get habitRequestEmailSubject => 'Richiesta di abitudine';
 
   @override
   String healthToleranceMinutesValue(Object minutes) {
-    return '$minutes minutes';
+    return '$minutes minuti';
   }
 
   @override
-  String get healthToleranceHourValue => '1 hour';
+  String get healthToleranceHourValue => '1 ora';
 
   @override
   String healthToleranceDescBedtime(Object duration) {
-    return 'Going to bed earlier than your target is always fine. You can also go up to $duration late and it still counts';
+    return 'Andare a letto prima del tuo obiettivo va sempre bene. Puoi anche andarci fino a $duration più tardi e conta comunque';
   }
 
   @override
   String healthToleranceDescWakeTime(Object duration) {
-    return 'Waking up earlier than your target is always fine. You can also wake up to $duration late and it still counts';
+    return 'Svegliarsi prima del tuo obiettivo va sempre bene. Puoi anche svegliarti fino a $duration più tardi e conta comunque';
   }
 
   @override
   String healthToleranceDescSleep(Object duration) {
-    return 'Sleeping more than your target is always fine. You can also sleep up to $duration less and it still counts';
+    return 'Dormire più del tuo obiettivo va sempre bene. Puoi anche dormire fino a $duration in meno e conta comunque';
   }
 
   @override
-  String get healthMetricDescSteps => 'Tracks your steps';
+  String get healthMetricDescSteps => 'Registra i tuoi passi';
 
   @override
-  String get healthMetricDescSleep => 'Tracks your sleep time';
+  String get healthMetricDescSleep => 'Registra il tuo tempo di sonno';
 
   @override
-  String get healthMetricDescWorkouts => 'Tracks all your workouts';
+  String get healthMetricDescWorkouts => 'Registra tutti i tuoi allenamenti';
 
   @override
-  String get healthMetricDescMindfulness => 'Tracks your mindfulness sessions';
+  String get healthMetricDescMindfulness =>
+      'Registra le tue sessioni di mindfulness';
 
   @override
   String get healthMetricDescActiveCalories =>
-      'Tracks your active calories burned';
+      'Registra le calorie attive che bruci';
 
   @override
   String get healthMetricDescTotalCalories =>
-      'Tracks your total calories burned';
+      'Registra le calorie totali che bruci';
 
   @override
-  String get healthMetricDescBedtime => 'Tracks when you went to sleep';
+  String get healthMetricDescBedtime => 'Registra quando sei andato a dormire';
 
   @override
-  String get healthMetricDescWakeTime => 'Tracks when you woke up';
+  String get healthMetricDescWakeTime => 'Registra quando ti sei svegliato';
 
   @override
   String get premadeHabitMindfulness => 'Mindfulness';
 
   @override
-  String get premadeHabitSleepTime => 'Sleep time';
+  String get premadeHabitSleepTime => 'Tempo di sonno';
 
   @override
-  String get premadeHabitActiveCalories => 'Active calories';
+  String get premadeHabitActiveCalories => 'Calorie attive';
 
   @override
-  String get premadeHabitTotalCalories => 'Total calories';
+  String get premadeHabitTotalCalories => 'Calorie totali';
 
   @override
-  String get healthWorkoutTypePickerTitle => 'Choose a workout type';
+  String get healthWorkoutTypePickerTitle => 'Scegli un tipo di allenamento';
 
   @override
-  String get healthWorkoutFilterAny => 'Any';
+  String get healthWorkoutFilterAny => 'Qualsiasi';
 
   @override
-  String get healthWorkoutLabelAnySingular => 'workout';
+  String get healthWorkoutLabelAnySingular => 'allenamento';
 
   @override
-  String get healthWorkoutLabelAnyPlural => 'workouts';
+  String get healthWorkoutLabelAnyPlural => 'allenamenti';
 
   @override
-  String get healthWorkoutLabelOtherSingular => 'workout';
+  String get healthWorkoutLabelOtherSingular => 'allenamento';
 
   @override
-  String get healthWorkoutLabelOtherPlural => 'workouts';
+  String get healthWorkoutLabelOtherPlural => 'allenamenti';
 
   @override
-  String get healthWorkoutLabelWalkingSingular => 'walk';
+  String get healthWorkoutLabelWalkingSingular => 'camminata';
 
   @override
-  String get healthWorkoutLabelWalkingPlural => 'walks';
+  String get healthWorkoutLabelWalkingPlural => 'camminate';
 
   @override
-  String get healthWorkoutLabelRunningSingular => 'run';
+  String get healthWorkoutLabelRunningSingular => 'corsa';
 
   @override
-  String get healthWorkoutLabelRunningPlural => 'runs';
+  String get healthWorkoutLabelRunningPlural => 'corse';
 
   @override
-  String get healthWorkoutLabelCyclingSingular => 'ride';
+  String get healthWorkoutLabelCyclingSingular => 'uscita';
 
   @override
-  String get healthWorkoutLabelCyclingPlural => 'rides';
+  String get healthWorkoutLabelCyclingPlural => 'uscite';
 
   @override
-  String get healthWorkoutLabelSwimmingSingular => 'swim';
+  String get healthWorkoutLabelSwimmingSingular => 'nuotata';
 
   @override
-  String get healthWorkoutLabelSwimmingPlural => 'swims';
+  String get healthWorkoutLabelSwimmingPlural => 'nuotate';
 
   @override
-  String get healthWorkoutLabelHikingSingular => 'hike';
+  String get healthWorkoutLabelHikingSingular => 'escursione';
 
   @override
-  String get healthWorkoutLabelHikingPlural => 'hikes';
+  String get healthWorkoutLabelHikingPlural => 'escursioni';
 
   @override
-  String get healthWorkoutLabelFlexibilitySingular => 'session';
+  String get healthWorkoutLabelFlexibilitySingular => 'sessione';
 
   @override
-  String get healthWorkoutLabelFlexibilityPlural => 'sessions';
+  String get healthWorkoutLabelFlexibilityPlural => 'sessioni';
 
   @override
-  String get healthWorkoutLabelDancingSingular => 'dance';
+  String get healthWorkoutLabelDancingSingular => 'ballo';
 
   @override
-  String get healthWorkoutLabelDancingPlural => 'dances';
+  String get healthWorkoutLabelDancingPlural => 'balli';
 
   @override
-  String get healthWorkoutLabelRowingSingular => 'row';
+  String get healthWorkoutLabelRowingSingular => 'uscita in barca';
 
   @override
-  String get healthWorkoutLabelRowingPlural => 'rows';
+  String get healthWorkoutLabelRowingPlural => 'uscite in barca';
 
   @override
-  String get healthMindfulnessLabelSingular => 'session';
+  String get healthMindfulnessLabelSingular => 'sessione';
 
   @override
-  String get healthMindfulnessLabelPlural => 'sessions';
+  String get healthMindfulnessLabelPlural => 'sessioni';
 
   @override
-  String get overrideFieldsDialogTitle => 'Choose what to update';
+  String get overrideFieldsDialogTitle => 'Scegli cosa aggiornare';
 
   @override
   String get overrideFieldsDialogDesc =>
-      'Pick which parts of your habit should update to match this template. Anything left unchecked keeps its current value.';
+      'Scegli quali parti della tua abitudine aggiornare in base a questo modello. Tutto ciò che non è selezionato mantiene il valore attuale.';
 
   @override
-  String get overrideFieldsSelectAll => 'Select all';
+  String get overrideFieldsSelectAll => 'Seleziona tutto';
 
   @override
-  String get overrideFieldsDeselectAll => 'Deselect all';
+  String get overrideFieldsDeselectAll => 'Deseleziona tutto';
 
   @override
-  String get overrideFieldName => 'Name';
+  String get overrideFieldName => 'Nome';
 
   @override
-  String get overrideFieldIcon => 'Icon';
+  String get overrideFieldIcon => 'Icona';
 
   @override
-  String get overrideFieldCategory => 'Category';
+  String get overrideFieldCategory => 'Categoria';
 
   @override
-  String get overrideFieldTarget => 'Target';
+  String get overrideFieldTarget => 'Obiettivo';
 
   @override
-  String get overrideFieldHealthSync => 'Health sync';
+  String get overrideFieldHealthSync => 'Sincronizzazione Salute';
 
   @override
-  String get overrideFieldSchedule => 'Schedule';
+  String get overrideFieldSchedule => 'Programma';
 
   @override
-  String get overrideFieldNotifications => 'Notifications';
+  String get overrideFieldNotifications => 'Notifiche';
 }
