@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
@@ -5,6 +7,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/default/confetti_burst.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/dialogs/timer_dialog.dart';
@@ -29,6 +32,48 @@ class HabitPrimaryActionButton extends StatefulWidget {
 }
 
 class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
+  final _buttonKey = GlobalKey();
+  late bool _lastCompleted;
+  // set when the user taps/holds to complete, so completions from elsewhere
+  // (Health sync, notification actions) don't pop confetti
+  bool _confettiArmed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastCompleted = widget.habit.completed;
+  }
+
+  void _burstConfetti() {
+    final box = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.attached) return;
+    final cp = context.read<ColorProvider>();
+    ConfettiBurst.show(
+      context,
+      origin: box.localToGlobal(Offset(box.size.width, 0)),
+      direction: -math.pi / 4,
+      colors: [
+        cp.main,
+        cp.orange300,
+        cp.mid,
+        const Color(0xFF4FC3F7),
+        const Color(0xFFF06292),
+      ],
+    );
+  }
+
+  void _trackCompletion() {
+    final completed = widget.habit.completed;
+    if (completed == _lastCompleted) return;
+    _lastCompleted = completed;
+    if (completed && _confettiArmed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _burstConfetti();
+      });
+    }
+    _confettiArmed = false;
+  }
+
   double _progressValue() {
     if (widget.habit.completed || widget.habit.skipped) {
       return 1;
@@ -104,6 +149,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
     final stateProvider = context.read<StateProvider>();
 
     if (!widget.habit.hasTrackingType) {
+      _confettiArmed = !widget.habit.completed;
       habitProvider.completeHabit(widget.habit.id, context, stateProvider);
       return;
     }
@@ -115,6 +161,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
         (selected.year == now.year &&
             selected.month == now.month &&
             selected.day == now.day);
+    final wasCompleted = widget.habit.completed;
 
     await showDialogSheet(
       context: context,
@@ -134,6 +181,11 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
         }
       },
     );
+
+    // completed inside the dialog: pop once it's out of the way
+    if (mounted && !wasCompleted && widget.habit.completed) {
+      _burstConfetti();
+    }
   }
 
   @override
@@ -142,6 +194,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
     // the timer provider completes the habit itself once the target is
     // reached, so watching the habit provider is enough to stay in sync
     context.watch<HabitProvider>();
+    _trackCompletion();
     final isCompleted = widget.habit.completed;
 
     return GestureDetector(
@@ -152,6 +205,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
               : () {
                 final habitProvider = context.read<HabitProvider>();
                 final stateProvider = context.read<StateProvider>();
+                _confettiArmed = !widget.habit.completed;
                 habitProvider.completeHabit(
                   widget.habit.id,
                   context,
@@ -159,6 +213,7 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
                 );
               },
       child: NewDefaultButton(
+        key: _buttonKey,
         color: isCompleted ? cp.habitBg : cp.main,
         height: 41,
         padding: const EdgeInsets.symmetric(horizontal: 16),
