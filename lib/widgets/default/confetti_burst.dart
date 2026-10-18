@@ -29,7 +29,10 @@ class ConfettiBurst {
             colors: colors,
             direction: direction,
             maxDistance: maxDistance,
-            onDone: () => entry.remove(),
+            onDone: () {
+              entry.remove();
+              entry.dispose();
+            },
           ),
     );
     overlay.insert(entry);
@@ -98,13 +101,18 @@ class _ConfettiBurstOverlayState extends State<_ConfettiBurstOverlay>
 
   @override
   Widget build(BuildContext context) {
+    // The boundary keeps the per-frame repaints on their own layer instead of
+    // dirtying whatever ancestor layer the overlay would otherwise share.
     return IgnorePointer(
-      child: CustomPaint(
-        size: Size.infinite,
-        painter: _ConfettiBurstPainter(
-          animation: _controller,
-          origin: widget.origin,
-          pieces: _pieces,
+      child: RepaintBoundary(
+        child: CustomPaint(
+          size: Size.infinite,
+          willChange: true,
+          painter: _ConfettiBurstPainter(
+            animation: _controller,
+            origin: widget.origin,
+            pieces: _pieces,
+          ),
         ),
       ),
     );
@@ -112,21 +120,34 @@ class _ConfettiBurstOverlayState extends State<_ConfettiBurstOverlay>
 }
 
 class _Piece {
-  const _Piece({
+  _Piece({
     required this.angle,
     required this.distance,
-    required this.size,
+    required Size size,
     required this.spin,
     required this.color,
     required this.isCircle,
-  });
+  }) : direction = Offset(math.cos(angle), math.sin(angle)),
+       circleRadius = size.height / 2 + 0.5,
+       rrect = RRect.fromRectAndRadius(
+         Rect.fromCenter(
+           center: Offset.zero,
+           width: size.width,
+           height: size.height,
+         ),
+         const Radius.circular(1),
+       );
 
   final double angle;
   final double distance;
-  final Size size;
   final double spin;
   final Color color;
   final bool isCircle;
+
+  // precomputed so paint() allocates nothing per piece
+  final Offset direction;
+  final double circleRadius;
+  final RRect rrect;
 }
 
 class _ConfettiBurstPainter extends CustomPainter {
@@ -149,30 +170,22 @@ class _ConfettiBurstPainter extends CustomPainter {
     final travel = Curves.easeOutCubic.transform(t);
     final opacity = t < 0.5 ? 1.0 : 1 - (t - 0.5) / 0.5;
     final paint = Paint();
+    final alpha = opacity.clamp(0.0, 1.0);
 
     for (final piece in pieces) {
       final position =
           origin +
-          Offset(math.cos(piece.angle), math.sin(piece.angle)) *
-              (piece.distance * travel) +
+          piece.direction * (piece.distance * travel) +
           Offset(0, _gravityDrop * t * t);
 
-      paint.color = piece.color.withValues(alpha: opacity.clamp(0.0, 1.0));
+      paint.color = piece.color.withValues(alpha: alpha);
       canvas.save();
       canvas.translate(position.dx, position.dy);
       canvas.rotate(piece.angle + piece.spin * t);
-      final rect = Rect.fromCenter(
-        center: Offset.zero,
-        width: piece.size.width,
-        height: piece.size.height,
-      );
       if (piece.isCircle) {
-        canvas.drawCircle(Offset.zero, piece.size.height / 2 + 0.5, paint);
+        canvas.drawCircle(Offset.zero, piece.circleRadius, paint);
       } else {
-        canvas.drawRRect(
-          RRect.fromRectAndRadius(rect, const Radius.circular(1)),
-          paint,
-        );
+        canvas.drawRRect(piece.rrect, paint);
       }
       canvas.restore();
     }
