@@ -2868,6 +2868,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get restoreDeletedHabitConfirm =>
       'Ripristinare questa abitudine? La sua serie terrà conto dei giorni persi mentre era eliminata.';
+      'Ripristinare questa abitudine? La sua serie rifletterà i giorni saltati mentre era eliminata.';
 
   @override
   String get healthSyncSectionTitleApple => 'Sincronizza con Apple Health';
@@ -3150,4 +3151,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notifiche';
+  String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get demoMode => 'Demo mode';
+
+  @override
+  String get demoModeDesc =>
+      'Show a set of sample habits with progress on the home and habits screens.';
 }

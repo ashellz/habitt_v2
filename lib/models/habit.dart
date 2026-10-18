@@ -71,7 +71,8 @@ class Habit extends HiveObject {
   healthMetric; // if set, progress is synced from this Health metric
   HealthWorkoutType?
   healthWorkoutFilter; // narrows healthMetric == workouts to one workout type; null = any (all)
-  int toleranceMinutes; // forgiveness for amount/timeOfDay goals — 15m/30m/60m presets; 0 = none
+  int
+  toleranceMinutes; // forgiveness for amount/timeOfDay goals — 15m/30m/60m presets; 0 = none
   List<HealthSessionDetail>
   healthSessions; // individual workout or sleep sessions Health returned in a day
   bool? isDeleted;
@@ -807,6 +808,8 @@ class Habit extends HiveObject {
   bool get tracksAmount => trackingType == HabitTrackingType.amount;
 
   bool get tracksDuration => trackingType == HabitTrackingType.duration;
+
+  bool get tracksTimeOfDay => trackingType == HabitTrackingType.timeOfDay;
 
   bool get hasTrackingType => trackingType != null;
 

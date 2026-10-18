@@ -2864,6 +2864,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deletedHabitsPageDesc =>
       'Gelöschte Gewohnheiten bleiben hier 30 Tage lang und werden dann endgültig entfernt.';
+      'Gelöschte Gewohnheiten bleiben hier 30 Tage lang erhalten und werden dann endgültig entfernt.';
 
   @override
   String get restoreDeletedHabitConfirm =>
@@ -3152,4 +3153,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Benachrichtigungen';
+  String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get demoMode => 'Demo mode';
+
+  @override
+  String get demoModeDesc =>
+      'Show a set of sample habits with progress on the home and habits screens.';
 }

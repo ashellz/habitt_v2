@@ -13,9 +13,8 @@ enum HealthMetricType {
 }
 
 extension HealthMetricTypeMapping on HealthMetricType {
-  /// Workouts and mindfulness let the user choose between Amount (a session
-  /// count) and Duration (summed minutes) tracking — every other metric's
-  /// tracking type is fixed by [trackingType].
+  /// workouts and mindfulness let the user choose between Amount and Duration tracking
+  /// other metrics are predefined
   bool get supportsTrackingChoice =>
       this == HealthMetricType.workouts || this == HealthMetricType.mindfulness;
 

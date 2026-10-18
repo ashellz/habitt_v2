@@ -1186,5 +1186,8 @@
   "overrideFieldTarget": "Target",
   "overrideFieldHealthSync": "Health sync",
   "overrideFieldSchedule": "Schedule",
-  "overrideFieldNotifications": "Notifications"
+  "overrideFieldNotifications": "Notifications",
+
+  "demoMode": "Demo mode",
+  "demoModeDesc": "Show a set of sample habits with progress on the home and habits screens."
 }

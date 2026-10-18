@@ -2841,6 +2841,11 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get restoreDeletedHabitConfirm =>
       'Vratiti ovu naviku? Njen niz će uzeti u obzir sve dane koje je propustila dok je bila izbrisana.';
+      'Izbrisane navike ostaju ovdje 30 dana, a zatim se trajno uklanjaju.';
+
+  @override
+  String get restoreDeletedHabitConfirm =>
+      'Vratiti ovu naviku? Njen streak će odražavati sve dane koje je propustila dok je bila izbrisana.';
 
   @override
   String get healthSyncSectionTitleApple => 'Sinhronizuj s Apple Health';
@@ -3121,4 +3126,12 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Obavijesti';
+  String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get demoMode => 'Demo mode';
+
+  @override
+  String get demoModeDesc =>
+      'Show a set of sample habits with progress on the home and habits screens.';
 }
