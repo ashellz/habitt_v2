@@ -12,13 +12,6 @@ workflows:
       vars:
         PACKAGE_NAME: "com.shellz.habitt"
       flutter: stable
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: main
-          include: true
-          source: true
     scripts:
       - name: Restore Firebase config
         script: |
@@ -105,13 +98,6 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: main
-          include: true
-          source: true
     scripts:
       - name: Restore Firebase config
         script: |
