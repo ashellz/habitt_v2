@@ -20,7 +20,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.shellz.habitt"
-    compileSdkVersion("android-37.0")
+    compileSdk = 36
     ndkVersion = "28.2.13676358"
 
     compileOptions {
