@@ -25,6 +25,14 @@ workflows:
           echo $FIREBASE_GOOGLE_SERVICES_JSON | base64 --decode > $CM_BUILD_DIR/android/app/google-services.json
       - name: Set up local properties
         script: flutter packages pub get
+      - name: Restore app secrets
+        script: |
+          cat > "$CM_BUILD_DIR/lib/config/app_secrets.dart" <<EOF
+          class AppSecrets {
+            static const revenueCatIosApiKey = '$REVENUECAT_IOS_API_KEY';
+            static const revenueCatAndroidApiKey = '$REVENUECAT_ANDROID_API_KEY';
+          }
+          EOF
       - name: Restore keystore
         script: |
           echo $FCI_KEYSTORE | base64 --decode > $CM_BUILD_DIR/android/app/keystore.jks
@@ -106,6 +114,14 @@ workflows:
           echo $FIREBASE_GOOGLE_SERVICE_INFO_PLIST | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
       - name: Get Flutter packages
         script: flutter packages pub get
+      - name: Restore app secrets
+        script: |
+          cat > "$CM_BUILD_DIR/lib/config/app_secrets.dart" <<EOF
+          class AppSecrets {
+            static const revenueCatIosApiKey = '$REVENUECAT_IOS_API_KEY';
+            static const revenueCatAndroidApiKey = '$REVENUECAT_ANDROID_API_KEY';
+          }
+          EOF
       - name: Install CocoaPods dependencies
         script: find . -name "Podfile" -maxdepth 2 -execdir pod install \;
       - name: Flutter analyze
