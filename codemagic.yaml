@@ -35,6 +35,10 @@ workflows:
           keyPassword=$FCI_KEY_PASSWORD
           keyAlias=$FCI_KEY_ALIAS
           storeFile=$CM_BUILD_DIR/android/app/keystore.jks
+          debugStorePassword=android
+          debugKeyPassword=android
+          debugKeyAlias=androiddebugkey
+          debugStoreFile=$CM_BUILD_DIR/android/app/keystore.jks
           EOF
       - name: Flutter analyze
         script: flutter analyze --no-fatal-infos --no-fatal-warnings
