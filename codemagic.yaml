@@ -2,7 +2,7 @@ workflows:
   android-internal:
     name: Android - Play Store internal testing
     max_build_duration: 60
-    instance_type: linux_x2
+    instance_type: linux
     environment:
       groups:
         # Create this group in Codemagic UI → Teams → your team → Environment variables.
