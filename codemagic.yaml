@@ -1,0 +1,133 @@
+workflows:
+  android-internal:
+    name: Android - Play Store internal testing
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      groups:
+        # Create this group in Codemagic UI → Teams → your team → Environment variables.
+        # Add FCI_KEYSTORE (file), FCI_KEYSTORE_PASSWORD, FCI_KEY_ALIAS, FCI_KEY_PASSWORD,
+        # plus FIREBASE_GOOGLE_SERVICES_JSON (file type, upload android/app/google-services.json).
+        - android_signing_firebase
+      vars:
+        PACKAGE_NAME: "com.shellz.habitt"
+      flutter: stable
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Restore Firebase config
+        script: |
+          echo $FIREBASE_GOOGLE_SERVICES_JSON | base64 --decode > $CM_BUILD_DIR/android/app/google-services.json
+      - name: Set up local properties
+        script: flutter packages pub get
+      - name: Restore keystore
+        script: |
+          echo $FCI_KEYSTORE | base64 --decode > $CM_BUILD_DIR/android/app/keystore.jks
+      - name: Set up Android signing (key.properties)
+        script: |
+          cat >"$CM_BUILD_DIR/android/key.properties" <<EOF
+          storePassword=$FCI_KEYSTORE_PASSWORD
+          keyPassword=$FCI_KEY_PASSWORD
+          keyAlias=$FCI_KEY_ALIAS
+          storeFile=$CM_BUILD_DIR/android/app/keystore.jks
+          EOF
+      - name: Flutter analyze
+        script: flutter analyze
+      - name: Flutter unit tests
+        script: flutter test
+      - name: Build Android App Bundle
+        script: |
+          flutter build appbundle --release \
+            --build-name=$(cat pubspec.yaml | grep version: | sed 's/version: //' | cut -d'+' -f1) \
+            --build-number=$(cat pubspec.yaml | grep version: | sed 's/version: //' | cut -d'+' -f2)
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - ibrsboy32@gmail.com
+        notify:
+          success: true
+          failure: true
+      google_play:
+        # Create this integration in Codemagic UI → Team integrations → Google Play,
+        # uploading the service-account JSON key from Play Console → Setup → API access.
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: false
+
+  ios-testflight:
+    name: iOS - TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic_api_key
+      # ^ name of the App Store Connect integration you create in
+      # Codemagic UI → Team integrations → App Store Connect (uses an API key
+      # generated in App Store Connect → Users and Access → Integrations → Keys).
+    environment:
+      groups:
+        - android_signing_firebase
+        # reuses FIREBASE_GOOGLE_SERVICES_JSON-style group; add
+        # FIREBASE_GOOGLE_SERVICE_INFO_PLIST (file type) to the same group
+        # with the contents of ios/Runner/GoogleService-Info.plist.
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.shellz.habitt
+      vars:
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Restore Firebase config
+        script: |
+          echo $FIREBASE_GOOGLE_SERVICE_INFO_PLIST | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
+      - name: Get Flutter packages
+        script: flutter packages pub get
+      - name: Install CocoaPods dependencies
+        script: find . -name "Podfile" -maxdepth 2 -execdir pod install \;
+      - name: Flutter analyze
+        script: flutter analyze
+      - name: Flutter unit tests
+        script: flutter test
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+      - name: Build ipa
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist \
+            --build-name=$(cat pubspec.yaml | grep version: | sed 's/version: //' | cut -d'+' -f1) \
+            --build-number=$(cat pubspec.yaml | grep version: | sed 's/version: //' | cut -d'+' -f2)
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - ibrsboy32@gmail.com
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups: []
+        submit_to_app_store: false
