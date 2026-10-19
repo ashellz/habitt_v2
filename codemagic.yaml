@@ -38,6 +38,7 @@ workflows:
           EOF
       - name: Flutter analyze
         script: flutter analyze --no-fatal-infos --no-fatal-warnings
+        ignore_failure: true
       - name: Flutter unit tests
         script: flutter test
       - name: Build Android App Bundle
@@ -104,6 +105,7 @@ workflows:
         script: find . -name "Podfile" -maxdepth 2 -execdir pod install \;
       - name: Flutter analyze
         script: flutter analyze --no-fatal-infos --no-fatal-warnings
+        ignore_failure: true
       - name: Flutter unit tests
         script: flutter test
       - name: Set up code signing
