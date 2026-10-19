@@ -114,6 +114,9 @@ workflows:
           echo $FIREBASE_GOOGLE_SERVICE_INFO_PLIST | base64 --decode > $CM_BUILD_DIR/ios/Runner/GoogleService-Info.plist
       - name: Get Flutter packages
         script: flutter packages pub get
+      - name: Disable Swift Package Manager
+        script: |
+          flutter config --no-enable-swift-package-manager
       - name: Restore app secrets
         script: |
           cat > "$CM_BUILD_DIR/lib/config/app_secrets.dart" <<EOF
