@@ -358,7 +358,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       }
     } else {
       if (allCompleted && !_wasAllCompleted) {
-        _confettiController.play();
+        // Defer to a post-frame callback: the ConfettiWidget further down
+        // this same build() hasn't been laid out yet, and play() notifies
+        // listeners synchronously, which would ask it for its RenderBox
+        // position before it has one.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _confettiController.play();
+        });
       } else if (!allCompleted && _wasAllCompleted) {
         _confettiController.stop();
       }

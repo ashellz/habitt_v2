@@ -46,7 +46,13 @@ Future<void> main() async {
   final tp = await ThemeProvider.initFromPrefs(prefs);
   final languageProvider = LanguageProvider.fromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await BillingService.init();
+  try {
+    await BillingService.init();
+  } catch (e, st) {
+    // Billing is voluntary-support-only with no feature gating, so a
+    // misconfigured/missing RevenueCat key must not block app startup.
+    debugPrint('BillingService failed to initialize: $e\n$st');
+  }
 
   await Hive.initFlutter();
   Hive.registerAdapters();
