@@ -3324,4 +3324,25 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get notificationHealthNudgeRowing =>
       'Vrijeme je za veslanje.|Uzmi vesla, čeka te veslanje.';
+
+  @override
+  String get healthEditedManually => 'Ručno uređeno';
+
+  @override
+  String healthUseSourceValues(Object source) {
+    return 'Koristi vrijednosti iz $source';
+  }
+
+  @override
+  String healthOverrideNoticeTitle(Object source) {
+    return '$source je pauziran za ovaj dan';
+  }
+
+  @override
+  String healthOverrideNoticeBody(Object source) {
+    return 'Napredak je ručno promijenjen, pa ga Habitt za ovaj dan neće prepisati podacima iz $source. Broj ostaje tačno onakav kakav je unesen.\n\nŽeliš vratiti $source? Dodirni \"Koristi vrijednosti iz $source\" na ovoj navici.';
+  }
+
+  @override
+  String get healthOverrideNoticeUnderstood => 'Razumijem';
 }

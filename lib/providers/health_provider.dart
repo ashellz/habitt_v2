@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/health_service.dart';
@@ -112,33 +113,12 @@ class HealthProvider extends ChangeNotifier {
     try {
       for (final habit in linkedHabits) {
         final metric = habit.healthMetric!;
-        final bedtimeDayBefore = habit.healthBedtimeDayBefore;
         final syncDay = _service.syncDayFor(
           metric,
           targetDay,
-          bedtimeDayBefore: bedtimeDayBefore,
+          bedtimeDayBefore: habit.healthBedtimeDayBefore,
         );
-        final value = await _service.fetchValueForDay(
-          metric,
-          syncDay,
-          trackingType: habit.trackingType,
-          workoutFilter: habit.healthWorkoutFilter,
-          bedtimeDayBefore: bedtimeDayBefore,
-        );
-        if (value == null) continue;
-        final sessions = await _service.fetchSessionsForDay(
-          metric,
-          syncDay,
-          workoutFilter: habit.healthWorkoutFilter,
-          bedtimeDayBefore: bedtimeDayBefore,
-        );
-        await habitProvider.syncHabitFromHealth(
-          habit.id,
-          metric,
-          value,
-          day: syncDay,
-          sessions: sessions,
-        );
+        await _syncHabitDay(habitProvider, habit, syncDay);
       }
       lastSyncedAt = DateTime.now();
       await _saveLastSyncedAt(lastSyncedAt!);
@@ -148,5 +128,72 @@ class HealthProvider extends ChangeNotifier {
       isSyncing = false;
       notifyListeners();
     }
+  }
+
+  // disables manual override, then re-syncs the habit's day from Health to pull in its value
+  // shows as a sync (syncing state, then fresh last-synced time) like syncNow does
+  Future<void> useHealthValues(Habit habit, DateTime day) async {
+    final habitProvider = _habitProvider;
+    if (habitProvider == null || habit.healthMetric == null) return;
+
+    await habitProvider.clearHealthManualOverride(habit.id, day: day);
+
+    // a running syncNow already owns the syncing flag
+    final ownsSyncingFlag = !isSyncing;
+    try {
+      await ensureAvailabilityChecked();
+      if (!isAvailable) return;
+      if (Platform.isAndroid && !permissionGranted) return;
+
+      if (ownsSyncingFlag) {
+        isSyncing = true;
+        notifyListeners();
+      }
+      final applied = await _syncHabitDay(habitProvider, habit, day);
+      if (applied) {
+        lastSyncedAt = DateTime.now();
+        await _saveLastSyncedAt(lastSyncedAt!);
+      }
+    } catch (_) {
+      // the override is already cleared, so the next sync pulls the value in
+    } finally {
+      if (ownsSyncingFlag && isSyncing) {
+        isSyncing = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  // reads one Health value and its sessions for [syncDay] and applies them,
+  // false if Health had no value to apply
+  Future<bool> _syncHabitDay(
+    HabitProvider habitProvider,
+    Habit habit,
+    DateTime syncDay,
+  ) async {
+    final metric = habit.healthMetric!;
+    final bedtimeDayBefore = habit.healthBedtimeDayBefore;
+    final value = await _service.fetchValueForDay(
+      metric,
+      syncDay,
+      trackingType: habit.trackingType,
+      workoutFilter: habit.healthWorkoutFilter,
+      bedtimeDayBefore: bedtimeDayBefore,
+    );
+    if (value == null) return false;
+    final sessions = await _service.fetchSessionsForDay(
+      metric,
+      syncDay,
+      workoutFilter: habit.healthWorkoutFilter,
+      bedtimeDayBefore: bedtimeDayBefore,
+    );
+    await habitProvider.syncHabitFromHealth(
+      habit.id,
+      metric,
+      value,
+      day: syncDay,
+      sessions: sessions,
+    );
+    return true;
   }
 }

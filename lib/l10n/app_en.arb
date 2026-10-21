@@ -1234,5 +1234,10 @@
   "notificationHealthNudgeHiking": "The trails are calling, time for a hike.|Time to hit the trail.",
   "notificationHealthNudgeFlexibility": "Take a moment to stretch and loosen up.|Time to stretch it out.",
   "notificationHealthNudgeDancing": "Put on some music and dance.|Time to move to the music.",
-  "notificationHealthNudgeRowing": "Time to hit the water and row.|Grab the oars, a rowing session is waiting."
+  "notificationHealthNudgeRowing": "Time to hit the water and row.|Grab the oars, a rowing session is waiting.",
+  "healthEditedManually": "Edited manually",
+  "healthUseSourceValues": "Use {source} values",
+  "healthOverrideNoticeTitle": "{source} is paused for this day",
+  "healthOverrideNoticeBody": "You changed this progress yourself, so Habitt won't overwrite it with {source} data for this day. Your number stays exactly as you entered it.\n\nWant {source} back? Tap \"Use {source} values\" on this habit.",
+  "healthOverrideNoticeUnderstood": "Understood"
 }

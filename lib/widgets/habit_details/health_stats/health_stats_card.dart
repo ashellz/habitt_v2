@@ -9,6 +9,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/util/health_history.dart';
+import 'package:habitt/widgets/default/health_override_tag.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_sessions_list.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_week_chart.dart';
 import 'package:intl/intl.dart';
@@ -58,6 +59,8 @@ class HealthStatsCard extends StatelessWidget {
         spacing: 16,
         children: [
           _Header(),
+          if (latest != null)
+            HealthOverrideTag(habit: latest, day: history.points.last.day),
           _chartSection(cp, loc, history),
           if (metric == HealthMetricType.bedtime) _countingNote(cp, loc),
           if (metric.hasSessions) ...[

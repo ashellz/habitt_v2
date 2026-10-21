@@ -3355,4 +3355,25 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get notificationHealthNudgeRowing =>
       'Zeit zum Rudern.|Schnapp dir die Ruder, eine Rudereinheit wartet.';
+
+  @override
+  String get healthEditedManually => 'Manuell bearbeitet';
+
+  @override
+  String healthUseSourceValues(Object source) {
+    return '$source-Werte verwenden';
+  }
+
+  @override
+  String healthOverrideNoticeTitle(Object source) {
+    return '$source ist für diesen Tag pausiert';
+  }
+
+  @override
+  String healthOverrideNoticeBody(Object source) {
+    return 'Du hast den Fortschritt selbst geändert, deshalb überschreibt Habitt ihn für diesen Tag nicht mit Daten aus $source. Dein Wert bleibt genau so, wie du ihn eingegeben hast.\n\nMöchtest du $source zurück? Tippe bei dieser Gewohnheit auf \"$source-Werte verwenden\".';
+  }
+
+  @override
+  String get healthOverrideNoticeUnderstood => 'Verstanden';
 }

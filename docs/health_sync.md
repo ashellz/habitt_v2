@@ -177,6 +177,56 @@ only if at least one matching session was logged that day, using the same
 `sessions` list already fetched via `fetchSessionsForDay` for that sync
 pass (no extra Health read).
 
+## Manual override
+
+A Health-linked habit's progress can be edited by hand (log progress dialog,
+or completing/uncompleting it). That's for the case where the user did the
+thing but never logged it in Health, or logged it wrong.
+
+- `Habit.healthManualOverride` is **per-day state**, living on the day's
+  snapshot next to `healthSessions`. Any hand-edit of a habit with a
+  `healthMetric` sets it (`HabitProvider._markHealthManualOverride`, called from
+  `updateHabitAmountCompleted`, `updateHabitDurationCompleted` and
+  `completeHabit` — not when un-skipping, which only resets progress to 0).
+  Timer commits never set it: Health-linked duration habits have no timer
+  (`Habit.supportsTimer`), so there is one writer for progress at a time.
+- `syncHabitFromHealth` checks the flag on the day it's writing to. When set,
+  it **only refreshes `healthSessions`** and returns: progress, completion,
+  streak and notification bookkeeping are untouched. The sessions list stays
+  live because it's informational, and the "Sessions" section should keep
+  showing what Health actually recorded.
+- The flag only protects the day it was set on. New days start clear
+  (`copyResetCompletion`, `resetCompletion`, `clearDayState`), and a past day
+  edited by hand stays frozen.
+- **Hand it back:** `HealthOverrideTag`
+  ([`lib/widgets/default/health_override_tag.dart`](../lib/widgets/default/health_override_tag.dart))
+  renders "Edited manually · Use Apple Health values" (Health Connect on
+  Android) in the log progress dialog and at the top of the details-page
+  `HealthStatsCard`. Tapping it calls `HealthProvider.useHealthValues(habit, day)`,
+  which clears the flag (`HabitProvider.clearHealthManualOverride`) and
+  immediately re-syncs that exact day, so the Health value replaces the hand
+  edit right away. It behaves like a sync for the Health card: `isSyncing` is
+  set while it runs (header shows "Syncing…"), and when Health returned a value
+  `lastSyncedAt` is stamped and persisted, so "Last synced" is current. If
+  Health is unavailable or has no value at that moment the flag is still
+  cleared, `lastSyncedAt` is left alone, and the next sync applies the value.
+- **One-time explanation:** the first time a hand-edit pauses Health sync,
+  `HealthOverrideNotice.showIfNeeded`
+  ([`lib/util/health_override_notice.dart`](../lib/util/health_override_notice.dart))
+  opens `HealthOverrideNoticeDialog` explaining that Apple Health / Health
+  Connect is paused for that day and how to get it back. It has a single
+  "Understood" button that stays disabled for 3 seconds, counting down in its
+  label ("Understood (3)"), and can't be dismissed any other way. Gated by the
+  `healthOverrideNoticeShown` SharedPreferences bool, set the moment the dialog
+  opens so it never repeats. Triggered from `LogProgressDialog` (after it
+  closes, via the root navigator's context) and from `HabitProvider.completeHabit`
+  (long-press complete/uncomplete); only when the edit actually newly sets the
+  flag.
+- Syncing and the backup system: the flag is serialized in `toMap`/`fromMap`
+  (absent in older backups = `false`) and merged with the completion tuple
+  (`pickDayState`), so it travels with the progress it protects. Hive field
+  index 52.
+
 ## Completion side effects
 
 When a sync flips a habit's `completed` flag, `syncHabitFromHealth` does the

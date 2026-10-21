@@ -1213,5 +1213,10 @@
   "notificationHealthNudgeHiking": "Staze te zovu, vrijeme je za planinarenje.|Vrijeme je da se uputiš na stazu.",
   "notificationHealthNudgeFlexibility": "Odvoji trenutak za istezanje.|Vrijeme je da se protegneš.",
   "notificationHealthNudgeDancing": "Pusti muziku i zapleši.|Vrijeme je da se krećeš uz muziku.",
-  "notificationHealthNudgeRowing": "Vrijeme je za veslanje.|Uzmi vesla, čeka te veslanje."
+  "notificationHealthNudgeRowing": "Vrijeme je za veslanje.|Uzmi vesla, čeka te veslanje.",
+  "healthEditedManually": "Ručno uređeno",
+  "healthUseSourceValues": "Koristi vrijednosti iz {source}",
+  "healthOverrideNoticeTitle": "{source} je pauziran za ovaj dan",
+  "healthOverrideNoticeBody": "Napredak je ručno promijenjen, pa ga Habitt za ovaj dan neće prepisati podacima iz {source}. Broj ostaje tačno onakav kakav je unesen.\n\nŽeliš vratiti {source}? Dodirni \"Koristi vrijednosti iz {source}\" na ovoj navici.",
+  "healthOverrideNoticeUnderstood": "Razumijem"
 }

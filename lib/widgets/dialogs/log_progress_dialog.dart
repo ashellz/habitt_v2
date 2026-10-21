@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
@@ -7,7 +9,9 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/format_minutes_of_day.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/health_override_notice.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:habitt/widgets/default/health_override_tag.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
@@ -55,6 +59,13 @@ class LogProgressDialog extends StatelessWidget {
         final habitProvider = context.read<HabitProvider>();
         final stateProvider = context.read<StateProvider>();
 
+        // this dialog's own context is gone once it pops, the root
+        // navigator's is not
+        final rootContext = Navigator.of(context, rootNavigator: true).context;
+        // first hand-edit of a Health-synced day pauses Health sync for it
+        final pausesHealthSync =
+            habit.healthMetric != null && !habit.healthManualOverride;
+
         if (progressType != ProgressType.duration) {
           final value =
               _isSleep
@@ -92,7 +103,9 @@ class LogProgressDialog extends StatelessWidget {
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
-        ;
+        if (pausesHealthSync) {
+          unawaited(HealthOverrideNotice.showIfNeeded(rootContext));
+        }
       },
       child: progress(
         context,
@@ -136,6 +149,16 @@ class LogProgressDialog extends StatelessWidget {
             duration: habit.duration,
             durationCompleted: habit.durationCompleted,
           ),
+        HealthOverrideTag(
+          habit: habit,
+          day: context.read<HabitProvider>().selectedDate ?? DateTime.now(),
+          alignment: WrapAlignment.center,
+          onReset: () {
+            if (context.mounted && Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+          },
+        ),
         target(context, cp, loc, customSingulars),
       ],
     );

@@ -1223,5 +1223,10 @@
   "notificationHealthNudgeHiking": "Los senderos te llaman, es hora de una excursión.|Es hora de salir al sendero.",
   "notificationHealthNudgeFlexibility": "Tómate un momento para estirar.|Es hora de estirar el cuerpo.",
   "notificationHealthNudgeDancing": "Pon música y baila.|Es hora de moverte al ritmo de la música.",
-  "notificationHealthNudgeRowing": "Es hora de remar.|Coge los remos, te espera una sesión de remo."
+  "notificationHealthNudgeRowing": "Es hora de remar.|Coge los remos, te espera una sesión de remo.",
+  "healthEditedManually": "Editado manualmente",
+  "healthUseSourceValues": "Usar los valores de {source}",
+  "healthOverrideNoticeTitle": "{source} está en pausa para este día",
+  "healthOverrideNoticeBody": "Has cambiado el progreso manualmente, así que Habitt no lo sobrescribirá con datos de {source} en este día. Tu cifra se queda exactamente como la introdujiste.\n\n¿Quieres volver a {source}? Toca \"Usar los valores de {source}\" en este hábito.",
+  "healthOverrideNoticeUnderstood": "Entendido"
 }

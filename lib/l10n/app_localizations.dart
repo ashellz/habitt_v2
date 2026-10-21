@@ -5626,6 +5626,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time to hit the water and row.|Grab the oars, a rowing session is waiting.'**
   String get notificationHealthNudgeRowing;
+
+  /// No description provided for @healthEditedManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited manually'**
+  String get healthEditedManually;
+
+  /// No description provided for @healthUseSourceValues.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {source} values'**
+  String healthUseSourceValues(Object source);
+
+  /// No description provided for @healthOverrideNoticeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{source} is paused for this day'**
+  String healthOverrideNoticeTitle(Object source);
+
+  /// No description provided for @healthOverrideNoticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You changed this progress yourself, so Habitt won\'t overwrite it with {source} data for this day. Your number stays exactly as you entered it.\n\nWant {source} back? Tap \"Use {source} values\" on this habit.'**
+  String healthOverrideNoticeBody(Object source);
+
+  /// No description provided for @healthOverrideNoticeUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'Understood'**
+  String get healthOverrideNoticeUnderstood;
 }
 
 class _AppLocalizationsDelegate
