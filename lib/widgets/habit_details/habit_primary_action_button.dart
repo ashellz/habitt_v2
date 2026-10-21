@@ -161,7 +161,12 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
             progressType: ProgressType.amount,
             habit: widget.habit,
           );
-        } else if (isToday) {
+        } else if (widget.habit.tracksTimeOfDay) {
+          return LogProgressDialog(
+            progressType: ProgressType.timeOfDay,
+            habit: widget.habit,
+          );
+        } else if (isToday && widget.habit.supportsTimer) {
           return TimerDialog(habit: widget.habit);
         } else {
           return LogProgressDialog(

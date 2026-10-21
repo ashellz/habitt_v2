@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/format_minutes_of_day.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/duration_progress_input.dart';
+import 'package:habitt/widgets/habit_widget/progress_inputs/time_of_day_progress_input.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
-enum ProgressType { amount, duration }
+enum ProgressType { amount, duration, timeOfDay }
 
 class LogProgressDialog extends StatelessWidget {
   const LogProgressDialog({
@@ -23,17 +26,26 @@ class LogProgressDialog extends StatelessWidget {
 
   final ProgressType progressType;
   final Habit habit;
+
+  // sleep is an amount habit stored in minutes, so it's logged as a duration
+  bool get _isSleep =>
+      progressType == ProgressType.amount &&
+      habit.healthMetric == HealthMetricType.sleep;
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
 
     final title =
-        progressType == ProgressType.amount ? loc.logProgress : loc.logDuration;
-    final desc =
-        progressType == ProgressType.amount
-            ? loc.howMuchDidYouCompleteToday
-            : loc.howMuchTimeDidYouSpendOnThisHabitToday;
+        progressType == ProgressType.duration
+            ? loc.logDuration
+            : loc.logProgress;
+    final desc = switch (progressType) {
+      ProgressType.amount => loc.howMuchDidYouCompleteToday,
+      ProgressType.duration => loc.howMuchTimeDidYouSpendOnThisHabitToday,
+      ProgressType.timeOfDay => habit.healthMetric?.desc(loc),
+    };
 
     return NewDefaultDialog(
       title: title,
@@ -43,8 +55,13 @@ class LogProgressDialog extends StatelessWidget {
         final habitProvider = context.read<HabitProvider>();
         final stateProvider = context.read<StateProvider>();
 
-        if (progressType == ProgressType.amount) {
-          if (habit.amountCompleted == stateProvider.habitAmount) {
+        if (progressType != ProgressType.duration) {
+          final value =
+              _isSleep
+                  ? stateProvider.habitDuration.inMinutes
+                  : stateProvider.habitAmount;
+
+          if (habit.amountCompleted == value) {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
@@ -52,11 +69,7 @@ class LogProgressDialog extends StatelessWidget {
             return;
           }
 
-          habitProvider.updateHabitAmountCompleted(
-            habit.id,
-            stateProvider.habitAmount,
-            context,
-          );
+          habitProvider.updateHabitAmountCompleted(habit.id, value, context);
         }
 
         if (progressType == ProgressType.duration) {
@@ -81,11 +94,17 @@ class LogProgressDialog extends StatelessWidget {
         }
         ;
       },
-      child: progress(cp, loc, context.read<StateProvider>().customSingulars),
+      child: progress(
+        context,
+        cp,
+        loc,
+        context.read<StateProvider>().customSingulars,
+      ),
     );
   }
 
   Widget progress(
+    BuildContext context,
     ColorProvider cp,
     AppLocalizations loc,
     Map<String, String> customSingulars,
@@ -93,7 +112,21 @@ class LogProgressDialog extends StatelessWidget {
     return Column(
       spacing: 16,
       children: [
-        if (progressType == ProgressType.amount)
+        if (progressType == ProgressType.timeOfDay)
+          TimeOfDayProgressInput(
+            initialMinutes:
+                habit.amountCompleted > 0
+                    ? habit.amountCompleted
+                    : habit.amount,
+            isBedtime: habit.healthMetric == HealthMetricType.bedtime,
+          )
+        else if (_isSleep)
+          DurationProgressInput(
+            duration: habit.amount * 60,
+            durationCompleted: habit.amountCompleted * 60,
+            showSeconds: false,
+          )
+        else if (progressType == ProgressType.amount)
           AmountProgressInput(
             amount: habit.amount,
             amountCompleted: habit.amountCompleted,
@@ -103,18 +136,23 @@ class LogProgressDialog extends StatelessWidget {
             duration: habit.duration,
             durationCompleted: habit.durationCompleted,
           ),
-        target(cp, loc, customSingulars),
+        target(context, cp, loc, customSingulars),
       ],
     );
   }
 
   Row target(
+    BuildContext context,
     ColorProvider cp,
     AppLocalizations loc,
     Map<String, String> customSingulars,
   ) {
     String getTargetText() {
-      if (progressType == ProgressType.amount) {
+      if (progressType == ProgressType.timeOfDay) {
+        return formatMinutesOfDay(context, habit.amount);
+      } else if (_isSleep) {
+        return getDurationString(habit.amount * 60);
+      } else if (progressType == ProgressType.amount) {
         return "${habit.amount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, habit.amount, loc, customSingulars: customSingulars)}";
       } else {
         return getDurationString(habit.duration);

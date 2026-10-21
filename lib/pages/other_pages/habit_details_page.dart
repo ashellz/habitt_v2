@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
@@ -12,6 +13,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/get_sleep_amount_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/show_delete_habit_flow.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -578,6 +580,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   }
 
   String _amountLine(Habit habit) {
+    // sleep amounts are minutes, shown as a duration instead of a count
+    if (habit.healthMetric == HealthMetricType.sleep) {
+      return getSleepAmountString(habit);
+    }
     final baseLabel =
         habit.amountLabel.trim().isEmpty
             ? AmountLabelPreset.times.plural
