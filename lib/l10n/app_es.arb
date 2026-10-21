@@ -1190,5 +1190,12 @@
   "healthBedtimeDayWake": "Día al despertar",
   "healthBedtimeDayBefore": "Día anterior",
   "healthBedtimeDayWakeDesc": "Tu hora de dormir cuenta para el día en que te despiertas. Si te acuestas el lunes por la noche, cuenta para el martes",
-  "healthBedtimeDayBeforeDesc": "Tu hora de dormir cuenta para el día anterior a despertarte. Si te acuestas el lunes por la noche, cuenta para el lunes"
+  "healthBedtimeDayBeforeDesc": "Tu hora de dormir cuenta para el día anterior a despertarte. Si te acuestas el lunes por la noche, cuenta para el lunes",
+  "healthCardNotSyncedYet": "Aún sin sincronizar",
+  "healthCardSyncing": "Sincronizando…",
+  "healthCardPermissionNeeded": "Permite el acceso para seguir sincronizando",
+  "healthCardLast7Days": "Últimos 7 días",
+  "healthCardNoData": "Aún no hay datos de salud para estos días",
+  "healthCardSessions": "Sesiones",
+  "healthCardNoSessions": "No hay sesiones registradas para este día"
 }

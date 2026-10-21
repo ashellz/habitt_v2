@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/health_workout_type.dart';
+import 'package:habitt/util/health_history.dart';
 import 'package:habitt/util/sleep_sessions.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
@@ -426,20 +427,14 @@ class HealthService {
     }
   }
 
-  /// The calendar day a sync run on [today] should write [metric]'s value
-  /// to. A bedtime counted on the day before waking up is written to
-  /// yesterday, because the night that ended this morning started then;
-  /// every other metric lands on [today].
+  // returns day in database where the sync data should be written to
+  // could be the day before in case user toggles that on for bedtime habit
   DateTime syncDayFor(
     HealthMetricType metric,
     DateTime today, {
     bool bedtimeDayBefore = false,
   }) {
-    final dayStart = DateTime(today.year, today.month, today.day);
-    if (metric == HealthMetricType.bedtime && bedtimeDayBefore) {
-      return DateTime(dayStart.year, dayStart.month, dayStart.day - 1);
-    }
-    return dayStart;
+    return healthSyncDay(metric, today, bedtimeDayBefore: bedtimeDayBefore);
   }
 
   int _bedtimeMinutesOfDay(DateTime dateTime) {

@@ -1190,5 +1190,12 @@
   "healthBedtimeDayWake": "Aufwachtag",
   "healthBedtimeDayBefore": "Vortag",
   "healthBedtimeDayWakeDesc": "Deine Schlafenszeit zählt für den Tag, an dem du aufwachst. Gehst du Montagabend ins Bett, zählt es für Dienstag",
-  "healthBedtimeDayBeforeDesc": "Deine Schlafenszeit zählt für den Tag vor dem Aufwachen. Gehst du Montagabend ins Bett, zählt es für Montag"
+  "healthBedtimeDayBeforeDesc": "Deine Schlafenszeit zählt für den Tag vor dem Aufwachen. Gehst du Montagabend ins Bett, zählt es für Montag",
+  "healthCardNotSyncedYet": "Noch nicht synchronisiert",
+  "healthCardSyncing": "Synchronisiere…",
+  "healthCardPermissionNeeded": "Zugriff erlauben, um weiter zu synchronisieren",
+  "healthCardLast7Days": "Letzte 7 Tage",
+  "healthCardNoData": "Für diese Tage gibt es noch keine Health-Daten",
+  "healthCardSessions": "Einheiten",
+  "healthCardNoSessions": "Für diesen Tag wurden keine Einheiten aufgezeichnet"
 }

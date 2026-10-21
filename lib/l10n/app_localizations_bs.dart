@@ -3152,4 +3152,27 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get healthBedtimeDayBeforeDesc =>
       'Odlazak na spavanje se računa za dan prije buđenja. Ako legneš u ponedjeljak navečer, računa se za ponedjeljak';
+
+  @override
+  String get healthCardNotSyncedYet => 'Još nije sinkronizovano';
+
+  @override
+  String get healthCardSyncing => 'Sinkronizacija…';
+
+  @override
+  String get healthCardPermissionNeeded =>
+      'Dozvoli pristup za nastavak sinkronizacije';
+
+  @override
+  String get healthCardLast7Days => 'Posljednjih 7 dana';
+
+  @override
+  String get healthCardNoData =>
+      'Još nema podataka iz zdravstvene aplikacije za ove dane';
+
+  @override
+  String get healthCardSessions => 'Sesije';
+
+  @override
+  String get healthCardNoSessions => 'Nema zabilježenih sesija za ovaj dan';
 }

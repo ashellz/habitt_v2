@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/health_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const String _kLastSyncedAtKey = 'healthLastSyncedAt';
 
 class HealthProvider extends ChangeNotifier {
   HealthProvider({HealthService? service})
@@ -30,6 +33,7 @@ class HealthProvider extends ChangeNotifier {
   Future<void> ensureAvailabilityChecked() async {
     if (_availabilityChecked) return;
     _availabilityChecked = true;
+    await _loadLastSyncedAt();
     try {
       isAvailable = await _service.isAvailable();
       if (isAvailable) {
@@ -39,6 +43,29 @@ class HealthProvider extends ChangeNotifier {
       isAvailable = false;
     }
     notifyListeners();
+  }
+
+  // lastSyncedAt only lives in memory otherwise, so the details card would
+  // read "not synced yet" after every restart until the next sync finishes
+  Future<void> _loadLastSyncedAt() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final ms = prefs.getInt(_kLastSyncedAtKey);
+      if (ms != null && lastSyncedAt == null) {
+        lastSyncedAt = DateTime.fromMillisecondsSinceEpoch(ms);
+      }
+    } catch (_) {
+      // a missing timestamp just shows as "not synced yet"
+    }
+  }
+
+  Future<void> _saveLastSyncedAt(DateTime time) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_kLastSyncedAtKey, time.millisecondsSinceEpoch);
+    } catch (_) {
+      // losing the timestamp is harmless
+    }
   }
 
   // used when user tries to link a habit to Health for the first ime
@@ -114,6 +141,7 @@ class HealthProvider extends ChangeNotifier {
         );
       }
       lastSyncedAt = DateTime.now();
+      await _saveLastSyncedAt(lastSyncedAt!);
     } catch (_) {
       // A Health read failure must never block app-open flow.
     } finally {

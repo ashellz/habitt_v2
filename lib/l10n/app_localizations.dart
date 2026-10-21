@@ -5415,6 +5415,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your bedtime counts on the day before you wake up. Going to bed on Monday night counts for Monday'**
   String get healthBedtimeDayBeforeDesc;
+
+  /// No description provided for @healthCardNotSyncedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get healthCardNotSyncedYet;
+
+  /// No description provided for @healthCardSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get healthCardSyncing;
+
+  /// No description provided for @healthCardPermissionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to keep syncing'**
+  String get healthCardPermissionNeeded;
+
+  /// No description provided for @healthCardLast7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get healthCardLast7Days;
+
+  /// No description provided for @healthCardNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No Health data for these days yet'**
+  String get healthCardNoData;
+
+  /// No description provided for @healthCardSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get healthCardSessions;
+
+  /// No description provided for @healthCardNoSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions recorded for this day'**
+  String get healthCardNoSessions;
 }
 
 class _AppLocalizationsDelegate

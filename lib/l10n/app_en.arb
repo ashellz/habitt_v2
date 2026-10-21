@@ -1201,5 +1201,12 @@
   "healthBedtimeDayWake": "Wake-up day",
   "healthBedtimeDayBefore": "Day before",
   "healthBedtimeDayWakeDesc": "Your bedtime counts on the day you wake up. Going to bed on Monday night counts for Tuesday",
-  "healthBedtimeDayBeforeDesc": "Your bedtime counts on the day before you wake up. Going to bed on Monday night counts for Monday"
+  "healthBedtimeDayBeforeDesc": "Your bedtime counts on the day before you wake up. Going to bed on Monday night counts for Monday",
+  "healthCardNotSyncedYet": "Not synced yet",
+  "healthCardSyncing": "Syncing…",
+  "healthCardPermissionNeeded": "Allow access to keep syncing",
+  "healthCardLast7Days": "Last 7 days",
+  "healthCardNoData": "No Health data for these days yet",
+  "healthCardSessions": "Sessions",
+  "healthCardNoSessions": "No sessions recorded for this day"
 }

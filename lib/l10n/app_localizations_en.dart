@@ -3157,4 +3157,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get healthBedtimeDayBeforeDesc =>
       'Your bedtime counts on the day before you wake up. Going to bed on Monday night counts for Monday';
+
+  @override
+  String get healthCardNotSyncedYet => 'Not synced yet';
+
+  @override
+  String get healthCardSyncing => 'Syncing…';
+
+  @override
+  String get healthCardPermissionNeeded => 'Allow access to keep syncing';
+
+  @override
+  String get healthCardLast7Days => 'Last 7 days';
+
+  @override
+  String get healthCardNoData => 'No Health data for these days yet';
+
+  @override
+  String get healthCardSessions => 'Sessions';
+
+  @override
+  String get healthCardNoSessions => 'No sessions recorded for this day';
 }

@@ -1180,5 +1180,12 @@
   "healthBedtimeDayWake": "Dan buđenja",
   "healthBedtimeDayBefore": "Dan prije",
   "healthBedtimeDayWakeDesc": "Odlazak na spavanje se računa za dan kada se probudiš. Ako legneš u ponedjeljak navečer, računa se za utorak",
-  "healthBedtimeDayBeforeDesc": "Odlazak na spavanje se računa za dan prije buđenja. Ako legneš u ponedjeljak navečer, računa se za ponedjeljak"
+  "healthBedtimeDayBeforeDesc": "Odlazak na spavanje se računa za dan prije buđenja. Ako legneš u ponedjeljak navečer, računa se za ponedjeljak",
+  "healthCardNotSyncedYet": "Još nije sinkronizovano",
+  "healthCardSyncing": "Sinkronizacija…",
+  "healthCardPermissionNeeded": "Dozvoli pristup za nastavak sinkronizacije",
+  "healthCardLast7Days": "Posljednjih 7 dana",
+  "healthCardNoData": "Još nema podataka iz zdravstvene aplikacije za ove dane",
+  "healthCardSessions": "Sesije",
+  "healthCardNoSessions": "Nema zabilježenih sesija za ovaj dan"
 }

@@ -21,6 +21,7 @@ import 'package:habitt/widgets/default/default_popup_menu.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/habit_primary_action_button.dart';
+import 'package:habitt/widgets/habit_details/health_stats/health_stats_card.dart';
 import 'package:habitt/widgets/habit_details/strength_ring.dart';
 import 'package:habitt/widgets/habit_details/new/habit_detail_stats_sections.dart';
 import 'package:habitt/widgets/stats/consistency_calendar.dart';
@@ -272,6 +273,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 child: Column(
                   children: [
                     SizedBox(height: 24),
+                    if (habit.healthMetric != null) ...[
+                      HealthStatsCard(habit: habit),
+                      SizedBox(height: 24),
+                    ],
                     HabitDetailStatsSections(
                       habit: habit,
                       stats: stats,

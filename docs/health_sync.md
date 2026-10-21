@@ -77,6 +77,37 @@ opened, not the instant new Health data appears.
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
 
+## Habit details Health card
+
+A Health-linked habit's details page
+([`habit_details_page.dart`](../lib/pages/other_pages/habit_details_page.dart))
+shows a `HealthStatsCard`
+([`lib/widgets/habit_details/health_stats/`](../lib/widgets/habit_details/health_stats/)),
+on iOS and Android only:
+
+- **Header** — "Apple Health" / "Health Connect" and a status line:
+  syncing, not synced yet, or `Last synced: …`. On Android with Health
+  Connect access missing the line becomes a tappable prompt that requests
+  access and re-syncs (iOS can't report read access, so it never shows
+  this). `HealthProvider.lastSyncedAt` is persisted in `SharedPreferences`
+  (`healthLastSyncedAt`) so it survives restarts; it is loaded the first time
+  `ensureAvailabilityChecked()` runs.
+- **Last 7 days chart** (`HealthWeekChart`) — bars against a dashed target
+  line for counts, durations and sleep; dots on a time axis with the target
+  line (and tolerance band) for bedtime and wake time. There is no separate
+  history store: [`lib/util/health_history.dart`](../lib/util/health_history.dart)
+  (`buildHealthHistory`) reads each day's progress from that day's habit
+  snapshot (`HabitProvider.habitForDay`), so a day with no snapshot, or a
+  time-of-day habit whose progress is 0, is a gap. The window ends on
+  `healthSyncDay` — the day a sync run writes to, i.e. **yesterday for a
+  bedtime counted on the day before** — which `HealthService.syncDayFor`
+  also uses so the two can't drift.
+- **Sessions** (`HealthSessionsList`) — collapsed by default; lists the
+  `Habit.healthSessions` stored on that latest day's snapshot (time range and
+  duration; workout type for workouts). Not shown for steps and calories,
+  which have no sessions. Bedtime habits also show which day the night
+  counts on.
+
 ## Day attribution (sleep sessions)
 
 Most metrics are read midnight-to-midnight for the day being synced. The
