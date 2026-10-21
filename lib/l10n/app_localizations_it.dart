@@ -3257,4 +3257,99 @@ class AppLocalizationsIt extends AppLocalizations {
   String notificationSleepGoalProgress(Object goal, Object slept) {
     return 'Hai dormito $slept sul tuo obiettivo di $goal. Prova ad andare a letto prima stasera.|Sei a $slept su $goal di sonno. Fai contare questa notte.';
   }
+
+  @override
+  String notificationHealthStepsStart(Object goal) {
+    return 'È ora di muoversi, il tuo obiettivo di oggi è $goal.|Una camminata ora ti avvicina a $goal.|Ogni passo conta, punta a $goal oggi.|Sgranchisci le gambe, $goal ti aspettano.';
+  }
+
+  @override
+  String notificationHealthStepsProgress(Object progress, Object remaining) {
+    return 'Sei a $progress. Mancano solo $remaining!|Mancano $remaining al tuo obiettivo, continua a camminare.|Bel progresso, finora $progress. Una breve camminata lo completa.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesStart(Object goal) {
+    return 'Metti in movimento il corpo, l\'obiettivo di oggi è bruciare $goal.|Un allenamento o una camminata veloce ti porta a $goal.|È ora di bruciare energia, il tuo obiettivo è $goal.|Muoviti un po\' ora, l\'obiettivo di oggi è $goal.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Hai bruciato $progress finora. Mancano solo $remaining!|Mancano $remaining al tuo obiettivo, continua a muoverti.|Ottimo lavoro, $progress bruciate. Chiudi alla grande!';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesStart(Object goal) {
+    return 'Il tuo obiettivo totale di calorie per oggi è $goal. Resta in movimento!|Muoviti oggi, l\'obiettivo totale è $goal.|Obiettivo di consumo totale di oggi: $goal. Un po\' di movimento aiuta.';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Oggi sei a $progress, mancano $remaining all\'obiettivo.|Mancano $remaining all\'obiettivo di calorie di oggi.|Buon ritmo, finora $progress. Continua così!';
+  }
+
+  @override
+  String notificationHealthMindfulnessStart(Object goal) {
+    return 'Prenditi $goal per respirare e ricominciare.|Una breve pausa di consapevolezza di $goal è tutto ciò che serve.|Fermati per $goal di mindfulness oggi.|La tua mente merita $goal di calma.';
+  }
+
+  @override
+  String notificationHealthMindfulnessProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Finora $progress di mindfulness. Mancano $remaining all\'obiettivo.|Mancano $remaining di calma al tuo obiettivo.';
+  }
+
+  @override
+  String notificationHealthWorkoutStart(Object activity, Object goal) {
+    return '$activity: l\'obiettivo di oggi è $goal.|$activity è nel piano di oggi, punta a $goal.|$activity – obiettivo di oggi: $goal. Andiamo!|$activity, è il momento! L\'obiettivo è $goal.';
+  }
+
+  @override
+  String notificationHealthWorkoutProgress(
+    Object activity,
+    Object progress,
+    Object remaining,
+  ) {
+    return '$activity: sei a $progress, mancano $remaining!|Progressi in $activity: $progress. Continua, mancano $remaining.|$activity: mancano solo $remaining all\'obiettivo.';
+  }
+
+  @override
+  String get notificationHealthNudgeWalking =>
+      'È ora di fare una camminata.|Aria fresca e una camminata ti faranno bene.';
+
+  @override
+  String get notificationHealthNudgeRunning =>
+      'Allaccia le scarpe, è ora di correre.|È ora di uscire a correre.';
+
+  @override
+  String get notificationHealthNudgeCycling =>
+      'Prendi la bici, è ora di pedalare.|È ora di salire in bici.';
+
+  @override
+  String get notificationHealthNudgeSwimming =>
+      'È ora di andare in piscina.|Prendi il costume, ti aspetta una nuotata.';
+
+  @override
+  String get notificationHealthNudgeHiking =>
+      'I sentieri ti chiamano, è ora di un\'escursione.|È ora di metterti in cammino.';
+
+  @override
+  String get notificationHealthNudgeFlexibility =>
+      'Prenditi un momento per allungarti.|È ora di fare stretching.';
+
+  @override
+  String get notificationHealthNudgeDancing =>
+      'Metti su la musica e balla.|È ora di muoverti a ritmo di musica.';
+
+  @override
+  String get notificationHealthNudgeRowing =>
+      'È ora di remare.|Prendi i remi, ti aspetta una sessione di canottaggio.';
 }

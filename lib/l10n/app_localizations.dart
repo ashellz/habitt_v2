@@ -5505,6 +5505,127 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You slept {slept} of your {goal} goal. Aim for an earlier night tonight.|You\'re at {slept} out of {goal} of sleep. Make tonight count.'**
   String notificationSleepGoalProgress(Object goal, Object slept);
+
+  /// No description provided for @notificationHealthStepsStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to get moving, your goal is {goal} today.|A walk now brings you closer to {goal}.|Every step counts, aim for {goal} today.|Stretch your legs, {goal} is waiting.'**
+  String notificationHealthStepsStart(Object goal);
+
+  /// No description provided for @notificationHealthStepsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re at {progress}. Just {remaining} to go!|{remaining} left to reach your goal, keep walking.|Nice progress, {progress} so far. A short walk finishes it.'**
+  String notificationHealthStepsProgress(Object progress, Object remaining);
+
+  /// No description provided for @notificationHealthActiveCaloriesStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your body moving, today\'s goal is {goal} burned.|A workout or brisk walk gets you to {goal}.|Time to burn some energy, your goal is {goal}.|Move a little now, {goal} is the target today.'**
+  String notificationHealthActiveCaloriesStart(Object goal);
+
+  /// No description provided for @notificationHealthActiveCaloriesProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve burned {progress} so far. Only {remaining} more!|{remaining} left to hit your goal, keep moving.|Great work, {progress} burned. Finish strong!'**
+  String notificationHealthActiveCaloriesProgress(
+    Object progress,
+    Object remaining,
+  );
+
+  /// No description provided for @notificationHealthTotalCaloriesStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Your total calorie goal for today is {goal}. Stay on the move!|Keep moving today, the total target is {goal}.|Today\'s total energy target: {goal}. A little movement helps.'**
+  String notificationHealthTotalCaloriesStart(Object goal);
+
+  /// No description provided for @notificationHealthTotalCaloriesProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached {progress} today, {remaining} to go.|{remaining} left to reach today\'s calorie goal.|Good pace, {progress} so far. Keep it going!'**
+  String notificationHealthTotalCaloriesProgress(
+    Object progress,
+    Object remaining,
+  );
+
+  /// No description provided for @notificationHealthMindfulnessStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Take {goal} to breathe and reset.|A short mindful break of {goal} is all you need.|Pause for {goal} of mindfulness today.|Your mind deserves {goal} of calm.'**
+  String notificationHealthMindfulnessStart(Object goal);
+
+  /// No description provided for @notificationHealthMindfulnessProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{progress} of mindfulness so far. {remaining} more to reach your goal.|{remaining} of calm left to reach your goal.'**
+  String notificationHealthMindfulnessProgress(
+    Object progress,
+    Object remaining,
+  );
+
+  /// No description provided for @notificationHealthWorkoutStart.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity}: your goal today is {goal}.|{activity} is on the plan today, aim for {goal}.|{activity} goal for today: {goal}. Let\'s go!|{activity} time! Your goal is {goal}.'**
+  String notificationHealthWorkoutStart(Object activity, Object goal);
+
+  /// No description provided for @notificationHealthWorkoutProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity}: you\'re at {progress}, {remaining} to go!|{activity} progress: {progress}. Keep going, {remaining} left.|{activity}: only {remaining} left to reach your goal.'**
+  String notificationHealthWorkoutProgress(
+    Object activity,
+    Object progress,
+    Object remaining,
+  );
+
+  /// No description provided for @notificationHealthNudgeWalking.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to lace up and go for a walk.|Fresh air and a walk will do you good.'**
+  String get notificationHealthNudgeWalking;
+
+  /// No description provided for @notificationHealthNudgeRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Lace up your shoes, time for a run.|Time to hit the road for a run.'**
+  String get notificationHealthNudgeRunning;
+
+  /// No description provided for @notificationHealthNudgeCycling.
+  ///
+  /// In en, this message translates to:
+  /// **'Grab your bike, time for a ride.|Time to get on your bike.'**
+  String get notificationHealthNudgeCycling;
+
+  /// No description provided for @notificationHealthNudgeSwimming.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to hit the pool.|Grab your swimsuit, a swim is waiting.'**
+  String get notificationHealthNudgeSwimming;
+
+  /// No description provided for @notificationHealthNudgeHiking.
+  ///
+  /// In en, this message translates to:
+  /// **'The trails are calling, time for a hike.|Time to hit the trail.'**
+  String get notificationHealthNudgeHiking;
+
+  /// No description provided for @notificationHealthNudgeFlexibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a moment to stretch and loosen up.|Time to stretch it out.'**
+  String get notificationHealthNudgeFlexibility;
+
+  /// No description provided for @notificationHealthNudgeDancing.
+  ///
+  /// In en, this message translates to:
+  /// **'Put on some music and dance.|Time to move to the music.'**
+  String get notificationHealthNudgeDancing;
+
+  /// No description provided for @notificationHealthNudgeRowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to hit the water and row.|Grab the oars, a rowing session is waiting.'**
+  String get notificationHealthNudgeRowing;
 }
 
 class _AppLocalizationsDelegate

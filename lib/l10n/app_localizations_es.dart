@@ -3250,4 +3250,99 @@ class AppLocalizationsEs extends AppLocalizations {
   String notificationSleepGoalProgress(Object goal, Object slept) {
     return 'Has dormido $slept de tu objetivo de $goal. Intenta acostarte más temprano esta noche.|Vas por $slept de $goal de sueño. Haz que esta noche cuente.';
   }
+
+  @override
+  String notificationHealthStepsStart(Object goal) {
+    return 'Es hora de moverte, tu objetivo hoy es $goal.|Una caminata ahora te acerca a $goal.|Cada paso cuenta, apunta a $goal hoy.|Estira las piernas, $goal te esperan.';
+  }
+
+  @override
+  String notificationHealthStepsProgress(Object progress, Object remaining) {
+    return 'Vas por $progress. ¡Solo faltan $remaining!|Faltan $remaining para tu objetivo, sigue caminando.|Buen progreso, $progress hasta ahora. Una caminata corta lo completa.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesStart(Object goal) {
+    return 'Pon tu cuerpo en movimiento, el objetivo de hoy es quemar $goal.|Un entrenamiento o una caminata rápida te lleva a $goal.|Es hora de quemar energía, tu objetivo es $goal.|Muévete un poco ahora, el objetivo de hoy es $goal.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Llevas $progress quemadas. ¡Solo faltan $remaining!|Faltan $remaining para tu objetivo, sigue moviéndote.|Buen trabajo, $progress quemadas. ¡Termina con fuerza!';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesStart(Object goal) {
+    return 'Tu objetivo total de calorías para hoy es $goal. ¡Sigue en movimiento!|Muévete hoy, el objetivo total es $goal.|Objetivo total de gasto de hoy: $goal. Un poco de movimiento ayuda.';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Hoy llevas $progress, faltan $remaining para el objetivo.|Faltan $remaining para el objetivo de calorías de hoy.|Buen ritmo, $progress hasta ahora. ¡Sigue así!';
+  }
+
+  @override
+  String notificationHealthMindfulnessStart(Object goal) {
+    return 'Dedica $goal a respirar y reiniciarte.|Una pausa consciente de $goal es todo lo que necesitas.|Haz una pausa de $goal de atención plena hoy.|Tu mente merece $goal de calma.';
+  }
+
+  @override
+  String notificationHealthMindfulnessProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Llevas $progress de atención plena. Faltan $remaining para el objetivo.|Faltan $remaining de calma para tu objetivo.';
+  }
+
+  @override
+  String notificationHealthWorkoutStart(Object activity, Object goal) {
+    return '$activity: tu objetivo de hoy es $goal.|$activity está en el plan de hoy, apunta a $goal.|$activity – objetivo de hoy: $goal. ¡Vamos!|$activity, ¡es hora! El objetivo es $goal.';
+  }
+
+  @override
+  String notificationHealthWorkoutProgress(
+    Object activity,
+    Object progress,
+    Object remaining,
+  ) {
+    return '$activity: llevas $progress, ¡faltan $remaining!|Progreso en $activity: $progress. Sigue, faltan $remaining.|$activity: solo faltan $remaining para el objetivo.';
+  }
+
+  @override
+  String get notificationHealthNudgeWalking =>
+      'Es hora de salir a caminar.|El aire fresco y una caminata te sentarán bien.';
+
+  @override
+  String get notificationHealthNudgeRunning =>
+      'Átate las zapatillas, es hora de correr.|Es hora de salir a correr.';
+
+  @override
+  String get notificationHealthNudgeCycling =>
+      'Coge la bici, es hora de pedalear.|Es hora de subirte a la bici.';
+
+  @override
+  String get notificationHealthNudgeSwimming =>
+      'Es hora de ir a la piscina.|Coge el bañador, te espera una nadada.';
+
+  @override
+  String get notificationHealthNudgeHiking =>
+      'Los senderos te llaman, es hora de una excursión.|Es hora de salir al sendero.';
+
+  @override
+  String get notificationHealthNudgeFlexibility =>
+      'Tómate un momento para estirar.|Es hora de estirar el cuerpo.';
+
+  @override
+  String get notificationHealthNudgeDancing =>
+      'Pon música y baila.|Es hora de moverte al ritmo de la música.';
+
+  @override
+  String get notificationHealthNudgeRowing =>
+      'Es hora de remar.|Coge los remos, te espera una sesión de remo.';
 }
