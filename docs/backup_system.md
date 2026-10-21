@@ -138,6 +138,8 @@ Without this, a completion made on day *N* by a device that has not yet rolled o
 
 Without this, importing a file exported on day *N* onto a device now on day *N+1* pre-filled today with day *N*'s progress: the file has no snapshot for day *N+1*, but every master habit record still carried day *N*'s `completed`/`amountCompleted`/`durationCompleted`.
 
+**Companion day-state fields.** `healthSessions` and `healthManualOverride` (Health sync, see `health_sync.md`) are not in `dayStateKeys` and have no timestamp of their own; they follow whichever side wins the completion tuple (`pickDayState`), and `adoptDayState` / `clearDayState` copy / reset them with the tuple. A backup written before `healthManualOverride` existed reads it as `false`.
+
 **Completion tuple resolves as a unit.** Within a single day's per-habit merge, the four day-state fields are resolved together: the side whose day-state was modified most recently (latest timestamp among the tuple keys; tie → local) wins all four. They are never resolved independently, so a merge can no longer produce a contradictory `completed = true` with `amountCompleted = 0`.
 
 **Known follow-ups (not yet done):**

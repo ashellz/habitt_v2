@@ -1223,5 +1223,10 @@
   "notificationHealthNudgeHiking": "I sentieri ti chiamano, è ora di un'escursione.|È ora di metterti in cammino.",
   "notificationHealthNudgeFlexibility": "Prenditi un momento per allungarti.|È ora di fare stretching.",
   "notificationHealthNudgeDancing": "Metti su la musica e balla.|È ora di muoverti a ritmo di musica.",
-  "notificationHealthNudgeRowing": "È ora di remare.|Prendi i remi, ti aspetta una sessione di canottaggio."
+  "notificationHealthNudgeRowing": "È ora di remare.|Prendi i remi, ti aspetta una sessione di canottaggio.",
+  "healthEditedManually": "Modificato manualmente",
+  "healthUseSourceValues": "Usa i valori di {source}",
+  "healthOverrideNoticeTitle": "{source} è in pausa per questo giorno",
+  "healthOverrideNoticeBody": "Hai modificato i progressi manualmente, quindi Habitt non li sovrascriverà con i dati di {source} per questo giorno. Il tuo valore resta esattamente come lo hai inserito.\n\nVuoi tornare a {source}? Tocca \"Usa i valori di {source}\" su questa abitudine.",
+  "healthOverrideNoticeUnderstood": "Ho capito"
 }

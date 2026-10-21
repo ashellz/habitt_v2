@@ -8,11 +8,47 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/health_provider.dart';
+import 'package:habitt/services/health_service.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../fixtures/habit_factory.dart';
+
+/// Health stand-in that always reports [value] seconds and one session.
+class _FakeHealthService extends HealthService {
+  _FakeHealthService(this.value);
+
+  final int? value;
+
+  @override
+  Future<bool> isAvailable() async => true;
+
+  @override
+  Future<bool> hasPermissions() async => true;
+
+  @override
+  bool isMetricSupported(HealthMetricType metric) => true;
+
+  @override
+  Future<int?> fetchValueForDay(
+    HealthMetricType metric,
+    DateTime day, {
+    HabitTrackingType? trackingType,
+    HealthWorkoutType? workoutFilter,
+    bool bedtimeDayBefore = false,
+  }) async => value;
+
+  @override
+  Future<List<HealthSessionDetail>> fetchSessionsForDay(
+    HealthMetricType metric,
+    DateTime day, {
+    HealthWorkoutType? workoutFilter,
+    bool bedtimeDayBefore = false,
+  }) async => _sessions(1);
+}
 
 DateTime _normalize(DateTime date) => DateTime(date.year, date.month, date.day);
 
@@ -313,6 +349,128 @@ void main() {
         sessions: _sessions(2),
       );
       expect(provider.habits.firstWhere((h) => h.id == 8).completed, isFalse);
+    });
+  });
+
+  group('syncHabitFromHealth manual override', () {
+    // the habits are written in seconds already, so skip the one-time
+    // minutes-to-seconds migration that would otherwise scale them by 60
+    setUp(() {
+      final today = _normalize(DateTime.now());
+      SharedPreferences.setMockInitialValues({
+        'lastNotificationSyncDate': _dayKey(today),
+        'daySnapshotsSanitized_v1': true,
+        'dateJoined':
+            today.subtract(const Duration(days: 60)).toIso8601String(),
+        'durationSecondsMigrated_habits_v1': true,
+        'durationSecondsMigrated_days_v1': true,
+      });
+    });
+
+    Habit overriddenWorkout({required int id}) =>
+        buildTestHabit(
+            id: id,
+            healthMetric: HealthMetricType.workouts,
+            trackingType: HabitTrackingType.duration,
+            amount: 0,
+            duration: 3000,
+            durationCompleted: 3300, // user typed 55m over a synced 30m
+          )
+          ..completed = true
+          ..healthManualOverride = true;
+
+    test('a hand-edited day keeps its progress when Health reports less', () async {
+      await habitBox.put(9, overriddenWorkout(id: 9));
+      final provider = await createInitializedProvider();
+
+      await provider.syncHabitFromHealth(
+        9,
+        HealthMetricType.workouts,
+        1800,
+        day: DateTime.now(),
+        sessions: _sessions(1),
+      );
+
+      final habit = provider.habits.firstWhere((h) => h.id == 9);
+      expect(habit.durationCompleted, 3300);
+      expect(habit.completed, isTrue);
+      expect(habit.healthManualOverride, isTrue);
+    });
+
+    test('a hand-edited day still refreshes its session list', () async {
+      await habitBox.put(10, overriddenWorkout(id: 10));
+      final provider = await createInitializedProvider();
+
+      await provider.syncHabitFromHealth(
+        10,
+        HealthMetricType.workouts,
+        1800,
+        day: DateTime.now(),
+        sessions: _sessions(2),
+      );
+
+      final habit = provider.habits.firstWhere((h) => h.id == 10);
+      expect(habit.healthSessions, hasLength(2));
+      expect(habit.durationCompleted, 3300);
+    });
+
+    test('clearing the override lets the next sync write Health values again', () async {
+      await habitBox.put(11, overriddenWorkout(id: 11));
+      final provider = await createInitializedProvider();
+
+      await provider.clearHealthManualOverride(11, day: DateTime.now());
+      await provider.syncHabitFromHealth(
+        11,
+        HealthMetricType.workouts,
+        1800,
+        day: DateTime.now(),
+        sessions: _sessions(1),
+      );
+
+      final habit = provider.habits.firstWhere((h) => h.id == 11);
+      expect(habit.healthManualOverride, isFalse);
+      expect(habit.durationCompleted, 1800);
+      expect(habit.completed, isFalse);
+    });
+
+    test('using Health values re-syncs the day and refreshes the last-synced state', () async {
+      await habitBox.put(12, overriddenWorkout(id: 12));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _FakeHealthService(1800))
+        ..attachHabitProvider(habitProvider);
+      final habit = habitProvider.habits.firstWhere((h) => h.id == 12);
+
+      final syncingStates = <bool>[];
+      health.addListener(() => syncingStates.add(health.isSyncing));
+      expect(health.lastSyncedAt, isNull);
+
+      await health.useHealthValues(habit, DateTime.now());
+
+      final synced = habitProvider.habits.firstWhere((h) => h.id == 12);
+      expect(synced.healthManualOverride, isFalse);
+      expect(synced.durationCompleted, 1800);
+      expect(synced.healthSessions, hasLength(1));
+      expect(health.lastSyncedAt, isNotNull);
+      expect(health.isSyncing, isFalse);
+      // went through a visible "syncing" state and ended on idle
+      expect(syncingStates, contains(true));
+      expect(syncingStates.last, isFalse);
+    });
+
+    test('no Health value: override is cleared but last-synced stays untouched', () async {
+      await habitBox.put(13, overriddenWorkout(id: 13));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _FakeHealthService(null))
+        ..attachHabitProvider(habitProvider);
+      final habit = habitProvider.habits.firstWhere((h) => h.id == 13);
+
+      await health.useHealthValues(habit, DateTime.now());
+
+      final after = habitProvider.habits.firstWhere((h) => h.id == 13);
+      expect(after.healthManualOverride, isFalse);
+      expect(after.durationCompleted, 3300);
+      expect(health.lastSyncedAt, isNull);
+      expect(health.isSyncing, isFalse);
     });
   });
 }

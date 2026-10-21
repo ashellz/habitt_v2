@@ -3345,4 +3345,25 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get notificationHealthNudgeRowing =>
       'Es hora de remar.|Coge los remos, te espera una sesión de remo.';
+
+  @override
+  String get healthEditedManually => 'Editado manualmente';
+
+  @override
+  String healthUseSourceValues(Object source) {
+    return 'Usar los valores de $source';
+  }
+
+  @override
+  String healthOverrideNoticeTitle(Object source) {
+    return '$source está en pausa para este día';
+  }
+
+  @override
+  String healthOverrideNoticeBody(Object source) {
+    return 'Has cambiado el progreso manualmente, así que Habitt no lo sobrescribirá con datos de $source en este día. Tu cifra se queda exactamente como la introdujiste.\n\n¿Quieres volver a $source? Toca \"Usar los valores de $source\" en este hábito.';
+  }
+
+  @override
+  String get healthOverrideNoticeUnderstood => 'Entendido';
 }

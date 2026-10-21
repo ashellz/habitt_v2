@@ -17,6 +17,7 @@ import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
+import 'package:habitt/util/health_override_notice.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/premade_habit_type_migration.dart';
 import 'package:provider/provider.dart';
@@ -1216,6 +1217,12 @@ class HabitProvider extends ChangeNotifier {
     debugPrint("Completing habit: $id, day: $daySimple");
     habitStatsProvider?.invalidateHabit(id);
     final wasCompleted = habit.completed;
+    // un-skipping resets progress to 0, which isn't an edit worth freezing
+    final pausesHealthSync =
+        !habit.skipped &&
+        habit.healthMetric != null &&
+        !habit.healthManualOverride;
+    if (!habit.skipped) _markHealthManualOverride(habit);
     await habit.completeHabit();
     debugPrint("Habit completed: ${habit.completed}");
     if (playSound && !wasCompleted && habit.completed && context.mounted) {
@@ -1254,6 +1261,11 @@ class HabitProvider extends ChangeNotifier {
 
     refreshTodaysHabits(notify: false);
     notifyListeners();
+
+    if (pausesHealthSync && context.mounted) {
+      // the dialog informing the user that health sync is paused
+      unawaited(HealthOverrideNotice.showIfNeeded(context));
+    }
 
     if (!wasCompleted && habit.completed) {
       _maybeCelebratePastDayStreak(context, daySimple, todaySimple);
@@ -1475,6 +1487,7 @@ class HabitProvider extends ChangeNotifier {
 
     final wasCompleted = habit.completed;
     debugPrint("Habit was completed: $wasCompleted");
+    _markHealthManualOverride(habit);
     // bedtime/wake time are clock times where earlier is better, so they
     // complete differently from a plain amount
     if (habit.tracksTimeOfDay) {
@@ -1613,6 +1626,36 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // manually added progress to a health habit
+  void _markHealthManualOverride(Habit habit) {
+    if (habit.healthMetric != null) habit.healthManualOverride = true;
+  }
+
+  // user changed back to health sync after manually overriding a habit's progress
+  Future<void> clearHealthManualOverride(
+    int id, {
+    required DateTime day,
+  }) async {
+    habitStatsProvider?.invalidateHabit(id);
+
+    final now = DateTime.now();
+    final todaySimple = DateTime(now.year, now.month, now.day);
+    final daySimple = DateTime(day.year, day.month, day.day);
+
+    final source =
+        daySimple == todaySimple
+            ? habits
+            : getHabitsFromDay(daySimple, hydrateMissing: true);
+    final match = source.where((h) => h.id == id);
+    if (match.isEmpty) return;
+    final habit = match.first;
+    if (!habit.healthManualOverride) return;
+
+    habit.healthManualOverride = false;
+    await updateHabitInDB(habit, day: daySimple);
+    notifyListeners();
+  }
+
   // applies a value read from Health to the habit it's linked to
   Future<void> syncHabitFromHealth(
     int id,
@@ -1642,6 +1685,15 @@ class HabitProvider extends ChangeNotifier {
     // if habit got unlinked by user, dont apply wrongly,
     // instead wait for next sync to reapply if linked differently
     if (habit.healthMetric != metric) return;
+
+    // user edited this day by hand: leave the progress alone but keep the
+    // session list current, it's informational only
+    if (habit.healthManualOverride) {
+      habit.healthSessions = sessions.map((s) => s.copy()).toList();
+      await updateHabitInDB(habit, day: daySimple);
+      notifyListeners();
+      return;
+    }
 
     final wasCompleted = habit.completed;
 
@@ -1736,6 +1788,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     final wasCompleted = habit.completed;
+    _markHealthManualOverride(habit);
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
     if (!wasCompleted && isNowCompleted) {

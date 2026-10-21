@@ -77,6 +77,8 @@ class Habit extends HiveObject {
   toleranceMinutes; // stored forgiveness, 15m/30m/60m presets; 0 = none. Read through [effectiveToleranceMinutes], never directly
   List<HealthSessionDetail>
   healthSessions; // individual workout or sleep sessions Health returned in a day
+  bool
+  healthManualOverride; // per-day: user edited progress by hand, so Health sync leaves this day's progress alone
   bool? isDeleted;
   bool? isPaused;
   DateTime? deletedAt;
@@ -127,6 +129,7 @@ class Habit extends HiveObject {
     this.healthBedtimeDayBefore = false,
     this.toleranceMinutes = 0, // no forgiveness unless explicitly set
     List<HealthSessionDetail>? healthSessions,
+    this.healthManualOverride = false,
     this.isDeleted,
     this.isPaused,
     this.deletedAt,
@@ -238,6 +241,7 @@ class Habit extends HiveObject {
       healthBedtimeDayBefore: healthBedtimeDayBefore,
       toleranceMinutes: toleranceMinutes,
       healthSessions: healthSessions.map((s) => s.copy()).toList(),
+      healthManualOverride: healthManualOverride,
       isDeleted: isDeleted,
       isPaused: isPaused,
       deletedAt: deletedAt,
@@ -291,6 +295,7 @@ class Habit extends HiveObject {
       healthBedtimeDayBefore: healthBedtimeDayBefore,
       toleranceMinutes: toleranceMinutes,
       healthSessions: const [],
+      healthManualOverride: false,
       isDeleted: isDeleted,
       isPaused: isPaused,
       deletedAt: deletedAt,
@@ -570,6 +575,7 @@ class Habit extends HiveObject {
     healthBedtimeDayBefore = merged.healthBedtimeDayBefore;
     toleranceMinutes = merged.toleranceMinutes;
     healthSessions = merged.healthSessions.map((s) => s.copy()).toList();
+    healthManualOverride = merged.healthManualOverride;
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
     deletedAt = merged.deletedAt;
@@ -685,6 +691,7 @@ class Habit extends HiveObject {
     amountCompleted = 0;
     durationCompleted = 0;
     healthSessions = [];
+    healthManualOverride = false;
     // not updating timestamp because this is an auto reset, not user action
     // updating timestamps would cause bad syncing
   }
@@ -879,6 +886,7 @@ class Habit extends HiveObject {
       'healthBedtimeDayBefore': healthBedtimeDayBefore,
       'toleranceMinutes': toleranceMinutes,
       'healthSessions': healthSessions.map((s) => s.toMap()).toList(),
+      'healthManualOverride': healthManualOverride,
       'isDeleted': isDeleted,
       'isPaused': isPaused,
       'deletedAt': deletedAt?.toIso8601String(),
@@ -965,6 +973,7 @@ class Habit extends HiveObject {
       healthBedtimeDayBefore: (m['healthBedtimeDayBefore'] as bool?) ?? false,
       toleranceMinutes: (m['toleranceMinutes'] as num?)?.toInt() ?? 0,
       healthSessions: _parseHealthSessions(m['healthSessions']),
+      healthManualOverride: (m['healthManualOverride'] as bool?) ?? false,
       isDeleted: m['isDeleted'] as bool?,
       isPaused: m['isPaused'] as bool?,
       deletedAt: DateTime.tryParse(m['deletedAt']?.toString() ?? '')?.toUtc(),
@@ -992,6 +1001,7 @@ class Habit extends HiveObject {
     amountCompleted = source.amountCompleted;
     durationCompleted = source.durationCompleted;
     healthSessions = source.healthSessions.map((s) => s.copy()).toList();
+    healthManualOverride = source.healthManualOverride;
 
     for (final key in dayStateKeys) {
       final ts = source.timestamps[key];
@@ -1012,6 +1022,7 @@ class Habit extends HiveObject {
     amountCompleted = 0;
     durationCompleted = 0;
     healthSessions = [];
+    healthManualOverride = false;
     for (final key in dayStateKeys) {
       timestamps.remove(key);
     }
@@ -1131,6 +1142,12 @@ class Habit extends HiveObject {
         'healthSessions',
         healthSessions.map((s) => s.copy()).toList(),
         incoming.healthSessions.map((s) => s.copy()).toList(),
+      ),
+      // day-state too: travels with the progress it protects
+      healthManualOverride: pickDayState(
+        'healthManualOverride',
+        healthManualOverride,
+        incoming.healthManualOverride,
       ),
       streak: resolve('streak', streak, incoming.streak),
       longestStreak: resolve(
