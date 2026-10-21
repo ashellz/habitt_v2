@@ -115,11 +115,7 @@ void main() {
     });
 
     test('misses since the last completion are counted', () async {
-      await seedHistory([
-        _Outcome.completed,
-        _Outcome.miss,
-        _Outcome.miss,
-      ]);
+      await seedHistory([_Outcome.completed, _Outcome.miss, _Outcome.miss]);
       final provider = await createInitializedProvider();
       await provider.assignStreaks();
 
@@ -154,11 +150,10 @@ void main() {
     });
 
     test(
-      'partial progress resets the tail under current per-habit semantics',
+      'partial progress is skipped, neither a miss nor a completion',
       () async {
-        // Divergent from the perfect-days rule by design; the freeze point is
-        // tied to what actually resets tolerance so the badge never claims a
-        // risk the engine would not act on. Unification is a separate change.
+        // a partial day neither extends the miss run nor resets it, so the miss
+        // before it still counts
         await seedHistory([
           _Outcome.completed,
           _Outcome.miss,
@@ -167,7 +162,23 @@ void main() {
         final provider = await createInitializedProvider();
         await provider.assignStreaks();
 
-        expect(provider.consecutiveMissesFor(1), 0);
+        expect(provider.consecutiveMissesFor(1), 1);
+      },
+    );
+
+    test(
+      'a partial day in the middle of a miss run does not split it',
+      () async {
+        await seedHistory([
+          _Outcome.completed,
+          _Outcome.miss,
+          _Outcome.partial,
+          _Outcome.miss,
+        ]);
+        final provider = await createInitializedProvider();
+        await provider.assignStreaks();
+
+        expect(provider.consecutiveMissesFor(1), 2);
       },
     );
 
