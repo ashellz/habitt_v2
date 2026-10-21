@@ -782,7 +782,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Vrijeme za podnevni pregled tvojih navika';
 
   @override
-  String get minutes => 'Zapisnik';
+  String get minutes => 'Minute';
 
   @override
   String get missingPermissions => 'Nedostaju dozvole';
@@ -835,9 +835,8 @@ class AppLocalizationsBs extends AppLocalizations {
   }
 
   @override
-  String notificationCombinedAmountCompleted(Object encouragement) {
-    return 'Cilj je već dostignut, svaka čast.|Ispunio si današnji cilj, čestitam!|Danas si već postigao cilj, odlično!|Cilj je već ispunjen, sjajno!|Već si dostigao cilj za danas, odličan posao!';
-  }
+  String get notificationCombinedAmountCompleted =>
+      'Cilj je već dostignut, svaka čast.|Ispunio si današnji cilj, čestitam!|Danas si već postigao cilj, odlično!|Cilj je već ispunjen, sjajno!|Već si dostigao cilj za danas, odličan posao!';
 
   @override
   String notificationCombinedAmountInProgress(
@@ -1219,7 +1218,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String notificationProgressAlmostDoneAmount(Object label, Object remaining) {
-    return 'Tako si blizu. Preostalo je samo $remaining $label.|Preostalo je samo $remaining $label. Ovo je tvoj ritam — prepusti mu se.|Preostalo je samo $remaining $label. Već si obavio većinu. Skoro si gotov — $remaining $label te dijeli od završetka. Si $remaining $label korak od cilja. Završi snažno. Ciljna linija je blizu. Samo $remaining $label da završiš.';
+    return 'Tako si blizu. Preostalo je samo $remaining $label.|Preostalo je samo $remaining $label. Ovo je tvoj ritam — prepusti mu se.|Preostalo je samo $remaining $label. Već si obavio većinu.|Skoro si gotov — $remaining $label te dijeli od završetka.|Još $remaining $label do cilja. Završi snažno.|Ciljna linija je blizu. Samo $remaining $label da završiš.';
   }
 
   @override
@@ -2621,6 +2620,12 @@ class AppLocalizationsBs extends AppLocalizations {
       'Prikaži proslavu kada ti dnevni streak raste';
 
   @override
+  String get completionSound => 'Zvuk završetka';
+
+  @override
+  String get completionSoundDesc => 'Pusti kratak zvuk kada završiš naviku.';
+
+  @override
   String get greatProgress => 'Odličan napredak';
 
   @override
@@ -2825,302 +2830,309 @@ class AppLocalizationsBs extends AppLocalizations {
   String get streakCriticalPartial2 => 'Blizu si, završi i nastavi streak';
 
   @override
-  String get deletedToday => 'Today';
+  String get deletedToday => 'Danas';
 
   @override
-  String get deletedOneDayAgo => '1 day ago';
+  String get deletedOneDayAgo => 'Prije 1 dan';
 
   @override
   String deletedDaysAgoLabel(Object days) {
-    return '$days days ago';
+    return 'Prije $days dana';
   }
 
   @override
   String get deletedHabitsPageDesc =>
-      'Deleted habits stay here for 30 days, then they\'re permanently removed.';
+      'Izbrisane navike ostaju ovdje 30 dana, nakon čega se trajno uklanjaju.';
 
   @override
   String get restoreDeletedHabitConfirm =>
-      'Restore this habit? Its streak will reflect any days it missed while deleted.';
+      'Vratiti ovu naviku? Njen niz će uzeti u obzir sve dane koje je propustila dok je bila izbrisana.';
 
   @override
-  String get healthSyncSectionTitleApple => 'Sync with Apple Health';
+  String get healthSyncSectionTitleApple => 'Sinhronizuj s Apple Health';
 
   @override
-  String get healthSyncSectionTitleAndroid => 'Sync with Health Connect';
+  String get healthSyncSectionTitleAndroid => 'Sinhronizuj s Health Connect';
 
   @override
   String get healthSyncSectionDescApple =>
-      'Update this habit\'s progress automatically from Apple Health';
+      'Automatski ažuriraj napredak ove navike iz Apple Health';
 
   @override
   String get healthSyncSectionDescAndroid =>
-      'Update this habit\'s progress automatically from Health Connect';
+      'Automatski ažuriraj napredak ove navike iz Health Connect';
 
   @override
-  String get healthMetricSteps => 'Steps';
+  String get healthMetricSteps => 'Koraci';
 
   @override
-  String get healthMetricSleep => 'Sleep';
+  String get healthMetricSleep => 'Spavanje';
 
   @override
-  String get healthMetricExerciseMinutes => 'Workout';
+  String get healthMetricExerciseMinutes => 'Trening';
 
   @override
-  String get healthMetricMindfulMinutes => 'Mindfulness';
+  String get healthMetricMindfulMinutes => 'Svjesnost';
 
   @override
-  String get healthMetricActiveCalories => 'Active calories';
+  String get healthMetricActiveCalories => 'Aktivne kalorije';
 
   @override
-  String get healthMetricTotalCalories => 'Total calories';
+  String get healthMetricTotalCalories => 'Ukupne kalorije';
 
   @override
   String get healthPermissionDeniedMessage =>
-      'Habitt doesn\'t have permission to read this data. You can enable access in Settings.';
+      'Habitt nema dozvolu za čitanje ovih podataka. Pristup možeš omogućiti u Postavkama.';
 
   @override
-  String get calorie => 'calorie';
+  String get calorie => 'kalorija';
 
   @override
-  String get calories => 'calories';
+  String get calories => 'kalorija';
 
   @override
-  String get premadeSectionWorkouts => 'Workouts';
+  String get premadeSectionWorkouts => 'Treninzi';
 
   @override
-  String get premadeHabitWorkoutWalking => 'Walking';
+  String get premadeHabitWorkoutWalking => 'Hodanje';
 
   @override
-  String get premadeHabitWorkoutRunning => 'Running';
+  String get premadeHabitWorkoutRunning => 'Trčanje';
 
   @override
-  String get premadeHabitWorkoutCycling => 'Cycling';
+  String get premadeHabitWorkoutCycling => 'Biciklizam';
 
   @override
-  String get premadeHabitWorkoutSwimming => 'Swimming';
+  String get premadeHabitWorkoutSwimming => 'Plivanje';
 
   @override
-  String get premadeHabitWorkoutHiking => 'Hiking';
+  String get premadeHabitWorkoutHiking => 'Planinarenje';
 
   @override
-  String get premadeHabitWorkoutFlexibility => 'Stretching';
+  String get premadeHabitWorkoutFlexibility => 'Istezanje';
 
   @override
-  String get premadeHabitWorkoutDancing => 'Dancing';
+  String get premadeHabitWorkoutDancing => 'Ples';
 
   @override
-  String get premadeHabitWorkoutRowing => 'Rowing';
+  String get premadeHabitWorkoutRowing => 'Veslanje';
 
   @override
-  String get premadeHabitWorkoutCombined => 'Workout';
+  String get premadeHabitWorkoutCombined => 'Trening';
 
   @override
-  String get healthConnectedStatusApple => 'Connected to Apple Health';
+  String get healthConnectedStatusApple => 'Povezano s Apple Health';
 
   @override
-  String get healthConnectedStatusAndroid => 'Connected to Health Connect';
+  String get healthConnectedStatusAndroid => 'Povezano s Health Connect';
 
   @override
-  String get healthTrackByDuration => 'Duration';
+  String get healthTrackByDuration => 'Trajanje';
 
   @override
-  String get healthTrackByCount => 'Count';
+  String get healthTrackByCount => 'Broj';
 
   @override
-  String get healthTargetBedtime => 'Target bedtime';
+  String get healthTargetBedtime => 'Ciljano vrijeme odlaska na spavanje';
 
   @override
-  String get healthTargetWakeTime => 'Target wake time';
+  String get healthTargetWakeTime => 'Ciljano vrijeme buđenja';
 
   @override
-  String get healthToleranceLoose => 'Loose';
+  String get healthToleranceLoose => 'Blago';
 
   @override
-  String get healthToleranceRegular => 'Regular';
+  String get healthToleranceRegular => 'Uobičajeno';
 
   @override
-  String get healthToleranceStrict => 'Strict';
+  String get healthToleranceStrict => 'Strogo';
 
   @override
-  String get healthLastNight => 'Last night';
+  String get healthLastNight => 'Prošle noći';
 
   @override
-  String get healthMetricPickerTitle => 'Choose what to sync';
+  String get healthMetricPickerTitle => 'Odaberi šta sinhronizovati';
 
   @override
-  String get premadeRequestHabitPrompt => 'Don\'t see your habit?';
+  String get premadeRequestHabitPrompt => 'Ne vidiš svoju naviku?';
 
   @override
-  String get premadeRequestHabitLink => 'Suggest one';
+  String get premadeRequestHabitLink => 'Predloži je';
 
   @override
-  String get habitRequestEmailSubject => 'Habit Request';
+  String get habitRequestEmailSubject => 'Prijedlog navike';
 
   @override
   String healthToleranceMinutesValue(Object minutes) {
-    return '$minutes minutes';
+    return '$minutes minuta';
   }
 
   @override
-  String get healthToleranceHourValue => '1 hour';
+  String get healthToleranceHourValue => '1 sat';
 
   @override
   String healthToleranceDescBedtime(Object duration) {
-    return 'Going to bed earlier than your target is always fine. You can also go up to $duration late and it still counts';
+    return 'Odlazak na spavanje prije cilja je uvijek u redu. Možeš otići i do $duration kasnije i i dalje se računa';
   }
 
   @override
   String healthToleranceDescWakeTime(Object duration) {
-    return 'Waking up earlier than your target is always fine. You can also wake up to $duration late and it still counts';
+    return 'Buđenje prije cilja je uvijek u redu. Možeš se probuditi i do $duration kasnije i i dalje se računa';
   }
 
   @override
   String healthToleranceDescSleep(Object duration) {
-    return 'Sleeping more than your target is always fine. You can also sleep up to $duration less and it still counts';
+    return 'Spavati duže od cilja je uvijek u redu. Možeš spavati i do $duration manje i i dalje se računa';
   }
 
   @override
-  String get healthMetricDescSteps => 'Tracks your steps';
+  String get healthMetricDescSteps => 'Prati tvoje korake';
 
   @override
-  String get healthMetricDescSleep => 'Tracks your sleep time';
+  String get healthMetricDescSleep => 'Prati vrijeme tvog spavanja';
 
   @override
-  String get healthMetricDescWorkouts => 'Tracks all your workouts';
+  String get healthMetricDescWorkouts => 'Prati sve tvoje treninge';
 
   @override
-  String get healthMetricDescMindfulness => 'Tracks your mindfulness sessions';
+  String get healthMetricDescMindfulness => 'Prati tvoje sesije svjesnosti';
 
   @override
   String get healthMetricDescActiveCalories =>
-      'Tracks your active calories burned';
+      'Prati tvoje potrošene aktivne kalorije';
 
   @override
-  String get healthMetricDescTotalCalories =>
-      'Tracks your total calories burned';
+  String get healthMetricDescTotalCalories => 'Prati ukupno potrošene kalorije';
 
   @override
-  String get healthMetricDescBedtime => 'Tracks when you went to sleep';
+  String get healthMetricDescBedtime => 'Prati kada si otišao na spavanje';
 
   @override
-  String get healthMetricDescWakeTime => 'Tracks when you woke up';
+  String get healthMetricDescWakeTime => 'Prati kada si se probudio';
 
   @override
-  String get premadeHabitMindfulness => 'Mindfulness';
+  String get premadeHabitMindfulness => 'Svjesnost';
 
   @override
-  String get premadeHabitSleepTime => 'Sleep time';
+  String get premadeHabitSleepTime => 'Vrijeme spavanja';
 
   @override
-  String get premadeHabitActiveCalories => 'Active calories';
+  String get premadeHabitActiveCalories => 'Aktivne kalorije';
 
   @override
-  String get premadeHabitTotalCalories => 'Total calories';
+  String get premadeHabitTotalCalories => 'Ukupne kalorije';
 
   @override
-  String get healthWorkoutTypePickerTitle => 'Choose a workout type';
+  String get healthWorkoutTypePickerTitle => 'Odaberi vrstu treninga';
 
   @override
-  String get healthWorkoutFilterAny => 'Any';
+  String get healthWorkoutFilterAny => 'Bilo koji';
 
   @override
-  String get healthWorkoutLabelAnySingular => 'workout';
+  String get healthWorkoutLabelAnySingular => 'trening';
 
   @override
-  String get healthWorkoutLabelAnyPlural => 'workouts';
+  String get healthWorkoutLabelAnyPlural => 'treninga';
 
   @override
-  String get healthWorkoutLabelOtherSingular => 'workout';
+  String get healthWorkoutLabelOtherSingular => 'trening';
 
   @override
-  String get healthWorkoutLabelOtherPlural => 'workouts';
+  String get healthWorkoutLabelOtherPlural => 'treninga';
 
   @override
-  String get healthWorkoutLabelWalkingSingular => 'walk';
+  String get healthWorkoutLabelWalkingSingular => 'šetnja';
 
   @override
-  String get healthWorkoutLabelWalkingPlural => 'walks';
+  String get healthWorkoutLabelWalkingPlural => 'šetnji';
 
   @override
-  String get healthWorkoutLabelRunningSingular => 'run';
+  String get healthWorkoutLabelRunningSingular => 'trčanje';
 
   @override
-  String get healthWorkoutLabelRunningPlural => 'runs';
+  String get healthWorkoutLabelRunningPlural => 'trčanja';
 
   @override
-  String get healthWorkoutLabelCyclingSingular => 'ride';
+  String get healthWorkoutLabelCyclingSingular => 'vožnja';
 
   @override
-  String get healthWorkoutLabelCyclingPlural => 'rides';
+  String get healthWorkoutLabelCyclingPlural => 'vožnji';
 
   @override
-  String get healthWorkoutLabelSwimmingSingular => 'swim';
+  String get healthWorkoutLabelSwimmingSingular => 'plivanje';
 
   @override
-  String get healthWorkoutLabelSwimmingPlural => 'swims';
+  String get healthWorkoutLabelSwimmingPlural => 'plivanja';
 
   @override
-  String get healthWorkoutLabelHikingSingular => 'hike';
+  String get healthWorkoutLabelHikingSingular => 'planinarenje';
 
   @override
-  String get healthWorkoutLabelHikingPlural => 'hikes';
+  String get healthWorkoutLabelHikingPlural => 'planinarenja';
 
   @override
-  String get healthWorkoutLabelFlexibilitySingular => 'session';
+  String get healthWorkoutLabelFlexibilitySingular => 'sesija';
 
   @override
-  String get healthWorkoutLabelFlexibilityPlural => 'sessions';
+  String get healthWorkoutLabelFlexibilityPlural => 'sesija';
 
   @override
-  String get healthWorkoutLabelDancingSingular => 'dance';
+  String get healthWorkoutLabelDancingSingular => 'ples';
 
   @override
-  String get healthWorkoutLabelDancingPlural => 'dances';
+  String get healthWorkoutLabelDancingPlural => 'plesova';
 
   @override
-  String get healthWorkoutLabelRowingSingular => 'row';
+  String get healthWorkoutLabelRowingSingular => 'veslanje';
 
   @override
-  String get healthWorkoutLabelRowingPlural => 'rows';
+  String get healthWorkoutLabelRowingPlural => 'veslanja';
 
   @override
-  String get healthMindfulnessLabelSingular => 'session';
+  String get healthMindfulnessLabelSingular => 'sesija';
 
   @override
-  String get healthMindfulnessLabelPlural => 'sessions';
+  String get healthMindfulnessLabelPlural => 'sesija';
 
   @override
-  String get overrideFieldsDialogTitle => 'Choose what to update';
+  String get overrideFieldsDialogTitle => 'Odaberi šta ažurirati';
 
   @override
   String get overrideFieldsDialogDesc =>
-      'Pick which parts of your habit should update to match this template. Anything left unchecked keeps its current value.';
+      'Odaberi koji dijelovi tvoje navike trebaju biti ažurirani prema ovom šablonu. Sve što nije označeno zadržava trenutnu vrijednost.';
 
   @override
-  String get overrideFieldsSelectAll => 'Select all';
+  String get overrideFieldsSelectAll => 'Označi sve';
 
   @override
-  String get overrideFieldsDeselectAll => 'Deselect all';
+  String get overrideFieldsDeselectAll => 'Poništi sve';
 
   @override
-  String get overrideFieldName => 'Name';
+  String get overrideFieldName => 'Naziv';
 
   @override
-  String get overrideFieldIcon => 'Icon';
+  String get overrideFieldIcon => 'Ikona';
 
   @override
-  String get overrideFieldCategory => 'Category';
+  String get overrideFieldCategory => 'Kategorija';
 
   @override
-  String get overrideFieldTarget => 'Target';
+  String get overrideFieldTarget => 'Cilj';
 
   @override
-  String get overrideFieldHealthSync => 'Health sync';
+  String get overrideFieldHealthSync => 'Sinhronizacija zdravlja';
 
   @override
-  String get overrideFieldSchedule => 'Schedule';
+  String get overrideFieldSchedule => 'Raspored';
 
   @override
-  String get overrideFieldNotifications => 'Notifications';
+  String get overrideFieldNotifications => 'Obavijesti';
+
+  @override
+  String get timerCompletedNotificationTitle => 'Cilj dostignut';
+
+  @override
+  String timerCompletedNotificationBody(String name) {
+    return '\'$name\' je dostigao cilj.';
+  }
 }

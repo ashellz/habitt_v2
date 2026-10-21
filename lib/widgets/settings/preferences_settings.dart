@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -165,6 +166,47 @@ class Preferences extends StatelessWidget {
                       spacing: 4,
                       children: [
                         Text(
+                          loc.completionSound,
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          loc.completionSoundDesc,
+                          style: TextStyle(
+                            color: cp.lightGreyText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  NewDefaultSwitch(
+                    onChanged: (value) {
+                      context
+                          .read<PreferencesProvider>()
+                          .setPlayCompletionSound(value);
+                    },
+                    value:
+                        context
+                            .watch<PreferencesProvider>()
+                            .playCompletionSound,
+                  ),
+                ],
+              ),
+              Divider(color: cp.border, height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        Text(
                           loc.showCategoriesOnMainPage,
                           style: TextStyle(
                             color: cp.text,
@@ -196,6 +238,34 @@ class Preferences extends StatelessWidget {
                   ),
                 ],
               ),
+              if (kDebugMode) ...[
+                Divider(color: cp.border, height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Demo mode",
+                        style: TextStyle(
+                          color: cp.text,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    NewDefaultSwitch(
+                      onChanged: (value) {
+                        context.read<PreferencesProvider>().setShowDemoHabits(
+                          value,
+                        );
+                      },
+                      value:
+                          context.watch<PreferencesProvider>().showDemoHabits,
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),

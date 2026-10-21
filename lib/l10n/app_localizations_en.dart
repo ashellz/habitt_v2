@@ -831,9 +831,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String notificationCombinedAmountCompleted(Object encouragement) {
-    return 'Target already reached, well done.|You\'ve completed today\'s target, congratulations!|You\'ve already hit your goal today — great job!|The target has already been met, awesome!|You\'ve already reached today\'s target, excellent work!';
-  }
+  String get notificationCombinedAmountCompleted =>
+      'Target already reached, well done.|You\'ve completed today\'s target, congratulations!|You\'ve already hit your goal today — great job!|The target has already been met, awesome!|You\'ve already reached today\'s target, excellent work!';
 
   @override
   String notificationCombinedAmountInProgress(
@@ -2622,6 +2621,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Show a celebration when your perfect-days streak grows.';
 
   @override
+  String get completionSound => 'Completion sound';
+
+  @override
+  String get completionSoundDesc =>
+      'Play a short sound when you complete a habit.';
+
+  @override
   String get greatProgress => 'Great progress';
 
   @override
@@ -3126,4 +3132,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overrideFieldNotifications => 'Notifications';
+
+  @override
+  String get timerCompletedNotificationTitle => 'Target reached';
+
+  @override
+  String timerCompletedNotificationBody(String name) {
+    return '\'$name\' reached its target.';
+  }
 }

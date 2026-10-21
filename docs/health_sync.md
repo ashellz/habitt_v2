@@ -26,9 +26,13 @@ opened, not the instant new Health data appears.
   `toMap()`/`fromMap()`) — see [`lib/models/habit.dart`](../lib/models/habit.dart).
 - `HealthMetricType` maps to a `HabitTrackingType`: `steps` /
   `activeCalories` / `totalCalories` are amount goals (a raw count);
-  `sleep` / `exerciseMinutes` / `mindfulMinutes` are duration goals
-  (seconds, matching the app's post-migration duration schema — see
-  `backup_system.md`'s "Duration Schema Version" section).
+  `sleep` is an amount goal in **minutes** (so `toleranceMinutes` can apply
+  to it — `HealthService.fetchValueForDay` returns sleep in minutes, and the
+  habit card formats it as a duration via `getSleepAmountString`);
+  `workouts` / `mindfulness` are duration goals by default (seconds,
+  matching the app's post-migration duration schema — see
+  `backup_system.md`'s "Duration Schema Version" section);
+  `bedtime` / `wakeTime` are time-of-day goals (minutes since midnight).
 - Linking a habit to a metric pins its `trackingType` to match (see
   `StateProvider.selectedHealthMetric` in
   [`lib/providers/state_provider.dart`](../lib/providers/state_provider.dart));
@@ -112,6 +116,35 @@ vacuously true against a target of 0, `syncHabitFromHealth` overrides
 only if at least one matching session was logged that day, using the same
 `sessions` list already fetched via `fetchSessionsForDay` for that sync
 pass (no extra Health read).
+
+## Completion side effects
+
+When a sync flips a habit's `completed` flag, `syncHabitFromHealth` does the
+same bookkeeping as a manual completion (`completeHabit`): it updates the
+weekly/monthly `timesCompletedThisWeek`/`timesCompletedThisMonth` counters on
+the real habit (`_updatePeriodCountersForId`), reschedules notifications,
+refreshes the perfect-streak flag, and for past days re-runs `assignStreaks`.
+Timer commits (`commitTimerDuration`) and the progress dialogs do likewise.
+
+## Tolerance (sleep, bedtime, wake time)
+
+`Habit.toleranceMinutes` (15/30/60 presets) is a "close enough" margin and only
+makes sense for `sleep` (completed at `amountCompleted >= amount - tolerance`),
+`bedtime` and `wakeTime` (completed at `amountCompleted <= amount + tolerance`,
+earlier is always fine). `HealthMetricType.supportsTolerance` is true for
+exactly those three.
+
+Completion logic never reads the raw field: it goes through
+`Habit.effectiveToleranceMinutes`, which returns `toleranceMinutes` only when
+`healthMetric.supportsTolerance` and `0` otherwise. This matters because the
+stored value can be stale — the habit sheet's `StateProvider.toleranceMinutes`
+is shared editor state that selecting the sleep metric sets to 30 and nothing
+clears when the user switches to another metric — and a stray 30 on a plain
+amount habit would otherwise make it count as completed at a fraction of its
+target, with no way to uncomplete it. `updateHabitAmountCompleted`,
+`updateHabitTimeOfDayCompleted` and the goal-change recompute in
+`Habit.updateHabit` all use the effective value so logging progress and
+editing the target agree.
 
 ## Platform differences
 

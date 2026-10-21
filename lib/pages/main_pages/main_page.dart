@@ -11,6 +11,7 @@ import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/insight_sheet_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
+import 'package:habitt/widgets/main_page/habits/demo_habits_section.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/main_page/timer_pill_widget.dart';
 import 'package:habitt/widgets/main_page/main_page_top_section.dart';
@@ -346,11 +347,24 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         requiredHabits.isNotEmpty &&
         requiredHabits.every((habit) => habit.completed);
     if (!_initializedCompletionState) {
-      _wasAllCompleted = allCompleted;
-      _initializedCompletionState = true;
+      // Habits load asynchronously, so the very first build or two can see
+      // an empty list before the real data arrives. Wait for a build with
+      // actual habits before locking in the baseline, otherwise that
+      // empty-to-loaded jump can look like a real completion and fire
+      // confetti right after opening the app.
+      if (requiredHabits.isNotEmpty) {
+        _wasAllCompleted = allCompleted;
+        _initializedCompletionState = true;
+      }
     } else {
       if (allCompleted && !_wasAllCompleted) {
-        _confettiController.play();
+        // Defer to a post-frame callback: the ConfettiWidget further down
+        // this same build() hasn't been laid out yet, and play() notifies
+        // listeners synchronously, which would ask it for its RenderBox
+        // position before it has one.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _confettiController.play();
+        });
       } else if (!allCompleted && _wasAllCompleted) {
         _confettiController.stop();
       }
@@ -440,6 +454,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         .watch<PreferencesProvider>()
                         .showCategoriesOnMainPage)
                       NewCategoriesList(),
+                    if (context.watch<PreferencesProvider>().showDemoHabits)
+                      const DemoHabitsSection(),
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 16,

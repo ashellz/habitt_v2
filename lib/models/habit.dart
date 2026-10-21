@@ -20,7 +20,7 @@ enum HabitTrackingType {
   duration,
   // A single point in time, minutes-since-midnight, stored in amount/
   // amountCompleted like an amount goal — but "earlier is better":
-  // completed = amountCompleted <= amount + toleranceMinutes.
+  // completed = amountCompleted <= amount + effectiveToleranceMinutes.
   // amount = target (bedtime goal - 10pm = 1320),
   // amountCompleted = actual (bedtime logged - 10:15pm = 1335)
   timeOfDay,
@@ -71,7 +71,8 @@ class Habit extends HiveObject {
   healthMetric; // if set, progress is synced from this Health metric
   HealthWorkoutType?
   healthWorkoutFilter; // narrows healthMetric == workouts to one workout type; null = any (all)
-  int toleranceMinutes; // forgiveness for amount/timeOfDay goals — 15m/30m/60m presets; 0 = none
+  int
+  toleranceMinutes; // stored forgiveness, 15m/30m/60m presets; 0 = none. Read through [effectiveToleranceMinutes], never directly
   List<HealthSessionDetail>
   healthSessions; // individual workout or sleep sessions Health returned in a day
   bool? isDeleted;
@@ -151,6 +152,10 @@ class Habit extends HiveObject {
     );
     this.timestamps['createdAt'] ??= this.createdAt;
   }
+
+  // 0 for regular habits, >0 for sleep habits (15, 30, 60)
+  int get effectiveToleranceMinutes =>
+      healthMetric?.supportsTolerance == true ? toleranceMinutes : 0;
 
   bool hasAnyProgress() {
     return completed || amountCompleted > 0 || durationCompleted > 0;
@@ -492,14 +497,16 @@ class Habit extends HiveObject {
       }
     } else if (newTrackingType == HabitTrackingType.amount &&
         amountGoalChanged) {
-      final shouldBeCompleted = amountCompleted >= amount;
+      final shouldBeCompleted =
+          amountCompleted >= amount - effectiveToleranceMinutes;
       if (completed != shouldBeCompleted) {
         completed = shouldBeCompleted;
         timestamps['completed'] = now;
       }
     } else if (newTrackingType == HabitTrackingType.timeOfDay &&
         (amountGoalChanged || toleranceChanged)) {
-      final shouldBeCompleted = amountCompleted <= amount + toleranceMinutes;
+      final shouldBeCompleted =
+          amountCompleted <= amount + effectiveToleranceMinutes;
       if (completed != shouldBeCompleted) {
         completed = shouldBeCompleted;
         timestamps['completed'] = now;
@@ -609,14 +616,12 @@ class Habit extends HiveObject {
     timestamps['skipped'] = DateTime.now().toUtc();
   }
 
-  /// completed = amountCompleted >= amount - toleranceMinutes. toleranceMinutes
-  /// defaults to 0 for every habit that doesn't explicitly set one (see the
-  /// Habit constructor), so this reduces to the plain `>=` comparison for
-  /// ordinary amount habits — the tolerance is currently only ever set by
-  /// the `sleep` Health metric.
+  /// completed = amountCompleted >= amount - effectiveToleranceMinutes. The
+  /// tolerance only applies to the `sleep` Health metric; for every other
+  /// habit it is 0, so this is the plain `>=` comparison.
   void updateHabitAmountCompleted(int amountCompleted) {
     final bool wasCompleted = completed;
-    if (amountCompleted >= amount - toleranceMinutes) {
+    if (amountCompleted >= amount - effectiveToleranceMinutes) {
       completed = true;
     } else if (completed) {
       completed = false;
@@ -644,7 +649,7 @@ class Habit extends HiveObject {
 
   /// For [HabitTrackingType.timeOfDay] habits (bedtime/wake-time)
   /// Unlike amount/duration, earlier is better: completed if [minutesOfDay] is at
-  /// or before the target plus [toleranceMinutes]
+  /// or before the target plus [effectiveToleranceMinutes]
   void updateHabitTimeOfDayCompleted(int minutesOfDay) {
     final bool wasCompleted = completed;
     // minutesOfDay is minutes since midnight based on real health data
@@ -652,7 +657,7 @@ class Habit extends HiveObject {
 
     // if minutesOfDay (22pm) is smaller or equal to amount (22pm) + tolerance (30m) = 22:30pm, then completed = true
     // if for example minutesOfDay is 23:00pm (1380) and amount is 22:00pm (1320) and tolerance is 30m, then completed = false
-    if (minutesOfDay <= amount + toleranceMinutes) {
+    if (minutesOfDay <= amount + effectiveToleranceMinutes) {
       completed = true;
     } else if (completed) {
       completed = false;
@@ -807,6 +812,8 @@ class Habit extends HiveObject {
   bool get tracksAmount => trackingType == HabitTrackingType.amount;
 
   bool get tracksDuration => trackingType == HabitTrackingType.duration;
+
+  bool get tracksTimeOfDay => trackingType == HabitTrackingType.timeOfDay;
 
   bool get hasTrackingType => trackingType != null;
 

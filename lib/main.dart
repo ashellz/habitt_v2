@@ -46,7 +46,13 @@ Future<void> main() async {
   final tp = await ThemeProvider.initFromPrefs(prefs);
   final languageProvider = LanguageProvider.fromPrefs(prefs);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await BillingService.init();
+  try {
+    await BillingService.init();
+  } catch (e, st) {
+    // Billing is voluntary-support-only with no feature gating, so a
+    // misconfigured/missing RevenueCat key must not block app startup.
+    debugPrint('BillingService failed to initialize: $e\n$st');
+  }
 
   await Hive.initFlutter();
   Hive.registerAdapters();
@@ -77,7 +83,19 @@ Future<void> main() async {
   await Hive.openBox<Habit>('habits');
   await Hive.openBox<Day>('days');
 
-  AwesomeNotifications().initialize(
+  final timerCompletedChannel = NotificationChannel(
+    channelGroupKey: 'basic_channel_group',
+    channelKey: 'timer_completed_channel',
+    channelName: 'Timer finished',
+    channelDescription:
+        'Alerts when a habit timer reaches its target while the app is '
+        'in the background. Plays the completion sound; while the app is '
+        'open the in-app sound covers it and this alert is cancelled.',
+    soundSource: 'resource://raw/completion',
+    playSound: true,
+  );
+
+  await AwesomeNotifications().initialize(
     null,
     [
       NotificationChannel(
@@ -97,6 +115,7 @@ Future<void> main() async {
           playSound: true,
         ),
       // basic channel is used by the system default option, same as this notification update never happened
+      timerCompletedChannel,
     ],
     channelGroups: [
       NotificationChannelGroup(
@@ -105,6 +124,16 @@ Future<void> main() async {
       ),
     ],
     debug: kDebugMode,
+  );
+
+  // initialize() only applies a channel's config the first time that key is
+  // ever seen — on iOS it's cached in UserDefaults and survives force-quit,
+  // so earlier config changes to this channel (e.g. enabling its sound)
+  // would otherwise never reach devices that already created it. forceUpdate
+  // makes sure it always matches the definition above.
+  await AwesomeNotifications().setChannel(
+    timerCompletedChannel,
+    forceUpdate: true,
   );
 
   // registering on tap and button listeners from notification
@@ -185,10 +214,15 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
 
-        ChangeNotifierProxyProvider<HabitProvider, TimerProvider>(
+        ChangeNotifierProxyProvider2<
+          HabitProvider,
+          PreferencesProvider,
+          TimerProvider
+        >(
           create: (_) => TimerProvider(prefs),
-          update: (_, habitProvider, previous) {
+          update: (_, habitProvider, preferencesProvider, previous) {
             previous!.attachHabitProvider(habitProvider);
+            previous.attachPreferencesProvider(preferencesProvider);
             habitProvider.onHabitDeactivated = previous.clearTimerIfActive;
             return previous;
           },

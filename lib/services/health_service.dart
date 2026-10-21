@@ -217,9 +217,9 @@ class HealthService {
   }
 
   /// The value for [metric] on the calendar [day], in the habit's native
-  /// unit — a raw count for [HealthMetricType.steps]/calories, seconds for
-  /// duration-tracked metrics, minutes-since-midnight for [bedtime]/
-  /// [wakeTime]. Returns `null` if the metric isn't supported on this
+  /// unit — a raw count for [HealthMetricType.steps]/calories, minutes for
+  /// [HealthMetricType.sleep], seconds for duration-tracked metrics,
+  /// minutes-since-midnight for [bedtime]/[wakeTime]. Returns `null` if the metric isn't supported on this
   /// platform or the read fails.
   ///
   /// [trackingType] only matters for [HealthMetricType.workouts] and
@@ -296,6 +296,11 @@ class HealthService {
         }
         return sum;
       });
+      // Sleep is an amount habit whose target and tolerance are in minutes
+      // (so tolerance can apply), not a seconds-based duration habit.
+      if (metric == HealthMetricType.sleep) {
+        return totalMinutes.round();
+      }
       return (totalMinutes * 60).round();
     } catch (_) {
       return null;
