@@ -26,9 +26,13 @@ opened, not the instant new Health data appears.
   `toMap()`/`fromMap()`) — see [`lib/models/habit.dart`](../lib/models/habit.dart).
 - `HealthMetricType` maps to a `HabitTrackingType`: `steps` /
   `activeCalories` / `totalCalories` are amount goals (a raw count);
-  `sleep` / `exerciseMinutes` / `mindfulMinutes` are duration goals
-  (seconds, matching the app's post-migration duration schema — see
-  `backup_system.md`'s "Duration Schema Version" section).
+  `sleep` is an amount goal in **minutes** (so `toleranceMinutes` can apply
+  to it — `HealthService.fetchValueForDay` returns sleep in minutes, and the
+  habit card formats it as a duration via `getSleepAmountString`);
+  `workouts` / `mindfulness` are duration goals by default (seconds,
+  matching the app's post-migration duration schema — see
+  `backup_system.md`'s "Duration Schema Version" section);
+  `bedtime` / `wakeTime` are time-of-day goals (minutes since midnight).
 - Linking a habit to a metric pins its `trackingType` to match (see
   `StateProvider.selectedHealthMetric` in
   [`lib/providers/state_provider.dart`](../lib/providers/state_provider.dart));

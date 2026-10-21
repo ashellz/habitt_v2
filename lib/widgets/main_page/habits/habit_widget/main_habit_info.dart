@@ -9,6 +9,7 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/get_sleep_amount_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +48,9 @@ class MainHabitInfo extends StatelessWidget {
     final bool isCompleted = habit.completed;
 
     String amountText() {
+      if (habit.healthMetric == HealthMetricType.sleep) {
+        return getSleepAmountString(habit);
+      }
       final loc = AppLocalizations.of(context)!;
       final sp = context.read<StateProvider>();
       final int amountForLabel =
