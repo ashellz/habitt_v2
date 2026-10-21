@@ -42,9 +42,11 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
     _lastCompleted = widget.habit.completed;
   }
 
-  void _burstConfetti() {
+  void _burstConfetti() async {
     final box = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
     if (box == null || !box.attached) return;
+    await Future.delayed(Duration(milliseconds: 200));
+    if (!mounted) return;
     ConfettiBurst.show(
       context,
       origin: box.localToGlobal(Offset(box.size.width, 0)),
