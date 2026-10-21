@@ -560,7 +560,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     if (hasAmount || hasDuration) {
       return Row(
         children: [
-          hasAmount
+          hasAmount && habit.healthMetric != HealthMetricType.sleep
               ? Icon(Icons.repeat, size: 14, color: cp.lightGreyText)
               : SvgPicture.asset(
                 'assets/images/new-svg/clock.svg',
