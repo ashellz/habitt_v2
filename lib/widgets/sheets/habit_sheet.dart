@@ -162,6 +162,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     stateProvider.selectedHabitTrackingType = habit.trackingType;
     stateProvider.hydrateHealthMetricFromHabit(habit.healthMetric);
     stateProvider.selectedHealthWorkoutFilter = habit.healthWorkoutFilter;
+    stateProvider.healthBedtimeDayBefore = habit.healthBedtimeDayBefore;
     stateProvider.toleranceMinutes = habit.toleranceMinutes;
     stateProvider.habitAmountLabelController.text = habit.amountLabel;
     stateProvider.setIconPathImmediately(habit.iconPath);
@@ -605,6 +606,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.trackingType = sp.selectedHabitTrackingType;
       habit.healthMetric = sp.selectedHealthMetric;
       habit.healthWorkoutFilter = sp.selectedHealthWorkoutFilter;
+      habit.healthBedtimeDayBefore = sp.healthBedtimeDayBefore;
       habit.toleranceMinutes = sp.toleranceMinutes;
       habit.name = sp.nameController.text;
       habit.description = sp.descController.text;
@@ -674,6 +676,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       trackingType: sp.selectedHabitTrackingType,
       healthMetric: sp.selectedHealthMetric,
       healthWorkoutFilter: sp.selectedHealthWorkoutFilter,
+      healthBedtimeDayBefore: sp.healthBedtimeDayBefore,
       toleranceMinutes: sp.toleranceMinutes,
       durationCompleted: 0,
       streak: 0,

@@ -85,18 +85,25 @@ class HealthProvider extends ChangeNotifier {
     try {
       for (final habit in linkedHabits) {
         final metric = habit.healthMetric!;
-        final syncDay = _service.syncDayFor(metric, targetDay);
+        final bedtimeDayBefore = habit.healthBedtimeDayBefore;
+        final syncDay = _service.syncDayFor(
+          metric,
+          targetDay,
+          bedtimeDayBefore: bedtimeDayBefore,
+        );
         final value = await _service.fetchValueForDay(
           metric,
           syncDay,
           trackingType: habit.trackingType,
           workoutFilter: habit.healthWorkoutFilter,
+          bedtimeDayBefore: bedtimeDayBefore,
         );
         if (value == null) continue;
         final sessions = await _service.fetchSessionsForDay(
           metric,
           syncDay,
           workoutFilter: habit.healthWorkoutFilter,
+          bedtimeDayBefore: bedtimeDayBefore,
         );
         await habitProvider.syncHabitFromHealth(
           habit.id,

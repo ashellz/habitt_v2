@@ -503,8 +503,50 @@ class _HealthWidgetState extends State<HealthWidget> {
             },
           ),
           _toleranceRow(cp, sp, metric),
+          if (isBedtime) _bedtimeDayRow(cp, sp, loc),
         ],
       ),
+    );
+  }
+
+  // ─── Bedtime day ──────────────────────────────────────
+
+  Widget _bedtimeDayRow(
+    ColorProvider cp,
+    StateProvider sp,
+    AppLocalizations loc,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        Text(
+          loc.healthBedtimeDayTitle,
+          style: TextStyle(
+            color: cp.lightGreyText,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        DualOptionSelector<bool>(
+          allowDeselect: false,
+          color: cp.isDark ? cp.habitBg : cp.bg,
+          firstLabel: loc.healthBedtimeDayWake,
+          firstValue: false,
+          secondLabel: loc.healthBedtimeDayBefore,
+          secondValue: true,
+          selectedValue: sp.healthBedtimeDayBefore,
+          onSelect: (value) {
+            if (value != null) sp.healthBedtimeDayBefore = value;
+          },
+        ),
+        Text(
+          sp.healthBedtimeDayBefore
+              ? loc.healthBedtimeDayBeforeDesc
+              : loc.healthBedtimeDayWakeDesc,
+          style: TextStyle(color: cp.lightGreyText, fontSize: 12),
+        ),
+      ],
     );
   }
 

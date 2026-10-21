@@ -77,20 +77,49 @@ opened, not the instant new Health data appears.
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
 
-## Day attribution (sleep windows)
+## Day attribution (sleep sessions)
 
 Most metrics are read midnight-to-midnight for the day being synced. The
-sleep-derived metrics use noon-to-noon windows instead
-(`HealthService._windowFor`), and each lands on a specific day:
+sleep-derived metrics (`sleep`, `bedtime`, `wakeTime`) are not cut by a clock
+window. `HealthService._fetchSleepSessions` reads the day before through the
+day after, groups the samples into sessions (`lib/util/sleep_sessions.dart`:
+samples less than `sleepSessionMaxGap`, 3 h, apart are one session, so a nap
+stays separate from the night), and keeps the sessions that belong to the day.
+A session's day is always derived from the day it **ends** (the wake-up day) —
+there is no clock-hour cutoff anywhere.
 
-- `sleep` and `wakeTime` belong to the day the person **wakes up** on —
-  the window runs from the previous noon to this day's noon.
-- `bedtime` belongs to the day the person **went to bed** on — the window
-  runs from this day's noon to the next day's noon. Since that night is
-  only finished after waking up, `HealthService.syncDayFor` shifts a
-  bedtime sync run today to write to **yesterday**; `syncNow()` uses the
-  shifted day for the read, the session list and `syncHabitFromHealth`.
-  If the habit didn't exist yesterday, the value is simply dropped.
+Which samples are read (`_iosSleepTypes` / `_androidSleepTypes`): every asleep
+sample, staged or not — `SLEEP_ASLEEP`, `SLEEP_LIGHT` (Apple's "core"),
+`SLEEP_DEEP`, `SLEEP_REM`. Apple Watch on iOS 16+ and most Health Connect
+trackers only write the stages, so reading `SLEEP_ASLEEP` alone misses them.
+Awake and in-bed samples are never read. Android also reads `SLEEP_SESSION`
+(the whole record, awake time included) for sources that log a night without
+stages; `groupSleepSessions` drops a session record wherever a stage sample
+overlaps it. All of these sit behind the same permission (`sleepAnalysis` on
+iOS, `READ_SLEEP` on Android), so no new prompt is needed.
+
+A session's minutes are the time covered by **at least one** sample, not the
+sum of the samples, so overlapping samples count once — two apps recording
+the same night, or a stage inside a broader asleep block. Gaps between
+samples (wake-ups) don't count.
+
+- `sleep` — total minutes of every session that ended that day.
+- `wakeTime` — end of the longest session that ended that day.
+- `bedtime` — start of the longest session counted on that day. Which day that
+  is is a per-habit choice, `Habit.healthBedtimeDayBefore` (editor: "Count
+  bedtime on" in the bedtime health widget):
+  - **Wake-up day** (default, `false`) — the session counts on the day it
+    ends, same as `sleep`/`wakeTime`. Going to bed Monday night counts for
+    Tuesday. Works unchanged for night-shift sleep (07:00–17:00).
+  - **Day before** (`true`) — the session counts on the day before it ends.
+    Going to bed Monday night counts for Monday, regardless of the hour.
+
+Sessions are not clipped at any hour, so a night that ends at 13:00 is read
+whole. `HealthService.syncDayFor` returns today for everything except a
+day-before bedtime, which returns yesterday (the night that ended this
+morning). The session list stored on the habit is these grouped sessions, not
+the raw samples. Changing the setting does not move bedtimes already recorded
+— sync only touches the current target day.
 
 ## Workouts/mindfulness tracking mode
 

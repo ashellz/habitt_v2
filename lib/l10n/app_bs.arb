@@ -1175,5 +1175,10 @@
   "overrideFieldTarget": "Cilj",
   "overrideFieldHealthSync": "Sinhronizacija zdravlja",
   "overrideFieldSchedule": "Raspored",
-  "overrideFieldNotifications": "Obavijesti"
+  "overrideFieldNotifications": "Obavijesti",
+  "healthBedtimeDayTitle": "Računaj odlazak na spavanje za",
+  "healthBedtimeDayWake": "Dan buđenja",
+  "healthBedtimeDayBefore": "Dan prije",
+  "healthBedtimeDayWakeDesc": "Odlazak na spavanje se računa za dan kada se probudiš. Ako legneš u ponedjeljak navečer, računa se za utorak",
+  "healthBedtimeDayBeforeDesc": "Odlazak na spavanje se računa za dan prije buđenja. Ako legneš u ponedjeljak navečer, računa se za ponedjeljak"
 }

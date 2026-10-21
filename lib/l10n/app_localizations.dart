@@ -5385,6 +5385,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'\'{name}\' reached its target.'**
   String timerCompletedNotificationBody(String name);
+
+  /// No description provided for @healthBedtimeDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Count bedtime on'**
+  String get healthBedtimeDayTitle;
+
+  /// No description provided for @healthBedtimeDayWake.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake-up day'**
+  String get healthBedtimeDayWake;
+
+  /// No description provided for @healthBedtimeDayBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Day before'**
+  String get healthBedtimeDayBefore;
+
+  /// No description provided for @healthBedtimeDayWakeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bedtime counts on the day you wake up. Going to bed on Monday night counts for Tuesday'**
+  String get healthBedtimeDayWakeDesc;
+
+  /// No description provided for @healthBedtimeDayBeforeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bedtime counts on the day before you wake up. Going to bed on Monday night counts for Monday'**
+  String get healthBedtimeDayBeforeDesc;
 }
 
 class _AppLocalizationsDelegate

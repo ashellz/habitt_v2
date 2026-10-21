@@ -166,6 +166,7 @@ class StateProvider extends ChangeNotifier {
   HabitTrackingType? _selectedHabitTrackingType;
   HealthMetricType? _selectedHealthMetric;
   HealthWorkoutType? _selectedHealthWorkoutFilter;
+  bool _healthBedtimeDayBefore = false;
   int _toleranceMinutes = 0;
   TextEditingController habitAmountLabelController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -199,6 +200,7 @@ class StateProvider extends ChangeNotifier {
   HealthMetricType? get selectedHealthMetric => _selectedHealthMetric;
   HealthWorkoutType? get selectedHealthWorkoutFilter =>
       _selectedHealthWorkoutFilter;
+  bool get healthBedtimeDayBefore => _healthBedtimeDayBefore;
   int get toleranceMinutes => _toleranceMinutes;
 
   String get scheduleSummary {
@@ -320,6 +322,11 @@ class StateProvider extends ChangeNotifier {
 
   set selectedHealthWorkoutFilter(HealthWorkoutType? value) {
     _selectedHealthWorkoutFilter = value;
+    notifyListeners();
+  }
+
+  set healthBedtimeDayBefore(bool value) {
+    _healthBedtimeDayBefore = value;
     notifyListeners();
   }
 
@@ -739,6 +746,7 @@ class StateProvider extends ChangeNotifier {
     _selectedHabitTrackingType = null;
     _selectedHealthMetric = null;
     _selectedHealthWorkoutFilter = null;
+    _healthBedtimeDayBefore = false;
     _toleranceMinutes = 0;
 
     _habitCategoryId = 1;

@@ -1185,5 +1185,10 @@
   "overrideFieldTarget": "Obiettivo",
   "overrideFieldHealthSync": "Sincronizzazione Salute",
   "overrideFieldSchedule": "Programma",
-  "overrideFieldNotifications": "Notifiche"
+  "overrideFieldNotifications": "Notifiche",
+  "healthBedtimeDayTitle": "Conta l'orario per dormire il",
+  "healthBedtimeDayWake": "Giorno del risveglio",
+  "healthBedtimeDayBefore": "Giorno prima",
+  "healthBedtimeDayWakeDesc": "L'orario in cui vai a dormire conta per il giorno in cui ti svegli. Se vai a letto lunedì sera, conta per martedì",
+  "healthBedtimeDayBeforeDesc": "L'orario in cui vai a dormire conta per il giorno prima del risveglio. Se vai a letto lunedì sera, conta per lunedì"
 }

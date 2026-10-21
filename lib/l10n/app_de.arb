@@ -1185,5 +1185,10 @@
   "overrideFieldTarget": "Ziel",
   "overrideFieldHealthSync": "Health-Synchronisierung",
   "overrideFieldSchedule": "Zeitplan",
-  "overrideFieldNotifications": "Benachrichtigungen"
+  "overrideFieldNotifications": "Benachrichtigungen",
+  "healthBedtimeDayTitle": "Schlafenszeit zählen für",
+  "healthBedtimeDayWake": "Aufwachtag",
+  "healthBedtimeDayBefore": "Vortag",
+  "healthBedtimeDayWakeDesc": "Deine Schlafenszeit zählt für den Tag, an dem du aufwachst. Gehst du Montagabend ins Bett, zählt es für Dienstag",
+  "healthBedtimeDayBeforeDesc": "Deine Schlafenszeit zählt für den Tag vor dem Aufwachen. Gehst du Montagabend ins Bett, zählt es für Montag"
 }
