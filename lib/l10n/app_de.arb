@@ -1197,5 +1197,13 @@
   "healthCardLast7Days": "Letzte 7 Tage",
   "healthCardNoData": "Für diese Tage gibt es noch keine Health-Daten",
   "healthCardSessions": "Einheiten",
-  "healthCardNoSessions": "Für diesen Tag wurden keine Einheiten aufgezeichnet"
+  "healthCardNoSessions": "Für diesen Tag wurden keine Einheiten aufgezeichnet",
+  "notificationSleepHours": "{count, plural, =1{1 Stunde} other{{count} Stunden}}",
+  "notificationSleepMinutes": "{count, plural, =1{1 Minute} other{{count} Minuten}}",
+  "notificationSleepHoursAndMinutes": "{hours} und {minutes}",
+  "notificationSleepBedtimeSoon": "Mach dich bettfertig, deine Schlafenszeit ist in {countdown}.|Zeit zum Runterkommen, deine Schlafenszeit ist in {countdown}.|Starte deine Abendroutine, in {countdown} geht das Licht aus.|Fast Schlafenszeit! Noch {countdown} bis {time}.",
+  "notificationSleepBedtime": "Nur eine Erinnerung, heute früh schlafen zu gehen.|Dein Schlafenszeit-Ziel ist {time}. Fang an, runterzufahren.|Eine frühe Nacht macht den morgigen Tag leichter.|Leg bald dein Handy weg, deine Schlafenszeit ist {time}.",
+  "notificationSleepWakeUp": "Guten Morgen! Dein Aufsteh-Ziel ist {time}.|Zeit aufzustehen, dein Ziel ist {time}. Du schaffst das!|Aufstehen und strahlen, ein ruhiger früher Start lohnt sich.|Nur eine Erinnerung, früh aufzuwachen: dein Ziel ist {time}.",
+  "notificationSleepGoal": "Peile heute Nacht {goal} Schlaf an.|Geh rechtzeitig ins Bett, um heute Nacht volle {goal} Schlaf zu bekommen.|Dein Ziel heute Nacht sind {goal} Schlaf. Fang an, runterzufahren.|Schütze deinen Schlaf heute Nacht, das Ziel sind {goal}.",
+  "notificationSleepGoalProgress": "Du hast {slept} von deinem Ziel von {goal} geschlafen. Geh heute Nacht früher ins Bett.|Du liegst bei {slept} von {goal} Schlaf. Lass die heutige Nacht zählen."
 }

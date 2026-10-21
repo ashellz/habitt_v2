@@ -7,6 +7,7 @@ import 'package:habitt/services/notification_text/locale_resolver.dart';
 import 'package:habitt/services/notification_text/rules/freshness_rule.dart';
 import 'package:habitt/services/notification_text/rules/progress_rule.dart';
 import 'package:habitt/services/notification_text/rules/schedule_rule.dart';
+import 'package:habitt/services/notification_text/sleep_notification_text.dart';
 import 'package:habitt/services/notification_text/template_catalog.dart';
 import 'package:habitt/services/notification_text/types.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -164,6 +165,14 @@ class HabitNotificationTextBuilder {
     required List<String> evaluatedChecks,
   }) {
     final l = context.localizations;
+
+    // sleep habits store minutes, so they get their own wording and duration
+    // formatting instead of the generic amount templates
+    final sleepText = SleepNotificationText.build(context);
+    if (sleepText != null) {
+      evaluatedChecks.add('combined.sleep');
+      return sleepText;
+    }
 
     final isOneOff =
         scheduleResult.riskState ==
