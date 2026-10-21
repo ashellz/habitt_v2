@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 51
+    nextIndex: 52
     fields:
       id:
         index: 0
@@ -103,6 +103,8 @@ types:
         index: 49
       healthSessions:
         index: 50
+      healthBedtimeDayBefore:
+        index: 51
   Day:
     typeId: 1
     nextIndex: 4

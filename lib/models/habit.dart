@@ -71,6 +71,8 @@ class Habit extends HiveObject {
   healthMetric; // if set, progress is synced from this Health metric
   HealthWorkoutType?
   healthWorkoutFilter; // narrows healthMetric == workouts to one workout type; null = any (all)
+  bool
+  healthBedtimeDayBefore; // bedtime habits: count a night on the day before waking up instead of the wake-up day
   int
   toleranceMinutes; // stored forgiveness, 15m/30m/60m presets; 0 = none. Read through [effectiveToleranceMinutes], never directly
   List<HealthSessionDetail>
@@ -122,6 +124,7 @@ class Habit extends HiveObject {
     this.trackingType,
     this.healthMetric,
     this.healthWorkoutFilter,
+    this.healthBedtimeDayBefore = false,
     this.toleranceMinutes = 0, // no forgiveness unless explicitly set
     List<HealthSessionDetail>? healthSessions,
     this.isDeleted,
@@ -232,6 +235,7 @@ class Habit extends HiveObject {
       trackingType: trackingType,
       healthMetric: healthMetric,
       healthWorkoutFilter: healthWorkoutFilter,
+      healthBedtimeDayBefore: healthBedtimeDayBefore,
       toleranceMinutes: toleranceMinutes,
       healthSessions: healthSessions.map((s) => s.copy()).toList(),
       isDeleted: isDeleted,
@@ -284,6 +288,7 @@ class Habit extends HiveObject {
       trackingType: trackingType,
       healthMetric: healthMetric,
       healthWorkoutFilter: healthWorkoutFilter,
+      healthBedtimeDayBefore: healthBedtimeDayBefore,
       toleranceMinutes: toleranceMinutes,
       healthSessions: const [],
       isDeleted: isDeleted,
@@ -457,6 +462,10 @@ class Habit extends HiveObject {
       healthWorkoutFilter = habit.healthWorkoutFilter;
       timestamps['healthWorkoutFilter'] = now;
     }
+    if (healthBedtimeDayBefore != habit.healthBedtimeDayBefore) {
+      healthBedtimeDayBefore = habit.healthBedtimeDayBefore;
+      timestamps['healthBedtimeDayBefore'] = now;
+    }
     if (toleranceMinutes != habit.toleranceMinutes) {
       toleranceMinutes = habit.toleranceMinutes;
       timestamps['toleranceMinutes'] = now;
@@ -558,6 +567,7 @@ class Habit extends HiveObject {
     trackingType = merged.trackingType;
     healthMetric = merged.healthMetric;
     healthWorkoutFilter = merged.healthWorkoutFilter;
+    healthBedtimeDayBefore = merged.healthBedtimeDayBefore;
     toleranceMinutes = merged.toleranceMinutes;
     healthSessions = merged.healthSessions.map((s) => s.copy()).toList();
     isDeleted = merged.isDeleted;
@@ -862,6 +872,7 @@ class Habit extends HiveObject {
       'trackingType': _serializeTrackingType(trackingType),
       'healthMetric': _serializeHealthMetricType(healthMetric),
       'healthWorkoutFilter': healthWorkoutFilter?.name,
+      'healthBedtimeDayBefore': healthBedtimeDayBefore,
       'toleranceMinutes': toleranceMinutes,
       'healthSessions': healthSessions.map((s) => s.toMap()).toList(),
       'isDeleted': isDeleted,
@@ -947,6 +958,7 @@ class Habit extends HiveObject {
       healthWorkoutFilter: _deserializeHealthWorkoutType(
         m['healthWorkoutFilter']?.toString(),
       ),
+      healthBedtimeDayBefore: (m['healthBedtimeDayBefore'] as bool?) ?? false,
       toleranceMinutes: (m['toleranceMinutes'] as num?)?.toInt() ?? 0,
       healthSessions: _parseHealthSessions(m['healthSessions']),
       isDeleted: m['isDeleted'] as bool?,
@@ -1225,6 +1237,11 @@ class Habit extends HiveObject {
         'healthWorkoutFilter',
         healthWorkoutFilter,
         incoming.healthWorkoutFilter,
+      ),
+      healthBedtimeDayBefore: resolve(
+        'healthBedtimeDayBefore',
+        healthBedtimeDayBefore,
+        incoming.healthBedtimeDayBefore,
       ),
       toleranceMinutes: resolve(
         'toleranceMinutes',

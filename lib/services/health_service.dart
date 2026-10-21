@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/health_workout_type.dart';
+import 'package:habitt/util/sleep_sessions.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
@@ -22,22 +23,46 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 /// Time-of-day values (bedtime/wake time) are minutes-since-midnight, with
 /// one convention: any wall-clock time before noon is treated as "the small
 /// hours of the same night" and gets +1440 added, so a 1:00 AM bedtime
-/// (1500) still sorts later than an 11:00 PM one (1380). This mirrors the
-/// noon-to-noon window already used for sleep queries. Wake times don't
+/// (1500) still sorts later than an 11:00 PM one (1380). Wake times don't
 /// need this — they're always compared as plain minutes-since-midnight.
+///
+/// Sleep, bedtime and wake time are read as whole sleep sessions (see
+/// `sleep_sessions.dart`) rather than a fixed clock window, so a night that
+/// ends at 13:00 — or a night shift's 07:00–17:00 sleep — lands on the right
+/// day.
 class HealthService {
   HealthService({Health? health}) : _health = health ?? Health();
 
   final Health _health;
   bool _configured = false;
 
+  // Every asleep sample, staged or not. Apple Watch (iOS 16+) and most
+  // Health Connect trackers only write the stages, never plain "asleep".
+  // Awake / in-bed samples are left out so they don't count as sleep.
+  static const List<HealthDataType> _iosSleepTypes = [
+    HealthDataType.SLEEP_ASLEEP,
+    HealthDataType.SLEEP_LIGHT,
+    HealthDataType.SLEEP_DEEP,
+    HealthDataType.SLEEP_REM,
+  ];
+
+  // Plus the session record itself, for sources that log a night without
+  // stages — see [SleepSegment.isWholeSession].
+  static const List<HealthDataType> _androidSleepTypes = [
+    HealthDataType.SLEEP_SESSION,
+    HealthDataType.SLEEP_ASLEEP,
+    HealthDataType.SLEEP_LIGHT,
+    HealthDataType.SLEEP_DEEP,
+    HealthDataType.SLEEP_REM,
+  ];
+
   // Health Connect has no mindfulness record type. bedtime/wakeTime reuse
   // the same sleep types as `sleep` — same read, different aggregation.
   static const Map<HealthMetricType, List<HealthDataType>> _iosTypes = {
     HealthMetricType.steps: [HealthDataType.STEPS],
-    HealthMetricType.sleep: [HealthDataType.SLEEP_ASLEEP],
-    HealthMetricType.bedtime: [HealthDataType.SLEEP_ASLEEP],
-    HealthMetricType.wakeTime: [HealthDataType.SLEEP_ASLEEP],
+    HealthMetricType.sleep: _iosSleepTypes,
+    HealthMetricType.bedtime: _iosSleepTypes,
+    HealthMetricType.wakeTime: _iosSleepTypes,
     HealthMetricType.workouts: [HealthDataType.EXERCISE_TIME],
     HealthMetricType.mindfulness: [HealthDataType.MINDFULNESS],
     HealthMetricType.activeCalories: [HealthDataType.ACTIVE_ENERGY_BURNED],
@@ -46,9 +71,9 @@ class HealthService {
 
   static const Map<HealthMetricType, List<HealthDataType>> _androidTypes = {
     HealthMetricType.steps: [HealthDataType.STEPS],
-    HealthMetricType.sleep: [HealthDataType.SLEEP_ASLEEP],
-    HealthMetricType.bedtime: [HealthDataType.SLEEP_ASLEEP],
-    HealthMetricType.wakeTime: [HealthDataType.SLEEP_ASLEEP],
+    HealthMetricType.sleep: _androidSleepTypes,
+    HealthMetricType.bedtime: _androidSleepTypes,
+    HealthMetricType.wakeTime: _androidSleepTypes,
     HealthMetricType.workouts: [HealthDataType.WORKOUT],
     HealthMetricType.activeCalories: [HealthDataType.ACTIVE_ENERGY_BURNED],
     HealthMetricType.totalCalories: [HealthDataType.TOTAL_CALORIES_BURNED],
@@ -194,7 +219,7 @@ class HealthService {
     DateTime day,
     HealthWorkoutType? workoutFilter,
   ) async {
-    final window = _windowFor(metric, day);
+    final window = _windowFor(day);
     final types = _queryTypesFor(metric, workoutFilter);
     if (types.isEmpty) return const [];
 
@@ -216,6 +241,48 @@ class HealthService {
     }).toList();
   }
 
+  // Sleep, bedtime and wake time all come from the same sleep samples,
+  // grouped into sessions rather than cut by a clock window.
+  static const Set<HealthMetricType> _sleepMetrics = {
+    HealthMetricType.sleep,
+    HealthMetricType.bedtime,
+    HealthMetricType.wakeTime,
+  };
+
+  /// The sleep sessions that belong to [day] for [metric]: those the person
+  /// woke up on [day]. A bedtime with [bedtimeDayBefore] instead takes the
+  /// sessions the person woke up from on the day after [day]. Reads a day
+  /// either side so a session that crosses midnight is never cut off, then
+  /// keeps only the matching ones.
+  Future<List<SleepSession>> _fetchSleepSessions(
+    HealthMetricType metric,
+    DateTime day, {
+    bool bedtimeDayBefore = false,
+  }) async {
+    final dayStart = DateTime(day.year, day.month, day.day);
+    final points = await _health.getHealthDataFromTypes(
+      types: _typesByMetric[metric] ?? const [],
+      startTime: DateTime(dayStart.year, dayStart.month, dayStart.day - 1),
+      endTime: DateTime(dayStart.year, dayStart.month, dayStart.day + 2),
+    );
+
+    final segments = points.map(
+      (point) => SleepSegment(
+        start: point.dateFrom,
+        end: point.dateTo,
+        isWholeSession: point.type == HealthDataType.SLEEP_SESSION,
+      ),
+    );
+
+    final countOnDayBefore =
+        metric == HealthMetricType.bedtime && bedtimeDayBefore;
+    return groupSleepSessions(segments).where((session) {
+      final sessionDay =
+          countOnDayBefore ? session.dayBeforeWake : session.wakeDay;
+      return sessionDay == dayStart;
+    }).toList();
+  }
+
   /// The value for [metric] on the calendar [day], in the habit's native
   /// unit — a raw count for [HealthMetricType.steps]/calories, minutes for
   /// [HealthMetricType.sleep], seconds for duration-tracked metrics,
@@ -226,12 +293,14 @@ class HealthService {
   /// [HealthMetricType.mindfulness]: a habit tracking `amount` gets the
   /// session *count* for the day instead of summed duration — same
   /// underlying read, different aggregation. [workoutFilter] narrows
-  /// workout reads to one [HealthWorkoutType].
+  /// workout reads to one [HealthWorkoutType]. [bedtimeDayBefore] only
+  /// matters for [HealthMetricType.bedtime] — see [_fetchSleepSessions].
   Future<int?> fetchValueForDay(
     HealthMetricType metric,
     DateTime day, {
     HabitTrackingType? trackingType,
     HealthWorkoutType? workoutFilter,
+    bool bedtimeDayBefore = false,
   }) async {
     if (!isMetricSupported(metric)) return null;
 
@@ -244,6 +313,30 @@ class HealthService {
         return _health.getTotalStepsInInterval(start, end);
       }
 
+      if (_sleepMetrics.contains(metric)) {
+        final sessions = await _fetchSleepSessions(
+          metric,
+          day,
+          bedtimeDayBefore: bedtimeDayBefore,
+        );
+        switch (metric) {
+          case HealthMetricType.bedtime:
+            final main = mainSleepSession(sessions);
+            return main == null ? null : _bedtimeMinutesOfDay(main.start);
+          case HealthMetricType.wakeTime:
+            final main = mainSleepSession(sessions);
+            return main == null ? null : main.end.hour * 60 + main.end.minute;
+          default:
+            // Sleep is an amount habit whose target and tolerance are in
+            // minutes, not a seconds-based duration habit.
+            final totalMinutes = sessions.fold<double>(
+              0,
+              (sum, session) => sum + session.minutes,
+            );
+            return totalMinutes.round();
+        }
+      }
+
       final points = await _fetchPoints(metric, day, workoutFilter);
 
       if (_countMetrics.contains(metric)) {
@@ -254,22 +347,6 @@ class HealthService {
               : sum;
         });
         return total.round();
-      }
-
-      if (metric == HealthMetricType.bedtime) {
-        if (points.isEmpty) return null;
-        final earliest = points
-            .map((p) => p.dateFrom)
-            .reduce((a, b) => a.isBefore(b) ? a : b);
-        return _bedtimeMinutesOfDay(earliest);
-      }
-
-      if (metric == HealthMetricType.wakeTime) {
-        if (points.isEmpty) return null;
-        final latest = points
-            .map((p) => p.dateTo)
-            .reduce((a, b) => a.isAfter(b) ? a : b);
-        return latest.hour * 60 + latest.minute;
       }
 
       if (_dualModeMetrics.contains(metric) &&
@@ -287,8 +364,8 @@ class HealthService {
         );
       }
 
-      // Sleep / exercise-time / mindfulness samples are declared in MINUTE
-      // units by the plugin, so their numeric value is already a duration.
+      // Exercise-time / mindfulness samples are declared in MINUTE units by
+      // the plugin, so their numeric value is already a duration.
       final totalMinutes = points.fold<double>(0, (sum, point) {
         final value = point.value;
         if (value is NumericHealthValue) {
@@ -296,11 +373,6 @@ class HealthService {
         }
         return sum;
       });
-      // Sleep is an amount habit whose target and tolerance are in minutes
-      // (so tolerance can apply), not a seconds-based duration habit.
-      if (metric == HealthMetricType.sleep) {
-        return totalMinutes.round();
-      }
       return (totalMinutes * 60).round();
     } catch (_) {
       return null;
@@ -315,6 +387,7 @@ class HealthService {
     HealthMetricType metric,
     DateTime day, {
     HealthWorkoutType? workoutFilter,
+    bool bedtimeDayBefore = false,
   }) async {
     if (!_sessionMetrics.contains(metric) || !isMetricSupported(metric)) {
       return const [];
@@ -322,6 +395,18 @@ class HealthService {
 
     try {
       await _ensureConfigured();
+
+      if (_sleepMetrics.contains(metric)) {
+        final sessions = await _fetchSleepSessions(
+          metric,
+          day,
+          bedtimeDayBefore: bedtimeDayBefore,
+        );
+        return sessions
+            .map((s) => HealthSessionDetail(start: s.start, end: s.end))
+            .toList();
+      }
+
       final points = await _fetchPoints(metric, day, workoutFilter);
 
       return points.map((point) {
@@ -341,26 +426,29 @@ class HealthService {
     }
   }
 
+  /// The calendar day a sync run on [today] should write [metric]'s value
+  /// to. A bedtime counted on the day before waking up is written to
+  /// yesterday, because the night that ended this morning started then;
+  /// every other metric lands on [today].
+  DateTime syncDayFor(
+    HealthMetricType metric,
+    DateTime today, {
+    bool bedtimeDayBefore = false,
+  }) {
+    final dayStart = DateTime(today.year, today.month, today.day);
+    if (metric == HealthMetricType.bedtime && bedtimeDayBefore) {
+      return DateTime(dayStart.year, dayStart.month, dayStart.day - 1);
+    }
+    return dayStart;
+  }
+
   int _bedtimeMinutesOfDay(DateTime dateTime) {
     final minutes = dateTime.hour * 60 + dateTime.minute;
     return minutes < 12 * 60 ? minutes + 24 * 60 : minutes;
   }
 
-  ({DateTime start, DateTime end}) _windowFor(
-    HealthMetricType metric,
-    DateTime day,
-  ) {
+  ({DateTime start, DateTime end}) _windowFor(DateTime day) {
     final dayStart = DateTime(day.year, day.month, day.day);
-    if (metric == HealthMetricType.sleep ||
-        metric == HealthMetricType.bedtime ||
-        metric == HealthMetricType.wakeTime) {
-      // A night's sleep is attributed to the day the person wakes up on —
-      // query from the previous noon through this noon rather than
-      // midnight-to-midnight.
-      final end = dayStart.add(const Duration(hours: 12));
-      final start = end.subtract(const Duration(hours: 24));
-      return (start: start, end: end);
-    }
     return (start: dayStart, end: dayStart.add(const Duration(days: 1)));
   }
 }

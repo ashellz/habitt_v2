@@ -3165,4 +3165,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' ha raggiunto l\'obiettivo.';
   }
+
+  @override
+  String get healthBedtimeDayTitle => 'Conta l\'orario per dormire il';
+
+  @override
+  String get healthBedtimeDayWake => 'Giorno del risveglio';
+
+  @override
+  String get healthBedtimeDayBefore => 'Giorno prima';
+
+  @override
+  String get healthBedtimeDayWakeDesc =>
+      'L\'orario in cui vai a dormire conta per il giorno in cui ti svegli. Se vai a letto lunedì sera, conta per martedì';
+
+  @override
+  String get healthBedtimeDayBeforeDesc =>
+      'L\'orario in cui vai a dormire conta per il giorno prima del risveglio. Se vai a letto lunedì sera, conta per lunedì';
 }

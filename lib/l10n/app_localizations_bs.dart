@@ -3135,4 +3135,21 @@ class AppLocalizationsBs extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' je dostigao cilj.';
   }
+
+  @override
+  String get healthBedtimeDayTitle => 'Računaj odlazak na spavanje za';
+
+  @override
+  String get healthBedtimeDayWake => 'Dan buđenja';
+
+  @override
+  String get healthBedtimeDayBefore => 'Dan prije';
+
+  @override
+  String get healthBedtimeDayWakeDesc =>
+      'Odlazak na spavanje se računa za dan kada se probudiš. Ako legneš u ponedjeljak navečer, računa se za utorak';
+
+  @override
+  String get healthBedtimeDayBeforeDesc =>
+      'Odlazak na spavanje se računa za dan prije buđenja. Ako legneš u ponedjeljak navečer, računa se za ponedjeljak';
 }

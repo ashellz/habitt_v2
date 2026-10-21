@@ -141,6 +141,36 @@ void main() {
     });
   });
 
+  group('Habit.healthBedtimeDayBefore persistence', () {
+    test('defaults to the wake-up day', () {
+      expect(buildTestHabit().healthBedtimeDayBefore, isFalse);
+    });
+
+    test('toMap/fromMap round-trips the day-before setting', () {
+      final habit = buildTestHabit(
+        healthMetric: HealthMetricType.bedtime,
+        healthBedtimeDayBefore: true,
+      );
+
+      final restored = Habit.fromMap(habit.toMap());
+
+      expect(restored.healthBedtimeDayBefore, isTrue);
+    });
+
+    test('a map without the key (older backup) reads as the wake-up day', () {
+      final map = buildTestHabit(healthMetric: HealthMetricType.bedtime).toMap()
+        ..remove('healthBedtimeDayBefore');
+
+      expect(Habit.fromMap(map).healthBedtimeDayBefore, isFalse);
+    });
+
+    test('copy() preserves the setting', () {
+      final habit = buildTestHabit(healthBedtimeDayBefore: true);
+
+      expect(habit.copy().healthBedtimeDayBefore, isTrue);
+    });
+  });
+
   group('Habit.healthSessions day-state', () {
     test('toMap/fromMap round-trips sessions', () {
       final start = DateTime.utc(2026, 1, 1, 7);

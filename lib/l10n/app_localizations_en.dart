@@ -3140,4 +3140,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String timerCompletedNotificationBody(String name) {
     return '\'$name\' reached its target.';
   }
+
+  @override
+  String get healthBedtimeDayTitle => 'Count bedtime on';
+
+  @override
+  String get healthBedtimeDayWake => 'Wake-up day';
+
+  @override
+  String get healthBedtimeDayBefore => 'Day before';
+
+  @override
+  String get healthBedtimeDayWakeDesc =>
+      'Your bedtime counts on the day you wake up. Going to bed on Monday night counts for Tuesday';
+
+  @override
+  String get healthBedtimeDayBeforeDesc =>
+      'Your bedtime counts on the day before you wake up. Going to bed on Monday night counts for Monday';
 }
