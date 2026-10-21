@@ -827,6 +827,10 @@ class Habit extends HiveObject {
 
   bool get hasTrackingType => trackingType != null;
 
+  // Health-synced duration habits (workouts, mindfulness) get their progress
+  // from Health, so a manual timer would only fight the synced value
+  bool get supportsTimer => tracksDuration && healthMetric == null;
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

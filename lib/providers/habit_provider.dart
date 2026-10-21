@@ -1475,7 +1475,13 @@ class HabitProvider extends ChangeNotifier {
 
     final wasCompleted = habit.completed;
     debugPrint("Habit was completed: $wasCompleted");
-    habit.updateHabitAmountCompleted(amountCompleted);
+    // bedtime/wake time are clock times where earlier is better, so they
+    // complete differently from a plain amount
+    if (habit.tracksTimeOfDay) {
+      habit.updateHabitTimeOfDayCompleted(amountCompleted);
+    } else {
+      habit.updateHabitAmountCompleted(amountCompleted);
+    }
     final isNowCompleted = habit.completed;
     if (!wasCompleted && isNowCompleted) {
       playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);

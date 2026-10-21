@@ -8,6 +8,7 @@ class DurationProgressInput extends StatefulWidget {
     super.key,
     required this.duration,
     this.durationCompleted,
+    this.showSeconds = true,
   });
 
   /// Target duration in seconds.
@@ -15,6 +16,10 @@ class DurationProgressInput extends StatefulWidget {
 
   /// Progress in seconds, if any.
   final int? durationCompleted;
+
+  /// Whether the picker shows a seconds column. Minute-based values like
+  /// sleep hide it.
+  final bool showSeconds;
 
   @override
   State<DurationProgressInput> createState() => _DurationProgressInputState();
@@ -69,7 +74,7 @@ class _DurationProgressInputState extends State<DurationProgressInput> {
       height: 211,
       hoursController: hoursController,
       minutesController: minutesController,
-      secondsController: secondsController,
+      secondsController: widget.showSeconds ? secondsController : null,
       width: width,
       padZero: false,
       onChangedHours: (value) {

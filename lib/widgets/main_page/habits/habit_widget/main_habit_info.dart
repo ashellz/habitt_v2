@@ -8,6 +8,7 @@ import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
+import 'package:habitt/util/format_minutes_of_day.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/get_sleep_amount_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -30,10 +31,9 @@ class MainHabitInfo extends StatelessWidget {
     final bool isAmount = habit.tracksAmount;
     final bool isDuration = habit.tracksDuration;
     final bool isTimeOfDay = habit.tracksTimeOfDay;
-    // sleep is an amount goal, but its values are seconds of sleep, so it
-    // reads as a duration rather than a count
+    // sleep is an amount goal in minutes, so it reads as a duration (clock
+    // icon, "8h") rather than a count
     final bool isSleep = habit.healthMetric == HealthMetricType.sleep;
-
     // follow the running timer live, same as NewHabitProgress.
     final liveDurationSeconds = context.select<TimerProvider, int?>(
       (t) => t.liveProgressFor(habit.id),
@@ -85,32 +85,14 @@ class MainHabitInfo extends StatelessWidget {
     }
 
     String timeOfDayText() {
-      final materialLoc = MaterialLocalizations.of(context);
-      String format(int minutes) {
-        final normalized = minutes % (24 * 60);
-        return materialLoc.formatTimeOfDay(
-          TimeOfDay(hour: normalized ~/ 60, minute: normalized % 60),
-        );
-      }
-
       // show the real logged start bedtime or wake time once there is one, otherwise the target
-      return format(hasProgress ? habit.amountCompleted : habit.amount);
-    }
-
-    String sleepText() {
-      final int target = habit.amount;
-      final int slept = habit.amountCompleted;
-
-      if (hasProgress && !isCompleted && slept < target) {
-        return "${getDurationString(slept)} / ${getDurationString(target)}";
-      } else if (isCompleted) {
-        return getDurationString(slept);
-      }
-      return getDurationString(target);
+      return formatMinutesOfDay(
+        context,
+        hasProgress ? habit.amountCompleted : habit.amount,
+      );
     }
 
     String getText() {
-      if (isSleep && isAmount) return sleepText();
       switch (habit.trackingType) {
         case HabitTrackingType.amount:
           return amountText();
