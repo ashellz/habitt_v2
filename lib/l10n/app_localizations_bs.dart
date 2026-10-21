@@ -3175,4 +3175,58 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get healthCardNoSessions => 'Nema zabilježenih sesija za ovaj dan';
+
+  @override
+  String notificationSleepHours(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sati',
+      few: '$count sata',
+      one: '$count sat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationSleepMinutes(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuta',
+      few: '$count minute',
+      one: '$count minuta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationSleepHoursAndMinutes(Object hours, Object minutes) {
+    return '$hours i $minutes';
+  }
+
+  @override
+  String notificationSleepBedtimeSoon(Object countdown, Object time) {
+    return 'Pripremi se za spavanje, tvoje vrijeme za spavanje je za $countdown.|Vrijeme je da se smiriš, spavanje počinje za $countdown.|Započni večernju rutinu, gašenje svjetla za $countdown.|Skoro je vrijeme za spavanje! Još samo $countdown do $time.';
+  }
+
+  @override
+  String notificationSleepBedtime(Object time) {
+    return 'Samo podsjetnik da večeras ranije odeš na spavanje.|Tvoj cilj za spavanje je $time. Počni se smirivati.|Rano spavanje večeras olakšava sutrašnji dan.|Uskoro ostavi telefon, vrijeme za spavanje je $time.';
+  }
+
+  @override
+  String notificationSleepWakeUp(Object time) {
+    return 'Dobro jutro! Tvoj cilj za buđenje je $time.|Vrijeme je za ustajanje, cilj ti je $time. Možeš ti to!|Ustani i sijaj, miran rani početak vrijedi toga.|Samo podsjetnik da se rano probudiš, cilj ti je $time.';
+  }
+
+  @override
+  String notificationSleepGoal(Object goal) {
+    return 'Ciljaj na $goal sna večeras.|Idi na vrijeme u krevet da večeras dobiješ punih $goal sna.|Tvoj cilj večeras je $goal sna. Počni se smirivati.|Zaštiti svoj san večeras, cilj je $goal.';
+  }
+
+  @override
+  String notificationSleepGoalProgress(Object goal, Object slept) {
+    return 'Zabilježeno je $slept sna od cilja od $goal. Pokušaj ranije leći večeras.|Trenutno si na $slept od $goal sna. Neka ova noć bude bolja.';
+  }
 }

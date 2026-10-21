@@ -3208,4 +3208,56 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get healthCardNoSessions =>
       'Für diesen Tag wurden keine Einheiten aufgezeichnet';
+
+  @override
+  String notificationSleepHours(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Stunden',
+      one: '1 Stunde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationSleepMinutes(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Minuten',
+      one: '1 Minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationSleepHoursAndMinutes(Object hours, Object minutes) {
+    return '$hours und $minutes';
+  }
+
+  @override
+  String notificationSleepBedtimeSoon(Object countdown, Object time) {
+    return 'Mach dich bettfertig, deine Schlafenszeit ist in $countdown.|Zeit zum Runterkommen, deine Schlafenszeit ist in $countdown.|Starte deine Abendroutine, in $countdown geht das Licht aus.|Fast Schlafenszeit! Noch $countdown bis $time.';
+  }
+
+  @override
+  String notificationSleepBedtime(Object time) {
+    return 'Nur eine Erinnerung, heute früh schlafen zu gehen.|Dein Schlafenszeit-Ziel ist $time. Fang an, runterzufahren.|Eine frühe Nacht macht den morgigen Tag leichter.|Leg bald dein Handy weg, deine Schlafenszeit ist $time.';
+  }
+
+  @override
+  String notificationSleepWakeUp(Object time) {
+    return 'Guten Morgen! Dein Aufsteh-Ziel ist $time.|Zeit aufzustehen, dein Ziel ist $time. Du schaffst das!|Aufstehen und strahlen, ein ruhiger früher Start lohnt sich.|Nur eine Erinnerung, früh aufzuwachen: dein Ziel ist $time.';
+  }
+
+  @override
+  String notificationSleepGoal(Object goal) {
+    return 'Peile heute Nacht $goal Schlaf an.|Geh rechtzeitig ins Bett, um heute Nacht volle $goal Schlaf zu bekommen.|Dein Ziel heute Nacht sind $goal Schlaf. Fang an, runterzufahren.|Schütze deinen Schlaf heute Nacht, das Ziel sind $goal.';
+  }
+
+  @override
+  String notificationSleepGoalProgress(Object goal, Object slept) {
+    return 'Du hast $slept von deinem Ziel von $goal geschlafen. Geh heute Nacht früher ins Bett.|Du liegst bei $slept von $goal Schlaf. Lass die heutige Nacht zählen.';
+  }
 }

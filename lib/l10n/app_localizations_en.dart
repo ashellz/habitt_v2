@@ -3178,4 +3178,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthCardNoSessions => 'No sessions recorded for this day';
+
+  @override
+  String notificationSleepHours(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours',
+      one: '1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationSleepMinutes(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes',
+      one: '1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationSleepHoursAndMinutes(Object hours, Object minutes) {
+    return '$hours and $minutes';
+  }
+
+  @override
+  String notificationSleepBedtimeSoon(Object countdown, Object time) {
+    return 'Get ready to sleep, your bedtime is in $countdown.|Time to wind down, your bedtime is in $countdown.|Start your evening routine, lights out in $countdown.|Almost bedtime! Only $countdown until $time.';
+  }
+
+  @override
+  String notificationSleepBedtime(Object time) {
+    return 'Just a reminder to go to sleep early tonight.|Your bedtime goal is $time. Start winding down.|An early night tonight makes tomorrow easier.|Put your phone away soon, your bedtime is $time.';
+  }
+
+  @override
+  String notificationSleepWakeUp(Object time) {
+    return 'Good morning! Your wake-up goal is $time.|Time to get up, your goal is $time. You\'ve got this!|Rise and shine, a calm early start is worth it.|Just a reminder to wake up early, your goal is $time.';
+  }
+
+  @override
+  String notificationSleepGoal(Object goal) {
+    return 'Aim for $goal of sleep tonight.|Head to bed on time to get your full $goal of sleep tonight.|Your goal is $goal of sleep tonight. Start winding down.|Protect your sleep tonight, $goal is the target.';
+  }
+
+  @override
+  String notificationSleepGoalProgress(Object goal, Object slept) {
+    return 'You slept $slept of your $goal goal. Aim for an earlier night tonight.|You\'re at $slept out of $goal of sleep. Make tonight count.';
+  }
 }

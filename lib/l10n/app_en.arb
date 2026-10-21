@@ -1208,5 +1208,13 @@
   "healthCardLast7Days": "Last 7 days",
   "healthCardNoData": "No Health data for these days yet",
   "healthCardSessions": "Sessions",
-  "healthCardNoSessions": "No sessions recorded for this day"
+  "healthCardNoSessions": "No sessions recorded for this day",
+  "notificationSleepHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "notificationSleepMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "notificationSleepHoursAndMinutes": "{hours} and {minutes}",
+  "notificationSleepBedtimeSoon": "Get ready to sleep, your bedtime is in {countdown}.|Time to wind down, your bedtime is in {countdown}.|Start your evening routine, lights out in {countdown}.|Almost bedtime! Only {countdown} until {time}.",
+  "notificationSleepBedtime": "Just a reminder to go to sleep early tonight.|Your bedtime goal is {time}. Start winding down.|An early night tonight makes tomorrow easier.|Put your phone away soon, your bedtime is {time}.",
+  "notificationSleepWakeUp": "Good morning! Your wake-up goal is {time}.|Time to get up, your goal is {time}. You've got this!|Rise and shine, a calm early start is worth it.|Just a reminder to wake up early, your goal is {time}.",
+  "notificationSleepGoal": "Aim for {goal} of sleep tonight.|Head to bed on time to get your full {goal} of sleep tonight.|Your goal is {goal} of sleep tonight. Start winding down.|Protect your sleep tonight, {goal} is the target.",
+  "notificationSleepGoalProgress": "You slept {slept} of your {goal} goal. Aim for an earlier night tonight.|You're at {slept} out of {goal} of sleep. Make tonight count."
 }

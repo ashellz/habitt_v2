@@ -1187,5 +1187,13 @@
   "healthCardLast7Days": "Posljednjih 7 dana",
   "healthCardNoData": "Još nema podataka iz zdravstvene aplikacije za ove dane",
   "healthCardSessions": "Sesije",
-  "healthCardNoSessions": "Nema zabilježenih sesija za ovaj dan"
+  "healthCardNoSessions": "Nema zabilježenih sesija za ovaj dan",
+  "notificationSleepHours": "{count, plural, one{{count} sat} few{{count} sata} other{{count} sati}}",
+  "notificationSleepMinutes": "{count, plural, one{{count} minuta} few{{count} minute} other{{count} minuta}}",
+  "notificationSleepHoursAndMinutes": "{hours} i {minutes}",
+  "notificationSleepBedtimeSoon": "Pripremi se za spavanje, tvoje vrijeme za spavanje je za {countdown}.|Vrijeme je da se smiriš, spavanje počinje za {countdown}.|Započni večernju rutinu, gašenje svjetla za {countdown}.|Skoro je vrijeme za spavanje! Još samo {countdown} do {time}.",
+  "notificationSleepBedtime": "Samo podsjetnik da večeras ranije odeš na spavanje.|Tvoj cilj za spavanje je {time}. Počni se smirivati.|Rano spavanje večeras olakšava sutrašnji dan.|Uskoro ostavi telefon, vrijeme za spavanje je {time}.",
+  "notificationSleepWakeUp": "Dobro jutro! Tvoj cilj za buđenje je {time}.|Vrijeme je za ustajanje, cilj ti je {time}. Možeš ti to!|Ustani i sijaj, miran rani početak vrijedi toga.|Samo podsjetnik da se rano probudiš, cilj ti je {time}.",
+  "notificationSleepGoal": "Ciljaj na {goal} sna večeras.|Idi na vrijeme u krevet da večeras dobiješ punih {goal} sna.|Tvoj cilj večeras je {goal} sna. Počni se smirivati.|Zaštiti svoj san večeras, cilj je {goal}.",
+  "notificationSleepGoalProgress": "Zabilježeno je {slept} sna od cilja od {goal}. Pokušaj ranije leći večeras.|Trenutno si na {slept} od {goal} sna. Neka ova noć bude bolja."
 }
