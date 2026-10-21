@@ -12,6 +12,7 @@ import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/amount_label_preset.dart';
+import 'package:habitt/util/format_minutes_of_day.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/get_sleep_amount_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
@@ -556,8 +557,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   Widget _summaryMeta(ColorProvider cp, Habit habit) {
     final hasAmount = habit.tracksAmount;
     final hasDuration = habit.tracksDuration;
+    final hasTimeOfDay = habit.tracksTimeOfDay;
 
-    if (hasAmount || hasDuration) {
+    if (hasAmount || hasDuration || hasTimeOfDay) {
       return Row(
         children: [
           hasAmount && habit.healthMetric != HealthMetricType.sleep
@@ -569,7 +571,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
               ),
           const SizedBox(width: 6),
           Text(
-            hasAmount ? _amountLine(habit) : _durationLine(habit),
+            hasAmount
+                ? _amountLine(habit)
+                : hasTimeOfDay
+                ? _timeOfDayLine(habit)
+                : _durationLine(habit),
             style: TextStyle(color: cp.lightGreyText, fontSize: 13),
           ),
         ],
@@ -577,6 +583,14 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     }
 
     return SizedBox.shrink();
+  }
+
+  // bedtime / wake time: the logged time once there is one, otherwise the target
+  String _timeOfDayLine(Habit habit) {
+    return formatMinutesOfDay(
+      context,
+      habit.amountCompleted > 0 ? habit.amountCompleted : habit.amount,
+    );
   }
 
   String _amountLine(Habit habit) {
