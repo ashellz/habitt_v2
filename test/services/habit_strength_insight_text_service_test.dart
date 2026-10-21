@@ -91,7 +91,7 @@ void main() {
     expect(copy.description, contains('19'));
     expect(copy.description, contains('60 min'));
     expect(copy.description, contains('48 min'));
-    expect(copy.primaryLabel, l10n.insightStrengthApplyDecrease);
+    expect(copy.primaryLabel, l10n.apply);
   });
 
   test(
@@ -119,7 +119,7 @@ void main() {
       expect(copy.description, contains('93'));
       expect(copy.description, contains('5 km'));
       expect(copy.description, contains('6 km'));
-      expect(copy.primaryLabel, l10n.insightStrengthApplyIncrease);
+      expect(copy.primaryLabel, l10n.apply);
     },
   );
 

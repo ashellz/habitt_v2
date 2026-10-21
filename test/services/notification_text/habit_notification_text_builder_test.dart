@@ -55,20 +55,23 @@ void main() {
     expect(text.description, contains('left'));
   });
 
-  test('uses fallback title when habit name is empty', () {
-    final scheduledAt = DateTime(2026, 4, 16, 9, 0);
-    final habit = buildTestHabit(name: '   ');
+  test(
+    'uses fallback title, prefixed with the habit icon, when name is empty',
+    () {
+      final scheduledAt = DateTime(2026, 4, 16, 9, 0);
+      final habit = buildTestHabit(name: '   ');
 
-    final text = HabitNotificationTextBuilder.build(
-      buildContext(
-        habit,
-        scheduledAt: scheduledAt,
-        appearsOnDay: (_, __) => true,
-      ),
-    );
+      final text = HabitNotificationTextBuilder.build(
+        buildContext(
+          habit,
+          scheduledAt: scheduledAt,
+          appearsOnDay: (_, __) => true,
+        ),
+      );
 
-    expect(text.title, l10n.notificationFallbackTitle);
-  });
+      expect(text.title, '${habit.iconPath} ${l10n.notificationFallbackTitle}');
+    },
+  );
 
   test('one-off branch overrides progress/freshness branches', () {
     final scheduledAt = DateTime(2026, 4, 19, 21, 0); // Sunday
@@ -101,7 +104,7 @@ void main() {
     expect(text.description, isNot(contains('/')));
   });
 
-  test('uses deterministic variant selection for the same habit/day', () {
+  test('picks a single clean variant each time', () {
     final scheduledAt = DateTime(2026, 4, 16, 9, 0);
     final habit = buildTestHabit(
       id: 99,
@@ -112,23 +115,20 @@ void main() {
       duration: 0,
     );
 
-    final first = HabitNotificationTextBuilder.build(
-      buildContext(
-        habit,
-        scheduledAt: scheduledAt,
-        appearsOnDay: (_, __) => true,
-      ),
-    );
+    // variants are chosen at random, so look at many picks
+    for (var i = 0; i < 40; i++) {
+      final text = HabitNotificationTextBuilder.build(
+        buildContext(
+          habit,
+          scheduledAt: scheduledAt,
+          appearsOnDay: (_, __) => true,
+        ),
+      );
 
-    final second = HabitNotificationTextBuilder.build(
-      buildContext(
-        habit,
-        scheduledAt: scheduledAt,
-        appearsOnDay: (_, __) => true,
-      ),
-    );
-
-    expect(first.description, second.description);
+      expect(text.description, isNotEmpty);
+      // a raw pipe-separated variant list must never reach a notification
+      expect(text.description, isNot(contains('|')));
+    }
   });
 
   test(

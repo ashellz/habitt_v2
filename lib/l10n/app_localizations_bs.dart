@@ -3229,4 +3229,99 @@ class AppLocalizationsBs extends AppLocalizations {
   String notificationSleepGoalProgress(Object goal, Object slept) {
     return 'Zabilježeno je $slept sna od cilja od $goal. Pokušaj ranije leći večeras.|Trenutno si na $slept od $goal sna. Neka ova noć bude bolja.';
   }
+
+  @override
+  String notificationHealthStepsStart(Object goal) {
+    return 'Vrijeme je da se pokreneš, današnji cilj je $goal.|Šetnja sada te približava cilju od $goal.|Svaki korak se računa, ciljaj na $goal danas.|Protegni noge, čeka te $goal.';
+  }
+
+  @override
+  String notificationHealthStepsProgress(Object progress, Object remaining) {
+    return 'Trenutno si na $progress. Još samo $remaining!|Preostalo je $remaining do cilja, nastavi hodati.|Lijep napredak, do sada $progress. Kratka šetnja ga završava.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesStart(Object goal) {
+    return 'Pokreni tijelo, današnji cilj je $goal potrošeno.|Trening ili brza šetnja te vodi do $goal.|Vrijeme je da sagoriš energiju, cilj je $goal.|Malo kretanja sada, cilj za danas je $goal.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Do sada je potrošeno $progress. Još samo $remaining!|Preostalo je $remaining do cilja, nastavi se kretati.|Odličan rad, $progress potrošeno. Završi snažno!';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesStart(Object goal) {
+    return 'Tvoj ukupni kalorijski cilj za danas je $goal. Ostani u pokretu!|Kreći se danas, ukupni cilj je $goal.|Ukupna potrošnja za danas: cilj je $goal. Malo kretanja pomaže.';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Do sada je $progress, još $remaining do cilja.|Preostalo je $remaining do današnjeg kalorijskog cilja.|Dobar tempo, do sada $progress. Nastavi tako!';
+  }
+
+  @override
+  String notificationHealthMindfulnessStart(Object goal) {
+    return 'Odvoji $goal da udahneš i resetuješ se.|Kratka pauza za svjesnost od $goal je sve što ti treba.|Zastani na $goal svjesnosti danas.|Tvoj um zaslužuje $goal mira.';
+  }
+
+  @override
+  String notificationHealthMindfulnessProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'Do sada je $progress svjesnosti. Još $remaining do cilja.|Preostalo je $remaining mira do cilja.';
+  }
+
+  @override
+  String notificationHealthWorkoutStart(Object activity, Object goal) {
+    return '$activity: današnji cilj je $goal.|$activity je danas u planu, ciljaj na $goal.|$activity – cilj za danas je $goal. Idemo!|$activity, vrijeme je! Cilj je $goal.';
+  }
+
+  @override
+  String notificationHealthWorkoutProgress(
+    Object activity,
+    Object progress,
+    Object remaining,
+  ) {
+    return '$activity: trenutno $progress, još $remaining!|$activity napredak: $progress. Nastavi, preostalo $remaining.|$activity: samo još $remaining do cilja.';
+  }
+
+  @override
+  String get notificationHealthNudgeWalking =>
+      'Vrijeme je za šetnju.|Svjež zrak i šetnja će ti prijati.';
+
+  @override
+  String get notificationHealthNudgeRunning =>
+      'Obuj patike, vrijeme je za trčanje.|Vrijeme je da izađeš na trčanje.';
+
+  @override
+  String get notificationHealthNudgeCycling =>
+      'Uzmi bicikl, vrijeme je za vožnju.|Vrijeme je da se provozaš biciklom.';
+
+  @override
+  String get notificationHealthNudgeSwimming =>
+      'Vrijeme je za bazen.|Uzmi kupaće, čeka te plivanje.';
+
+  @override
+  String get notificationHealthNudgeHiking =>
+      'Staze te zovu, vrijeme je za planinarenje.|Vrijeme je da se uputiš na stazu.';
+
+  @override
+  String get notificationHealthNudgeFlexibility =>
+      'Odvoji trenutak za istezanje.|Vrijeme je da se protegneš.';
+
+  @override
+  String get notificationHealthNudgeDancing =>
+      'Pusti muziku i zapleši.|Vrijeme je da se krećeš uz muziku.';
+
+  @override
+  String get notificationHealthNudgeRowing =>
+      'Vrijeme je za veslanje.|Uzmi vesla, čeka te veslanje.';
 }

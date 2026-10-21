@@ -3230,4 +3230,99 @@ class AppLocalizationsEn extends AppLocalizations {
   String notificationSleepGoalProgress(Object goal, Object slept) {
     return 'You slept $slept of your $goal goal. Aim for an earlier night tonight.|You\'re at $slept out of $goal of sleep. Make tonight count.';
   }
+
+  @override
+  String notificationHealthStepsStart(Object goal) {
+    return 'Time to get moving, your goal is $goal today.|A walk now brings you closer to $goal.|Every step counts, aim for $goal today.|Stretch your legs, $goal is waiting.';
+  }
+
+  @override
+  String notificationHealthStepsProgress(Object progress, Object remaining) {
+    return 'You\'re at $progress. Just $remaining to go!|$remaining left to reach your goal, keep walking.|Nice progress, $progress so far. A short walk finishes it.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesStart(Object goal) {
+    return 'Get your body moving, today\'s goal is $goal burned.|A workout or brisk walk gets you to $goal.|Time to burn some energy, your goal is $goal.|Move a little now, $goal is the target today.';
+  }
+
+  @override
+  String notificationHealthActiveCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'You\'ve burned $progress so far. Only $remaining more!|$remaining left to hit your goal, keep moving.|Great work, $progress burned. Finish strong!';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesStart(Object goal) {
+    return 'Your total calorie goal for today is $goal. Stay on the move!|Keep moving today, the total target is $goal.|Today\'s total energy target: $goal. A little movement helps.';
+  }
+
+  @override
+  String notificationHealthTotalCaloriesProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return 'You\'ve reached $progress today, $remaining to go.|$remaining left to reach today\'s calorie goal.|Good pace, $progress so far. Keep it going!';
+  }
+
+  @override
+  String notificationHealthMindfulnessStart(Object goal) {
+    return 'Take $goal to breathe and reset.|A short mindful break of $goal is all you need.|Pause for $goal of mindfulness today.|Your mind deserves $goal of calm.';
+  }
+
+  @override
+  String notificationHealthMindfulnessProgress(
+    Object progress,
+    Object remaining,
+  ) {
+    return '$progress of mindfulness so far. $remaining more to reach your goal.|$remaining of calm left to reach your goal.';
+  }
+
+  @override
+  String notificationHealthWorkoutStart(Object activity, Object goal) {
+    return '$activity: your goal today is $goal.|$activity is on the plan today, aim for $goal.|$activity goal for today: $goal. Let\'s go!|$activity time! Your goal is $goal.';
+  }
+
+  @override
+  String notificationHealthWorkoutProgress(
+    Object activity,
+    Object progress,
+    Object remaining,
+  ) {
+    return '$activity: you\'re at $progress, $remaining to go!|$activity progress: $progress. Keep going, $remaining left.|$activity: only $remaining left to reach your goal.';
+  }
+
+  @override
+  String get notificationHealthNudgeWalking =>
+      'Time to lace up and go for a walk.|Fresh air and a walk will do you good.';
+
+  @override
+  String get notificationHealthNudgeRunning =>
+      'Lace up your shoes, time for a run.|Time to hit the road for a run.';
+
+  @override
+  String get notificationHealthNudgeCycling =>
+      'Grab your bike, time for a ride.|Time to get on your bike.';
+
+  @override
+  String get notificationHealthNudgeSwimming =>
+      'Time to hit the pool.|Grab your swimsuit, a swim is waiting.';
+
+  @override
+  String get notificationHealthNudgeHiking =>
+      'The trails are calling, time for a hike.|Time to hit the trail.';
+
+  @override
+  String get notificationHealthNudgeFlexibility =>
+      'Take a moment to stretch and loosen up.|Time to stretch it out.';
+
+  @override
+  String get notificationHealthNudgeDancing =>
+      'Put on some music and dance.|Time to move to the music.';
+
+  @override
+  String get notificationHealthNudgeRowing =>
+      'Time to hit the water and row.|Grab the oars, a rowing session is waiting.';
 }

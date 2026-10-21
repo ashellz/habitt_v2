@@ -4,6 +4,7 @@ import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
+import 'package:habitt/services/notification_text/health_metric_notification_text.dart';
 import 'package:habitt/services/notification_text/rules/freshness_rule.dart';
 import 'package:habitt/services/notification_text/rules/progress_rule.dart';
 import 'package:habitt/services/notification_text/rules/schedule_rule.dart';
@@ -172,6 +173,14 @@ class HabitNotificationTextBuilder {
     if (sleepText != null) {
       evaluatedChecks.add('combined.sleep');
       return sleepText;
+    }
+
+    // same for steps, calories, workouts and mindfulness: own wording and
+    // number/duration formatting
+    final healthText = HealthMetricNotificationText.build(context);
+    if (healthText != null) {
+      evaluatedChecks.add('combined.healthMetric');
+      return healthText;
     }
 
     final isOneOff =
