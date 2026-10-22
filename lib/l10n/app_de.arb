@@ -1228,5 +1228,7 @@
   "healthUseSourceValues": "{source}-Werte verwenden",
   "healthOverrideNoticeTitle": "{source} ist für diesen Tag pausiert",
   "healthOverrideNoticeBody": "Du hast den Fortschritt selbst geändert, deshalb überschreibt Habitt ihn für diesen Tag nicht mit Daten aus {source}. Dein Wert bleibt genau so, wie du ihn eingegeben hast.\n\nMöchtest du {source} zurück? Tippe bei dieser Gewohnheit auf \"{source}-Werte verwenden\".",
-  "healthOverrideNoticeUnderstood": "Verstanden"
+  "healthOverrideNoticeUnderstood": "Verstanden",
+  "separateOptionalHabits": "Optionale Gewohnheiten trennen",
+  "separateOptionalHabitsDesc": "Optionale Gewohnheiten wandern aus ihren Kategorien in einen eigenen Bereich am Ende, den du einklappen kannst."
 }
