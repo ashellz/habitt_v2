@@ -523,8 +523,8 @@ class _HealthWidgetState extends State<HealthWidget> {
         Text(
           loc.healthBedtimeDayTitle,
           style: TextStyle(
-            color: cp.lightGreyText,
-            fontSize: 13,
+            color: cp.text,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),

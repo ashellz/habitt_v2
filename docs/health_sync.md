@@ -73,7 +73,12 @@ opened, not the instant new Health data appears.
    `HealthProvider.syncNow()` runs alongside the existing backup-sync /
    `updateLastOpenedDate` calls, fire-and-forget (`unawaited`), so it never
    delays the rest of the open/resume sequence.
-4. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
+4. **New habit saved** ([`lib/widgets/sheets/habit_sheet.dart`](../lib/widgets/sheets/habit_sheet.dart)) —
+   a newly created Health-linked habit calls `HealthProvider.syncHabit(habit)`
+   (fire-and-forget) so it starts with today's Health progress instead of 0
+   until the next app open. It reads just that one habit, so it's safe while a
+   `syncNow()` is running. Editing an existing habit does not trigger it.
+5. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
 
