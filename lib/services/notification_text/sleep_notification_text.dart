@@ -95,7 +95,11 @@ class SleepNotificationText {
     final habit = context.habit;
     final goal = formatSleepDuration(l, habit.amount);
 
-    if (habit.amountCompleted > 0 && habit.amountCompleted < habit.amount) {
+    // Health-linked progress is stale by the time the notification fires (it
+    // only syncs on app open), so only hand-logged sleep is quoted
+    if (habit.healthMetric == null &&
+        habit.amountCompleted > 0 &&
+        habit.amountCompleted < habit.amount) {
       return _pick(
         l.notificationSleepGoalProgress(
           formatSleepDuration(l, habit.amountCompleted),

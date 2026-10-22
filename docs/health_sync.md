@@ -236,6 +236,21 @@ the real habit (`_updatePeriodCountersForId`), reschedules notifications,
 refreshes the perfect-streak flag, and for past days re-runs `assignStreaks`.
 Timer commits (`commitTimerDuration`) and the progress dialogs do likewise.
 
+## Habit notifications
+
+Reminder text is built when the notification is *scheduled* (up to 7 days
+ahead, on the first app open of the day and on completion changes) and handed
+to the OS as a fixed string. Health only syncs on app open/resume, so a
+Health-linked habit's progress can be hours out of date when the reminder
+fires — a "6 of 230 calories" notification after a long workout.
+
+So for a habit with `healthMetric` set, `HealthMetricNotificationText` and
+`SleepNotificationText` never quote progress: they use only the goal wording
+(the `…Start` strings; `notificationSleepGoal`). The `…Progress` strings are
+used only for hand-logged habits (no `healthMetric`, e.g. a premade steps
+habit with Health sync off), whose progress is always current. Completion
+still cancels that day's reminder (`_syncNotificationsOnCompletionChange`).
+
 ## Tolerance (sleep, bedtime, wake time)
 
 `Habit.toleranceMinutes` (15/30/60 presets) is a "close enough" margin and only
