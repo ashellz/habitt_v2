@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 53
+    nextIndex: 54
     fields:
       id:
         index: 0
@@ -107,6 +107,8 @@ types:
         index: 51
       healthManualOverride:
         index: 52
+      optionalOrder:
+        index: 53
   Day:
     typeId: 1
     nextIndex: 4

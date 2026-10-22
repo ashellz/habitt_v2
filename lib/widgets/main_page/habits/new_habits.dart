@@ -7,11 +7,14 @@ import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
+import 'package:habitt/util/optional_habit_order.dart';
 import 'package:habitt/widgets/main_page/add_habit_button.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
+import 'package:habitt/widgets/main_page/habits/new_optional_habits.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 
@@ -32,6 +35,7 @@ class _NewHabitsState extends State<NewHabits>
 
   late AnimationController _reorderController;
   late List<Habit> habits;
+  bool _separateOptionalHabits = false;
   List<int> _lastProviderOrderIds = const [];
   List<int> _displayOrderIds = const [];
   List<int>? _queuedProviderOrderIds;
@@ -75,6 +79,8 @@ class _NewHabitsState extends State<NewHabits>
           ..addListener(_onReorderTick)
           ..addStatusListener(_onReorderStatusChanged);
 
+    _separateOptionalHabits =
+        context.read<PreferencesProvider>().separateOptionalHabits;
     habits = _getHabits();
   }
 
@@ -146,7 +152,11 @@ class _NewHabitsState extends State<NewHabits>
 
   int _habitCountForCategory(int categoryId) {
     return habits
-        .where((habit) => habit.categoryId == categoryId) //  && !habit.optional
+        .where(
+          (habit) =>
+              habit.categoryId == categoryId &&
+              !(_separateOptionalHabits && habit.optional),
+        )
         .length;
   }
 
@@ -334,7 +344,7 @@ class _NewHabitsState extends State<NewHabits>
             habits: habits,
             isFirst: isFirst,
             category: category,
-            showOptionalHabits: true,
+            separateOptionalHabits: _separateOptionalHabits,
           ),
         ),
       ),
@@ -373,10 +383,29 @@ class _NewHabitsState extends State<NewHabits>
     return MediaQuery.of(context).size.height - height;
   }
 
+  /// Optional habits (of the selected category, or all of them) in the user's
+  /// optional order, shown in their own section below the real categories.
+  List<Habit> _optionalHabits(
+    List<Category> categories,
+    int? selectedCategoryId,
+  ) {
+    if (!_separateOptionalHabits) return const [];
+
+    return sortOptionalHabits(
+      habits.where(
+        (habit) =>
+            habit.optional &&
+            (selectedCategoryId == 0 || habit.categoryId == selectedCategoryId),
+      ),
+      categories,
+    );
+  }
+
   double _calculateContentHeight(
     List<Category> categories,
     BuildContext context,
     int? selectedCategoryId,
+    int optionalHabitsCount,
   ) {
     const double categoryTitleHeight = 26;
     const double habitHeight = 74; // 42 icon + 32 padding
@@ -392,7 +421,7 @@ class _NewHabitsState extends State<NewHabits>
       final categoryLength = getCategoryLength(
         category,
         context,
-        true,
+        !_separateOptionalHabits,
         _effectiveSelectedDay(),
       );
 
@@ -412,6 +441,12 @@ class _NewHabitsState extends State<NewHabits>
 
         totalHeight += 50; // button
       }
+    }
+
+    if (optionalHabitsCount > 0) {
+      totalHeight += categoryTopPadding + categoryTitleHeight + categorySpacing;
+      totalHeight += habitHeight * optionalHabitsCount;
+      totalHeight += categorySpacing * (optionalHabitsCount - 1);
     }
 
     return totalHeight;
@@ -441,12 +476,12 @@ class _NewHabitsState extends State<NewHabits>
   @override
   Widget build(BuildContext context) {
     habits = _getHabits();
+    _separateOptionalHabits =
+        context.watch<PreferencesProvider>().separateOptionalHabits;
     final selectedDay = _effectiveSelectedDay();
     final dayKey = _dateIdentityKey(selectedDay);
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
-
-    final optionalHabitsCount = habits.where((habit) => habit.optional).length;
 
     final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
     final habitsListHeight = _calculateHabitsListHeight(
@@ -476,9 +511,16 @@ class _NewHabitsState extends State<NewHabits>
         categories
             .where(
               (category) =>
-                  getCategoryLength(category, context, true, selectedDay) > 0,
+                  getCategoryLength(
+                    category,
+                    context,
+                    !_separateOptionalHabits,
+                    selectedDay,
+                  ) >
+                  0,
             )
             .toList();
+    final optionalHabits = _optionalHabits(categories, selectedCategoryId);
 
     final providerOrderIds =
         visibleCategories.map((category) => category.id).toList();
@@ -499,6 +541,7 @@ class _NewHabitsState extends State<NewHabits>
       displayedCategories,
       context,
       selectedCategoryId,
+      optionalHabits.length,
     );
     final bottomSpacing = (habitsListHeight - contentHeight).clamp(
       0.0,
@@ -526,10 +569,19 @@ class _NewHabitsState extends State<NewHabits>
               isToday: _isTodayView(),
               selectedDate: selectedDay,
               habits: habits,
-              showOptionalHabits: true,
               category: selectedCategory,
+              separateOptionalHabits: _separateOptionalHabits,
             ),
           ),
+          if (optionalHabits.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: NewOptionalHabits(
+                key: const ValueKey('optional-habits-section'),
+                habits: optionalHabits,
+                dayKey: dayKey,
+              ),
+            ),
           if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
         ],
       );
@@ -554,12 +606,15 @@ class _NewHabitsState extends State<NewHabits>
                 progress: reorderProgress,
               ),
 
-            Padding(
-              padding: EdgeInsets.only(
-                top: optionalHabitsCount == habits.length ? 12 : 0,
+            if (optionalHabits.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: NewOptionalHabits(
+                  key: const ValueKey('optional-habits-section'),
+                  habits: optionalHabits,
+                  dayKey: dayKey,
+                ),
               ),
-              // child additional tasks
-            ),
 
             AddHabitButton(),
             if (Platform.isAndroid) SizedBox(height: 24),

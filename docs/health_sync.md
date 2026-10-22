@@ -177,6 +177,42 @@ only if at least one matching session was logged that day, using the same
 `sessions` list already fetched via `fetchSessionsForDay` for that sync
 pass (no extra Health read).
 
+## Workout reads
+
+Both platforms read `WORKOUT` records — one record per workout, each with an
+activity type. `HealthService._fetchWorkoutSessions` is the single path for
+every workout habit, in both tracking modes and for the Sessions list:
+
+- **Habit linked to one type** (Walking, Running, …) keeps only records of
+  that `HealthWorkoutType`; everything else is ignored.
+- **"Any" workout habit** keeps every type, including ones with no dedicated
+  filter (they show as `other`).
+- **Duration** is the time each session covers (`end - start`), not a sample
+  value — `WORKOUT` records have no numeric value on either platform.
+  **Amount** is the number of sessions.
+
+Records that overlap in time are folded into one session by
+`dedupOverlappingSessions`
+([`lib/util/workout_sessions.dart`](../lib/util/workout_sessions.dart)), after
+the type filter. The same workout often arrives twice (watch and phone, or
+watch and a third-party app); counting both doubled the count and the
+duration. A merged session spans all its records, takes the type of the
+longest, and its duration counts overlapping time once. Workouts that only
+touch (a run followed by a cool-down walk) stay separate.
+
+iOS used to read Apple's `EXERCISE_TIME` for an unfiltered workout habit. That
+is one-minute samples of brisk activity with no type, not workouts, so a
+single walk showed up as many "workouts" (task 18). It is no longer read. The
+trade-off: activity Apple credits as exercise minutes but that was never
+started as a workout does not count.
+
+`WORKOUT` is part of the iOS read permission set, so
+`requestAuthorization()` now asks for it. Users who linked a workout habit
+before this were never asked, so `HealthProvider.syncNow` calls
+`requestAuthorization()` once per launch on iOS when a workout habit is linked
+(`_requestWorkoutAccessOnce`); HealthKit only shows the sheet for types not
+yet answered, so it is silent otherwise.
+
 ## Manual override
 
 A Health-linked habit's progress can be edited by hand (log progress dialog,
@@ -258,10 +294,9 @@ editing the target agree.
 
 ## Platform differences
 
-Health Connect (Android) has no mindfulness record type and no direct
-"exercise time" quantity — `mindfulMinutes` is iOS-only, and
-`exerciseMinutes` on Android is derived by summing workout session
-durations (`dateTo - dateFrom`) rather than reading a quantity value.
+Health Connect (Android) has no mindfulness record type —
+`mindfulMinutes` is iOS-only. Workouts read the same `WORKOUT` records on both
+platforms (see "Workout reads").
 `HealthService.supportedMetrics` reflects this per-platform, and the habit
 editor's metric picker only offers what's actually supported.
 

@@ -33,6 +33,7 @@ class Habit extends HiveObject {
   String iconPath;
   int categoryId; // Any time, Morning, Afternoon, Evening
   int order; // order within category
+  int optionalOrder; // global order among optional habits (0 = not set yet)
   String tag; // Custom tags, not implemented
   bool completed;
   bool skipped; // deprecated
@@ -93,6 +94,7 @@ class Habit extends HiveObject {
     required this.iconPath,
     required this.categoryId,
     this.order = 0,
+    this.optionalOrder = 0,
     this.amountLabel = AmountLabelPreset.defaultAmountLabel,
     this.tag = "No tag",
     this.completed = false,
@@ -207,6 +209,7 @@ class Habit extends HiveObject {
       iconPath: iconPath,
       categoryId: categoryId,
       order: order,
+      optionalOrder: optionalOrder,
       tag: tag,
       amount: amount,
       amountCompleted: amountCompleted,
@@ -261,6 +264,7 @@ class Habit extends HiveObject {
       iconPath: iconPath,
       categoryId: categoryId,
       order: order,
+      optionalOrder: optionalOrder,
       tag: tag,
       amount: amount,
       amountCompleted: 0,
@@ -333,6 +337,10 @@ class Habit extends HiveObject {
     if (order != habit.order) {
       order = habit.order;
       timestamps['order'] = now;
+    }
+    if (optionalOrder != habit.optionalOrder) {
+      optionalOrder = habit.optionalOrder;
+      timestamps['optionalOrder'] = now;
     }
     if (tag != habit.tag) {
       tag = habit.tag;
@@ -538,6 +546,7 @@ class Habit extends HiveObject {
     iconPath = merged.iconPath;
     categoryId = merged.categoryId;
     order = merged.order;
+    optionalOrder = merged.optionalOrder;
     tag = merged.tag;
     completed = merged.completed;
     skipped = merged.skipped;
@@ -846,6 +855,7 @@ class Habit extends HiveObject {
       'iconPath': iconPath,
       'categoryId': categoryId,
       'order': order,
+      'optionalOrder': optionalOrder,
       'tag': tag,
       'completed': completed,
       'skipped': skipped,
@@ -921,6 +931,7 @@ class Habit extends HiveObject {
       iconPath: m['iconPath'] as String,
       categoryId: m['categoryId'] as int,
       order: (m['order'] as num?)?.toInt() ?? 0,
+      optionalOrder: (m['optionalOrder'] as num?)?.toInt() ?? 0,
       amountLabel:
           (m['amountLabel'] as String?) ?? AmountLabelPreset.times.plural,
       tag: (m['tag'] as String?) ?? 'No tag',
@@ -1120,6 +1131,11 @@ class Habit extends HiveObject {
       iconPath: resolve('iconPath', iconPath, incoming.iconPath),
       categoryId: resolve('categoryId', categoryId, incoming.categoryId),
       order: resolve('order', order, incoming.order),
+      optionalOrder: resolve(
+        'optionalOrder',
+        optionalOrder,
+        incoming.optionalOrder,
+      ),
       amountLabel: resolve('amountLabel', amountLabel, incoming.amountLabel),
       tag: resolve('tag', tag, incoming.tag),
       completed: pickDayState('completed', completed, incoming.completed),

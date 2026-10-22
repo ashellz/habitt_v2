@@ -3373,4 +3373,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get healthOverrideNoticeUnderstood => 'Ho capito';
+
+  @override
+  String get separateOptionalHabits => 'Separa le abitudini facoltative';
+
+  @override
+  String get separateOptionalHabitsDesc =>
+      'Le abitudini facoltative escono dalle loro categorie e vanno in una sezione dedicata in fondo, che puoi comprimere.';
 }

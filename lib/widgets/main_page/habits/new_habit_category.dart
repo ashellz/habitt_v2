@@ -16,10 +16,10 @@ class NewHabitCategory extends StatefulWidget {
     this.useFallbackAnimation = false,
     this.fallbackVisibleHabits = 3,
     this.showTitle = true,
-    required this.showOptionalHabits,
     required this.category,
     required this.habits,
     required this.isToday,
+    required this.separateOptionalHabits,
     this.selectedDate,
   });
 
@@ -31,7 +31,10 @@ class NewHabitCategory extends StatefulWidget {
   final bool useFallbackAnimation;
   final int fallbackVisibleHabits;
   final Category category;
-  final bool showOptionalHabits;
+
+  /// When true, optional habits are left out because the optional habits
+  /// section shows them instead.
+  final bool separateOptionalHabits;
   final List<Habit> habits;
   final bool isToday;
   final bool showTitle;
@@ -67,8 +70,9 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
     final categoryHabits =
         widgetConfig.habits
             .where(
-              (habit) => habit.categoryId == widgetConfig.category.id, //&&
-              //!habit.optional,
+              (habit) =>
+                  habit.categoryId == widgetConfig.category.id &&
+                  !(widgetConfig.separateOptionalHabits && habit.optional),
             )
             .length;
 
@@ -232,9 +236,10 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
         widget.habits
             .where(
               (habit) =>
-                  habit.categoryId == widget.category.id, // && !habit.optional,
+                  habit.categoryId == widget.category.id &&
+                  !(widget.separateOptionalHabits && habit.optional),
             )
-            .toList(); // It will not show additional habits/tasks
+            .toList();
 
     final hasFallbackCandidate =
         widget.reorderActive &&
@@ -316,8 +321,6 @@ class _NewHabitCategoryState extends State<NewHabitCategory>
               ),
             ),
           ),
-        if (widget.showOptionalHabits) Container(),
-        // additional tasks
       ],
     );
   }
