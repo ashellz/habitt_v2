@@ -123,7 +123,8 @@ class NotificationActionHandler {
   /// Resolves a notification tap.
   ///
   /// Amount and duration habits that can be logged by hand open the
-  /// log-progress dialog right where the user is, with no navigation. Anything
+  /// log-progress dialog over the main page (an open habit details page is
+  /// closed first), with no navigation to details. Anything
   /// else (checkbox habits, Health-linked habits, habits already done or
   /// skipped) opens the habit's details page, see [_openDetails].
   static void _navigateToHabit(int habitId, DateTime? day) {
@@ -170,6 +171,13 @@ class NotificationActionHandler {
     }
 
     if (!overlayContext.mounted) return;
+
+    // a habit details page is open: close it so the dialog sits on the main
+    // page instead of on top of whatever habit the user was looking at
+    if (HabitRouteTracker.currentTopHabitId != null) {
+      liveNav.pop();
+    }
+
     _logDialogOpen = true;
     unawaited(
       showDialogSheet(
