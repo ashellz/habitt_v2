@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
@@ -177,10 +178,19 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
   late Animation<double> _animation;
   late int _currentRawValue;
 
+  // sleep is an amount goal in minutes, so its total reads as a duration
+  // ("240h") instead of "14400 times"
+  static bool _isSleep(Habit habit) =>
+      habit.healthMetric == HealthMetricType.sleep;
+
+  static bool _showsDuration(Habit habit) =>
+      habit.tracksDuration || _isSleep(habit);
+
   int _rawValueFor(Habit habit, HabitStatsData stats) {
     if (habit.tracksDuration) {
       return stats.totalDurationCompletedSeconds;
     }
+    if (_isSleep(habit)) return stats.totalAmountCompleted * 60;
     return stats.totalAmountCompleted;
   }
 
@@ -228,9 +238,10 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
   Widget build(BuildContext context) {
     final habit = widget.habit;
     final loc = AppLocalizations.of(context)!;
-    final title = habit.tracksDuration ? loc.duration : loc.amount;
+    final showsDuration = _showsDuration(habit);
+    final title = showsDuration ? loc.duration : loc.amount;
     final iconPath =
-        habit.tracksDuration
+        showsDuration
             ? 'assets/images/new-svg/clock.svg'
             : 'assets/images/new-svg/amount.svg';
 
@@ -241,7 +252,7 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
         final customSingulars =
             context.read<StateProvider>().customSingulars;
         final value =
-            habit.tracksDuration
+            showsDuration
                 ? getDurationString(animatedRaw)
                 : '$animatedRaw ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, animatedRaw, loc, customSingulars: customSingulars)}';
 

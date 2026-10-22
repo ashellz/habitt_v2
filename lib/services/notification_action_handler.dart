@@ -2,6 +2,7 @@ import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/habit_route_tracker.dart';
@@ -9,6 +10,8 @@ import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
@@ -39,6 +42,10 @@ class NotificationActionHandler {
   /// Notification day paired with [_pendingHabitRoute], so cold-start replay
   /// still applies the correct `selectedDate`.
   static DateTime? _pendingHabitDay;
+
+  /// True while the log-progress dialog opened by a tap is on screen, so a
+  /// second tap can't stack another one on top.
+  static bool _logDialogOpen = false;
 
   /// Register listeners with awesome_notifications. Call once after initialize().
   static Future<void> registerListeners() async {
@@ -120,6 +127,9 @@ class NotificationActionHandler {
   ///    selected date still updates, since the tap targeted a specific day)
   ///  - a different habit's details page is showing -> replace it
   ///  - anything else -> pop back to the root (MainPage) and push
+  ///
+  /// Habits with an amount or duration to log also get the log-progress dialog
+  /// on top of their details page; checkbox habits just open the page.
   static void _navigateToHabit(int habitId, DateTime? day) {
     if (UnsavedChangesGuard.isBlocking) {
       return;
@@ -142,6 +152,7 @@ class NotificationActionHandler {
 
     final currentTopHabitId = HabitRouteTracker.currentTopHabitId;
     if (currentTopHabitId == habitId) {
+      _showLogProgressIfNeeded(nav, habitId, day);
       return;
     }
 
@@ -153,6 +164,66 @@ class NotificationActionHandler {
     }
 
     nav.push(_habitDetailsRoute(habitId));
+    _showLogProgressIfNeeded(nav, habitId, day);
+  }
+
+  /// Opens the log-progress dialog for amount/duration habits so the progress
+  /// can be entered straight from the notification. Skipped for Health-linked
+  /// habits (their progress comes from Health, and a hand edit would pause
+  /// that sync) and for habits that are already done or skipped.
+  static void _showLogProgressIfNeeded(
+    NavigatorState nav,
+    int habitId,
+    DateTime? day,
+  ) {
+    if (_logDialogOpen) return;
+
+    final overlayContext = nav.overlay?.context;
+    if (overlayContext == null) return;
+
+    final habitProvider = overlayContext.read<HabitProvider>();
+    if (!habitProvider.isInitialized) return;
+
+    final habit = _habitForDay(habitProvider, habitId, day);
+    if (habit == null ||
+        habit.healthMetric != null ||
+        habit.completed ||
+        habit.skipped) {
+      return;
+    }
+
+    final ProgressType progressType;
+    if (habit.tracksAmount) {
+      progressType = ProgressType.amount;
+    } else if (habit.tracksDuration) {
+      progressType = ProgressType.duration;
+    } else {
+      return;
+    }
+
+    _logDialogOpen = true;
+    showDialogSheet(
+      context: overlayContext,
+      builder:
+          (_) => LogProgressDialog(progressType: progressType, habit: habit),
+    ).whenComplete(() => _logDialogOpen = false);
+  }
+
+  static Habit? _habitForDay(
+    HabitProvider habitProvider,
+    int habitId,
+    DateTime? day,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final source =
+        day == null || day == today
+            ? habitProvider.habits
+            : habitProvider.getHabitsFromDay(day, hydrateMissing: true);
+    for (final habit in source) {
+      if (habit.id == habitId) return habit;
+    }
+    return null;
   }
 
   static Route<void> _habitDetailsRoute(int habitId) {

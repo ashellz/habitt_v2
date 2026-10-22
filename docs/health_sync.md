@@ -102,6 +102,9 @@ on iOS and Android only:
   `healthSyncDay` — the day a sync run writes to, i.e. **yesterday for a
   bedtime counted on the day before** — which `HealthService.syncDayFor`
   also uses so the two can't drift.
+- **Total stat** — the details page's "Total" stat card sums the habit's
+  logged amount; for a sleep habit (minutes) it's scaled to seconds and shown
+  as a duration ("240h") instead of a raw "14400 times".
 - **Sessions** (`HealthSessionsList`) — collapsed by default; lists the
   `Habit.healthSessions` stored on that latest day's snapshot (time range and
   duration; workout type for workouts). Not shown for steps and calories,
