@@ -108,8 +108,6 @@ class _HealthWidgetState extends State<HealthWidget> {
     if (!Platform.isIOS && !Platform.isAndroid) return const SizedBox.shrink();
     if (!healthProvider.isAvailable) return const SizedBox.shrink();
 
-    final selectedTemplate = _selectedTemplate(sp);
-    final isFixedByTemplate = selectedTemplate?.defaultHealthMetric != null;
     final metric = sp.selectedHealthMetric;
     final enabled = metric != null;
 

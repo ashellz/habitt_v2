@@ -9,10 +9,12 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/util/optional_habit_order.dart';
 import 'package:habitt/util/show_new_habit_creation_flow.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
+import 'package:habitt/widgets/default/optional_habits_section.dart';
 import 'package:habitt/widgets/habit_widget/habit_card.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/demo_habits_grid.dart';
@@ -170,11 +172,38 @@ class ReorderingHabits extends StatefulWidget {
 }
 
 class _ReorderingHabitsState extends State<ReorderingHabits> {
+  // habit card when lifted, overwrites the default
+  Widget Function(BuildContext, BoxConstraints, Widget) _dragFeedback(
+    ColorProvider cp,
+  ) {
+    return (context, constraints, child) {
+      return Material(
+        type: MaterialType.transparency,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: cp.bg,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: cp.isDark ? 0.5 : 0.16),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: ConstrainedBox(constraints: constraints, child: child),
+        ),
+      );
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final hp = context.watch<HabitProvider>();
     final cp = context.watch<ColorProvider>();
     final categoryProvider = context.watch<CategoryProvider>();
+    final separateOptional =
+        context.watch<PreferencesProvider>().separateOptionalHabits;
 
     final scopedHabits =
         widget.todaysOnly
@@ -189,10 +218,24 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
           if (selectedCategoryId != 0 && category.id != selectedCategoryId) {
             return false;
           }
-          return scopedHabits.any((habit) => habit.categoryId == category.id);
+          return scopedHabits.any(
+            (habit) =>
+                habit.categoryId == category.id &&
+                !(separateOptional && habit.optional),
+          );
         }).toList();
 
-    if (visibleCategories.isEmpty) {
+    final optionalHabits = sortOptionalHabits(
+      scopedHabits.where(
+        (habit) =>
+            separateOptional &&
+            habit.optional &&
+            (selectedCategoryId == 0 || habit.categoryId == selectedCategoryId),
+      ),
+      categories,
+    );
+
+    if (visibleCategories.isEmpty && optionalHabits.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 28),
         child: SizedBox(
@@ -230,7 +273,8 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                         .where(
                           (habit) =>
                               habit.categoryId ==
-                              visibleCategories[sectionIndex].id,
+                                  visibleCategories[sectionIndex].id &&
+                              !(separateOptional && habit.optional),
                         )
                         .toList()
                       ..sort((a, b) {
@@ -246,12 +290,14 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                 return ReorderableWrap(
                   spacing: 10,
                   runSpacing: 10,
+                  buildDraggableFeedback: _dragFeedback(cp),
                   onReorder: (oldIndex, newIndex) {
                     hp.reorderHabitsInCategory(
                       categoryId: visibleCategories[sectionIndex].id,
                       oldIndex: oldIndex,
                       newIndex: newIndex,
                       todaysOnly: widget.todaysOnly,
+                      separateOptional: separateOptional,
                     );
                   },
                   children: [
@@ -263,6 +309,41 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                         size: cardSize,
                       ),
                   ],
+                );
+              },
+            ),
+          ],
+          // ─── Optional habits when separated ──────────────────────
+          if (optionalHabits.isNotEmpty) ...[
+            if (visibleCategories.isNotEmpty) const SizedBox(height: 18),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final cardSize = (constraints.maxWidth - 10) / 2;
+
+                return OptionalHabitsSection(
+                  count: optionalHabits.length,
+                  builder:
+                      (context, _) => ReorderableWrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        buildDraggableFeedback: _dragFeedback(cp),
+                        onReorder:
+                            (oldIndex, newIndex) => hp.reorderOptionalHabits(
+                              categories: categories,
+                              visible: optionalHabits,
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            ),
+                        children: [
+                          for (final habit in optionalHabits)
+                            HabitCard(
+                              key: ValueKey(habit.id),
+                              habit: habit,
+                              cp: cp,
+                              size: cardSize,
+                            ),
+                        ],
+                      ),
                 );
               },
             ),

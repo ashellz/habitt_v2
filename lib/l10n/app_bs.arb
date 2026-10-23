@@ -1218,5 +1218,7 @@
   "healthUseSourceValues": "Koristi vrijednosti iz {source}",
   "healthOverrideNoticeTitle": "{source} je pauziran za ovaj dan",
   "healthOverrideNoticeBody": "Napredak je ručno promijenjen, pa ga Habitt za ovaj dan neće prepisati podacima iz {source}. Broj ostaje tačno onakav kakav je unesen.\n\nŽeliš vratiti {source}? Dodirni \"Koristi vrijednosti iz {source}\" na ovoj navici.",
-  "healthOverrideNoticeUnderstood": "Razumijem"
+  "healthOverrideNoticeUnderstood": "Razumijem",
+  "separateOptionalHabits": "Odvoji opcionalne navike",
+  "separateOptionalHabitsDesc": "Opcionalne navike izlaze iz svojih kategorija u zasebnu sekciju pri dnu, koju možeš sklopiti."
 }

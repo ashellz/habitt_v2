@@ -6,6 +6,7 @@ import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/util/health_history.dart';
 import 'package:habitt/util/sleep_sessions.dart';
+import 'package:habitt/util/workout_sessions.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
@@ -64,7 +65,7 @@ class HealthService {
     HealthMetricType.sleep: _iosSleepTypes,
     HealthMetricType.bedtime: _iosSleepTypes,
     HealthMetricType.wakeTime: _iosSleepTypes,
-    HealthMetricType.workouts: [HealthDataType.EXERCISE_TIME],
+    HealthMetricType.workouts: [HealthDataType.WORKOUT],
     HealthMetricType.mindfulness: [HealthDataType.MINDFULNESS],
     HealthMetricType.activeCalories: [HealthDataType.ACTIVE_ENERGY_BURNED],
     HealthMetricType.totalCalories: [HealthDataType.TOTAL_CALORIES_BURNED],
@@ -199,47 +200,46 @@ class HealthService {
     );
   }
 
-  /// The type(s) to query for [metric]. Workout habits filtered to one
-  /// [workoutFilter] query `WORKOUT` (which carries an activity type) even
-  /// on iOS, where an unfiltered workout habit would otherwise use the
-  /// type-less `EXERCISE_TIME` quantity.
-  List<HealthDataType> _queryTypesFor(
-    HealthMetricType metric,
-    HealthWorkoutType? workoutFilter,
-  ) {
-    if (metric == HealthMetricType.workouts &&
-        Platform.isIOS &&
-        workoutFilter != null) {
-      return [HealthDataType.WORKOUT];
-    }
-    return _typesByMetric[metric] ?? const [];
-  }
-
   Future<List<HealthDataPoint>> _fetchPoints(
     HealthMetricType metric,
     DateTime day,
-    HealthWorkoutType? workoutFilter,
   ) async {
     final window = _windowFor(day);
-    final types = _queryTypesFor(metric, workoutFilter);
+    final types = _typesByMetric[metric] ?? const [];
     if (types.isEmpty) return const [];
 
-    final points = await _health.getHealthDataFromTypes(
+    return _health.getHealthDataFromTypes(
       types: types,
       startTime: window.start,
       endTime: window.end,
     );
+  }
 
-    if (metric != HealthMetricType.workouts || workoutFilter == null) {
-      return points;
-    }
+  /// The workouts recorded on [day], narrowed to [workoutFilter] when set.
+  /// Both platforms read `WORKOUT` records, which carry an activity type and
+  /// are one record per workout. Records of the same workout written by more
+  /// than one source are folded into one — see [dedupOverlappingSessions].
+  Future<List<HealthSessionDetail>> _fetchWorkoutSessions(
+    DateTime day,
+    HealthWorkoutType? workoutFilter,
+  ) async {
+    final points = await _fetchPoints(HealthMetricType.workouts, day);
 
-    return points.where((point) {
+    final sessions = <HealthSessionDetail>[];
+    for (final point in points) {
       final value = point.value;
-      if (value is! WorkoutHealthValue) return false;
-      return _mapWorkoutActivityType(value.workoutActivityType) ==
-          workoutFilter;
-    }).toList();
+      if (value is! WorkoutHealthValue) continue;
+      final type = _mapWorkoutActivityType(value.workoutActivityType);
+      if (workoutFilter != null && type != workoutFilter) continue;
+      sessions.add(
+        HealthSessionDetail(
+          start: point.dateFrom,
+          end: point.dateTo,
+          workoutType: type,
+        ),
+      );
+    }
+    return dedupOverlappingSessions(sessions);
   }
 
   // Sleep, bedtime and wake time all come from the same sleep samples,
@@ -338,7 +338,18 @@ class HealthService {
         }
       }
 
-      final points = await _fetchPoints(metric, day, workoutFilter);
+      if (metric == HealthMetricType.workouts) {
+        final sessions = await _fetchWorkoutSessions(day, workoutFilter);
+        if (trackingType == HabitTrackingType.amount) return sessions.length;
+        // Workout records carry no duration value — it's the time each
+        // session covers.
+        return sessions.fold<int>(
+          0,
+          (sum, session) => sum + session.duration.inSeconds,
+        );
+      }
+
+      final points = await _fetchPoints(metric, day);
 
       if (_countMetrics.contains(metric)) {
         final total = points.fold<double>(0, (sum, point) {
@@ -355,18 +366,8 @@ class HealthService {
         return points.length;
       }
 
-      if (Platform.isAndroid && metric == HealthMetricType.workouts) {
-        // Workout sessions carry no duration value on Health Connect —
-        // derive it from each session's start/end instead.
-        return points.fold<int>(
-          0,
-          (sum, point) =>
-              sum + point.dateTo.difference(point.dateFrom).inSeconds,
-        );
-      }
-
-      // Exercise-time / mindfulness samples are declared in MINUTE units by
-      // the plugin, so their numeric value is already a duration.
+      // Mindfulness samples are declared in MINUTE units by the plugin, so
+      // their numeric value is already a duration.
       final totalMinutes = points.fold<double>(0, (sum, point) {
         final value = point.value;
         if (value is NumericHealthValue) {
@@ -408,20 +409,18 @@ class HealthService {
             .toList();
       }
 
-      final points = await _fetchPoints(metric, day, workoutFilter);
+      if (metric == HealthMetricType.workouts) {
+        return _fetchWorkoutSessions(day, workoutFilter);
+      }
 
-      return points.map((point) {
-        final value = point.value;
-        final workoutType =
-            metric == HealthMetricType.workouts && value is WorkoutHealthValue
-                ? _mapWorkoutActivityType(value.workoutActivityType)
-                : null;
-        return HealthSessionDetail(
-          start: point.dateFrom,
-          end: point.dateTo,
-          workoutType: workoutType,
-        );
-      }).toList();
+      final points = await _fetchPoints(metric, day);
+
+      return points
+          .map(
+            (point) =>
+                HealthSessionDetail(start: point.dateFrom, end: point.dateTo),
+          )
+          .toList();
     } catch (_) {
       return const [];
     }

@@ -3366,4 +3366,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get healthOverrideNoticeUnderstood => 'Entendido';
+
+  @override
+  String get separateOptionalHabits => 'Separar hábitos opcionales';
+
+  @override
+  String get separateOptionalHabitsDesc =>
+      'Los hábitos opcionales salen de sus categorías y pasan a su propia sección al final, que puedes contraer.';
 }
