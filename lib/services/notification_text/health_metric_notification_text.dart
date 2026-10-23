@@ -84,7 +84,11 @@ class HealthMetricNotificationText {
     );
     if (measure.goal <= 0 || measure.done >= measure.goal) return null;
 
-    final started = measure.done > 0;
+    // the text is fixed when the notification is scheduled, but Health only
+    // syncs on app open, so a Health-linked habit's progress can be hours out
+    // of date by the time this fires ("6 of 230" after a long workout). Only
+    // hand-logged progress, which is always current, is worth quoting.
+    final started = habit.healthMetric == null && measure.done > 0;
     final goalText = measure.format(measure.goal);
     final progressText = measure.format(measure.done);
     final remainingText = measure.format(measure.goal - measure.done);

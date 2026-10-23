@@ -187,10 +187,10 @@ void main() {
     });
 
     test(
-      'sleep time reminder with logged sleep shows progress as durations',
+      'sleep time reminder with hand-logged sleep shows progress as durations',
       () {
         final habit = buildTestHabit(
-          healthMetric: HealthMetricType.sleep,
+          premadeHabitType: PremadeHabitType.sleepTime,
           amount: 8 * 60,
           amountCompleted: 61,
         );
@@ -208,6 +208,25 @@ void main() {
         }
       },
     );
+
+    test('Health-linked sleep never quotes its stale progress', () {
+      final habit = buildTestHabit(
+        healthMetric: HealthMetricType.sleep,
+        amount: 8 * 60,
+        amountCompleted: 61,
+      );
+
+      for (var seed = 0; seed < 8; seed++) {
+        final text =
+            SleepNotificationText.build(
+              contextFor(habit, DateTime(2026, 10, 21, 9, 0)),
+              random: math.Random(seed),
+            )!;
+
+        expect(text, contains('8 hours'));
+        expect(text, isNot(contains('1 hour and 1 minute')));
+      }
+    });
 
     test('regular habits are left to the generic templates', () {
       final habit = buildTestHabit(amount: 10);

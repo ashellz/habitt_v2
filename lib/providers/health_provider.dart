@@ -132,6 +132,35 @@ class HealthProvider extends ChangeNotifier {
     }
   }
 
+  // pulls Health progress for a single habit right away, so a habit that was
+  // just created doesn't sit at 0 until the next app open. Safe while syncNow
+  // is running: it only touches this habit.
+  Future<void> syncHabit(Habit habit) async {
+    final habitProvider = _habitProvider;
+    final metric = habit.healthMetric;
+    if (habitProvider == null || metric == null) return;
+
+    try {
+      await ensureAvailabilityChecked();
+      if (!isAvailable) return;
+      if (Platform.isAndroid && !permissionGranted) return;
+
+      await _requestWorkoutAccessOnce([habit]);
+      final syncDay = _service.syncDayFor(
+        metric,
+        DateTime.now(),
+        bedtimeDayBefore: habit.healthBedtimeDayBefore,
+      );
+      if (await _syncHabitDay(habitProvider, habit, syncDay)) {
+        lastSyncedAt = DateTime.now();
+        await _saveLastSyncedAt(lastSyncedAt!);
+        notifyListeners();
+      }
+    } catch (_) {
+      // a Health read failure just leaves the habit for the next app-open sync
+    }
+  }
+
   Future<void> _requestWorkoutAccessOnce(List<Habit> linkedHabits) async {
     if (!Platform.isIOS || _workoutAccessRequested) return;
     if (!linkedHabits.any((h) => h.healthMetric == HealthMetricType.workouts)) {

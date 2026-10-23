@@ -73,7 +73,12 @@ opened, not the instant new Health data appears.
    `HealthProvider.syncNow()` runs alongside the existing backup-sync /
    `updateLastOpenedDate` calls, fire-and-forget (`unawaited`), so it never
    delays the rest of the open/resume sequence.
-4. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
+4. **New habit saved** ([`lib/widgets/sheets/habit_sheet.dart`](../lib/widgets/sheets/habit_sheet.dart)) —
+   a newly created Health-linked habit calls `HealthProvider.syncHabit(habit)`
+   (fire-and-forget) so it starts with today's Health progress instead of 0
+   until the next app open. It reads just that one habit, so it's safe while a
+   `syncNow()` is running. Editing an existing habit does not trigger it.
+5. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
 
@@ -102,6 +107,9 @@ on iOS and Android only:
   `healthSyncDay` — the day a sync run writes to, i.e. **yesterday for a
   bedtime counted on the day before** — which `HealthService.syncDayFor`
   also uses so the two can't drift.
+- **Total stat** — the details page's "Total" stat card sums the habit's
+  logged amount; for a sleep habit (minutes) it's scaled to seconds and shown
+  as a duration ("240h") instead of a raw "14400 times".
 - **Sessions** (`HealthSessionsList`) — collapsed by default; lists the
   `Habit.healthSessions` stored on that latest day's snapshot (time range and
   duration; workout type for workouts). Not shown for steps and calories,
@@ -271,6 +279,21 @@ weekly/monthly `timesCompletedThisWeek`/`timesCompletedThisMonth` counters on
 the real habit (`_updatePeriodCountersForId`), reschedules notifications,
 refreshes the perfect-streak flag, and for past days re-runs `assignStreaks`.
 Timer commits (`commitTimerDuration`) and the progress dialogs do likewise.
+
+## Habit notifications
+
+Reminder text is built when the notification is *scheduled* (up to 7 days
+ahead, on the first app open of the day and on completion changes) and handed
+to the OS as a fixed string. Health only syncs on app open/resume, so a
+Health-linked habit's progress can be hours out of date when the reminder
+fires — a "6 of 230 calories" notification after a long workout.
+
+So for a habit with `healthMetric` set, `HealthMetricNotificationText` and
+`SleepNotificationText` never quote progress: they use only the goal wording
+(the `…Start` strings; `notificationSleepGoal`). The `…Progress` strings are
+used only for hand-logged habits (no `healthMetric`, e.g. a premade steps
+habit with Health sync off), whose progress is always current. Completion
+still cancels that day's reminder (`_syncNotificationsOnCompletionChange`).
 
 ## Tolerance (sleep, bedtime, wake time)
 

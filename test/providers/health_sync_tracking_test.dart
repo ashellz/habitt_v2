@@ -473,4 +473,64 @@ void main() {
       expect(health.isSyncing, isFalse);
     });
   });
+
+  group('syncHabit (a habit that was just added)', () {
+    Habit stepsHabit({required int id}) => buildTestHabit(
+      id: id,
+      trackingType: HabitTrackingType.amount,
+      healthMetric: HealthMetricType.steps,
+      amount: 6000,
+      amountLabel: 'steps',
+    );
+
+    test('pulls today\'s Health value instead of starting at 0', () async {
+      await habitBox.put(20, stepsHabit(id: 20));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _FakeHealthService(4200))
+        ..attachHabitProvider(habitProvider);
+      final habit = habitProvider.habits.firstWhere((h) => h.id == 20);
+      expect(habit.amountCompleted, 0);
+
+      await health.syncHabit(habit);
+
+      final synced = habitProvider.habits.firstWhere((h) => h.id == 20);
+      expect(synced.amountCompleted, 4200);
+      expect(synced.completed, isFalse);
+      expect(health.lastSyncedAt, isNotNull);
+    });
+
+    test('completes the habit when Health is already past the goal', () async {
+      await habitBox.put(21, stepsHabit(id: 21));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _FakeHealthService(8000))
+        ..attachHabitProvider(habitProvider);
+
+      await health.syncHabit(habitProvider.habits.firstWhere((h) => h.id == 21));
+
+      expect(habitProvider.habits.firstWhere((h) => h.id == 21).completed, isTrue);
+    });
+
+    test('no Health value leaves the habit at 0', () async {
+      await habitBox.put(22, stepsHabit(id: 22));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _FakeHealthService(null))
+        ..attachHabitProvider(habitProvider);
+
+      await health.syncHabit(habitProvider.habits.firstWhere((h) => h.id == 22));
+
+      expect(habitProvider.habits.firstWhere((h) => h.id == 22).amountCompleted, 0);
+      expect(health.lastSyncedAt, isNull);
+    });
+
+    test('a habit without a Health metric is ignored', () async {
+      await habitBox.put(23, buildTestHabit(id: 23));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _FakeHealthService(4200))
+        ..attachHabitProvider(habitProvider);
+
+      await health.syncHabit(habitProvider.habits.firstWhere((h) => h.id == 23));
+
+      expect(habitProvider.habits.firstWhere((h) => h.id == 23).amountCompleted, 0);
+    });
+  });
 }

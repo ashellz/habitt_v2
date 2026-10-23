@@ -226,6 +226,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedTrackingType =
         sp.selectedHabitTrackingType != habit.trackingType;
     final changedHealthMetric = sp.selectedHealthMetric != habit.healthMetric;
+    final changedWorkoutFilter =
+        sp.selectedHealthWorkoutFilter != habit.healthWorkoutFilter;
+    final changedBedtimeDay =
+        sp.healthBedtimeDayBefore != habit.healthBedtimeDayBefore;
+    final changedTolerance = sp.toleranceMinutes != habit.toleranceMinutes;
     final changedOptionalHabit = sp.isOptional != habit.optional;
     final changedIcon = sp.iconPath != habit.iconPath;
     final changedScheduleType = sp.selectedScheduleOption != habit.scheduleType;
@@ -282,6 +287,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedAmount ||
         changedTrackingType ||
         changedHealthMetric ||
+        changedWorkoutFilter ||
+        changedBedtimeDay ||
+        changedTolerance ||
         changedOptionalHabit ||
         changedIcon ||
         changedScheduleType ||
@@ -705,7 +713,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       localizedNames: newLocalizedNames,
     );
 
+    final healthProvider = context.read<HealthProvider>();
     habitProvider.addHabit(newHabit);
+    // a Health-linked habit starts with today's Health progress, not 0
+    if (newHabit.healthMetric != null) {
+      unawaited(healthProvider.syncHabit(newHabit));
+    }
 
     if (mounted) {
       _popSheet(result: HabitSheetCloseResult.saved);

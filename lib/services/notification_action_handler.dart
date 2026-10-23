@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/models/habit.dart';
 import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/habit_route_tracker.dart';
@@ -9,6 +11,8 @@ import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
+import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
@@ -39,6 +43,10 @@ class NotificationActionHandler {
   /// Notification day paired with [_pendingHabitRoute], so cold-start replay
   /// still applies the correct `selectedDate`.
   static DateTime? _pendingHabitDay;
+
+  /// True while the log-progress dialog opened by a tap is on screen, so a
+  /// second tap can't stack another one on top.
+  static bool _logDialogOpen = false;
 
   /// Register listeners with awesome_notifications. Call once after initialize().
   static Future<void> registerListeners() async {
@@ -112,14 +120,13 @@ class NotificationActionHandler {
     }
   }
 
-  /// Resolves a tap to a fixed target stack (MainPage -> HabitDetails(habitId))
-  /// by reconciling against whatever is currently on screen, rather than
-  /// unconditionally stacking a new page:
-  ///  - a screen with unsaved changes is showing -> ignore the tap entirely
-  ///  - that habit's details page is already showing -> no-op (but the
-  ///    selected date still updates, since the tap targeted a specific day)
-  ///  - a different habit's details page is showing -> replace it
-  ///  - anything else -> pop back to the root (MainPage) and push
+  /// Resolves a notification tap.
+  ///
+  /// Amount and duration habits that can be logged by hand open the
+  /// log-progress dialog over the main page (an open habit details page is
+  /// closed first), with no navigation to details. Anything
+  /// else (checkbox habits, Health-linked habits, habits already done or
+  /// skipped) opens the habit's details page, see [_openDetails].
   static void _navigateToHabit(int habitId, DateTime? day) {
     if (UnsavedChangesGuard.isBlocking) {
       return;
@@ -132,14 +139,81 @@ class NotificationActionHandler {
       return;
     }
 
-    // Applied unconditionally (before the no-op check below) so that
-    // re-tapping a different day's notification while this habit's details
-    // page is already open still corrects `selectedDate`, even though no
-    // navigation occurs.
-    if (day != null) {
-      nav.context.read<HabitProvider>().setSelectedDate(day);
+    unawaited(_handleTap(nav, habitId, day));
+  }
+
+  static Future<void> _handleTap(
+    NavigatorState nav,
+    int habitId,
+    DateTime? day,
+  ) async {
+    // a dialog from an earlier tap is still up; a second one would stack on
+    // top of it and, with another day selected, log into the wrong day
+    if (_logDialogOpen) return;
+
+    final habitProvider = nav.context.read<HabitProvider>();
+    // cold start: habits may still be loading when the tap is replayed
+    await _waitUntilInitialized(habitProvider);
+
+    // `selectedDate` decides which day the dialog (and the details page)
+    // writes to, so it has to follow the notification's day
+    if (day != null) habitProvider.setSelectedDate(day);
+
+    final habit = _habitForDay(habitProvider, habitId, day);
+    final progressType = habit == null ? null : _logProgressTypeFor(habit);
+    // the navigator may have changed while waiting on a cold start
+    final liveNav = navigatorKey.currentState;
+    if (liveNav == null) return;
+    final overlayContext = liveNav.overlay?.context;
+    if (habit == null || progressType == null || overlayContext == null) {
+      _openDetails(liveNav, habitId);
+      return;
     }
 
+    if (!overlayContext.mounted) return;
+
+    // a habit details page is open: close it so the dialog sits on the main
+    // page instead of on top of whatever habit the user was looking at
+    if (HabitRouteTracker.currentTopHabitId != null) {
+      liveNav.pop();
+    }
+
+    _logDialogOpen = true;
+    unawaited(
+      showDialogSheet(
+        context: overlayContext,
+        builder:
+            (_) => LogProgressDialog(progressType: progressType, habit: habit),
+      ).whenComplete(() => _logDialogOpen = false),
+    );
+  }
+
+  static Future<void> _waitUntilInitialized(HabitProvider habitProvider) async {
+    final deadline = DateTime.now().add(const Duration(seconds: 3));
+    while (!habitProvider.isInitialized && DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+  }
+
+  /// The dialog to log progress with, or null when the habit should open its
+  /// details page instead. Health-linked habits are excluded because their
+  /// progress comes from Health and a hand edit would pause that sync.
+  static ProgressType? _logProgressTypeFor(Habit habit) {
+    if (habit.healthMetric != null || habit.completed || habit.skipped) {
+      return null;
+    }
+    if (habit.tracksAmount) return ProgressType.amount;
+    if (habit.tracksDuration) return ProgressType.duration;
+    return null;
+  }
+
+  /// Opens a fixed target stack (MainPage -> HabitDetails(habitId)) by
+  /// reconciling against whatever is currently on screen, rather than
+  /// unconditionally stacking a new page:
+  ///  - that habit's details page is already showing -> no-op
+  ///  - a different habit's details page is showing -> replace it
+  ///  - anything else -> pop back to the root (MainPage) and push
+  static void _openDetails(NavigatorState nav, int habitId) {
     final currentTopHabitId = HabitRouteTracker.currentTopHabitId;
     if (currentTopHabitId == habitId) {
       return;
@@ -164,9 +238,7 @@ class NotificationActionHandler {
 
   /// Called once the app UI is ready to flush any route captured before the
   /// navigator existed (cold start). Routes back through [_navigateToHabit]
-  /// so the cold-start push gets the same tagging and stack resolution as
-  /// any other tap — at this point the app has just launched, so the top of
-  /// stack is the fresh home page and this resolves to a plain push.
+  /// so the cold-start tap gets the same handling as any other tap.
   static void consumePendingRoute() {
     final habitId = _pendingHabitRoute;
     if (habitId == null) return;
@@ -174,6 +246,23 @@ class NotificationActionHandler {
     _pendingHabitRoute = null;
     _pendingHabitDay = null;
     _navigateToHabit(habitId, day);
+  }
+
+  static Habit? _habitForDay(
+    HabitProvider habitProvider,
+    int habitId,
+    DateTime? day,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final source =
+        day == null || day == today
+            ? habitProvider.habits
+            : habitProvider.getHabitsFromDay(day, hydrateMissing: true);
+    for (final habit in source) {
+      if (habit.id == habitId) return habit;
+    }
+    return null;
   }
 
   static DateTime? _parseDay(String? raw) {

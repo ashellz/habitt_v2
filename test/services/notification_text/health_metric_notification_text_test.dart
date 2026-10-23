@@ -37,24 +37,26 @@ void main() {
     };
   }
 
-  Habit steps({int done = 0, String label = 'steps'}) => buildTestHabit(
-    healthMetric: HealthMetricType.steps,
+  // [linked] false is a hand-logged habit: same premade type, no Health sync
+  Habit steps({int done = 0, String label = 'steps', bool linked = true}) =>
+      buildTestHabit(
+    healthMetric: linked ? HealthMetricType.steps : null,
     premadeHabitType: PremadeHabitType.steps,
     amount: 6000,
     amountCompleted: done,
     amountLabel: label,
   );
 
-  Habit activeCalories({int done = 0}) => buildTestHabit(
-    healthMetric: HealthMetricType.activeCalories,
+  Habit activeCalories({int done = 0, bool linked = true}) => buildTestHabit(
+    healthMetric: linked ? HealthMetricType.activeCalories : null,
     premadeHabitType: PremadeHabitType.activeCalories,
     amount: 230,
     amountCompleted: done,
     amountLabel: 'calories',
   );
 
-  Habit totalCalories({int done = 0}) => buildTestHabit(
-    healthMetric: HealthMetricType.totalCalories,
+  Habit totalCalories({int done = 0, bool linked = true}) => buildTestHabit(
+    healthMetric: linked ? HealthMetricType.totalCalories : null,
     premadeHabitType: PremadeHabitType.totalCalories,
     amount: 1700,
     amountCompleted: done,
@@ -66,18 +68,20 @@ void main() {
     PremadeHabitType type = PremadeHabitType.workoutCombined,
     int goalMinutes = 30,
     int doneMinutes = 0,
+    bool linked = true,
   }) => buildTestHabit(
     trackingType: HabitTrackingType.duration,
-    healthMetric: HealthMetricType.workouts,
+    healthMetric: linked ? HealthMetricType.workouts : null,
     healthWorkoutFilter: filter,
     premadeHabitType: type,
     duration: goalMinutes * 60,
     durationCompleted: doneMinutes * 60,
   );
 
-  Habit mindfulness({int doneMinutes = 0}) => buildTestHabit(
+  Habit mindfulness({int doneMinutes = 0, bool linked = true}) =>
+      buildTestHabit(
     trackingType: HabitTrackingType.duration,
-    healthMetric: HealthMetricType.mindfulness,
+    healthMetric: linked ? HealthMetricType.mindfulness : null,
     premadeHabitType: PremadeHabitType.mindfulness,
     duration: 10 * 60,
     durationCompleted: doneMinutes * 60,
@@ -142,11 +146,35 @@ void main() {
       expect(all.any((t) => t.contains('times')), isFalse);
     });
 
-    test('progress reports what is done and what is left', () {
-      final all = variants(steps(done: 4000));
+    test('hand-logged progress reports what is done and what is left', () {
+      final all = variants(steps(done: 4000, linked: false));
 
       expect(all.any((t) => t.contains('4,000 steps')), isTrue);
       expect(all.any((t) => t.contains('2,000 steps')), isTrue);
+    });
+
+    test('Health-linked progress is never quoted, only the goal', () {
+      // the synced value is whatever the last app open saw, which is stale by
+      // the time the notification fires
+      final pairs = <(Habit, Habit)>[
+        (steps(done: 4000), steps()),
+        (activeCalories(done: 6), activeCalories()),
+        (totalCalories(done: 100), totalCalories()),
+        (mindfulness(doneMinutes: 3), mindfulness()),
+        (workout(goalMinutes: 30, doneMinutes: 12), workout(goalMinutes: 30)),
+      ];
+      for (final (withProgress, untouched) in pairs) {
+        expect(
+          variants(withProgress),
+          equals(variants(untouched)),
+          reason: '${withProgress.healthMetric}',
+        );
+      }
+
+      final calories = variants(activeCalories(done: 6));
+      expect(calories.any((t) => t.contains('230 calories')), isTrue);
+      expect(calories.any((t) => t.contains('6 calories')), isFalse);
+      expect(calories.any((t) => t.contains('224')), isFalse);
     });
 
     test('a generic "times" label falls back to the metric unit', () {
@@ -172,7 +200,7 @@ void main() {
     });
 
     test('a one-unit remainder uses the singular label', () {
-      final all = variants(activeCalories(done: 229));
+      final all = variants(activeCalories(done: 229, linked: false));
       expect(all.any((t) => t.contains('1 calorie')), isTrue);
       expect(all.any((t) => t.contains('1 calories')), isFalse);
     });
@@ -194,8 +222,10 @@ void main() {
       expect(all.any((t) => t.contains('5400')), isFalse);
     });
 
-    test('progress shows done and remaining time', () {
-      final all = variants(workout(goalMinutes: 30, doneMinutes: 12));
+    test('hand-logged progress shows done and remaining time', () {
+      final all = variants(
+        workout(goalMinutes: 30, doneMinutes: 12, linked: false),
+      );
 
       expect(all.any((t) => t.contains('12 minutes')), isTrue);
       expect(all.any((t) => t.contains('18 minutes')), isTrue);
@@ -204,7 +234,7 @@ void main() {
     test('remaining time never rounds down to zero', () {
       final habit = buildTestHabit(
         trackingType: HabitTrackingType.duration,
-        healthMetric: HealthMetricType.workouts,
+        premadeHabitType: PremadeHabitType.workoutCombined,
         duration: 1800,
         durationCompleted: 1790, // 10 seconds short
       );
@@ -278,19 +308,23 @@ void main() {
   test('every language renders every state without leftover placeholders', () {
     final habits = <String, Habit>{
       'steps start': steps(),
-      'steps progress': steps(done: 1000),
+      'steps progress': steps(done: 1000, linked: false),
       'active start': activeCalories(),
-      'active progress': activeCalories(done: 100),
+      'active progress': activeCalories(done: 100, linked: false),
       'total start': totalCalories(),
-      'total progress': totalCalories(done: 100),
+      'total progress': totalCalories(done: 100, linked: false),
       'mindfulness start': mindfulness(),
-      'mindfulness progress': mindfulness(doneMinutes: 3),
+      'mindfulness progress': mindfulness(doneMinutes: 3, linked: false),
       'workout start': workout(),
-      'workout progress': workout(doneMinutes: 10),
+      'workout progress': workout(doneMinutes: 10, linked: false),
       for (final type in HealthWorkoutType.values)
         'workout ${type.name} start': workout(filter: type),
       for (final type in HealthWorkoutType.values)
-        'workout ${type.name} progress': workout(filter: type, doneMinutes: 10),
+        'workout ${type.name} progress': workout(
+          filter: type,
+          doneMinutes: 10,
+          linked: false,
+        ),
     };
 
     for (final locale in AppLocalizations.supportedLocales) {
