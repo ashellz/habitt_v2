@@ -61,7 +61,7 @@ extension HealthMetricTypeMapping on HealthMetricType {
       case HealthMetricType.wakeTime:
         return 'assets/images/health-icons/wake.png';
       case HealthMetricType.activity:
-        return 'assets/images/health-icons/workout.png';
+        return 'assets/images/health-icons/activity.png';
     }
   }
 
