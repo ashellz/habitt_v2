@@ -71,7 +71,11 @@ class CategoryProvider extends ChangeNotifier {
     }
 
     // 2. Calculate habit counts
+    // Optional habits never block a category from being "completed", so they
+    // are left out of the counts entirely.
     for (var habit in habits) {
+      if (habit.optional) continue;
+
       // Get the effective category id
       int effectiveCategoryId;
       if (habit.categoryId == morningCategoryId) {
@@ -205,15 +209,6 @@ class CategoryProvider extends ChangeNotifier {
       mainDisplayCategory ??= _categories.firstWhere(
         (c) => c.id == anytimeCategoryId,
       );
-
-      // Fallback 3: Absolute fallback to the first category
-      // This is the last resort, if nothing else works, but we don't need it as well
-      if (_categories.isNotEmpty) {
-        mainDisplayCategory = _categories.first;
-        debugPrint(
-          "Fallback 3: Using first available category '${mainDisplayCategory.name}'.",
-        );
-      }
     }
 
     // Debugging output for all category states
