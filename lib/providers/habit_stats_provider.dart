@@ -3,6 +3,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/habit_strength_calculator.dart';
+import 'package:habitt/util/stats_range.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_ce/hive.dart';
 
@@ -23,6 +24,19 @@ class HabitWeekdayRate {
   int get percentage => (rate * 100).round();
 }
 
+/// Completion numbers for one [StatsRange].
+class HabitRangeStats {
+  const HabitRangeStats({
+    required this.completionRatio,
+    required this.bestWeekday,
+    required this.worstWeekday,
+  });
+
+  final double completionRatio;
+  final HabitWeekdayRate bestWeekday;
+  final HabitWeekdayRate worstWeekday;
+}
+
 class HabitStatsData {
   const HabitStatsData({
     required this.habitId,
@@ -33,12 +47,11 @@ class HabitStatsData {
     required this.longestStreak,
     required this.totalAmountCompleted,
     required this.totalDurationCompletedSeconds,
-    required this.completionRatioLast7Days,
-    required this.bestWeekday,
-    required this.worstWeekday,
+    required this.rangeStats,
     required this.dailyProgress,
     required this.currentStrength,
     required this.strengthHistory,
+    required this.strengthDates,
     required this.actionableInsight,
     required this.strengthDropLast5Days,
     required this.strengthVarianceLast30Days,
@@ -52,15 +65,35 @@ class HabitStatsData {
   final int longestStreak;
   final int totalAmountCompleted;
   final int totalDurationCompletedSeconds;
-  final double completionRatioLast7Days;
-  final HabitWeekdayRate bestWeekday;
-  final HabitWeekdayRate worstWeekday;
+  final Map<StatsRange, HabitRangeStats> rangeStats;
   final Map<DateTime, double> dailyProgress;
   final double currentStrength;
   final List<double> strengthHistory;
+  // the day each strengthHistory value belongs to, same length and order
+  final List<DateTime> strengthDates;
   final HabitStrengthInsight actionableInsight;
   final double strengthDropLast5Days;
   final double strengthVarianceLast30Days;
+}
+
+class _RangeTally {
+  int scheduled = 0;
+  int completed = 0;
+  final scheduledByWeekday = <int, int>{
+    for (int weekday = 1; weekday <= 7; weekday++) weekday: 0,
+  };
+  final completedByWeekday = <int, int>{
+    for (int weekday = 1; weekday <= 7; weekday++) weekday: 0,
+  };
+
+  void add(DateTime day, {required bool completedThatDay}) {
+    scheduled += 1;
+    scheduledByWeekday[day.weekday] = scheduledByWeekday[day.weekday]! + 1;
+    if (completedThatDay) {
+      completed += 1;
+      completedByWeekday[day.weekday] = completedByWeekday[day.weekday]! + 1;
+    }
+  }
 }
 
 class _HabitStatsCacheEntry {
@@ -148,22 +181,15 @@ class HabitStatsProvider extends ChangeNotifier {
 
   HabitStatsData _computeStats(Habit habit, {Locale? locale}) {
     final today = _cachedToday;
-    final sevenDayStart = today.subtract(const Duration(days: 6));
-    final monthWindowStart = today.subtract(const Duration(days: 29));
     final resolvedLocale =
         locale ?? WidgetsBinding.instance.platformDispatcher.locale;
 
-    final completedByWeekday = <int, int>{};
-    final scheduledByWeekday = <int, int>{};
-    for (int weekday = 1; weekday <= 7; weekday++) {
-      completedByWeekday[weekday] = 0;
-      scheduledByWeekday[weekday] = 0;
-    }
+    final tallies = {
+      for (final range in StatsRange.values) range: _RangeTally(),
+    };
 
     int completedCount = 0;
     int missedCount = 0;
-    int scheduledInLast7 = 0;
-    int completedInLast7 = 0;
     int totalAmountCompleted = 0;
     int totalDurationCompletedSeconds = 0;
 
@@ -209,19 +235,10 @@ class HabitStatsProvider extends ChangeNotifier {
       totalAmountCompleted += dayHabit.amountCompleted;
       totalDurationCompletedSeconds += dayHabit.durationCompleted;
 
-      if (_isWithinRange(dayDate, sevenDayStart, today)) {
-        scheduledInLast7 += 1;
-        if (dayHabit.completed) {
-          completedInLast7 += 1;
-        }
-      }
-
-      if (_isWithinRange(dayDate, monthWindowStart, today)) {
-        scheduledByWeekday[dayDate.weekday] =
-            (scheduledByWeekday[dayDate.weekday] ?? 0) + 1;
-        if (dayHabit.completed) {
-          completedByWeekday[dayDate.weekday] =
-              (completedByWeekday[dayDate.weekday] ?? 0) + 1;
+      for (final range in StatsRange.values) {
+        final start = range.startFor(today);
+        if (start == null || _isWithinRange(dayDate, start, today)) {
+          tallies[range]!.add(dayDate, completedThatDay: dayHabit.completed);
         }
       }
     }
@@ -232,20 +249,12 @@ class HabitStatsProvider extends ChangeNotifier {
       fallback: today,
     );
 
-    final ratio7 =
-        scheduledInLast7 == 0 ? 0.0 : completedInLast7 / scheduledInLast7;
-    final best = _resolveWeekdayRate(
-      completedByWeekday: completedByWeekday,
-      scheduledByWeekday: scheduledByWeekday,
-      pickBest: true,
-      locale: resolvedLocale,
-    );
-    final worst = _resolveWeekdayRate(
-      completedByWeekday: completedByWeekday,
-      scheduledByWeekday: scheduledByWeekday,
-      pickBest: false,
-      locale: resolvedLocale,
-    );
+    final rangeStats = {
+      for (final range in StatsRange.values)
+        range: _resolveRangeStats(tallies[range]!, resolvedLocale),
+    };
+    // the calculator walks entries oldest first; sort here so the dates match
+    strengthEntries.sort((a, b) => a.date.compareTo(b.date));
     final strengthResult = HabitStrengthCalculator.calculate(strengthEntries);
 
     return HabitStatsData(
@@ -257,12 +266,11 @@ class HabitStatsProvider extends ChangeNotifier {
       longestStreak: habit.longestStreak,
       totalAmountCompleted: totalAmountCompleted,
       totalDurationCompletedSeconds: totalDurationCompletedSeconds,
-      completionRatioLast7Days: ratio7,
-      bestWeekday: best,
-      worstWeekday: worst,
+      rangeStats: rangeStats,
       dailyProgress: progressByDay,
       currentStrength: strengthResult.currentStrength,
       strengthHistory: strengthResult.strengthHistory,
+      strengthDates: [for (final entry in strengthEntries) entry.date],
       actionableInsight: strengthResult.actionableInsight,
       strengthDropLast5Days: strengthResult.recentDropFraction,
       strengthVarianceLast30Days: strengthResult.varianceLast30Days,
@@ -304,6 +312,22 @@ class HabitStatsProvider extends ChangeNotifier {
       date: dayDate,
       goal: 1,
       actual: dayHabit.completed ? 1 : 0,
+    );
+  }
+
+  HabitRangeStats _resolveRangeStats(_RangeTally tally, Locale locale) {
+    HabitWeekdayRate pick({required bool pickBest}) => _resolveWeekdayRate(
+      completedByWeekday: tally.completedByWeekday,
+      scheduledByWeekday: tally.scheduledByWeekday,
+      pickBest: pickBest,
+      locale: locale,
+    );
+
+    return HabitRangeStats(
+      completionRatio:
+          tally.scheduled == 0 ? 0.0 : tally.completed / tally.scheduled,
+      bestWeekday: pick(pickBest: true),
+      worstWeekday: pick(pickBest: false),
     );
   }
 

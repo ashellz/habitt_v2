@@ -3383,4 +3383,84 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get separateOptionalHabitsDesc =>
       'Optionale Gewohnheiten wandern aus ihren Kategorien in einen eigenen Bereich am Ende, den du einklappen kannst.';
+
+  @override
+  String get strengthOverTime => 'Stärke im Zeitverlauf';
+
+  @override
+  String get strengthChartNotEnoughData =>
+      'Weiter so. Dein Stärkeverlauf erscheint nach ein paar Tagen.';
+
+  @override
+  String get habitAgeStartedToday => 'Heute gestartet, viel Erfolg!';
+
+  @override
+  String habitAgeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tagen',
+      one: '1 Tag',
+    );
+    return 'Du machst das seit $_temp0';
+  }
+
+  @override
+  String habitAgeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Wochen',
+      one: '1 Woche',
+    );
+    return 'Du machst das seit $_temp0';
+  }
+
+  @override
+  String habitAgeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Monaten',
+      one: '1 Monat',
+    );
+    return 'Du machst das seit $_temp0';
+  }
+
+  @override
+  String habitAgeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Jahren',
+      one: '1 Jahr',
+    );
+    return 'Du machst das seit $_temp0';
+  }
+
+  @override
+  String habitAgeYearsMonths(num months, num years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years Jahren',
+      one: '1 Jahr',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months Monaten',
+      one: '1 Monat',
+    );
+    return 'Du machst das seit $_temp0 und $_temp1';
+  }
+
+  @override
+  String get statsRange7Days => '7T';
+
+  @override
+  String get statsRange30Days => '30T';
+
+  @override
+  String get statsRangeAll => 'ALLE';
 }

@@ -5668,6 +5668,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional habits move out of their categories into their own section at the bottom, which you can collapse.'**
   String get separateOptionalHabitsDesc;
+
+  /// No description provided for @strengthOverTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength over time'**
+  String get strengthOverTime;
+
+  /// No description provided for @strengthChartNotEnoughData.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going. Your strength trend shows up after a couple of days.'**
+  String get strengthChartNotEnoughData;
+
+  /// No description provided for @habitAgeStartedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Started today, good luck!'**
+  String get habitAgeStartedToday;
+
+  /// No description provided for @habitAgeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing this for {count, plural, =1{1 day} other{{count} days}}'**
+  String habitAgeDays(num count);
+
+  /// No description provided for @habitAgeWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing this for {count, plural, =1{1 week} other{{count} weeks}}'**
+  String habitAgeWeeks(num count);
+
+  /// No description provided for @habitAgeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing this for {count, plural, =1{1 month} other{{count} months}}'**
+  String habitAgeMonths(num count);
+
+  /// No description provided for @habitAgeYears.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing this for {count, plural, =1{1 year} other{{count} years}}'**
+  String habitAgeYears(num count);
+
+  /// No description provided for @habitAgeYearsMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing this for {years, plural, =1{1 year} other{{years} years}} and {months, plural, =1{1 month} other{{months} months}}'**
+  String habitAgeYearsMonths(num months, num years);
+
+  /// No description provided for @statsRange7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'7D'**
+  String get statsRange7Days;
+
+  /// No description provided for @statsRange30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'30D'**
+  String get statsRange30Days;
+
+  /// No description provided for @statsRangeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'ALL'**
+  String get statsRangeAll;
 }
 
 class _AppLocalizationsDelegate

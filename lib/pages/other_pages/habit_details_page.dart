@@ -25,6 +25,7 @@ import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/habit_primary_action_button.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_stats_card.dart';
+import 'package:habitt/widgets/habit_details/strength_over_time_section.dart';
 import 'package:habitt/widgets/habit_details/strength_ring.dart';
 import 'package:habitt/widgets/habit_details/new/habit_detail_stats_sections.dart';
 import 'package:habitt/widgets/stats/consistency_calendar.dart';
@@ -286,6 +287,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       currentStreakOverride: effectiveStreak,
                       longestStreakOverride: effectiveLongest,
                     ),
+                    SizedBox(height: 28),
+                    StrengthOverTimeSection(stats: stats),
                     SizedBox(height: 24),
                     ConsistencyCalendar(habitStats: stats),
                     SizedBox(
