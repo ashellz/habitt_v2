@@ -3347,6 +3347,13 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Razumijem';
 
   @override
+  String get separateOptionalHabits => 'Odvoji opcionalne navike';
+
+  @override
+  String get separateOptionalHabitsDesc =>
+      'Opcionalne navike izlaze iz svojih kategorija u zasebnu sekciju pri dnu, koju možeš sklopiti.';
+
+  @override
   String get strengthOverTime => 'Čvrstoća kroz vrijeme';
 
   @override

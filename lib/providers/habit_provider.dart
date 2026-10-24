@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:habitt/models/category.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
@@ -18,6 +19,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/health_override_notice.dart';
+import 'package:habitt/util/optional_habit_order.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/premade_habit_type_migration.dart';
 import 'package:provider/provider.dart';
@@ -1051,18 +1053,19 @@ class HabitProvider extends ChangeNotifier {
     required int oldIndex,
     required int newIndex,
     required bool todaysOnly,
+    bool separateOptional = false,
   }) async {
     if (oldIndex < 0 || newIndex < 0 || oldIndex == newIndex) {
       return;
     }
 
-    final categoryHabits =
-        habits.where((h) => h.categoryId == categoryId).toList();
-    if (categoryHabits.length < 2) {
-      return;
-    }
+    // with separated optional habits only the required habits of the category
+    // move
+    bool inScope(Habit h) => !(separateOptional && h.optional);
 
-    categoryHabits.sort((a, b) {
+    final allCategoryHabits =
+        habits.where((h) => h.categoryId == categoryId).toList();
+    allCategoryHabits.sort((a, b) {
       final aOrder = a.order <= 0 ? 1 << 30 : a.order;
       final bOrder = b.order <= 0 ? 1 << 30 : b.order;
       final orderCompare = aOrder.compareTo(bOrder);
@@ -1071,6 +1074,13 @@ class HabitProvider extends ChangeNotifier {
       }
       return a.id.compareTo(b.id);
     });
+
+    final categoryHabits = allCategoryHabits.where(inScope).toList();
+    final outOfScopeHabits =
+        allCategoryHabits.where((h) => !inScope(h)).toList();
+    if (categoryHabits.length < 2) {
+      return;
+    }
 
     late final List<Habit> reorderedCategory;
 
@@ -1085,7 +1095,9 @@ class HabitProvider extends ChangeNotifier {
       reorderedCategory.insert(newIndex, moved);
     } else {
       final scheduledCategoryHabits =
-          todaysHabits.where((h) => h.categoryId == categoryId).toList();
+          todaysHabits
+              .where((h) => h.categoryId == categoryId && inScope(h))
+              .toList();
       if (oldIndex >= scheduledCategoryHabits.length ||
           newIndex >= scheduledCategoryHabits.length ||
           scheduledCategoryHabits.length < 2) {
@@ -1111,6 +1123,8 @@ class HabitProvider extends ChangeNotifier {
       }
     }
 
+    reorderedCategory.addAll(outOfScopeHabits);
+
     final now = DateTime.now().toUtc();
     final changedHabits = <Habit>[];
 
@@ -1127,6 +1141,63 @@ class HabitProvider extends ChangeNotifier {
     }
 
     _sortHabitsByCategoryAndOrder(habits);
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+
+    for (final habit in changedHabits) {
+      if (habit.isInBox) {
+        await habit.save();
+      }
+    }
+
+    backupProvider?.scheduleAutoSync();
+  }
+
+  // reorders the optional habits as one list, whatever their category
+  Future<void> reorderOptionalHabits({
+    required List<Category> categories,
+    required List<Habit> visible,
+    required int oldIndex,
+    required int newIndex,
+  }) async {
+    if (oldIndex < 0 ||
+        newIndex < 0 ||
+        oldIndex == newIndex ||
+        oldIndex >= visible.length ||
+        newIndex >= visible.length) {
+      return;
+    }
+
+    final reorderedVisible = List<Habit>.from(visible);
+    reorderedVisible.insert(newIndex, reorderedVisible.removeAt(oldIndex));
+
+    final all = sortOptionalHabits(
+      habits.where((h) => h.optional && h.isDeleted != true),
+      categories,
+    );
+    final visibleIds = visible.map((h) => h.id).toSet();
+    int visibleCursor = 0;
+    final reordered = [
+      for (final habit in all)
+        visibleIds.contains(habit.id)
+            ? reorderedVisible[visibleCursor++]
+            : habit,
+    ];
+
+    final now = DateTime.now().toUtc();
+    final changedHabits = <Habit>[];
+    for (int index = 0; index < reordered.length; index++) {
+      final habit = reordered[index];
+      final desiredOrder = index + 1;
+      if (habit.optionalOrder == desiredOrder) {
+        continue;
+      }
+
+      habit.optionalOrder = desiredOrder;
+      habit.timestamps['optionalOrder'] = now;
+      changedHabits.add(habit);
+    }
+
     refreshTodaysHabits(notify: false);
     notifyListeners();
 

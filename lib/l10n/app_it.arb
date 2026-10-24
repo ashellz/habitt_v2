@@ -1229,6 +1229,8 @@
   "healthOverrideNoticeTitle": "{source} è in pausa per questo giorno",
   "healthOverrideNoticeBody": "Hai modificato i progressi manualmente, quindi Habitt non li sovrascriverà con i dati di {source} per questo giorno. Il tuo valore resta esattamente come lo hai inserito.\n\nVuoi tornare a {source}? Tocca \"Usa i valori di {source}\" su questa abitudine.",
   "healthOverrideNoticeUnderstood": "Ho capito",
+  "separateOptionalHabits": "Separa le abitudini facoltative",
+  "separateOptionalHabitsDesc": "Le abitudini facoltative escono dalle loro categorie e vanno in una sezione dedicata in fondo, che puoi comprimere.",
   "strengthOverTime": "Forza nel tempo",
   "strengthChartNotEnoughData": "Continua così. Il grafico della forza apparirà dopo un paio di giorni.",
   "habitAgeStartedToday": "Iniziata oggi, buona fortuna!",

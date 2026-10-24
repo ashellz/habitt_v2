@@ -5657,6 +5657,18 @@ abstract class AppLocalizations {
   /// **'Understood'**
   String get healthOverrideNoticeUnderstood;
 
+  /// No description provided for @separateOptionalHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate optional habits'**
+  String get separateOptionalHabits;
+
+  /// No description provided for @separateOptionalHabitsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional habits move out of their categories into their own section at the bottom, which you can collapse.'**
+  String get separateOptionalHabitsDesc;
+
   /// No description provided for @strengthOverTime.
   ///
   /// In en, this message translates to:

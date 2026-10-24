@@ -67,7 +67,6 @@ class _PaywallPageState extends State<PaywallPage> {
 
   List<Package> _packages = [];
   String? _activeProductId;
-  String? _managementUrl;
 
   final ScrollController _scrollController = ScrollController();
   int _selectedIndex = 0;
@@ -202,7 +201,6 @@ class _PaywallPageState extends State<PaywallPage> {
         _hasPro = entitlement != null;
         BillingService.hasPro = _hasPro;
         _activeProductId = entitlement?.productIdentifier;
-        _managementUrl = info.managementURL;
         _isRefreshing = false;
       });
       _maybeApplyInitialSelection();
@@ -244,17 +242,6 @@ class _PaywallPageState extends State<PaywallPage> {
       await _refreshSubscriptionStatus();
     } finally {
       if (mounted) setState(() => _isPresenting = false);
-    }
-  }
-
-  Future<void> _handleCancelTap() async {
-    HapticFeedback.selectionClick();
-    final url = _managementUrl;
-    if (url != null) {
-      final uri = Uri.parse(url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
     }
   }
 

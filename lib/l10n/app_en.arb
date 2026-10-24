@@ -1240,6 +1240,8 @@
   "healthOverrideNoticeTitle": "{source} is paused for this day",
   "healthOverrideNoticeBody": "You changed this progress yourself, so Habitt won't overwrite it with {source} data for this day. Your number stays exactly as you entered it.\n\nWant {source} back? Tap \"Use {source} values\" on this habit.",
   "healthOverrideNoticeUnderstood": "Understood",
+  "separateOptionalHabits": "Separate optional habits",
+  "separateOptionalHabitsDesc": "Optional habits move out of their categories into their own section at the bottom, which you can collapse.",
   "strengthOverTime": "Strength over time",
   "strengthChartNotEnoughData": "Keep going. Your strength trend shows up after a couple of days.",
   "habitAgeStartedToday": "Started today, good luck!",

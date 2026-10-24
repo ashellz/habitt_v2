@@ -1229,6 +1229,8 @@
   "healthOverrideNoticeTitle": "{source} está en pausa para este día",
   "healthOverrideNoticeBody": "Has cambiado el progreso manualmente, así que Habitt no lo sobrescribirá con datos de {source} en este día. Tu cifra se queda exactamente como la introdujiste.\n\n¿Quieres volver a {source}? Toca \"Usar los valores de {source}\" en este hábito.",
   "healthOverrideNoticeUnderstood": "Entendido",
+  "separateOptionalHabits": "Separar hábitos opcionales",
+  "separateOptionalHabitsDesc": "Los hábitos opcionales salen de sus categorías y pasan a su propia sección al final, que puedes contraer.",
   "strengthOverTime": "Fuerza a lo largo del tiempo",
   "strengthChartNotEnoughData": "Sigue así. Tu tendencia de fuerza aparecerá tras un par de días.",
   "habitAgeStartedToday": "Empezado hoy, ¡buena suerte!",

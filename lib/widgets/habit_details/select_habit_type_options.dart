@@ -4,7 +4,6 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/select_habit_type_widget.dart';
 import 'package:habitt/pages/other_pages/enter_amount_page.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
 
 class SelectHabitTypeOptions extends StatefulWidget {
   const SelectHabitTypeOptions({super.key});
