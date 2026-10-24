@@ -71,7 +71,11 @@ class CategoryProvider extends ChangeNotifier {
     }
 
     // 2. Calculate habit counts
+    // Optional habits never block a category from being "completed", so they
+    // are left out of the counts entirely.
     for (var habit in habits) {
+      if (habit.optional) continue;
+
       // Get the effective category id
       int effectiveCategoryId;
       if (habit.categoryId == morningCategoryId) {
@@ -105,13 +109,11 @@ class CategoryProvider extends ChangeNotifier {
     Category? mainDisplayCategory;
 
     List<int> readinessCheckOrderIds;
-    int currentTimeSlotFallbackId;
     String currentTimeSlotName = "Unknown";
 
     if (currentHour >= 4 && currentHour < 12) {
       debugPrint("Current hour is between 4 and 12");
       currentTimeSlotName = "Morning";
-      currentTimeSlotFallbackId = morningCategoryId;
       readinessCheckOrderIds = [
         morningCategoryId,
         anytimeCategoryId,
@@ -121,7 +123,6 @@ class CategoryProvider extends ChangeNotifier {
     } else if (currentHour >= 12 && currentHour < 19) {
       debugPrint("Current hour is between 12 and 19");
       currentTimeSlotName = "Afternoon";
-      currentTimeSlotFallbackId = afternoonCategoryId;
       readinessCheckOrderIds = [
         afternoonCategoryId,
         morningCategoryId,
@@ -131,7 +132,6 @@ class CategoryProvider extends ChangeNotifier {
     } else {
       debugPrint("Current hour is between 19 and 4");
       currentTimeSlotName = "Evening";
-      currentTimeSlotFallbackId = eveningCategoryId;
       readinessCheckOrderIds = [
         eveningCategoryId,
         afternoonCategoryId,
@@ -176,44 +176,11 @@ class CategoryProvider extends ChangeNotifier {
       debugPrint(
         "No category is 'ready'. Applying fallback logic for $currentTimeSlotName time.",
       );
-      // Fallback 1: Current time slot's category, if it has habits
-      // Technically we don't need to worry about this because
-      // if there are no habits, a widget saying that will be displayed instead
-
-      String fallbackCatName1 =
-          _categories
-              .firstWhere(
-                (c) => c.id == currentTimeSlotFallbackId,
-                orElse:
-                    () => Category(
-                      id: currentTimeSlotFallbackId,
-                      name: "Unknown $currentTimeSlotFallbackId",
-                    ),
-              )
-              .name;
-
-      if (getProgress(currentTimeSlotFallbackId, fallbackCatName1).hasHabits) {
-        mainDisplayCategory = _categories.firstWhere(
-          (c) => c.id == currentTimeSlotFallbackId,
-        );
-      }
-
-      // Fallback 2: "Any time" category
-      // Also we don't need this either, but it's nice to have
-      // because it may save us from future bugs or exploits
-
-      mainDisplayCategory ??= _categories.firstWhere(
+      // Every category is completed (or empty): "Any time" goes first, so a
+      // completed time-slot category is never kept above it.
+      mainDisplayCategory = _categories.firstWhere(
         (c) => c.id == anytimeCategoryId,
       );
-
-      // Fallback 3: Absolute fallback to the first category
-      // This is the last resort, if nothing else works, but we don't need it as well
-      if (_categories.isNotEmpty) {
-        mainDisplayCategory = _categories.first;
-        debugPrint(
-          "Fallback 3: Using first available category '${mainDisplayCategory.name}'.",
-        );
-      }
     }
 
     // Debugging output for all category states

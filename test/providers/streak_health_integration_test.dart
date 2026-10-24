@@ -224,4 +224,59 @@ void main() {
       expect(hp.streakHealthFor(habit), StreakHealth.fading);
     });
   });
+
+  group('device clock moved ahead and back (task 35)', () {
+    /// Seeds missed days dated after today, as left behind when the user set
+    /// the phone's date ahead, opened the app, then set it back.
+    Future<void> seedFutureMisses(int count) async {
+      final today = _normalize(DateTime.now());
+      for (int i = 1; i <= count; i++) {
+        final date = today.add(Duration(days: i));
+        await daysBox.put(
+          _dayKey(date),
+          Day(
+            date: date,
+            habits: [snapshot(_Outcome.miss)],
+            timestamp: DateTime.now().toUtc(),
+            isAutoCreated: true,
+          ),
+        );
+      }
+    }
+
+    test('future days do not break the perfect-days or habit streak', () async {
+      await seedHistory([_Outcome.perfect, _Outcome.perfect, _Outcome.perfect]);
+      await seedFutureMisses(3);
+      final (hp, sp) = await boot();
+
+      expect(sp.perfectDaysStreak, 3);
+      expect(sp.perfectDaysTailMisses, 0);
+      expect(hp.habits.firstWhere((h) => h.id == 1).streak, 3);
+    });
+
+    test('restoreTodayFromSnapshot brings back today\'s progress', () async {
+      await seedHistory([_Outcome.perfect]);
+      final today = _normalize(DateTime.now());
+      await daysBox.put(
+        _dayKey(today),
+        Day(
+          date: today,
+          habits: [snapshot(_Outcome.perfect)],
+          timestamp: DateTime.now().toUtc(),
+        ),
+      );
+      final (hp, _) = await boot();
+
+      // The live habit holds the "future" day's empty state.
+      final live = hp.habits.firstWhere((h) => h.id == 1);
+      await live.resetCompletion();
+      expect(live.completed, isFalse);
+
+      await hp.restoreTodayFromSnapshot();
+
+      final restored = hp.todaysHabits.firstWhere((h) => h.id == 1);
+      expect(restored.completed, isTrue);
+      expect(restored.amountCompleted, 10);
+    });
+  });
 }

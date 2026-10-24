@@ -26,6 +26,8 @@ String dateKey(DateTime date) {
 /// - The "Streak celebration" preference must be ON (checked first).
 /// - The streak is recomputed fresh (never the queued/stale value).
 /// - First run / post-restore seeds the celebrated value without showing.
+/// - When the streak drops below the celebrated value (it broke), the
+///   celebrated value follows it down so the new run can celebrate again.
 /// - Shows when `streak >= 1 && streak > celebrated && shownDate != today`.
 /// - Dedup state is written BEFORE the dialog is presented.
 /// - A shared gate makes the insight sheet defer so the two never overlap.
@@ -56,7 +58,15 @@ Future<void> maybeShowStreakCelebration(BuildContext context) async {
       return;
     }
 
-    final celebrated = prefs.getInt(_kCelebratedStreakKey) ?? 0;
+    var celebrated = prefs.getInt(_kCelebratedStreakKey) ?? 0;
+
+    // The streak broke (or shrank) since the last celebration. Lower the
+    // celebrated value so the new run celebrates again as it grows, instead of
+    // staying silent until it beats the old run.
+    if (streak < celebrated) {
+      celebrated = streak;
+      await prefs.setInt(_kCelebratedStreakKey, streak);
+    }
     final shownDate = prefs.getString(_kShownDateKey);
     final now = DateTime.now();
     final today = dateKey(now);
