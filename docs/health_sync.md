@@ -295,6 +295,14 @@ used only for hand-logged habits (no `healthMetric`, e.g. a premade steps
 habit with Health sync off), whose progress is always current. Completion
 still cancels that day's reminder (`_syncNotificationsOnCompletionChange`).
 
+Health-linked habits' reminders also have **no "Complete" action button**
+(`NotificationService.scheduleAllHabitNotifications` passes no `actionButtons`
+when `healthMetric` is set). Completing from the notification would be a hand
+edit (`completeHabit` sets `healthManualOverride`), so a goal the user actually
+hit on their watch would never replace it on the next sync (task 33). Tapping
+the notification still opens the habit's details page, like the tap handling
+in `NotificationActionHandler._logProgressTypeFor`.
+
 ## Tolerance (sleep, bedtime, wake time)
 
 `Habit.toleranceMinutes` (15/30/60 presets) is a "close enough" margin and only
