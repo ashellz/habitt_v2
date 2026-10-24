@@ -1134,7 +1134,7 @@
   "healthMetricDescSleep": "Prati vrijeme tvog spavanja",
   "healthMetricDescWorkouts": "Prati sve tvoje treninge",
   "healthMetricDescMindfulness": "Prati tvoje sesije svjesnosti",
-  "healthMetricDescActivity": "Prati tvoje minute vježbanja, kao krug vježbanja. Trening nije potreban",
+  "healthMetricDescActivity": "Prati tvoj krug vježbanja sa Apple Watcha",
   "healthMetricDescActiveCalories": "Prati tvoje potrošene aktivne kalorije",
   "healthMetricDescTotalCalories": "Prati ukupno potrošene kalorije",
   "healthMetricDescBedtime": "Prati kada si otišao na spavanje",

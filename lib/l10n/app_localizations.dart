@@ -5125,7 +5125,7 @@ abstract class AppLocalizations {
   /// No description provided for @healthMetricDescActivity.
   ///
   /// In en, this message translates to:
-  /// **'Tracks your exercise minutes, like the Exercise ring. No workout needed'**
+  /// **'Tracks your exercise ring from Apple Watch'**
   String get healthMetricDescActivity;
 
   /// No description provided for @healthMetricDescActiveCalories.

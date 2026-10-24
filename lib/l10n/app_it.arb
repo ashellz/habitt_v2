@@ -1144,7 +1144,7 @@
   "healthMetricDescSleep": "Registra il tuo tempo di sonno",
   "healthMetricDescWorkouts": "Registra tutti i tuoi allenamenti",
   "healthMetricDescMindfulness": "Registra le tue sessioni di mindfulness",
-  "healthMetricDescActivity": "Registra i tuoi minuti di esercizio, come l'anello Esercizio. Non serve un allenamento",
+  "healthMetricDescActivity": "Registra il tuo anello Esercizio dall'Apple Watch",
   "healthMetricDescActiveCalories": "Registra le calorie attive che bruci",
   "healthMetricDescTotalCalories": "Registra le calorie totali che bruci",
   "healthMetricDescBedtime": "Registra quando sei andato a dormire",

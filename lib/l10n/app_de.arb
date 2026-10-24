@@ -1144,7 +1144,7 @@
   "healthMetricDescSleep": "Erfasst deine Schlafdauer",
   "healthMetricDescWorkouts": "Erfasst alle deine Workouts",
   "healthMetricDescMindfulness": "Erfasst deine Achtsamkeitseinheiten",
-  "healthMetricDescActivity": "Erfasst deine Trainingsminuten, wie der Trainieren-Ring. Kein Workout nötig",
+  "healthMetricDescActivity": "Erfasst deinen Trainingsring von der Apple Watch",
   "healthMetricDescActiveCalories": "Erfasst deine verbrannten aktiven Kalorien",
   "healthMetricDescTotalCalories": "Erfasst deine insgesamt verbrannten Kalorien",
   "healthMetricDescBedtime": "Erfasst, wann du schlafen gegangen bist",

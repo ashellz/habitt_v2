@@ -3002,7 +3002,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get healthMetricDescActivity =>
-      'Prati tvoje minute vježbanja, kao krug vježbanja. Trening nije potreban';
+      'Prati tvoj krug vježbanja sa Apple Watcha';
 
   @override
   String get healthMetricDescActiveCalories =>

@@ -102,6 +102,9 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
+      // seeded durations are already seconds, skip the minutes -> seconds migration
+      'durationSecondsMigrated_habits_v1': true,
+      'durationSecondsMigrated_days_v1': true,
       'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
     });
     await habitBox.clear();
@@ -190,7 +193,7 @@ void main() {
           healthMetric: HealthMetricType.activity,
           trackingType: HabitTrackingType.duration,
           amount: 0,
-          duration: 30, // minutes: the seconds migration runs on init
+          duration: 30 * 60,
         ),
       );
       final provider = await createInitializedProvider();

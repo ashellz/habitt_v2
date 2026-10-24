@@ -238,6 +238,9 @@ the ring and leave a Workout habit at zero.
   `_androidTypes` has no `activity` entry, the metric picker doesn't offer it,
   and the premade "Activity" template (`PremadeHabitType.activity`,
   `PremadeHabitTemplate.iosOnly`) is hidden from the premade sheet elsewhere.
+- **Needs an Apple Watch in practice.** Exercise minutes are measured by the
+  watch; an iPhone on its own doesn't record them, so such users see 0. The
+  picker description says so ("Tracks your exercise ring from Apple Watch").
 - **Duration only** (`supportsTrackingChoice` is false): no Amount mode and no
   type filter. The default goal is 30 minutes, Apple's default ring goal.
 - **Read:** `EXERCISE_TIME` samples (`HealthService._fetchActivitySamples`).

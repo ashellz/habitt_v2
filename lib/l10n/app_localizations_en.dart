@@ -3006,7 +3006,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthMetricDescActivity =>
-      'Tracks your exercise minutes, like the Exercise ring. No workout needed';
+      'Tracks your exercise ring from Apple Watch';
 
   @override
   String get healthMetricDescActiveCalories =>

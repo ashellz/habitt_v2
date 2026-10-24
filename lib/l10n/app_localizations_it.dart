@@ -3031,7 +3031,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get healthMetricDescActivity =>
-      'Registra i tuoi minuti di esercizio, come l\'anello Esercizio. Non serve un allenamento';
+      'Registra il tuo anello Esercizio dall\'Apple Watch';
 
   @override
   String get healthMetricDescActiveCalories =>

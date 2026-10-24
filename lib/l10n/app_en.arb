@@ -1144,7 +1144,7 @@
   "healthMetricDescSleep": "Tracks your sleep time",
   "healthMetricDescWorkouts": "Tracks all your workouts",
   "healthMetricDescMindfulness": "Tracks your mindfulness sessions",
-  "healthMetricDescActivity": "Tracks your exercise minutes, like the Exercise ring. No workout needed",
+  "healthMetricDescActivity": "Tracks your exercise ring from Apple Watch",
   "healthMetricDescActiveCalories": "Tracks your active calories burned",
   "healthMetricDescTotalCalories": "Tracks your total calories burned",
   "healthMetricDescBedtime": "Tracks when you went to sleep",

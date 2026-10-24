@@ -3032,7 +3032,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get healthMetricDescActivity =>
-      'Erfasst deine Trainingsminuten, wie der Trainieren-Ring. Kein Workout nötig';
+      'Erfasst deinen Trainingsring von der Apple Watch';
 
   @override
   String get healthMetricDescActiveCalories =>
