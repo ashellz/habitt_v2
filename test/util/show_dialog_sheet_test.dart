@@ -10,7 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const double _statusBarHeight = 59;
 
-Future<void> _pumpHost(WidgetTester tester, {required double contentHeight}) async {
+Future<void> _pumpHost(
+  WidgetTester tester, {
+  required double contentHeight,
+  bool withButtons = false,
+}) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
   await tester.pumpWidget(
@@ -34,8 +38,14 @@ Future<void> _pumpHost(WidgetTester tester, {required double contentHeight}) asy
                         builder:
                             (_) => NewDefaultDialog(
                               title: 'Tall sheet',
-                              overrideDefaultButtons: true,
-                              child: SizedBox(height: contentHeight),
+                              overrideDefaultButtons: !withButtons,
+                              child: SizedBox(
+                                height: contentHeight,
+                                child: const Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Text('content top'),
+                                ),
+                              ),
                             ),
                       ),
                   child: const Text('open'),
@@ -47,36 +57,64 @@ Future<void> _pumpHost(WidgetTester tester, {required double contentHeight}) asy
   );
 }
 
-void main() {
-  testWidgets('a sheet taller than the screen stops below the status bar '
-      'and scrolls', (tester) async {
-    tester.view.physicalSize = const Size(400, 800);
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = const FakeViewPadding(top: _statusBarHeight);
-    addTearDown(tester.view.reset);
+void _useTallPhone(WidgetTester tester) {
+  tester.view.physicalSize = const Size(400, 800);
+  tester.view.devicePixelRatio = 1;
+  tester.view.padding = const FakeViewPadding(top: _statusBarHeight);
+  addTearDown(tester.view.reset);
+}
 
+void main() {
+  testWidgets('a tall sheet stops below the status bar, and only its content '
+      'scrolls', (tester) async {
+    _useTallPhone(tester);
     await _pumpHost(tester, contentHeight: 2000);
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    final sheetTop = tester.getTopLeft(find.byType(NewDefaultDialog)).dy;
-    expect(sheetTop, greaterThanOrEqualTo(_statusBarHeight));
-
-    final scrollable = tester.state<ScrollableState>(
-      find.descendant(
-        of: find.byType(NewDefaultDialog),
-        matching: find.byType(Scrollable),
-      ),
+    expect(
+      tester.getTopLeft(find.byType(NewDefaultDialog)).dy,
+      greaterThanOrEqualTo(_statusBarHeight),
     );
-    expect(scrollable.position.maxScrollExtent, greaterThan(0));
+
+    final cardTop = tester.getTopLeft(find.byType(NewDefaultDialog));
+    final cardSize = tester.getSize(find.byType(NewDefaultDialog));
+    final titleTop = tester.getTopLeft(find.text('Tall sheet'));
+    final contentTop = tester.getTopLeft(find.text('content top'));
+
+    await tester.drag(find.text('content top'), const Offset(0, -300));
+    await tester.pumpAndSettle();
+
+    // the card and its title stay put, the content moves
+    expect(tester.getTopLeft(find.byType(NewDefaultDialog)), cardTop);
+    expect(tester.getSize(find.byType(NewDefaultDialog)), cardSize);
+    expect(tester.getTopLeft(find.text('Tall sheet')), titleTop);
+    expect(
+      tester.getTopLeft(find.text('content top')).dy,
+      lessThan(contentTop.dy),
+    );
+  });
+
+  testWidgets('the buttons stay on screen under a tall content', (
+    tester,
+  ) async {
+    _useTallPhone(tester);
+    await _pumpHost(tester, contentHeight: 2000, withButtons: true);
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    final done = find.text('Done');
+    expect(done, findsOneWidget);
+    expect(tester.getBottomLeft(done).dy, lessThanOrEqualTo(800));
+
+    final doneTop = tester.getTopLeft(done);
+    await tester.drag(find.text('content top'), const Offset(0, -300));
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(done), doneTop);
   });
 
   testWidgets('a short sheet is not stretched', (tester) async {
-    tester.view.physicalSize = const Size(400, 800);
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = const FakeViewPadding(top: _statusBarHeight);
-    addTearDown(tester.view.reset);
-
+    _useTallPhone(tester);
     await _pumpHost(tester, contentHeight: 100);
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
