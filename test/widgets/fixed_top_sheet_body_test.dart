@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/fading_scroll_view.dart';
 import 'package:habitt/widgets/default/fixed_top_sheet_body.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,17 +38,23 @@ Future<void> _pump(
       ),
     ),
   );
+  // the first scroll metrics arrive after the first layout
+  await tester.pumpAndSettle();
 }
 
-double _fadeOpacity(WidgetTester tester) =>
-    tester
-        .widget<AnimatedOpacity>(
-          find.descendant(
-            of: find.byType(FixedTopSheetBody),
-            matching: find.byType(AnimatedOpacity),
-          ),
-        )
-        .opacity;
+double _fade(WidgetTester tester, Key key) =>
+    tester.widget<AnimatedOpacity>(find.byKey(key)).opacity;
+
+double _topFade(WidgetTester tester) =>
+    _fade(tester, FadingScrollView.topFadeKey);
+
+double _bottomFade(WidgetTester tester) =>
+    _fade(tester, FadingScrollView.bottomFadeKey);
+
+Future<void> _dragSheet(WidgetTester tester, double dy) async {
+  await tester.drag(find.byType(SingleChildScrollView), Offset(0, dy));
+  await tester.pumpAndSettle();
+}
 
 void main() {
   testWidgets('the top bar stays put while the content scrolls', (
@@ -58,8 +65,7 @@ void main() {
     final barTop = tester.getTopLeft(find.text('top bar'));
     final contentTop = tester.getTopLeft(find.text('content top'));
 
-    await tester.drag(find.text('content top'), const Offset(0, -300));
-    await tester.pumpAndSettle();
+    await _dragSheet(tester, -300);
 
     expect(tester.getTopLeft(find.text('top bar')), barTop);
     expect(
@@ -68,19 +74,26 @@ void main() {
     );
   });
 
-  testWidgets('the edge fade only shows once the content has scrolled', (
+  testWidgets('the fades show only on the edges that have more content', (
     tester,
   ) async {
     await _pump(tester, contentHeight: 2000);
-    expect(_fadeOpacity(tester), 0);
+    // at the top, more below
+    expect(_topFade(tester), 0);
+    expect(_bottomFade(tester), 1);
 
-    await tester.drag(find.text('content top'), const Offset(0, -100));
-    await tester.pumpAndSettle();
-    expect(_fadeOpacity(tester), 1);
+    await _dragSheet(tester, -100);
+    expect(_topFade(tester), 1);
+    expect(_bottomFade(tester), 1);
 
-    await tester.drag(find.byType(SingleChildScrollView), const Offset(0, 400));
-    await tester.pumpAndSettle();
-    expect(_fadeOpacity(tester), 0);
+    await _dragSheet(tester, -5000);
+    // at the very bottom
+    expect(_topFade(tester), 1);
+    expect(_bottomFade(tester), 0);
+
+    await _dragSheet(tester, 5000);
+    expect(_topFade(tester), 0);
+    expect(_bottomFade(tester), 1);
   });
 
   testWidgets('short content does not scroll and shows no fade', (
@@ -88,10 +101,10 @@ void main() {
   ) async {
     await _pump(tester, contentHeight: 50);
 
-    await tester.drag(find.text('content top'), const Offset(0, -100));
-    await tester.pumpAndSettle();
+    await _dragSheet(tester, -100);
 
-    expect(_fadeOpacity(tester), 0);
+    expect(_topFade(tester), 0);
+    expect(_bottomFade(tester), 0);
     expect(
       tester.getSize(find.byType(FixedTopSheetBody)).height,
       lessThan(300),
@@ -119,6 +132,7 @@ void main() {
     await tester.drag(find.text('item 1'), const Offset(-200, 0));
     await tester.pumpAndSettle();
 
-    expect(_fadeOpacity(tester), 0);
+    expect(_topFade(tester), 0);
+    expect(_bottomFade(tester), 0);
   });
 }

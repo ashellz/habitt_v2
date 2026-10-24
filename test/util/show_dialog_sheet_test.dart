@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/default/fading_scroll_view.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ Future<void> _pumpHost(
   WidgetTester tester, {
   required double contentHeight,
   bool withButtons = false,
+  bool showCloseButton = false,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
@@ -39,6 +41,7 @@ Future<void> _pumpHost(
                             (_) => NewDefaultDialog(
                               title: 'Tall sheet',
                               overrideDefaultButtons: !withButtons,
+                              showCloseButton: showCloseButton,
                               child: SizedBox(
                                 height: contentHeight,
                                 child: const Align(
@@ -64,35 +67,43 @@ void _useTallPhone(WidgetTester tester) {
   addTearDown(tester.view.reset);
 }
 
+double _fade(WidgetTester tester, Key key) =>
+    tester.widget<AnimatedOpacity>(find.byKey(key)).opacity;
+
+Future<void> _open(WidgetTester tester) async {
+  await tester.tap(find.text('open'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
-  testWidgets('a tall sheet stops below the status bar, and only its content '
-      'scrolls', (tester) async {
+  testWidgets('a tall dialog keeps its card, scrolls everything inside it and '
+      'fades the edges', (tester) async {
     _useTallPhone(tester);
     await _pumpHost(tester, contentHeight: 2000);
-    await tester.tap(find.text('open'));
-    await tester.pumpAndSettle();
+    await _open(tester);
 
     expect(
       tester.getTopLeft(find.byType(NewDefaultDialog)).dy,
       greaterThanOrEqualTo(_statusBarHeight),
     );
+    expect(_fade(tester, FadingScrollView.topFadeKey), 0);
+    expect(_fade(tester, FadingScrollView.bottomFadeKey), 1);
 
     final cardTop = tester.getTopLeft(find.byType(NewDefaultDialog));
     final cardSize = tester.getSize(find.byType(NewDefaultDialog));
     final titleTop = tester.getTopLeft(find.text('Tall sheet'));
-    final contentTop = tester.getTopLeft(find.text('content top'));
 
     await tester.drag(find.text('content top'), const Offset(0, -300));
     await tester.pumpAndSettle();
 
-    // the card and its title stay put, the content moves
+    // the card stays, the title scrolls away with the content
     expect(tester.getTopLeft(find.byType(NewDefaultDialog)), cardTop);
     expect(tester.getSize(find.byType(NewDefaultDialog)), cardSize);
-    expect(tester.getTopLeft(find.text('Tall sheet')), titleTop);
     expect(
-      tester.getTopLeft(find.text('content top')).dy,
-      lessThan(contentTop.dy),
+      tester.getTopLeft(find.text('Tall sheet')).dy,
+      lessThan(titleTop.dy),
     );
+    expect(_fade(tester, FadingScrollView.topFadeKey), 1);
   });
 
   testWidgets('the buttons stay on screen under a tall content', (
@@ -100,8 +111,7 @@ void main() {
   ) async {
     _useTallPhone(tester);
     await _pumpHost(tester, contentHeight: 2000, withButtons: true);
-    await tester.tap(find.text('open'));
-    await tester.pumpAndSettle();
+    await _open(tester);
 
     final done = find.text('Done');
     expect(done, findsOneWidget);
@@ -113,12 +123,33 @@ void main() {
     expect(tester.getTopLeft(done), doneTop);
   });
 
-  testWidgets('a short sheet is not stretched', (tester) async {
+  testWidgets('a header with a close button stays pinned', (tester) async {
     _useTallPhone(tester);
-    await _pumpHost(tester, contentHeight: 100);
-    await tester.tap(find.text('open'));
+    await _pumpHost(tester, contentHeight: 2000, showCloseButton: true);
+    await _open(tester);
+
+    final titleTop = tester.getTopLeft(find.text('Tall sheet'));
+    final contentTop = tester.getTopLeft(find.text('content top'));
+
+    await tester.drag(find.text('content top'), const Offset(0, -300));
     await tester.pumpAndSettle();
 
+    expect(tester.getTopLeft(find.text('Tall sheet')), titleTop);
+    expect(
+      tester.getTopLeft(find.text('content top')).dy,
+      lessThan(contentTop.dy),
+    );
+  });
+
+  testWidgets('a short dialog is not stretched and shows no fade', (
+    tester,
+  ) async {
+    _useTallPhone(tester);
+    await _pumpHost(tester, contentHeight: 100);
+    await _open(tester);
+
     expect(tester.getSize(find.byType(NewDefaultDialog)).height, lessThan(400));
+    expect(_fade(tester, FadingScrollView.topFadeKey), 0);
+    expect(_fade(tester, FadingScrollView.bottomFadeKey), 0);
   });
 }
