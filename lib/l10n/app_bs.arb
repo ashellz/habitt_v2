@@ -1218,5 +1218,16 @@
   "healthUseSourceValues": "Koristi vrijednosti iz {source}",
   "healthOverrideNoticeTitle": "{source} je pauziran za ovaj dan",
   "healthOverrideNoticeBody": "Napredak je ručno promijenjen, pa ga Habitt za ovaj dan neće prepisati podacima iz {source}. Broj ostaje tačno onakav kakav je unesen.\n\nŽeliš vratiti {source}? Dodirni \"Koristi vrijednosti iz {source}\" na ovoj navici.",
-  "healthOverrideNoticeUnderstood": "Razumijem"
+  "healthOverrideNoticeUnderstood": "Razumijem",
+  "strengthOverTime": "Čvrstoća kroz vrijeme",
+  "strengthChartNotEnoughData": "Samo naprijed. Trend čvrstoće pojavit će se nakon par dana.",
+  "habitAgeStartedToday": "Počeo danas, sretno!",
+  "habitAgeDays": "Radiš ovu već {count, plural, one{{count} dan} few{{count} dana} other{{count} dana}}",
+  "habitAgeWeeks": "Radiš ovo već {count, plural, one{{count} sedmicu} few{{count} sedmice} other{{count} sedmica}}",
+  "habitAgeMonths": "Radiš ovo već {count, plural, one{{count} mjesec} few{{count} mjeseca} other{{count} mjeseci}}",
+  "habitAgeYears": "Radiš ovo već {count, plural, one{{count} godinu} few{{count} godine} other{{count} godina}}",
+  "habitAgeYearsMonths": "Radiš ovo već {years, plural, one{{years} godinu} few{{years} godine} other{{years} godina}} i {months, plural, one{{months} mjesec} few{{months} mjeseca} other{{months} mjeseci}}",
+  "statsRange7Days": "7D",
+  "statsRange30Days": "30D",
+  "statsRangeAll": "SVE"
 }

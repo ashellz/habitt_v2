@@ -3373,4 +3373,84 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get healthOverrideNoticeUnderstood => 'Ho capito';
+
+  @override
+  String get strengthOverTime => 'Forza nel tempo';
+
+  @override
+  String get strengthChartNotEnoughData =>
+      'Continua così. Il grafico della forza apparirà dopo un paio di giorni.';
+
+  @override
+  String get habitAgeStartedToday => 'Iniziata oggi, buona fortuna!';
+
+  @override
+  String habitAgeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni',
+      one: '1 giorno',
+    );
+    return 'Lo fai da $_temp0';
+  }
+
+  @override
+  String habitAgeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count settimane',
+      one: '1 settimana',
+    );
+    return 'Lo fai da $_temp0';
+  }
+
+  @override
+  String habitAgeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi',
+      one: '1 mese',
+    );
+    return 'Lo fai da $_temp0';
+  }
+
+  @override
+  String habitAgeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count anni',
+      one: '1 anno',
+    );
+    return 'Lo fai da $_temp0';
+  }
+
+  @override
+  String habitAgeYearsMonths(num months, num years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years anni',
+      one: '1 anno',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months mesi',
+      one: '1 mese',
+    );
+    return 'Lo fai da $_temp0 e $_temp1';
+  }
+
+  @override
+  String get statsRange7Days => '7G';
+
+  @override
+  String get statsRange30Days => '30G';
+
+  @override
+  String get statsRangeAll => 'TUTTO';
 }

@@ -14,6 +14,7 @@ class MultipleOptionSelector<T> extends StatefulWidget {
     this.allowDeselect = true,
     this.showDeselectHint = false,
     this.alignDuration = const Duration(milliseconds: 250),
+    this.compact = false,
   }) : assert(labels.length == values.length),
        assert(labels.length >= 2);
 
@@ -25,6 +26,9 @@ class MultipleOptionSelector<T> extends StatefulWidget {
   final bool showDeselectHint;
   final Duration alignDuration;
   final Color? bgColor;
+
+  /// Smaller pill with tighter labels, for use beside a section title.
+  final bool compact;
 
   @override
   State<MultipleOptionSelector<T>> createState() =>
@@ -91,8 +95,8 @@ class _MultipleOptionSelectorState<T> extends State<MultipleOptionSelector<T>> {
     final optionCount = widget.values.length;
 
     return Container(
-      height: 46,
-      padding: const EdgeInsets.all(4),
+      height: widget.compact ? 32 : 46,
+      padding: EdgeInsets.all(widget.compact ? 3 : 4),
       decoration: BoxDecoration(
         color: widget.bgColor ?? cp.field,
         borderRadius: BorderRadius.circular(100),
@@ -126,6 +130,7 @@ class _MultipleOptionSelectorState<T> extends State<MultipleOptionSelector<T>> {
                         label: widget.labels[i],
                         isSelected: widget.selectedValue == widget.values[i],
                         showDeselectHint: widget.showDeselectHint,
+                        compact: widget.compact,
                         onTap: () => _onTapIndex(i),
                       ),
                     ),
@@ -145,8 +150,10 @@ class _OptionButton extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
     this.showDeselectHint = false,
+    this.compact = false,
   });
 
+  final bool compact;
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
@@ -161,7 +168,7 @@ class _OptionButton extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: compact ? 4 : 16.0),
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,7 +182,7 @@ class _OptionButton extends StatelessWidget {
                   curve: Curves.easeOutCubic,
                   style: TextStyle(
                     color: textColor,
-                    fontSize: 14,
+                    fontSize: compact ? 12 : 14,
                     fontWeight: FontWeight.w500,
                   ),
                   child: Text(

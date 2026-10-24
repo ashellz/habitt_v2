@@ -1228,5 +1228,16 @@
   "healthUseSourceValues": "{source}-Werte verwenden",
   "healthOverrideNoticeTitle": "{source} ist für diesen Tag pausiert",
   "healthOverrideNoticeBody": "Du hast den Fortschritt selbst geändert, deshalb überschreibt Habitt ihn für diesen Tag nicht mit Daten aus {source}. Dein Wert bleibt genau so, wie du ihn eingegeben hast.\n\nMöchtest du {source} zurück? Tippe bei dieser Gewohnheit auf \"{source}-Werte verwenden\".",
-  "healthOverrideNoticeUnderstood": "Verstanden"
+  "healthOverrideNoticeUnderstood": "Verstanden",
+  "strengthOverTime": "Stärke im Zeitverlauf",
+  "strengthChartNotEnoughData": "Weiter so. Dein Stärkeverlauf erscheint nach ein paar Tagen.",
+  "habitAgeStartedToday": "Heute gestartet, viel Erfolg!",
+  "habitAgeDays": "Du machst das seit {count, plural, =1{1 Tag} other{{count} Tagen}}",
+  "habitAgeWeeks": "Du machst das seit {count, plural, =1{1 Woche} other{{count} Wochen}}",
+  "habitAgeMonths": "Du machst das seit {count, plural, =1{1 Monat} other{{count} Monaten}}",
+  "habitAgeYears": "Du machst das seit {count, plural, =1{1 Jahr} other{{count} Jahren}}",
+  "habitAgeYearsMonths": "Du machst das seit {years, plural, =1{1 Jahr} other{{years} Jahren}} und {months, plural, =1{1 Monat} other{{months} Monaten}}",
+  "statsRange7Days": "7T",
+  "statsRange30Days": "30T",
+  "statsRangeAll": "ALLE"
 }

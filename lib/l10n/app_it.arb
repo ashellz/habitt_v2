@@ -1228,5 +1228,16 @@
   "healthUseSourceValues": "Usa i valori di {source}",
   "healthOverrideNoticeTitle": "{source} è in pausa per questo giorno",
   "healthOverrideNoticeBody": "Hai modificato i progressi manualmente, quindi Habitt non li sovrascriverà con i dati di {source} per questo giorno. Il tuo valore resta esattamente come lo hai inserito.\n\nVuoi tornare a {source}? Tocca \"Usa i valori di {source}\" su questa abitudine.",
-  "healthOverrideNoticeUnderstood": "Ho capito"
+  "healthOverrideNoticeUnderstood": "Ho capito",
+  "strengthOverTime": "Forza nel tempo",
+  "strengthChartNotEnoughData": "Continua così. Il grafico della forza apparirà dopo un paio di giorni.",
+  "habitAgeStartedToday": "Iniziata oggi, buona fortuna!",
+  "habitAgeDays": "Lo fai da {count, plural, =1{1 giorno} other{{count} giorni}}",
+  "habitAgeWeeks": "Lo fai da {count, plural, =1{1 settimana} other{{count} settimane}}",
+  "habitAgeMonths": "Lo fai da {count, plural, =1{1 mese} other{{count} mesi}}",
+  "habitAgeYears": "Lo fai da {count, plural, =1{1 anno} other{{count} anni}}",
+  "habitAgeYearsMonths": "Lo fai da {years, plural, =1{1 anno} other{{years} anni}} e {months, plural, =1{1 mese} other{{months} mesi}}",
+  "statsRange7Days": "7G",
+  "statsRange30Days": "30G",
+  "statsRangeAll": "TUTTO"
 }

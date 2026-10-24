@@ -3345,4 +3345,90 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get healthOverrideNoticeUnderstood => 'Razumijem';
+
+  @override
+  String get strengthOverTime => 'Čvrstoća kroz vrijeme';
+
+  @override
+  String get strengthChartNotEnoughData =>
+      'Samo naprijed. Trend čvrstoće pojavit će se nakon par dana.';
+
+  @override
+  String get habitAgeStartedToday => 'Počeo danas, sretno!';
+
+  @override
+  String habitAgeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dana',
+      few: '$count dana',
+      one: '$count dan',
+    );
+    return 'Radiš ovu već $_temp0';
+  }
+
+  @override
+  String habitAgeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sedmica',
+      few: '$count sedmice',
+      one: '$count sedmicu',
+    );
+    return 'Radiš ovo već $_temp0';
+  }
+
+  @override
+  String habitAgeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mjeseci',
+      few: '$count mjeseca',
+      one: '$count mjesec',
+    );
+    return 'Radiš ovo već $_temp0';
+  }
+
+  @override
+  String habitAgeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count godina',
+      few: '$count godine',
+      one: '$count godinu',
+    );
+    return 'Radiš ovo već $_temp0';
+  }
+
+  @override
+  String habitAgeYearsMonths(num months, num years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years godina',
+      few: '$years godine',
+      one: '$years godinu',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months mjeseci',
+      few: '$months mjeseca',
+      one: '$months mjesec',
+    );
+    return 'Radiš ovo već $_temp0 i $_temp1';
+  }
+
+  @override
+  String get statsRange7Days => '7D';
+
+  @override
+  String get statsRange30Days => '30D';
+
+  @override
+  String get statsRangeAll => 'SVE';
 }
