@@ -4,7 +4,8 @@
 
 Habitt can link individual habits to a metric from Apple Health (iOS) or
 Google Health Connect (Android) — steps, sleep, exercise minutes, mindful
-minutes, active calories, or total calories. When linked, the habit's
+minutes, activity (exercise minutes, iOS only), active calories, or total
+calories. When linked, the habit's
 `amountCompleted`/`durationCompleted` are pulled from Health instead of
 being entered by hand.
 
@@ -31,8 +32,11 @@ opened, not the instant new Health data appears.
   habit card formats it as a duration via `getSleepAmountString`);
   `workouts` / `mindfulness` are duration goals by default (seconds,
   matching the app's post-migration duration schema — see
-  `backup_system.md`'s "Duration Schema Version" section);
+  `backup_system.md`'s "Duration Schema Version" section); `activity` is a
+  duration goal with no Amount choice (see "Activity");
   `bedtime` / `wakeTime` are time-of-day goals (minutes since midnight).
+- `HealthMetricType` is stored by enum index, so new metrics are only ever
+  added at the end (`activity` is last).
 - Linking a habit to a metric pins its `trackingType` to match (see
   `StateProvider.selectedHealthMetric` in
   [`lib/providers/state_provider.dart`](../lib/providers/state_provider.dart));
@@ -210,16 +214,44 @@ touch (a run followed by a cool-down walk) stay separate.
 
 iOS used to read Apple's `EXERCISE_TIME` for an unfiltered workout habit. That
 is one-minute samples of brisk activity with no type, not workouts, so a
-single walk showed up as many "workouts" (task 18). It is no longer read. The
-trade-off: activity Apple credits as exercise minutes but that was never
-started as a workout does not count.
+single walk showed up as many "workouts" (task 18). Workout habits no longer
+read it: they only count real workouts. Activity Apple credits as exercise
+minutes but that was never started as a workout is what the separate
+**Activity** metric is for (next section).
 
 `WORKOUT` is part of the iOS read permission set, so
-`requestAuthorization()` now asks for it. Users who linked a workout habit
-before this were never asked, so `HealthProvider.syncNow` calls
-`requestAuthorization()` once per launch on iOS when a workout habit is linked
-(`_requestWorkoutAccessOnce`); HealthKit only shows the sheet for types not
-yet answered, so it is silent otherwise.
+`requestAuthorization()` asks for it. Users who linked a workout habit before
+this were never asked, so `HealthProvider.syncNow` / `syncHabit` call
+`requestAuthorization()` once per launch on iOS when a workout or activity
+habit is linked (`_requestIosAccessOnce`); HealthKit only shows the sheet for
+types not yet answered, so it is silent otherwise.
+
+## Activity (exercise minutes)
+
+`HealthMetricType.activity` mirrors the Apple Watch Exercise ring: every minute
+of brisk movement counts, whether or not a workout was started. It is separate
+from `workouts` on purpose — workouts are typed, user-started sessions;
+exercise minutes are untyped one-minute samples. A walk to the shop can fill
+the ring and leave a Workout habit at zero.
+
+- **iOS only.** Health Connect has no exercise-minutes record, so
+  `_androidTypes` has no `activity` entry, the metric picker doesn't offer it,
+  and the premade "Activity" template (`PremadeHabitType.activity`,
+  `PremadeHabitTemplate.iosOnly`) is hidden from the premade sheet elsewhere.
+- **Duration only** (`supportsTrackingChoice` is false): no Amount mode and no
+  type filter. The default goal is 30 minutes, Apple's default ring goal.
+- **Read:** `EXERCISE_TIME` samples (`HealthService._fetchActivitySamples`).
+  Workouts count toward it too, but only the brisk part, so a gentle yoga
+  session may add little. The habit shows what Apple credits, same as the ring.
+- **Value:** the time covered by at least one sample
+  (`activeTimeCovered` in
+  [`lib/util/activity_sessions.dart`](../lib/util/activity_sessions.dart)), so
+  the same minute reported by two sources counts once.
+- **Sessions list:** `groupActivityPeriods` joins samples at most
+  `activityPeriodMaxGap` (2 minutes) apart into periods, so 23 consecutive
+  minutes show as one "10:02 – 10:25" row. A period's duration is its span, so
+  it can be a minute or two longer than the habit's progress when small gaps
+  were joined.
 
 ## Manual override
 
@@ -318,7 +350,8 @@ editing the target agree.
 ## Platform differences
 
 Health Connect (Android) has no mindfulness record type —
-`mindfulMinutes` is iOS-only. Workouts read the same `WORKOUT` records on both
+`mindfulMinutes` is iOS-only — and no exercise-minutes record, so `activity`
+is iOS-only too. Workouts read the same `WORKOUT` records on both
 platforms (see "Workout reads").
 `HealthService.supportedMetrics` reflects this per-platform, and the habit
 editor's metric picker only offers what's actually supported.

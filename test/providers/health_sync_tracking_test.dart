@@ -182,6 +182,33 @@ void main() {
       expect(habit.completed, isFalse);
     });
 
+    test('activity habit writes durationCompleted and completes', () async {
+      await habitBox.put(
+        4,
+        buildTestHabit(
+          id: 4,
+          healthMetric: HealthMetricType.activity,
+          trackingType: HabitTrackingType.duration,
+          amount: 0,
+          duration: 30, // minutes: the seconds migration runs on init
+        ),
+      );
+      final provider = await createInitializedProvider();
+
+      await provider.syncHabitFromHealth(
+        4,
+        HealthMetricType.activity,
+        35 * 60,
+        day: DateTime.now(),
+        sessions: _sessions(1),
+      );
+
+      final habit = provider.habits.firstWhere((h) => h.id == 4);
+      expect(habit.durationCompleted, 35 * 60);
+      expect(habit.amountCompleted, 0);
+      expect(habit.completed, isTrue);
+    });
+
     test('Amount-mode mindfulness habit writes amountCompleted', () async {
       await habitBox.put(
         3,

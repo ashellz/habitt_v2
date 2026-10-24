@@ -2903,6 +2903,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get healthMetricMindfulMinutes => 'Mindfulness';
 
   @override
+  String get healthMetricActivity => 'Attività';
+
+  @override
   String get healthMetricActiveCalories => 'Calorie attive';
 
   @override
@@ -3027,6 +3030,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Registra le tue sessioni di mindfulness';
 
   @override
+  String get healthMetricDescActivity =>
+      'Registra i tuoi minuti di esercizio, come l\'anello Esercizio. Non serve un allenamento';
+
+  @override
   String get healthMetricDescActiveCalories =>
       'Registra le calorie attive che bruci';
 
@@ -3042,6 +3049,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get premadeHabitMindfulness => 'Mindfulness';
+
+  @override
+  String get premadeHabitActivity => 'Attività';
 
   @override
   String get premadeHabitSleepTime => 'Tempo di sonno';
@@ -3305,6 +3315,16 @@ class AppLocalizationsIt extends AppLocalizations {
     Object remaining,
   ) {
     return 'Finora $progress di mindfulness. Mancano $remaining all\'obiettivo.|Mancano $remaining di calma al tuo obiettivo.';
+  }
+
+  @override
+  String notificationHealthActivityStart(Object goal) {
+    return 'Muoviti per $goal oggi. Una camminata a passo svelto conta.|Punta a $goal di attività oggi, ogni movimento conta.|È ora di muoversi, il tuo obiettivo di attività è $goal.|Resta in movimento, l\'obiettivo di oggi è $goal di attività.';
+  }
+
+  @override
+  String notificationHealthActivityProgress(Object progress, Object remaining) {
+    return 'Finora $progress di attività. Mancano $remaining all\'obiettivo.|Mancano $remaining di attività, continua a muoverti!|Bene, già $progress di attività oggi. Ne mancano solo $remaining.';
   }
 
   @override

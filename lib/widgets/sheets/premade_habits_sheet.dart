@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -154,7 +155,7 @@ class PremadeHabitsSheet extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children:
-              section.habits.map((template) {
+              section.habits.where(_isAvailable).map((template) {
                 final isSelected = selectedPremadeHabitType == template.type;
 
                 return NewDefaultButton(
@@ -191,6 +192,9 @@ class PremadeHabitsSheet extends StatelessWidget {
       ],
     );
   }
+
+  bool _isAvailable(PremadeHabitTemplate template) =>
+      !template.iosOnly || defaultTargetPlatform == TargetPlatform.iOS;
 
   Widget _topSection(
     BuildContext context,

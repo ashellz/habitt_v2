@@ -21,7 +21,7 @@ class HealthProvider extends ChangeNotifier {
   bool isSyncing = false;
   DateTime? lastSyncedAt;
   bool _availabilityChecked = false;
-  bool _workoutAccessRequested = false;
+  bool _iosAccessRequested = false;
 
   List<HealthMetricType> get supportedMetrics => _service.supportedMetrics;
 
@@ -112,7 +112,7 @@ class HealthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _requestWorkoutAccessOnce(linkedHabits);
+      await _requestIosAccessOnce(linkedHabits);
       for (final habit in linkedHabits) {
         final metric = habit.healthMetric!;
         final syncDay = _service.syncDayFor(
@@ -145,7 +145,7 @@ class HealthProvider extends ChangeNotifier {
       if (!isAvailable) return;
       if (Platform.isAndroid && !permissionGranted) return;
 
-      await _requestWorkoutAccessOnce([habit]);
+      await _requestIosAccessOnce([habit]);
       final syncDay = _service.syncDayFor(
         metric,
         DateTime.now(),
@@ -161,12 +161,17 @@ class HealthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _requestWorkoutAccessOnce(List<Habit> linkedHabits) async {
-    if (!Platform.isIOS || _workoutAccessRequested) return;
-    if (!linkedHabits.any((h) => h.healthMetric == HealthMetricType.workouts)) {
+  Future<void> _requestIosAccessOnce(List<Habit> linkedHabits) async {
+    if (!Platform.isIOS || _iosAccessRequested) return;
+    final needsAccess = linkedHabits.any(
+      (h) =>
+          h.healthMetric == HealthMetricType.workouts ||
+          h.healthMetric == HealthMetricType.activity,
+    );
+    if (!needsAccess) {
       return;
     }
-    _workoutAccessRequested = true;
+    _iosAccessRequested = true;
     try {
       await _service.requestAuthorization();
     } catch (_) {

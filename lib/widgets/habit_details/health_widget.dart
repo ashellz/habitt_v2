@@ -238,6 +238,8 @@ class _HealthWidgetState extends State<HealthWidget> {
       case HealthMetricType.workouts:
       case HealthMetricType.mindfulness:
         return _workoutOrMindfulnessBody(cp, sp, metric);
+      case HealthMetricType.activity:
+        return _activityBody(cp);
       case HealthMetricType.steps:
       case HealthMetricType.activeCalories:
       case HealthMetricType.totalCalories:
@@ -253,6 +255,14 @@ class _HealthWidgetState extends State<HealthWidget> {
         minValue: 1,
         color: cp.isDark ? cp.habitBg : cp.bg,
       ),
+    );
+  }
+
+  // exercise minutes are a duration only, there's no session count to track
+  Widget _activityBody(ColorProvider cp) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: EnterHabitDuration(color: cp.isDark ? cp.habitBg : cp.bg),
     );
   }
 

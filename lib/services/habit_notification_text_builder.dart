@@ -449,6 +449,7 @@ class HabitNotificationTextBuilder {
       case PremadeHabitType.workoutRowing:
       case PremadeHabitType.workoutCombined:
       case PremadeHabitType.mindfulness:
+      case PremadeHabitType.activity:
       case PremadeHabitType.sleepTime:
       case PremadeHabitType.activeCalories:
       case PremadeHabitType.totalCalories:
@@ -593,6 +594,7 @@ class HabitNotificationTextBuilder {
       case PremadeHabitType.workoutRowing:
       case PremadeHabitType.workoutCombined:
       case PremadeHabitType.mindfulness:
+      case PremadeHabitType.activity:
       case PremadeHabitType.sleepTime:
       case PremadeHabitType.activeCalories:
       case PremadeHabitType.totalCalories:

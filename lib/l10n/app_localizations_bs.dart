@@ -2875,6 +2875,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthMetricMindfulMinutes => 'Svjesnost';
 
   @override
+  String get healthMetricActivity => 'Aktivnost';
+
+  @override
   String get healthMetricActiveCalories => 'Aktivne kalorije';
 
   @override
@@ -2998,6 +3001,10 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthMetricDescMindfulness => 'Prati tvoje sesije svjesnosti';
 
   @override
+  String get healthMetricDescActivity =>
+      'Prati tvoje minute vježbanja, kao krug vježbanja. Trening nije potreban';
+
+  @override
   String get healthMetricDescActiveCalories =>
       'Prati tvoje potrošene aktivne kalorije';
 
@@ -3012,6 +3019,9 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get premadeHabitMindfulness => 'Svjesnost';
+
+  @override
+  String get premadeHabitActivity => 'Aktivnost';
 
   @override
   String get premadeHabitSleepTime => 'Vrijeme spavanja';
@@ -3277,6 +3287,16 @@ class AppLocalizationsBs extends AppLocalizations {
     Object remaining,
   ) {
     return 'Do sada je $progress svjesnosti. Još $remaining do cilja.|Preostalo je $remaining mira do cilja.';
+  }
+
+  @override
+  String notificationHealthActivityStart(Object goal) {
+    return 'Odvoji $goal za kretanje danas. Brza šetnja se računa.|Ciljaj $goal aktivnosti danas, svako kretanje se računa.|Vrijeme je za kretanje, tvoj cilj aktivnosti je $goal.|Ostani u pokretu, današnji cilj je $goal aktivnosti.';
+  }
+
+  @override
+  String notificationHealthActivityProgress(Object progress, Object remaining) {
+    return 'Do sada $progress aktivnosti. Još $remaining do cilja.|Preostalo je $remaining aktivnosti, nastavi se kretati!|Odlično, danas već $progress aktivnosti. Samo još $remaining.';
   }
 
   @override

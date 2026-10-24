@@ -87,6 +87,14 @@ void main() {
     durationCompleted: doneMinutes * 60,
   );
 
+  Habit activity({int doneMinutes = 0, bool linked = true}) => buildTestHabit(
+    trackingType: HabitTrackingType.duration,
+    healthMetric: linked ? HealthMetricType.activity : null,
+    premadeHabitType: PremadeHabitType.activity,
+    duration: 30 * 60,
+    durationCompleted: doneMinutes * 60,
+  );
+
   group('metricFor', () {
     test('only claims the supported activity habits', () {
       expect(
@@ -100,6 +108,14 @@ void main() {
       expect(
         HealthMetricNotificationText.metricFor(mindfulness()),
         HealthMetricType.mindfulness,
+      );
+      expect(
+        HealthMetricNotificationText.metricFor(activity()),
+        HealthMetricType.activity,
+      );
+      expect(
+        HealthMetricNotificationText.metricFor(activity(linked: false)),
+        HealthMetricType.activity,
       );
       expect(
         HealthMetricNotificationText.metricFor(buildTestHabit(amount: 10)),

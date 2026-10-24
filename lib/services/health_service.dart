@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/health_workout_type.dart';
+import 'package:habitt/util/activity_sessions.dart';
 import 'package:habitt/util/health_history.dart';
 import 'package:habitt/util/sleep_sessions.dart';
 import 'package:habitt/util/workout_sessions.dart';
@@ -69,6 +70,8 @@ class HealthService {
     HealthMetricType.mindfulness: [HealthDataType.MINDFULNESS],
     HealthMetricType.activeCalories: [HealthDataType.ACTIVE_ENERGY_BURNED],
     HealthMetricType.totalCalories: [HealthDataType.TOTAL_CALORIES_BURNED],
+    // iOS only: Health Connect has no exercise-minutes record
+    HealthMetricType.activity: [HealthDataType.EXERCISE_TIME],
   };
 
   static const Map<HealthMetricType, List<HealthDataType>> _androidTypes = {
@@ -95,6 +98,7 @@ class HealthService {
   static const Set<HealthMetricType> _sessionMetrics = {
     HealthMetricType.workouts,
     HealthMetricType.mindfulness,
+    HealthMetricType.activity,
     HealthMetricType.sleep,
     HealthMetricType.bedtime,
     HealthMetricType.wakeTime,
@@ -242,6 +246,18 @@ class HealthService {
     return dedupOverlappingSessions(sessions);
   }
 
+  /// One sample per minute of Apple's exercise time — brisk movement of any
+  /// kind, started as a workout or not, so it has no activity type. Overlapping
+  /// samples from more than one source are not merged here, so
+  /// [activeTimeCovered] counts them once.
+  Future<List<HealthSessionDetail>> _fetchActivitySamples(DateTime day) async {
+    final points = await _fetchPoints(HealthMetricType.activity, day);
+    return [
+      for (final point in points)
+        HealthSessionDetail(start: point.dateFrom, end: point.dateTo),
+    ];
+  }
+
   // Sleep, bedtime and wake time all come from the same sleep samples,
   // grouped into sessions rather than cut by a clock window.
   static const Set<HealthMetricType> _sleepMetrics = {
@@ -349,6 +365,11 @@ class HealthService {
         );
       }
 
+      if (metric == HealthMetricType.activity) {
+        final samples = await _fetchActivitySamples(day);
+        return activeTimeCovered(samples).inSeconds;
+      }
+
       final points = await _fetchPoints(metric, day);
 
       if (_countMetrics.contains(metric)) {
@@ -411,6 +432,10 @@ class HealthService {
 
       if (metric == HealthMetricType.workouts) {
         return _fetchWorkoutSessions(day, workoutFilter);
+      }
+
+      if (metric == HealthMetricType.activity) {
+        return groupActivityPeriods(await _fetchActivitySamples(day));
       }
 
       final points = await _fetchPoints(metric, day);
