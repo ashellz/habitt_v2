@@ -93,7 +93,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Odaberi koliko šaren treba biti korisnički interfejs.';
 
   @override
-  String get clear => 'Jasno';
+  String get clear => 'Obriši';
 
   @override
   String get clearSelectedDays => 'Očisti odabrane dane';
