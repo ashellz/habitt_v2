@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/default/fading_scroll_view.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
+import 'package:habitt/widgets/default/scroll_edge_fade.dart';
 import 'package:provider/provider.dart';
 
 class NewDefaultDialog extends StatelessWidget {
@@ -234,16 +234,18 @@ class NewDefaultDialog extends StatelessWidget {
               ),
             if (scrolling.isNotEmpty)
               Flexible(
-                child: FadingScrollView(
-                  padding: EdgeInsets.only(
-                    top: 20,
-                    bottom: footerWidgets.isEmpty ? 20 : 0,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 20,
-                    children: scrolling,
+                child: ScrollEdgeFade(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(
+                      top: 20,
+                      bottom: footerWidgets.isEmpty ? 20 : 0,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 20,
+                      children: scrolling,
+                    ),
                   ),
                 ),
               ),

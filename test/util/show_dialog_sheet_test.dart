@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
-import 'package:habitt/widgets/default/fading_scroll_view.dart';
+import 'package:habitt/widgets/default/scroll_edge_fade.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,7 +68,7 @@ void _useTallPhone(WidgetTester tester) {
 }
 
 double _fade(WidgetTester tester, Key key) =>
-    tester.widget<AnimatedOpacity>(find.byKey(key)).opacity;
+    tester.widget<TweenAnimationBuilder<double>>(find.byKey(key)).tween.end!;
 
 Future<void> _open(WidgetTester tester) async {
   await tester.tap(find.text('open'));
@@ -86,8 +86,8 @@ void main() {
       tester.getTopLeft(find.byType(NewDefaultDialog)).dy,
       greaterThanOrEqualTo(_statusBarHeight),
     );
-    expect(_fade(tester, FadingScrollView.topFadeKey), 0);
-    expect(_fade(tester, FadingScrollView.bottomFadeKey), 1);
+    expect(_fade(tester, ScrollEdgeFade.startFadeKey), 0);
+    expect(_fade(tester, ScrollEdgeFade.endFadeKey), 1);
 
     final cardTop = tester.getTopLeft(find.byType(NewDefaultDialog));
     final cardSize = tester.getSize(find.byType(NewDefaultDialog));
@@ -103,7 +103,7 @@ void main() {
       tester.getTopLeft(find.text('Tall sheet')).dy,
       lessThan(titleTop.dy),
     );
-    expect(_fade(tester, FadingScrollView.topFadeKey), 1);
+    expect(_fade(tester, ScrollEdgeFade.startFadeKey), 1);
   });
 
   testWidgets('the buttons stay on screen under a tall content', (
@@ -149,7 +149,7 @@ void main() {
     await _open(tester);
 
     expect(tester.getSize(find.byType(NewDefaultDialog)).height, lessThan(400));
-    expect(_fade(tester, FadingScrollView.topFadeKey), 0);
-    expect(_fade(tester, FadingScrollView.bottomFadeKey), 0);
+    expect(_fade(tester, ScrollEdgeFade.startFadeKey), 0);
+    expect(_fade(tester, ScrollEdgeFade.endFadeKey), 0);
   });
 }

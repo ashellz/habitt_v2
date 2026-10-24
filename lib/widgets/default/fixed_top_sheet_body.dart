@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/widgets/default/fading_scroll_view.dart';
+import 'package:habitt/widgets/default/scroll_edge_fade.dart';
 
 // body of a bottom sheet: [topBar] (back / title / save) stays at the top while
 // [child] scrolls underneath it, with soft fades at the scrolled edges
-// (see FadingScrollView)
+// (see ScrollEdgeFade)
 // needs a bounded height, put it inside the sheet's ConstrainedBox
 class FixedTopSheetBody extends StatelessWidget {
   const FixedTopSheetBody({
@@ -29,10 +29,12 @@ class FixedTopSheetBody extends StatelessWidget {
       children: [
         Padding(padding: EdgeInsets.only(top: topPadding), child: topBar),
         Flexible(
-          child: FadingScrollView(
-            controller: controller,
-            padding: EdgeInsets.only(bottom: bottomPadding),
-            child: child,
+          child: ScrollEdgeFade(
+            child: SingleChildScrollView(
+              controller: controller,
+              padding: EdgeInsets.only(bottom: bottomPadding),
+              child: child,
+            ),
           ),
         ),
       ],

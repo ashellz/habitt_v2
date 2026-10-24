@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/default/fading_scroll_view.dart';
+import 'package:habitt/widgets/default/scroll_edge_fade.dart';
 import 'package:habitt/widgets/default/fixed_top_sheet_body.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,13 +43,13 @@ Future<void> _pump(
 }
 
 double _fade(WidgetTester tester, Key key) =>
-    tester.widget<AnimatedOpacity>(find.byKey(key)).opacity;
+    tester.widget<TweenAnimationBuilder<double>>(find.byKey(key)).tween.end!;
 
 double _topFade(WidgetTester tester) =>
-    _fade(tester, FadingScrollView.topFadeKey);
+    _fade(tester, ScrollEdgeFade.startFadeKey);
 
 double _bottomFade(WidgetTester tester) =>
-    _fade(tester, FadingScrollView.bottomFadeKey);
+    _fade(tester, ScrollEdgeFade.endFadeKey);
 
 Future<void> _dragSheet(WidgetTester tester, double dy) async {
   await tester.drag(find.byType(SingleChildScrollView), Offset(0, dy));
