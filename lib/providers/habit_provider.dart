@@ -1449,6 +1449,37 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Restores today's day-state from today's stored snapshot, if one exists.
+  ///
+  /// Used when the device clock moves backwards (e.g. the user set the date a
+  /// few days ahead, then back): the live habits hold the "future" day's state,
+  /// while today's real progress was snapshotted when the clock moved ahead.
+  /// Falls back to [resetCompletion] when there is no snapshot for today.
+  Future<void> restoreTodayFromSnapshot() async {
+    final today = _normalizeDate(DateTime.now());
+    final todayKey = today.toIso8601String().split('T').first;
+    final snapshot = daysBox.get(todayKey);
+    if (snapshot == null) {
+      await resetCompletion();
+      return;
+    }
+
+    habitStatsProvider?.clearAll();
+    final snapshotById = {for (final h in snapshot.habits) h.id: h};
+    for (final habit in habits) {
+      final dayHabit = snapshotById[habit.id];
+      if (dayHabit != null) {
+        habit.adoptDayState(dayHabit);
+      } else {
+        await habit.resetCompletion();
+      }
+      await updateHabitInDB(habit);
+    }
+    refreshTodaysHabits(notify: false);
+    _syncAllHabitNotifications(force: true);
+    notifyListeners();
+  }
+
   Future<void> resetScheduleCountersIfNeeded({
     required bool resetWeekly,
     required bool resetMonthly,
@@ -1956,7 +1987,9 @@ class HabitProvider extends ChangeNotifier {
     final sortedDays = daysBox.values.toList();
     sortedDays.sort((a, b) => a.date.compareTo(b.date)); // oldest → newest
     final today = _normalizeDate(DateTime.now());
-    sortedDays.removeWhere((day) => _normalizeDate(day.date) == today);
+    // Drop today and any future days (left behind if the device clock was
+    // moved ahead and back), which would otherwise count as misses.
+    sortedDays.removeWhere((day) => !_normalizeDate(day.date).isBefore(today));
 
     for (final habit in habitBox.values) {
       if (onlyHabitId != null && habit.id != onlyHabitId) continue;
@@ -2022,8 +2055,9 @@ class HabitProvider extends ChangeNotifier {
     sortedDays.sort((a, b) => b.date.compareTo(a.date));
 
     final today = _normalizeDate(DateTime.now());
-    // Removing today
-    sortedDays.removeWhere((day) => _normalizeDate(day.date) == today);
+    // Removing today and any future days (left behind if the device clock was
+    // moved ahead and back), which would otherwise count as misses.
+    sortedDays.removeWhere((day) => !_normalizeDate(day.date).isBefore(today));
 
     final currentHabits = habitBox.values;
 

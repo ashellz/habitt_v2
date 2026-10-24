@@ -53,6 +53,30 @@ void checkForNewDay(
   if (lastOpenedDate.day != today.day ||
       lastOpenedDate.month != today.month ||
       lastOpenedDate.year != today.year) {
+    final normalizedLastOpened = DateTime(
+      lastOpenedDate.year,
+      lastOpenedDate.month,
+      lastOpenedDate.day,
+    );
+    final normalizedToday = DateTime(today.year, today.month, today.day);
+
+    // The device clock moved backwards (e.g. the user set the date a few days
+    // ahead and then back). Today's real progress was already snapshotted when
+    // the clock moved ahead, so restore it instead of resetting completion.
+    // Days dated after today are ignored by the streak calculations.
+    if (normalizedToday.isBefore(normalizedLastOpened)) {
+      debugPrint("Clock moved backwards, restoring today's progress");
+      await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
+      await habitProvider.restoreTodayFromSnapshot();
+      await habitProvider.assignStreaks();
+      statsProvider.perfectDaysStreak = statsProvider.refreshPerfectStreak();
+      if (stateProvider.shouldUpdateStreaks) {
+        stateProvider.shouldUpdateStreaks = false;
+      }
+      prefs.setString("lastOpenedDate", today.toString());
+      return;
+    }
+
     debugPrint("New day, resetting completion");
     await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
 
@@ -61,7 +85,6 @@ void checkForNewDay(
       lastOpenedDate.month,
       lastOpenedDate.day,
     ).add(const Duration(days: 1));
-    final normalizedToday = DateTime(today.year, today.month, today.day);
     while (gapDay.isBefore(normalizedToday)) {
       await habitProvider.saveHabitDay(
         gapDay,
