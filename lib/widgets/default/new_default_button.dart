@@ -179,8 +179,14 @@ class NewDefaultButton extends StatelessWidget {
         _variant == _ButtonVariant.primary ||
         _variant == _ButtonVariant.primarySmall ||
         _variant == _ButtonVariant.circle;
+    // Red (destructive) buttons always use white text, in light and dark mode.
+    final bool isDestructiveColor =
+        !isGradient && (buttonColor == cp.fail || buttonColor == cp.error);
     final Color resolvedTextColor =
-        textColor ?? (isMainButtonVariant ? cp.bg : cp.text);
+        textColor ??
+        (isDestructiveColor
+            ? Colors.white
+            : (isMainButtonVariant ? cp.bg : cp.text));
     const transitionDuration = Duration(milliseconds: 200);
 
     return AnimatedOpacity(
