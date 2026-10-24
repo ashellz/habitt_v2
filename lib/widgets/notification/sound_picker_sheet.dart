@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/sound_preview_player.dart';
+import 'package:habitt/widgets/default/fixed_top_sheet_body.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/notification/sound_option_widget.dart';
 import 'package:provider/provider.dart';
@@ -102,26 +103,22 @@ class _SoundPickerSheetState extends State<_SoundPickerSheet> {
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: widget.maxSheetHeight),
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
+      child: FixedTopSheetBody(
+        topBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _topSection(context, cp, loc),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
           child: Column(
-            spacing: 20,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
             children: [
-              _topSection(context, cp, loc),
-              Column(
-                spacing: 10,
-                children: [
-                  for (final entry in entries)
-                    SoundOptionWidget(
-                      label: entry.label,
-                      isSelected: entry.key == _selected,
-                      onTap: () => _onPick(entry.key),
-                    ),
-                ],
-              ),
+              for (final entry in entries)
+                SoundOptionWidget(
+                  label: entry.label,
+                  isSelected: entry.key == _selected,
+                  onTap: () => _onPick(entry.key),
+                ),
             ],
           ),
         ),
