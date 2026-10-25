@@ -3487,4 +3487,62 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get noTimedHabitsDay =>
       'Ninguno de los hábitos de este día tiene un intervalo de tiempo';
+
+  @override
+  String get back => 'Atrás';
+
+  @override
+  String get setDaySchedule => 'Establecer horario del día';
+
+  @override
+  String get daySchedule => 'Horario del día';
+
+  @override
+  String get daySchedulePrompt =>
+      'Define cuándo debe ocurrir este hábito durante el día';
+
+  @override
+  String get noFixedTime => 'Sin hora fija';
+
+  @override
+  String habitAppearsInSection(String section) {
+    return 'El hábito aparece en la sección $section';
+  }
+
+  @override
+  String get specificTime => 'Hora específica';
+
+  @override
+  String get specificTimeDesc => 'Programar a una hora exacta';
+
+  @override
+  String get timeRange => 'Franja horaria';
+
+  @override
+  String get timeRangeDesc => 'Programar con hora de inicio y de fin';
+
+  @override
+  String get setStartTime => 'Establecer hora de inicio';
+
+  @override
+  String get setEndTime => 'Establecer hora de fin';
+
+  @override
+  String get setTimeRange => 'Establecer franja horaria';
+
+  @override
+  String get startTimeLabel => 'Inicio:';
+
+  @override
+  String get endTimeLabel => 'Fin:';
+
+  @override
+  String get startsAt => 'Empieza a las:';
+
+  @override
+  String get endsAt => 'Termina a las:';
+
+  @override
+  String get timeRangeSameTimes =>
+      'La hora de inicio y la de fin no pueden ser iguales';
 }

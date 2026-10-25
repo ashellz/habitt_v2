@@ -382,7 +382,7 @@ class StateProvider extends ChangeNotifier {
     _isOptional = false;
     _timeIntervalEnabled = false;
     _timeIntervalStart = 420;
-    _timeIntervalEnd = 450;
+    _timeIntervalEnd = 480;
     _habitNotificationsEnabled = false;
     _habitSoundKey = null;
     _habitNotificationTimes =
@@ -540,7 +540,7 @@ class StateProvider extends ChangeNotifier {
 
   bool _timeIntervalEnabled = false;
   int _timeIntervalStart = 420;
-  int _timeIntervalEnd = 450;
+  int _timeIntervalEnd = 480;
   bool _habitNotificationsEnabled = false;
   List<HabitNotificationTime> _habitNotificationTimes = [
     HabitNotificationTime(
@@ -761,7 +761,7 @@ class StateProvider extends ChangeNotifier {
 
     _timeIntervalEnabled = false;
     _timeIntervalStart = 420;
-    _timeIntervalEnd = 450;
+    _timeIntervalEnd = 480;
     _habitNotificationsEnabled = false;
     _habitSoundKey = null;
     _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(

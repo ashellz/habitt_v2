@@ -3467,4 +3467,61 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noTimedHabitsDay =>
       'None of this day\'s habits have a time interval';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get setDaySchedule => 'Set day schedule';
+
+  @override
+  String get daySchedule => 'Day schedule';
+
+  @override
+  String get daySchedulePrompt =>
+      'Set when this habit should happen during the day';
+
+  @override
+  String get noFixedTime => 'No fixed time';
+
+  @override
+  String habitAppearsInSection(String section) {
+    return 'Habit appears in the $section section';
+  }
+
+  @override
+  String get specificTime => 'Specific time';
+
+  @override
+  String get specificTimeDesc => 'Schedule at an exact time';
+
+  @override
+  String get timeRange => 'Time range';
+
+  @override
+  String get timeRangeDesc => 'Schedule with a start and end time';
+
+  @override
+  String get setStartTime => 'Set start time';
+
+  @override
+  String get setEndTime => 'Set end time';
+
+  @override
+  String get setTimeRange => 'Set time range';
+
+  @override
+  String get startTimeLabel => 'Start time:';
+
+  @override
+  String get endTimeLabel => 'End time:';
+
+  @override
+  String get startsAt => 'Starts at:';
+
+  @override
+  String get endsAt => 'Ends at:';
+
+  @override
+  String get timeRangeSameTimes => 'Start and end time can\'t be the same';
 }

@@ -3472,4 +3472,61 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get noTimedHabitsDay =>
       'Nijedna navika za ovaj dan nema vremenski interval';
+
+  @override
+  String get back => 'Nazad';
+
+  @override
+  String get setDaySchedule => 'Postavi raspored dana';
+
+  @override
+  String get daySchedule => 'Raspored dana';
+
+  @override
+  String get daySchedulePrompt =>
+      'Odredi kada bi se ova navika trebala desiti tokom dana';
+
+  @override
+  String get noFixedTime => 'Bez fiksnog vremena';
+
+  @override
+  String habitAppearsInSection(String section) {
+    return 'Navika se prikazuje u sekciji $section';
+  }
+
+  @override
+  String get specificTime => 'Tačno vrijeme';
+
+  @override
+  String get specificTimeDesc => 'Zakaži u tačno vrijeme';
+
+  @override
+  String get timeRange => 'Vremenski raspon';
+
+  @override
+  String get timeRangeDesc => 'Zakaži s vremenom početka i kraja';
+
+  @override
+  String get setStartTime => 'Postavi vrijeme početka';
+
+  @override
+  String get setEndTime => 'Postavi vrijeme kraja';
+
+  @override
+  String get setTimeRange => 'Postavi vremenski raspon';
+
+  @override
+  String get startTimeLabel => 'Početak:';
+
+  @override
+  String get endTimeLabel => 'Kraj:';
+
+  @override
+  String get startsAt => 'Počinje u:';
+
+  @override
+  String get endsAt => 'Završava u:';
+
+  @override
+  String get timeRangeSameTimes => 'Vrijeme početka i kraja ne može biti isto';
 }

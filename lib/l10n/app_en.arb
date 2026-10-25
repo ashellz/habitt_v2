@@ -1261,5 +1261,30 @@
   "noHabitsScheduledToday": "No habits scheduled for today",
   "noHabitsScheduledDay": "No habits scheduled for this day",
   "noTimedHabitsToday": "None of today's habits have a time interval",
-  "noTimedHabitsDay": "None of this day's habits have a time interval"
+  "noTimedHabitsDay": "None of this day's habits have a time interval",
+  "back": "Back",
+  "setDaySchedule": "Set day schedule",
+  "daySchedule": "Day schedule",
+  "daySchedulePrompt": "Set when this habit should happen during the day",
+  "noFixedTime": "No fixed time",
+  "habitAppearsInSection": "Habit appears in the {section} section",
+  "@habitAppearsInSection": {
+    "placeholders": {
+      "section": {
+        "type": "String"
+      }
+    }
+  },
+  "specificTime": "Specific time",
+  "specificTimeDesc": "Schedule at an exact time",
+  "timeRange": "Time range",
+  "timeRangeDesc": "Schedule with a start and end time",
+  "setStartTime": "Set start time",
+  "setEndTime": "Set end time",
+  "setTimeRange": "Set time range",
+  "startTimeLabel": "Start time:",
+  "endTimeLabel": "End time:",
+  "startsAt": "Starts at:",
+  "endsAt": "Ends at:",
+  "timeRangeSameTimes": "Start and end time can't be the same"
 }

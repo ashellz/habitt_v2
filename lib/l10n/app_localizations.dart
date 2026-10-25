@@ -5788,6 +5788,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'None of this day\'s habits have a time interval'**
   String get noTimedHabitsDay;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @setDaySchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Set day schedule'**
+  String get setDaySchedule;
+
+  /// No description provided for @daySchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Day schedule'**
+  String get daySchedule;
+
+  /// No description provided for @daySchedulePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Set when this habit should happen during the day'**
+  String get daySchedulePrompt;
+
+  /// No description provided for @noFixedTime.
+  ///
+  /// In en, this message translates to:
+  /// **'No fixed time'**
+  String get noFixedTime;
+
+  /// No description provided for @habitAppearsInSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit appears in the {section} section'**
+  String habitAppearsInSection(String section);
+
+  /// No description provided for @specificTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific time'**
+  String get specificTime;
+
+  /// No description provided for @specificTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule at an exact time'**
+  String get specificTimeDesc;
+
+  /// No description provided for @timeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Time range'**
+  String get timeRange;
+
+  /// No description provided for @timeRangeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule with a start and end time'**
+  String get timeRangeDesc;
+
+  /// No description provided for @setStartTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Set start time'**
+  String get setStartTime;
+
+  /// No description provided for @setEndTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Set end time'**
+  String get setEndTime;
+
+  /// No description provided for @setTimeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Set time range'**
+  String get setTimeRange;
+
+  /// No description provided for @startTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start time:'**
+  String get startTimeLabel;
+
+  /// No description provided for @endTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End time:'**
+  String get endTimeLabel;
+
+  /// No description provided for @startsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at:'**
+  String get startsAt;
+
+  /// No description provided for @endsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends at:'**
+  String get endsAt;
+
+  /// No description provided for @timeRangeSameTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Start and end time can\'t be the same'**
+  String get timeRangeSameTimes;
 }
 
 class _AppLocalizationsDelegate
