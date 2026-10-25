@@ -8,7 +8,8 @@ import 'package:habitt/widgets/habit_details/strength_chart.dart';
 import 'package:habitt/widgets/stats/stats_range_selector.dart';
 import 'package:provider/provider.dart';
 
-/// "Doing this for 3 months" plus the strength-over-time chart.
+/// A milestone message for how long the habit has run, plus the
+/// strength-over-time chart.
 class StrengthOverTimeSection extends StatefulWidget {
   const StrengthOverTimeSection({super.key, required this.stats});
 
@@ -53,7 +54,10 @@ class _StrengthOverTimeSectionState extends State<StrengthOverTimeSection> {
         ),
         const SizedBox(height: 4),
         Text(
-          _ageLabel(loc, habitAge(stats.createdAt, DateTime.now())),
+          _milestoneLabel(
+            loc,
+            habitAge(stats.createdAt, DateTime.now()).milestone,
+          ),
           style: TextStyle(color: cp.lightGreyText),
         ),
         const SizedBox(height: 14),
@@ -110,15 +114,17 @@ class _StrengthOverTimeSectionState extends State<StrengthOverTimeSection> {
     return _Window(from: from, to: today, dates: dates, values: values);
   }
 
-  String _ageLabel(AppLocalizations loc, HabitAge age) {
-    if (age.isNew) return loc.habitAgeStartedToday;
-    if (age.years > 0 && age.months > 0) {
-      return loc.habitAgeYearsMonths(age.years, age.months);
-    }
-    if (age.years > 0) return loc.habitAgeYears(age.years);
-    if (age.months > 0) return loc.habitAgeMonths(age.months);
-    if (age.days >= 14) return loc.habitAgeWeeks(age.days ~/ 7);
-    return loc.habitAgeDays(age.days);
+  String _milestoneLabel(AppLocalizations loc, HabitAgeMilestone milestone) {
+    return switch (milestone) {
+      HabitAgeMilestone.startedToday => loc.habitAgeStartedToday,
+      HabitAgeMilestone.starting => loc.habitAgeMilestoneStarting,
+      HabitAgeMilestone.rhythm => loc.habitAgeMilestoneRhythm,
+      HabitAgeMilestone.routine => loc.habitAgeMilestoneRoutine,
+      HabitAgeMilestone.impressive => loc.habitAgeMilestoneImpressive,
+      HabitAgeMilestone.outstanding => loc.habitAgeMilestoneOutstanding,
+      HabitAgeMilestone.dedication => loc.habitAgeMilestoneDedication,
+      HabitAgeMilestone.legendary => loc.habitAgeMilestoneLegendary,
+    };
   }
 }
 
