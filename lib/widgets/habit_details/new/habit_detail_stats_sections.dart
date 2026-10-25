@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
-import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
-import 'package:habitt/widgets/stats/completion_rate.dart';
-import 'package:habitt/widgets/stats/completion_ratio_text.dart';
 import 'package:habitt/widgets/stats/counter_stat_card.dart';
+import 'package:habitt/widgets/habit_details/new/completion_ratio_section.dart';
 import 'package:habitt/widgets/stats/stat_card.dart';
-import 'package:habitt/widgets/stats/value_blur_cloud.dart';
 import 'package:provider/provider.dart';
 
 class HabitDetailStatsSections extends StatelessWidget {
@@ -31,8 +28,6 @@ class HabitDetailStatsSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,42 +38,7 @@ class HabitDetailStatsSections extends StatelessWidget {
           longestStreakOverride: longestStreakOverride,
         ),
         const SizedBox(height: 28),
-        CompletionRatioText(),
-        const SizedBox(height: 14),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: ShapeDecoration(
-            color: cp.habitBg,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-          ),
-          child: Row(
-            spacing: 12,
-            children: [
-              CompletionRate(
-                percentage: (stats.completionRatioLast7Days * 100).round(),
-              ),
-              Container(width: 1, height: 33, color: cp.border),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _WeekdayRateRow(
-                      label: stats.bestWeekday.label,
-                      percentage: stats.bestWeekday.percentage,
-                    ),
-                    const SizedBox(height: 10),
-                    _WeekdayRateRow(
-                      label: stats.worstWeekday.label,
-                      percentage: stats.worstWeekday.percentage,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        CompletionRatioSection(stats: stats),
       ],
     );
   }
@@ -249,8 +209,7 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
       animation: _animation,
       builder: (context, _) {
         final animatedRaw = _animation.value.round();
-        final customSingulars =
-            context.read<StateProvider>().customSingulars;
+        final customSingulars = context.read<StateProvider>().customSingulars;
         final value =
             showsDuration
                 ? getDurationString(animatedRaw)
@@ -262,92 +221,6 @@ class _TotalSpentCardState extends State<_TotalSpentCard>
           iconPath: iconPath,
           fullWidth: true,
           cloudProgress: _controller.value,
-        );
-      },
-    );
-  }
-}
-
-class _WeekdayRateRow extends StatefulWidget {
-  const _WeekdayRateRow({required this.label, required this.percentage});
-
-  final String label;
-  final int percentage;
-
-  @override
-  State<_WeekdayRateRow> createState() => _WeekdayRateRowState();
-}
-
-class _WeekdayRateRowState extends State<_WeekdayRateRow>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late Animation<double> _animation;
-  late int _currentPercentage;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentPercentage = widget.percentage.clamp(0, 100);
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 650),
-    );
-    _animation = AlwaysStoppedAnimation(_currentPercentage.toDouble());
-  }
-
-  @override
-  void didUpdateWidget(covariant _WeekdayRateRow oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    final nextPercentage = widget.percentage.clamp(0, 100);
-    if (nextPercentage == _currentPercentage) {
-      return;
-    }
-
-    _animation = Tween<double>(
-      begin: _currentPercentage.toDouble(),
-      end: nextPercentage.toDouble(),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-    _currentPercentage = nextPercentage;
-    _controller.forward(from: 0);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, _) {
-        final animatedPercentage = _animation.value.round();
-
-        return Row(
-          spacing: 4,
-          children: [
-            Text(
-              "${widget.label[0].toUpperCase()}${widget.label.substring(1).toLowerCase()}",
-              style: TextStyle(color: cp.lightGreyText, fontSize: 13),
-            ),
-            Text('-', style: TextStyle(color: cp.lightGreyText, fontSize: 13)),
-            ValueBlurCloud(
-              progress: _controller.value,
-              borderRadius: BorderRadius.circular(6),
-              child: Text(
-                '$animatedPercentage%',
-                style: TextStyle(
-                  color: cp.text,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
         );
       },
     );

@@ -130,6 +130,17 @@ int computeLongestStreak(List<DayCompletionStatus> chronological) {
 class StatsProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
 
+  /// Stored days, minus any dated after today. Future days can only exist if
+  /// the device clock was moved ahead and back again; they hold no real
+  /// history and would otherwise count as misses and break streaks.
+  Iterable<Day> get _daysUpToToday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return daysBox.values.where(
+      (d) => !DateTime(d.date.year, d.date.month, d.date.day).isAfter(today),
+    );
+  }
+
   int _habitsCompleted = -1;
   int _highestAmountOfHabitsLastWeek = -1;
   int _completionRateLastWeek = -1;
@@ -222,7 +233,7 @@ class StatsProvider extends ChangeNotifier {
     final allDays = <Day>[];
     final now = DateTime.now();
 
-    for (final day in daysBox.values) {
+    for (final day in _daysUpToToday) {
       // Do not keep persisted "today"; replace with live today's habits.
       if (day.date.year == now.year &&
           day.date.month == now.month &&
@@ -395,7 +406,7 @@ class StatsProvider extends ChangeNotifier {
   _streakDaysExcludingToday() {
     final now = DateTime.now();
     final days =
-        daysBox.values
+        _daysUpToToday
             .where(
               (d) =>
                   !(d.date.year == now.year &&
@@ -421,7 +432,7 @@ class StatsProvider extends ChangeNotifier {
 
   int refreshHabitsCompleted() {
     int habitsCompleted = 0;
-    for (final day in daysBox.values) {
+    for (final day in _daysUpToToday) {
       for (final habit in day.habits) {
         if (habit.completed) {
           habitsCompleted++;
@@ -435,7 +446,7 @@ class StatsProvider extends ChangeNotifier {
     int highestAmountOfHabits = 0;
 
     // First we order the days by date
-    final orderedDays = daysBox.values.toList();
+    final orderedDays = _daysUpToToday.toList();
     orderedDays.sort((a, b) => b.date.compareTo(a.date));
 
     // Then we check the last 7 days
@@ -460,12 +471,12 @@ class StatsProvider extends ChangeNotifier {
 
     final now = DateTime.now();
 
-    if (daysBox.values.isEmpty) {
+    if (_daysUpToToday.isEmpty) {
       return 0;
     }
 
     // First we order the days by date
-    final orderedDays = daysBox.values.toList();
+    final orderedDays = _daysUpToToday.toList();
     orderedDays.sort((a, b) => b.date.compareTo(a.date));
 
     // We remove today
@@ -539,7 +550,7 @@ class StatsProvider extends ChangeNotifier {
     List<double> habitsCompletedLastWeek = List.generate(7, (i) => 0);
 
     // First we order the days by date
-    final orderedDays = daysBox.values.toList();
+    final orderedDays = _daysUpToToday.toList();
     orderedDays.sort((a, b) => b.date.compareTo(a.date));
 
     // Then we check the last 7 days

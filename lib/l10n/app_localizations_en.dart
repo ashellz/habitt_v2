@@ -3375,6 +3375,86 @@ class AppLocalizationsEn extends AppLocalizations {
       'Optional habits move out of their categories into their own section at the bottom, which you can collapse.';
 
   @override
+  String get strengthOverTime => 'Strength over time';
+
+  @override
+  String get strengthChartNotEnoughData =>
+      'Keep going. Your strength trend shows up after a couple of days.';
+
+  @override
+  String get habitAgeStartedToday => 'Started today, good luck!';
+
+  @override
+  String habitAgeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return 'Doing this for $_temp0';
+  }
+
+  @override
+  String habitAgeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks',
+      one: '1 week',
+    );
+    return 'Doing this for $_temp0';
+  }
+
+  @override
+  String habitAgeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months',
+      one: '1 month',
+    );
+    return 'Doing this for $_temp0';
+  }
+
+  @override
+  String habitAgeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years',
+      one: '1 year',
+    );
+    return 'Doing this for $_temp0';
+  }
+
+  @override
+  String habitAgeYearsMonths(num months, num years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years years',
+      one: '1 year',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return 'Doing this for $_temp0 and $_temp1';
+  }
+
+  @override
+  String get statsRange7Days => '7D';
+
+  @override
+  String get statsRange30Days => '30D';
+
+  @override
+  String get statsRangeAll => 'ALL';
+
+  @override
   String get noHabitsScheduledToday => 'No habits scheduled for today';
 
   @override

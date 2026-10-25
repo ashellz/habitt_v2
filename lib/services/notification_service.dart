@@ -316,7 +316,14 @@ class NotificationService {
               _habitDayKey: _dayKeyString(day),
             },
           ),
-          actionButtons: _habitActionButtons(localizations),
+          // Health-linked habits get no "Complete" button: completing from the
+          // notification is a hand edit that pauses Health sync for the day,
+          // so the real Health value would never replace it. Tapping the
+          // notification still opens the habit.
+          actionButtons:
+              habit.healthMetric == null
+                  ? _habitActionButtons(localizations)
+                  : null,
           schedule: NotificationCalendar(
             year: day.year,
             month: day.month,

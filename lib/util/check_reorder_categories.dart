@@ -8,7 +8,9 @@ void checkReorderCategories(BuildContext context, Habit habit) {
   debugPrint(
     'Checking if we should reorder categories based on habit change...',
   );
-  // if (habit.optional) return;
+  // Optional habits are excluded from category completion, so toggling one
+  // can never change which category should be the main one.
+  if (habit.optional) return;
 
   if (categoryStatusChanged(context, habit)) {
     final categoryProvider = context.read<CategoryProvider>();
@@ -36,7 +38,7 @@ bool categoryStatusChanged(BuildContext context, Habit habit) {
 
   final habitsInMainCategory =
       habitProvider.todaysHabits
-          .where((h) => h.categoryId == mainCategoryId)
+          .where((h) => h.categoryId == mainCategoryId && !h.optional)
           .toList();
 
   if (habitsInMainCategory.isEmpty) {
