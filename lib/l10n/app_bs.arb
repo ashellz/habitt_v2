@@ -1237,7 +1237,7 @@
   "noTimedHabitsToday": "Nijedna današnja navika nema vremenski interval",
   "noTimedHabitsDay": "Nijedna navika za ovaj dan nema vremenski interval",
   "habitAgeCardTitle": "Radiš ovo već",
-  "habitAgeCardNew": "Upravo počelo",
+  "habitAgeCardNew": "Počeo danas",
   "habitAgeCardYearsMonthsDays": "{years}g {months}mj {days}d",
   "habitAgeMilestoneStarting": "Tek počinješ",
   "habitAgeMilestoneRhythm": "Hvataš ritam",

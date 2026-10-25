@@ -1247,7 +1247,7 @@
   "noTimedHabitsToday": "Ninguno de los hábitos de hoy tiene un intervalo de tiempo",
   "noTimedHabitsDay": "Ninguno de los hábitos de este día tiene un intervalo de tiempo",
   "habitAgeCardTitle": "Llevas haciéndolo",
-  "habitAgeCardNew": "Recién empezado",
+  "habitAgeCardNew": "Empezado hoy",
   "habitAgeCardYearsMonthsDays": "{years}a {months}m {days}d",
   "habitAgeMilestoneStarting": "Apenas estás empezando",
   "habitAgeMilestoneRhythm": "Encontrando tu ritmo",

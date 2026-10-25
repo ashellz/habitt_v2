@@ -3410,7 +3410,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get habitAgeCardTitle => 'Radiš ovo već';
 
   @override
-  String get habitAgeCardNew => 'Upravo počelo';
+  String get habitAgeCardNew => 'Počeo danas';
 
   @override
   String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {
