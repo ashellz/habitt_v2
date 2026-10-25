@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:habitt/l10n/app_localizations_en.dart';
 import 'package:habitt/util/habit_age.dart';
 
 void main() {
@@ -36,5 +37,37 @@ void main() {
     final a = age(DateTime(2025, 6, 1), DateTime(2026, 6, 1));
     expect(a.years, 1);
     expect(a.months, 0);
+  });
+
+  test('extraDays is what is left after years and months', () {
+    final a = age(DateTime(2024, 1, 20), DateTime(2026, 4, 25));
+    expect(a.years, 2);
+    expect(a.months, 3);
+    expect(a.extraDays, 5);
+  });
+
+  test('extraDays clamps the month end instead of going negative', () {
+    final a = age(DateTime(2026, 1, 31), DateTime(2026, 3, 1));
+    expect(a.months, 1);
+    expect(a.extraDays, 1);
+  });
+
+  test('milestone follows the total days', () {
+    HabitAgeMilestone at(int days) =>
+        HabitAge(years: 0, months: 0, days: days).milestone;
+
+    expect(at(0), HabitAgeMilestone.startedToday);
+    expect(at(1), HabitAgeMilestone.starting);
+    expect(at(7), HabitAgeMilestone.rhythm);
+    expect(at(30), HabitAgeMilestone.routine);
+    expect(at(90), HabitAgeMilestone.impressive);
+    expect(at(180), HabitAgeMilestone.outstanding);
+    expect(at(365), HabitAgeMilestone.dedication);
+    expect(at(730), HabitAgeMilestone.legendary);
+  });
+
+  test('age card strings take years, months, days in that order', () {
+    final loc = AppLocalizationsEn();
+    expect(loc.habitAgeCardYearsMonthsDays(2, 1, 6), '2y 1m 6d');
   });
 }

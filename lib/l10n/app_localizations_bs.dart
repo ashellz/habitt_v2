@@ -3384,73 +3384,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get habitAgeStartedToday => 'Počeo danas, sretno!';
 
   @override
-  String habitAgeDays(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count dana',
-      few: '$count dana',
-      one: '$count dan',
-    );
-    return 'Radiš ovu već $_temp0';
-  }
-
-  @override
-  String habitAgeWeeks(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count sedmica',
-      few: '$count sedmice',
-      one: '$count sedmicu',
-    );
-    return 'Radiš ovo već $_temp0';
-  }
-
-  @override
-  String habitAgeMonths(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count mjeseci',
-      few: '$count mjeseca',
-      one: '$count mjesec',
-    );
-    return 'Radiš ovo već $_temp0';
-  }
-
-  @override
-  String habitAgeYears(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count godina',
-      few: '$count godine',
-      one: '$count godinu',
-    );
-    return 'Radiš ovo već $_temp0';
-  }
-
-  @override
-  String habitAgeYearsMonths(num months, num years) {
-    String _temp0 = intl.Intl.pluralLogic(
-      years,
-      locale: localeName,
-      other: '$years godina',
-      few: '$years godine',
-      one: '$years godinu',
-    );
-    String _temp1 = intl.Intl.pluralLogic(
-      months,
-      locale: localeName,
-      other: '$months mjeseci',
-      few: '$months mjeseca',
-      one: '$months mjesec',
-    );
-    return 'Radiš ovo već $_temp0 i $_temp1';
-  }
-
-  @override
   String get statsRange7Days => '7D';
 
   @override
@@ -3472,6 +3405,38 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get noTimedHabitsDay =>
       'Nijedna navika za ovaj dan nema vremenski interval';
+
+  @override
+  String get habitAgeCardTitle => 'Radiš ovo već';
+
+  @override
+  String get habitAgeCardNew => 'Upravo počelo';
+
+  @override
+  String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {
+    return '${years}g ${months}mj ${days}d';
+  }
+
+  @override
+  String get habitAgeMilestoneStarting => 'Tek počinješ';
+
+  @override
+  String get habitAgeMilestoneRhythm => 'Hvataš ritam';
+
+  @override
+  String get habitAgeMilestoneRoutine => 'Ovo postaje rutina';
+
+  @override
+  String get habitAgeMilestoneImpressive => 'Impresivno!';
+
+  @override
+  String get habitAgeMilestoneOutstanding => 'Izvanredno!';
+
+  @override
+  String get habitAgeMilestoneDedication => 'Cijela godina. To je posvećenost!';
+
+  @override
+  String get habitAgeMilestoneLegendary => 'Legendarna dosljednost!';
 
   @override
   String get back => 'Nazad';
