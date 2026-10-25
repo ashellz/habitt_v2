@@ -12,14 +12,23 @@ class FixedTopSheetBody extends StatelessWidget {
     required this.child,
     this.controller,
     this.topPadding = 20,
+    this.topBarBottomPadding = 10,
     this.bottomPadding = 28,
+    this.fadeExtent = 32,
   });
 
   final Widget topBar;
   final Widget child;
   final ScrollController? controller;
   final double topPadding;
+
+  // gap between the top bar and the scrolling content
+  final double topBarBottomPadding;
   final double bottomPadding;
+
+  // longer than the default ScrollEdgeFade: the first items of a sheet are
+  // mostly text and low contrast fields, which a short fade barely shows
+  final double fadeExtent;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +36,16 @@ class FixedTopSheetBody extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: EdgeInsets.only(top: topPadding), child: topBar),
+        Padding(
+          padding: EdgeInsets.only(
+            top: topPadding,
+            bottom: topBarBottomPadding,
+          ),
+          child: topBar,
+        ),
         Flexible(
           child: ScrollEdgeFade(
+            fadeExtent: fadeExtent,
             child: SingleChildScrollView(
               controller: controller,
               padding: EdgeInsets.only(bottom: bottomPadding),

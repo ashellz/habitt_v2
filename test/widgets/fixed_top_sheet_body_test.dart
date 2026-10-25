@@ -74,6 +74,18 @@ void main() {
     );
   });
 
+  testWidgets('there is a gap between the top bar and the scrolling content', (
+    tester,
+  ) async {
+    await _pump(tester, contentHeight: 2000);
+
+    final barBottom =
+        tester.getBottomLeft(find.widgetWithText(SizedBox, 'top bar')).dy;
+    final scrollTop = tester.getTopLeft(find.byType(SingleChildScrollView)).dy;
+
+    expect(scrollTop - barBottom, 10);
+  });
+
   testWidgets('the fades show only on the edges that have more content', (
     tester,
   ) async {
