@@ -93,7 +93,7 @@ class AppLocalizationsBs extends AppLocalizations {
       'Odaberi koliko šaren treba biti korisnički interfejs.';
 
   @override
-  String get clear => 'Jasno';
+  String get clear => 'Obriši';
 
   @override
   String get clearSelectedDays => 'Očisti odabrane dane';
@@ -2875,6 +2875,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthMetricMindfulMinutes => 'Svjesnost';
 
   @override
+  String get healthMetricActivity => 'Aktivnost';
+
+  @override
   String get healthMetricActiveCalories => 'Aktivne kalorije';
 
   @override
@@ -2998,6 +3001,10 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthMetricDescMindfulness => 'Prati tvoje sesije svjesnosti';
 
   @override
+  String get healthMetricDescActivity =>
+      'Prati tvoj krug vježbanja sa Apple Watcha';
+
+  @override
   String get healthMetricDescActiveCalories =>
       'Prati tvoje potrošene aktivne kalorije';
 
@@ -3012,6 +3019,9 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get premadeHabitMindfulness => 'Svjesnost';
+
+  @override
+  String get premadeHabitActivity => 'Aktivnost';
 
   @override
   String get premadeHabitSleepTime => 'Vrijeme spavanja';
@@ -3280,6 +3290,16 @@ class AppLocalizationsBs extends AppLocalizations {
   }
 
   @override
+  String notificationHealthActivityStart(Object goal) {
+    return 'Odvoji $goal za kretanje danas. Brza šetnja se računa.|Ciljaj $goal aktivnosti danas, svako kretanje se računa.|Vrijeme je za kretanje, tvoj cilj aktivnosti je $goal.|Ostani u pokretu, današnji cilj je $goal aktivnosti.';
+  }
+
+  @override
+  String notificationHealthActivityProgress(Object progress, Object remaining) {
+    return 'Do sada $progress aktivnosti. Još $remaining do cilja.|Preostalo je $remaining aktivnosti, nastavi se kretati!|Odlično, danas već $progress aktivnosti. Samo još $remaining.';
+  }
+
+  @override
   String notificationHealthWorkoutStart(Object activity, Object goal) {
     return '$activity: današnji cilj je $goal.|$activity je danas u planu, ciljaj na $goal.|$activity – cilj za danas je $goal. Idemo!|$activity, vrijeme je! Cilj je $goal.';
   }
@@ -3438,4 +3458,18 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get statsRangeAll => 'SVE';
+
+  @override
+  String get noHabitsScheduledToday => 'Nema navika zakazanih za danas';
+
+  @override
+  String get noHabitsScheduledDay => 'Nema navika zakazanih za ovaj dan';
+
+  @override
+  String get noTimedHabitsToday =>
+      'Nijedna današnja navika nema vremenski interval';
+
+  @override
+  String get noTimedHabitsDay =>
+      'Nijedna navika za ovaj dan nema vremenski interval';
 }

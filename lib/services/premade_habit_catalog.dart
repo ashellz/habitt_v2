@@ -91,6 +91,16 @@ class PremadeHabitCatalog {
           defaultHealthMetric: HealthMetricType.workouts,
         ),
         PremadeHabitTemplate(
+          type: PremadeHabitType.activity,
+          name: 'Activity',
+          iconPath: '⚡',
+          categoryId: 1,
+          amount: 0,
+          durationMinutes: 30,
+          defaultHealthMetric: HealthMetricType.activity,
+          iosOnly: true,
+        ),
+        PremadeHabitTemplate(
           type: PremadeHabitType.activeCalories,
           name: 'Active calories',
           iconPath: '🔥',

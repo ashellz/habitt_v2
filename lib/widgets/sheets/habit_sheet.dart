@@ -24,6 +24,7 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/show_emoji_picker_dialog.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/animated_checkbox.dart';
+import 'package:habitt/widgets/default/fixed_top_sheet_body.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
@@ -770,44 +771,41 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
-              child: SingleChildScrollView(
+              child: FixedTopSheetBody(
                 controller: scrollController,
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      topSection(context, cp, sp, tp, canSave),
-                      Padding(
-                        padding: EdgeInsets.only(left: 16, right: 16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 20,
-                          children: [
-                            chooseIcon(cp, sp, context),
-                            habitDetails(cp),
-                            habitScheduling(cp),
-                            HealthWidget(habit: widget.habit),
-                            habitTypeRow(cp, sp),
-                          ],
-                        ),
+                topBar: topSection(context, cp, sp, tp, canSave),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 20,
+                        children: [
+                          chooseIcon(cp, sp, context),
+                          habitDetails(cp),
+                          habitScheduling(cp),
+                          HealthWidget(habit: widget.habit),
+                          habitTypeRow(cp, sp),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 16),
-                        child: Column(
-                          children: [
-                            optionalHabitCheck(cp, sp),
-                            Padding(
-                              padding: EdgeInsets.only(right: 16),
-                              child: notificationSection(cp, sp),
-                            ),
-                          ],
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: Column(
+                        children: [
+                          optionalHabitCheck(cp, sp),
+                          Padding(
+                            padding: EdgeInsets.only(right: 16),
+                            child: notificationSection(cp, sp),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

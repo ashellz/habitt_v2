@@ -102,6 +102,9 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
+      // seeded durations are already seconds, skip the minutes -> seconds migration
+      'durationSecondsMigrated_habits_v1': true,
+      'durationSecondsMigrated_days_v1': true,
       'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
     });
     await habitBox.clear();
@@ -180,6 +183,33 @@ void main() {
       expect(habit.durationCompleted, 600);
       expect(habit.amountCompleted, 0);
       expect(habit.completed, isFalse);
+    });
+
+    test('activity habit writes durationCompleted and completes', () async {
+      await habitBox.put(
+        4,
+        buildTestHabit(
+          id: 4,
+          healthMetric: HealthMetricType.activity,
+          trackingType: HabitTrackingType.duration,
+          amount: 0,
+          duration: 30 * 60,
+        ),
+      );
+      final provider = await createInitializedProvider();
+
+      await provider.syncHabitFromHealth(
+        4,
+        HealthMetricType.activity,
+        35 * 60,
+        day: DateTime.now(),
+        sessions: _sessions(1),
+      );
+
+      final habit = provider.habits.firstWhere((h) => h.id == 4);
+      expect(habit.durationCompleted, 35 * 60);
+      expect(habit.amountCompleted, 0);
+      expect(habit.completed, isTrue);
     });
 
     test('Amount-mode mindfulness habit writes amountCompleted', () async {

@@ -9,6 +9,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/profile_image_util.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/default/fixed_top_sheet_body.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -267,103 +268,100 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
             },
-            child: SingleChildScrollView(
+            child: FixedTopSheetBody(
               controller: scrollController,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    topSection(context, cp, canSave),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16, right: 16, top: 24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 20,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 20,
-                            children: [
-                              Text(
-                                loc.uploadPhoto,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
+              topBar: topSection(context, cp, canSave),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16, top: 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 20,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 20,
+                          children: [
+                            Text(
+                              loc.uploadPhoto,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
-                              GestureDetector(
-                                onTap: _isPickingImage ? null : _pickImage,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  child: Center(
-                                    child:
-                                        _buildImageContent(cp) ??
-                                        Center(
-                                          child: DottedBorder(
-                                            options:
-                                                RoundedRectDottedBorderOptions(
-                                                  dashPattern: [10, 5],
-                                                  strokeWidth: 1,
-                                                  radius: Radius.circular(24),
-                                                  color: cp.disabled,
-                                                  padding: EdgeInsets.all(48),
-                                                ),
-                                            child: Container(
-                                              padding: const EdgeInsets.all(12),
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: ShapeDecoration(
-                                                color: cp.field,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(24),
-                                                ),
+                            ),
+                            GestureDetector(
+                              onTap: _isPickingImage ? null : _pickImage,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Center(
+                                  child:
+                                      _buildImageContent(cp) ??
+                                      Center(
+                                        child: DottedBorder(
+                                          options:
+                                              RoundedRectDottedBorderOptions(
+                                                dashPattern: [10, 5],
+                                                strokeWidth: 1,
+                                                radius: Radius.circular(24),
+                                                color: cp.disabled,
+                                                padding: EdgeInsets.all(48),
                                               ),
-                                              child: _buildImageButton(cp),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(12),
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: ShapeDecoration(
+                                              color: cp.field,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(24),
+                                              ),
                                             ),
+                                            child: _buildImageButton(cp),
                                           ),
                                         ),
-                                  ),
+                                      ),
                                 ),
                               ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                loc.profileDetails,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              loc.profileDetails,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
-                              NewDefaultTextField(
-                                topPadding: 20,
-                                title: loc.name,
-                                hint: loc.yourUsername,
-                                controller: _nameController,
-                              ),
-                              NewDefaultTextField(
-                                topPadding: 10,
-                                title: loc.email,
-                                enabled: false,
-                                hint: loc.youDontHaveAnEmailYet,
-                                controller: _emailController,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                            NewDefaultTextField(
+                              topPadding: 20,
+                              title: loc.name,
+                              hint: loc.yourUsername,
+                              controller: _nameController,
+                            ),
+                            NewDefaultTextField(
+                              topPadding: 10,
+                              title: loc.email,
+                              enabled: false,
+                              hint: loc.youDontHaveAnEmailYet,
+                              controller: _emailController,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

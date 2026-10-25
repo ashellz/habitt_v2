@@ -2904,6 +2904,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get healthMetricMindfulMinutes => 'Achtsamkeit';
 
   @override
+  String get healthMetricActivity => 'Aktivität';
+
+  @override
   String get healthMetricActiveCalories => 'Aktive Kalorien';
 
   @override
@@ -3028,6 +3031,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Erfasst deine Achtsamkeitseinheiten';
 
   @override
+  String get healthMetricDescActivity =>
+      'Erfasst deinen Trainingsring von der Apple Watch';
+
+  @override
   String get healthMetricDescActiveCalories =>
       'Erfasst deine verbrannten aktiven Kalorien';
 
@@ -3044,6 +3051,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get premadeHabitMindfulness => 'Achtsamkeit';
+
+  @override
+  String get premadeHabitActivity => 'Aktivität';
 
   @override
   String get premadeHabitSleepTime => 'Schlafdauer';
@@ -3311,6 +3321,16 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String notificationHealthActivityStart(Object goal) {
+    return 'Bewege dich heute $goal. Ein zügiger Spaziergang zählt.|Peile heute $goal Aktivität an, jede Bewegung zählt.|Zeit für Bewegung, dein Aktivitätsziel sind $goal.|Bleib in Bewegung, dein Ziel heute: $goal Aktivität.';
+  }
+
+  @override
+  String notificationHealthActivityProgress(Object progress, Object remaining) {
+    return 'Bisher $progress Aktivität. Noch $remaining bis zum Ziel.|Noch $remaining Aktivität, bleib in Bewegung!|Stark, heute schon $progress Aktivität. Nur noch $remaining.';
+  }
+
+  @override
   String notificationHealthWorkoutStart(Object activity, Object goal) {
     return '$activity: Dein Ziel heute ist $goal.|$activity steht heute auf dem Plan, peile $goal an.|$activity – Tagesziel: $goal. Los geht\'s!|$activity, los geht\'s! Das Ziel sind $goal.';
   }
@@ -3463,4 +3483,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get statsRangeAll => 'ALLE';
+
+  @override
+  String get noHabitsScheduledToday =>
+      'Für heute sind keine Gewohnheiten geplant';
+
+  @override
+  String get noHabitsScheduledDay =>
+      'Für diesen Tag sind keine Gewohnheiten geplant';
+
+  @override
+  String get noTimedHabitsToday =>
+      'Keine der heutigen Gewohnheiten hat ein Zeitintervall';
+
+  @override
+  String get noTimedHabitsDay =>
+      'Keine Gewohnheit an diesem Tag hat ein Zeitintervall';
 }

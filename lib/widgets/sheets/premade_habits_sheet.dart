@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -6,6 +7,7 @@ import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
+import 'package:habitt/widgets/default/fixed_top_sheet_body.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:provider/provider.dart';
@@ -66,19 +68,18 @@ class PremadeHabitsSheet extends StatelessWidget {
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: maxSheetHeight),
-      child: SingleChildScrollView(
+      child: FixedTopSheetBody(
+        topBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _topSection(context, cp, rightActionLabel),
+        ),
+        bottomPadding: mediaQuery.padding.bottom + 28,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            16,
-            20,
-            16,
-            MediaQuery.of(context).padding.bottom + 28,
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,
             children: [
-              _topSection(context, cp, rightActionLabel),
               Text(
                 desc,
                 style: TextStyle(
@@ -154,7 +155,7 @@ class PremadeHabitsSheet extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children:
-              section.habits.map((template) {
+              section.habits.where(_isAvailable).map((template) {
                 final isSelected = selectedPremadeHabitType == template.type;
 
                 return NewDefaultButton(
@@ -191,6 +192,9 @@ class PremadeHabitsSheet extends StatelessWidget {
       ],
     );
   }
+
+  bool _isAvailable(PremadeHabitTemplate template) =>
+      !template.iosOnly || defaultTargetPlatform == TargetPlatform.iOS;
 
   Widget _topSection(
     BuildContext context,

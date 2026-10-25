@@ -33,6 +33,7 @@ enum PremadeHabitType {
   activeCalories,
   totalCalories,
   steps,
+  activity,
 }
 
 extension PremadeHabitTypeLabel on PremadeHabitType {
@@ -92,6 +93,8 @@ extension PremadeHabitTypeLabel on PremadeHabitType {
         return 'Workout';
       case PremadeHabitType.mindfulness:
         return 'Mindfulness';
+      case PremadeHabitType.activity:
+        return 'Activity';
       case PremadeHabitType.sleepTime:
         return 'Sleep time';
       case PremadeHabitType.activeCalories:
@@ -161,6 +164,8 @@ extension PremadeHabitTypeLocalizedName on PremadeHabitType {
         return l10n.premadeHabitWorkoutCombined;
       case PremadeHabitType.mindfulness:
         return l10n.premadeHabitMindfulness;
+      case PremadeHabitType.activity:
+        return l10n.premadeHabitActivity;
       case PremadeHabitType.sleepTime:
         return l10n.premadeHabitSleepTime;
       case PremadeHabitType.activeCalories:
@@ -234,6 +239,8 @@ extension PremadeHabitTypeArbSuffix on PremadeHabitType {
         return 'WorkoutCombined';
       case PremadeHabitType.mindfulness:
         return 'Mindfulness';
+      case PremadeHabitType.activity:
+        return 'Activity';
       case PremadeHabitType.sleepTime:
         return 'SleepTime';
       case PremadeHabitType.activeCalories:

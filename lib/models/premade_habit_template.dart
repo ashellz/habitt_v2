@@ -35,6 +35,7 @@ class PremadeHabitTemplate {
     this.defaultHealthMetric,
     this.defaultWorkoutFilter,
     this.toleranceMinutes = 0,
+    this.iosOnly = false,
   }) : selectedDaysAWeek = selectedDaysAWeek ?? const <int>{},
        selectedDaysAMonth = selectedDaysAMonth ?? const <int>{},
        notificationTimesMinutesOfDay =
@@ -61,6 +62,9 @@ class PremadeHabitTemplate {
   final HealthWorkoutType? defaultWorkoutFilter;
 
   final int toleranceMinutes;
+
+  // hidden from the premade list on every platform but iOS
+  final bool iosOnly;
 
   String get resolvedAmountLabel => amountLabelPreset?.plural ?? amountLabel;
 

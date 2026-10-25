@@ -38,6 +38,18 @@ void main() {
       );
     });
 
+    test('activity is duration only, with no Amount choice', () {
+      expect(
+        HealthMetricType.activity.trackingType,
+        HabitTrackingType.duration,
+      );
+      expect(HealthMetricType.activity.supportsTrackingChoice, isFalse);
+    });
+
+    test('activity is added last so stored metric indexes do not shift', () {
+      expect(HealthMetricType.values.last, HealthMetricType.activity);
+    });
+
     test('bedtime and wakeTime map to timeOfDay tracking', () {
       expect(
         HealthMetricType.bedtime.trackingType,

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/habit.dart';
@@ -9,14 +8,46 @@ import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
-import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/get_category_length.dart';
 import 'package:habitt/util/optional_habit_order.dart';
 import 'package:habitt/widgets/main_page/add_habit_button.dart';
+import 'package:habitt/widgets/main_page/habits/empty_habits_widget.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
 import 'package:habitt/widgets/main_page/habits/new_optional_habits.dart';
 import 'package:provider/provider.dart';
-import 'package:habitt/l10n/app_localizations.dart';
+
+/// Height the habits area needs to fill the rest of the home page, used to
+/// center the empty state and keep the page from collapsing.
+double calculateHabitsListHeight(BuildContext context, int perfectDaysStreak) {
+  final topPadding = MediaQuery.of(context).padding.top;
+  final bottomPadding = 0;
+  const bottomNavBar = 160;
+
+  final baseHeight =
+      topPadding +
+      52 + // date label and view toggle row
+      20 +
+      40 +
+      79 +
+      20 +
+      (36 + 40) +
+      bottomNavBar +
+      bottomPadding;
+  final baseHeightWithStreak =
+      topPadding +
+      52 + // date label and view toggle row
+      20 +
+      60 +
+      79 +
+      82 +
+      20 +
+      (36 + 40) +
+      bottomNavBar +
+      bottomPadding;
+
+  final height = perfectDaysStreak > 0 ? baseHeightWithStreak : baseHeight;
+  return MediaQuery.of(context).size.height - height;
+}
 
 class NewHabits extends StatefulWidget {
   final DateTime? daySelected;
@@ -351,38 +382,6 @@ class _NewHabitsState extends State<NewHabits>
     );
   }
 
-  double _calculateHabitsListHeight(
-    BuildContext context,
-    int perfectDaysStreak,
-  ) {
-    final topPadding = MediaQuery.of(context).padding.top;
-    final bottomPadding = 0;
-    const bottomNavBar = 160;
-
-    final baseHeight =
-        topPadding +
-        20 +
-        40 +
-        79 +
-        20 +
-        (36 + 40) +
-        bottomNavBar +
-        bottomPadding;
-    final baseHeightWithStreak =
-        topPadding +
-        20 +
-        60 +
-        79 +
-        82 +
-        20 +
-        (36 + 40) +
-        bottomNavBar +
-        bottomPadding;
-
-    final height = perfectDaysStreak > 0 ? baseHeightWithStreak : baseHeight;
-    return MediaQuery.of(context).size.height - height;
-  }
-
   /// Optional habits (of the selected category, or all of them) in the user's
   /// optional order, shown in their own section below the real categories.
   List<Habit> _optionalHabits(
@@ -484,7 +483,7 @@ class _NewHabitsState extends State<NewHabits>
     final selectedCategoryId = categoryProvider.selectedCategoryId;
 
     final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
-    final habitsListHeight = _calculateHabitsListHeight(
+    final habitsListHeight = calculateHabitsListHeight(
       context,
       perfectDaysStreak,
     );
@@ -498,7 +497,15 @@ class _NewHabitsState extends State<NewHabits>
           spacing: 16,
           children: [
             Spacer(),
-            EmptyHabitsWidget(),
+            EmptyHabitsWidget(
+              variant:
+                  context.read<HabitProvider>().habits.any(
+                        (habit) => habit.isDeleted != true,
+                      )
+                      ? EmptyHabitsVariant.noneScheduled
+                      : EmptyHabitsVariant.noHabits,
+              isToday: _isTodayView(),
+            ),
             const Spacer(),
             AddHabitButton(),
           ],
@@ -623,28 +630,6 @@ class _NewHabitsState extends State<NewHabits>
           ],
         );
       },
-    );
-  }
-}
-
-class EmptyHabitsWidget extends StatelessWidget {
-  const EmptyHabitsWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final cp = context.watch<ColorProvider>();
-
-    final loc = AppLocalizations.of(context)!;
-    return Column(
-      spacing: 16,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset("assets/images/new-svg/empty-box.svg"),
-        Text(
-          loc.youHaventAddedAnyHabitsYet,
-          style: TextStyle(color: cp.lightGreyText, fontSize: 16),
-        ),
-      ],
     );
   }
 }

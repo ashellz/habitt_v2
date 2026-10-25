@@ -165,6 +165,8 @@ class _HealthSessionsListState extends State<HealthSessionsList> {
         return session.workoutType.label(loc);
       case HealthMetricType.mindfulness:
         return loc.healthMetricMindfulMinutes;
+      case HealthMetricType.activity:
+        return loc.healthMetricActivity;
       case HealthMetricType.sleep:
       case HealthMetricType.bedtime:
       case HealthMetricType.wakeTime:

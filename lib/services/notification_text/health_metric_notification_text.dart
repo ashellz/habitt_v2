@@ -32,6 +32,7 @@ class HealthMetricNotificationText {
             ? metric
             : null;
       case HealthMetricType.mindfulness:
+      case HealthMetricType.activity:
         return habit.tracksDuration && habit.duration > 0 ? metric : null;
       default:
         return null;
@@ -48,6 +49,8 @@ class HealthMetricNotificationText {
         return HealthMetricType.totalCalories;
       case PremadeHabitType.mindfulness:
         return HealthMetricType.mindfulness;
+      case PremadeHabitType.activity:
+        return HealthMetricType.activity;
       case PremadeHabitType.workoutCombined:
       case PremadeHabitType.workoutWalking:
       case PremadeHabitType.workoutRunning:
@@ -129,6 +132,16 @@ class HealthMetricNotificationText {
                 remainingText,
               )
               : l.notificationHealthMindfulnessStart(goalText),
+          rng,
+        );
+      case HealthMetricType.activity:
+        return _pick(
+          started
+              ? l.notificationHealthActivityProgress(
+                progressText,
+                remainingText,
+              )
+              : l.notificationHealthActivityStart(goalText),
           rng,
         );
       case HealthMetricType.workouts:
@@ -259,6 +272,7 @@ class _Measure {
   ) {
     final isDuration =
         metric == HealthMetricType.mindfulness ||
+        metric == HealthMetricType.activity ||
         (metric == HealthMetricType.workouts && habit.tracksDuration);
 
     if (isDuration) {

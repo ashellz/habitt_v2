@@ -10,9 +10,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/insight_sheet_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
-import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
-import 'package:habitt/widgets/main_page/habits/demo_habits_section.dart';
-import 'package:habitt/widgets/main_page/habits/new_habits.dart';
+import 'package:habitt/widgets/main_page/home_habits_view.dart';
 import 'package:habitt/widgets/main_page/timer_pill_widget.dart';
 import 'package:habitt/widgets/main_page/main_page_top_section.dart';
 import 'package:habitt/widgets/main_page/month_progress_calendar.dart';
@@ -413,57 +411,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               )
                               : const SizedBox.shrink(),
                     ),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation) {
-                        return SizeTransition(
-                          sizeFactor: animation,
-                          child: FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child:
-                          isToday(habitProvider.selectedDate ?? DateTime.now())
-                              ? const SizedBox.shrink()
-                              : Padding(
-                                key: const ValueKey('selected-day-label'),
-                                padding: const EdgeInsets.only(
-                                  left: 16,
-                                  right: 16,
-                                  top: 16,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      _selectedDayLabel(context),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color:
-                                            cp.isDark
-                                                ? cp.lightGreyText
-                                                : cp.greyText,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                    ),
-                    if (context
-                        .watch<PreferencesProvider>()
-                        .showCategoriesOnMainPage)
-                      NewCategoriesList(),
-                    if (context.watch<PreferencesProvider>().showDemoHabits)
-                      const DemoHabitsSection(),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        top: 8,
-                      ),
-                      child: NewHabits(),
-                    ),
+                    HomeHabitsView(dayLabel: _selectedDayLabel(context)),
                     SizedBox(height: bottomPadding + bottomNavBar),
                   ],
                 ),

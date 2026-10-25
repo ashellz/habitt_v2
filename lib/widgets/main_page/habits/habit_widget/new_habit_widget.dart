@@ -11,10 +11,19 @@ import 'package:habitt/widgets/main_page/habits/habit_widget/streak_badge.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitWidget extends StatefulWidget {
-  const NewHabitWidget({super.key, required this.habit, this.isDemo = false});
+  const NewHabitWidget({
+    super.key,
+    required this.habit,
+    this.isDemo = false,
+    this.isCurrent = false,
+  });
 
   final Habit habit;
   final bool isDemo;
+
+  /// The habit's time interval contains the current time (plan view). Shown
+  /// with the completed style in yellow; completed still wins.
+  final bool isCurrent;
 
   @override
   State<NewHabitWidget> createState() => _NewHabitWidgetState();
@@ -23,6 +32,7 @@ class NewHabitWidget extends StatefulWidget {
 class _NewHabitWidgetState extends State<NewHabitWidget>
     with TickerProviderStateMixin {
   static const int _segmentCount = 12;
+  static const Color _currentColor = Color(0xFFFFC21A);
   late AnimationController _controller;
   late List<Animation<double>> _segmentAnimations;
   late bool _previousCompleted;
@@ -245,10 +255,14 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
           builder: (context, child) {
             final colors = <Color>[];
             final stops = <double>[];
+            final baseColor =
+                widget.isCurrent
+                    ? _currentColor.withValues(alpha: 0.1)
+                    : cp.widget;
 
             for (int i = 0; i < _segmentCount; i++) {
               final t = _segmentAnimations[i].value;
-              final color = Color.lerp(cp.widget, cp.main.withOpacity(0.1), t)!;
+              final color = Color.lerp(baseColor, cp.main.withOpacity(0.1), t)!;
               stops.add(i / (_segmentCount - 1));
               colors.add(color);
             }
@@ -264,6 +278,8 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
                     color:
                         isCompleted
                             ? cp.main.withOpacity(0.2)
+                            : widget.isCurrent
+                            ? _currentColor.withValues(alpha: 0.3)
                             : cp.border,
                   ),
                   borderRadius: BorderRadius.circular(24),
@@ -278,6 +294,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
               NewHabitIcon(
                 iconPath: widget.habit.iconPath,
                 isCompleted: isCompleted,
+                forceColor: widget.isCurrent && !isCompleted ? cp.bg : null,
               ),
               Expanded(
                 child: MainHabitInfo(

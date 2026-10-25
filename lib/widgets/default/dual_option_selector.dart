@@ -15,7 +15,27 @@ class DualOptionSelector<T> extends StatefulWidget {
     this.showDeselectHint = false,
     this.alignDuration = const Duration(milliseconds: 250),
     this.color,
-  });
+  }) : firstIcon = null,
+       secondIcon = null,
+       width = null;
+
+  /// Compact icon-only variant: a bordered pill where the selected half is
+  /// filled flat, so its corners toward the middle stay square.
+  const DualOptionSelector.icons({
+    super.key,
+    required Widget Function(Color color) this.firstIcon,
+    required Widget Function(Color color) this.secondIcon,
+    required this.firstValue,
+    required this.secondValue,
+    required this.selectedValue,
+    required this.onSelect,
+    this.allowDeselect = false,
+    this.alignDuration = const Duration(milliseconds: 250),
+    this.color,
+    this.width = 80,
+  }) : firstLabel = '',
+       secondLabel = '',
+       showDeselectHint = false;
 
   final String firstLabel;
   final String secondLabel;
@@ -27,6 +47,9 @@ class DualOptionSelector<T> extends StatefulWidget {
   final bool showDeselectHint;
   final Duration alignDuration;
   final Color? color;
+  final Widget Function(Color color)? firstIcon;
+  final Widget Function(Color color)? secondIcon;
+  final double? width;
 
   @override
   State<DualOptionSelector<T>> createState() => _DualOptionSelectorState<T>();
@@ -99,6 +122,9 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
+    if (widget.firstIcon != null && widget.secondIcon != null) {
+      return _buildIconStyle(cp);
+    }
     final isDeselected = widget.selectedValue == null;
 
     return Container(
@@ -152,6 +178,103 @@ class _DualOptionSelectorState<T> extends State<DualOptionSelector<T>> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildIconStyle(ColorProvider cp) {
+    final isFirst = _getIndicatorAlignment() == Alignment.centerLeft;
+    // Pill radius (36 / 2) minus the 1px border.
+    const outerRadius = 17.0;
+
+    return Container(
+      width: widget.width,
+      height: 36,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: widget.color ?? (cp.isDark ? cp.field : cp.border),
+        border: Border.all(color: cp.border),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              AnimatedAlign(
+                duration: _effectiveAlignDuration,
+                curve: Curves.easeOutCubic,
+                alignment: _getIndicatorAlignment(),
+                child: AnimatedContainer(
+                  duration: _effectiveAlignDuration,
+                  curve: Curves.easeOutCubic,
+                  width: constraints.maxWidth / 2,
+                  decoration: BoxDecoration(
+                    color: cp.bg,
+                    // Round only the sides facing the outside of the pill.
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(isFirst ? outerRadius : 0),
+                      right: Radius.circular(isFirst ? 0 : outerRadius),
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _IconOptionButton(
+                      icon: widget.firstIcon!,
+                      isSelected: widget.selectedValue == widget.firstValue,
+                      onTap: _onTapFirst,
+                    ),
+                  ),
+                  Expanded(
+                    child: _IconOptionButton(
+                      icon: widget.secondIcon!,
+                      isSelected: widget.selectedValue == widget.secondValue,
+                      onTap: _onTapSecond,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _IconOptionButton extends StatelessWidget {
+  const _IconOptionButton({
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final Widget Function(Color color) icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final iconColor =
+        isSelected
+            ? cp.main
+            : cp.isDark
+            ? cp.greyText
+            : cp.lightGreyText;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Center(
+        child: TweenAnimationBuilder<Color?>(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          tween: ColorTween(end: iconColor),
+          builder: (context, color, _) => icon(color ?? iconColor),
+        ),
       ),
     );
   }

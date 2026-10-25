@@ -2903,6 +2903,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get healthMetricMindfulMinutes => 'Mindfulness';
 
   @override
+  String get healthMetricActivity => 'Attività';
+
+  @override
   String get healthMetricActiveCalories => 'Calorie attive';
 
   @override
@@ -3027,6 +3030,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Registra le tue sessioni di mindfulness';
 
   @override
+  String get healthMetricDescActivity =>
+      'Registra il tuo anello Esercizio dall\'Apple Watch';
+
+  @override
   String get healthMetricDescActiveCalories =>
       'Registra le calorie attive che bruci';
 
@@ -3042,6 +3049,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get premadeHabitMindfulness => 'Mindfulness';
+
+  @override
+  String get premadeHabitActivity => 'Attività';
 
   @override
   String get premadeHabitSleepTime => 'Tempo di sonno';
@@ -3308,6 +3318,16 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String notificationHealthActivityStart(Object goal) {
+    return 'Muoviti per $goal oggi. Una camminata a passo svelto conta.|Punta a $goal di attività oggi, ogni movimento conta.|È ora di muoversi, il tuo obiettivo di attività è $goal.|Resta in movimento, l\'obiettivo di oggi è $goal di attività.';
+  }
+
+  @override
+  String notificationHealthActivityProgress(Object progress, Object remaining) {
+    return 'Finora $progress di attività. Mancano $remaining all\'obiettivo.|Mancano $remaining di attività, continua a muoverti!|Bene, già $progress di attività oggi. Ne mancano solo $remaining.';
+  }
+
+  @override
   String notificationHealthWorkoutStart(Object activity, Object goal) {
     return '$activity: l\'obiettivo di oggi è $goal.|$activity è nel piano di oggi, punta a $goal.|$activity – obiettivo di oggi: $goal. Andiamo!|$activity, è il momento! L\'obiettivo è $goal.';
   }
@@ -3460,4 +3480,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get statsRangeAll => 'TUTTO';
+
+  @override
+  String get noHabitsScheduledToday => 'Nessuna abitudine programmata per oggi';
+
+  @override
+  String get noHabitsScheduledDay =>
+      'Nessuna abitudine programmata per questo giorno';
+
+  @override
+  String get noTimedHabitsToday =>
+      'Nessuna delle abitudini di oggi ha un intervallo di tempo';
+
+  @override
+  String get noTimedHabitsDay =>
+      'Nessuna delle abitudini di questo giorno ha un intervallo di tempo';
 }

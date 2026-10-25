@@ -10,6 +10,7 @@ enum HealthMetricType {
   totalCalories,
   bedtime,
   wakeTime,
+  activity, // all exercise minutes (the Exercise ring), iOS only
 }
 
 extension HealthMetricTypeMapping on HealthMetricType {
@@ -33,6 +34,7 @@ extension HealthMetricTypeMapping on HealthMetricType {
         return HabitTrackingType.amount;
       case HealthMetricType.workouts:
       case HealthMetricType.mindfulness:
+      case HealthMetricType.activity:
         return HabitTrackingType.duration;
       case HealthMetricType.bedtime:
       case HealthMetricType.wakeTime:
@@ -58,6 +60,8 @@ extension HealthMetricTypeMapping on HealthMetricType {
         return 'assets/images/health-icons/bedtime.png';
       case HealthMetricType.wakeTime:
         return 'assets/images/health-icons/wake.png';
+      case HealthMetricType.activity:
+        return 'assets/images/health-icons/activity.png';
     }
   }
 
@@ -79,6 +83,8 @@ extension HealthMetricTypeMapping on HealthMetricType {
         return loc.healthTargetBedtime;
       case HealthMetricType.wakeTime:
         return loc.healthTargetWakeTime;
+      case HealthMetricType.activity:
+        return loc.healthMetricActivity;
     }
   }
 
@@ -100,6 +106,8 @@ extension HealthMetricTypeMapping on HealthMetricType {
         return loc.healthMetricDescBedtime;
       case HealthMetricType.wakeTime:
         return loc.healthMetricDescWakeTime;
+      case HealthMetricType.activity:
+        return loc.healthMetricDescActivity;
     }
   }
 }

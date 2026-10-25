@@ -4888,6 +4888,12 @@ abstract class AppLocalizations {
   /// **'Mindfulness'**
   String get healthMetricMindfulMinutes;
 
+  /// No description provided for @healthMetricActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get healthMetricActivity;
+
   /// No description provided for @healthMetricActiveCalories.
   ///
   /// In en, this message translates to:
@@ -5116,6 +5122,12 @@ abstract class AppLocalizations {
   /// **'Tracks your mindfulness sessions'**
   String get healthMetricDescMindfulness;
 
+  /// No description provided for @healthMetricDescActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks your exercise ring from Apple Watch'**
+  String get healthMetricDescActivity;
+
   /// No description provided for @healthMetricDescActiveCalories.
   ///
   /// In en, this message translates to:
@@ -5145,6 +5157,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mindfulness'**
   String get premadeHabitMindfulness;
+
+  /// No description provided for @premadeHabitActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get premadeHabitActivity;
 
   /// No description provided for @premadeHabitSleepTime.
   ///
@@ -5563,6 +5581,18 @@ abstract class AppLocalizations {
     Object remaining,
   );
 
+  /// No description provided for @notificationHealthActivityStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Get {goal} of activity today. A brisk walk counts.|Aim for {goal} of exercise today, any movement counts.|Time to move, your activity goal is {goal}.|Keep moving, today\'s goal is {goal} of activity.'**
+  String notificationHealthActivityStart(Object goal);
+
+  /// No description provided for @notificationHealthActivityProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{progress} of activity so far. {remaining} more to reach your goal.|{remaining} of activity left, keep moving!|Nice, {progress} active today. Only {remaining} to go.'**
+  String notificationHealthActivityProgress(Object progress, Object remaining);
+
   /// No description provided for @notificationHealthWorkoutStart.
   ///
   /// In en, this message translates to:
@@ -5734,6 +5764,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ALL'**
   String get statsRangeAll;
+
+  /// No description provided for @noHabitsScheduledToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits scheduled for today'**
+  String get noHabitsScheduledToday;
+
+  /// No description provided for @noHabitsScheduledDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits scheduled for this day'**
+  String get noHabitsScheduledDay;
+
+  /// No description provided for @noTimedHabitsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'None of today\'s habits have a time interval'**
+  String get noTimedHabitsToday;
+
+  /// No description provided for @noTimedHabitsDay.
+  ///
+  /// In en, this message translates to:
+  /// **'None of this day\'s habits have a time interval'**
+  String get noTimedHabitsDay;
 }
 
 class _AppLocalizationsDelegate

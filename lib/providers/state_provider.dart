@@ -315,6 +315,9 @@ class StateProvider extends ChangeNotifier {
         case HealthMetricType.mindfulness:
           _habitAmount = 1;
           break;
+        case HealthMetricType.activity:
+          _habitDuration = const Duration(minutes: 30);
+          break;
       }
     }
     notifyListeners();

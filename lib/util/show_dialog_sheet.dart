@@ -15,6 +15,8 @@ Future<T?> showDialogSheet<T>({
     backgroundColor: Colors.transparent,
     barrierColor: cp.greyText.darken().withOpacity(0.3),
     isScrollControlled: true,
+    // keeps a tall sheet below the status bar, its content scrolls instead
+    useSafeArea: true,
     isDismissible: dismissible,
     enableDrag: dismissible,
     context: context,
