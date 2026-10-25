@@ -3403,4 +3403,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get separateOptionalHabitsDesc =>
       'Optionale Gewohnheiten wandern aus ihren Kategorien in einen eigenen Bereich am Ende, den du einklappen kannst.';
+
+  @override
+  String get noHabitsScheduledToday =>
+      'Für heute sind keine Gewohnheiten geplant';
+
+  @override
+  String get noHabitsScheduledDay =>
+      'Für diesen Tag sind keine Gewohnheiten geplant';
+
+  @override
+  String get noTimedHabitsToday =>
+      'Keine der heutigen Gewohnheiten hat ein Zeitintervall';
+
+  @override
+  String get noTimedHabitsDay =>
+      'Keine Gewohnheit an diesem Tag hat ein Zeitintervall';
 }

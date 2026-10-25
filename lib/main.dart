@@ -49,8 +49,6 @@ Future<void> main() async {
   try {
     await BillingService.init();
   } catch (e, st) {
-    // Billing is voluntary-support-only with no feature gating, so a
-    // misconfigured/missing RevenueCat key must not block app startup.
     debugPrint('BillingService failed to initialize: $e\n$st');
   }
 

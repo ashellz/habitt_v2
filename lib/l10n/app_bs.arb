@@ -1225,5 +1225,9 @@
   "healthOverrideNoticeBody": "Napredak je ručno promijenjen, pa ga Habitt za ovaj dan neće prepisati podacima iz {source}. Broj ostaje tačno onakav kakav je unesen.\n\nŽeliš vratiti {source}? Dodirni \"Koristi vrijednosti iz {source}\" na ovoj navici.",
   "healthOverrideNoticeUnderstood": "Razumijem",
   "separateOptionalHabits": "Odvoji opcionalne navike",
-  "separateOptionalHabitsDesc": "Opcionalne navike izlaze iz svojih kategorija u zasebnu sekciju pri dnu, koju možeš sklopiti."
+  "separateOptionalHabitsDesc": "Opcionalne navike izlaze iz svojih kategorija u zasebnu sekciju pri dnu, koju možeš sklopiti.",
+  "noHabitsScheduledToday": "Nema navika zakazanih za danas",
+  "noHabitsScheduledDay": "Nema navika zakazanih za ovaj dan",
+  "noTimedHabitsToday": "Nijedna današnja navika nema vremenski interval",
+  "noTimedHabitsDay": "Nijedna navika za ovaj dan nema vremenski interval"
 }

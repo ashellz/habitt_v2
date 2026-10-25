@@ -3372,4 +3372,18 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get separateOptionalHabitsDesc =>
       'Opcionalne navike izlaze iz svojih kategorija u zasebnu sekciju pri dnu, koju možeš sklopiti.';
+
+  @override
+  String get noHabitsScheduledToday => 'Nema navika zakazanih za danas';
+
+  @override
+  String get noHabitsScheduledDay => 'Nema navika zakazanih za ovaj dan';
+
+  @override
+  String get noTimedHabitsToday =>
+      'Nijedna današnja navika nema vremenski interval';
+
+  @override
+  String get noTimedHabitsDay =>
+      'Nijedna navika za ovaj dan nema vremenski interval';
 }

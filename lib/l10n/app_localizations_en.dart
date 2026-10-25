@@ -3373,4 +3373,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get separateOptionalHabitsDesc =>
       'Optional habits move out of their categories into their own section at the bottom, which you can collapse.';
+
+  @override
+  String get noHabitsScheduledToday => 'No habits scheduled for today';
+
+  @override
+  String get noHabitsScheduledDay => 'No habits scheduled for this day';
+
+  @override
+  String get noTimedHabitsToday =>
+      'None of today\'s habits have a time interval';
+
+  @override
+  String get noTimedHabitsDay =>
+      'None of this day\'s habits have a time interval';
 }

@@ -1246,5 +1246,9 @@
   "healthOverrideNoticeBody": "You changed this progress yourself, so Habitt won't overwrite it with {source} data for this day. Your number stays exactly as you entered it.\n\nWant {source} back? Tap \"Use {source} values\" on this habit.",
   "healthOverrideNoticeUnderstood": "Understood",
   "separateOptionalHabits": "Separate optional habits",
-  "separateOptionalHabitsDesc": "Optional habits move out of their categories into their own section at the bottom, which you can collapse."
+  "separateOptionalHabitsDesc": "Optional habits move out of their categories into their own section at the bottom, which you can collapse.",
+  "noHabitsScheduledToday": "No habits scheduled for today",
+  "noHabitsScheduledDay": "No habits scheduled for this day",
+  "noTimedHabitsToday": "None of today's habits have a time interval",
+  "noTimedHabitsDay": "None of this day's habits have a time interval"
 }

@@ -1235,5 +1235,9 @@
   "healthOverrideNoticeBody": "Has cambiado el progreso manualmente, así que Habitt no lo sobrescribirá con datos de {source} en este día. Tu cifra se queda exactamente como la introdujiste.\n\n¿Quieres volver a {source}? Toca \"Usar los valores de {source}\" en este hábito.",
   "healthOverrideNoticeUnderstood": "Entendido",
   "separateOptionalHabits": "Separar hábitos opcionales",
-  "separateOptionalHabitsDesc": "Los hábitos opcionales salen de sus categorías y pasan a su propia sección al final, que puedes contraer."
+  "separateOptionalHabitsDesc": "Los hábitos opcionales salen de sus categorías y pasan a su propia sección al final, que puedes contraer.",
+  "noHabitsScheduledToday": "No hay hábitos programados para hoy",
+  "noHabitsScheduledDay": "No hay hábitos programados para este día",
+  "noTimedHabitsToday": "Ninguno de los hábitos de hoy tiene un intervalo de tiempo",
+  "noTimedHabitsDay": "Ninguno de los hábitos de este día tiene un intervalo de tiempo"
 }

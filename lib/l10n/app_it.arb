@@ -1235,5 +1235,9 @@
   "healthOverrideNoticeBody": "Hai modificato i progressi manualmente, quindi Habitt non li sovrascriverà con i dati di {source} per questo giorno. Il tuo valore resta esattamente come lo hai inserito.\n\nVuoi tornare a {source}? Tocca \"Usa i valori di {source}\" su questa abitudine.",
   "healthOverrideNoticeUnderstood": "Ho capito",
   "separateOptionalHabits": "Separa le abitudini facoltative",
-  "separateOptionalHabitsDesc": "Le abitudini facoltative escono dalle loro categorie e vanno in una sezione dedicata in fondo, che puoi comprimere."
+  "separateOptionalHabitsDesc": "Le abitudini facoltative escono dalle loro categorie e vanno in una sezione dedicata in fondo, che puoi comprimere.",
+  "noHabitsScheduledToday": "Nessuna abitudine programmata per oggi",
+  "noHabitsScheduledDay": "Nessuna abitudine programmata per questo giorno",
+  "noTimedHabitsToday": "Nessuna delle abitudini di oggi ha un intervallo di tempo",
+  "noTimedHabitsDay": "Nessuna delle abitudini di questo giorno ha un intervallo di tempo"
 }

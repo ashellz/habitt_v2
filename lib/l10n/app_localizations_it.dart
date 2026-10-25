@@ -3400,4 +3400,19 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get separateOptionalHabitsDesc =>
       'Le abitudini facoltative escono dalle loro categorie e vanno in una sezione dedicata in fondo, che puoi comprimere.';
+
+  @override
+  String get noHabitsScheduledToday => 'Nessuna abitudine programmata per oggi';
+
+  @override
+  String get noHabitsScheduledDay =>
+      'Nessuna abitudine programmata per questo giorno';
+
+  @override
+  String get noTimedHabitsToday =>
+      'Nessuna delle abitudini di oggi ha un intervallo di tempo';
+
+  @override
+  String get noTimedHabitsDay =>
+      'Nessuna delle abitudini di questo giorno ha un intervallo di tempo';
 }

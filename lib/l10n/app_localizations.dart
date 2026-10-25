@@ -5698,6 +5698,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional habits move out of their categories into their own section at the bottom, which you can collapse.'**
   String get separateOptionalHabitsDesc;
+
+  /// No description provided for @noHabitsScheduledToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits scheduled for today'**
+  String get noHabitsScheduledToday;
+
+  /// No description provided for @noHabitsScheduledDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits scheduled for this day'**
+  String get noHabitsScheduledDay;
+
+  /// No description provided for @noTimedHabitsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'None of today\'s habits have a time interval'**
+  String get noTimedHabitsToday;
+
+  /// No description provided for @noTimedHabitsDay.
+  ///
+  /// In en, this message translates to:
+  /// **'None of this day\'s habits have a time interval'**
+  String get noTimedHabitsDay;
 }
 
 class _AppLocalizationsDelegate

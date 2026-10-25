@@ -18,7 +18,7 @@ import 'package:habitt/widgets/default/optional_habits_section.dart';
 import 'package:habitt/widgets/habit_widget/habit_card.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/demo_habits_grid.dart';
-import 'package:habitt/widgets/main_page/habits/new_habits.dart';
+import 'package:habitt/widgets/main_page/habits/empty_habits_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 
