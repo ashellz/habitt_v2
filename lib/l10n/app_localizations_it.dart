@@ -3467,4 +3467,62 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get habitAgeMilestoneLegendary => 'Costanza leggendaria!';
+
+  @override
+  String get back => 'Indietro';
+
+  @override
+  String get setDaySchedule => 'Imposta la programmazione del giorno';
+
+  @override
+  String get daySchedule => 'Programmazione del giorno';
+
+  @override
+  String get daySchedulePrompt =>
+      'Imposta quando questa abitudine deve avvenire durante la giornata';
+
+  @override
+  String get noFixedTime => 'Nessun orario fisso';
+
+  @override
+  String habitAppearsInSection(String section) {
+    return 'L\'abitudine compare nella sezione $section';
+  }
+
+  @override
+  String get specificTime => 'Orario specifico';
+
+  @override
+  String get specificTimeDesc => 'Programma a un orario preciso';
+
+  @override
+  String get timeRange => 'Fascia oraria';
+
+  @override
+  String get timeRangeDesc => 'Programma con orario di inizio e di fine';
+
+  @override
+  String get setStartTime => 'Imposta l\'orario di inizio';
+
+  @override
+  String get setEndTime => 'Imposta l\'orario di fine';
+
+  @override
+  String get setTimeRange => 'Imposta la fascia oraria';
+
+  @override
+  String get startTimeLabel => 'Inizio:';
+
+  @override
+  String get endTimeLabel => 'Fine:';
+
+  @override
+  String get startsAt => 'Inizia alle:';
+
+  @override
+  String get endsAt => 'Finisce alle:';
+
+  @override
+  String get timeRangeSameTimes =>
+      'L\'orario di inizio e di fine non possono coincidere';
 }

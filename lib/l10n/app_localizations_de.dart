@@ -3470,4 +3470,62 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get habitAgeMilestoneLegendary => 'Legendäre Beständigkeit!';
+
+  @override
+  String get back => 'Zurück';
+
+  @override
+  String get setDaySchedule => 'Tagesplan festlegen';
+
+  @override
+  String get daySchedule => 'Tagesplan';
+
+  @override
+  String get daySchedulePrompt =>
+      'Lege fest, wann diese Gewohnheit im Laufe des Tages stattfinden soll';
+
+  @override
+  String get noFixedTime => 'Keine feste Uhrzeit';
+
+  @override
+  String habitAppearsInSection(String section) {
+    return 'Die Gewohnheit erscheint im Bereich $section';
+  }
+
+  @override
+  String get specificTime => 'Bestimmte Uhrzeit';
+
+  @override
+  String get specificTimeDesc => 'Zu einer genauen Uhrzeit planen';
+
+  @override
+  String get timeRange => 'Zeitraum';
+
+  @override
+  String get timeRangeDesc => 'Mit Start- und Endzeit planen';
+
+  @override
+  String get setStartTime => 'Startzeit festlegen';
+
+  @override
+  String get setEndTime => 'Endzeit festlegen';
+
+  @override
+  String get setTimeRange => 'Zeitraum festlegen';
+
+  @override
+  String get startTimeLabel => 'Startzeit:';
+
+  @override
+  String get endTimeLabel => 'Endzeit:';
+
+  @override
+  String get startsAt => 'Beginnt um:';
+
+  @override
+  String get endsAt => 'Endet um:';
+
+  @override
+  String get timeRangeSameTimes =>
+      'Start- und Endzeit dürfen nicht gleich sein';
 }

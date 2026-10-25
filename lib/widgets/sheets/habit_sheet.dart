@@ -32,7 +32,7 @@ import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/override_habit_type_fields_dialog.dart';
 import 'package:habitt/widgets/habit_details/health_widget.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/delete_notification_dialog.dart';
-import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_period.dart';
+import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_schedule.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_type.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
@@ -248,12 +248,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           (d) => habit.selectedDaysAMonth.contains(d),
         );
 
+    // stored times only matter while the interval is on
+    final changedTimeInterval =
+        sp.timeIntervalEnabled != habit.timeIntervalEnabled ||
+        (sp.timeIntervalEnabled &&
+            (sp.timeIntervalStart != habit.timeIntervalStart ||
+                sp.timeIntervalEnd != habit.timeIntervalEnd));
     /*
-    final changedTimeIntervalEnabled =
-        sp.timeIntervalEnabled != habit.timeIntervalEnabled;
-    final changedTimeIntervalStart =
-        sp.timeIntervalStart != habit.timeIntervalStart;
-    final changedTimeIntervalEnd = sp.timeIntervalEnd != habit.timeIntervalEnd;
     final changedHabitColor =
         sp.getHabitColor(tp) != habit.resolveColor(tp) ||
         sp.habitColorName != habit.colorName;
@@ -284,6 +285,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     return changedName ||
         changedDesc ||
         changedCategory ||
+        changedTimeInterval ||
         changedDuration ||
         changedAmount ||
         changedTrackingType ||
@@ -323,7 +325,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedOptional = sp.isOptional;
     final changedTimeIntervalEnabled = sp.timeIntervalEnabled;
     final changedTimeIntervalStart = sp.timeIntervalStart != 420;
-    final changedTimeIntervalEnd = sp.timeIntervalEnd != 450;
+    final changedTimeIntervalEnd = sp.timeIntervalEnd != 480;
     final changedScheduleType = sp.selectedScheduleOption != ScheduleType.daily;
     final changedWeeklyTarget = sp.weeklyTarget != 1;
     final changedMonthlyTarget = sp.monthlyTarget != 1;
@@ -790,6 +792,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                           habitScheduling(cp),
                           HealthWidget(habit: widget.habit),
                           habitTypeRow(cp, sp),
+                          const SelectHabitDaySchedule(),
                         ],
                       ),
                     ),
@@ -1206,8 +1209,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           maxLines: 4,
           controller: habitNotesController,
         ),
-
-        SelectHabitDayPeriod(),
       ],
     );
   }
