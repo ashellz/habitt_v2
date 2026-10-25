@@ -3412,67 +3412,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get habitAgeStartedToday => 'Iniziata oggi, buona fortuna!';
 
   @override
-  String habitAgeDays(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count giorni',
-      one: '1 giorno',
-    );
-    return 'Lo fai da $_temp0';
-  }
-
-  @override
-  String habitAgeWeeks(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count settimane',
-      one: '1 settimana',
-    );
-    return 'Lo fai da $_temp0';
-  }
-
-  @override
-  String habitAgeMonths(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count mesi',
-      one: '1 mese',
-    );
-    return 'Lo fai da $_temp0';
-  }
-
-  @override
-  String habitAgeYears(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count anni',
-      one: '1 anno',
-    );
-    return 'Lo fai da $_temp0';
-  }
-
-  @override
-  String habitAgeYearsMonths(num months, num years) {
-    String _temp0 = intl.Intl.pluralLogic(
-      years,
-      locale: localeName,
-      other: '$years anni',
-      one: '1 anno',
-    );
-    String _temp1 = intl.Intl.pluralLogic(
-      months,
-      locale: localeName,
-      other: '$months mesi',
-      one: '1 mese',
-    );
-    return 'Lo fai da $_temp0 e $_temp1';
-  }
-
-  @override
   String get statsRange7Days => '7G';
 
   @override
@@ -3495,4 +3434,37 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get noTimedHabitsDay =>
       'Nessuna delle abitudini di questo giorno ha un intervallo di tempo';
+
+  @override
+  String get habitAgeCardTitle => 'Lo fai da';
+
+  @override
+  String get habitAgeCardNew => 'Appena iniziata';
+
+  @override
+  String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {
+    return '${years}a ${months}m ${days}g';
+  }
+
+  @override
+  String get habitAgeMilestoneStarting => 'Stai appena iniziando';
+
+  @override
+  String get habitAgeMilestoneRhythm => 'Stai trovando il tuo ritmo';
+
+  @override
+  String get habitAgeMilestoneRoutine => 'Sta diventando una routine';
+
+  @override
+  String get habitAgeMilestoneImpressive => 'Impressionante!';
+
+  @override
+  String get habitAgeMilestoneOutstanding => 'Eccezionale!';
+
+  @override
+  String get habitAgeMilestoneDedication =>
+      'Un anno intero. Questa è dedizione!';
+
+  @override
+  String get habitAgeMilestoneLegendary => 'Costanza leggendaria!';
 }

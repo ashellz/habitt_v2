@@ -6,6 +6,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/get_duration_string.dart';
+import 'package:habitt/util/habit_age.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/widgets/stats/counter_stat_card.dart';
 import 'package:habitt/widgets/habit_details/new/completion_ratio_section.dart';
@@ -113,12 +114,45 @@ class _StatsGrid extends StatelessWidget {
             ),
           ],
         ),
-        if (habit.tracksAmount || habit.tracksDuration) ...[
-          const SizedBox(height: 10),
-          _TotalSpentCard(habit: habit, stats: stats),
-        ],
+        const SizedBox(height: 10),
+        // next to the amount / duration total when there is one
+        if (habit.tracksAmount || habit.tracksDuration)
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _TotalSpentCard(habit: habit, stats: stats)),
+                const SizedBox(width: 10),
+                Expanded(child: _ageCard(loc)),
+              ],
+            ),
+          )
+        else
+          _ageCard(loc, fullWidth: true),
       ],
     );
+  }
+
+  Widget _ageCard(AppLocalizations loc, {bool fullWidth = false}) {
+    return StatCard(
+      title: loc.habitAgeCardTitle,
+      value: _ageValue(loc, habitAge(stats.createdAt, DateTime.now())),
+      iconPath: 'assets/images/new-svg/calendar.svg',
+      fullWidth: fullWidth,
+    );
+  }
+
+  // the exact day count for the first year, then years / months / days
+  String _ageValue(AppLocalizations loc, HabitAge age) {
+    if (age.isNew) return loc.habitAgeCardNew;
+    if (age.years > 0) {
+      return loc.habitAgeCardYearsMonthsDays(
+        age.years,
+        age.months,
+        age.extraDays,
+      );
+    }
+    return age.days == 1 ? '1 ${loc.day}' : '${age.days} ${loc.days}';
   }
 }
 

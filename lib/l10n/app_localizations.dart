@@ -5717,36 +5717,6 @@ abstract class AppLocalizations {
   /// **'Started today, good luck!'**
   String get habitAgeStartedToday;
 
-  /// No description provided for @habitAgeDays.
-  ///
-  /// In en, this message translates to:
-  /// **'Doing this for {count, plural, =1{1 day} other{{count} days}}'**
-  String habitAgeDays(num count);
-
-  /// No description provided for @habitAgeWeeks.
-  ///
-  /// In en, this message translates to:
-  /// **'Doing this for {count, plural, =1{1 week} other{{count} weeks}}'**
-  String habitAgeWeeks(num count);
-
-  /// No description provided for @habitAgeMonths.
-  ///
-  /// In en, this message translates to:
-  /// **'Doing this for {count, plural, =1{1 month} other{{count} months}}'**
-  String habitAgeMonths(num count);
-
-  /// No description provided for @habitAgeYears.
-  ///
-  /// In en, this message translates to:
-  /// **'Doing this for {count, plural, =1{1 year} other{{count} years}}'**
-  String habitAgeYears(num count);
-
-  /// No description provided for @habitAgeYearsMonths.
-  ///
-  /// In en, this message translates to:
-  /// **'Doing this for {years, plural, =1{1 year} other{{years} years}} and {months, plural, =1{1 month} other{{months} months}}'**
-  String habitAgeYearsMonths(num months, num years);
-
   /// No description provided for @statsRange7Days.
   ///
   /// In en, this message translates to:
@@ -5788,6 +5758,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'None of this day\'s habits have a time interval'**
   String get noTimedHabitsDay;
+
+  /// No description provided for @habitAgeCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Doing this for'**
+  String get habitAgeCardTitle;
+
+  /// No description provided for @habitAgeCardNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Just started'**
+  String get habitAgeCardNew;
+
+  /// No description provided for @habitAgeCardYearsMonthsDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{years}y {months}m {days}d'**
+  String habitAgeCardYearsMonthsDays(Object years, Object months, Object days);
+
+  /// No description provided for @habitAgeMilestoneStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Just getting started'**
+  String get habitAgeMilestoneStarting;
+
+  /// No description provided for @habitAgeMilestoneRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your rhythm'**
+  String get habitAgeMilestoneRhythm;
+
+  /// No description provided for @habitAgeMilestoneRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'This is turning into a routine'**
+  String get habitAgeMilestoneRoutine;
+
+  /// No description provided for @habitAgeMilestoneImpressive.
+  ///
+  /// In en, this message translates to:
+  /// **'Impressive!'**
+  String get habitAgeMilestoneImpressive;
+
+  /// No description provided for @habitAgeMilestoneOutstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding!'**
+  String get habitAgeMilestoneOutstanding;
+
+  /// No description provided for @habitAgeMilestoneDedication.
+  ///
+  /// In en, this message translates to:
+  /// **'A full year. That\'s dedication!'**
+  String get habitAgeMilestoneDedication;
+
+  /// No description provided for @habitAgeMilestoneLegendary.
+  ///
+  /// In en, this message translates to:
+  /// **'Legendary consistency!'**
+  String get habitAgeMilestoneLegendary;
 }
 
 class _AppLocalizationsDelegate
