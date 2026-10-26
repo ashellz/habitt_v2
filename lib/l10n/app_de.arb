@@ -1273,5 +1273,7 @@
   "endTimeLabel": "Endzeit:",
   "startsAt": "Beginnt um:",
   "endsAt": "Endet um:",
-  "timeRangeSameTimes": "Start- und Endzeit dürfen nicht gleich sein"
+  "timeRangeSameTimes": "Start- und Endzeit dürfen nicht gleich sein",
+  "showIfMissed": "Erneut anzeigen, wenn verpasst",
+  "showIfMissedDesc": "Wenn du einen geplanten Tag verpasst, wird die Gewohnheit täglich angezeigt, bis der nächste geplante Tag kommt"
 }

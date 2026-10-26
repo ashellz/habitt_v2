@@ -574,6 +574,63 @@ class HabitProvider extends ChangeNotifier {
     if (habit.isPaused == true) {
       return false;
     }
+    if (_isScheduledOnDay(habit, day, progressHabit: progressHabit)) {
+      return true;
+    }
+    return _isMissedCarryOverDay(habit, day);
+  }
+
+  // How far back we look for the last scheduled day when carrying a miss over.
+  // Covers the longest interval a user can pick (custom: 30 days, monthly: 31).
+  static const int _missedCarryOverLookbackDays = 62;
+
+  // "Show if missed" toggle: a weekly (fixed days), monthly (fixed days) or
+  // custom habit that was scheduled on an earlier day and not completed since
+  // keeps appearing every day until its next scheduled day. Only ever applies
+  // to today — past days keep their recorded snapshot, so a carry-over day can
+  // never add a miss to the streak, only a bonus completion.
+  bool _isMissedCarryOverDay(Habit habit, DateTime day) {
+    if (!habit.showIfMissed) return false;
+    final hasFixedSchedule = switch (habit.scheduleType) {
+      ScheduleType.daily => false,
+      ScheduleType.weekly => habit.selectedDaysAWeek.isNotEmpty,
+      ScheduleType.monthly => habit.selectedDaysAMonth.isNotEmpty,
+      ScheduleType.custom => true,
+    };
+    if (!hasFixedSchedule) return false;
+
+    final today = _normalizeDate(DateTime.now());
+    if (_normalizeDate(day) != today) return false;
+
+    final createdDay = _normalizeDate(habit.createdAt.toLocal());
+    DateTime? lastScheduled;
+    for (var i = 1; i <= _missedCarryOverLookbackDays; i++) {
+      final candidate = today.subtract(Duration(days: i));
+      if (candidate.isBefore(createdDay)) return false;
+      if (_isScheduledOnDay(habit, candidate)) {
+        lastScheduled = candidate;
+        break;
+      }
+    }
+    if (lastScheduled == null) return false;
+
+    // Any completion from that scheduled day up to yesterday settles it.
+    for (
+      var d = lastScheduled;
+      d.isBefore(today);
+      d = DateTime(d.year, d.month, d.day + 1)
+    ) {
+      final key = d.toIso8601String().split('T').first;
+      final snapshot = daysBox.get(key);
+      if (snapshot == null) continue;
+      for (final recorded in snapshot.habits) {
+        if (recorded.id == habit.id && recorded.completed) return false;
+      }
+    }
+    return true;
+  }
+
+  bool _isScheduledOnDay(Habit habit, DateTime day, {Habit? progressHabit}) {
     final normalizedDay = _normalizeDate(day);
     final today = _normalizeDate(DateTime.now());
     final isToday = normalizedDay == today;

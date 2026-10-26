@@ -56,6 +56,8 @@ class Habit extends HiveObject {
   List<int> selectedDaysAWeek; // 1,3,5... 1 = monday
   List<int> selectedDaysAMonth; // 1,3,5... 1 = 1st
   List<String> customAppearance;
+  bool
+  showIfMissed; // weekly/monthly/custom: keep showing daily after a missed scheduled day until the next one
   int timesCompletedThisWeek;
   int timesCompletedThisMonth;
   DateTime createdAt; // When habit was created
@@ -116,6 +118,7 @@ class Habit extends HiveObject {
     List<int>? selectedDaysAWeek,
     List<int>? selectedDaysAMonth,
     List<String>? customAppearance,
+    this.showIfMissed = false,
     this.timesCompletedThisWeek = 0,
     this.timesCompletedThisMonth = 0,
     DateTime? createdAt,
@@ -229,6 +232,7 @@ class Habit extends HiveObject {
       selectedDaysAWeek: List<int>.from(selectedDaysAWeek),
       selectedDaysAMonth: List<int>.from(selectedDaysAMonth),
       customAppearance: List<String>.from(customAppearance),
+      showIfMissed: showIfMissed,
       timesCompletedThisWeek: timesCompletedThisWeek,
       timesCompletedThisMonth: timesCompletedThisMonth,
       createdAt: createdAt,
@@ -284,6 +288,7 @@ class Habit extends HiveObject {
       selectedDaysAWeek: List<int>.from(selectedDaysAWeek),
       selectedDaysAMonth: List<int>.from(selectedDaysAMonth),
       customAppearance: List<String>.from(customAppearance),
+      showIfMissed: showIfMissed,
       timesCompletedThisWeek: 0,
       timesCompletedThisMonth: 0,
       createdAt: createdAt,
@@ -417,6 +422,10 @@ class Habit extends HiveObject {
     if (!_sameIntList(selectedDaysAMonth, habit.selectedDaysAMonth)) {
       selectedDaysAMonth = List<int>.from(habit.selectedDaysAMonth);
       timestamps['selectedDaysAMonth'] = now;
+    }
+    if (showIfMissed != habit.showIfMissed) {
+      showIfMissed = habit.showIfMissed;
+      timestamps['showIfMissed'] = now;
     }
     if (!_sameStringList(customAppearance, habit.customAppearance)) {
       customAppearance = List<String>.from(habit.customAppearance);
@@ -582,6 +591,7 @@ class Habit extends HiveObject {
     healthMetric = merged.healthMetric;
     healthWorkoutFilter = merged.healthWorkoutFilter;
     healthBedtimeDayBefore = merged.healthBedtimeDayBefore;
+    showIfMissed = merged.showIfMissed;
     toleranceMinutes = merged.toleranceMinutes;
     healthSessions = merged.healthSessions.map((s) => s.copy()).toList();
     healthManualOverride = merged.healthManualOverride;
@@ -894,6 +904,7 @@ class Habit extends HiveObject {
       'healthMetric': _serializeHealthMetricType(healthMetric),
       'healthWorkoutFilter': healthWorkoutFilter?.name,
       'healthBedtimeDayBefore': healthBedtimeDayBefore,
+      'showIfMissed': showIfMissed,
       'toleranceMinutes': toleranceMinutes,
       'healthSessions': healthSessions.map((s) => s.toMap()).toList(),
       'healthManualOverride': healthManualOverride,
@@ -982,6 +993,7 @@ class Habit extends HiveObject {
         m['healthWorkoutFilter']?.toString(),
       ),
       healthBedtimeDayBefore: (m['healthBedtimeDayBefore'] as bool?) ?? false,
+      showIfMissed: (m['showIfMissed'] as bool?) ?? false,
       toleranceMinutes: (m['toleranceMinutes'] as num?)?.toInt() ?? 0,
       healthSessions: _parseHealthSessions(m['healthSessions']),
       healthManualOverride: (m['healthManualOverride'] as bool?) ?? false,
@@ -1280,6 +1292,7 @@ class Habit extends HiveObject {
         healthBedtimeDayBefore,
         incoming.healthBedtimeDayBefore,
       ),
+      showIfMissed: resolve('showIfMissed', showIfMissed, incoming.showIfMissed),
       toleranceMinutes: resolve(
         'toleranceMinutes',
         toleranceMinutes,
