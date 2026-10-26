@@ -8,12 +8,19 @@ import 'package:flutter/material.dart';
 // background and stays inside the widget's bounds (no colour to match, nothing
 // painted outside a rounded card). It is not a blur: a BackdropFilter re-blurs
 // the scrolling content every frame and made sheets laggy.
+//
+// A fade only shows on content that contrasts with the background, so over
+// light on light content (empty space, pale fields) it is hard to see. Pass
+// [startShadowColor] to also get a faint shadow along the start edge that
+// appears as soon as the content is scrolled, whatever it looks like.
 class ScrollEdgeFade extends StatefulWidget {
   const ScrollEdgeFade({
     super.key,
     required this.child,
     this.axis = Axis.vertical,
     this.fadeExtent = 16,
+    this.startShadowColor,
+    this.startShadowExtent = 14,
   });
 
   final Widget child;
@@ -22,9 +29,15 @@ class ScrollEdgeFade extends StatefulWidget {
   // length of the fade in logical pixels
   final double fadeExtent;
 
+  // colour (at its strongest) of the shadow drawn over the start edge while the
+  // content is scrolled away from it, null for no shadow
+  final Color? startShadowColor;
+  final double startShadowExtent;
+
   // the animated 0 (none) to 1 (full) strength of each fade, read by tests
   static const startFadeKey = ValueKey('scroll-edge-fade-start');
   static const endFadeKey = ValueKey('scroll-edge-fade-end');
+  static const startShadowKey = ValueKey('scroll-edge-fade-start-shadow');
 
   @override
   State<ScrollEdgeFade> createState() => _ScrollEdgeFadeState();
@@ -96,19 +109,62 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
         tween: Tween<double>(end: _fadeStart ? 1 : 0),
         duration: _duration,
         child: widget.child,
-        builder:
-            (context, start, child) => TweenAnimationBuilder<double>(
-              key: ScrollEdgeFade.endFadeKey,
-              tween: Tween<double>(end: _fadeEnd ? 1 : 0),
-              duration: _duration,
-              child: child,
-              builder:
-                  (context, end, child) => ShaderMask(
-                    blendMode: BlendMode.dstIn,
-                    shaderCallback: (bounds) => _shader(bounds, start, end),
-                    child: child,
+        builder: (context, start, child) {
+          final faded = TweenAnimationBuilder<double>(
+            key: ScrollEdgeFade.endFadeKey,
+            tween: Tween<double>(end: _fadeEnd ? 1 : 0),
+            duration: _duration,
+            child: child,
+            builder:
+                (context, end, child) => ShaderMask(
+                  blendMode: BlendMode.dstIn,
+                  shaderCallback: (bounds) => _shader(bounds, start, end),
+                  child: child,
+                ),
+          );
+
+          final shadowColor = widget.startShadowColor;
+          if (shadowColor == null) return faded;
+
+          final horizontal = widget.axis == Axis.horizontal;
+          return Stack(
+            children: [
+              faded,
+              Positioned(
+                top: 0,
+                left: 0,
+                right: horizontal ? null : 0,
+                bottom: horizontal ? 0 : null,
+                width: horizontal ? widget.startShadowExtent : null,
+                height: horizontal ? null : widget.startShadowExtent,
+                child: IgnorePointer(
+                  child: Opacity(
+                    key: ScrollEdgeFade.startShadowKey,
+                    opacity: start,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin:
+                              horizontal
+                                  ? Alignment.centerLeft
+                                  : Alignment.topCenter,
+                          end:
+                              horizontal
+                                  ? Alignment.centerRight
+                                  : Alignment.bottomCenter,
+                          colors: [
+                            shadowColor,
+                            shadowColor.withValues(alpha: 0),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-            ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

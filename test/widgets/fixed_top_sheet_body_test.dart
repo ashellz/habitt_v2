@@ -108,6 +108,25 @@ void main() {
     expect(_bottomFade(tester), 1);
   });
 
+  testWidgets('a shadow shows under the top bar as soon as content scrolls', (
+    tester,
+  ) async {
+    await _pump(tester, contentHeight: 2000);
+    double shadow() =>
+        tester
+            .widget<Opacity>(find.byKey(ScrollEdgeFade.startShadowKey))
+            .opacity;
+
+    expect(shadow(), 0);
+
+    // a few pixels is enough, it does not depend on what is under the bar
+    await _dragSheet(tester, -30);
+    expect(shadow(), 1);
+
+    await _dragSheet(tester, 5000);
+    expect(shadow(), 0);
+  });
+
   testWidgets('short content does not scroll and shows no fade', (
     tester,
   ) async {

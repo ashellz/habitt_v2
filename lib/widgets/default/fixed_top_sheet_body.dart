@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/scroll_edge_fade.dart';
+import 'package:provider/provider.dart';
 
 // body of a bottom sheet: [topBar] (back / title / save) stays at the top while
 // [child] scrolls underneath it, with soft fades at the scrolled edges
@@ -27,11 +29,14 @@ class FixedTopSheetBody extends StatelessWidget {
   final double bottomPadding;
 
   // longer than the default ScrollEdgeFade: the first items of a sheet are
-  // mostly text and low contrast fields, which a short fade barely shows
+  // mostly text and low contrast fields, which a short fade barely shows (the
+  // shadow under the top bar covers what the fade can't)
   final double fadeExtent;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.select<ColorProvider, bool>((cp) => cp.isDark);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,6 +51,9 @@ class FixedTopSheetBody extends StatelessWidget {
         Flexible(
           child: ScrollEdgeFade(
             fadeExtent: fadeExtent,
+            startShadowColor: Colors.black.withValues(
+              alpha: isDark ? 0.3 : 0.08,
+            ),
             child: SingleChildScrollView(
               controller: controller,
               padding: EdgeInsets.only(bottom: bottomPadding),
