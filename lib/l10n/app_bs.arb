@@ -1265,5 +1265,5 @@
   "endsAt": "Završava u:",
   "timeRangeSameTimes": "Vrijeme početka i kraja ne može biti isto",
   "showIfMissed": "Prikaži ponovo ako je propuštena",
-  "showIfMissedDesc": "Ako propustiš zakazani dan, navika će se prikazivati svaki dan do sljedećeg zakazanog dana"
+  "showIfMissedDesc": "Ako propustiš zakazani dan, navika će se prikazivati svaki dan dok je ne završiš, a zatim se interval računa od tog dana"
 }

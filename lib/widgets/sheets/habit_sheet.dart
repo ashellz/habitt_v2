@@ -632,7 +632,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.monthlyTarget = sp.monthlyTarget;
       habit.customIntervalDays = sp.customIntervalDays;
       habit.showIfMissed =
-          sp.selectedScheduleOption != ScheduleType.daily && sp.showIfMissed;
+          sp.selectedScheduleOption == ScheduleType.custom && sp.showIfMissed;
       habit.selectedDaysAWeek = sp.selectedDaysAWeek.toList()..sort();
       habit.selectedDaysAMonth = sp.selectedDaysAMonth.toList()..sort();
       habit.premadeHabitType = sp.selectedPremadeHabitType;
@@ -705,7 +705,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       selectedDaysAMonth: sp.selectedDaysAMonth.toList()..sort(),
       customAppearance: buildCustomAppearance(sp.customIntervalDays),
       showIfMissed:
-          sp.selectedScheduleOption != ScheduleType.daily && sp.showIfMissed,
+          sp.selectedScheduleOption == ScheduleType.custom && sp.showIfMissed,
       timesCompletedThisWeek: 0,
       timesCompletedThisMonth: 0,
       createdAt: DateTime.now().toUtc(),

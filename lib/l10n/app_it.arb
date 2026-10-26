@@ -1275,5 +1275,5 @@
   "endsAt": "Finisce alle:",
   "timeRangeSameTimes": "L'orario di inizio e di fine non possono coincidere",
   "showIfMissed": "Mostra di nuovo se saltata",
-  "showIfMissedDesc": "Se salti un giorno programmato, l'abitudine verrà mostrata ogni giorno fino al prossimo giorno programmato"
+  "showIfMissedDesc": "Se salti un giorno programmato, l'abitudine verrà mostrata ogni giorno finché non la completi; poi l'intervallo riparte da quel giorno"
 }

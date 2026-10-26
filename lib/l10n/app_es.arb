@@ -1275,5 +1275,5 @@
   "endsAt": "Termina a las:",
   "timeRangeSameTimes": "La hora de inicio y la de fin no pueden ser iguales",
   "showIfMissed": "Mostrar de nuevo si se pierde",
-  "showIfMissedDesc": "Si te saltas un día programado, el hábito se seguirá mostrando cada día hasta el siguiente día programado"
+  "showIfMissedDesc": "Si te saltas un día programado, el hábito se seguirá mostrando cada día hasta que lo completes; después el intervalo se cuenta desde ese día"
 }

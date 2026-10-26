@@ -56,7 +56,7 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
           children: [
             for (var option in ScheduleType.values)
               ScheduleOptionWidget(scheduleOptionType: option),
-            if (sp.selectedScheduleOption != ScheduleType.daily)
+            if (sp.selectedScheduleOption == ScheduleType.custom)
               Row(
                 children: [
                   Expanded(

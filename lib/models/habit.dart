@@ -57,7 +57,7 @@ class Habit extends HiveObject {
   List<int> selectedDaysAMonth; // 1,3,5... 1 = 1st
   List<String> customAppearance;
   bool
-  showIfMissed; // weekly/monthly/custom: keep showing daily after a missed scheduled day until the next one
+  showIfMissed; // custom interval only: keep showing daily after a missed scheduled day until completed, then restart the interval
   int timesCompletedThisWeek;
   int timesCompletedThisMonth;
   DateTime createdAt; // When habit was created

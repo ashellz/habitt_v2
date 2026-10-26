@@ -106,8 +106,8 @@ class OldAddHabitButton extends StatelessWidget {
                     stateProvider.customIntervalDays,
                   ),
                   showIfMissed:
-                      stateProvider.selectedScheduleOption !=
-                          ScheduleType.daily &&
+                      stateProvider.selectedScheduleOption ==
+                          ScheduleType.custom &&
                       stateProvider.showIfMissed,
                   timesCompletedThisWeek: 0,
                   timesCompletedThisMonth: 0,

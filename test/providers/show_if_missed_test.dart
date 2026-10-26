@@ -16,22 +16,31 @@ DateTime _normalize(DateTime date) =>
 String _dayKey(DateTime date) =>
     _normalize(date).toIso8601String().split('T').first;
 
-Habit _weeklyHabit({
-  required int weekday,
-  required DateTime createdAt,
+String _key(DateTime d) => _dayKey(d);
+
+/// Custom "every 3 days" habit whose grid is anchored [anchorDaysAgo] days
+/// ago, so with anchorDaysAgo = 8 the scheduled days are -8, -5, -2, +1, ...
+Habit _customHabit({
+  required int anchorDaysAgo,
   bool showIfMissed = true,
   bool completed = false,
 }) {
+  final today = _normalize(DateTime.now());
+  final anchor = today.subtract(Duration(days: anchorDaysAgo));
   return Habit(
     id: 1,
     name: 'omega 3',
     iconPath: '',
     categoryId: 0,
-    scheduleType: ScheduleType.weekly,
-    selectedDaysAWeek: [weekday],
+    scheduleType: ScheduleType.custom,
+    customIntervalDays: 3,
     showIfMissed: showIfMissed,
     completed: completed,
-    createdAt: createdAt,
+    createdAt: today.subtract(const Duration(days: 100)),
+    lastCustomUpdate: anchor,
+    customAppearance: [
+      for (var i = 0; i < 365; i += 3) _key(anchor.add(Duration(days: i))),
+    ],
   );
 }
 
@@ -84,9 +93,6 @@ void main() {
   }
 
   final today = _normalize(DateTime.now());
-  final longAgo = today.subtract(const Duration(days: 100));
-  // A weekly habit scheduled on the weekday that was 2 days ago.
-  final scheduledWeekday = today.subtract(const Duration(days: 2)).weekday;
 
   Future<void> recordDay(DateTime date, Habit habit) async {
     await daysBox.put(
@@ -95,13 +101,13 @@ void main() {
     );
   }
 
-  group('show if missed', () {
+  group('show if missed (custom interval)', () {
     test('keeps showing after a missed scheduled day', () async {
       final provider = await createInitializedProvider();
-      final habit = _weeklyHabit(weekday: scheduledWeekday, createdAt: longAgo);
+      final habit = _customHabit(anchorDaysAgo: 8);
       await recordDay(
         today.subtract(const Duration(days: 2)),
-        _weeklyHabit(weekday: scheduledWeekday, createdAt: longAgo),
+        _customHabit(anchorDaysAgo: 8),
       );
 
       expect(provider.appearsOnDay(habit, today), isTrue);
@@ -109,40 +115,17 @@ void main() {
 
     test('toggle off: does not show off-schedule days', () async {
       final provider = await createInitializedProvider();
-      final habit = _weeklyHabit(
-        weekday: scheduledWeekday,
-        createdAt: longAgo,
-        showIfMissed: false,
-      );
+      final habit = _customHabit(anchorDaysAgo: 8, showIfMissed: false);
 
       expect(provider.appearsOnDay(habit, today), isFalse);
     });
 
     test('stops once completed on the scheduled day', () async {
       final provider = await createInitializedProvider();
-      final habit = _weeklyHabit(weekday: scheduledWeekday, createdAt: longAgo);
+      final habit = _customHabit(anchorDaysAgo: 8);
       await recordDay(
         today.subtract(const Duration(days: 2)),
-        _weeklyHabit(
-          weekday: scheduledWeekday,
-          createdAt: longAgo,
-          completed: true,
-        ),
-      );
-
-      expect(provider.appearsOnDay(habit, today), isFalse);
-    });
-
-    test('stops once completed on a carry-over day', () async {
-      final provider = await createInitializedProvider();
-      final habit = _weeklyHabit(weekday: scheduledWeekday, createdAt: longAgo);
-      await recordDay(
-        today.subtract(const Duration(days: 1)),
-        _weeklyHabit(
-          weekday: scheduledWeekday,
-          createdAt: longAgo,
-          completed: true,
-        ),
+        _customHabit(anchorDaysAgo: 8, completed: true),
       );
 
       expect(provider.appearsOnDay(habit, today), isFalse);
@@ -150,7 +133,7 @@ void main() {
 
     test('never carries over to past days (streaks unaffected)', () async {
       final provider = await createInitializedProvider();
-      final habit = _weeklyHabit(weekday: scheduledWeekday, createdAt: longAgo);
+      final habit = _customHabit(anchorDaysAgo: 8);
 
       expect(
         provider.appearsOnDay(habit, today.subtract(const Duration(days: 1))),
@@ -158,39 +141,45 @@ void main() {
       );
     });
 
-    test('does not carry over from before the habit was created', () async {
+    test('does not apply to weekly habits', () async {
       final provider = await createInitializedProvider();
-      final habit = _weeklyHabit(
-        weekday: scheduledWeekday,
-        createdAt: today.subtract(const Duration(days: 1)),
+      final habit = Habit(
+        id: 1,
+        name: 'weekly',
+        iconPath: '',
+        categoryId: 0,
+        scheduleType: ScheduleType.weekly,
+        selectedDaysAWeek: [today.subtract(const Duration(days: 2)).weekday],
+        showIfMissed: true,
+        createdAt: today.subtract(const Duration(days: 100)),
       );
 
       expect(provider.appearsOnDay(habit, today), isFalse);
     });
 
-    test('custom interval carries over until the next occurrence', () async {
+    test('late completion restarts the interval from that day', () async {
       final provider = await createInitializedProvider();
-      final createdAt = today.subtract(const Duration(days: 10));
-      final habit = Habit(
-        id: 1,
-        name: 'custom',
-        iconPath: '',
-        categoryId: 0,
-        scheduleType: ScheduleType.custom,
-        customIntervalDays: 5,
-        showIfMissed: true,
-        createdAt: createdAt,
-        lastCustomUpdate: createdAt,
-        customAppearance: [
-          for (var i = 0; i < 365; i += 5)
-            _dayKey(createdAt.add(Duration(days: i))),
-        ],
+      final habit = _customHabit(anchorDaysAgo: 8);
+      await habitBox.add(habit);
+      await recordDay(
+        today.subtract(const Duration(days: 2)),
+        _customHabit(anchorDaysAgo: 8),
       );
-      // Scheduled days: -10, -5, 0 (today). Today is scheduled itself.
       expect(provider.appearsOnDay(habit, today), isTrue);
-      // Day after a missed -5 is not today, so no carry-over is evaluated.
+
+      habit.completed = true;
+      await provider.updateHabitInDB(habit);
+
       expect(
-        provider.appearsOnDay(habit, today.subtract(const Duration(days: 4))),
+        habit.customAppearance,
+        containsAll([
+          _key(today.subtract(const Duration(days: 2))), // history kept
+          _key(today),
+          _key(today.add(const Duration(days: 3))),
+        ]),
+      );
+      expect(
+        habit.customAppearance.contains(_key(today.add(const Duration(days: 1)))),
         isFalse,
       );
     });

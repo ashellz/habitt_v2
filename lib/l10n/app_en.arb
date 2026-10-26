@@ -1300,5 +1300,5 @@
   "endsAt": "Ends at:",
   "timeRangeSameTimes": "Start and end time can't be the same",
   "showIfMissed": "Show again if missed",
-  "showIfMissedDesc": "If you miss a scheduled day, keep showing this habit every day until the next scheduled day"
+  "showIfMissedDesc": "If you miss a scheduled day, keep showing this habit every day until you complete it, then repeat the interval from that day"
 }

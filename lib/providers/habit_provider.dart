@@ -584,20 +584,17 @@ class HabitProvider extends ChangeNotifier {
   // Covers the longest interval a user can pick (custom: 30 days, monthly: 31).
   static const int _missedCarryOverLookbackDays = 62;
 
-  // "Show if missed" toggle: a weekly (fixed days), monthly (fixed days) or
-  // custom habit that was scheduled on an earlier day and not completed since
-  // keeps appearing every day until its next scheduled day. Only ever applies
-  // to today — past days keep their recorded snapshot, so a carry-over day can
-  // never add a miss to the streak, only a bonus completion.
+  // "Show if missed" toggle (custom interval habits only; weekly/monthly
+  // habits already stay visible until their target is reached): a custom habit
+  // that was scheduled on an earlier day and not completed since keeps
+  // appearing every day until it is completed (see
+  // _rescheduleCustomAfterLateCompletion for what happens then). Only ever
+  // applies to today — past days keep their recorded snapshot, so a carry-over
+  // day can never add a miss to the streak, only a bonus completion.
   bool _isMissedCarryOverDay(Habit habit, DateTime day) {
-    if (!habit.showIfMissed) return false;
-    final hasFixedSchedule = switch (habit.scheduleType) {
-      ScheduleType.daily => false,
-      ScheduleType.weekly => habit.selectedDaysAWeek.isNotEmpty,
-      ScheduleType.monthly => habit.selectedDaysAMonth.isNotEmpty,
-      ScheduleType.custom => true,
-    };
-    if (!hasFixedSchedule) return false;
+    if (!habit.showIfMissed || habit.scheduleType != ScheduleType.custom) {
+      return false;
+    }
 
     final today = _normalizeDate(DateTime.now());
     if (_normalizeDate(day) != today) return false;
@@ -628,6 +625,34 @@ class HabitProvider extends ChangeNotifier {
       }
     }
     return true;
+  }
+
+  // A custom habit completed late (on a carry-over day, not a scheduled one)
+  // restarts its interval from that day: "every 3 days" means the next
+  // occurrence is 3 days after the late completion. Dates before the
+  // completion day are kept so past streak calculations are unchanged.
+  void _rescheduleCustomAfterLateCompletion(Habit habit, DateTime day) {
+    if (!habit.showIfMissed ||
+        habit.scheduleType != ScheduleType.custom ||
+        !habit.completed) {
+      return;
+    }
+    final completionDay = _normalizeDate(day);
+    if (completionDay != _normalizeDate(DateTime.now())) return;
+    final key = completionDay.toIso8601String().split('T').first;
+    if (habit.customAppearance.contains(key)) return; // on schedule
+
+    final now = DateTime.now().toUtc();
+    habit.customAppearance = [
+      ...habit.customAppearance.where((d) => d.compareTo(key) < 0),
+      ..._buildCustomAppearance(
+        anchor: completionDay,
+        intervalDays: habit.customIntervalDays,
+      ),
+    ];
+    habit.lastCustomUpdate = now;
+    habit.timestamps['customAppearance'] = now;
+    habit.timestamps['lastCustomUpdate'] = now;
   }
 
   bool _isScheduledOnDay(Habit habit, DateTime day, {Habit? progressHabit}) {
@@ -1018,6 +1043,11 @@ class HabitProvider extends ChangeNotifier {
       (h) => h.id == habit.id,
       orElse: () => habit, // fallback to current one if not found
     );
+
+    _rescheduleCustomAfterLateCompletion(habit, usedDay);
+    if (!identical(realHabit, habit)) {
+      _rescheduleCustomAfterLateCompletion(realHabit, usedDay);
+    }
 
     // Only save if habit is in box (not a detached copy)
     if (realHabit.isInBox) {
