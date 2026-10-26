@@ -1247,7 +1247,7 @@
   "noTimedHabitsToday": "Keine der heutigen Gewohnheiten hat ein Zeitintervall",
   "noTimedHabitsDay": "Keine Gewohnheit an diesem Tag hat ein Zeitintervall",
   "habitAgeCardTitle": "Du machst das seit",
-  "habitAgeCardNew": "Gerade gestartet",
+  "habitAgeCardNew": "Heute gestartet",
   "habitAgeCardYearsMonthsDays": "{years}J {months}M {days}T",
   "habitAgeMilestoneStarting": "Du fängst gerade erst an",
   "habitAgeMilestoneRhythm": "Du findest deinen Rhythmus",

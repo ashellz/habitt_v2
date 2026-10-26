@@ -3439,7 +3439,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get habitAgeCardTitle => 'Lo fai da';
 
   @override
-  String get habitAgeCardNew => 'Appena iniziata';
+  String get habitAgeCardNew => 'Iniziata oggi';
 
   @override
   String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {

@@ -3443,7 +3443,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get habitAgeCardTitle => 'Du machst das seit';
 
   @override
-  String get habitAgeCardNew => 'Gerade gestartet';
+  String get habitAgeCardNew => 'Heute gestartet';
 
   @override
   String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {
