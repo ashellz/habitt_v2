@@ -29,13 +29,15 @@ class FixedTopSheetBody extends StatelessWidget {
   final double bottomPadding;
 
   // longer than the default ScrollEdgeFade: the first items of a sheet are
-  // mostly text and low contrast fields, which a short fade barely shows (the
-  // shadow under the top bar covers what the fade can't)
+  // mostly text and low contrast fields, which a short fade barely shows
   final double fadeExtent;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.select<ColorProvider, bool>((cp) => cp.isDark);
+    // the sheets are shown on this colour (see showModalBottomSheet callers)
+    final sheetColor = context.select<ColorProvider, Color>(
+      (cp) => cp.isDark ? cp.habitBg : cp.bg,
+    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -51,9 +53,7 @@ class FixedTopSheetBody extends StatelessWidget {
         Flexible(
           child: ScrollEdgeFade(
             fadeExtent: fadeExtent,
-            startShadowColor: Colors.black.withValues(
-              alpha: isDark ? 0.3 : 0.08,
-            ),
+            startOverlayColor: sheetColor,
             child: SingleChildScrollView(
               controller: controller,
               padding: EdgeInsets.only(bottom: bottomPadding),

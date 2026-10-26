@@ -108,23 +108,23 @@ void main() {
     expect(_bottomFade(tester), 1);
   });
 
-  testWidgets('a shadow shows under the top bar as soon as content scrolls', (
+  testWidgets('the top fade shows as soon as content scrolls, whatever is under the bar', (
     tester,
   ) async {
     await _pump(tester, contentHeight: 2000);
-    double shadow() =>
+    // drawn over the content in the sheet's colour, so it shows on pale content
+    double overlay() =>
         tester
-            .widget<Opacity>(find.byKey(ScrollEdgeFade.startShadowKey))
+            .widget<Opacity>(find.byKey(ScrollEdgeFade.startOverlayKey))
             .opacity;
 
-    expect(shadow(), 0);
+    expect(overlay(), 0);
 
-    // a few pixels is enough, it does not depend on what is under the bar
     await _dragSheet(tester, -30);
-    expect(shadow(), 1);
+    expect(overlay(), 1);
 
     await _dragSheet(tester, 5000);
-    expect(shadow(), 0);
+    expect(overlay(), 0);
   });
 
   testWidgets('short content does not scroll and shows no fade', (

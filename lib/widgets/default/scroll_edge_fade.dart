@@ -9,18 +9,19 @@ import 'package:flutter/material.dart';
 // painted outside a rounded card). It is not a blur: a BackdropFilter re-blurs
 // the scrolling content every frame and made sheets laggy.
 //
-// A fade only shows on content that contrasts with the background, so over
-// light on light content (empty space, pale fields) it is hard to see. Pass
-// [startShadowColor] to also get a faint shadow along the start edge that
-// appears as soon as the content is scrolled, whatever it looks like.
+// A mask only shows on content that contrasts with the background, so over
+// light on light content (empty space, pale fields) the fade is hard to see.
+// Pass the background's colour as [startOverlayColor] to draw the start fade as
+// an overlay of that colour instead: same look on content that contrasts, and
+// it still reads as a fade on content that doesn't. The background has to be a
+// solid colour for that to blend in.
 class ScrollEdgeFade extends StatefulWidget {
   const ScrollEdgeFade({
     super.key,
     required this.child,
     this.axis = Axis.vertical,
     this.fadeExtent = 16,
-    this.startShadowColor,
-    this.startShadowExtent = 14,
+    this.startOverlayColor,
   });
 
   final Widget child;
@@ -29,15 +30,14 @@ class ScrollEdgeFade extends StatefulWidget {
   // length of the fade in logical pixels
   final double fadeExtent;
 
-  // colour (at its strongest) of the shadow drawn over the start edge while the
-  // content is scrolled away from it, null for no shadow
-  final Color? startShadowColor;
-  final double startShadowExtent;
+  // colour of the background behind the content, null to fade the start with a
+  // mask like the end
+  final Color? startOverlayColor;
 
   // the animated 0 (none) to 1 (full) strength of each fade, read by tests
   static const startFadeKey = ValueKey('scroll-edge-fade-start');
   static const endFadeKey = ValueKey('scroll-edge-fade-end');
-  static const startShadowKey = ValueKey('scroll-edge-fade-start-shadow');
+  static const startOverlayKey = ValueKey('scroll-edge-fade-start-overlay');
 
   @override
   State<ScrollEdgeFade> createState() => _ScrollEdgeFadeState();
@@ -110,6 +110,7 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
         duration: _duration,
         child: widget.child,
         builder: (context, start, child) {
+          final overlayColor = widget.startOverlayColor;
           final faded = TweenAnimationBuilder<double>(
             key: ScrollEdgeFade.endFadeKey,
             tween: Tween<double>(end: _fadeEnd ? 1 : 0),
@@ -118,13 +119,18 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
             builder:
                 (context, end, child) => ShaderMask(
                   blendMode: BlendMode.dstIn,
-                  shaderCallback: (bounds) => _shader(bounds, start, end),
+                  shaderCallback:
+                      (bounds) => _shader(
+                        bounds,
+                        // the overlay does the start fade
+                        overlayColor == null ? start : 0,
+                        end,
+                      ),
                   child: child,
                 ),
           );
 
-          final shadowColor = widget.startShadowColor;
-          if (shadowColor == null) return faded;
+          if (overlayColor == null) return faded;
 
           final horizontal = widget.axis == Axis.horizontal;
           return Stack(
@@ -135,11 +141,11 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
                 left: 0,
                 right: horizontal ? null : 0,
                 bottom: horizontal ? 0 : null,
-                width: horizontal ? widget.startShadowExtent : null,
-                height: horizontal ? null : widget.startShadowExtent,
+                width: horizontal ? widget.fadeExtent : null,
+                height: horizontal ? null : widget.fadeExtent,
                 child: IgnorePointer(
                   child: Opacity(
-                    key: ScrollEdgeFade.startShadowKey,
+                    key: ScrollEdgeFade.startOverlayKey,
                     opacity: start,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
@@ -153,8 +159,8 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
                                   ? Alignment.centerRight
                                   : Alignment.bottomCenter,
                           colors: [
-                            shadowColor,
-                            shadowColor.withValues(alpha: 0),
+                            overlayColor,
+                            overlayColor.withValues(alpha: 0),
                           ],
                         ),
                       ),
