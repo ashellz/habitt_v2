@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
+import 'package:habitt/services/alarm_kit_service.dart';
 import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
@@ -82,6 +83,8 @@ class NotificationService {
   /// when the app has Apple's entitlement) and Do Not Disturb override.
   /// Denial is not fatal: alarms then degrade to high-priority notifications.
   static Future<void> requestAlarmPermissions() async {
+    // iOS 26+: AlarmKit is the real alarm; it has its own permission prompt.
+    await AlarmKitService.requestAuthorization();
     try {
       await AwesomeNotifications().requestPermissionToSendNotifications(
         channelKey: alarmChannelKey,
@@ -292,6 +295,10 @@ class NotificationService {
       return;
     }
 
+    // iOS 26+ with permission: schedule a real AlarmKit alarm instead of a
+    // notification (rings through silent/Focus until stopped).
+    final useAlarmKit = habit.isAlarm && await AlarmKitService.isAvailable();
+
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day);
 
@@ -336,6 +343,16 @@ class NotificationService {
             customSingulars: customSingulars,
           ),
         );
+
+        if (useAlarmKit) {
+          final scheduled = await AlarmKitService.schedule(
+            id: notificationId,
+            at: scheduledAt,
+            title: text.title,
+            stopLabel: localizations.notificationDismissAction,
+          );
+          if (scheduled) continue;
+        }
 
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
@@ -404,6 +421,7 @@ class NotificationService {
       for (final slot in habit.notificationTimes) {
         final id = _getHabitNotificationId(habit.id, slot.id, day);
         await AwesomeNotifications().cancel(id);
+        await AlarmKitService.cancel(id);
       }
     }
   }
@@ -419,10 +437,12 @@ class NotificationService {
     for (final slot in habit.notificationTimes) {
       final id = _getHabitNotificationId(habit.id, slot.id, normalizedDay);
       await AwesomeNotifications().cancel(id);
+      await AlarmKitService.cancel(id);
     }
   }
 
   static Future<void> cancelAllHabitNotifications() async {
+    await AlarmKitService.cancelAll();
     final scheduled = await AwesomeNotifications().listScheduledNotifications();
     for (final model in scheduled) {
       final content = model.content;

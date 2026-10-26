@@ -1,6 +1,10 @@
 import Flutter
 import UIKit
 import UserNotifications
+#if canImport(AlarmKit)
+import AlarmKit
+import SwiftUI
+#endif
 import awesome_notifications
 import shared_preferences_foundation
 
@@ -41,6 +45,9 @@ import shared_preferences_foundation
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HabitAlarmKit") {
+      HabitAlarmKitBridge.register(messenger: registrar.messenger())
+    }
   }
 
   // awesome_notifications forwards these to its Flutter channel without
@@ -76,4 +83,111 @@ import shared_preferences_foundation
       }
     }
   }
+}
+
+// MARK: - AlarmKit (iOS 26+) bridge for "alarm" habits
+//
+// Alarm habits ring through silent mode / Focus until stopped. AlarmKit is
+// iOS 26+, so everything is gated; on older iOS (or if the user denies
+// permission) Dart falls back to a normal notification. Alarm ids are the same
+// integers used for the habit's notifications, mapped to a deterministic UUID
+// so cancelling needs no lookup. See docs/habit_alarms.md.
+
+#if canImport(AlarmKit)
+@available(iOS 26.0, *)
+struct HabitAlarmMetadata: AlarmMetadata {}
+#endif
+
+enum HabitAlarmKitBridge {
+  static func register(messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "habitt/alarmkit", binaryMessenger: messenger)
+    channel.setMethodCallHandler { call, result in
+      #if canImport(AlarmKit)
+      if #available(iOS 26.0, *) {
+        handle(call, result)
+        return
+      }
+      #endif
+      // Not supported on this OS version: report unsupported / no-ops.
+      switch call.method {
+      case "isAvailable", "requestAuthorization": result(false)
+      default: result(nil)
+      }
+    }
+  }
+
+  #if canImport(AlarmKit)
+  @available(iOS 26.0, *)
+  private static func alarmUUID(_ id: Int) -> UUID {
+    UUID(uuidString: String(format: "00000000-0000-0000-0000-%012llx", UInt64(id))) ?? UUID()
+  }
+
+  @available(iOS 26.0, *)
+  private static func handle(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    let manager = AlarmManager.shared
+    let args = call.arguments as? [String: Any]
+    switch call.method {
+    case "isAvailable":
+      result(manager.authorizationState == .authorized)
+    case "requestAuthorization":
+      Task {
+        do {
+          let state = try await manager.requestAuthorization()
+          result(state == .authorized)
+        } catch {
+          result(false)
+        }
+      }
+    case "schedule":
+      guard let id = args?["id"] as? Int,
+        let epochMs = args?["epochMs"] as? Int,
+        let title = args?["title"] as? String,
+        let stopLabel = args?["stopLabel"] as? String
+      else {
+        result(FlutterError(code: "bad_args", message: "schedule needs id, epochMs, title, stopLabel", details: nil))
+        return
+      }
+      Task {
+        do {
+          let date = Date(timeIntervalSince1970: Double(epochMs) / 1000)
+          let alert = AlarmPresentation.Alert(
+            title: LocalizedStringResource(stringLiteral: title),
+            stopButton: AlarmButton(
+              text: LocalizedStringResource(stringLiteral: stopLabel),
+              textColor: .white,
+              systemImageName: "stop.circle"
+            )
+          )
+          let attributes = AlarmAttributes<HabitAlarmMetadata>(
+            presentation: AlarmPresentation(alert: alert),
+            tintColor: .orange
+          )
+          let configuration = AlarmManager.AlarmConfiguration<HabitAlarmMetadata>(
+            schedule: .fixed(date),
+            attributes: attributes
+          )
+          // Same id may already be scheduled (reschedule-all): replace it.
+          try? manager.cancel(id: alarmUUID(id))
+          _ = try await manager.schedule(id: alarmUUID(id), configuration: configuration)
+          result(true)
+        } catch {
+          result(false)
+        }
+      }
+    case "cancelAll":
+      // Every AlarmKit alarm this app owns is a habit alarm.
+      if let alarms = try? manager.alarms {
+        for alarm in alarms { try? manager.cancel(id: alarm.id) }
+      }
+      result(nil)
+    case "cancel":
+      if let id = args?["id"] as? Int {
+        try? manager.cancel(id: alarmUUID(id))
+      }
+      result(nil)
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+  #endif
 }
