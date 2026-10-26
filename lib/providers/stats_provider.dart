@@ -384,6 +384,7 @@ class StatsProvider extends ChangeNotifier {
     if (_refreshList.contains(StatsType.habitsCompleted) || force) {
       _habitsCompleted = refreshHabitsCompleted();
       _habitsCompletedLastWeek = refreshHabitsCompletedLastWeek();
+      _completionRateLastWeek = refreshCompletionRateLastWeek();
     }
     if (_refreshList.contains(StatsType.highestAmountOfHabitsLastWeek) ||
         force) {
