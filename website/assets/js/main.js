@@ -371,8 +371,10 @@
       var r = compare.getBoundingClientRect();
       setPos((ev.clientX - r.left) / r.width * 100);
     };
-    compare.addEventListener("pointerdown", function (ev) { dragging = true; compare.setPointerCapture(ev.pointerId); fromEvent(ev); });
+    compare.addEventListener("pointerdown", function (ev) { ev.preventDefault(); dragging = true; compare.setPointerCapture(ev.pointerId); fromEvent(ev); });
     compare.addEventListener("pointermove", function (ev) { if (dragging) fromEvent(ev); });
+    compare.addEventListener("selectstart", function (ev) { ev.preventDefault(); });
+    compare.addEventListener("dragstart", function (ev) { ev.preventDefault(); });
     compare.addEventListener("pointerup", function () { dragging = false; });
     compare.addEventListener("pointercancel", function () { dragging = false; });
     handle.addEventListener("keydown", function (ev) {
