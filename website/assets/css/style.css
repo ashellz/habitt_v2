@@ -596,6 +596,9 @@ section { position: relative; }
 .week span.s { background: var(--orange-wash); border-color: var(--orange-soft); }
 .langs { display: flex; flex-wrap: wrap; gap: 8px; }
 .langs span { padding: 8px 14px; border-radius: 999px; background: var(--card); font-size: 15px; font-weight: 500; }
+/* Dark mode: the card colour is nearly the tile colour, so lift the pills with a lighter fill and a visible edge */
+:root[data-theme="dark"] .langs span { background: var(--line); border: 1px solid var(--line-2); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .langs span { background: var(--line); border: 1px solid var(--line-2); } }
 .tile.templates { padding-bottom: 0; }
 .tile.templates .shot { margin: auto auto 0; width: min(78%, 290px); max-height: 440px; border-radius: 28px 28px 0 0; overflow: hidden; box-shadow: var(--shadow-lg); border: 6px solid #1b1c1e; border-bottom: 0; }
 .pause { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
