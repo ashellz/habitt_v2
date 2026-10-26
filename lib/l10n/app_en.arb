@@ -1030,10 +1030,13 @@
   "streakPraiseExtra3": "Hats off to you!",
   "backAtIt": "Back at it",
   "timeForHabits": "Time for habits?",
+  "notificationDismissAction": "Dismiss",
   "notificationCompleteAction": "Complete",
   "notificationSoundSettingTitle": "Notification sound",
   "notificationSoundSettingSubtitle": "Sound played for reminders",
   "habitSoundTitle": "Reminder sound",
+  "habitAlarmTitle": "Alarm",
+  "habitAlarmSubtitle": "Keeps ringing until you dismiss it. Best for urgent habits like medicine.",
   "useGlobalDefaultSound": "Use global default",
   "soundNumbered": "Sound {number}",
   "@soundNumbered": {

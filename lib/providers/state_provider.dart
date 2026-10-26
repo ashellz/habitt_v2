@@ -385,6 +385,7 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalEnd = 480;
     _habitNotificationsEnabled = false;
     _habitSoundKey = null;
+    _habitIsAlarm = false;
     _habitNotificationTimes =
         template.notificationTimesMinutesOfDay.isNotEmpty
             ? _buildNotificationTimesFromMinutes(
@@ -472,6 +473,7 @@ class StateProvider extends ChangeNotifier {
     if (fields.contains(PremadeTemplateField.notifications)) {
       _habitNotificationsEnabled = false;
       _habitSoundKey = null;
+    _habitIsAlarm = false;
       _habitNotificationTimes =
           template.notificationTimesMinutesOfDay.isNotEmpty
               ? _buildNotificationTimesFromMinutes(
@@ -564,6 +566,14 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Per-habit alarm draft: reminders ring until dismissed instead of a normal notification.
+  bool _habitIsAlarm = false;
+  bool get habitIsAlarm => _habitIsAlarm;
+  set habitIsAlarm(bool value) {
+    _habitIsAlarm = value;
+    notifyListeners();
+  }
+
   set timeIntervalEnabled(bool value) {
     _timeIntervalEnabled = value;
     notifyListeners();
@@ -588,9 +598,11 @@ class StateProvider extends ChangeNotifier {
     required bool enabled,
     required List<HabitNotificationTime> notificationTimes,
     String? soundKey,
+    bool isAlarm = false,
   }) {
     _habitNotificationsEnabled = enabled;
     _habitSoundKey = soundKey;
+    _habitIsAlarm = isAlarm;
     if (notificationTimes.isEmpty) {
       _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
         _habitCategoryId,
@@ -764,6 +776,7 @@ class StateProvider extends ChangeNotifier {
     _timeIntervalEnd = 480;
     _habitNotificationsEnabled = false;
     _habitSoundKey = null;
+    _habitIsAlarm = false;
     _habitNotificationTimes = _buildDefaultNotificationTimesForCategory(
       _habitCategoryId,
     );

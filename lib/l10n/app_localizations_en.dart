@@ -2668,6 +2668,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeForHabits => 'Time for habits?';
 
   @override
+  String get notificationDismissAction => 'Dismiss';
+
+  @override
   String get notificationCompleteAction => 'Complete';
 
   @override
@@ -2678,6 +2681,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitSoundTitle => 'Reminder sound';
+
+  @override
+  String get habitAlarmTitle => 'Alarm';
+
+  @override
+  String get habitAlarmSubtitle => 'Keeps ringing until you dismiss it. Best for urgent habits like medicine.';
 
   @override
   String get useGlobalDefaultSound => 'Use global default';

@@ -2665,6 +2665,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get timeForHabits => 'Vrijeme za navike?';
 
   @override
+  String get notificationDismissAction => 'Isključi';
+
+  @override
   String get notificationCompleteAction => 'Završi';
 
   @override
@@ -2675,6 +2678,12 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get habitSoundTitle => 'Zvuk podsjetnika';
+
+  @override
+  String get habitAlarmTitle => 'Alarm';
+
+  @override
+  String get habitAlarmSubtitle => 'Zvoni dok ga ne isključiš. Idealno za hitne navike poput uzimanja lijekova.';
 
   @override
   String get useGlobalDefaultSound => 'Koristi zadani zvuk';

@@ -190,6 +190,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       enabled: habit.notificationsEnabled,
       notificationTimes: habit.notificationTimes,
       soundKey: habit.soundKey,
+      isAlarm: habit.isAlarm,
     );
   }
 
@@ -278,6 +279,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
           return false;
         })();
     final changedSoundKey = sp.habitSoundKey != habit.soundKey;
+    final changedIsAlarm = sp.habitIsAlarm != habit.isAlarm;
 
     return changedName ||
         changedDesc ||
@@ -303,7 +305,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedNotificationTimes ||
         changedAmountLabel ||
         changedLocalizations ||
-        changedSoundKey;
+        changedSoundKey ||
+        changedIsAlarm;
   }
 
   // Used so if sheet closes without saving, we can check if there are unsaved changes
@@ -337,6 +340,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         sp.habitNotificationTimes.first.minutesOfDay != 8 * 60;
     final changedLocalizations = sp.habitLocalizedNames.isNotEmpty;
     final changedSoundKey = sp.habitSoundKey != NotificationSounds.inheritKey;
+    final changedIsAlarm = sp.habitIsAlarm;
 
     return changedName ||
         changedDesc ||
@@ -362,7 +366,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         changedNotificationsEnabled ||
         changedNotificationTimes ||
         changedLocalizations ||
-        changedSoundKey;
+        changedSoundKey ||
+        changedIsAlarm;
   }
 
   bool _unsavedChangesCheck() => _hasUnsavedChanges(_sp, _tp);
@@ -636,6 +641,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.notificationTimes =
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList();
       habit.soundKey = sp.habitSoundKey;
+      habit.isAlarm = sp.habitIsAlarm;
 
       if (habit.scheduleType == ScheduleType.custom) {
         habit.customAppearance = buildCustomAppearance(
@@ -709,6 +715,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       notificationTimes:
           sp.habitNotificationTimes.map((slot) => slot.copy()).toList(),
       soundKey: sp.habitSoundKey,
+      isAlarm: sp.habitIsAlarm,
       premadeHabitType: sp.selectedPremadeHabitType,
       localizedNames: newLocalizedNames,
     );
@@ -959,7 +966,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
               ],
             ),
           ),
-          _habitSoundRow(cp, sp),
+          _habitAlarmRow(cp, sp),
+          if (!sp.habitIsAlarm) _habitSoundRow(cp, sp),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 220),
             transitionBuilder:
@@ -1023,6 +1031,45 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
                       ),
                     )
                     : const SizedBox.shrink(key: ValueKey('notifications-off')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _habitAlarmRow(ColorProvider cp, StateProvider sp) {
+    final loc = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+      child: Row(
+        spacing: 12,
+        children: [
+          Expanded(
+            child: Column(
+              spacing: 4,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  loc.habitAlarmTitle,
+                  style: TextStyle(
+                    color: cp.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  loc.habitAlarmSubtitle,
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          NewDefaultSwitch(
+            value: sp.habitIsAlarm,
+            onChanged: (value) {
+              sp.habitIsAlarm = value;
+              if (value) NotificationService.requestAlarmPermissions();
+            },
           ),
         ],
       ),

@@ -2683,6 +2683,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get timeForHabits => '¿Hora de hábitos?';
 
   @override
+  String get notificationDismissAction => 'Descartar';
+
+  @override
   String get notificationCompleteAction => 'Completar';
 
   @override
@@ -2693,6 +2696,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get habitSoundTitle => 'Sonido del recordatorio';
+
+  @override
+  String get habitAlarmTitle => 'Alarma';
+
+  @override
+  String get habitAlarmSubtitle => 'Suena hasta que la descartes. Ideal para hábitos urgentes como la medicación.';
 
   @override
   String get useGlobalDefaultSound => 'Usar predeterminado';

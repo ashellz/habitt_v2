@@ -4504,6 +4504,12 @@ abstract class AppLocalizations {
   /// **'Time for habits?'**
   String get timeForHabits;
 
+  /// No description provided for @notificationDismissAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get notificationDismissAction;
+
   /// No description provided for @notificationCompleteAction.
   ///
   /// In en, this message translates to:
@@ -4527,6 +4533,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminder sound'**
   String get habitSoundTitle;
+
+  /// No description provided for @habitAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get habitAlarmTitle;
+
+  /// No description provided for @habitAlarmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps ringing until you dismiss it. Best for urgent habits like medicine.'**
+  String get habitAlarmSubtitle;
 
   /// No description provided for @useGlobalDefaultSound.
   ///

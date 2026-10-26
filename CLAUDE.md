@@ -94,6 +94,10 @@ The backup/sync system (Google Drive and iCloud cloud backends, plus local file 
 
 Selectable stock notification sounds (global default + per-habit override) are implemented via one channel per sound. To add a new sound or understand the system, see [`docs/notification_sounds.md`](docs/notification_sounds.md).
 
+### Habit Alarms
+
+Habits can be set to "alarm" instead of a normal notification (rings until dismissed). Documented at [`docs/habit_alarms.md`](docs/habit_alarms.md).
+
 ### Health Sync
 
 Habits can optionally sync progress from Apple Health / Google Health Connect (steps, sleep, exercise minutes, mindful minutes, calories), read-only, on app open/resume. Documented in full at [`docs/health_sync.md`](docs/health_sync.md). Read it before touching `HealthService`, `HealthProvider`, or `Habit.healthMetric`.

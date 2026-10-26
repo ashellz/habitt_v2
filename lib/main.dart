@@ -112,6 +112,20 @@ Future<void> main() async {
           soundSource: NotificationSounds.resource(key),
           playSound: true,
         ),
+      // alarm-style reminders: rings with the system alarm sound until dismissed
+      NotificationChannel(
+        channelGroupKey: 'basic_channel_group',
+        channelKey: NotificationService.alarmChannelKey,
+        channelName: 'Habit alarms',
+        channelDescription:
+            'Alarm-style reminders that keep ringing until dismissed',
+        importance: NotificationImportance.Max,
+        defaultRingtoneType: DefaultRingtoneType.Alarm,
+        criticalAlerts: true,
+        locked: true,
+        playSound: true,
+        enableVibration: true,
+      ),
       // basic channel is used by the system default option, same as this notification update never happened
       timerCompletedChannel,
     ],

@@ -2689,6 +2689,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timeForHabits => 'Ora delle abitudini?';
 
   @override
+  String get notificationDismissAction => 'Chiudi';
+
+  @override
   String get notificationCompleteAction => 'Completa';
 
   @override
@@ -2699,6 +2702,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get habitSoundTitle => 'Suono del promemoria';
+
+  @override
+  String get habitAlarmTitle => 'Sveglia';
+
+  @override
+  String get habitAlarmSubtitle => 'Suona finché non la chiudi. Ideale per abitudini urgenti come i farmaci.';
 
   @override
   String get useGlobalDefaultSound => 'Usa predefinito';

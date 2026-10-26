@@ -25,6 +25,13 @@ class NotificationService {
   static const String _timerCompletePayloadTypeValue = 'timer_complete';
   static const String _timerCompletedChannelKey = 'timer_completed_channel';
 
+  /// Channel for habits set to "alarm": max importance, system alarm ringtone,
+  /// bypasses Do Not Disturb. See docs/habit_alarms.md.
+  static const String alarmChannelKey = 'habit_alarm_channel';
+
+  /// Action button key for the "Dismiss" button on alarm reminders.
+  static const String dismissActionKey = 'DISMISS_ALARM';
+
   /// Action button key for the "Complete" button on habit reminders.
   static const String completeActionKey = 'COMPLETE';
 
@@ -36,8 +43,16 @@ class NotificationService {
       '${day.day.toString().padLeft(2, '0')}';
 
   static List<NotificationActionButton> _habitActionButtons(
-    AppLocalizations localizations,
-  ) => [
+    AppLocalizations localizations, {
+    bool isAlarm = false,
+  }) => [
+    if (isAlarm)
+      NotificationActionButton(
+        key: dismissActionKey,
+        label: localizations.notificationDismissAction,
+        actionType: ActionType.DismissAction,
+        autoDismissible: true,
+      ),
     NotificationActionButton(
       key: completeActionKey,
       label: localizations.notificationCompleteAction,
@@ -60,6 +75,29 @@ class NotificationService {
       return allowed;
     }
     return true;
+  }
+
+  /// Asks for the extra permissions alarm-style reminders need: full-screen
+  /// intent and exact alarms (Android), critical alerts (iOS, only honoured
+  /// when the app has Apple's entitlement) and Do Not Disturb override.
+  /// Denial is not fatal: alarms then degrade to high-priority notifications.
+  static Future<void> requestAlarmPermissions() async {
+    try {
+      await AwesomeNotifications().requestPermissionToSendNotifications(
+        channelKey: alarmChannelKey,
+        permissions: const [
+          NotificationPermission.Alert,
+          NotificationPermission.Sound,
+          NotificationPermission.Vibration,
+          NotificationPermission.FullScreenIntent,
+          NotificationPermission.PreciseAlarms,
+          NotificationPermission.CriticalAlert,
+          NotificationPermission.OverrideDnD,
+        ],
+      );
+    } catch (e) {
+      debugPrint('alarm permission request failed: $e');
+    }
   }
 
   /// Check if notifications are allowed
@@ -302,14 +340,25 @@ class NotificationService {
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: notificationId,
-            channelKey: NotificationSounds.channelForKeyOrDefault(
-              habit.soundKey ?? globalSoundKey,
-            ),
+            channelKey:
+                habit.isAlarm
+                    ? alarmChannelKey
+                    : NotificationSounds.channelForKeyOrDefault(
+                      habit.soundKey ?? globalSoundKey,
+                    ),
             title: text.title,
             body: text.description,
             notificationLayout: NotificationLayout.Default,
             wakeUpScreen: true,
-            category: NotificationCategory.Reminder,
+            category:
+                habit.isAlarm
+                    ? NotificationCategory.Alarm
+                    : NotificationCategory.Reminder,
+            // Alarms keep ringing until the user acts: no swipe-away, show
+            // over the lock screen, and break through Do Not Disturb.
+            fullScreenIntent: habit.isAlarm,
+            autoDismissible: !habit.isAlarm,
+            locked: habit.isAlarm,
             payload: {
               _habitPayloadKey: habit.id.toString(),
               _habitPayloadTypeKey: _habitPayloadTypeValue,
@@ -322,7 +371,7 @@ class NotificationService {
           // notification still opens the habit.
           actionButtons:
               habit.healthMetric == null
-                  ? _habitActionButtons(localizations)
+                  ? _habitActionButtons(localizations, isAlarm: habit.isAlarm)
                   : null,
           schedule: NotificationCalendar(
             year: day.year,
