@@ -78,6 +78,7 @@ After modifying any `@HiveType` / `@HiveField` annotated model, regenerate with 
 | `lib/l10n/` | ARB localization files |
 | `lib/generated/` | Auto-generated assets and l10n code — do not edit |
 | `test/` | Unit tests with `test/fixtures/` for test data factories |
+| `website/` | Static landing page deployed to GitHub Pages (see `website/README.md`) |
 
 ### Localization
 

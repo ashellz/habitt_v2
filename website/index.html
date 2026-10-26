@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Habitt · Private Habit Tracker for iPhone and Android</title>
+  <meta name="description" content="Habitt is a free, private habit tracker. No account, no ads, no tracking. Build habits that stick with streaks, habit strength coaching, reminders and an encrypted backup to your own cloud.">
+  <link rel="canonical" href="https://ashellz.github.io/habitt_v2/">
+  <meta name="theme-color" content="#02d382">
+  <meta name="color-scheme" content="light dark">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Habitt">
+  <meta property="og:title" content="Habitt · The private habit tracker">
+  <meta property="og:description" content="Build habits that actually stick. No account, no ads, no tracking. Your habits never leave your phone.">
+  <meta property="og:url" content="https://ashellz.github.io/habitt_v2/">
+  <meta property="og:image" content="https://ashellz.github.io/habitt_v2/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Habitt · The private habit tracker">
+  <meta name="twitter:description" content="Build habits that actually stick. No account, no ads, no tracking.">
+  <meta name="twitter:image" content="https://ashellz.github.io/habitt_v2/assets/img/og.png">
+  <meta name="apple-itunes-app" content="app-id=6745617462">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/Satoshi-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/Satoshi-Black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    // Set the theme before first paint so there is no flash.
+    try {
+      var t = localStorage.getItem("habitt-theme");
+      if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Habitt: Private Habit Tracker",
+    "operatingSystem": "iOS, Android",
+    "applicationCategory": "HealthApplication",
+    "description": "A free, private, local-first habit tracker. No account, no ads, no tracking.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "downloadUrl": [
+      "https://apps.apple.com/app/id6745617462",
+      "https://play.google.com/store/apps/details?id=com.shellz.habitt"
+    ],
+    "publisher": { "@type": "Organization", "name": "ThinkingApp" }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+
+  <!-- ─── Inline icon sprite ───────────────────────────── -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-apple" viewBox="0 0 24 24"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="3"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor"/></g></symbol>
+      <symbol id="i-user-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-3.5 3.5-6 8-6 1.3 0 2.5.2 3.6.6"/><path d="m17 17 4 4m0-4-4 4"/></g></symbol>
+      <symbol id="i-ad-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m7.5 15 2-6 2 6m-3.3-2h2.6M14 9v6h1.2a3 3 0 0 0 0-6H14z"/><path d="M3 3l18 18"/></g></symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c5 0 8.5 4.5 9.5 7a13 13 0 0 1-2.4 3.6M6.4 6.4C4.3 7.8 3 9.9 2.5 12c1 2.5 4.5 7 9.5 7 1.9 0 3.6-.6 5-1.5"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M3 3l18 18"/></g></symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 18.5a4.5 4.5 0 0 1-.4-9A6 6 0 0 1 18 8.6a5 5 0 0 1-.5 9.9H7z"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2s5 4.2 5 9.3a5 5 0 0 1-10 0c0-1.9.8-3.3 1.8-4.3.1 1.6.9 2.7 2.2 3.1C11 7 12 2 12 2zm0 20a7 7 0 0 1-7-7c0-.6.1-1.2.2-1.8a7 7 0 0 0 13.6 0c.1.6.2 1.2.2 1.8a7 7 0 0 1-7 7z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></symbol>
+      <symbol id="i-arrow-l" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></symbol>
+      <symbol id="i-arrow-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></symbol>
+      <symbol id="i-repeat" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 9h13l-3-3m6 9H7l3 3"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+      <symbol id="i-tap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0v3.5a7 7 0 0 1-7 7h-.6a6 6 0 0 1-4.6-2.2L3.5 15a1.6 1.6 0 0 1 2.4-2.1L9 15.5"/></symbol>
+      <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ─── Nav ───────────────────────────────────────────── -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="Habitt home">
+        <img src="assets/img/icon.png" alt="" width="36" height="36">
+        <span>habitt</span>
+      </a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#privacy">Privacy</a>
+        <a href="#features">Features</a>
+        <a href="#screens">Screens</a>
+        <a href="#import">Switch apps</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <svg class="sun"><use href="#i-sun"/></svg>
+          <svg class="moon"><use href="#i-moon"/></svg>
+        </button>
+        <a class="btn btn-green" href="#download">Get the app</a>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false"><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#privacy">Privacy</a>
+    <a href="#features">Features</a>
+    <a href="#screens">Screens</a>
+    <a href="#import">Switch apps</a>
+    <a href="#faq">FAQ</a>
+    <div class="badges">
+      <a class="badge" href="https://apps.apple.com/app/id6745617462" rel="noopener"><svg><use href="#i-apple"/></svg><span><small>Download on the</small><b>App Store</b></span></a>
+      <a class="badge" href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener"><svg><use href="#i-play"/></svg><span><small>Get it on</small><b>Google Play</b></span></a>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ─── Hero ────────────────────────────────────────── -->
+    <section class="hero" id="top">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="grid"></div>
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+      </div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="pill reveal" style="--d:.05s"><span class="dot"><svg><use href="#i-lock"/></svg></span>Free. No account. No ads. No tracking.</span>
+          <h1 class="reveal" style="--d:.15s">Build habits that actually <span class="underline">stick<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 50 4, 120 3, 197 10"/></svg></span>.</h1>
+          <p class="lead reveal" style="--d:.3s">Habitt is a calm habit tracker that coaches you through bad days instead of punishing you for them. Everything lives on your phone. We never see your habits, and we never will.</p>
+          <div class="badges reveal" style="--d:.45s" id="download">
+            <a class="badge" href="https://apps.apple.com/app/id6745617462" rel="noopener"><svg><use href="#i-apple"/></svg><span><small>Download on the</small><b>App Store</b></span></a>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener"><svg><use href="#i-play"/></svg><span><small>Get it on</small><b>Google Play</b></span></a>
+          </div>
+          <div class="trust reveal" style="--d:.6s">
+            <span><svg><use href="#i-check"/></svg>Every feature free</span>
+            <span><svg><use href="#i-check"/></svg>Works offline</span>
+            <span><svg><use href="#i-check"/></svg>Imports from HabitKit</span>
+          </div>
+        </div>
+
+        <div class="hero-stage" id="heroStage" aria-label="Habitt app screenshots">
+          <div class="phone back" data-tilt>
+            <div class="phone-body">
+              <div class="phone-screen">
+                <img src="assets/img/screens/calendar-light.webp" data-light="assets/img/screens/calendar-light.webp" data-dark="assets/img/screens/calendar-dark.webp" alt="Streak calendar: 15 day current streak, 25 day longest" width="720" height="1565">
+              </div>
+            </div>
+          </div>
+          <div class="phone front" data-tilt>
+            <div class="phone-body">
+              <div class="phone-buttons" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span></div>
+              <div class="phone-screen">
+                <img src="assets/img/screens/home-light.webp" data-light="assets/img/screens/home-light.webp" data-dark="assets/img/screens/home-dark.webp" alt="Habitt home screen with a 15 day streak and today's habits" width="720" height="1565" fetchpriority="high">
+              </div>
+            </div>
+          </div>
+          <div class="float complete"><span class="ico"><svg><use href="#i-check"/></svg></span>Morning run · done</div>
+          <div class="float streak"><span class="ico">🔥</span><span>15 day streak<small>Longest: 25 days</small></span></div>
+          <div class="float private"><span class="ico"><svg><use href="#i-lock"/></svg></span><span>Stored on this phone<small>0 bytes on our servers</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Template marquee ────────────────────────────── -->
+    <div class="marquee" aria-label="Ready-made habit templates">
+      <div class="marquee-track">
+        <span><i>⏰</i>Wake up early</span><span><i>💧</i>Drink water</span><span><i>🏋️</i>Gym</span><span><i>🏃</i>Running</span><span><i>📖</i>Reading</span><span><i>🤲</i>Praying</span><span><i>🪥</i>Brush teeth</span><span><i>🌸</i>Skin care</span><span><i>💊</i>Medications</span><span><i>🥗</i>Nutrition</span><span><i>🎓</i>Studying</span><span><i>🚶</i>Walking</span><span><i>🌙</i>Go to bed early</span><span><i>🚿</i>Shower</span><span><i>🔬</i>Research</span><span><i>⚡</i>Deep work</span>
+        <span aria-hidden="true"><i>⏰</i>Wake up early</span><span aria-hidden="true"><i>💧</i>Drink water</span><span aria-hidden="true"><i>🏋️</i>Gym</span><span aria-hidden="true"><i>🏃</i>Running</span><span aria-hidden="true"><i>📖</i>Reading</span><span aria-hidden="true"><i>🤲</i>Praying</span><span aria-hidden="true"><i>🪥</i>Brush teeth</span><span aria-hidden="true"><i>🌸</i>Skin care</span><span aria-hidden="true"><i>💊</i>Medications</span><span aria-hidden="true"><i>🥗</i>Nutrition</span><span aria-hidden="true"><i>🎓</i>Studying</span><span aria-hidden="true"><i>🚶</i>Walking</span><span aria-hidden="true"><i>🌙</i>Go to bed early</span><span aria-hidden="true"><i>🚿</i>Shower</span><span aria-hidden="true"><i>🔬</i>Research</span><span aria-hidden="true"><i>⚡</i>Deep work</span>
+      </div>
+    </div>
+
+    <!-- ─── Privacy ─────────────────────────────────────── -->
+    <section class="pad" style="padding-bottom:0"></section>
+    <section class="privacy pad" id="privacy">
+      <div class="privacy-glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow reveal">Private by design</span>
+          <h2 class="split">Your habits are <span class="hl">none of our business.</span></h2>
+          <p class="lead reveal">Most habit apps want an email, a subscription and a peek at your data. Habitt wants none of it. Open the app and start, that's the whole sign-up.</p>
+        </div>
+
+        <div class="no-cards">
+          <article class="no-card reveal" style="--d:0s">
+            <div class="icon"><svg><use href="#i-user-off"/></svg></div>
+            <div class="big"><s>Account</s></div>
+            <p>No email, no password, no sign-up wall. Your habits are ready the second you open the app.</p>
+          </article>
+          <article class="no-card reveal" style="--d:.1s">
+            <div class="icon"><svg><use href="#i-ad-off"/></svg></div>
+            <div class="big"><s>Ads</s></div>
+            <p>Nothing between you and your morning run. No banners, no "watch a video to unlock", ever.</p>
+          </article>
+          <article class="no-card reveal" style="--d:.2s">
+            <div class="icon"><svg><use href="#i-eye-off"/></svg></div>
+            <div class="big"><s>Tracking</s></div>
+            <p>No analytics SDKs and no data collection. Even this website loads zero trackers and zero cookies.</p>
+          </article>
+        </div>
+
+        <div class="flow reveal">
+          <div>
+            <h3>Backups that only you can read.</h3>
+            <p>Want a copy in the cloud? Turn on backup and Habitt encrypts everything on your phone before it goes to <em>your own</em> Google Drive or iCloud. Prefer files? Export a backup to your device. No account with us either way.</p>
+            <ul>
+              <li><svg><use href="#i-check"/></svg>AES-256-GCM encryption, done on your device</li>
+              <li><svg><use href="#i-check"/></svg>Optional PIN to protect the encryption key</li>
+              <li><svg><use href="#i-check"/></svg>Sync across your phones through your own cloud</li>
+            </ul>
+          </div>
+          <svg class="flow-diagram" viewBox="0 0 520 300" role="img" aria-label="Your phone encrypts data and sends it only to your own cloud, never to Habitt servers">
+            <path class="wire" d="M150 150 H 360"/>
+            <path class="pulse" d="M150 150 H 360"/>
+            <path class="dead" d="M95 205 V 255 H 360"/>
+            <rect class="node hot" x="20" y="70" width="150" height="160" rx="26"/>
+            <rect x="80" y="100" width="30" height="46" rx="7" fill="none" stroke="#11f29b" stroke-width="2.5"/><rect x="89" y="104" width="12" height="3" rx="1.5" fill="#11f29b"/>
+            <text x="95" y="178" text-anchor="middle">Your phone</text>
+            <text class="sub" x="95" y="198" text-anchor="middle">all data lives here</text>
+            <rect class="node" x="226" y="128" width="74" height="44" rx="22"/>
+            <use href="#i-lock" x="238" y="141" width="18" height="18" style="color:#11f29b"/><text x="276" y="156" text-anchor="middle" style="font-size:13px">AES</text>
+            <rect class="node hot" x="360" y="70" width="150" height="110" rx="26"/>
+            <use href="#i-cloud" x="417" y="88" width="36" height="36" style="color:#11f29b"/>
+            <text x="435" y="145" text-anchor="middle">Your cloud</text>
+            <text class="sub" x="435" y="163" text-anchor="middle">Drive or iCloud, optional</text>
+            <rect class="node no" x="360" y="225" width="150" height="60" rx="22"/>
+            <text x="435" y="252" text-anchor="middle" style="fill:#ff6464">Our servers</text>
+            <text class="sub" x="435" y="270" text-anchor="middle">don't exist</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Story: sticky phone ─────────────────────────── -->
+    <section class="pad" id="how">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow reveal">How it works</span>
+          <h2 class="split">Small wins, every day.</h2>
+          <p class="lead reveal">Habitt keeps the daily part fast and the long game honest. Here is what a day with it looks like.</p>
+        </div>
+
+        <div class="story">
+          <div class="story-phone" aria-hidden="true">
+            <div class="halo" id="storyHalo"></div>
+            <div class="phone" id="storyPhone">
+              <div class="phone-body">
+                <div class="phone-buttons"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span></div>
+                <div class="phone-screen" id="storyScreen">
+                  <img src="assets/img/screens/list-light.webp" alt="" width="720" height="1565">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-steps">
+            <!-- Step 1 -->
+            <div class="step" data-light="assets/img/screens/list-light.webp" data-dark="assets/img/screens/list-dark.webp" data-halo="var(--green)">
+              <span class="num"><b>01</b> / 05</span>
+              <h2 class="split">Track it your way.</h2>
+              <p class="lead">Tick it off, count it (8 glasses, 20 pages) or time it with the built-in timer. Daily, weekly, monthly, specific days or every few days. Try it below.</p>
+              <div class="demo-cards" id="demoCards">
+                <button class="habit-card" type="button" data-kind="check">
+                  <span class="emoji">📖</span>
+                  <span class="meta"><b>Read 20 pages</b><small>Any time</small></span>
+                  <span class="hint">Tap to complete</span>
+                  <svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle class="track" cx="20" cy="20" r="18"/><circle class="disc" cx="20" cy="20" r="18"/><path class="tick" d="M13 20.5l4.5 4.5L27 15.5" transform="rotate(90 20 20)"/></svg>
+                </button>
+                <button class="habit-card" type="button" data-kind="amount" data-amount="5" data-target="8">
+                  <span class="emoji">💧</span>
+                  <span class="meta"><b>Drink water</b><small><svg><use href="#i-repeat"/></svg><span class="count">5 / 8 glasses</span></small></span>
+                  <span class="hint">Tap to add one</span>
+                  <svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle class="track" cx="20" cy="20" r="18"/><circle class="fill" cx="20" cy="20" r="10"/><circle class="disc" cx="20" cy="20" r="18"/><path class="tick" d="M13 20.5l4.5 4.5L27 15.5" transform="rotate(90 20 20)"/></svg>
+                </button>
+                <button class="habit-card" type="button" data-kind="timer" data-sec="840" data-target="1200">
+                  <span class="emoji">🧘</span>
+                  <span class="meta"><b>Meditation</b><small><svg><use href="#i-clock"/></svg><span class="count">14:00 / 20:00</span></small></span>
+                  <span class="hint">Tap to start timer</span>
+                  <svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle class="track" cx="20" cy="20" r="18"/><circle class="fill" cx="20" cy="20" r="10"/><circle class="disc" cx="20" cy="20" r="18"/><path class="tick" d="M13 20.5l4.5 4.5L27 15.5" transform="rotate(90 20 20)"/></svg>
+                </button>
+              </div>
+              <span class="demo-note"><svg><use href="#i-tap"/></svg>Interactive. Nothing you tap here is saved anywhere.</span>
+              <div class="mobile-phone"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/list-light.webp" data-light="assets/img/screens/list-light.webp" data-dark="assets/img/screens/list-dark.webp" alt="Today's habits grouped by Any time, Morning and Afternoon" width="720" height="1565"></div></div></div></div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step" data-light="assets/img/screens/charts-light.webp" data-dark="assets/img/screens/charts-dark.webp" data-halo="var(--blue)">
+              <span class="num"><b>02</b> / 05</span>
+              <h2 class="split">A coach, not a judge.</h2>
+              <p class="lead">Streaks break. That's life. Habit Strength looks at your recent consistency instead of one missed day, and suggests a smaller target when you're struggling or a bigger one when you're cruising.</p>
+              <div class="coach">
+                <div class="coach-ring" id="coachRing">
+                  <svg viewBox="0 0 92 92" aria-hidden="true"><circle class="t" cx="46" cy="46" r="40"/><circle class="f" cx="46" cy="46" r="40"/></svg>
+                  <div><div class="val"><span id="strengthVal">0</span>%</div><div class="lbl">Strength · Morning run</div></div>
+                </div>
+                <div class="tip up"><span class="ti">📈</span><span><b>You're crushing it</b>7 for 7 this week. Ready to go from 3 km to 4 km?</span></div>
+                <div class="tip down"><span class="ti">🌱</span><span><b>Rough patch? That's fine</b>Try 10 pages a day for now. Small and steady beats nothing.</span></div>
+              </div>
+              <div class="mobile-phone"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/charts-light.webp" data-light="assets/img/screens/charts-light.webp" data-dark="assets/img/screens/charts-dark.webp" alt="Strength over time chart and consistency calendar" width="720" height="1565"></div></div></div></div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step" data-light="assets/img/screens/calendar-light.webp" data-dark="assets/img/screens/calendar-dark.webp" data-halo="var(--orange)">
+              <span class="num"><b>03</b> / 05</span>
+              <h2 class="split">See your real consistency.</h2>
+              <p class="lead">Heatmaps, streak calendars, completion ratios and a "doing this for 174 days" counter. Perfect days light up, and optional habits never break your streak.</p>
+              <div class="heatmap" id="heatmap" aria-label="Six months of habit completions"></div>
+              <div class="heat-legend">
+                <span><b data-count="15">0</b>day streak</span>
+                <span><b data-count="25">0</b>longest streak</span>
+                <span><b data-count="94">0</b>% this month</span>
+              </div>
+              <div class="mobile-phone"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/calendar-light.webp" data-light="assets/img/screens/calendar-light.webp" data-dark="assets/img/screens/calendar-dark.webp" alt="Streak calendar showing a 15 day streak" width="720" height="1565"></div></div></div></div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step" data-light="assets/img/screens/reminders-light.webp" data-halo="var(--orange-soft)">
+              <span class="num"><b>04</b> / 05</span>
+              <h2 class="split">Reminders that sound like a friend.</h2>
+              <p class="lead">Set as many reminders per habit as you like, on the days you choose, with one of ten sounds. Morning, mid-day and wrap-up nudges keep the whole day on track.</p>
+              <div class="notifs" id="notifs">
+                <div class="notif"><img src="assets/img/icon.png" alt="" width="38" height="38"><div class="nb"><b>Habitt <small>now</small></b><span>💧 5 of 8 glasses so far. A refill before lunch?</span></div></div>
+                <div class="notif"><img src="assets/img/icon.png" alt="" width="38" height="38"><div class="nb"><b>Habitt <small>18:30</small></b><span>🏋️ Gym time. Future you says thanks.</span></div></div>
+                <div class="notif"><img src="assets/img/icon.png" alt="" width="38" height="38"><div class="nb"><b>Habitt <small>21:00</small></b><span>🌙 Wrap up: 2 habits left to keep your 15 day streak.</span></div></div>
+              </div>
+              <div class="chips"><span class="chip on">Mon</span><span class="chip on">Tue</span><span class="chip on">Wed</span><span class="chip on">Thu</span><span class="chip on">Fri</span><span class="chip">Sat</span><span class="chip">Sun</span></div>
+              <div class="mobile-phone"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/reminders-light.webp" alt="Edit habit with multiple reminder times" width="720" height="1565"></div></div></div></div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step" data-light="assets/img/screens/schedule-light.webp" data-halo="var(--green)">
+              <span class="num"><b>05</b> / 05</span>
+              <h2 class="split">Plan the shape of your day.</h2>
+              <p class="lead">Group habits into morning, afternoon and evening, or pin them to an exact time or a time range. Your list reorders itself so the next thing is always on top.</p>
+              <div class="periods">
+                <div class="period"><span>🌅</span>Morning</div>
+                <div class="period"><span>☀️</span>Afternoon</div>
+                <div class="period"><span>🌙</span>Evening</div>
+                <div class="period"><span>✨</span>Any time</div>
+              </div>
+              <div class="mobile-phone"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/schedule-light.webp" alt="Day schedule picker: any time, morning, afternoon, evening, specific time, time range" width="720" height="1565"></div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Bento features ──────────────────────────────── -->
+    <section class="pad" id="features" style="padding-top:0">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow reveal">Everything included</span>
+          <h2 class="split">All the features. None of the paywalls.</h2>
+          <p class="lead reveal">Habitt is free with no limits on how many habits you track. A subscription exists only as a tip jar for the developer.</p>
+        </div>
+
+        <div class="bento">
+          <article class="tile w4 health reveal">
+            <h3>Apple Health &amp; Health Connect</h3>
+            <p>Link a habit to steps, sleep, workouts, mindful minutes or calories, and Habitt fills in your progress automatically. Read-only, processed on your phone.</p>
+            <div class="art">
+              <div class="health-icons">
+                <img src="assets/img/health/steps.png" alt="Steps" width="52" height="52" loading="lazy">
+                <img src="assets/img/health/sleep.png" alt="Sleep" width="52" height="52" loading="lazy">
+                <img src="assets/img/health/workout.png" alt="Workouts" width="52" height="52" loading="lazy">
+                <img src="assets/img/health/mindfullnes.png" alt="Mindful minutes" width="52" height="52" loading="lazy">
+                <img src="assets/img/health/burned_calories.png" alt="Calories" width="52" height="52" loading="lazy">
+                <img src="assets/img/health/activity.png" alt="Activity" width="52" height="52" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+          <article class="tile w2 tall templates reveal" style="--d:.1s">
+            <h3>Start in seconds</h3>
+            <p>Pick a ready-made habit with smart defaults and friendlier reminders, then tweak it.</p>
+            <div class="shot"><img src="assets/img/screens/templates-light.webp" alt="Premade habit templates" width="720" height="1565" loading="lazy"></div>
+          </article>
+
+          <article class="tile w2 timer reveal">
+            <h3>Built-in timer</h3>
+            <p>Time-based habits count themselves.</p>
+            <div class="art"><div class="clock" id="tileClock">14:00</div><div class="bar"><i id="tileBar"></i></div></div>
+          </article>
+
+          <article class="tile w2 reveal" style="--d:.1s">
+            <h3>Flexible schedules</h3>
+            <p>However often your life needs it.</p>
+            <div class="art sched"><span class="on">Daily</span><span>3× a week</span><span>Mon · Wed · Fri</span><span>Every 3 days</span><span>Monthly</span></div>
+          </article>
+
+          <article class="tile w3 reveal">
+            <h3>Optional habits</h3>
+            <p>Trying something new? Mark it optional and it won't touch your perfect-day streak.</p>
+            <div class="art week"><span class="d">M</span><span class="d">T</span><span class="d">W</span><span class="s">T</span><span class="d">F</span><span class="d">S</span><span class="d">S</span></div>
+          </article>
+
+          <article class="tile w3 reveal" style="--d:.1s">
+            <h3>Pause, don't delete</h3>
+            <p>Sick, injured or travelling? Pause a habit and pick it back up with its history intact.</p>
+            <div class="art pause"><span class="emoji">🏃</span><b>Morning run</b><em>Paused</em></div>
+          </article>
+
+          <article class="tile w2 reveal">
+            <h3>Speaks your language</h3>
+            <p>Every screen and reminder, translated.</p>
+            <div class="art langs"><span>🇬🇧 English</span><span>🇩🇪 Deutsch</span><span>🇪🇸 Español</span><span>🇮🇹 Italiano</span><span>🇧🇦 Bosanski</span></div>
+          </article>
+
+          <article class="tile w4 reveal" style="--d:.1s">
+            <h3>Streak celebrations</h3>
+            <p>Hit a new perfect-day milestone and Habitt throws a small party. Tiny dopamine, real momentum.</p>
+            <div class="art" style="display:flex;gap:10px;flex-wrap:wrap">
+              <span class="chip on" style="background:var(--orange);color:#fff">🔥 7 days</span><span class="chip">🔥 14 days</span><span class="chip">🔥 30 days</span><span class="chip">🔥 100 days</span><span class="chip">🏆 365 days</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Light / dark compare ────────────────────────── -->
+    <section class="pad" style="padding-top:0">
+      <div class="container compare-wrap">
+        <div class="section-head">
+          <span class="eyebrow reveal">Designed, not generated</span>
+          <h2 class="split">Easy on the eyes, day or night.</h2>
+          <p class="lead reveal">Every screen is crafted by professional designers in both light and dark mode. Drag the handle to switch.</p>
+        </div>
+        <div>
+          <div class="compare" id="compare">
+            <div class="phone">
+              <div class="phone-body">
+                <div class="phone-screen">
+                  <img src="assets/img/screens/home-light.webp" alt="Home screen in light mode" width="720" height="1565" loading="lazy">
+                  <img class="dark-layer" src="assets/img/screens/home-dark.webp" alt="Home screen in dark mode" width="720" height="1565" loading="lazy">
+                </div>
+              </div>
+            </div>
+            <div class="compare-handle" id="compareHandle" role="slider" tabindex="0" aria-label="Compare light and dark mode" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
+          </div>
+          <div class="compare-labels"><span>☀️ Light</span><span>Dark 🌙</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Gallery ─────────────────────────────────────── -->
+    <section class="gallery pad" id="screens" style="padding-top:0">
+      <div class="container">
+        <div class="section-head center" style="margin-bottom:0">
+          <span class="eyebrow reveal">A closer look</span>
+          <h2 class="split">Real screens. Real app.</h2>
+        </div>
+      </div>
+      <div class="gallery-track" id="galleryTrack">
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/home-light.webp" data-light="assets/img/screens/home-light.webp" data-dark="assets/img/screens/home-dark.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Today at a glance<small>Week strip and streak</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/list-light.webp" data-light="assets/img/screens/list-light.webp" data-dark="assets/img/screens/list-dark.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Your day, in order<small>Morning to evening</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/charts-light.webp" data-light="assets/img/screens/charts-light.webp" data-dark="assets/img/screens/charts-dark.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Strength over time<small>Months of progress</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/streak-light.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Streak celebrations<small>Keep going!</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/calendar-light.webp" data-light="assets/img/screens/calendar-light.webp" data-dark="assets/img/screens/calendar-dark.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Streak calendar<small>Current and longest</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/edit-light.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Make it yours<small>Icons, goals, schedules</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/schedule-light.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Day schedule<small>Times and ranges</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/templates-light.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Templates<small>Ready-made habits</small></figcaption></figure>
+        <figure class="gallery-item"><div class="phone"><div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/backup-light.webp" alt="" width="720" height="1565"></div></div></div><figcaption>Backup &amp; sync<small>Your cloud, encrypted</small></figcaption></figure>
+      </div>
+      <div class="gallery-nav">
+        <button type="button" id="galPrev" aria-label="Previous screen"><svg><use href="#i-arrow-l"/></svg></button>
+        <button type="button" id="galNext" aria-label="Next screen"><svg><use href="#i-arrow-r"/></svg></button>
+      </div>
+    </section>
+
+    <!-- ─── Import ──────────────────────────────────────── -->
+    <section class="import pad" id="import">
+      <div class="container import-grid">
+        <div>
+          <div class="section-head" style="margin-bottom:0">
+            <span class="eyebrow reveal">Switching is painless</span>
+            <h2 class="split">Bring your streaks with you.</h2>
+            <p class="lead reveal">Coming from HabitKit? Import every habit and its full completion history in a few taps. Merge with what you already have, or start fresh.</p>
+          </div>
+          <ol class="steps-list reveal">
+            <li><span><b>Export from HabitKit</b><span>Export your data from HabitKit and save the file.</span></span></li>
+            <li><span><b>Open Habitt</b><span>Profile → Backup &amp; Sync → Import from other apps.</span></span></li>
+            <li><span><b>Pick merge or replace</b><span>Your history, streaks and stats show up right away.</span></span></li>
+          </ol>
+        </div>
+        <div class="reveal">
+          <div class="transfer" aria-hidden="true">
+            <div class="app"><img src="assets/img/habitkit.png" alt="" width="112" height="112">HabitKit<small>your history</small></div>
+            <div class="lane"></div>
+            <span class="packet">✅</span><span class="packet">🔥</span><span class="packet">📅</span>
+            <div class="app"><img src="assets/img/icon.png" alt="" width="112" height="112">Habitt<small>stays on your phone</small></div>
+          </div>
+          <div style="perspective:1400px;margin-top:40px">
+            <div class="phone" style="width:min(270px,70vw);margin:0 auto;--ry:-8deg;--rx:4deg" data-tilt>
+              <div class="phone-body"><div class="phone-screen"><img loading="lazy" src="assets/img/screens/import-dialog-light.webp" alt="Import HabitKit data dialog with Merge and Replace options" width="720" height="1565"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Indie ───────────────────────────────────────── -->
+    <section class="pad">
+      <div class="container indie">
+        <div>
+          <span class="eyebrow reveal">Made by one developer</span>
+          <blockquote class="split" style="margin-top:22px">I built Habitt because I wanted a habit tracker that respects me. <span class="muted">No dark patterns, no data harvesting, no paywall on the features you need.</span></blockquote>
+          <p class="lead reveal" style="margin-top:24px">Habitt is independent and supported by people who choose to chip in. Feedback, ideas and bug reports genuinely shape what comes next.</p>
+        </div>
+        <div class="stats">
+          <div class="stat g reveal"><b data-count="0">0</b><span>trackers or ads</span></div>
+          <div class="stat reveal" style="--d:.08s"><b data-count="100" data-suffix="%">0</b><span>of features free</span></div>
+          <div class="stat reveal" style="--d:.16s"><b data-count="5">0</b><span>languages</span></div>
+          <div class="stat reveal" style="--d:.24s"><b data-count="256">0</b><span>bit encryption</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FAQ ─────────────────────────────────────────── -->
+    <section class="pad" id="faq" style="padding-top:0">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow reveal">FAQ</span>
+          <h2 class="split">Good questions.</h2>
+        </div>
+        <div class="faq reveal">
+          <details open>
+            <summary>Is Habitt really free?<i></i></summary>
+            <div class="answer">Yes. Every feature is free and there's no limit on habits. There's an optional subscription, but it's a tip to support development and doesn't unlock anything.</div>
+          </details>
+          <details>
+            <summary>Where is my data stored?<i></i></summary>
+            <div class="answer">On your phone. Habitt has no servers that store habit data. If you turn on backup, an encrypted copy goes to your own Google Drive or iCloud, and only your device holds the key. Read the full <a href="privacy.html">privacy policy</a>.</div>
+          </details>
+          <details>
+            <summary>Do I need an account?<i></i></summary>
+            <div class="answer">No. Open the app and start. You only sign in with Google if you choose Google Drive backup, and that sign-in is between you and Google.</div>
+          </details>
+          <details>
+            <summary>What happens if I change phones?<i></i></summary>
+            <div class="answer">Turn on Google Drive or iCloud backup, or export a local backup file, then restore it on the new phone. Your whole history comes along.</div>
+          </details>
+          <details>
+            <summary>Can I import from another habit app?<i></i></summary>
+            <div class="answer">You can import from HabitKit today, including your full completion history. You can merge it with existing habits or replace everything.</div>
+          </details>
+          <details>
+            <summary>Does it work without internet?<i></i></summary>
+            <div class="answer">Completely. Internet is only used for optional cloud backup.</div>
+          </details>
+          <details>
+            <summary>Which platforms are supported?<i></i></summary>
+            <div class="answer">iPhone (iOS 15.6 or later) and Android. Habitt is available on the <a href="https://apps.apple.com/app/id6745617462" rel="noopener">App Store</a> and <a href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener">Google Play</a>.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CTA ─────────────────────────────────────────── -->
+    <section class="cta" id="get">
+      <div class="ticks" id="ctaTicks" aria-hidden="true"></div>
+      <img class="icon-big" src="assets/img/icon.png" alt="" width="112" height="112">
+      <h2 class="split">Start with one habit.</h2>
+      <p>Pick something small, tap it once today, and let Habitt handle the rest. Free, private, and ready in seconds.</p>
+      <div class="badges">
+        <a class="badge" href="https://apps.apple.com/app/id6745617462" rel="noopener"><svg><use href="#i-apple"/></svg><span><small>Download on the</small><b>App Store</b></span></a>
+        <a class="badge" href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener"><svg><use href="#i-play"/></svg><span><small>Get it on</small><b>Google Play</b></span></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ─── Footer ──────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <div>
+          <a class="brand" href="#top"><img src="assets/img/icon.png" alt="" width="36" height="36"><span>habitt</span></a>
+          <p>The private habit tracker. No account, no ads, no tracking. Made with care by ThinkingApp.</p>
+        </div>
+        <div>
+          <h4>App</h4>
+          <ul>
+            <li><a href="https://apps.apple.com/app/id6745617462" rel="noopener">App Store</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener">Google Play</a></li>
+            <li><a href="#features">Features</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy.html">Privacy policy</a></li>
+            <li><a href="tos.html">Terms of service</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>More</h4>
+          <ul>
+            <li><a href="https://github.com/ashellz/habitt_v2" rel="noopener">Source on GitHub</a></li>
+            <li><a href="https://www.thinking-app.com/en" rel="noopener">ThinkingApp</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year">2026</span> ThinkingApp. All rights reserved.</span>
+        <span>This site uses no cookies and no analytics.</span>
+      </div>
+      <div class="wordmark" aria-hidden="true">habitt</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

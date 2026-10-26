@@ -184,7 +184,7 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
 
     final platform = Theme.of(context).platform;
 
-    if (platform == TargetPlatform.iOS) {
+    if (platform == TargetPlatform.iOS && widget.supportsLiquidGlass) {
       final brightness =
           MediaQuery.of(context).platformBrightness == Brightness.dark
               ? 'dark'
@@ -228,7 +228,12 @@ class _NewBottomNavBarState extends State<NewBottomNavBar> {
       child: Container(
         height: 95 + bottomInset,
         width: double.infinity,
-        padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 28 + bottomInset),
+        padding: EdgeInsets.only(
+          top: 10,
+          left: 20,
+          right: 20,
+          bottom: 28 + bottomInset,
+        ),
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: cp.border, width: 1)),
           color: cp.bg,

@@ -70,3 +70,7 @@ lib/config/app_secrets.dart
 # Claude Code & OpenSpec
 .claude/
 openspec/
+
+# Built landing page (website/build.py)
+_site/
+marketing/demo-data/raw26/

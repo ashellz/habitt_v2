@@ -176,14 +176,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       selectedDaysAWeek: habit.selectedDaysAWeek,
       selectedDaysAMonth: habit.selectedDaysAMonth,
     );
-    /*
     stateProvider.timeIntervalEnabled = habit.timeIntervalEnabled;
     stateProvider.timeIntervalStart = habit.timeIntervalStart;
     stateProvider.timeIntervalEnd = habit.timeIntervalEnd;
     stateProvider.habitColorName = habit.colorName;
-    stateProvider.habitColor = habit.resolveColor(
-      context.read<ThemeProvider>(),
-    ); */
+    stateProvider.habitColor = habit.resolveColor(_tp);
     stateProvider.habitLocalizedNames = Map<String, String>.from(
       habit.localizedNames,
     );
