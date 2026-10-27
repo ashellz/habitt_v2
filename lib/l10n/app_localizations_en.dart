@@ -3515,4 +3515,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get supporterThankYouDesc =>
       'You help keep it free of ads and tracking for everyone.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.';
 }

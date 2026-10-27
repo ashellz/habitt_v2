@@ -81,9 +81,28 @@ void main() {
     await _pumpBanner(tester);
 
     await tester.tap(find.text('I already donated'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.text('See ways to support'), findsNothing);
     expect(_support.donated, isTrue);
+
+    // let the toast leave so no timer is left pending
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('"I already donated" says thank you in a toast', (tester) async {
+    await _pumpBanner(tester);
+
+    await tester.tap(find.text('I already donated'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.text('Thank you for supporting Habitt'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+    expect(find.text('Thank you for supporting Habitt'), findsNothing);
   });
 }

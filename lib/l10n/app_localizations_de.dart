@@ -3548,4 +3548,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get supporterThankYouDesc =>
       'Du hilfst, es für alle frei von Werbung und Tracking zu halten.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht.';
 }

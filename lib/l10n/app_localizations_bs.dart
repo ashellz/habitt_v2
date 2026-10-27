@@ -3514,4 +3514,8 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get supporterThankYouDesc =>
       'Pomažeš da ostane bez reklama i praćenja za sve.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt nema reklama ni praćenja. Ako ti pomaže, ti možeš pomoći da nastavi postojati.';
 }

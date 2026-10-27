@@ -81,10 +81,14 @@ Future<StreakCelebration?> evaluateStreakCelebration(
   // being the cause.
   final dayStatuses = statsProvider.getDayCompletionStatuses(habitProvider);
   final yesterday = DateTime(now.year, now.month, now.day - 1);
-  final yesterdayPerfect = dayStatuses[yesterday] == DayCompletionStatus.perfect;
+  final yesterdayPerfect =
+      dayStatuses[yesterday] == DayCompletionStatus.perfect;
 
   final shouldShow =
-      streak >= 1 && streak > celebrated && shownDate != today && yesterdayPerfect;
+      streak >= 1 &&
+      streak > celebrated &&
+      shownDate != today &&
+      yesterdayPerfect;
   if (!shouldShow) return null;
 
   return StreakCelebration(
@@ -101,11 +105,12 @@ Future<StreakCelebration?> evaluateStreakCelebration(
 }
 
 /// Records the dedup state, then presents the celebration dialog and completes
-/// when it is dismissed.
+/// when it is dismissed. [showSupportCard] adds the milestone support card.
 Future<void> showStreakCelebration(
   BuildContext context,
-  StreakCelebration celebration,
-) async {
+  StreakCelebration celebration, {
+  bool showSupportCard = false,
+}) async {
   await celebration.persistShown();
   if (!context.mounted) return;
 
@@ -117,6 +122,7 @@ Future<void> showStreakCelebration(
           dayStatuses: celebration.dayStatuses,
           allStats: celebration.allStats,
           today: celebration.today,
+          showSupportCard: showSupportCard,
         ),
   );
 }

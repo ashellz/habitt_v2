@@ -3537,4 +3537,8 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get supporterThankYouDesc =>
       'Ayudas a mantenerlo sin anuncios ni rastreo para todos.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt no tiene anuncios ni rastreo. Si te ayuda, tú puedes ayudar a que siga adelante.';
 }

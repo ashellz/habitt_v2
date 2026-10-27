@@ -130,8 +130,7 @@ class _HoldCompleteTipWidgetState extends State<_HoldCompleteTipWidget>
       child: SwipeUpToDismiss(
         onDismiss: _animateOut,
         onDragStart: () => _timer?.cancel(),
-        onSettle:
-            () => _timer = Timer(const Duration(seconds: 5), _animateOut),
+        onSettle: () => _timer = Timer(const Duration(seconds: 5), _animateOut),
         child: FadeTransition(
           opacity: _animation,
           child: SlideTransition(

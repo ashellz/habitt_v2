@@ -1304,5 +1304,6 @@
   "supportAlreadyDonated": "I already donated",
   "supportBannerDismiss": "Dismiss",
   "supporterThankYouTitle": "Thank you for supporting Habitt",
-  "supporterThankYouDesc": "You help keep it free of ads and tracking for everyone."
+  "supporterThankYouDesc": "You help keep it free of ads and tracking for everyone.",
+  "supportMilestoneText": "Habitt has no ads and no tracking. If it's helping you, you can help it keep going."
 }

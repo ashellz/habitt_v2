@@ -9,10 +9,6 @@ import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/streak_milestones.dart';
 import 'package:provider/provider.dart';
 
-// Flipped on once the milestone support card exists in the celebration dialog
-// (task 38). Until then it must not claim the day's budget.
-const bool _kMilestoneCardEnabled = false;
-
 // delay between streak celebration and review ask
 const Duration _kReviewDelay = Duration(milliseconds: 400);
 
@@ -77,15 +73,18 @@ Future<void> runStreakMoment(
       budgetFree: !support.claimedToday,
       possible: {
         if (reviewPossible) AskKind.review,
-        if (_kMilestoneCardEnabled && crossed != null && !support.asksHidden)
-          AskKind.milestoneBanner,
+        if (crossed != null && !support.asksHidden) AskKind.milestoneBanner,
       },
     );
     if (ask != null) support.tryClaimAsk(ask);
 
     if (celebration != null) {
       if (!context.mounted) return;
-      await showStreakCelebration(context, celebration);
+      await showStreakCelebration(
+        context,
+        celebration,
+        showSupportCard: ask == AskKind.milestoneBanner,
+      );
     }
 
     if (ask == AskKind.review) {

@@ -5962,6 +5962,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You help keep it free of ads and tracking for everyone.'**
   String get supporterThankYouDesc;
+
+  /// No description provided for @supportMilestoneText.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.'**
+  String get supportMilestoneText;
 }
 
 class _AppLocalizationsDelegate

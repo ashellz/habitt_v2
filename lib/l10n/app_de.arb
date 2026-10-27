@@ -1279,5 +1279,6 @@
   "supportAlreadyDonated": "Ich habe schon gespendet",
   "supportBannerDismiss": "Schließen",
   "supporterThankYouTitle": "Danke, dass du Habitt unterstützt",
-  "supporterThankYouDesc": "Du hilfst, es für alle frei von Werbung und Tracking zu halten."
+  "supporterThankYouDesc": "Du hilfst, es für alle frei von Werbung und Tracking zu halten.",
+  "supportMilestoneText": "Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht."
 }
