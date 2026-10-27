@@ -1305,5 +1305,12 @@
   "supportBannerDismiss": "Dismiss",
   "supporterThankYouTitle": "Thank you for supporting Habitt",
   "supporterThankYouDesc": "You help keep it free of ads and tracking for everyone.",
-  "supportMilestoneText": "Habitt has no ads and no tracking. If it's helping you, you can help it keep going."
+  "supportMilestoneText": "Habitt has no ads and no tracking. If it's helping you, you can help it keep going.",
+  "themeSettingTitle": "Theme",
+  "themeNameHabitt": "Habitt",
+  "themeNameLagoon": "Lagoon",
+  "themeNameOcean": "Ocean",
+  "themeNameIndigo": "Indigo",
+  "themeNameViolet": "Violet",
+  "themeNameOrchid": "Orchid"
 }

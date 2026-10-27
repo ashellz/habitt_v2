@@ -1270,5 +1270,12 @@
   "supportBannerDismiss": "Odbaci",
   "supporterThankYouTitle": "Hvala ti što podržavaš Habitt",
   "supporterThankYouDesc": "Pomažeš da ostane bez reklama i praćenja za sve.",
-  "supportMilestoneText": "Habitt nema reklama ni praćenja. Ako ti pomaže, ti možeš pomoći da nastavi postojati."
+  "supportMilestoneText": "Habitt nema reklama ni praćenja. Ako ti pomaže, ti možeš pomoći da nastavi postojati.",
+  "themeSettingTitle": "Tema",
+  "themeNameHabitt": "Habitt",
+  "themeNameLagoon": "Laguna",
+  "themeNameOcean": "Okean",
+  "themeNameIndigo": "Indigo",
+  "themeNameViolet": "Ljubičasta",
+  "themeNameOrchid": "Orhideja"
 }

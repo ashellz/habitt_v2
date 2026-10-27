@@ -3519,4 +3519,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get supportMilestoneText =>
       'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.';
+
+  @override
+  String get themeSettingTitle => 'Theme';
+
+  @override
+  String get themeNameHabitt => 'Habitt';
+
+  @override
+  String get themeNameLagoon => 'Lagoon';
+
+  @override
+  String get themeNameOcean => 'Ocean';
+
+  @override
+  String get themeNameIndigo => 'Indigo';
+
+  @override
+  String get themeNameViolet => 'Violet';
+
+  @override
+  String get themeNameOrchid => 'Orchid';
 }

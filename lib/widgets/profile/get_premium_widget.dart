@@ -320,12 +320,9 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget>
                   ),
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
-                    color: const Color(0x1911F29B),
+                    color: cp.mainTint,
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 1,
-                        color: const Color(0x330CD280),
-                      ),
+                      side: BorderSide(width: 1, color: cp.mainBorder),
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),

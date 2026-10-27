@@ -3518,4 +3518,25 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get supportMilestoneText =>
       'Habitt nema reklama ni praćenja. Ako ti pomaže, ti možeš pomoći da nastavi postojati.';
+
+  @override
+  String get themeSettingTitle => 'Tema';
+
+  @override
+  String get themeNameHabitt => 'Habitt';
+
+  @override
+  String get themeNameLagoon => 'Laguna';
+
+  @override
+  String get themeNameOcean => 'Okean';
+
+  @override
+  String get themeNameIndigo => 'Indigo';
+
+  @override
+  String get themeNameViolet => 'Ljubičasta';
+
+  @override
+  String get themeNameOrchid => 'Orhideja';
 }

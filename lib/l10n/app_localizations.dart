@@ -5968,6 +5968,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.'**
   String get supportMilestoneText;
+
+  /// No description provided for @themeSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeSettingTitle;
+
+  /// No description provided for @themeNameHabitt.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt'**
+  String get themeNameHabitt;
+
+  /// No description provided for @themeNameLagoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Lagoon'**
+  String get themeNameLagoon;
+
+  /// No description provided for @themeNameOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean'**
+  String get themeNameOcean;
+
+  /// No description provided for @themeNameIndigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get themeNameIndigo;
+
+  /// No description provided for @themeNameViolet.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get themeNameViolet;
+
+  /// No description provided for @themeNameOrchid.
+  ///
+  /// In en, this message translates to:
+  /// **'Orchid'**
+  String get themeNameOrchid;
 }
 
 class _AppLocalizationsDelegate

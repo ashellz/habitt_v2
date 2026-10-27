@@ -3552,4 +3552,25 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get supportMilestoneText =>
       'Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht.';
+
+  @override
+  String get themeSettingTitle => 'Farbthema';
+
+  @override
+  String get themeNameHabitt => 'Habitt';
+
+  @override
+  String get themeNameLagoon => 'Lagune';
+
+  @override
+  String get themeNameOcean => 'Ozean';
+
+  @override
+  String get themeNameIndigo => 'Indigo';
+
+  @override
+  String get themeNameViolet => 'Violett';
+
+  @override
+  String get themeNameOrchid => 'Orchidee';
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:habitt/models/app_theme.dart';
 import 'package:habitt/services/color_service.dart';
+import 'package:habitt/services/theme_catalog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum ColorMode { light, dark, system }
@@ -127,10 +129,20 @@ class _ColSet {
 class ColorProvider extends ChangeNotifier {
   SharedPreferences prefs;
 
+  static const String _kThemeIdKey = 'app_theme_id';
+
   ColorMode _mode = ColorMode.system;
+  AppTheme _theme = ThemeCatalog.habitt;
   VoidCallback? _previousBrightnessCallback;
 
   ColorMode get mode => _mode;
+
+  /// The selected theme: only the accent changes with it.
+  AppTheme get theme => _theme;
+
+  /// Faint and soft versions of the accent for chips, badges and selections.
+  Color get mainTint => main.withValues(alpha: 0.1);
+  Color get mainBorder => main.withValues(alpha: 0.2);
 
   bool get isDark =>
       _mode == ColorMode.dark ||
@@ -196,6 +208,7 @@ class ColorProvider extends ChangeNotifier {
 
   Future<void> initFromPrefs() async {
     _mode = _getModeFromPrefs(prefs);
+    _theme = ThemeCatalog.byId(prefs.getString(_kThemeIdKey));
     _applyColSet(_colsForDark(isDark));
     notifyListeners();
   }
@@ -219,6 +232,14 @@ class ColorProvider extends ChangeNotifier {
   void setMode(ColorMode newMode) {
     _mode = newMode;
     prefs.setString('color_mode', newMode.toString());
+    _startTransition();
+  }
+
+  /// Switches the accent. Persisted, and animated like a light/dark change.
+  void setTheme(AppTheme theme) {
+    if (theme.id == _theme.id) return;
+    _theme = theme;
+    prefs.setString(_kThemeIdKey, theme.id);
     _startTransition();
   }
 
@@ -253,13 +274,14 @@ class ColorProvider extends ChangeNotifier {
   }
 
   _ColSet _colsForDark(bool dark) {
+    final accent = _theme.accent(isDark: dark);
     if (dark) {
-      return const _ColSet(
+      return _ColSet(
         bg: Dark.bg,
         habitBg: Dark.habitsBg,
         text: Dark.text,
         glassButtonBg: Dark.black5,
-        main: Dark.main,
+        main: accent.main,
         mid: Dark.mid,
         fail: Dark.fail,
         secondaryButton: Dark.secondaryButton,
@@ -274,8 +296,8 @@ class ColorProvider extends ChangeNotifier {
         orange100: Dark.orange100,
         orange200: Dark.orange200,
         orange300: Dark.orange300,
-        mainButtonLeftGradient: Dark.mainButtonLeftGradient,
-        mainButtonRightGradient: Dark.mainButtonRightGradient,
+        mainButtonLeftGradient: accent.buttonLeft,
+        mainButtonRightGradient: accent.buttonRight,
         leftFadingOrangeGraident: Dark.leftFadingOrangeGraident,
         rightFadingOrangeGradient: Dark.rightFadingOrangeGradient,
         fadingOrangeCircle: Dark.fadingOrangeCircle,
@@ -289,12 +311,12 @@ class ColorProvider extends ChangeNotifier {
         error: Dark.error,
       );
     } else {
-      return const _ColSet(
+      return _ColSet(
         bg: Light.bg,
         habitBg: Light.habitsBg,
         glassButtonBg: Light.white5,
         text: Light.black,
-        main: Light.main,
+        main: accent.main,
         mid: Light.mid,
         fail: Light.fail,
         secondaryButton: Light.secondaryButton,
@@ -309,8 +331,8 @@ class ColorProvider extends ChangeNotifier {
         orange100: Light.orange100,
         orange200: Light.orange200,
         orange300: Light.orange300,
-        mainButtonLeftGradient: Light.mainButtonLeftGradient,
-        mainButtonRightGradient: Light.mainButtonRightGradient,
+        mainButtonLeftGradient: accent.buttonLeft,
+        mainButtonRightGradient: accent.buttonRight,
         leftFadingOrangeGraident: Light.leftFadingOrangeGraident,
         rightFadingOrangeGradient: Light.rightFadingOrangeGradient,
         fadingOrangeCircle: Light.fadingOrangeCircle,

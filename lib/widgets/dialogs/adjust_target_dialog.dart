@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -116,9 +116,7 @@ class AdjustTargetDialog extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(12),
                       margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SvgPicture.asset(
-                        'assets/images/new-svg/arrow.svg',
-                      ),
+                      child: const AccentSvg('assets/images/new-svg/arrow.svg'),
                     ),
 
                     Expanded(

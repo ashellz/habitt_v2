@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/billing_service.dart';
+import 'package:habitt/services/color_service.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -468,7 +469,7 @@ class _PaywallPageState extends State<PaywallPage> {
                       isLoading: _isRefreshing,
                       width: double.infinity,
                       color: Colors.white,
-                      textColor: const Color(0xFF02D382),
+                      textColor: BrandColors.green,
                     ),
                     const SizedBox(height: 12),
                     GestureDetector(
@@ -560,8 +561,8 @@ class _PaywallPageState extends State<PaywallPage> {
                           NewDefaultButton(
                             onPressed: _handleDonateTap,
                             label: loc.donate,
-                            color: Color(0x1A0CD280),
-                            textColor: Color(0xFF02D382),
+                            color: BrandColors.greenTint,
+                            textColor: BrandColors.green,
                             width: double.infinity,
                           ),
                         ],
@@ -776,7 +777,7 @@ class _PlanCard extends StatelessWidget {
                   child: Text(
                     plan.badge!,
                     style: const TextStyle(
-                      color: Color(0xFF02D382),
+                      color: BrandColors.green,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),

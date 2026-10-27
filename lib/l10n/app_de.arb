@@ -1280,5 +1280,12 @@
   "supportBannerDismiss": "Schließen",
   "supporterThankYouTitle": "Danke, dass du Habitt unterstützt",
   "supporterThankYouDesc": "Du hilfst, es für alle frei von Werbung und Tracking zu halten.",
-  "supportMilestoneText": "Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht."
+  "supportMilestoneText": "Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht.",
+  "themeSettingTitle": "Farbthema",
+  "themeNameHabitt": "Habitt",
+  "themeNameLagoon": "Lagune",
+  "themeNameOcean": "Ozean",
+  "themeNameIndigo": "Indigo",
+  "themeNameViolet": "Violett",
+  "themeNameOrchid": "Orchidee"
 }
