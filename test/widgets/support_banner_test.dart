@@ -3,7 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/util/support_thanks.dart';
 import 'package:habitt/widgets/support/support_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,11 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 late SupportProvider _support;
 
 // A user who has used the app for 10 days with 12 completions.
-Future<void> _pumpBanner(
-  WidgetTester tester, {
-  bool supporter = false,
-}) async {
+Future<void> _pumpBanner(WidgetTester tester, {bool supporter = false}) async {
   final firstSeen = DateTime.now().subtract(const Duration(days: 10));
+  donationSound = () async {};
   SharedPreferences.setMockInitialValues({
     'support_first_seen_ms': firstSeen.millisecondsSinceEpoch,
     kTotalCompletionsKey: 12,
@@ -32,6 +32,7 @@ Future<void> _pumpBanner(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ColorProvider(prefs)),
+        ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ChangeNotifierProvider<SupportProvider>.value(value: _support),
       ],
       child: MaterialApp(

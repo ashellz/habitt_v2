@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/services/theme_catalog.dart';
 import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:habitt/widgets/settings/theme_picker.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late ColorProvider _cp;
+late SupportProvider _support;
 
 Future<void> _pump(WidgetTester tester, Widget body) async {
   SharedPreferences.setMockInitialValues({
@@ -18,10 +20,20 @@ Future<void> _pump(WidgetTester tester, Widget body) async {
   });
   final prefs = await SharedPreferences.getInstance();
   _cp = ColorProvider(prefs);
+  _support = SupportProvider(
+    prefs,
+    readSupporter: () => false,
+    checkSupporter: () async => false,
+    // keeps the one-time sheet out of these colour tests
+    platformSupportsAsks: false,
+  );
 
   await tester.pumpWidget(
-    ChangeNotifierProvider<ColorProvider>.value(
-      value: _cp,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ColorProvider>.value(value: _cp),
+        ChangeNotifierProvider<SupportProvider>.value(value: _support),
+      ],
       child: MaterialApp(
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -67,6 +79,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
 
     expect(_cp.theme, ThemeCatalog.ocean);
+    // the picker waits a moment before offering the support sheet
+    await tester.pump(const Duration(milliseconds: 400));
     _cp.dispose();
   });
 

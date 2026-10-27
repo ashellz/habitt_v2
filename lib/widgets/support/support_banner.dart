@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
-import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/support_navigator.dart';
 import 'package:habitt/util/support_thanks.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
@@ -13,35 +12,8 @@ import 'package:provider/provider.dart';
 /// whether it shows is decided by [SupportProvider.bannerVisible] (7 days of use,
 /// 10 completions, not donated or subscribed, dismiss schedule, and no other ask
 /// claimed today), and it collapses away when that turns false.
-class SupportBanner extends StatefulWidget {
+class SupportBanner extends StatelessWidget {
   const SupportBanner({super.key});
-
-  @override
-  State<SupportBanner> createState() => _SupportBannerState();
-}
-
-class _SupportBannerState extends State<SupportBanner>
-    with TickerProviderStateMixin {
-  // Lives here, not in the card: the card is removed the moment the donation
-  // is marked, and disposing the controller would cut the thank-you short.
-  late final StatusOverlayPopupController _thanksPopup;
-
-  @override
-  void initState() {
-    super.initState();
-    _thanksPopup = StatusOverlayPopupController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _thanksPopup.dispose();
-    super.dispose();
-  }
-
-  void _onDonated() {
-    showDonationThanks(context, _thanksPopup);
-    context.read<SupportProvider>().markDonated();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +25,12 @@ class _SupportBannerState extends State<SupportBanner>
       alignment: Alignment.topCenter,
       child:
           support.bannerVisible
-              ? _BannerCard(onDonated: _onDonated)
+              ? _BannerCard(
+                onDonated: () {
+                  showDonationThanks(context);
+                  support.markDonated();
+                },
+              )
               : const SizedBox(width: double.infinity),
     );
   }

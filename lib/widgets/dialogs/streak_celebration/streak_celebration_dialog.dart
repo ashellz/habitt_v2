@@ -8,7 +8,6 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
-import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/support_thanks.dart';
 import 'package:habitt/util/streak_praise.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -44,9 +43,8 @@ class StreakCelebrationDialog extends StatefulWidget {
 }
 
 class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final StatusOverlayPopupController _thanksPopup;
   late final Animation<double> _progress;
 
   static const int _hapticSteps = 15;
@@ -67,7 +65,6 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
   @override
   void initState() {
     super.initState();
-    _thanksPopup = StatusOverlayPopupController(vsync: this);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1300),
@@ -102,7 +99,6 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
   @override
   void dispose() {
     _progress.removeListener(_maybeHaptic);
-    _thanksPopup.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -246,7 +242,7 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
             const SizedBox(height: 24),
             MilestoneSupportCard(
               onDonated: () {
-                showDonationThanks(context, _thanksPopup);
+                showDonationThanks(context);
                 context.read<SupportProvider>().markDonated();
               },
             ),

@@ -14,6 +14,7 @@ class SupportProvider extends ChangeNotifier {
   static const String _kAskDayKey = 'support_ask_day';
   static const String _kAskKindKey = 'support_ask_kind';
   static const String _kStreakReachedKey = 'support_streak7_reached';
+  static const String _kSheetShownKey = 'support_sheet_last_shown';
   static const String _kBannerDismissalsKey = 'support_banner_dismissals';
   static const String _kBannerNextDayKey = 'support_banner_next_day';
 
@@ -105,6 +106,28 @@ class SupportProvider extends ChangeNotifier {
   void noteStreak(int streak) {
     if (streak < kReviewStreakMilestone || reviewMilestoneReached) return;
     _prefs.setBool(_kStreakReachedKey, true);
+  }
+
+  // ─── Support sheet ────────────────────────────────────────
+
+  /// How long after the "free for everyone" sheet was shown before the next
+  /// theme pick or backup setup may show it again.
+  static const int sheetRepeatDays = 30;
+
+  /// Whether the "free for everyone" sheet should show now: asks are not hidden
+  /// and it has never been shown, or last showed [sheetRepeatDays] calendar days
+  /// ago. It is user-initiated, so it neither claims nor checks the ask budget.
+  bool get sheetDue {
+    if (asksHidden) return false;
+    final last = DateTime.tryParse(_prefs.getString(_kSheetShownKey) ?? '');
+    if (last == null) return true;
+    final days = _calendarDaysBetween(last, _clock());
+    // a negative count can only come from a clock moved back, do not wait it out
+    return days < 0 || days >= sheetRepeatDays;
+  }
+
+  void markSheetShown() {
+    _prefs.setString(_kSheetShownKey, dateKey(_clock()));
   }
 
   // ─── Main-page banner ─────────────────────────────────────

@@ -1287,5 +1287,9 @@
   "themeNameOcean": "Océano",
   "themeNameIndigo": "Índigo",
   "themeNameViolet": "Violeta",
-  "themeNameOrchid": "Orquídea"
+  "themeNameOrchid": "Orquídea",
+  "supportSheetTitle": "Gratis para todos",
+  "supportSheetDesc": "Los temas y la copia de seguridad en la nube son gratis para todos. Quienes apoyan mantienen Habitt en marcha.",
+  "supportNotNow": "Ahora no",
+  "supportHabittRow": "Apoya a Habitt"
 }

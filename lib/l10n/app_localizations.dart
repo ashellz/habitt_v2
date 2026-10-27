@@ -6010,6 +6010,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Orchid'**
   String get themeNameOrchid;
+
+  /// No description provided for @supportSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free for everyone'**
+  String get supportSheetTitle;
+
+  /// No description provided for @supportSheetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.'**
+  String get supportSheetDesc;
+
+  /// No description provided for @supportNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get supportNotNow;
+
+  /// No description provided for @supportHabittRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Habitt'**
+  String get supportHabittRow;
 }
 
 class _AppLocalizationsDelegate

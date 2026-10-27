@@ -3562,4 +3562,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get themeNameOrchid => 'Orquídea';
+
+  @override
+  String get supportSheetTitle => 'Gratis para todos';
+
+  @override
+  String get supportSheetDesc =>
+      'Los temas y la copia de seguridad en la nube son gratis para todos. Quienes apoyan mantienen Habitt en marcha.';
+
+  @override
+  String get supportNotNow => 'Ahora no';
+
+  @override
+  String get supportHabittRow => 'Apoya a Habitt';
 }

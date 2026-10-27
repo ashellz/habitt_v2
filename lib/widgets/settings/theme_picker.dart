@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/app_theme.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/services/theme_catalog.dart';
+import 'package:habitt/util/support_sheet_flow.dart';
+import 'package:habitt/widgets/support/support_row.dart';
 import 'package:provider/provider.dart';
 
 /// The accent themes as swatch chips, each drawn in the current light/dark mode
@@ -15,6 +18,9 @@ class ThemePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
+    final asksHidden = context.select<SupportProvider, bool>(
+      (s) => s.asksHidden,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,13 +43,22 @@ class ThemePicker extends StatelessWidget {
                 theme: theme,
                 name: _themeName(loc, theme),
                 selected: cp.theme.id == theme.id,
-                onTap: () {
+                onTap: () async {
+                  if (cp.theme.id == theme.id) return;
                   HapticFeedback.selectionClick();
                   cp.setTheme(theme);
+                  // let them see the new theme first, then the one-time sheet
+                  await Future<void>.delayed(const Duration(milliseconds: 600));
+                  if (context.mounted) maybeShowSupportSheet(context);
                 },
               ),
           ],
         ),
+        // ─── Support ──────────────────────────────────────
+        if (!asksHidden) ...[
+          Divider(color: cp.border, height: 0),
+          const SupportRow(),
+        ],
       ],
     );
   }

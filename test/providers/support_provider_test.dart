@@ -238,4 +238,75 @@ void main() {
       expect(provider.bannerVisible, isTrue);
     });
   });
+
+  group('support sheet', () {
+    test('is due for a regular user who has never seen it', () {
+      expect(build().sheetDue, isTrue);
+    });
+
+    test('is not due again right after it was shown, even after a restart', () {
+      build().markSheetShown();
+      expect(build().sheetDue, isFalse);
+    });
+
+    test('is due again after 30 calendar days, not before', () {
+      build().markSheetShown();
+
+      now = DateTime(2026, 12, 2, 23, 59); // 29 days later
+      expect(build().sheetDue, isFalse);
+
+      now = DateTime(2026, 12, 3, 0, 1); // 30 days later
+      expect(build().sheetDue, isTrue);
+    });
+
+    test('waits out the full period again after being shown a second time', () {
+      build().markSheetShown();
+      now = DateTime(2026, 12, 3, 9);
+      build().markSheetShown();
+
+      now = DateTime(2027, 1, 1, 9); // 29 days after the second showing
+      expect(build().sheetDue, isFalse);
+      now = DateTime(2027, 1, 2, 9);
+      expect(build().sheetDue, isTrue);
+    });
+
+    test('a clock moved back does not hide it for months', () {
+      now = DateTime(2027, 6, 1);
+      build().markSheetShown();
+
+      now = DateTime(2026, 11, 3);
+      expect(build().sheetDue, isTrue);
+    });
+
+    test('is never due for donors, subscribers or unsupported platforms', () {
+      supporter = true;
+      expect(build().sheetDue, isFalse);
+
+      supporter = false;
+      build().markDonated();
+      now = DateTime(2030, 1, 1);
+      expect(build().sheetDue, isFalse);
+
+      expect(build(platformSupportsAsks: false).sheetDue, isFalse);
+    });
+
+    test('is due again after a long wait for a user who was asked before', () {
+      build().markSheetShown();
+      now = DateTime(2027, 6, 1);
+      expect(build().sheetDue, isTrue);
+    });
+
+    test(
+      'does not touch the ask budget, and a claimed budget does not stop it',
+      () {
+        final provider = build();
+        provider.markSheetShown();
+        expect(provider.claimedToday, isFalse);
+
+        prefs.remove('support_sheet_last_shown');
+        final claimed = build()..tryClaimAsk(AskKind.review);
+        expect(claimed.sheetDue, isTrue);
+      },
+    );
+  });
 }

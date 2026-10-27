@@ -1277,5 +1277,9 @@
   "themeNameOcean": "Okean",
   "themeNameIndigo": "Indigo",
   "themeNameViolet": "Ljubičasta",
-  "themeNameOrchid": "Orhideja"
+  "themeNameOrchid": "Orhideja",
+  "supportSheetTitle": "Besplatno za sve",
+  "supportSheetDesc": "Teme i sigurnosna kopija u oblaku su besplatne za sve. Podržavaoci su ono što drži Habitt u životu.",
+  "supportNotNow": "Ne sada",
+  "supportHabittRow": "Podrži Habitt"
 }

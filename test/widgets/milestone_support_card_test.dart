@@ -3,7 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/util/support_thanks.dart';
 import 'package:habitt/widgets/support/milestone_support_card.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +14,7 @@ late SupportProvider _support;
 var _donatedTaps = 0;
 
 Future<void> _pumpCard(WidgetTester tester, {bool supporter = false}) async {
+  donationSound = () async {};
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
   _donatedTaps = 0;
@@ -26,6 +29,7 @@ Future<void> _pumpCard(WidgetTester tester, {bool supporter = false}) async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ColorProvider(prefs)),
+        ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ChangeNotifierProvider<SupportProvider>.value(value: _support),
       ],
       child: MaterialApp(

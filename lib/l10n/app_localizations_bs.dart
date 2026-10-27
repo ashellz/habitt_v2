@@ -3539,4 +3539,17 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get themeNameOrchid => 'Orhideja';
+
+  @override
+  String get supportSheetTitle => 'Besplatno za sve';
+
+  @override
+  String get supportSheetDesc =>
+      'Teme i sigurnosna kopija u oblaku su besplatne za sve. Podržavaoci su ono što drži Habitt u životu.';
+
+  @override
+  String get supportNotNow => 'Ne sada';
+
+  @override
+  String get supportHabittRow => 'Podrži Habitt';
 }
