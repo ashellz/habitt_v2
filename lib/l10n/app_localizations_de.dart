@@ -3528,4 +3528,24 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get timeRangeSameTimes =>
       'Start- und Endzeit dürfen nicht gleich sein';
+
+  @override
+  String get supportBannerText =>
+      'Habitt hat keine Werbung, kein Tracking und kein Konto. Es besteht nur weiter, wenn Menschen, die es mögen, etwas beitragen.';
+
+  @override
+  String get supportSeeWays => 'Möglichkeiten zur Unterstützung ansehen';
+
+  @override
+  String get supportAlreadyDonated => 'Ich habe schon gespendet';
+
+  @override
+  String get supportBannerDismiss => 'Schließen';
+
+  @override
+  String get supporterThankYouTitle => 'Danke, dass du Habitt unterstützt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'Du hilfst, es für alle frei von Werbung und Tracking zu halten.';
 }

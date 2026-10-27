@@ -13,6 +13,7 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/services/completion_sound_player.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
@@ -1971,8 +1972,8 @@ class HabitProvider extends ChangeNotifier {
   // review prompt no longer fires here, it waits for a streak milestone.
   Future<void> _countCompletion() async {
     final prefs = await SharedPreferences.getInstance();
-    final count = (prefs.getInt('total_habit_completions') ?? 0) + 1;
-    await prefs.setInt('total_habit_completions', count);
+    final count = (prefs.getInt(kTotalCompletionsKey) ?? 0) + 1;
+    await prefs.setInt(kTotalCompletionsKey, count);
   }
 
   Future<void> recalculateLongestStreaks([int? onlyHabitId]) async {

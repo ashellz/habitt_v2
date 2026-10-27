@@ -3525,4 +3525,24 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get timeRangeSameTimes =>
       'L\'orario di inizio e di fine non possono coincidere';
+
+  @override
+  String get supportBannerText =>
+      'Habitt non ha pubblicità, tracciamento né account. Va avanti solo se chi lo apprezza contribuisce.';
+
+  @override
+  String get supportSeeWays => 'Scopri come sostenere';
+
+  @override
+  String get supportAlreadyDonated => 'Ho già donato';
+
+  @override
+  String get supportBannerDismiss => 'Chiudi';
+
+  @override
+  String get supporterThankYouTitle => 'Grazie per sostenere Habitt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'Ci aiuti a mantenerlo senza pubblicità e tracciamento per tutti.';
 }

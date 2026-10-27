@@ -5926,6 +5926,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start and end time can\'t be the same'**
   String get timeRangeSameTimes;
+
+  /// No description provided for @supportBannerText.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.'**
+  String get supportBannerText;
+
+  /// No description provided for @supportSeeWays.
+  ///
+  /// In en, this message translates to:
+  /// **'See ways to support'**
+  String get supportSeeWays;
+
+  /// No description provided for @supportAlreadyDonated.
+  ///
+  /// In en, this message translates to:
+  /// **'I already donated'**
+  String get supportAlreadyDonated;
+
+  /// No description provided for @supportBannerDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get supportBannerDismiss;
+
+  /// No description provided for @supporterThankYouTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for supporting Habitt'**
+  String get supporterThankYouTitle;
+
+  /// No description provided for @supporterThankYouDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You help keep it free of ads and tracking for everyone.'**
+  String get supporterThankYouDesc;
 }
 
 class _AppLocalizationsDelegate

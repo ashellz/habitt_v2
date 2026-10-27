@@ -3495,4 +3495,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeRangeSameTimes => 'Start and end time can\'t be the same';
+
+  @override
+  String get supportBannerText =>
+      'Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.';
+
+  @override
+  String get supportSeeWays => 'See ways to support';
+
+  @override
+  String get supportAlreadyDonated => 'I already donated';
+
+  @override
+  String get supportBannerDismiss => 'Dismiss';
+
+  @override
+  String get supporterThankYouTitle => 'Thank you for supporting Habitt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'You help keep it free of ads and tracking for everyone.';
 }

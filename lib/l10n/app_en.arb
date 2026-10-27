@@ -1298,5 +1298,11 @@
   "endTimeLabel": "End time:",
   "startsAt": "Starts at:",
   "endsAt": "Ends at:",
-  "timeRangeSameTimes": "Start and end time can't be the same"
+  "timeRangeSameTimes": "Start and end time can't be the same",
+  "supportBannerText": "Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.",
+  "supportSeeWays": "See ways to support",
+  "supportAlreadyDonated": "I already donated",
+  "supportBannerDismiss": "Dismiss",
+  "supporterThankYouTitle": "Thank you for supporting Habitt",
+  "supporterThankYouDesc": "You help keep it free of ads and tracking for everyone."
 }

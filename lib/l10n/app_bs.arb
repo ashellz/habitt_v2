@@ -1263,5 +1263,11 @@
   "endTimeLabel": "Kraj:",
   "startsAt": "Počinje u:",
   "endsAt": "Završava u:",
-  "timeRangeSameTimes": "Vrijeme početka i kraja ne može biti isto"
+  "timeRangeSameTimes": "Vrijeme početka i kraja ne može biti isto",
+  "supportBannerText": "Habitt nema reklama, praćenja ni naloga. Nastavlja postojati samo ako ga ljudi koji ga vole podrže.",
+  "supportSeeWays": "Pogledaj načine podrške",
+  "supportAlreadyDonated": "Već sam donirao/la",
+  "supportBannerDismiss": "Odbaci",
+  "supporterThankYouTitle": "Hvala ti što podržavaš Habitt",
+  "supporterThankYouDesc": "Pomažeš da ostane bez reklama i praćenja za sve."
 }

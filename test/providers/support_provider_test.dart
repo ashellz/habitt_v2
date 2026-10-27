@@ -138,4 +138,104 @@ void main() {
       expect(provider.reviewMilestoneReached, isTrue);
     });
   });
+
+  group('main-page banner', () {
+    late SupportProvider provider;
+
+    // a user who joined on `now`, then `days` calendar days passed
+    void useFor(int days, {int completions = 10}) {
+      prefs.setInt(kTotalCompletionsKey, completions);
+      provider = build();
+      now = DateTime(now.year, now.month, now.day + days, 9);
+    }
+
+    test('is hidden for the first 7 days of use', () {
+      useFor(6);
+      expect(provider.bannerVisible, isFalse);
+    });
+
+    test('shows once 7 days and 10 completions are reached', () {
+      useFor(7);
+      expect(provider.bannerVisible, isTrue);
+    });
+
+    test('counts calendar days, not 24 hour spans', () {
+      now = DateTime(2026, 11, 3, 23, 30);
+      prefs.setInt(kTotalCompletionsKey, 10);
+      provider = build();
+      now = DateTime(2026, 11, 10, 0, 10);
+      expect(provider.bannerVisible, isTrue);
+    });
+
+    test('needs 10 completions', () {
+      useFor(30, completions: 9);
+      expect(provider.bannerVisible, isFalse);
+    });
+
+    test('is hidden for donors and subscribers', () {
+      useFor(10);
+      supporter = true;
+      expect(provider.bannerVisible, isFalse);
+
+      supporter = false;
+      expect(provider.bannerVisible, isTrue);
+      provider.markDonated();
+      expect(provider.bannerVisible, isFalse);
+    });
+
+    test('yields to an ask that claimed today and returns tomorrow', () {
+      useFor(10);
+      provider.tryClaimAsk(AskKind.review);
+      expect(provider.bannerVisible, isFalse);
+
+      now = DateTime(now.year, now.month, now.day + 1, 9);
+      expect(provider.bannerVisible, isTrue);
+    });
+
+    test('never claims the ask budget itself', () {
+      useFor(10);
+      expect(provider.bannerVisible, isTrue);
+      expect(provider.claimedToday, isFalse);
+    });
+
+    test('dismissing waits 30, then 45, then 90, then 90 days', () {
+      useFor(10);
+      for (final wait in [30, 45, 90, 90]) {
+        expect(provider.bannerVisible, isTrue);
+        provider.dismissBanner();
+        expect(provider.bannerVisible, isFalse);
+
+        final dismissedOn = now;
+        now = DateTime(
+          dismissedOn.year,
+          dismissedOn.month,
+          dismissedOn.day + wait - 1,
+        );
+        expect(provider.bannerVisible, isFalse, reason: 'day ${wait - 1}');
+
+        now = DateTime(
+          dismissedOn.year,
+          dismissedOn.month,
+          dismissedOn.day + wait,
+        );
+        expect(provider.bannerVisible, isTrue, reason: 'day $wait');
+      }
+    });
+
+    test('dismissing notifies and survives a restart', () {
+      useFor(10);
+      var notified = 0;
+      provider.addListener(() => notified++);
+
+      provider.dismissBanner();
+      expect(notified, 1);
+      expect(build().bannerVisible, isFalse);
+    });
+
+    test('ignores a next day pushed far ahead by a moved clock', () {
+      useFor(10);
+      prefs.setString('support_banner_next_day', '2030-01-01');
+      expect(provider.bannerVisible, isTrue);
+    });
+  });
 }

@@ -3494,4 +3494,24 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get timeRangeSameTimes => 'Vrijeme početka i kraja ne može biti isto';
+
+  @override
+  String get supportBannerText =>
+      'Habitt nema reklama, praćenja ni naloga. Nastavlja postojati samo ako ga ljudi koji ga vole podrže.';
+
+  @override
+  String get supportSeeWays => 'Pogledaj načine podrške';
+
+  @override
+  String get supportAlreadyDonated => 'Već sam donirao/la';
+
+  @override
+  String get supportBannerDismiss => 'Odbaci';
+
+  @override
+  String get supporterThankYouTitle => 'Hvala ti što podržavaš Habitt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'Pomažeš da ostane bez reklama i praćenja za sve.';
 }

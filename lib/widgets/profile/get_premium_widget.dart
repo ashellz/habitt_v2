@@ -255,6 +255,39 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget>
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 20,
         children: [
+          // ─── Thank you ────────────────────────────────────
+          Row(
+            spacing: 14,
+            children: [
+              Image.asset(
+                'assets/images/widget-images/love-bubble.png',
+                width: 52,
+                height: 52,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4,
+                  children: [
+                    Text(
+                      loc.supporterThankYouTitle,
+                      style: TextStyle(
+                        color: cp.text,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      loc.supporterThankYouDesc,
+                      style: TextStyle(color: cp.greyText, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Divider(color: cp.border, height: 0),
+          // ─── Plan ─────────────────────────────────────────
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
