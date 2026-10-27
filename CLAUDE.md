@@ -44,7 +44,7 @@ flutter build web                 # Web
 
 ### State Management — Provider
 
-All global state lives in 13 `ChangeNotifier`-based providers in `lib/providers/`. They are wired up in `main.dart` using `ChangeNotifierProvider` and `ChangeNotifierProxyProvider`.
+All global state lives in 16 `ChangeNotifier`-based providers in `lib/providers/`. They are wired up in `main.dart` using `ChangeNotifierProvider` and `ChangeNotifierProxyProvider`.
 
 **Dependency order (top = no dependencies):**
 ```
@@ -54,7 +54,7 @@ StatsProvider
                     └─> BackupProvider
 ```
 
-Other providers (ThemeProvider, LanguageProvider, ColorProvider, CalendarProvider, PreferencesProvider, NotificationsProvider, ProfileImageProvider, StateProvider) are independent.
+Other providers (ThemeProvider, LanguageProvider, ColorProvider, CalendarProvider, PreferencesProvider, NotificationsProvider, ProfileImageProvider, StateProvider, SupportProvider) are independent.
 
 ### Data Layer — Hive
 
@@ -93,6 +93,18 @@ The backup/sync system (Google Drive and iCloud cloud backends, plus local file 
 ### Notification Sounds
 
 Selectable stock notification sounds (global default + per-habit override) are implemented via one channel per sound. To add a new sound or understand the system, see [`docs/notification_sounds.md`](docs/notification_sounds.md).
+
+### Support Asks
+
+Where and how often the app asks for support (main-page banner, streak milestone card, support sheet, review prompt), the shared daily ask budget, the "I already donated" flag and all their local state are documented in full at [`docs/support_asks.md`](docs/support_asks.md). Read it before touching `SupportProvider`, `AskBudget`, `runStreakMoment` or any support surface.
+
+**Maintenance rule:** Any change to the support asks, their timing or their state keys must also update `docs/support_asks.md`.
+
+### Themes
+
+Accent themes (Habitt green plus five more, free for everyone) are layered on `ColorProvider`: a theme swaps only the accent, neutrals and semantic colours stay fixed. The catalog, brand guardrails, accent-following SVGs and how to add a theme are documented in full at [`docs/themes.md`](docs/themes.md). Read it before touching `ThemeCatalog`, `ColorProvider`'s theme code or `AccentSvg`.
+
+**Maintenance rule:** Any change to how themes work, the catalog or the guardrails must also update `docs/themes.md`.
 
 ### Health Sync
 
