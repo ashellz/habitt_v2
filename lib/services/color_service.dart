@@ -5,6 +5,13 @@ class ColorService {
   static const dark = Dark();
 }
 
+/// Habitt green on the surfaces that keep the brand whatever theme is selected:
+/// the support page and its artwork. In-app UI uses `ColorProvider.main`.
+class BrandColors {
+  static const Color green = Color(0xFF02D382);
+  static const Color greenTint = Color(0x1A0CD280);
+}
+
 class Light {
   const Light();
 

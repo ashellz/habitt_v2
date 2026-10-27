@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/color_service.dart';
+import 'package:habitt/widgets/settings/theme_picker.dart';
 import 'package:provider/provider.dart';
 
 class AppearanceSetting extends StatefulWidget {
@@ -455,6 +456,8 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
                   ),
                 ],
               ),
+              Divider(color: cp.border, height: 0),
+              const ThemePicker(),
             ],
           ),
         ),

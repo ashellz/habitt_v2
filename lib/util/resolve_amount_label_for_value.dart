@@ -9,7 +9,9 @@ String resolveAmountLabelForValue(
 }) {
   final preset = AmountLabelPreset.fromLocalizedLabel(label, loc);
   if (preset != null) {
-    return value == 1 ? preset.localizedSingular(loc) : preset.localizedPlural(loc);
+    return value == 1
+        ? preset.localizedSingular(loc)
+        : preset.localizedPlural(loc);
   }
 
   if (customSingulars != null && customSingulars.containsKey(label)) {

@@ -7,9 +7,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/util/support_thanks.dart';
 import 'package:habitt/util/streak_praise.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/dialogs/streak_celebration/streak_day_strip.dart';
+import 'package:habitt/widgets/support/milestone_support_card.dart';
 import 'package:provider/provider.dart';
 
 /// Celebration shown when the perfect-days streak grows. Presented via
@@ -22,12 +25,17 @@ class StreakCelebrationDialog extends StatefulWidget {
     required this.dayStatuses,
     required this.allStats,
     this.today,
+    this.showSupportCard = false,
   });
 
   final int streak;
   final Map<DateTime, DayCompletionStatus> dayStatuses;
   final Map<DateTime, double> allStats;
   final DateTime? today;
+
+  /// Adds the milestone support card below the day strip (7- and 30-day
+  /// milestones, when the ask budget allows it).
+  final bool showSupportCard;
 
   @override
   State<StreakCelebrationDialog> createState() =>
@@ -172,7 +180,10 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
                     final pulse = sin(_controller.value * pi).clamp(0.0, 1.0);
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 31.0),
-                      child: Transform.scale(scale: 1 + 0.2 * pulse, child: child),
+                      child: Transform.scale(
+                        scale: 1 + 0.2 * pulse,
+                        child: child,
+                      ),
                     );
                   },
                   child: SvgPicture.asset(
@@ -226,6 +237,16 @@ class _StreakCelebrationDialogState extends State<StreakCelebrationDialog>
             today: widget.today,
             progress: _progress,
           ),
+          // ─── Milestone support card ───────────────────────
+          if (widget.showSupportCard) ...[
+            const SizedBox(height: 24),
+            MilestoneSupportCard(
+              onDonated: () {
+                showDonationThanks(context);
+                context.read<SupportProvider>().markDonated();
+              },
+            ),
+          ],
         ],
       ),
     );

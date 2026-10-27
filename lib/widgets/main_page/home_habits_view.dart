@@ -9,6 +9,7 @@ import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/demo_habits_section.dart';
 import 'package:habitt/widgets/main_page/habits/new_habits.dart';
 import 'package:habitt/widgets/main_page/plan/plan_habits.dart';
+import 'package:habitt/widgets/support/support_banner.dart';
 import 'package:provider/provider.dart';
 
 /// Date label with the list / plan toggle, and the habits below it. Switching
@@ -113,6 +114,8 @@ class HomeHabitsView extends StatelessWidget {
                               ),
                               child: NewHabits(),
                             ),
+                            // ─── Support banner ───────────────────────
+                            const SupportBanner(),
                           ],
                         ),
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -99,7 +99,7 @@ class SoundOptionWidget extends StatelessWidget {
                       duration: selectionDuration,
                       curve: Curves.easeOutBack,
                       turns: isSelected ? 0 : iconTurns,
-                      child: SvgPicture.asset(checkSvgPath),
+                      child: AccentSvg(checkSvgPath),
                     ),
                   ),
                 ),
