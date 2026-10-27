@@ -27,6 +27,7 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -211,6 +212,20 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => StateProvider(prefs)),
         ChangeNotifierProvider(create: (_) => CalendarProvider()),
         ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
+
+        ChangeNotifierProvider(
+          create:
+              (_) => SupportProvider(
+                prefs,
+                readSupporter: () => BillingService.hasPro,
+                checkSupporter: () async {
+                  final hasPro = await BillingService.checkHasPro();
+                  BillingService.hasPro = hasPro;
+                  return hasPro;
+                },
+              ),
+          lazy: false,
+        ),
 
         ChangeNotifierProxyProvider2<
           HabitProvider,

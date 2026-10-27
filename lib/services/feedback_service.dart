@@ -14,26 +14,33 @@ class FeedbackService {
 
   static const String _reviewLastRequestedKey = 'review_last_requested_ms';
 
-  // Silently shows the native review dialog when engagement thresholds are met.
-  // Safe to call on every completion — guards ensure it only fires once per 90 days.
-  static Future<void> maybeRequestReview({
-    required int totalCompletions,
-    required int maxStreak,
-  }) async {
-    if (totalCompletions < 10 || maxStreak < 3) return;
-
+  // Whether the native review dialog can be requested right now: the 90-day
+  // guard has passed and the platform offers it. Has no side effects, so the
+  // daily ask budget is only spent on a review that can actually show.
+  static Future<bool> canRequestReview() async {
     final prefs = await SharedPreferences.getInstance();
     final lastMs = prefs.getInt(_reviewLastRequestedKey) ?? 0;
     final now = DateTime.now().millisecondsSinceEpoch;
     const ninetyDays = 90 * 24 * 60 * 60 * 1000;
 
-    if (lastMs != 0 && (now - lastMs) < ninetyDays) return;
+    if (lastMs != 0 && (now - lastMs) < ninetyDays) return false;
 
-    final inAppReview = InAppReview.instance;
-    if (!await inAppReview.isAvailable()) return;
+    try {
+      return await InAppReview.instance.isAvailable();
+    } catch (_) {
+      return false;
+    }
+  }
 
-    await inAppReview.requestReview();
-    await prefs.setInt(_reviewLastRequestedKey, now);
+  // Shows the native review dialog and starts the 90-day guard. Callers decide
+  // when (a streak milestone, see runStreakMoment) after canRequestReview.
+  static Future<void> requestReview() async {
+    await InAppReview.instance.requestReview();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(
+      _reviewLastRequestedKey,
+      DateTime.now().millisecondsSinceEpoch,
+    );
   }
 
   static Future<void> rateUs() async {
