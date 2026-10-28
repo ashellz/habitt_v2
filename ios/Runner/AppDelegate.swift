@@ -25,6 +25,10 @@ import shared_preferences_foundation
       UNUserNotificationCenter.current().delegate = self
     }
 
+    // Before any plugin schedules a notification: keep every action-button
+    // category registered (see NotificationCategoryMerger).
+    NotificationCategoryMerger.install()
+
     // Register the plugins the awesome_notifications BACKGROUND isolate needs
     // (action handling for the "Complete" button). Register only these — using
     // GeneratedPluginRegistrant here crashes the isolate because heavyweight
@@ -85,6 +89,66 @@ import shared_preferences_foundation
         super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
       }
     }
+  }
+}
+
+// MARK: - Notification action-button categories
+//
+// iOS shows a notification's buttons from the category registered under its
+// categoryIdentifier when it is displayed. awesome_notifications registers
+// each notification's buttons as its own category, but with
+// setNotificationCategories([thatOne]), which drops every category registered
+// before it. So the last notification scheduled decided the buttons of all
+// pending ones: a Health-linked habit (no buttons) or a timer notification
+// scheduled last left every reminder without "Complete". This swaps
+// setNotificationCategories for one that adds to the categories already
+// registered instead of replacing them. A category's identifier encodes its
+// buttons (keys and labels), so replacing by identifier never loses buttons.
+
+enum NotificationCategoryMerger {
+  private static let lock = NSLock()
+  private static var known: [String: UNNotificationCategory] = [:]
+  private static var installed = false
+
+  static func install() {
+    guard !installed else { return }
+    installed = true
+
+    let cls: AnyClass = UNUserNotificationCenter.self
+    guard
+      let original = class_getInstanceMethod(
+        cls, #selector(UNUserNotificationCenter.setNotificationCategories(_:))),
+      let merging = class_getInstanceMethod(
+        cls, #selector(UNUserNotificationCenter.habitt_setMergedNotificationCategories(_:)))
+    else { return }
+    method_exchangeImplementations(original, merging)
+
+    // Categories persist across launches; seed them so the first notification
+    // scheduled this launch doesn't drop the ones registered last time.
+    let center = UNUserNotificationCenter.current()
+    center.getNotificationCategories { existing in
+      center.setNotificationCategories(existing)
+    }
+  }
+
+  fileprivate static func merge(
+    _ categories: Set<UNNotificationCategory>
+  ) -> Set<UNNotificationCategory> {
+    lock.lock()
+    defer { lock.unlock() }
+    for category in categories {
+      known[category.identifier] = category
+    }
+    return Set(known.values)
+  }
+}
+
+extension UNUserNotificationCenter {
+  @objc fileprivate func habitt_setMergedNotificationCategories(
+    _ categories: Set<UNNotificationCategory>
+  ) {
+    // Implementations are exchanged: this calls the original setter.
+    habitt_setMergedNotificationCategories(NotificationCategoryMerger.merge(categories))
   }
 }
 

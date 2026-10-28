@@ -338,6 +338,13 @@ hit on their watch would never replace it on the next sync (task 33). Tapping
 the notification still opens the habit's details page, like the tap handling
 in `NotificationActionHandler._logProgressTypeFor`.
 
+On iOS this relies on `NotificationCategoryMerger` in
+`ios/Runner/AppDelegate.swift`. awesome_notifications registers each
+notification's buttons as an iOS category but replaces all previously
+registered categories when it does, so a button-less Health reminder scheduled
+last used to strip "Complete" from every other habit's reminder too. The merger
+keeps every category registered.
+
 ## Tolerance (sleep, bedtime, wake time)
 
 `Habit.toleranceMinutes` (15/30/60 presets) is a "close enough" margin and only
