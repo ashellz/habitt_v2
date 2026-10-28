@@ -16,7 +16,8 @@ import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/services/main_tab_controller.dart';
-import 'package:habitt/util/perfect_streak_celebration.dart';
+import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/util/streak_moment.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/dialogs/outdated_other_device_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,6 +72,7 @@ class _HomePageState extends State<HomePage>
         );
 
         unawaited(context.read<HealthProvider>().syncNow());
+        unawaited(context.read<SupportProvider>().refreshSupporter());
 
         categoryProvider.reorderCategoriesBasedOnTime();
 
@@ -94,7 +96,7 @@ class _HomePageState extends State<HomePage>
         });
 
         if (mounted) {
-          await maybeShowStreakCelebration(context);
+          await runStreakMoment(context);
         }
       });
     }
@@ -163,7 +165,7 @@ class _HomePageState extends State<HomePage>
       });
 
       if (mounted) {
-        await maybeShowStreakCelebration(context);
+        await runStreakMoment(context);
       }
     });
   }

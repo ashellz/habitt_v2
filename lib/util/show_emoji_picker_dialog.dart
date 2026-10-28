@@ -5,18 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-Future<String?> showEmojiPickerDialog(
-  BuildContext context,
-  ColorProvider cp,
-) {
+Future<String?> showEmojiPickerDialog(BuildContext context, ColorProvider cp) {
   final isDark = cp.isDark;
   final isIOS = Platform.isIOS;
 
   final bgColor = isDark ? const Color(0xFF1C1C1E) : const Color(0xFFEBEFF2);
   final categoryBgColor =
       isDark ? const Color(0xFF2C2C2E) : const Color(0xFFEBEFF2);
-  final iconColor =
-      isDark ? const Color(0xFF8E8E93) : const Color(0xFF6C757D);
+  final iconColor = isDark ? const Color(0xFF8E8E93) : const Color(0xFF6C757D);
   final selectedColor = isDark ? Colors.white : Colors.black87;
   final accentColor = isDark ? Colors.white70 : Colors.black54;
 

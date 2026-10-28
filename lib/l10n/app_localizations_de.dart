@@ -3443,7 +3443,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get habitAgeCardTitle => 'Du machst das seit';
 
   @override
-  String get habitAgeCardNew => 'Gerade gestartet';
+  String get habitAgeCardNew => 'Heute gestartet';
 
   @override
   String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {
@@ -3528,4 +3528,69 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get timeRangeSameTimes =>
       'Start- und Endzeit dürfen nicht gleich sein';
+
+  @override
+  String get showIfMissed => 'Erneut anzeigen, wenn verpasst';
+
+  @override
+  String get showIfMissedDesc =>
+      'Wenn du einen geplanten Tag verpasst, wird die Gewohnheit täglich angezeigt, bis du sie erledigst. Danach beginnt das Intervall ab diesem Tag neu';
+
+  @override
+  String get supportBannerText =>
+      'Habitt hat keine Werbung, kein Tracking und kein Konto. Es besteht nur weiter, wenn Menschen, die es mögen, etwas beitragen.';
+
+  @override
+  String get supportSeeWays => 'Möglichkeiten zur Unterstützung ansehen';
+
+  @override
+  String get supportAlreadyDonated => 'Ich habe schon gespendet';
+
+  @override
+  String get supportBannerDismiss => 'Schließen';
+
+  @override
+  String get supporterThankYouTitle => 'Danke, dass du Habitt unterstützt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'Du hilfst, es für alle frei von Werbung und Tracking zu halten.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht.';
+
+  @override
+  String get themeSettingTitle => 'Farbthema';
+
+  @override
+  String get themeNameHabitt => 'Habitt';
+
+  @override
+  String get themeNameLagoon => 'Lagune';
+
+  @override
+  String get themeNameOcean => 'Ozean';
+
+  @override
+  String get themeNameIndigo => 'Indigo';
+
+  @override
+  String get themeNameViolet => 'Violett';
+
+  @override
+  String get themeNameOrchid => 'Orchidee';
+
+  @override
+  String get supportSheetTitle => 'Kostenlos für alle';
+
+  @override
+  String get supportSheetDesc =>
+      'Farbthemen und Cloud-Sicherung sind für alle kostenlos. Unterstützer halten Habitt am Laufen.';
+
+  @override
+  String get supportNotNow => 'Nicht jetzt';
+
+  @override
+  String get supportHabittRow => 'Unterstütze Habitt';
 }

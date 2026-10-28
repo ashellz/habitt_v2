@@ -3495,4 +3495,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeRangeSameTimes => 'Start and end time can\'t be the same';
+
+  @override
+  String get showIfMissed => 'Show again if missed';
+
+  @override
+  String get showIfMissedDesc =>
+      'If you miss a scheduled day, keep showing this habit every day until you complete it, then repeat the interval from that day';
+
+  @override
+  String get supportBannerText =>
+      'Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.';
+
+  @override
+  String get supportSeeWays => 'See ways to support';
+
+  @override
+  String get supportAlreadyDonated => 'I already donated';
+
+  @override
+  String get supportBannerDismiss => 'Dismiss';
+
+  @override
+  String get supporterThankYouTitle => 'Thank you for supporting Habitt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'You help keep it free of ads and tracking for everyone.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.';
+
+  @override
+  String get themeSettingTitle => 'Theme';
+
+  @override
+  String get themeNameHabitt => 'Habitt';
+
+  @override
+  String get themeNameLagoon => 'Lagoon';
+
+  @override
+  String get themeNameOcean => 'Ocean';
+
+  @override
+  String get themeNameIndigo => 'Indigo';
+
+  @override
+  String get themeNameViolet => 'Violet';
+
+  @override
+  String get themeNameOrchid => 'Orchid';
+
+  @override
+  String get supportSheetTitle => 'Free for everyone';
+
+  @override
+  String get supportSheetDesc =>
+      'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.';
+
+  @override
+  String get supportNotNow => 'Not now';
+
+  @override
+  String get supportHabittRow => 'Support Habitt';
 }

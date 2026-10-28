@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/language_option.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -118,7 +119,7 @@ class LanguageOptionWidget extends StatelessWidget {
                       duration: selectionDuration,
                       curve: Curves.easeOutBack,
                       turns: selectedLanguage == languageOption ? 0 : iconTurns,
-                      child: SvgPicture.asset(checkSvgPath),
+                      child: AccentSvg(checkSvgPath),
                     ),
                   ),
                 ),

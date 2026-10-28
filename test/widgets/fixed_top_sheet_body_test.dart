@@ -74,6 +74,18 @@ void main() {
     );
   });
 
+  testWidgets('there is a gap between the top bar and the scrolling content', (
+    tester,
+  ) async {
+    await _pump(tester, contentHeight: 2000);
+
+    final barBottom =
+        tester.getBottomLeft(find.widgetWithText(SizedBox, 'top bar')).dy;
+    final scrollTop = tester.getTopLeft(find.byType(SingleChildScrollView)).dy;
+
+    expect(scrollTop - barBottom, 10);
+  });
+
   testWidgets('the fades show only on the edges that have more content', (
     tester,
   ) async {
@@ -94,6 +106,25 @@ void main() {
     await _dragSheet(tester, 5000);
     expect(_topFade(tester), 0);
     expect(_bottomFade(tester), 1);
+  });
+
+  testWidgets('the top fade shows as soon as content scrolls, whatever is under the bar', (
+    tester,
+  ) async {
+    await _pump(tester, contentHeight: 2000);
+    // drawn over the content in the sheet's colour, so it shows on pale content
+    double overlay() =>
+        tester
+            .widget<Opacity>(find.byKey(ScrollEdgeFade.startOverlayKey))
+            .opacity;
+
+    expect(overlay(), 0);
+
+    await _dragSheet(tester, -30);
+    expect(overlay(), 1);
+
+    await _dragSheet(tester, 5000);
+    expect(overlay(), 0);
   });
 
   testWidgets('short content does not scroll and shows no fade', (

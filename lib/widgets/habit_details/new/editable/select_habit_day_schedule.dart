@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/day_schedule_flow.dart';
+import 'package:habitt/widgets/habit_details/new/editable/schedule_time_column.dart';
 import 'package:habitt/widgets/habit_details/new/editable/schedule_time_field.dart';
 import 'package:provider/provider.dart';
 
@@ -78,21 +79,39 @@ class SelectHabitDaySchedule extends StatelessWidget {
               ),
 
               // ─── Times / hint ─────────────────────────────────
-              if (schedule.isTimed) ...[
+              if (schedule == DaySchedule.timeRange)
+                // same layout as the time range dialog
+                Row(
+                  spacing: 10,
+                  children: [
+                    Expanded(
+                      child: ScheduleTimeColumn(
+                        label: loc.startsAt,
+                        minutes: sp.timeIntervalStart,
+                        onTap:
+                            () =>
+                                editScheduleTime(context, editingStart: true),
+                      ),
+                    ),
+                    Expanded(
+                      child: ScheduleTimeColumn(
+                        label: loc.endsAt,
+                        minutes: sp.timeIntervalEnd,
+                        onTap:
+                            () =>
+                                editScheduleTime(context, editingStart: false),
+                      ),
+                    ),
+                  ],
+                )
+              else if (schedule.isTimed)
                 _timeRow(
                   context,
                   label: loc.startsAt,
                   minutes: sp.timeIntervalStart,
                   editingStart: true,
-                ),
-                if (schedule == DaySchedule.timeRange)
-                  _timeRow(
-                    context,
-                    label: loc.endsAt,
-                    minutes: sp.timeIntervalEnd,
-                    editingStart: false,
-                  ),
-              ] else
+                )
+              else
                 Text(
                   loc.daySchedulePrompt,
                   style: TextStyle(

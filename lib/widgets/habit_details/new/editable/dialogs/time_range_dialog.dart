@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
-import 'package:habitt/widgets/habit_details/new/editable/schedule_time_field.dart';
+import 'package:habitt/widgets/habit_details/new/editable/schedule_time_column.dart';
 import 'package:provider/provider.dart';
 
 enum TimeRangeAction { done, back, editStart, editEnd }
@@ -75,25 +75,10 @@ class TimeRangeDialog extends StatelessWidget {
     required int minutes,
     required TimeRangeAction action,
   }) {
-    final cp = context.watch<ColorProvider>();
-
-    return Column(
-      spacing: 4,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: cp.isDark ? cp.greyText : cp.lightGreyText,
-            fontSize: 13,
-          ),
-        ),
-        ScheduleTimeField(
-          minutes: minutes,
-          expand: true,
-          onTap: () => Navigator.of(context).pop(action),
-        ),
-      ],
+    return ScheduleTimeColumn(
+      label: label,
+      minutes: minutes,
+      onTap: () => Navigator.of(context).pop(action),
     );
   }
 }

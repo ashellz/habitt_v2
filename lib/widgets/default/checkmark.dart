@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:provider/provider.dart';
 
 class Checkmark extends StatelessWidget {
@@ -23,6 +23,8 @@ class Checkmark extends StatelessWidget {
     final svgPath =
         "assets/images/new-svg/check-${value ? "on" : "off"}-${isDark ? "dark" : "light"}.svg";
 
-    return SvgPicture.asset(secondaryCheckmarks ? secondarySvgPath : svgPath);
+    // the checked states have the brand green baked in, AccentSvg swaps it for
+    // the selected theme's accent
+    return AccentSvg(secondaryCheckmarks ? secondarySvgPath : svgPath);
   }
 }
