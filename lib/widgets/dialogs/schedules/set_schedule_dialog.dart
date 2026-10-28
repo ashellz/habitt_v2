@@ -4,7 +4,6 @@ import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/dialogs/schedules/schedule_dialog_snapshot.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
-import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/habit_details/new/editable/schedule_option_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
@@ -37,8 +36,6 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final sp = context.watch<StateProvider>();
-    final cp = context.watch<ColorProvider>();
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -56,36 +53,6 @@ class _SetScheduleDialogState extends State<SetScheduleDialog> {
           children: [
             for (var option in ScheduleType.values)
               ScheduleOptionWidget(scheduleOptionType: option),
-            if (sp.selectedScheduleOption == ScheduleType.custom)
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          loc.showIfMissed,
-                          style: TextStyle(
-                            color: cp.text,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          loc.showIfMissedDesc,
-                          style: TextStyle(color: cp.greyText, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  NewDefaultSwitch(
-                    value: sp.showIfMissed,
-                    onChanged: (value) => sp.showIfMissed = value,
-                  ),
-                ],
-              ),
           ],
         ),
         onPrimaryButtonPressed: () {

@@ -4,6 +4,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/increment_decrement_text_field.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/schedules/schedule_dialog_snapshot.dart';
 import 'package:habitt/widgets/dialogs/schedules/set_schedule_dialog.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class CustomScheduleDialog extends StatefulWidget {
 
 class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
   late int initialCustomIntervalDays;
+  late bool initialShowIfMissed;
   late final TextEditingController customIntervalController;
 
   @override
@@ -27,6 +29,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
     super.initState();
     final sp = context.read<StateProvider>();
     initialCustomIntervalDays = sp.customIntervalDays;
+    initialShowIfMissed = sp.showIfMissed;
     customIntervalController = TextEditingController(
       text: sp.customIntervalDays.toString(),
     );
@@ -39,7 +42,8 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
   }
 
   bool _hasUnsavedChanges(StateProvider sp) {
-    return sp.customIntervalDays != initialCustomIntervalDays;
+    return sp.customIntervalDays != initialCustomIntervalDays ||
+        sp.showIfMissed != initialShowIfMissed;
   }
 
   void _returnToSetSchedule(ColorProvider cp) {
@@ -67,6 +71,7 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
             primaryButtonLabel: loc.exit,
             onPrimaryButtonPressed: () {
               sp.customIntervalDays = initialCustomIntervalDays;
+              sp.showIfMissed = initialShowIfMissed;
               Navigator.of(dialogContext).pop();
               _returnToSetSchedule(cp);
             },
@@ -132,6 +137,37 @@ class _CustomScheduleDialogState extends State<CustomScheduleDialog> {
                 loc.habitWillAppear(loc.day, sp.customIntervalDays),
                 style: TextStyle(color: cp.greyText, fontSize: 13),
               ),
+            ),
+            const SizedBox(height: 20),
+            // ─── Show if missed ───────────────────────────────────
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.showIfMissed,
+                        style: TextStyle(
+                          color: cp.text,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        loc.showIfMissedDesc,
+                        style: TextStyle(color: cp.greyText, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                NewDefaultSwitch(
+                  value: sp.showIfMissed,
+                  onChanged: (value) => sp.showIfMissed = value,
+                ),
+              ],
             ),
           ],
         ),
