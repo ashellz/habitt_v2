@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
@@ -104,6 +105,10 @@ class OldAddHabitButton extends StatelessWidget {
                   customAppearance: buildCustomAppearance(
                     stateProvider.customIntervalDays,
                   ),
+                  showIfMissed:
+                      stateProvider.selectedScheduleOption ==
+                          ScheduleType.custom &&
+                      stateProvider.showIfMissed,
                   timesCompletedThisWeek: 0,
                   timesCompletedThisMonth: 0,
                   lastCustomUpdate: DateTime.now().toUtc(),

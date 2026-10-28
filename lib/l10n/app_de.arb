@@ -1277,6 +1277,8 @@
   "startsAt": "Beginnt um:",
   "endsAt": "Endet um:",
   "timeRangeSameTimes": "Start- und Endzeit dürfen nicht gleich sein",
+  "showIfMissed": "Erneut anzeigen, wenn verpasst",
+  "showIfMissedDesc": "Wenn du einen geplanten Tag verpasst, wird die Gewohnheit täglich angezeigt, bis du sie erledigst. Danach beginnt das Intervall ab diesem Tag neu",
   "supportBannerText": "Habitt hat keine Werbung, kein Tracking und kein Konto. Es besteht nur weiter, wenn Menschen, die es mögen, etwas beitragen.",
   "supportSeeWays": "Möglichkeiten zur Unterstützung ansehen",
   "supportAlreadyDonated": "Ich habe schon gespendet",

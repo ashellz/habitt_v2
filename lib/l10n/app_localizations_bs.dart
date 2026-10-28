@@ -3506,6 +3506,13 @@ class AppLocalizationsBs extends AppLocalizations {
   String get timeRangeSameTimes => 'Vrijeme početka i kraja ne može biti isto';
 
   @override
+  String get showIfMissed => 'Prikaži ponovo ako je propuštena';
+
+  @override
+  String get showIfMissedDesc =>
+      'Ako propustiš zakazani dan, navika će se prikazivati svaki dan dok je ne završiš, a zatim se interval računa od tog dana';
+
+  @override
   String get supportBannerText =>
       'Habitt nema reklama, praćenja ni naloga. Nastavlja postojati samo ako ga ljudi koji ga vole podrže.';
 

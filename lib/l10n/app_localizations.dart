@@ -5945,6 +5945,18 @@ abstract class AppLocalizations {
   /// **'Start and end time can\'t be the same'**
   String get timeRangeSameTimes;
 
+  /// No description provided for @showIfMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Show again if missed'**
+  String get showIfMissed;
+
+  /// No description provided for @showIfMissedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'If you miss a scheduled day, keep showing this habit every day until you complete it, then repeat the interval from that day'**
+  String get showIfMissedDesc;
+
   /// No description provided for @supportBannerText.
   ///
   /// In en, this message translates to:

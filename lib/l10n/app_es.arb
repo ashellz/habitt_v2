@@ -1277,6 +1277,8 @@
   "startsAt": "Empieza a las:",
   "endsAt": "Termina a las:",
   "timeRangeSameTimes": "La hora de inicio y la de fin no pueden ser iguales",
+  "showIfMissed": "Mostrar de nuevo si se pierde",
+  "showIfMissedDesc": "Si te saltas un día programado, el hábito se seguirá mostrando cada día hasta que lo completes; después el intervalo se cuenta desde ese día",
   "supportBannerText": "Habitt no tiene anuncios, rastreo ni cuentas. Solo sigue adelante si quienes lo disfrutan contribuyen.",
   "supportSeeWays": "Ver formas de apoyar",
   "supportAlreadyDonated": "Ya doné",

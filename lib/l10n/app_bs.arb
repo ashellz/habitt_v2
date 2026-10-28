@@ -1267,6 +1267,8 @@
   "startsAt": "Počinje u:",
   "endsAt": "Završava u:",
   "timeRangeSameTimes": "Vrijeme početka i kraja ne može biti isto",
+  "showIfMissed": "Prikaži ponovo ako je propuštena",
+  "showIfMissedDesc": "Ako propustiš zakazani dan, navika će se prikazivati svaki dan dok je ne završiš, a zatim se interval računa od tog dana",
   "supportBannerText": "Habitt nema reklama, praćenja ni naloga. Nastavlja postojati samo ako ga ljudi koji ga vole podrže.",
   "supportSeeWays": "Pogledaj načine podrške",
   "supportAlreadyDonated": "Već sam donirao/la",

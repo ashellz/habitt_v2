@@ -176,6 +176,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       customIntervalDays: habit.customIntervalDays,
       selectedDaysAWeek: habit.selectedDaysAWeek,
       selectedDaysAMonth: habit.selectedDaysAMonth,
+      showIfMissed: habit.showIfMissed,
     );
     stateProvider.timeIntervalEnabled = habit.timeIntervalEnabled;
     stateProvider.timeIntervalStart = habit.timeIntervalStart;
@@ -237,7 +238,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedWeeklyTarget = sp.weeklyTarget != habit.weeklyTarget;
     final changedMonthlyTarget = sp.monthlyTarget != habit.monthlyTarget;
     final changedCustomInterval =
-        sp.customIntervalDays != habit.customIntervalDays;
+        sp.customIntervalDays != habit.customIntervalDays ||
+        sp.showIfMissed != habit.showIfMissed;
     final changedSelectedWeekDays =
         sp.selectedDaysAWeek.length != habit.selectedDaysAWeek.length ||
         !sp.selectedDaysAWeek.every((d) => habit.selectedDaysAWeek.contains(d));
@@ -330,7 +332,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     final changedScheduleType = sp.selectedScheduleOption != ScheduleType.daily;
     final changedWeeklyTarget = sp.weeklyTarget != 1;
     final changedMonthlyTarget = sp.monthlyTarget != 1;
-    final changedCustomInterval = sp.customIntervalDays != 2;
+    final changedCustomInterval = sp.customIntervalDays != 2 || sp.showIfMissed;
     final changedSelectedWeekDays = sp.selectedDaysAWeek.isNotEmpty;
     final changedSelectedMonthDays = sp.selectedDaysAMonth.isNotEmpty;
     final changedColorName = sp.habitColorName != null;
@@ -618,6 +620,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.weeklyTarget = sp.weeklyTarget;
       habit.monthlyTarget = sp.monthlyTarget;
       habit.customIntervalDays = sp.customIntervalDays;
+      habit.showIfMissed =
+          sp.selectedScheduleOption == ScheduleType.custom && sp.showIfMissed;
       habit.selectedDaysAWeek = sp.selectedDaysAWeek.toList()..sort();
       habit.selectedDaysAMonth = sp.selectedDaysAMonth.toList()..sort();
       habit.premadeHabitType = sp.selectedPremadeHabitType;
@@ -695,6 +699,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       selectedDaysAWeek: sp.selectedDaysAWeek.toList()..sort(),
       selectedDaysAMonth: sp.selectedDaysAMonth.toList()..sort(),
       customAppearance: buildCustomAppearance(sp.customIntervalDays),
+      showIfMissed:
+          sp.selectedScheduleOption == ScheduleType.custom && sp.showIfMissed,
       timesCompletedThisWeek: 0,
       timesCompletedThisMonth: 0,
       createdAt: DateTime.now().toUtc(),

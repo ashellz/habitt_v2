@@ -9,6 +9,7 @@ class ScheduleDialogSnapshot {
     required this.customIntervalDays,
     required this.selectedDaysAWeek,
     required this.selectedDaysAMonth,
+    required this.showIfMissed,
   });
 
   final ScheduleType selectedScheduleOption;
@@ -17,6 +18,7 @@ class ScheduleDialogSnapshot {
   final int customIntervalDays;
   final Set<int> selectedDaysAWeek;
   final Set<int> selectedDaysAMonth;
+  final bool showIfMissed;
 
   factory ScheduleDialogSnapshot.fromStateProvider(StateProvider sp) {
     return ScheduleDialogSnapshot(
@@ -26,12 +28,14 @@ class ScheduleDialogSnapshot {
       customIntervalDays: sp.customIntervalDays,
       selectedDaysAWeek: Set<int>.from(sp.selectedDaysAWeek),
       selectedDaysAMonth: Set<int>.from(sp.selectedDaysAMonth),
+      showIfMissed: sp.showIfMissed,
     );
   }
 
   void restore(StateProvider sp) {
     sp.selectedScheduleOption = selectedScheduleOption;
     sp.customIntervalDays = customIntervalDays;
+    sp.showIfMissed = showIfMissed;
     sp.selectedDaysAWeek = Set<int>.from(selectedDaysAWeek);
     sp.selectedDaysAMonth = Set<int>.from(selectedDaysAMonth);
     // Set targets last so they win over the auto-sync in the days setters.

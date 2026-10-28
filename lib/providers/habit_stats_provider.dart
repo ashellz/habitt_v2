@@ -440,6 +440,7 @@ class HabitStatsProvider extends ChangeNotifier {
       habit.weeklyTarget,
       habit.monthlyTarget,
       habit.customIntervalDays,
+      habit.showIfMissed,
       habit.selectedDaysAWeek.join(','),
       habit.selectedDaysAMonth.join(','),
       habit.completed,

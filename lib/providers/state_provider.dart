@@ -179,6 +179,7 @@ class StateProvider extends ChangeNotifier {
   int _weeklyTarget = 1;
   int _monthlyTarget = 1;
   int _customIntervalDays = 2;
+  bool _showIfMissed = false;
   final Set<int> _selectedDaysAWeek = <int>{};
   final Set<int> _selectedDaysAMonth = <int>{};
   PremadeHabitType? _selectedPremadeHabitType;
@@ -192,6 +193,7 @@ class StateProvider extends ChangeNotifier {
   int get weeklyTarget => _weeklyTarget;
   int get monthlyTarget => _monthlyTarget;
   int get customIntervalDays => _customIntervalDays;
+  bool get showIfMissed => _showIfMissed;
   Set<int> get selectedDaysAWeek => Set<int>.from(_selectedDaysAWeek);
   Set<int> get selectedDaysAMonth => Set<int>.from(_selectedDaysAMonth);
   PremadeHabitType? get selectedPremadeHabitType => _selectedPremadeHabitType;
@@ -246,6 +248,11 @@ class StateProvider extends ChangeNotifier {
 
   set monthlyTarget(int value) {
     _monthlyTarget = value.clamp(1, 30);
+    notifyListeners();
+  }
+
+  set showIfMissed(bool value) {
+    _showIfMissed = value;
     notifyListeners();
   }
 
@@ -516,8 +523,10 @@ class StateProvider extends ChangeNotifier {
     required int customIntervalDays,
     required List<int> selectedDaysAWeek,
     required List<int> selectedDaysAMonth,
+    bool showIfMissed = false,
   }) {
     _selectedScheduleOption = scheduleType;
+    _showIfMissed = showIfMissed;
     _weeklyTarget = weeklyTarget.clamp(1, 6);
     _monthlyTarget = monthlyTarget.clamp(1, 30);
     _customIntervalDays = customIntervalDays.clamp(1, 365);
@@ -787,6 +796,7 @@ class StateProvider extends ChangeNotifier {
     _weeklyTarget = 1;
     _monthlyTarget = 1;
     _customIntervalDays = 2;
+    _showIfMissed = false;
     _selectedDaysAWeek.clear();
     _selectedDaysAMonth.clear();
     _selectedPremadeHabitType = null;

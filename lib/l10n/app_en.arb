@@ -1302,6 +1302,8 @@
   "startsAt": "Starts at:",
   "endsAt": "Ends at:",
   "timeRangeSameTimes": "Start and end time can't be the same",
+  "showIfMissed": "Show again if missed",
+  "showIfMissedDesc": "If you miss a scheduled day, keep showing this habit every day until you complete it, then repeat the interval from that day",
   "supportBannerText": "Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.",
   "supportSeeWays": "See ways to support",
   "supportAlreadyDonated": "I already donated",

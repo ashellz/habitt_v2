@@ -1277,6 +1277,8 @@
   "startsAt": "Inizia alle:",
   "endsAt": "Finisce alle:",
   "timeRangeSameTimes": "L'orario di inizio e di fine non possono coincidere",
+  "showIfMissed": "Mostra di nuovo se saltata",
+  "showIfMissedDesc": "Se salti un giorno programmato, l'abitudine verrà mostrata ogni giorno finché non la completi; poi l'intervallo riparte da quel giorno",
   "supportBannerText": "Habitt non ha pubblicità, tracciamento né account. Va avanti solo se chi lo apprezza contribuisce.",
   "supportSeeWays": "Scopri come sostenere",
   "supportAlreadyDonated": "Ho già donato",

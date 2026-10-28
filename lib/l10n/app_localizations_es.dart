@@ -3529,6 +3529,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'La hora de inicio y la de fin no pueden ser iguales';
 
   @override
+  String get showIfMissed => 'Mostrar de nuevo si se pierde';
+
+  @override
+  String get showIfMissedDesc =>
+      'Si te saltas un día programado, el hábito se seguirá mostrando cada día hasta que lo completes; después el intervalo se cuenta desde ese día';
+
+  @override
   String get supportBannerText =>
       'Habitt no tiene anuncios, rastreo ni cuentas. Solo sigue adelante si quienes lo disfrutan contribuyen.';
 

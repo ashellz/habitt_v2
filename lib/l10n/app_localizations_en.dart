@@ -3507,6 +3507,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeRangeSameTimes => 'Start and end time can\'t be the same';
 
   @override
+  String get showIfMissed => 'Show again if missed';
+
+  @override
+  String get showIfMissedDesc =>
+      'If you miss a scheduled day, keep showing this habit every day until you complete it, then repeat the interval from that day';
+
+  @override
   String get supportBannerText =>
       'Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.';
 

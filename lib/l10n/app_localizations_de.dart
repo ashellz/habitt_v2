@@ -3540,6 +3540,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Start- und Endzeit dürfen nicht gleich sein';
 
   @override
+  String get showIfMissed => 'Erneut anzeigen, wenn verpasst';
+
+  @override
+  String get showIfMissedDesc =>
+      'Wenn du einen geplanten Tag verpasst, wird die Gewohnheit täglich angezeigt, bis du sie erledigst. Danach beginnt das Intervall ab diesem Tag neu';
+
+  @override
   String get supportBannerText =>
       'Habitt hat keine Werbung, kein Tracking und kein Konto. Es besteht nur weiter, wenn Menschen, die es mögen, etwas beitragen.';
 
