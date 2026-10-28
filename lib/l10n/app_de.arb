@@ -1027,10 +1027,13 @@
   "streakPraiseExtra3": "Hut ab vor dir!",
   "backAtIt": "Wieder dabei",
   "timeForHabits": "Zeit für Gewohnheiten?",
+  "notificationDismissAction": "Ausschalten",
   "notificationCompleteAction": "Erledigt",
   "notificationSoundSettingTitle": "Benachrichtigungston",
   "notificationSoundSettingSubtitle": "Ton für Erinnerungen",
   "habitSoundTitle": "Erinnerungston",
+  "habitAlarmTitle": "Alarm",
+  "habitAlarmSubtitle": "Klingelt, bis du ihn ausschaltest. Ideal für dringende Gewohnheiten wie Medikamente.",
   "useGlobalDefaultSound": "Standard verwenden",
   "soundNumbered": "Ton {number}",
   "notificationSoundAppDefault": "App-Standard",
@@ -1291,5 +1294,8 @@
   "supportSheetTitle": "Kostenlos für alle",
   "supportSheetDesc": "Farbthemen und Cloud-Sicherung sind für alle kostenlos. Unterstützer halten Habitt am Laufen.",
   "supportNotNow": "Nicht jetzt",
-  "supportHabittRow": "Unterstütze Habitt"
+  "supportHabittRow": "Unterstütze Habitt",
+  "notificationsOffInSystemTitle": "Benachrichtigungen sind ausgeschaltet",
+  "notificationsOffInSystemDesc": "Habitt kann keine Erinnerungen senden, weil Benachrichtigungen in den Geräteeinstellungen für die App ausgeschaltet sind.",
+  "openSettings": "Einstellungen öffnen"
 }

@@ -24,6 +24,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       categoryId: (fields[4] as num).toInt(),
       order: fields[36] == null ? 0 : (fields[36] as num).toInt(),
       optionalOrder: fields[53] == null ? 0 : (fields[53] as num).toInt(),
+      isAlarm: fields[54] == null ? false : fields[54] as bool,
       amountLabel:
           fields[13] == null
               ? AmountLabelPreset.defaultAmountLabel
@@ -79,7 +80,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(51)
+      ..writeByte(52)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -181,7 +182,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(52)
       ..write(obj.healthManualOverride)
       ..writeByte(53)
-      ..write(obj.optionalOrder);
+      ..write(obj.optionalOrder)
+      ..writeByte(54)
+      ..write(obj.isAlarm);
   }
 
   @override

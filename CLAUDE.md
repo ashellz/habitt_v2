@@ -94,6 +94,10 @@ The backup/sync system (Google Drive and iCloud cloud backends, plus local file 
 
 Selectable stock notification sounds (global default + per-habit override) are implemented via one channel per sound. To add a new sound or understand the system, see [`docs/notification_sounds.md`](docs/notification_sounds.md).
 
+### Habit Alarms
+
+Habits can be set to "alarm" instead of a normal notification (rings until dismissed). Documented at [`docs/habit_alarms.md`](docs/habit_alarms.md).
+
 ### Support Asks
 
 Where and how often the app asks for support (main-page banner, streak milestone card, support sheet, review prompt), the shared daily ask budget, the "I already donated" flag and all their local state are documented in full at [`docs/support_asks.md`](docs/support_asks.md). Read it before touching `SupportProvider`, `AskBudget`, `runStreakMoment` or any support surface.

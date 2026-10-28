@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 54
+    nextIndex: 55
     fields:
       id:
         index: 0
@@ -109,6 +109,8 @@ types:
         index: 52
       optionalOrder:
         index: 53
+      isAlarm:
+        index: 54
   Day:
     typeId: 1
     nextIndex: 4

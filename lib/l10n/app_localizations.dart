@@ -4504,6 +4504,12 @@ abstract class AppLocalizations {
   /// **'Time for habits?'**
   String get timeForHabits;
 
+  /// No description provided for @notificationDismissAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get notificationDismissAction;
+
   /// No description provided for @notificationCompleteAction.
   ///
   /// In en, this message translates to:
@@ -4527,6 +4533,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminder sound'**
   String get habitSoundTitle;
+
+  /// No description provided for @habitAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get habitAlarmTitle;
+
+  /// No description provided for @habitAlarmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps ringing until you dismiss it. Best for urgent habits like medicine.'**
+  String get habitAlarmSubtitle;
 
   /// No description provided for @useGlobalDefaultSound.
   ///
@@ -6034,6 +6052,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Support Habitt'**
   String get supportHabittRow;
+
+  /// No description provided for @notificationsOffInSystemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are turned off'**
+  String get notificationsOffInSystemTitle;
+
+  /// No description provided for @notificationsOffInSystemDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt can\'t send reminders because notifications are turned off for it in your device settings.'**
+  String get notificationsOffInSystemDesc;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
 }
 
 class _AppLocalizationsDelegate

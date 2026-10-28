@@ -2668,6 +2668,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeForHabits => 'Time for habits?';
 
   @override
+  String get notificationDismissAction => 'Dismiss';
+
+  @override
   String get notificationCompleteAction => 'Complete';
 
   @override
@@ -2678,6 +2681,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitSoundTitle => 'Reminder sound';
+
+  @override
+  String get habitAlarmTitle => 'Alarm';
+
+  @override
+  String get habitAlarmSubtitle =>
+      'Keeps ringing until you dismiss it. Best for urgent habits like medicine.';
 
   @override
   String get useGlobalDefaultSound => 'Use global default';
@@ -3553,4 +3563,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportHabittRow => 'Support Habitt';
+
+  @override
+  String get notificationsOffInSystemTitle => 'Notifications are turned off';
+
+  @override
+  String get notificationsOffInSystemDesc =>
+      'Habitt can\'t send reminders because notifications are turned off for it in your device settings.';
+
+  @override
+  String get openSettings => 'Open settings';
 }

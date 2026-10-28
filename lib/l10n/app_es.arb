@@ -1027,10 +1027,13 @@
   "streakPraiseExtra3": "¡Me quito el sombrero!",
   "backAtIt": "De vuelta a ello",
   "timeForHabits": "¿Hora de hábitos?",
+  "notificationDismissAction": "Descartar",
   "notificationCompleteAction": "Completar",
   "notificationSoundSettingTitle": "Sonido de notificación",
   "notificationSoundSettingSubtitle": "Sonido de los recordatorios",
   "habitSoundTitle": "Sonido del recordatorio",
+  "habitAlarmTitle": "Alarma",
+  "habitAlarmSubtitle": "Suena hasta que la descartes. Ideal para hábitos urgentes como la medicación.",
   "useGlobalDefaultSound": "Usar predeterminado",
   "soundNumbered": "Sonido {number}",
   "notificationSoundAppDefault": "App",
@@ -1291,5 +1294,8 @@
   "supportSheetTitle": "Gratis para todos",
   "supportSheetDesc": "Los temas y la copia de seguridad en la nube son gratis para todos. Quienes apoyan mantienen Habitt en marcha.",
   "supportNotNow": "Ahora no",
-  "supportHabittRow": "Apoya a Habitt"
+  "supportHabittRow": "Apoya a Habitt",
+  "notificationsOffInSystemTitle": "Las notificaciones están desactivadas",
+  "notificationsOffInSystemDesc": "Habitt no puede enviar recordatorios porque las notificaciones están desactivadas para la app en los ajustes del dispositivo.",
+  "openSettings": "Abrir ajustes"
 }

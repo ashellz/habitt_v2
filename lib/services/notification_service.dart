@@ -1,13 +1,18 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
+import 'package:habitt/services/alarm_kit_service.dart';
 import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
 import 'package:habitt/util/custom_amount_label.dart';
+import 'package:habitt/widgets/notification/system_notifications_disabled_dialog.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -25,6 +30,13 @@ class NotificationService {
   static const String _timerCompletePayloadTypeValue = 'timer_complete';
   static const String _timerCompletedChannelKey = 'timer_completed_channel';
 
+  /// Channel for habits set to "alarm": max importance, system alarm ringtone,
+  /// bypasses Do Not Disturb. See docs/habit_alarms.md.
+  static const String alarmChannelKey = 'habit_alarm_channel';
+
+  /// Action button key for the "Dismiss" button on alarm reminders.
+  static const String dismissActionKey = 'DISMISS_ALARM';
+
   /// Action button key for the "Complete" button on habit reminders.
   static const String completeActionKey = 'COMPLETE';
 
@@ -36,8 +48,16 @@ class NotificationService {
       '${day.day.toString().padLeft(2, '0')}';
 
   static List<NotificationActionButton> _habitActionButtons(
-    AppLocalizations localizations,
-  ) => [
+    AppLocalizations localizations, {
+    bool isAlarm = false,
+  }) => [
+    if (isAlarm)
+      NotificationActionButton(
+        key: dismissActionKey,
+        label: localizations.notificationDismissAction,
+        actionType: ActionType.DismissAction,
+        autoDismissible: true,
+      ),
     NotificationActionButton(
       key: completeActionKey,
       label: localizations.notificationCompleteAction,
@@ -51,15 +71,79 @@ class NotificationService {
   /// threading it through every call site.
   static String globalSoundKey = NotificationSounds.defaultKey;
 
-  /// Request notification permissions
+  static const MethodChannel _statusChannel = MethodChannel(
+    'habitt/notification_status',
+  );
+
+  /// iOS only: notifications are turned off for Habitt in the OS, so the system
+  /// prompt can't be shown again. See `HabitNotificationStatusBridge` in
+  /// `ios/Runner/AppDelegate.swift`.
+  static Future<bool> isPermissionDeniedInSystem() async {
+    if (!Platform.isIOS) return false;
+    try {
+      return await _statusChannel.invokeMethod<bool>('isDenied') ?? false;
+    } catch (e) {
+      debugPrint('notification status check failed: $e');
+      return false;
+    }
+  }
+
+  /// True when the user turned notifications off for Habitt in the OS settings
+  /// (on iOS, not when they were never asked).
+  static Future<bool> areDisabledInSystem() async {
+    if (Platform.isIOS) return isPermissionDeniedInSystem();
+    return !await areNotificationsAllowed();
+  }
+
+  /// True when the system prompt can't be shown anymore and only the OS
+  /// settings can allow notifications.
+  static Future<bool> cannotRequestPermission() async {
+    if (Platform.isIOS) return isPermissionDeniedInSystem();
+    final locked = await AwesomeNotifications().shouldShowRationaleToRequest();
+    return locked.isNotEmpty;
+  }
+
+  /// Request notification permissions.
+  ///
+  /// When the OS permission is denied and can't be asked again, explains how to
+  /// turn it on in the OS settings and returns false. (Requesting anyway makes
+  /// awesome_notifications wait forever on iOS 18+: it sends the user to
+  /// Settings with a call iOS ignores, then waits for them to come back.)
   static Future<bool> requestPermissions(BuildContext context) async {
     final isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isAllowed) {
-      final allowed =
-          await AwesomeNotifications().requestPermissionToSendNotifications();
-      return allowed;
+    if (isAllowed) return true;
+
+    if (await isPermissionDeniedInSystem()) {
+      if (context.mounted) await showSystemNotificationsDisabledDialog(context);
+      return false;
     }
-    return true;
+
+    return await AwesomeNotifications().requestPermissionToSendNotifications();
+  }
+
+  /// Asks for the extra permissions alarm-style reminders need: full-screen
+  /// intent and exact alarms (Android), critical alerts (iOS, only honoured
+  /// when the app has Apple's entitlement) and Do Not Disturb override.
+  /// Denial is not fatal: alarms then degrade to high-priority notifications.
+  static Future<void> requestAlarmPermissions() async {
+    // iOS 26+: AlarmKit is the real alarm; it has its own permission prompt.
+    await AlarmKitService.requestAuthorization();
+    try {
+      await AwesomeNotifications().requestPermissionToSendNotifications(
+        channelKey: alarmChannelKey,
+        permissions: const [
+          NotificationPermission.Alert,
+          NotificationPermission.Sound,
+          NotificationPermission.Vibration,
+          NotificationPermission.FullScreenIntent,
+          NotificationPermission.PreciseAlarms,
+          NotificationPermission.CriticalAlert,
+          NotificationPermission.OverrideDnD,
+        ],
+      );
+    } catch (e) {
+      debugPrint('alarm permission request failed: $e');
+    }
   }
 
   /// Check if notifications are allowed
@@ -254,6 +338,10 @@ class NotificationService {
       return;
     }
 
+    // iOS 26+ with permission: schedule a real AlarmKit alarm instead of a
+    // notification (rings through silent/Focus until stopped).
+    final useAlarmKit = habit.isAlarm && await AlarmKitService.isAvailable();
+
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day);
 
@@ -299,17 +387,38 @@ class NotificationService {
           ),
         );
 
+        if (useAlarmKit) {
+          final scheduled = await AlarmKitService.schedule(
+            id: notificationId,
+            at: scheduledAt,
+            title: text.title,
+            stopLabel: localizations.notificationDismissAction,
+          );
+          if (scheduled) continue;
+        }
+
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: notificationId,
-            channelKey: NotificationSounds.channelForKeyOrDefault(
-              habit.soundKey ?? globalSoundKey,
-            ),
+            channelKey:
+                habit.isAlarm
+                    ? alarmChannelKey
+                    : NotificationSounds.channelForKeyOrDefault(
+                      habit.soundKey ?? globalSoundKey,
+                    ),
             title: text.title,
             body: text.description,
             notificationLayout: NotificationLayout.Default,
             wakeUpScreen: true,
-            category: NotificationCategory.Reminder,
+            category:
+                habit.isAlarm
+                    ? NotificationCategory.Alarm
+                    : NotificationCategory.Reminder,
+            // Alarms keep ringing until the user acts: no swipe-away, show
+            // over the lock screen, and break through Do Not Disturb.
+            fullScreenIntent: habit.isAlarm,
+            autoDismissible: !habit.isAlarm,
+            locked: habit.isAlarm,
             payload: {
               _habitPayloadKey: habit.id.toString(),
               _habitPayloadTypeKey: _habitPayloadTypeValue,
@@ -322,7 +431,7 @@ class NotificationService {
           // notification still opens the habit.
           actionButtons:
               habit.healthMetric == null
-                  ? _habitActionButtons(localizations)
+                  ? _habitActionButtons(localizations, isAlarm: habit.isAlarm)
                   : null,
           schedule: NotificationCalendar(
             year: day.year,
@@ -355,6 +464,7 @@ class NotificationService {
       for (final slot in habit.notificationTimes) {
         final id = _getHabitNotificationId(habit.id, slot.id, day);
         await AwesomeNotifications().cancel(id);
+        await AlarmKitService.cancel(id);
       }
     }
   }
@@ -370,10 +480,12 @@ class NotificationService {
     for (final slot in habit.notificationTimes) {
       final id = _getHabitNotificationId(habit.id, slot.id, normalizedDay);
       await AwesomeNotifications().cancel(id);
+      await AlarmKitService.cancel(id);
     }
   }
 
   static Future<void> cancelAllHabitNotifications() async {
+    await AlarmKitService.cancelAll();
     final scheduled = await AwesomeNotifications().listScheduledNotifications();
     for (final model in scheduled) {
       final content = model.content;

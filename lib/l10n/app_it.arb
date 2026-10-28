@@ -1027,10 +1027,13 @@
   "streakPraiseExtra3": "Tanto di cappello!",
   "backAtIt": "Di nuovo all'opera",
   "timeForHabits": "Ora delle abitudini?",
+  "notificationDismissAction": "Chiudi",
   "notificationCompleteAction": "Completa",
   "notificationSoundSettingTitle": "Suono di notifica",
   "notificationSoundSettingSubtitle": "Suono per i promemoria",
   "habitSoundTitle": "Suono del promemoria",
+  "habitAlarmTitle": "Sveglia",
+  "habitAlarmSubtitle": "Suona finché non la chiudi. Ideale per abitudini urgenti come i farmaci.",
   "useGlobalDefaultSound": "Usa predefinito",
   "soundNumbered": "Suono {number}",
   "notificationSoundAppDefault": "App",
@@ -1291,5 +1294,8 @@
   "supportSheetTitle": "Gratis per tutti",
   "supportSheetDesc": "I temi e il backup nel cloud sono gratuiti per tutti. Sono i sostenitori a far andare avanti Habitt.",
   "supportNotNow": "Non ora",
-  "supportHabittRow": "Sostieni Habitt"
+  "supportHabittRow": "Sostieni Habitt",
+  "notificationsOffInSystemTitle": "Le notifiche sono disattivate",
+  "notificationsOffInSystemDesc": "Habitt non può inviare promemoria perché le notifiche sono disattivate per l'app nelle impostazioni del dispositivo.",
+  "openSettings": "Apri impostazioni"
 }

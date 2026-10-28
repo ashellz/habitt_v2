@@ -1018,10 +1018,13 @@
   "streakPraiseExtra3": "Ejvallah, svaka čast!",
   "backAtIt": "Opet u akciji",
   "timeForHabits": "Vrijeme za navike?",
+  "notificationDismissAction": "Isključi",
   "notificationCompleteAction": "Završi",
   "notificationSoundSettingTitle": "Zvuk obavijesti",
   "notificationSoundSettingSubtitle": "Zvuk za podsjetnike",
   "habitSoundTitle": "Zvuk podsjetnika",
+  "habitAlarmTitle": "Alarm",
+  "habitAlarmSubtitle": "Zvoni dok ga ne isključiš. Idealno za hitne navike poput uzimanja lijekova.",
   "useGlobalDefaultSound": "Koristi zadani zvuk",
   "soundNumbered": "Zvuk {number}",
   "notificationSoundAppDefault": "Aplikacija",
@@ -1281,5 +1284,8 @@
   "supportSheetTitle": "Besplatno za sve",
   "supportSheetDesc": "Teme i sigurnosna kopija u oblaku su besplatne za sve. Podržavaoci su ono što drži Habitt u životu.",
   "supportNotNow": "Ne sada",
-  "supportHabittRow": "Podrži Habitt"
+  "supportHabittRow": "Podrži Habitt",
+  "notificationsOffInSystemTitle": "Obavijesti su isključene",
+  "notificationsOffInSystemDesc": "Habitt ne može slati podsjetnike jer su obavijesti za aplikaciju isključene u postavkama uređaja.",
+  "openSettings": "Otvori postavke"
 }

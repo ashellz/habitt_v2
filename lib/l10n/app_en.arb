@@ -1030,10 +1030,13 @@
   "streakPraiseExtra3": "Hats off to you!",
   "backAtIt": "Back at it",
   "timeForHabits": "Time for habits?",
+  "notificationDismissAction": "Dismiss",
   "notificationCompleteAction": "Complete",
   "notificationSoundSettingTitle": "Notification sound",
   "notificationSoundSettingSubtitle": "Sound played for reminders",
   "habitSoundTitle": "Reminder sound",
+  "habitAlarmTitle": "Alarm",
+  "habitAlarmSubtitle": "Keeps ringing until you dismiss it. Best for urgent habits like medicine.",
   "useGlobalDefaultSound": "Use global default",
   "soundNumbered": "Sound {number}",
   "@soundNumbered": {
@@ -1316,5 +1319,8 @@
   "supportSheetTitle": "Free for everyone",
   "supportSheetDesc": "Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.",
   "supportNotNow": "Not now",
-  "supportHabittRow": "Support Habitt"
+  "supportHabittRow": "Support Habitt",
+  "notificationsOffInSystemTitle": "Notifications are turned off",
+  "notificationsOffInSystemDesc": "Habitt can't send reminders because notifications are turned off for it in your device settings.",
+  "openSettings": "Open settings"
 }
