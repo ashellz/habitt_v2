@@ -104,8 +104,7 @@ class HomeHabitsView extends StatelessWidget {
                           children: [
                             if (prefs.showCategoriesOnMainPage)
                               NewCategoriesList(),
-                            if (prefs.showDemoHabits)
-                              const DemoHabitsSection(),
+                            if (prefs.showDemoHabits) const DemoHabitsSection(),
                             const Padding(
                               padding: EdgeInsets.only(
                                 left: 16,

@@ -1319,5 +1319,8 @@
   "supportSheetTitle": "Free for everyone",
   "supportSheetDesc": "Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.",
   "supportNotNow": "Not now",
-  "supportHabittRow": "Support Habitt"
+  "supportHabittRow": "Support Habitt",
+  "notificationsOffInSystemTitle": "Notifications are turned off",
+  "notificationsOffInSystemDesc": "Habitt can't send reminders because notifications are turned off for it in your device settings.",
+  "openSettings": "Open settings"
 }

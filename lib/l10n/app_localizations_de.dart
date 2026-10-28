@@ -2708,7 +2708,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get habitAlarmTitle => 'Alarm';
 
   @override
-  String get habitAlarmSubtitle => 'Klingelt, bis du ihn ausschaltest. Ideal für dringende Gewohnheiten wie Medikamente.';
+  String get habitAlarmSubtitle =>
+      'Klingelt, bis du ihn ausschaltest. Ideal für dringende Gewohnheiten wie Medikamente.';
 
   @override
   String get useGlobalDefaultSound => 'Standard verwenden';
@@ -3595,4 +3596,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get supportHabittRow => 'Unterstütze Habitt';
+
+  @override
+  String get notificationsOffInSystemTitle =>
+      'Benachrichtigungen sind ausgeschaltet';
+
+  @override
+  String get notificationsOffInSystemDesc =>
+      'Habitt kann keine Erinnerungen senden, weil Benachrichtigungen in den Geräteeinstellungen für die App ausgeschaltet sind.';
+
+  @override
+  String get openSettings => 'Einstellungen öffnen';
 }

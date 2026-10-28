@@ -48,6 +48,9 @@ import shared_preferences_foundation
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HabitAlarmKit") {
       HabitAlarmKitBridge.register(messenger: registrar.messenger())
     }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HabitNotificationStatus") {
+      HabitNotificationStatusBridge.register(messenger: registrar.messenger())
+    }
   }
 
   // awesome_notifications forwards these to its Flutter channel without
@@ -80,6 +83,28 @@ import shared_preferences_foundation
     } else {
       DispatchQueue.main.async {
         super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
+      }
+    }
+  }
+}
+
+// MARK: - Notification permission status
+//
+// awesome_notifications can't tell "never asked" from "denied" (both are just
+// "not allowed"), and for a denied user its permission request waits forever
+// for them to come back from Settings. Dart asks this first so it only
+// requests the permission when the system prompt can still be shown.
+
+enum HabitNotificationStatusBridge {
+  static func register(messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "habitt/notification_status", binaryMessenger: messenger)
+    channel.setMethodCallHandler { call, result in
+      guard call.method == "isDenied" else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
+      UNUserNotificationCenter.current().getNotificationSettings { settings in
+        DispatchQueue.main.async { result(settings.authorizationStatus == .denied) }
       }
     }
   }

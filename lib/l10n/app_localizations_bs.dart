@@ -2683,7 +2683,8 @@ class AppLocalizationsBs extends AppLocalizations {
   String get habitAlarmTitle => 'Alarm';
 
   @override
-  String get habitAlarmSubtitle => 'Zvoni dok ga ne isključiš. Idealno za hitne navike poput uzimanja lijekova.';
+  String get habitAlarmSubtitle =>
+      'Zvoni dok ga ne isključiš. Idealno za hitne navike poput uzimanja lijekova.';
 
   @override
   String get useGlobalDefaultSound => 'Koristi zadani zvuk';
@@ -3561,4 +3562,14 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get supportHabittRow => 'Podrži Habitt';
+
+  @override
+  String get notificationsOffInSystemTitle => 'Obavijesti su isključene';
+
+  @override
+  String get notificationsOffInSystemDesc =>
+      'Habitt ne može slati podsjetnike jer su obavijesti za aplikaciju isključene u postavkama uređaja.';
+
+  @override
+  String get openSettings => 'Otvori postavke';
 }

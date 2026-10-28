@@ -15,6 +15,7 @@ import 'package:habitt/widgets/notification/sound_picker_sheet.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/widgets/notification/system_notifications_banner.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
@@ -99,7 +100,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   // Runs once after first frame. If OS permissions have been revoked since app
-  // start, requests them. If the user denies, disables everything.
+  // start, requests them, or tells the user to turn them on in the OS settings.
   Future<void> _checkPermissionsOnOpen() async {
     if (_isCheckingPermissions || !mounted) return;
     _isCheckingPermissions = true;
@@ -120,39 +121,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       return;
     }
 
-    final granted = await NotificationService.requestPermissions(context);
-    if (!mounted) {
-      _isCheckingPermissions = false;
-      return;
-    }
-
-    if (!granted) {
-      final np = context.read<NotificationsProvider>();
-      final habitProvider = context.read<HabitProvider>();
-      await np.applyGlobalToggles(
-        context: context,
-        masterEnabled: false,
-        periodsEnabled: false,
-        habitsEnabled: false,
-        habits: habitProvider.habits,
-        appearsOnDay: habitProvider.appearsOnDay,
-      );
-      if (!mounted) {
-        _isCheckingPermissions = false;
-        return;
-      }
-      setState(() {
-        _draftMasterEnabled = false;
-        _draftPeriodEnabled = false;
-        _draftHabitsEnabled = false;
-        for (final period in NotificationPeriod.values) {
-          final cur = _draftSettings[period];
-          if (cur != null) {
-            _draftSettings[period] = cur.copyWith(enabled: false);
-          }
-        }
-      });
-    }
+    // explains it with a dialog when it was denied in the OS, the toggles stay
+    // as the user set them
+    await NotificationService.requestPermissions(context);
 
     _isCheckingPermissions = false;
   }
@@ -358,6 +329,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         body: ListView(
           children: [
             _topBar(cp, np, hasUnsavedChanges, loc),
+            const SystemNotificationsBanner(),
             SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

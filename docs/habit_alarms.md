@@ -1,9 +1,11 @@
 # Habit Alarms
 
 Urgent habits (e.g. medicine) can be switched from a normal notification to an
-alarm-style reminder with the **Alarm** toggle in the habit sheet's
-notifications section. The alarm toggle replaces the per-habit sound picker
-(alarms always use the system alarm ringtone).
+alarm-style reminder with the **Alarm** checkbox in the habit sheet's
+notifications section. It only shows while the Notifications toggle is on, and
+it doesn't change that toggle: it just turns the habit's reminders into alarms.
+Checking it replaces the per-habit sound picker (alarms always use the system
+alarm ringtone).
 
 ## Data
 
@@ -23,8 +25,8 @@ When `habit.isAlarm`:
 
 ## Permissions
 
-`NotificationService.requestAlarmPermissions()` runs when the toggle is turned
-on and asks for FullScreenIntent, PreciseAlarms, CriticalAlert and OverrideDnD.
+`NotificationService.requestAlarmPermissions()` runs when the checkbox is checked
+and asks for FullScreenIntent, PreciseAlarms, CriticalAlert and OverrideDnD.
 Denial is not fatal; the reminder degrades to a high-priority notification.
 
 - **Android:** manifest declares `USE_FULL_SCREEN_INTENT` and
@@ -35,7 +37,7 @@ Denial is not fatal; the reminder degrades to a high-priority notification.
   `HabitAlarmKitBridge` in `ios/Runner/AppDelegate.swift` (method channel
   `habitt/alarmkit`) + `lib/services/alarm_kit_service.dart`. Needs
   `NSAlarmKitUsageDescription` in `Info.plist`; permission is requested when the
-  Alarm toggle is turned on. Alarm ids = the habit notification ids (mapped to a
+  Alarm checkbox is checked. Alarm ids = the habit notification ids (mapped to a
   deterministic UUID), cancelled alongside them. If AlarmKit is unavailable or
   denied, scheduling falls back to the notification path below. Only a Stop
   button is shown (no Complete/Open from the alarm; no countdown, so no widget
@@ -44,6 +46,33 @@ Denial is not fatal; the reminder degrades to a high-priority notification.
   (`com.apple.developer.usernotifications.critical-alerts`) must be requested
   from Apple and added to the app; without it the alarm is a normal
   notification, and iOS cannot loop a sound until dismissed either way.
+
+## Notifications turned off
+
+Saving a habit with notifications on never changes the habit's own setting
+(`_checkNotificationPermissions` in `habit_sheet.dart`). If reminders can't
+fire, the user is told instead, in this order:
+
+1. a dialog when Habitt's own notification toggles are off (turn on);
+2. a dialog with an **Open settings** button when notifications are denied in
+   the OS and can't be asked again
+   (`showSystemNotificationsDisabledDialog`).
+
+The habit starts working once notifications are allowed. The same OS dialog is
+shown by `NotificationService.requestPermissions` (settings page, toggles,
+onboarding) instead of requesting again.
+
+The notification settings page also shows `SystemNotificationsBanner` at the top
+while notifications are turned off in the OS: not dismissible, re-checked when
+the app resumes, with an **Open settings** button.
+
+iOS 18+ notes: awesome_notifications opens the Settings app with the
+deprecated `openURL:`, which iOS ignores, so `openSystemNotificationSettings`
+(`lib/util/`) uses permission_handler's `openAppSettings` on iOS. For a denied
+user its permission request also waits forever for them to come back from
+Settings, so iOS asks the OS status first (`habitt/notification_status` channel,
+`HabitNotificationStatusBridge` in `AppDelegate.swift`) and only requests when
+the prompt can still be shown.
 
 ## Not verified
 

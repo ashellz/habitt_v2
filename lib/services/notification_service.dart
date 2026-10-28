@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/notification.dart';
@@ -9,6 +12,7 @@ import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
 import 'package:habitt/util/custom_amount_label.dart';
+import 'package:habitt/widgets/notification/system_notifications_disabled_dialog.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -67,15 +71,54 @@ class NotificationService {
   /// threading it through every call site.
   static String globalSoundKey = NotificationSounds.defaultKey;
 
-  /// Request notification permissions
+  static const MethodChannel _statusChannel = MethodChannel(
+    'habitt/notification_status',
+  );
+
+  /// iOS only: notifications are turned off for Habitt in the OS, so the system
+  /// prompt can't be shown again. See `HabitNotificationStatusBridge` in
+  /// `ios/Runner/AppDelegate.swift`.
+  static Future<bool> isPermissionDeniedInSystem() async {
+    if (!Platform.isIOS) return false;
+    try {
+      return await _statusChannel.invokeMethod<bool>('isDenied') ?? false;
+    } catch (e) {
+      debugPrint('notification status check failed: $e');
+      return false;
+    }
+  }
+
+  /// True when the user turned notifications off for Habitt in the OS settings
+  /// (on iOS, not when they were never asked).
+  static Future<bool> areDisabledInSystem() async {
+    if (Platform.isIOS) return isPermissionDeniedInSystem();
+    return !await areNotificationsAllowed();
+  }
+
+  /// True when the system prompt can't be shown anymore and only the OS
+  /// settings can allow notifications.
+  static Future<bool> cannotRequestPermission() async {
+    if (Platform.isIOS) return isPermissionDeniedInSystem();
+    final locked = await AwesomeNotifications().shouldShowRationaleToRequest();
+    return locked.isNotEmpty;
+  }
+
+  /// Request notification permissions.
+  ///
+  /// When the OS permission is denied and can't be asked again, explains how to
+  /// turn it on in the OS settings and returns false. (Requesting anyway makes
+  /// awesome_notifications wait forever on iOS 18+: it sends the user to
+  /// Settings with a call iOS ignores, then waits for them to come back.)
   static Future<bool> requestPermissions(BuildContext context) async {
     final isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isAllowed) {
-      final allowed =
-          await AwesomeNotifications().requestPermissionToSendNotifications();
-      return allowed;
+    if (isAllowed) return true;
+
+    if (await isPermissionDeniedInSystem()) {
+      if (context.mounted) await showSystemNotificationsDisabledDialog(context);
+      return false;
     }
-    return true;
+
+    return await AwesomeNotifications().requestPermissionToSendNotifications();
   }
 
   /// Asks for the extra permissions alarm-style reminders need: full-screen

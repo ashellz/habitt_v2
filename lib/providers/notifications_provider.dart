@@ -452,7 +452,9 @@ class NotificationsProvider extends ChangeNotifier {
     if (!_masterEnabled) {
       _masterEnabled = true;
       await _prefs?.setBool(_masterKey, true);
-      await NotificationService.scheduleAllNotifications(this);
+      if (await NotificationService.areNotificationsAllowed()) {
+        await NotificationService.scheduleAllNotifications(this);
+      }
     }
     if (!_habitsEnabled) {
       _habitsEnabled = true;

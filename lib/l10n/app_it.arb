@@ -1294,5 +1294,8 @@
   "supportSheetTitle": "Gratis per tutti",
   "supportSheetDesc": "I temi e il backup nel cloud sono gratuiti per tutti. Sono i sostenitori a far andare avanti Habitt.",
   "supportNotNow": "Non ora",
-  "supportHabittRow": "Sostieni Habitt"
+  "supportHabittRow": "Sostieni Habitt",
+  "notificationsOffInSystemTitle": "Le notifiche sono disattivate",
+  "notificationsOffInSystemDesc": "Habitt non può inviare promemoria perché le notifiche sono disattivate per l'app nelle impostazioni del dispositivo.",
+  "openSettings": "Apri impostazioni"
 }

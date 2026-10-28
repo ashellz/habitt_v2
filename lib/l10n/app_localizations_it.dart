@@ -2707,7 +2707,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get habitAlarmTitle => 'Sveglia';
 
   @override
-  String get habitAlarmSubtitle => 'Suona finché non la chiudi. Ideale per abitudini urgenti come i farmaci.';
+  String get habitAlarmSubtitle =>
+      'Suona finché non la chiudi. Ideale per abitudini urgenti come i farmaci.';
 
   @override
   String get useGlobalDefaultSound => 'Usa predefinito';
@@ -3592,4 +3593,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get supportHabittRow => 'Sostieni Habitt';
+
+  @override
+  String get notificationsOffInSystemTitle => 'Le notifiche sono disattivate';
+
+  @override
+  String get notificationsOffInSystemDesc =>
+      'Habitt non può inviare promemoria perché le notifiche sono disattivate per l\'app nelle impostazioni del dispositivo.';
+
+  @override
+  String get openSettings => 'Apri impostazioni';
 }

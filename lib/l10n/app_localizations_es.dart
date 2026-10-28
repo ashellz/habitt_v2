@@ -2701,7 +2701,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get habitAlarmTitle => 'Alarma';
 
   @override
-  String get habitAlarmSubtitle => 'Suena hasta que la descartes. Ideal para hábitos urgentes como la medicación.';
+  String get habitAlarmSubtitle =>
+      'Suena hasta que la descartes. Ideal para hábitos urgentes como la medicación.';
 
   @override
   String get useGlobalDefaultSound => 'Usar predeterminado';
@@ -3584,4 +3585,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get supportHabittRow => 'Apoya a Habitt';
+
+  @override
+  String get notificationsOffInSystemTitle =>
+      'Las notificaciones están desactivadas';
+
+  @override
+  String get notificationsOffInSystemDesc =>
+      'Habitt no puede enviar recordatorios porque las notificaciones están desactivadas para la app en los ajustes del dispositivo.';
+
+  @override
+  String get openSettings => 'Abrir ajustes';
 }

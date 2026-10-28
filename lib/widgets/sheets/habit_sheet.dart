@@ -37,6 +37,7 @@ import 'package:habitt/widgets/habit_details/new/editable/select_habit_schedule_
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
 import 'package:habitt/widgets/notification/notification_time_row.dart';
+import 'package:habitt/widgets/notification/system_notifications_disabled_dialog.dart';
 import 'package:habitt/widgets/notification/sound_picker_sheet.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
@@ -505,12 +506,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
-  Future<bool> _showEnableNotificationsDialog() async {
-    if (!mounted) return false;
-    final loc = AppLocalizations.of(context)!;
+  Future<bool> _showEnableNotificationsDialog(BuildContext dialogContext) async {
+    if (!dialogContext.mounted) return false;
+    final loc = AppLocalizations.of(dialogContext)!;
     bool result = false;
     await showDialogSheet(
-      context: context,
+      context: dialogContext,
       builder:
           (dialogContext) => NewDefaultDialog(
             title: loc.notificationsAreDisabled,
@@ -529,61 +530,42 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     return result;
   }
 
-  // Fire-and-forget after save: request OS permission and disable habit notifications
-  // if the user ultimately denies.
-  // If user accepts, resave habit to trigger notification scheduling with the now-granted permission.
-  Future<void> _checkNotificationPermissions(
-    HabitProvider habitProvider,
-    Habit habit,
-  ) async {
-    final allowed = await NotificationService.areNotificationsAllowed();
-
-    if (allowed && mounted) {
-      final notificationsProvider = context.read<NotificationsProvider>();
-
-      if (notificationsProvider.areHabitNotificationsEnabled) {
-        return;
-      }
-
-      // Has app permission but toggles are off
-
-      final enabled = await _showEnableNotificationsDialog();
-
-      if (!enabled) {
-        habit.notificationsEnabled = false;
-        habitProvider.updateHabit(habit);
-        return;
-      }
-
-      await notificationsProvider.enableHabitNotificationToggles();
-      await habitProvider.syncSingleHabitNotifications(habit);
-
-      return;
+  // Fire-and-forget after save: tells the user when reminders can't fire, first
+  // when Habitt's own notification toggles are off, then when notifications are
+  // turned off in the OS. The habit's own notifications setting is never
+  // changed here, it stays as the user saved it and starts working once
+  // notifications are allowed.
+  //
+  // The sheet is already closing by now, so everything it needs is passed in:
+  // [dialogContext] is the root navigator's, which outlives the sheet.
+  Future<void> _checkNotificationPermissions({
+    required HabitProvider habitProvider,
+    required NotificationsProvider notificationsProvider,
+    required BuildContext dialogContext,
+    required Habit habit,
+  }) async {
+    if (!notificationsProvider.areHabitNotificationsEnabled) {
+      final enabled = await _showEnableNotificationsDialog(dialogContext);
+      if (enabled) await notificationsProvider.enableHabitNotificationToggles();
     }
 
+    var allowed = await NotificationService.areNotificationsAllowed();
     if (!allowed) {
-      final lockedBeforeRequest =
-          await AwesomeNotifications().shouldShowRationaleToRequest();
-      if (lockedBeforeRequest.isNotEmpty) {
-        habit.notificationsEnabled = false;
-        habitProvider.updateHabit(habit);
+      if (await NotificationService.cannotRequestPermission()) {
+        if (dialogContext.mounted) {
+          await showSystemNotificationsDisabledDialog(dialogContext);
+        }
         return;
       }
 
       await AwesomeNotifications().requestPermissionToSendNotifications();
 
-      final allowedAfterRequest =
-          await NotificationService.areNotificationsAllowed();
-      if (!allowedAfterRequest) {
-        habit.notificationsEnabled = false;
-        habitProvider.updateHabit(habit);
-        return;
-      }
+      // denied in the prompt the user just saw, no need to explain it again
+      allowed = await NotificationService.areNotificationsAllowed();
+      if (!allowed) return;
+    }
 
-      if (!mounted) return;
-
-      final notificationsProvider = context.read<NotificationsProvider>();
-      await notificationsProvider.enableHabitNotificationToggles();
+    if (notificationsProvider.areHabitNotificationsEnabled) {
       await habitProvider.syncSingleHabitNotifications(habit);
     }
   }
@@ -599,6 +581,8 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     if (!mounted) return;
 
     final habitProvider = context.read<HabitProvider>();
+    final notificationsProvider = context.read<NotificationsProvider>();
+    final dialogContext = Navigator.of(context, rootNavigator: true).context;
 
     if (_isEditMode) {
       final tp = context.read<ThemeProvider>();
@@ -665,7 +649,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
       // RQ:
       if (habitNotificationsEnabled) {
-        _checkNotificationPermissions(habitProvider, habit);
+        _checkNotificationPermissions(
+          habitProvider: habitProvider,
+          notificationsProvider: notificationsProvider,
+          dialogContext: dialogContext,
+          habit: habit,
+        );
       }
       return;
     }
@@ -731,7 +720,12 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       _popSheet(result: HabitSheetCloseResult.saved);
     }
     if (habitNotificationsEnabled) {
-      _checkNotificationPermissions(habitProvider, newHabit);
+      _checkNotificationPermissions(
+        habitProvider: habitProvider,
+        notificationsProvider: notificationsProvider,
+        dialogContext: dialogContext,
+        habit: newHabit,
+      );
     }
   }
 
@@ -966,8 +960,6 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
               ],
             ),
           ),
-          _habitAlarmRow(cp, sp),
-          if (!sp.habitIsAlarm) _habitSoundRow(cp, sp),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 220),
             transitionBuilder:
@@ -978,13 +970,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             child:
                 sp.habitNotificationsEnabled
                     ? Padding(
-                      padding: EdgeInsets.only(
-                        top: sp.habitNotificationTimes.isNotEmpty ? 20 : 10,
-                      ),
+                      padding: const EdgeInsets.only(top: 12),
                       child: Column(
                         key: const ValueKey('notifications-expanded'),
                         spacing: 10,
                         children: [
+                          _habitAlarmRow(cp, sp),
+                          if (!sp.habitIsAlarm) _habitSoundRow(cp, sp),
                           ...sp.habitNotificationTimes.map(
                             (slot) => NotificationTimeRow(
                               onOpenTimeDialog: () async {
@@ -1039,39 +1031,32 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
 
   Widget _habitAlarmRow(ColorProvider cp, StateProvider sp) {
     final loc = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
-      child: Row(
-        spacing: 12,
-        children: [
-          Expanded(
-            child: Column(
-              spacing: 4,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  loc.habitAlarmTitle,
-                  style: TextStyle(
-                    color: cp.text,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+
+    void setAlarm(bool value) {
+      sp.habitIsAlarm = value;
+      if (value) NotificationService.requestAlarmPermissions();
+    }
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => setAlarm(!sp.habitIsAlarm),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                loc.habitAlarmTitle,
+                style: TextStyle(
+                  color: cp.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-                Text(
-                  loc.habitAlarmSubtitle,
-                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
-                ),
-              ],
+              ),
             ),
-          ),
-          NewDefaultSwitch(
-            value: sp.habitIsAlarm,
-            onChanged: (value) {
-              sp.habitIsAlarm = value;
-              if (value) NotificationService.requestAlarmPermissions();
-            },
-          ),
-        ],
+            AnimatedCheckbox(value: sp.habitIsAlarm, onChanged: setAlarm),
+          ],
+        ),
       ),
     );
   }
@@ -1084,7 +1069,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             ? loc.useGlobalDefaultSound
             : notificationSoundDisplayName(loc, key);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
           Expanded(

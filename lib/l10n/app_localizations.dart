@@ -6052,6 +6052,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Support Habitt'**
   String get supportHabittRow;
+
+  /// No description provided for @notificationsOffInSystemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are turned off'**
+  String get notificationsOffInSystemTitle;
+
+  /// No description provided for @notificationsOffInSystemDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt can\'t send reminders because notifications are turned off for it in your device settings.'**
+  String get notificationsOffInSystemDesc;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
 }
 
 class _AppLocalizationsDelegate

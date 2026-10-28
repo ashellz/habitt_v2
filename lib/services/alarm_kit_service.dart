@@ -13,13 +13,13 @@ class AlarmKitService {
   /// True when AlarmKit exists on this OS and the user has authorized alarms.
   static Future<bool> isAvailable() async {
     if (!Platform.isIOS) return false;
-    return _invoke<bool>('isAvailable') ?? false;
+    return await _invoke<bool>('isAvailable') ?? false;
   }
 
   /// Prompts for AlarmKit permission (iOS 26+ only).
   static Future<bool> requestAuthorization() async {
     if (!Platform.isIOS) return false;
-    return _invoke<bool>('requestAuthorization') ?? false;
+    return await _invoke<bool>('requestAuthorization') ?? false;
   }
 
   static Future<bool> schedule({

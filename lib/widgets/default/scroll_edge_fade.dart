@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 // Fades the edges of a scrollable ([child]: SingleChildScrollView, ListView...)
 // that have more content behind them: the start once scrolled away from it, the
@@ -47,6 +48,9 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
   bool _fadeStart = false;
   bool _fadeEnd = false;
 
+  // latest fades seen while the frame was being laid out, applied after it
+  ({bool start, bool end})? _deferredFades;
+
   // half a pixel of slack so a fully scrolled view doesn't flicker
   static const double _epsilon = 0.5;
   static const Duration _duration = Duration(milliseconds: 200);
@@ -68,15 +72,37 @@ class _ScrollEdgeFadeState extends State<ScrollEdgeFade> {
     }
     if (metrics.axis != widget.axis) return false;
 
-    final fadeStart = metrics.extentBefore > _epsilon;
-    final fadeEnd = metrics.extentAfter > _epsilon;
-    if (fadeStart != _fadeStart || fadeEnd != _fadeEnd) {
-      setState(() {
-        _fadeStart = fadeStart;
-        _fadeEnd = fadeEnd;
-      });
-    }
+    _setFades(
+      fadeStart: metrics.extentBefore > _epsilon,
+      fadeEnd: metrics.extentAfter > _epsilon,
+    );
     return false;
+  }
+
+  void _setFades({required bool fadeStart, required bool fadeEnd}) {
+    // the scrollable dispatches scroll notifications synchronously from its own
+    // layout when its content shrinks (e.g. a row disappearing while scrolled to
+    // the bottom), and setState isn't allowed while the frame is being laid out
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      final alreadyScheduled = _deferredFades != null;
+      _deferredFades = (start: fadeStart, end: fadeEnd);
+      if (alreadyScheduled) return;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        final fades = _deferredFades;
+        _deferredFades = null;
+        if (mounted && fades != null) {
+          _setFades(fadeStart: fades.start, fadeEnd: fades.end);
+        }
+      });
+      return;
+    }
+
+    if (fadeStart == _fadeStart && fadeEnd == _fadeEnd) return;
+    setState(() {
+      _fadeStart = fadeStart;
+      _fadeEnd = fadeEnd;
+    });
   }
 
   Shader _shader(Rect bounds, double start, double end) {
