@@ -371,6 +371,10 @@ class Habit extends HiveObject {
       amountCompleted = habit.amountCompleted;
       timestamps['amountCompleted'] = now;
     }
+    if (amountLabel != habit.amountLabel) {
+      amountLabel = habit.amountLabel;
+      timestamps['amountLabel'] = now;
+    }
     if (duration != habit.duration) {
       duration = habit.duration;
       timestamps['duration'] = now;

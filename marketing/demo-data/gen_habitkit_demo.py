@@ -4,7 +4,7 @@ today = dt.date.today()
 habits = [
   # name, icon, color, start date, base rate, done today
   ("Morning run",   "run",        "teal",   dt.date(2026,5,4), 0.78, True),
-  ("Read 20 pages", "book_open",  "amber",  dt.date(2026,4,20),0.88, False),
+  ("Read", "book_open",  "amber",  dt.date(2026,4,20),0.88, False),
   ("Drink water",   "droplets",   "sky",    dt.date(2026,4,20),0.93, True),
   ("Meditation",    "meditation", "violet", dt.date(2026,6,1), 0.82, True),
   ("Gym",           "dumbbell",   "red",    dt.date(2026,5,18),0.70, False),

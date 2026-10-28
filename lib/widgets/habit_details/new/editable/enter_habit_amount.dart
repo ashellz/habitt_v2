@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/create_amount_label.dart';
@@ -25,9 +25,7 @@ class EnterHabitAmount extends StatelessWidget {
 
     String selectedLabel =
         initialSelection ??
-        (sp.habitAmountLabelController.text.trim().isNotEmpty
-            ? sp.canonicalizeAmountLabel(sp.habitAmountLabelController.text)
-            : loc.times);
+        _canonicalForPicker(sp, loc, sp.habitAmountLabelController.text);
 
     if (!context.mounted) return;
 
@@ -44,19 +42,38 @@ class EnterHabitAmount extends StatelessWidget {
             );
           },
           onConfirm: (label) {
-            sp.habitAmountLabelController.text = sp.canonicalizeAmountLabel(
-              resolveAmountLabelForValue(
-                label,
-                sp.habitAmount,
-                loc,
-                customSingulars: sp.customSingulars,
-              ),
-            );
+            // always store the plural form, it is resolved to singular/plural
+            // for the amount wherever the label is displayed
+            final preset = AmountLabelPreset.fromLabel(label);
+            sp.habitAmountLabelController.text =
+                preset?.localizedPlural(loc) ?? label;
             Navigator.of(sheetContext).pop();
           },
         );
       },
     );
+  }
+
+  /// Maps whatever is typed in the field (singular, plural, localized) to the
+  /// canonical label used by the picker so the right pill is preselected.
+  String _canonicalForPicker(
+    StateProvider sp,
+    AppLocalizations loc,
+    String text,
+  ) {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return AmountLabelPreset.times.plural;
+
+    final preset = AmountLabelPreset.fromLocalizedLabel(trimmed, loc);
+    if (preset != null) return preset.plural;
+
+    final lower = trimmed.toLowerCase();
+    for (final custom in sp.customAmountLabels) {
+      if (lower == custom.singular || lower == custom.plural) {
+        return custom.canonical;
+      }
+    }
+    return trimmed;
   }
 
   Future<void> _showCreateAmountLabelDialog(
@@ -91,24 +108,6 @@ class EnterHabitAmount extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
     final loc = AppLocalizations.of(context)!;
-
-    final currentLabel = sp.habitAmountLabelController.text;
-    final resolvedLabel = resolveAmountLabelForValue(
-      currentLabel,
-      sp.habitAmount,
-      loc,
-      customSingulars: sp.customSingulars,
-    );
-    if (resolvedLabel != currentLabel) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!context.mounted) return;
-        if (sp.habitAmountLabelController.text != resolvedLabel) {
-          sp.habitAmountLabelController.text = sp.canonicalizeAmountLabel(
-            resolvedLabel,
-          );
-        }
-      });
-    }
 
     return Row(
       spacing: 10,

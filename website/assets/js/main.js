@@ -239,6 +239,48 @@
     return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
   }
 
+  // Same completion sounds as the app: one for a habit, another when all are done.
+  // Web Audio instead of <audio>: the timer card finishes from a setInterval, not a tap, and
+  // browsers (Safari) only let an <audio> play there if that element was already started by a
+  // tap. An AudioContext resumed by any earlier tap can play whenever.
+  var SOUND_URLS = { habit: "assets/sound/completion.mp3", all: "assets/sound/completion_all.mp3" };
+  var AudioCtx = window.AudioContext || window.webkitAudioContext;
+  var audioCtx = null, buffers = {}, fallback = {};
+  try { audioCtx = AudioCtx ? new AudioCtx() : null; } catch (e) {}
+  Object.keys(SOUND_URLS).forEach(function (name) {
+    fallback[name] = new Audio(SOUND_URLS[name]);
+    if (!audioCtx) return;
+    fetch(SOUND_URLS[name]).then(function (r) { return r.arrayBuffer(); }).then(function (data) {
+      audioCtx.decodeAudioData(data, function (buf) { buffers[name] = buf; }, function () {});
+    }).catch(function () {});
+  });
+  function unlockAudio() { if (audioCtx && audioCtx.state === "suspended") audioCtx.resume(); }
+  ["pointerdown", "click", "touchend", "keydown"].forEach(function (ev) {
+    document.addEventListener(ev, unlockAudio, { capture: true, passive: true });
+  });
+  function playSound(name) {
+    try {
+      if (audioCtx && buffers[name]) {
+        unlockAudio();
+        var src = audioCtx.createBufferSource();
+        src.buffer = buffers[name];
+        src.connect(audioCtx.destination);
+        src.start(0);
+        return;
+      }
+      var a = fallback[name];
+      a.currentTime = 0;
+      var p = a.play();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) {}
+  }
+  function celebrate(card) {
+    burst(card);
+    var cards = $$("#demoCards .habit-card");
+    var allDone = cards.every(function (c) { return c.classList.contains("done"); });
+    playSound(allDone ? "all" : "habit");
+  }
+
   $$("#demoCards .habit-card").forEach(function (card) {
     var kind = card.dataset.kind;
     var timer = null;
@@ -249,7 +291,7 @@
     card.addEventListener("click", function () {
       if (kind === "check") {
         card.classList.toggle("done");
-        if (card.classList.contains("done")) burst(card);
+        if (card.classList.contains("done")) celebrate(card);
         return;
       }
       if (kind === "amount") {
@@ -259,7 +301,7 @@
         $(".count", card).textContent = a + " / " + t + " glasses";
         setRing(card, a / t);
         card.classList.toggle("done", a >= t);
-        if (a >= t) burst(card);
+        if (a >= t) celebrate(card);
         return;
       }
       if (kind === "timer") {
@@ -283,7 +325,7 @@
             clearInterval(timer); timer = null;
             card.classList.add("done");
             $(".hint", card).textContent = "Tap to start timer";
-            burst(card);
+            celebrate(card);
           }
         }, 60);
       }
@@ -412,11 +454,14 @@
         var off = (r.left + r.width / 2 - mid) / r.width;
         var c = Math.max(-2.5, Math.min(2.5, off));
         var phone = $(".phone", it);
-        phone.style.setProperty("--ry", (-c * 22).toFixed(2) + "deg");
+        // Screens face away from the middle: left phones turn left, right ones right
+        phone.style.setProperty("--ry", (c * 24).toFixed(2) + "deg");
         phone.style.setProperty("--ty", (Math.abs(c) * 18).toFixed(1) + "px");
         phone.style.transition = "transform .15s linear";
-        phone.style.opacity = (1 - Math.min(0.35, Math.abs(c) * 0.14)).toFixed(2);
-        $("figcaption", it).style.opacity = Math.abs(off) < 0.5 ? 1 : 0.35;
+        phone.style.setProperty("--fade", Math.min(0.35, Math.abs(c) * 0.14).toFixed(2));
+        // Captions only show under the centred phone and fade in/out with scroll,
+        // so they never sit visibly skewed under a tilted phone
+        $("figcaption", it).style.opacity = Math.max(0, 1 - Math.abs(off) * 1.8).toFixed(2);
       });
     };
     track.addEventListener("scroll", function () {
