@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -224,7 +224,7 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
                                     child: Center(
                                       child:
                                           _showingSuccess
-                                              ? SvgPicture.asset(
+                                              ? AccentSvg(
                                                 cp.isDark
                                                     ? 'assets/images/new-svg/check-on-dark.svg'
                                                     : 'assets/images/new-svg/check-on-light.svg',

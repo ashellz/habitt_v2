@@ -121,7 +121,7 @@ class HabitKitImportService {
           result.earliestDate!,
         );
       }
-      if (context.mounted) await context.read<HabitProvider>().init();
+      if (context.mounted) await _refreshProviders(context);
 
       return true;
     } catch (e, st) {
@@ -202,13 +202,23 @@ class HabitKitImportService {
           result.earliestDate!,
         );
       }
-      if (context.mounted) await context.read<HabitProvider>().init();
+      if (context.mounted) await _refreshProviders(context);
 
       return true;
     } catch (e, st) {
       debugPrint('HabitKit merge failed: $e\n$st');
       return false;
     }
+  }
+
+  /// Reloads habits and recomputes streaks and stats so the UI reflects the
+  /// imported data immediately.
+  static Future<void> _refreshProviders(BuildContext context) async {
+    final habitProvider = context.read<HabitProvider>();
+    await habitProvider.init();
+    await habitProvider.assignStreaks();
+    await habitProvider.recalculateLongestStreaks();
+    habitProvider.statsProvider?.refreshStats(force: true);
   }
 
   static Habit _buildHabit(

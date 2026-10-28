@@ -35,6 +35,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   late final ConfettiController _confettiController;
   bool _wasAllCompleted = false;
   bool _initializedCompletionState = false;
+  // the day _wasAllCompleted belongs to
+  DateTime? _completionDay;
   late VoidCallback _habitProviderListener;
   bool _hasHabitListener = false;
   final InsightSheetFlow _insightSheetFlow = InsightSheetFlow();
@@ -338,12 +340,29 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     const bottomNavBar = 95;
 
-    final habits = habitProvider.todaysHabits;
+    // The selected day, not just today: completing the last habit of a past
+    // day celebrates too, like the completion sound already does.
+    final now = DateTime.now();
+    final selected = habitProvider.selectedDate ?? now;
+    final selectedDay = DateTime(selected.year, selected.month, selected.day);
+    final habits = habitProvider.getHabitsForDate(selectedDay);
     final requiredHabits = habits.where((habit) => !habit.optional);
 
     final bool allCompleted =
         requiredHabits.isNotEmpty &&
         requiredHabits.every((habit) => habit.completed);
+    if (_completionDay != selectedDay) {
+      final isFirstBuild = _completionDay == null;
+      _completionDay = selectedDay;
+      // Moving to another day (or midnight rolling over) is never a
+      // completion: whatever state that day is in becomes the new baseline.
+      // The very first build keeps going through the loading check below.
+      if (!isFirstBuild) {
+        _confettiController.stop();
+        _wasAllCompleted = allCompleted;
+        _initializedCompletionState = requiredHabits.isNotEmpty;
+      }
+    }
     if (!_initializedCompletionState) {
       // Habits load asynchronously, so the very first build or two can see
       // an empty list before the real data arrives. Wait for a build with

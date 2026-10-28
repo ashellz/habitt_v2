@@ -13,14 +13,14 @@ import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/services/completion_sound_player.dart';
-import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/health_override_notice.dart';
 import 'package:habitt/util/optional_habit_order.dart';
-import 'package:habitt/util/perfect_streak_celebration.dart';
+import 'package:habitt/util/streak_moment.dart';
 import 'package:habitt/util/premade_habit_type_migration.dart';
 import 'package:provider/provider.dart';
 import 'package:habitt/models/streak_health.dart';
@@ -835,7 +835,7 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple != yesterday || !context.mounted) {
       return;
     }
-    unawaited(maybeShowStreakCelebration(context));
+    unawaited(runStreakMoment(context, celebrationOnly: true));
   }
 
   Map<DateTime, double> getThisWeekProgress({DateTime? anchorDate}) {
@@ -1059,9 +1059,11 @@ class HabitProvider extends ChangeNotifier {
       return;
     }
 
-    // with separated optional habits only the required habits of the category
-    // move
-    bool inScope(Habit h) => !(separateOptional && h.optional);
+    // the indices come from the visible cards, so deleted habits (hidden there)
+    // stay out of the shuffle and keep their slots at the end. With separated
+    // optional habits only the required habits of the category move
+    bool inScope(Habit h) =>
+        h.isDeleted != true && !(separateOptional && h.optional);
 
     final allCategoryHabits =
         habits.where((h) => h.categoryId == categoryId).toList();
@@ -1327,7 +1329,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     if (!wasCompleted && habit.completed) {
-      unawaited(_maybeRequestReview());
+      unawaited(_countCompletion());
     }
 
     refreshTodaysHabits(notify: false);
@@ -1968,16 +1970,12 @@ class HabitProvider extends ChangeNotifier {
   bool _isRecalculatingLongestStreak = false;
   bool get isRecalculatingLongestStreak => _isRecalculatingLongestStreak;
 
-  Future<void> _maybeRequestReview() async {
+  // Counts completions for the support banner's "10 completions" threshold. The
+  // review prompt no longer fires here, it waits for a streak milestone.
+  Future<void> _countCompletion() async {
     final prefs = await SharedPreferences.getInstance();
-    final count = (prefs.getInt('total_habit_completions') ?? 0) + 1;
-    await prefs.setInt('total_habit_completions', count);
-
-    final maxStreak = habits.fold(0, (m, h) => h.streak > m ? h.streak : m);
-    await FeedbackService.maybeRequestReview(
-      totalCompletions: count,
-      maxStreak: maxStreak,
-    );
+    final count = (prefs.getInt(kTotalCompletionsKey) ?? 0) + 1;
+    await prefs.setInt(kTotalCompletionsKey, count);
   }
 
   Future<void> recalculateLongestStreaks([int? onlyHabitId]) async {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 
@@ -109,16 +110,18 @@ class StatusOverlayPopupController {
                               height: 24,
                               child:
                                   iconWidget ??
-                                  SvgPicture.asset(
-                                    resolvedIconPath,
-                                    colorFilter:
-                                        iconColor != null
-                                            ? ColorFilter.mode(
-                                              iconColor,
-                                              BlendMode.srcIn,
-                                            )
-                                            : null,
-                                  ),
+                                  (iconPath == null && !isError
+                                      ? AccentSvg(resolvedIconPath)
+                                      : SvgPicture.asset(
+                                        resolvedIconPath,
+                                        colorFilter:
+                                            iconColor != null
+                                                ? ColorFilter.mode(
+                                                  iconColor,
+                                                  BlendMode.srcIn,
+                                                )
+                                                : null,
+                                      )),
                             ),
                             Text(
                               title,

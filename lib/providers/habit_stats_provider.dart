@@ -219,21 +219,27 @@ class HabitStatsProvider extends ChangeNotifier {
               : earliestDayWithHabit;
 
       progressByDay[dayDate] = _progressValue(dayHabit);
-      // Skip today's entry unless the habit is completed — an incomplete today
-      // would drag strength down at the start of the day before the user has
-      // had a chance to log anything.
-      if (!dayDate.isAtSameMomentAs(today) || dayHabit.completed) {
-        strengthEntries.add(_toHabitEntry(dayDate, dayHabit));
-      }
 
-      if (dayHabit.completed) {
-        completedCount += 1;
-      } else {
-        missedCount += 1;
+      // An incomplete today isn't a miss yet — the user still has the rest of
+      // the day to log it. It would drag strength, the missed count and the
+      // completion rates down at the start of the day, so only count today once
+      // the habit is completed.
+      final countsAsOutcome =
+          !dayDate.isAtSameMomentAs(today) || dayHabit.completed;
+      if (countsAsOutcome) {
+        strengthEntries.add(_toHabitEntry(dayDate, dayHabit));
+
+        if (dayHabit.completed) {
+          completedCount += 1;
+        } else {
+          missedCount += 1;
+        }
       }
 
       totalAmountCompleted += dayHabit.amountCompleted;
       totalDurationCompletedSeconds += dayHabit.durationCompleted;
+
+      if (!countsAsOutcome) continue;
 
       for (final range in StatsRange.values) {
         final start = range.startFor(today);

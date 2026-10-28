@@ -3448,7 +3448,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get habitAgeCardTitle => 'Lo fai da';
 
   @override
-  String get habitAgeCardNew => 'Appena iniziata';
+  String get habitAgeCardNew => 'Iniziata oggi';
 
   @override
   String habitAgeCardYearsMonthsDays(Object years, Object months, Object days) {
@@ -3534,4 +3534,62 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get timeRangeSameTimes =>
       'L\'orario di inizio e di fine non possono coincidere';
+
+  @override
+  String get supportBannerText =>
+      'Habitt non ha pubblicità, tracciamento né account. Va avanti solo se chi lo apprezza contribuisce.';
+
+  @override
+  String get supportSeeWays => 'Scopri come sostenere';
+
+  @override
+  String get supportAlreadyDonated => 'Ho già donato';
+
+  @override
+  String get supportBannerDismiss => 'Chiudi';
+
+  @override
+  String get supporterThankYouTitle => 'Grazie per sostenere Habitt';
+
+  @override
+  String get supporterThankYouDesc =>
+      'Ci aiuti a mantenerlo senza pubblicità e tracciamento per tutti.';
+
+  @override
+  String get supportMilestoneText =>
+      'Habitt non ha pubblicità né tracciamento. Se ti aiuta, puoi aiutarlo ad andare avanti.';
+
+  @override
+  String get themeSettingTitle => 'Tema';
+
+  @override
+  String get themeNameHabitt => 'Habitt';
+
+  @override
+  String get themeNameLagoon => 'Laguna';
+
+  @override
+  String get themeNameOcean => 'Oceano';
+
+  @override
+  String get themeNameIndigo => 'Indaco';
+
+  @override
+  String get themeNameViolet => 'Viola';
+
+  @override
+  String get themeNameOrchid => 'Orchidea';
+
+  @override
+  String get supportSheetTitle => 'Gratis per tutti';
+
+  @override
+  String get supportSheetDesc =>
+      'I temi e il backup nel cloud sono gratuiti per tutti. Sono i sostenitori a far andare avanti Habitt.';
+
+  @override
+  String get supportNotNow => 'Non ora';
+
+  @override
+  String get supportHabittRow => 'Sostieni Habitt';
 }

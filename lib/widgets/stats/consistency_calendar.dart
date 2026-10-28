@@ -26,22 +26,27 @@ class ConsistencyCalendar extends StatefulWidget {
 }
 
 class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
-  static final List<Color> _progressScaleDark = [
-    const Color(0xFF11F29B).withValues(alpha: 0.06),
-    const Color(0xFF11F29B).withValues(alpha: 0.12),
-    const Color(0xFF11F29B).withValues(alpha: 0.18),
-    const Color(0xFF11F29B).withValues(alpha: 0.24),
-    const Color(0xFF11F29B).withValues(alpha: 0.32),
-    const Color(0xFF02D382), // 100% only
+  // Softer steps of the accent for partial days, the full accent for 100% only.
+  // The 100% colour is the light accent in both modes, as it always was.
+  static const List<double> _progressAlphasDark = [
+    0.06,
+    0.12,
+    0.18,
+    0.24,
+    0.32,
+  ];
+  static const List<double> _progressAlphasLight = [
+    0.08,
+    0.16,
+    0.24,
+    0.32,
+    0.42,
   ];
 
-  static final List<Color> _progressScaleLight = [
-    const Color(0xFF0CD280).withValues(alpha: 0.08),
-    const Color(0xFF0CD280).withValues(alpha: 0.16),
-    const Color(0xFF0CD280).withValues(alpha: 0.24),
-    const Color(0xFF0CD280).withValues(alpha: 0.32),
-    const Color(0xFF0CD280).withValues(alpha: 0.42),
-    const Color(0xFF02D382), // 100% only
+  List<Color> _progressScale(ColorProvider cp) => [
+    for (final alpha in cp.isDark ? _progressAlphasDark : _progressAlphasLight)
+      cp.main.withValues(alpha: alpha),
+    cp.theme.light.main,
   ];
 
   late DateTime _focusedDay;
@@ -100,7 +105,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
     final calendarFirstDay = _monthStart(selectableFirstDay);
     final focusedDay = _clampFocusedDay(_focusedDay, calendarFirstDay, today);
 
-    final dots = cp.isDark ? _progressScaleDark : _progressScaleLight;
+    final dots = _progressScale(cp);
 
     final loc = AppLocalizations.of(context)!;
 
@@ -373,12 +378,7 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
       fillColor = outsideDisabledFill;
       textColor = outsideDisabledText;
     } else {
-      fillColor =
-          _colorForProgress(
-            progress,
-            cp.isDark ? _progressScaleDark : _progressScaleLight,
-          ) ??
-          cp.habitBg;
+      fillColor = _colorForProgress(progress, _progressScale(cp)) ?? cp.habitBg;
       textColor = cp.text;
     }
 
@@ -425,7 +425,10 @@ class _ConsistencyCalendarState extends State<ConsistencyCalendar> {
     if (progress >= 1.0) return progressScale.last;
     // Partial progress maps across all buckets except the last.
     final partialBuckets = progressScale.length - 1;
-    final index = (progress * partialBuckets).floor().clamp(0, partialBuckets - 1);
+    final index = (progress * partialBuckets).floor().clamp(
+      0,
+      partialBuckets - 1,
+    );
     return progressScale[index];
   }
 

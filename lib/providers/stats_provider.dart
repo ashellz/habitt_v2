@@ -143,7 +143,6 @@ class StatsProvider extends ChangeNotifier {
 
   int _habitsCompleted = -1;
   int _highestAmountOfHabitsLastWeek = -1;
-  int _completionRateLastWeek = -1;
   List<double> _habitsCompletedLastWeek = List.generate(7, (i) => -1);
   int _perfectDaysStreak = -1;
   int _longestPerfectDaysStreak = -1;
@@ -365,12 +364,8 @@ class StatsProvider extends ChangeNotifier {
     return _habitsCompletedLastWeek;
   }
 
-  int getCompletionRateLastWeek() {
-    if (_completionRateLastWeek == -1) {
-      _completionRateLastWeek = refreshCompletionRateLastWeek();
-    }
-    return _completionRateLastWeek;
-  }
+  // not cached: today's completions change it all day long
+  int getCompletionRateLastWeek() => refreshCompletionRateLastWeek();
 
   int getPerfectStreak() {
     if (_perfectDaysStreak == -1) {
@@ -470,32 +465,39 @@ class StatsProvider extends ChangeNotifier {
     int completedHabits = 0;
 
     final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
-    if (_daysUpToToday.isEmpty) {
-      return 0;
-    }
+    // The last days that are over, newest first
+    final orderedDays =
+        _daysUpToToday
+            .where((day) => !_isSameDay(day.date, today))
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
 
-    // First we order the days by date
-    final orderedDays = _daysUpToToday.toList();
-    orderedDays.sort((a, b) => b.date.compareTo(a.date));
-
-    // We remove today
-    orderedDays.removeWhere(
-      (day) =>
-          day.date.year == now.year &&
-          day.date.month == now.month &&
-          day.date.day == now.day,
-    );
-
-    // Then we check the last 7 days
     for (int i = 0; i < 6 && i < orderedDays.length; i++) {
-      final day = orderedDays[i];
-      for (final habit in _countingHabits(day)) {
+      for (final habit in _countingHabits(orderedDays[i])) {
         if (habit.optional) continue;
         totalHabits++;
         if (habit.completed) {
           completedHabits++;
         }
+      }
+    }
+
+    // Today isn't over: a habit that is already completed counts straight
+    // away, one that isn't yet is not a miss and stays out of the ratio.
+    final hp = _habitProvider;
+    final todayDay =
+        hp != null
+            ? Day(date: today, habits: hp.todaysHabits, timestamp: now)
+            : _daysUpToToday
+                .where((day) => _isSameDay(day.date, today))
+                .firstOrNull;
+    if (todayDay != null) {
+      for (final habit in _countingHabits(todayDay)) {
+        if (habit.optional || !habit.completed) continue;
+        totalHabits++;
+        completedHabits++;
       }
     }
 
@@ -505,6 +507,9 @@ class StatsProvider extends ChangeNotifier {
 
     return (completedHabits / totalHabits * 100).clamp(0, 100).toInt();
   }
+
+  static bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 
   List<double> getCompletionRateLastWeekByDay(HabitProvider hp) {
     final allDays = _allDaysIncludingToday(hp);

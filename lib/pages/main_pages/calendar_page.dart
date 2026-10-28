@@ -164,12 +164,18 @@ class CompletionRatio extends StatelessWidget {
                         barRods: [
                           BarChartRodData(
                             toY: completionRateLastWeek[index],
+                            // today in the full accent, the other days as a
+                            // soft step of it (opaque, so the grid lines
+                            // don't show through the bars)
                             color:
                                 index == 6
                                     ? cp.main
-                                    : cp.isDark
-                                    ? Color(0xFF3C6D59)
-                                    : Color(0xFFBBF3DC),
+                                    : Color.alphaBlend(
+                                      cp.main.withValues(
+                                        alpha: cp.isDark ? 0.4 : 0.24,
+                                      ),
+                                      cp.habitBg,
+                                    ),
                             width: 30,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),

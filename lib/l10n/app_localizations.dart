@@ -5944,6 +5944,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start and end time can\'t be the same'**
   String get timeRangeSameTimes;
+
+  /// No description provided for @supportBannerText.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.'**
+  String get supportBannerText;
+
+  /// No description provided for @supportSeeWays.
+  ///
+  /// In en, this message translates to:
+  /// **'See ways to support'**
+  String get supportSeeWays;
+
+  /// No description provided for @supportAlreadyDonated.
+  ///
+  /// In en, this message translates to:
+  /// **'I already donated'**
+  String get supportAlreadyDonated;
+
+  /// No description provided for @supportBannerDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get supportBannerDismiss;
+
+  /// No description provided for @supporterThankYouTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for supporting Habitt'**
+  String get supporterThankYouTitle;
+
+  /// No description provided for @supporterThankYouDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You help keep it free of ads and tracking for everyone.'**
+  String get supporterThankYouDesc;
+
+  /// No description provided for @supportMilestoneText.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.'**
+  String get supportMilestoneText;
+
+  /// No description provided for @themeSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeSettingTitle;
+
+  /// No description provided for @themeNameHabitt.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt'**
+  String get themeNameHabitt;
+
+  /// No description provided for @themeNameLagoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Lagoon'**
+  String get themeNameLagoon;
+
+  /// No description provided for @themeNameOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean'**
+  String get themeNameOcean;
+
+  /// No description provided for @themeNameIndigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get themeNameIndigo;
+
+  /// No description provided for @themeNameViolet.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get themeNameViolet;
+
+  /// No description provided for @themeNameOrchid.
+  ///
+  /// In en, this message translates to:
+  /// **'Orchid'**
+  String get themeNameOrchid;
+
+  /// No description provided for @supportSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free for everyone'**
+  String get supportSheetTitle;
+
+  /// No description provided for @supportSheetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.'**
+  String get supportSheetDesc;
+
+  /// No description provided for @supportNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get supportNotNow;
+
+  /// No description provided for @supportHabittRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Habitt'**
+  String get supportHabittRow;
 }
 
 class _AppLocalizationsDelegate

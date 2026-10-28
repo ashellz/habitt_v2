@@ -423,9 +423,41 @@
       if (!ticking) { ticking = true; requestAnimationFrame(cover); }
     }, { passive: true });
     window.addEventListener("resize", cover);
+    // Buttons scroll to an exact item centre. A native smooth scrollBy fights
+    // scroll-snap on iOS Safari and ends off-centre, so animate scrollLeft
+    // ourselves with snapping suspended, then hand control back to snap.
+    var centerOf = function (it) {
+      return it.offsetLeft - (track.clientWidth - it.offsetWidth) / 2;
+    };
+    var nearest = function () {
+      var best = 0, bestD = Infinity;
+      items.forEach(function (it, i) {
+        var d = Math.abs(centerOf(it) - track.scrollLeft);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      return best;
+    };
+    var anim = 0;
+    var stop = function () {
+      cancelAnimationFrame(anim);
+      track.style.scrollSnapType = "";
+    };
+    ["touchstart", "wheel", "pointerdown"].forEach(function (ev) {
+      track.addEventListener(ev, stop, { passive: true });
+    });
     var step = function (dir) {
-      var w = items[0].getBoundingClientRect().width + 28;
-      track.scrollBy({ left: dir * w, behavior: reduceMotion ? "auto" : "smooth" });
+      stop();
+      var i = Math.max(0, Math.min(items.length - 1, nearest() + dir));
+      var from = track.scrollLeft, to = centerOf(items[i]);
+      if (reduceMotion || from === to) { track.scrollLeft = to; return; }
+      track.style.scrollSnapType = "none";
+      var t0 = performance.now(), dur = 420;
+      (function run(now) {
+        var t = Math.min(1, (now - t0) / dur);
+        track.scrollLeft = from + (to - from) * (1 - Math.pow(1 - t, 3));
+        if (t < 1) { anim = requestAnimationFrame(run); }
+        else { track.scrollLeft = to; track.style.scrollSnapType = ""; }
+      })(t0);
     };
     $("#galPrev").addEventListener("click", function () { step(-1); });
     $("#galNext").addEventListener("click", function () { step(1); });

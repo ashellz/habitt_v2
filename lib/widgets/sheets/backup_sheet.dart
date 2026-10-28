@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/util/support_sheet_flow.dart';
+import 'package:habitt/widgets/support/support_row.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/backup/backup_migration_section.dart';
@@ -27,9 +30,20 @@ class _BackupSheetState extends State<BackupSheet> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _checkAndShowPinDialog(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowPinDialog();
+      _maybeShowSupportSheet();
+    });
+  }
+
+  // Cloud backup setup is the signed-out state. Waits for the sheet to finish
+  // sliding in so the support sheet does not land on top of the animation.
+  Future<void> _maybeShowSupportSheet() async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+    final bp = context.read<BackupProvider>();
+    if (bp.isLoggedIn || bp.isICloudConnected) return;
+    maybeShowSupportSheet(context);
   }
 
   @override
@@ -73,6 +87,7 @@ class _BackupSheetState extends State<BackupSheet> {
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final bp = context.watch<BackupProvider>();
+    final support = context.watch<SupportProvider>();
     final loc = AppLocalizations.of(context)!;
     final mediaQuery = MediaQuery.of(context);
     final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
@@ -123,6 +138,11 @@ class _BackupSheetState extends State<BackupSheet> {
                       BackupSignedInSection(
                         statusOverlay: widget.statusOverlay,
                         isICloud: bp.isICloudConnected,
+                      ),
+                    if (!support.asksHidden)
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                        child: SupportRow(),
                       ),
                   ],
                 ),

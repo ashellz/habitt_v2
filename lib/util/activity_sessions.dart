@@ -4,7 +4,9 @@ import 'package:habitt/models/health_session_detail.dart';
 // activity. Samples this close together belong to the same stretch of activity.
 const Duration activityPeriodMaxGap = Duration(minutes: 2);
 
-List<HealthSessionDetail> _sortedSamples(Iterable<HealthSessionDetail> samples) =>
+List<HealthSessionDetail> _sortedSamples(
+  Iterable<HealthSessionDetail> samples,
+) =>
     samples.where((s) => s.end.isAfter(s.start)).toList()
       ..sort((a, b) => a.start.compareTo(b.start));
 
