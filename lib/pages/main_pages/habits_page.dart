@@ -15,12 +15,12 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/optional_habits_section.dart';
+import 'package:habitt/widgets/default/reorderable_grid.dart';
 import 'package:habitt/widgets/habit_widget/habit_card.dart';
 import 'package:habitt/widgets/main_page/categories/new_categories_list.dart';
 import 'package:habitt/widgets/main_page/habits/demo_habits_grid.dart';
 import 'package:habitt/widgets/main_page/habits/empty_habits_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:reorderables/reorderables.dart';
 
 class HabitsPage extends StatefulWidget {
   const HabitsPage({super.key});
@@ -172,27 +172,27 @@ class ReorderingHabits extends StatefulWidget {
 }
 
 class _ReorderingHabitsState extends State<ReorderingHabits> {
-  // habit card when lifted, overwrites the default
-  Widget Function(BuildContext, BoxConstraints, Widget) _dragFeedback(
-    ColorProvider cp,
-  ) {
-    return (context, constraints, child) {
-      return Material(
-        type: MaterialType.transparency,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: cp.bg,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: cp.isDark ? 0.5 : 0.16),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: ConstrainedBox(constraints: constraints, child: child),
+  // habit card when lifted: an opaque card that casts a shadow as it rises
+  ReorderableGridLiftBuilder _liftDecoration(ColorProvider cp) {
+    return (context, child, lift) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: cp.bg,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow:
+              lift > 0
+                  ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(
+                        alpha: (cp.isDark ? 0.5 : 0.16) * lift,
+                      ),
+                      blurRadius: 24 * lift,
+                      offset: Offset(0, 8 * lift),
+                    ),
+                  ]
+                  : null,
         ),
+        child: child,
       );
     };
   }
@@ -278,7 +278,10 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                         )
                         .toList()
                       ..sort((a, b) {
-                        final orderCompare = a.order.compareTo(b.order);
+                        // same order as HabitProvider, so drag indices match
+                        final aOrder = a.order <= 0 ? 1 << 30 : a.order;
+                        final bOrder = b.order <= 0 ? 1 << 30 : b.order;
+                        final orderCompare = aOrder.compareTo(bOrder);
                         if (orderCompare != 0) {
                           return orderCompare;
                         }
@@ -287,10 +290,9 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
 
                 final cardSize = (constraints.maxWidth - 10) / 2;
 
-                return ReorderableWrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  buildDraggableFeedback: _dragFeedback(cp),
+                return ReorderableGrid(
+                  itemSize: cardSize,
+                  liftBuilder: _liftDecoration(cp),
                   onReorder: (oldIndex, newIndex) {
                     hp.reorderHabitsInCategory(
                       categoryId: visibleCategories[sectionIndex].id,
@@ -323,10 +325,9 @@ class _ReorderingHabitsState extends State<ReorderingHabits> {
                 return OptionalHabitsSection(
                   count: optionalHabits.length,
                   builder:
-                      (context, _) => ReorderableWrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        buildDraggableFeedback: _dragFeedback(cp),
+                      (context, _) => ReorderableGrid(
+                        itemSize: cardSize,
+                        liftBuilder: _liftDecoration(cp),
                         onReorder:
                             (oldIndex, newIndex) => hp.reorderOptionalHabits(
                               categories: categories,

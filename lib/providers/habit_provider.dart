@@ -1059,9 +1059,11 @@ class HabitProvider extends ChangeNotifier {
       return;
     }
 
-    // with separated optional habits only the required habits of the category
-    // move
-    bool inScope(Habit h) => !(separateOptional && h.optional);
+    // the indices come from the visible cards, so deleted habits (hidden there)
+    // stay out of the shuffle and keep their slots at the end. With separated
+    // optional habits only the required habits of the category move
+    bool inScope(Habit h) =>
+        h.isDeleted != true && !(separateOptional && h.optional);
 
     final allCategoryHabits =
         habits.where((h) => h.categoryId == categoryId).toList();
