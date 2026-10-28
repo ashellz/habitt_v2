@@ -254,20 +254,40 @@
       audioCtx.decodeAudioData(data, function (buf) { buffers[name] = buf; }, function () {});
     }).catch(function () {});
   });
-  function unlockAudio() { if (audioCtx && audioCtx.state === "suspended") audioCtx.resume(); }
+  // On the first real gesture, resume the context and "touch" both <audio> elements (play() then
+  // pause() in the same tick is silent) so WebKit browsers such as Safari and Orion let them play
+  // later without a tap too.
+  var htmlUnlocked = false;
+  function unlockAudio() {
+    if (audioCtx && audioCtx.state === "suspended") {
+      try { audioCtx.resume().catch(function () {}); } catch (e) {}
+    }
+    if (htmlUnlocked) return;
+    htmlUnlocked = true;
+    Object.keys(fallback).forEach(function (name) {
+      var a = fallback[name];
+      try {
+        var p = a.play();
+        a.pause();
+        a.currentTime = 0;
+        if (p && p.catch) p.catch(function () { htmlUnlocked = false; });
+      } catch (e) { htmlUnlocked = false; }
+    });
+  }
   ["pointerdown", "click", "touchend", "keydown"].forEach(function (ev) {
     document.addEventListener(ev, unlockAudio, { capture: true, passive: true });
   });
   function playSound(name) {
     try {
-      if (audioCtx && buffers[name]) {
-        unlockAudio();
+      // Only trust Web Audio once the context is actually running; otherwise use <audio>
+      if (audioCtx && buffers[name] && audioCtx.state === "running") {
         var src = audioCtx.createBufferSource();
         src.buffer = buffers[name];
         src.connect(audioCtx.destination);
         src.start(0);
         return;
       }
+      unlockAudio();
       var a = fallback[name];
       a.currentTime = 0;
       var p = a.play();
