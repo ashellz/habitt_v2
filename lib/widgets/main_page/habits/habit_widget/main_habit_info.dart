@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
@@ -180,8 +181,14 @@ class MainHabitInfo extends StatelessWidget {
       tags = [_pausedTag(loc)];
     } else {
       final habitProvider = context.watch<HabitProvider>();
+      // A custom "show again if missed" habit stays on today's list until
+      // it is done, so once completed it shows when it comes up next.
+      final settledToday =
+          habit.scheduleType == ScheduleType.custom &&
+          habit.showIfMissed &&
+          habit.completed;
       final nextDate =
-          habitProvider.appearsOnDay(habit, DateTime.now())
+          habitProvider.appearsOnDay(habit, DateTime.now()) && !settledToday
               ? null
               : habitProvider.nextScheduledDate(habit);
       tags = [
