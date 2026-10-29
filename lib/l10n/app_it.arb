@@ -1308,5 +1308,6 @@
   "nextResetTitle": "Prossimo reset",
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "I progressi settimanali si azzerano ogni lunedì.\nIl tuo obiettivo generale e la tua serie non saranno influenzati.",
-  "monthlyResetInfo": "I progressi mensili si azzerano il 1° di ogni mese.\nIl tuo obiettivo generale e la tua serie non saranno influenzati."
+  "monthlyResetInfo": "I progressi mensili si azzerano il 1° di ogni mese.\nIl tuo obiettivo generale e la tua serie non saranno influenzati.",
+  "ok": "Ok"
 }

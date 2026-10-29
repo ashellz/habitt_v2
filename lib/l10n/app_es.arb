@@ -1308,5 +1308,6 @@
   "nextResetTitle": "Próximo reinicio",
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "El progreso semanal se reinicia cada lunes.\nTu objetivo general y tu racha no se verán afectados.",
-  "monthlyResetInfo": "El progreso mensual se reinicia el día 1 de cada mes.\nTu objetivo general y tu racha no se verán afectados."
+  "monthlyResetInfo": "El progreso mensual se reinicia el día 1 de cada mes.\nTu objetivo general y tu racha no se verán afectados.",
+  "ok": "Aceptar"
 }

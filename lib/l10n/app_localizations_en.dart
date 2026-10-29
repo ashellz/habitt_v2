@@ -3620,4 +3620,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get monthlyResetInfo =>
       'Monthly progress resets on the 1st of every month.\nYour overall goal and streak won\'t be affected.';
+
+  @override
+  String get ok => 'Ok';
 }

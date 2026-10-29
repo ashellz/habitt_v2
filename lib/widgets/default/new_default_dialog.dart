@@ -12,7 +12,7 @@ class NewDefaultDialog extends StatelessWidget {
   const NewDefaultDialog({
     super.key,
     this.child,
-    required this.title,
+    this.title,
     this.primaryButtonLabel,
     this.primaryButtonEnabled = true,
     this.showSecondaryButton = true,
@@ -30,7 +30,7 @@ class NewDefaultDialog extends StatelessWidget {
   });
 
   final Widget? child;
-  final String title;
+  final String? title;
   final String? desc;
   final String? secondaryButtonLabel;
   final String? primaryButtonLabel;
@@ -78,14 +78,15 @@ class NewDefaultDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 10,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: cp.text,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
+                  if (title != null)
+                    Text(
+                      title!,
+                      style: TextStyle(
+                        color: cp.text,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
                   if (desc != null)
                     Text(
                       desc!,

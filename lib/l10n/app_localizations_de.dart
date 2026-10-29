@@ -3654,4 +3654,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get monthlyResetInfo =>
       'Der Monatsfortschritt wird am 1. jedes Monats zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.';
+
+  @override
+  String get ok => 'OK';
 }

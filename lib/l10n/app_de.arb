@@ -1308,5 +1308,6 @@
   "nextResetTitle": "Nächster Reset",
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "Der Wochenfortschritt wird jeden Montag zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.",
-  "monthlyResetInfo": "Der Monatsfortschritt wird am 1. jedes Monats zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt."
+  "monthlyResetInfo": "Der Monatsfortschritt wird am 1. jedes Monats zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.",
+  "ok": "OK"
 }

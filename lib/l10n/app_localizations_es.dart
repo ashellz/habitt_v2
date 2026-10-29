@@ -3643,4 +3643,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get monthlyResetInfo =>
       'El progreso mensual se reinicia el día 1 de cada mes.\nTu objetivo general y tu racha no se verán afectados.';
+
+  @override
+  String get ok => 'Aceptar';
 }

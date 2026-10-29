@@ -3619,4 +3619,7 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get monthlyResetInfo =>
       'Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni.';
+
+  @override
+  String get ok => 'U redu';
 }

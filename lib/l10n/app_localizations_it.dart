@@ -3650,4 +3650,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get monthlyResetInfo =>
       'I progressi mensili si azzerano il 1° di ogni mese.\nIl tuo obiettivo generale e la tua serie non saranno influenzati.';
+
+  @override
+  String get ok => 'Ok';
 }

@@ -24,6 +24,7 @@ import 'package:habitt/widgets/default/default_popup_menu.dart';
 import 'package:habitt/widgets/default/new_circle_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/habit_details/habit_primary_action_button.dart';
+import 'package:habitt/widgets/habit_details/habit_schedule_info.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_stats_card.dart';
 import 'package:habitt/widgets/habit_details/strength_over_time_section.dart';
 import 'package:habitt/widgets/habit_details/strength_ring.dart';
@@ -262,6 +263,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                         children: [
                           const SizedBox(height: 14),
                           _summaryCard(cp, habit, displayHabit, stats),
+                          HabitScheduleInfo(habit: habit, cp: cp),
                           const SizedBox(height: 18),
                           _notesSection(cp),
                           const SizedBox(height: 24),

@@ -1298,5 +1298,6 @@
   "nextResetTitle": "Sljedeći reset",
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "Sedmični napredak se resetuje svakog ponedjeljka.\nTvoj ukupni cilj i streak neće biti pogođeni.",
-  "monthlyResetInfo": "Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni."
+  "monthlyResetInfo": "Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni.",
+  "ok": "U redu"
 }
