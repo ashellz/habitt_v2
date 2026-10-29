@@ -710,6 +710,25 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  // Whether a past day counts toward the streak. Reads the schedule saved in
+  // that day's snapshot ([dayHabit]), not the live one, so editing a schedule
+  // only changes days from the edit on: switching a daily habit to "every 3
+  // days" must not turn its old misses into off-days (and the reverse must not
+  // turn old off-days into misses). Pause still comes from the live habit.
+  bool _appearedOnPastDay(Habit habit, Habit dayHabit, DateTime day) {
+    if (habit.isPaused == true) return false;
+    if (dayHabit.scheduleType == ScheduleType.custom) {
+      // An empty list means the snapshot never got one, fall back to live.
+      // Otherwise read it directly, _isScheduledOnDay would rebuild it in place
+      if (dayHabit.customAppearance.isEmpty) {
+        return _isScheduledOnDay(habit, day, progressHabit: dayHabit);
+      }
+      final key = _normalizeDate(day).toIso8601String().split('T').first;
+      return dayHabit.customAppearance.contains(key);
+    }
+    return _isScheduledOnDay(dayHabit, day, progressHabit: dayHabit);
+  }
+
   bool appearsOnDay(Habit habit, DateTime day) {
     return _appearsOnDay(habit, day);
   }
@@ -2130,11 +2149,7 @@ class HabitProvider extends ChangeNotifier {
         }
         if (dayHabit == null) continue;
 
-        final appears = _appearsOnDay(
-          habit,
-          normalizedDay,
-          progressHabit: dayHabit,
-        );
+        final appears = _appearedOnPastDay(habit, dayHabit, normalizedDay);
         if (!appears && !dayHabit.hasAnyProgress()) continue;
 
         if (dayHabit.completed) {
@@ -2212,11 +2227,7 @@ class HabitProvider extends ChangeNotifier {
           continue;
         }
 
-        final appears = _appearsOnDay(
-          habit,
-          normalizedDay,
-          progressHabit: dayHabit,
-        );
+        final appears = _appearedOnPastDay(habit, dayHabit, normalizedDay);
         if (!appears && !dayHabit.hasAnyProgress()) {
           // If it doesn't appear on this day and has no progress, we skip
           // it, it doesn't affect the streak
