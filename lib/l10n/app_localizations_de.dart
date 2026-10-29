@@ -3614,4 +3614,33 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get openSettings => 'Einstellungen öffnen';
+
+  @override
+  String get whatsNewTitle => 'Neu in 2.5.0';
+
+  @override
+  String get whatsNewDesc => 'Ein paar Neuerungen seit dem letzten Update.';
+
+  @override
+  String get whatsNewHealth =>
+      'Schritte, Schlaf und mehr aus Apple Health oder Health Connect synchronisieren';
+
+  @override
+  String get whatsNewAlarms =>
+      'Gewohnheits-Wecker, die klingeln, bis du sie ausschaltest';
+
+  @override
+  String get whatsNewShowAgain =>
+      'Verpasste wöchentliche und monatliche Gewohnheiten können erneut erscheinen';
+
+  @override
+  String get whatsNewPlan =>
+      'Eine Tagesplan-Ansicht mit Zeitbereichen für deinen Tag';
+
+  @override
+  String get whatsNewStrength =>
+      'Stärke der Gewohnheit im Zeitverlauf in den Details';
+
+  @override
+  String get whatsNewThemes => 'Neue Designfarben, kostenlos für alle';
 }

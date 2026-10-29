@@ -1299,5 +1299,13 @@
   "supportHabittRow": "Sostieni Habitt",
   "notificationsOffInSystemTitle": "Le notifiche sono disattivate",
   "notificationsOffInSystemDesc": "Habitt non può inviare promemoria perché le notifiche sono disattivate per l'app nelle impostazioni del dispositivo.",
-  "openSettings": "Apri impostazioni"
+  "openSettings": "Apri impostazioni",
+  "whatsNewTitle": "Novità della 2.5.0",
+  "whatsNewDesc": "Alcune cose che abbiamo aggiunto dall'ultimo aggiornamento.",
+  "whatsNewHealth": "Sincronizza passi, sonno e altro da Apple Health o Health Connect",
+  "whatsNewAlarms": "Sveglie per le abitudini che suonano finché non le spegni",
+  "whatsNewShowAgain": "Le abitudini settimanali e mensili mancate possono riapparire",
+  "whatsNewPlan": "Una vista Piano giornaliero con fasce orarie per la tua giornata",
+  "whatsNewStrength": "La forza dell'abitudine nel tempo nei dettagli",
+  "whatsNewThemes": "Nuovi colori del tema, gratis per tutti"
 }

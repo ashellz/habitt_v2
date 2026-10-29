@@ -3610,4 +3610,34 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get openSettings => 'Apri impostazioni';
+
+  @override
+  String get whatsNewTitle => 'Novità della 2.5.0';
+
+  @override
+  String get whatsNewDesc =>
+      'Alcune cose che abbiamo aggiunto dall\'ultimo aggiornamento.';
+
+  @override
+  String get whatsNewHealth =>
+      'Sincronizza passi, sonno e altro da Apple Health o Health Connect';
+
+  @override
+  String get whatsNewAlarms =>
+      'Sveglie per le abitudini che suonano finché non le spegni';
+
+  @override
+  String get whatsNewShowAgain =>
+      'Le abitudini settimanali e mensili mancate possono riapparire';
+
+  @override
+  String get whatsNewPlan =>
+      'Una vista Piano giornaliero con fasce orarie per la tua giornata';
+
+  @override
+  String get whatsNewStrength =>
+      'La forza dell\'abitudine nel tempo nei dettagli';
+
+  @override
+  String get whatsNewThemes => 'Nuovi colori del tema, gratis per tutti';
 }

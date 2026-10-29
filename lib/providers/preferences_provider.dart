@@ -43,6 +43,7 @@ class PreferencesProvider extends ChangeNotifier {
   static const String _kSeparateOptionalHabitsKey = 'separate_optional_habits';
   static const String _kOptionalHabitsExpandedKey = 'optional_habits_expanded';
   static const String _kShowPlanViewKey = 'show_plan_view';
+  static const String _kLastSeenVersionKey = 'last_seen_version';
 
   bool _glassFeel = true;
   // colorful interface level
@@ -58,6 +59,8 @@ class PreferencesProvider extends ChangeNotifier {
   bool _optionalHabitsExpanded = true;
   // home page shows the time-based plan instead of the habits list
   bool _showPlanView = false;
+  // version whose "What's new" sheet the user last saw, null if never
+  String? _lastSeenVersion;
 
   bool get glassFeel => _glassFeel;
   Colorfulness get colorfulness => _colorfulness;
@@ -71,6 +74,7 @@ class PreferencesProvider extends ChangeNotifier {
   bool get separateOptionalHabits => _separateOptionalHabits;
   bool get optionalHabitsExpanded => _optionalHabitsExpanded;
   bool get showPlanView => _showPlanView;
+  String? get lastSeenVersion => _lastSeenVersion;
 
   SharedPreferences? _prefs;
 
@@ -95,6 +99,7 @@ class PreferencesProvider extends ChangeNotifier {
     _optionalHabitsExpanded =
         _prefs?.getBool(_kOptionalHabitsExpandedKey) ?? true;
     _showPlanView = _prefs?.getBool(_kShowPlanViewKey) ?? false;
+    _lastSeenVersion = _prefs?.getString(_kLastSeenVersionKey);
     final stored = _prefs?.getString('colorfulness');
     _colorfulness = Colorfulness._parseColorfulness(stored);
     notifyListeners();
@@ -174,6 +179,13 @@ class PreferencesProvider extends ChangeNotifier {
     if (_showPlanView == value) return;
     _showPlanView = value;
     _prefs?.setBool(_kShowPlanViewKey, value);
+    notifyListeners();
+  }
+
+  void setLastSeenVersion(String version) {
+    if (_lastSeenVersion == version) return;
+    _lastSeenVersion = version;
+    _prefs?.setString(_kLastSeenVersionKey, version);
     notifyListeners();
   }
 }
