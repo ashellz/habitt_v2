@@ -1299,5 +1299,14 @@
   "supportHabittRow": "Apoya a Habitt",
   "notificationsOffInSystemTitle": "Las notificaciones están desactivadas",
   "notificationsOffInSystemDesc": "Habitt no puede enviar recordatorios porque las notificaciones están desactivadas para la app en los ajustes del dispositivo.",
-  "openSettings": "Abrir ajustes"
+  "openSettings": "Abrir ajustes",
+  "pausedTag": "En pausa",
+  "tomorrow": "Mañana",
+  "dayMonthLabel": "{day} {month}",
+  "dayMonthYearLabel": "{day} {month} {year}",
+  "nextScheduledTitle": "Próxima vez",
+  "nextResetTitle": "Próximo reinicio",
+  "dateWithTimeLabel": "{date}, {time}",
+  "weeklyResetInfo": "El progreso semanal se reinicia cada lunes.\nTu objetivo general y tu racha no se verán afectados.",
+  "monthlyResetInfo": "El progreso mensual se reinicia el día 1 de cada mes.\nTu objetivo general y tu racha no se verán afectados."
 }

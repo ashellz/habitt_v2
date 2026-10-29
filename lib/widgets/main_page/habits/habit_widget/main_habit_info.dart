@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
@@ -12,6 +13,8 @@ import 'package:habitt/util/format_minutes_of_day.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/get_sleep_amount_string.dart';
 import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:habitt/widgets/habit_widget/habit_tag.dart';
+import 'package:habitt/widgets/habit_widget/next_scheduled_tag.dart';
 import 'package:provider/provider.dart';
 
 class MainHabitInfo extends StatelessWidget {
@@ -129,15 +132,11 @@ class MainHabitInfo extends StatelessWidget {
                 ),
               ),
             ),
-            if (habit.optional && !habitsPage) optionalTag(loc),
+            if (habit.optional && !habitsPage) _optionalTag(loc),
           ],
         ),
 
-        if (habit.optional && habitsPage)
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: optionalTag(loc),
-          ),
+        if (habitsPage) _habitsPageTags(context, loc),
         if (isAmount || isDuration || isTimeOfDay)
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
@@ -169,23 +168,48 @@ class MainHabitInfo extends StatelessWidget {
     );
   }
 
-  AnimatedContainer optionalTag(AppLocalizations loc) {
-    return AnimatedContainer(
-      curve: Curves.linear,
-      duration: Duration(milliseconds: 150),
-      decoration: BoxDecoration(
-        color: habit.completed && !habitsPage ? cp.bg : cp.habitBg,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      padding: const EdgeInsets.fromLTRB(4, 0, 4, 2),
-      child: Text(
-        loc.optional,
-        style: TextStyle(
-          color: cp.isDark ? cp.greyText : cp.lightGreyText,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+  // ─── Tags ─────────────────────────────────────────────
+
+  // Habits page only: paused wins over everything, otherwise optional and the
+  // next scheduled day (for habits not scheduled today) sit side by side.
+  Widget _habitsPageTags(BuildContext context, AppLocalizations loc) {
+    if (habit.isDeleted == true) return const SizedBox.shrink();
+
+    final List<Widget> tags;
+    if (habit.isPaused == true) {
+      tags = [_pausedTag(loc)];
+    } else {
+      final habitProvider = context.watch<HabitProvider>();
+      final nextDate =
+          habitProvider.appearsOnDay(habit, DateTime.now())
+              ? null
+              : habitProvider.nextScheduledDate(habit);
+      tags = [
+        if (habit.optional) _optionalTag(loc),
+        if (nextDate != null) NextScheduledTag(date: nextDate, cp: cp),
+      ];
+    }
+    if (tags.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: Wrap(spacing: 4, runSpacing: 4, children: tags),
+    );
+  }
+
+  Widget _optionalTag(AppLocalizations loc) {
+    return HabitTag(
+      label: loc.optional,
+      color: cp.isDark ? cp.greyText : cp.lightGreyText,
+      backgroundColor: habit.completed && !habitsPage ? cp.bg : cp.habitBg,
+    );
+  }
+
+  Widget _pausedTag(AppLocalizations loc) {
+    return HabitTag(
+      label: loc.pausedTag,
+      color: ColorProvider.current,
+      backgroundColor: cp.currentTint,
     );
   }
 }

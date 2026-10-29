@@ -32,7 +32,6 @@ class NewHabitWidget extends StatefulWidget {
 class _NewHabitWidgetState extends State<NewHabitWidget>
     with TickerProviderStateMixin {
   static const int _segmentCount = 12;
-  static const Color _currentColor = Color(0xFFFFC21A);
   late AnimationController _controller;
   late List<Animation<double>> _segmentAnimations;
   late bool _previousCompleted;
@@ -257,7 +256,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
             final stops = <double>[];
             final baseColor =
                 widget.isCurrent
-                    ? _currentColor.withValues(alpha: 0.1)
+                    ? cp.currentTint
                     : cp.widget;
 
             for (int i = 0; i < _segmentCount; i++) {
@@ -279,7 +278,7 @@ class _NewHabitWidgetState extends State<NewHabitWidget>
                         isCompleted
                             ? cp.main.withOpacity(0.2)
                             : widget.isCurrent
-                            ? _currentColor.withValues(alpha: 0.3)
+                            ? cp.currentBorder
                             : cp.border,
                   ),
                   borderRadius: BorderRadius.circular(24),

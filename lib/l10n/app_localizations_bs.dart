@@ -3579,4 +3579,44 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get openSettings => 'Otvori postavke';
+
+  @override
+  String get pausedTag => 'Pauzirano';
+
+  @override
+  String get tomorrow => 'Sutra';
+
+  @override
+  String dayMonthLabel(String day, String daySuffix, String month) {
+    return '$day. $month';
+  }
+
+  @override
+  String dayMonthYearLabel(
+    String day,
+    String daySuffix,
+    String month,
+    String year,
+  ) {
+    return '$day. $month $year';
+  }
+
+  @override
+  String get nextScheduledTitle => 'Sljedeći termin';
+
+  @override
+  String get nextResetTitle => 'Sljedeći reset';
+
+  @override
+  String dateWithTimeLabel(String date, String time) {
+    return '$date, $time';
+  }
+
+  @override
+  String get weeklyResetInfo =>
+      'Sedmični napredak se resetuje svakog ponedjeljka.\nTvoj ukupni cilj i streak neće biti pogođeni.';
+
+  @override
+  String get monthlyResetInfo =>
+      'Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni.';
 }

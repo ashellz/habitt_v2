@@ -706,6 +706,24 @@ class HabitProvider extends ChangeNotifier {
     return _appearsOnDay(habit, day);
   }
 
+  // How far ahead nextScheduledDate looks. Longest gap a schedule can have is
+  // a monthly habit on day 31 (two months), so this always finds a day for
+  // anything that is scheduled at all.
+  static const int _nextScheduledLookaheadDays = 62;
+
+  /// The first day after [from] (default today) the habit is scheduled on, or
+  /// null when it is paused or nothing is scheduled within the lookahead.
+  /// Callers that want today as well check [appearsOnDay] first.
+  DateTime? nextScheduledDate(Habit habit, {DateTime? from}) {
+    if (habit.isPaused == true) return null;
+    final start = _normalizeDate(from ?? DateTime.now());
+    for (var i = 1; i <= _nextScheduledLookaheadDays; i++) {
+      final day = DateTime(start.year, start.month, start.day + i);
+      if (_appearsOnDay(habit, day)) return day;
+    }
+    return null;
+  }
+
   // public verson of filtered habits for day
   List<Habit> habitsCountingForDay(DateTime day, List<Habit> source) {
     return _filteredHabitsForDay(day, source);

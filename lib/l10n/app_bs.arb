@@ -1289,5 +1289,14 @@
   "supportHabittRow": "Podrži Habitt",
   "notificationsOffInSystemTitle": "Obavijesti su isključene",
   "notificationsOffInSystemDesc": "Habitt ne može slati podsjetnike jer su obavijesti za aplikaciju isključene u postavkama uređaja.",
-  "openSettings": "Otvori postavke"
+  "openSettings": "Otvori postavke",
+  "pausedTag": "Pauzirano",
+  "tomorrow": "Sutra",
+  "dayMonthLabel": "{day}. {month}",
+  "dayMonthYearLabel": "{day}. {month} {year}",
+  "nextScheduledTitle": "Sljedeći termin",
+  "nextResetTitle": "Sljedeći reset",
+  "dateWithTimeLabel": "{date}, {time}",
+  "weeklyResetInfo": "Sedmični napredak se resetuje svakog ponedjeljka.\nTvoj ukupni cilj i streak neće biti pogođeni.",
+  "monthlyResetInfo": "Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni."
 }
