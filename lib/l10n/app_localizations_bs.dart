@@ -3622,4 +3622,33 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get ok => 'U redu';
+
+  @override
+  String get whatsNewTitle => 'Šta je novo u 2.5.0';
+
+  @override
+  String get whatsNewDesc =>
+      'Nekoliko stvari koje smo dodali od prošlog ažuriranja.';
+
+  @override
+  String get whatsNewHealth =>
+      'Sinhronizuj korake, san i više iz Apple Health ili Health Connect';
+
+  @override
+  String get whatsNewAlarms =>
+      'Alarmi za navike koji zvone dok ih ne isključiš';
+
+  @override
+  String get whatsNewShowAgain =>
+      'Propuštene sedmične i mjesečne navike mogu se ponovo prikazati';
+
+  @override
+  String get whatsNewPlan =>
+      'Prikaz Dnevnog plana s vremenskim rasponima za tvoj dan';
+
+  @override
+  String get whatsNewStrength => 'Snaga navike kroz vrijeme u detaljima navike';
+
+  @override
+  String get whatsNewThemes => 'Nove boje tema, besplatne za sve';
 }

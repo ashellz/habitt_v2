@@ -18,6 +18,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/util/streak_moment.dart';
+import 'package:habitt/util/whats_new_flow.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/dialogs/outdated_other_device_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -166,6 +167,11 @@ class _HomePageState extends State<HomePage>
 
       if (mounted) {
         await runStreakMoment(context);
+      }
+
+      // launch only, after the streak moment so the two never overlap
+      if (mounted) {
+        await maybeShowWhatsNew(context);
       }
     });
   }

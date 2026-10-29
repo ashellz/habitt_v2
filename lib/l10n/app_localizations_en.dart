@@ -3623,4 +3623,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'Ok';
+
+  @override
+  String get whatsNewTitle => 'What\'s new in 2.5.0';
+
+  @override
+  String get whatsNewDesc => 'A few things we added since the last update.';
+
+  @override
+  String get whatsNewHealth =>
+      'Sync steps, sleep and more from Apple Health or Health Connect';
+
+  @override
+  String get whatsNewAlarms => 'Habit alarms that ring until you dismiss them';
+
+  @override
+  String get whatsNewShowAgain =>
+      'Missed weekly and monthly habits can show up again';
+
+  @override
+  String get whatsNewPlan => 'A Daily Plan view with time ranges for your day';
+
+  @override
+  String get whatsNewStrength =>
+      'Habit strength over time in the habit details';
+
+  @override
+  String get whatsNewThemes => 'New theme colors, free for everyone';
 }

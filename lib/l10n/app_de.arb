@@ -1309,5 +1309,13 @@
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "Der Wochenfortschritt wird jeden Montag zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.",
   "monthlyResetInfo": "Der Monatsfortschritt wird am 1. jedes Monats zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.",
-  "ok": "OK"
+  "ok": "OK",
+  "whatsNewTitle": "Neu in 2.5.0",
+  "whatsNewDesc": "Ein paar Neuerungen seit dem letzten Update.",
+  "whatsNewHealth": "Schritte, Schlaf und mehr aus Apple Health oder Health Connect synchronisieren",
+  "whatsNewAlarms": "Gewohnheits-Wecker, die klingeln, bis du sie ausschaltest",
+  "whatsNewShowAgain": "Verpasste wöchentliche und monatliche Gewohnheiten können erneut erscheinen",
+  "whatsNewPlan": "Eine Tagesplan-Ansicht mit Zeitbereichen für deinen Tag",
+  "whatsNewStrength": "Stärke der Gewohnheit im Zeitverlauf in den Details",
+  "whatsNewThemes": "Neue Designfarben, kostenlos für alle"
 }

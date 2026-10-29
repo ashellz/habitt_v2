@@ -1309,5 +1309,13 @@
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "I progressi settimanali si azzerano ogni lunedì.\nIl tuo obiettivo generale e la tua serie non saranno influenzati.",
   "monthlyResetInfo": "I progressi mensili si azzerano il 1° di ogni mese.\nIl tuo obiettivo generale e la tua serie non saranno influenzati.",
-  "ok": "Ok"
+  "ok": "Ok",
+  "whatsNewTitle": "Novità della 2.5.0",
+  "whatsNewDesc": "Alcune cose che abbiamo aggiunto dall'ultimo aggiornamento.",
+  "whatsNewHealth": "Sincronizza passi, sonno e altro da Apple Health o Health Connect",
+  "whatsNewAlarms": "Sveglie per le abitudini che suonano finché non le spegni",
+  "whatsNewShowAgain": "Le abitudini settimanali e mensili mancate possono riapparire",
+  "whatsNewPlan": "Una vista Piano giornaliero con fasce orarie per la tua giornata",
+  "whatsNewStrength": "La forza dell'abitudine nel tempo nei dettagli",
+  "whatsNewThemes": "Nuovi colori del tema, gratis per tutti"
 }

@@ -6147,6 +6147,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ok'**
   String get ok;
+
+  /// No description provided for @whatsNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new in 2.5.0'**
+  String get whatsNewTitle;
+
+  /// No description provided for @whatsNewDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'A few things we added since the last update.'**
+  String get whatsNewDesc;
+
+  /// No description provided for @whatsNewHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync steps, sleep and more from Apple Health or Health Connect'**
+  String get whatsNewHealth;
+
+  /// No description provided for @whatsNewAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit alarms that ring until you dismiss them'**
+  String get whatsNewAlarms;
+
+  /// No description provided for @whatsNewShowAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed weekly and monthly habits can show up again'**
+  String get whatsNewShowAgain;
+
+  /// No description provided for @whatsNewPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'A Daily Plan view with time ranges for your day'**
+  String get whatsNewPlan;
+
+  /// No description provided for @whatsNewStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit strength over time in the habit details'**
+  String get whatsNewStrength;
+
+  /// No description provided for @whatsNewThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'New theme colors, free for everyone'**
+  String get whatsNewThemes;
 }
 
 class _AppLocalizationsDelegate

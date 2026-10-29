@@ -1299,5 +1299,13 @@
   "dateWithTimeLabel": "{date}, {time}",
   "weeklyResetInfo": "Sedmični napredak se resetuje svakog ponedjeljka.\nTvoj ukupni cilj i streak neće biti pogođeni.",
   "monthlyResetInfo": "Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni.",
-  "ok": "U redu"
+  "ok": "U redu",
+  "whatsNewTitle": "Šta je novo u 2.5.0",
+  "whatsNewDesc": "Nekoliko stvari koje smo dodali od prošlog ažuriranja.",
+  "whatsNewHealth": "Sinhronizuj korake, san i više iz Apple Health ili Health Connect",
+  "whatsNewAlarms": "Alarmi za navike koji zvone dok ih ne isključiš",
+  "whatsNewShowAgain": "Propuštene sedmične i mjesečne navike mogu se ponovo prikazati",
+  "whatsNewPlan": "Prikaz Dnevnog plana s vremenskim rasponima za tvoj dan",
+  "whatsNewStrength": "Snaga navike kroz vrijeme u detaljima navike",
+  "whatsNewThemes": "Nove boje tema, besplatne za sve"
 }
