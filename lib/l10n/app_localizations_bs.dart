@@ -3584,28 +3584,37 @@ class AppLocalizationsBs extends AppLocalizations {
   String get whatsNewTitle => 'Šta je novo u 2.5.0';
 
   @override
-  String get whatsNewDesc =>
-      'Nekoliko stvari koje smo dodali od prošlog ažuriranja.';
+  String get whatsNewHealthTitle => 'Sinhronizacija zdravlja';
 
   @override
-  String get whatsNewHealth =>
-      'Sinhronizuj korake, san i više iz Apple Health ili Health Connect';
+  String get whatsNewHealthDesc =>
+      'Poveži naviku s koracima, snom, treninzima, minutama svjesnosti ili kalorijama i Habitt automatski unosi tvoj napredak.';
 
   @override
-  String get whatsNewAlarms =>
-      'Alarmi za navike koji zvone dok ih ne isključiš';
+  String get whatsNewAlarmsTitle => 'Alarmi za navike';
 
   @override
-  String get whatsNewShowAgain =>
-      'Propuštene sedmične i mjesečne navike mogu se ponovo prikazati';
+  String get whatsNewAlarmsDesc =>
+      'Uključi Alarm za naviku i zvonit će dok ga ne isključiš. Savršeno za lijekove i sve što ne smiješ propustiti.';
 
   @override
-  String get whatsNewPlan =>
-      'Prikaz Dnevnog plana s vremenskim rasponima za tvoj dan';
+  String get whatsNewPlanTitle => 'Dnevni plan';
 
   @override
-  String get whatsNewStrength => 'Snaga navike kroz vrijeme u detaljima navike';
+  String get whatsNewPlanDesc =>
+      'Prebaci početni ekran na Dnevni plan da vidiš svoje navike raspoređene kroz dan.';
 
   @override
-  String get whatsNewThemes => 'Nove boje tema, besplatne za sve';
+  String get whatsNewStrengthTitle => 'Snaga kroz vrijeme';
+
+  @override
+  String get whatsNewStrengthDesc =>
+      'Prati kako svaka navika jača, s grafikonom odmah u njenim detaljima.';
+
+  @override
+  String get whatsNewThemesTitle => 'Nove boje tema';
+
+  @override
+  String get whatsNewThemesDesc =>
+      'Učini Habitt svojim s novim bojama naglaska, besplatno za sve.';
 }

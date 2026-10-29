@@ -3619,28 +3619,37 @@ class AppLocalizationsDe extends AppLocalizations {
   String get whatsNewTitle => 'Neu in 2.5.0';
 
   @override
-  String get whatsNewDesc => 'Ein paar Neuerungen seit dem letzten Update.';
+  String get whatsNewHealthTitle => 'Health-Sync';
 
   @override
-  String get whatsNewHealth =>
-      'Schritte, Schlaf und mehr aus Apple Health oder Health Connect synchronisieren';
+  String get whatsNewHealthDesc =>
+      'Verknüpfe eine Gewohnheit mit Schritten, Schlaf, Workouts, Achtsamkeitsminuten oder Kalorien und Habitt trägt deinen Fortschritt automatisch ein.';
 
   @override
-  String get whatsNewAlarms =>
-      'Gewohnheits-Wecker, die klingeln, bis du sie ausschaltest';
+  String get whatsNewAlarmsTitle => 'Gewohnheits-Wecker';
 
   @override
-  String get whatsNewShowAgain =>
-      'Verpasste wöchentliche und monatliche Gewohnheiten können erneut erscheinen';
+  String get whatsNewAlarmsDesc =>
+      'Schalte den Wecker für eine Gewohnheit ein und er klingelt, bis du ihn ausschaltest. Perfekt für Medikamente und alles, was du nicht verpassen darfst.';
 
   @override
-  String get whatsNewPlan =>
-      'Eine Tagesplan-Ansicht mit Zeitbereichen für deinen Tag';
+  String get whatsNewPlanTitle => 'Tagesplan';
 
   @override
-  String get whatsNewStrength =>
-      'Stärke der Gewohnheit im Zeitverlauf in den Details';
+  String get whatsNewPlanDesc =>
+      'Stelle deinen Startbildschirm auf den Tagesplan um und sieh deine Gewohnheiten über den Tag verteilt.';
 
   @override
-  String get whatsNewThemes => 'Neue Designfarben, kostenlos für alle';
+  String get whatsNewStrengthTitle => 'Stärke im Zeitverlauf';
+
+  @override
+  String get whatsNewStrengthDesc =>
+      'Sieh mit einem Diagramm direkt in den Details, wie jede Gewohnheit stärker wird.';
+
+  @override
+  String get whatsNewThemesTitle => 'Neue Designfarben';
+
+  @override
+  String get whatsNewThemesDesc =>
+      'Mach Habitt zu deinem mit neuen Akzentfarben, kostenlos für alle.';
 }

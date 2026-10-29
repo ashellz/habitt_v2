@@ -1301,11 +1301,14 @@
   "notificationsOffInSystemDesc": "Habitt non può inviare promemoria perché le notifiche sono disattivate per l'app nelle impostazioni del dispositivo.",
   "openSettings": "Apri impostazioni",
   "whatsNewTitle": "Novità della 2.5.0",
-  "whatsNewDesc": "Alcune cose che abbiamo aggiunto dall'ultimo aggiornamento.",
-  "whatsNewHealth": "Sincronizza passi, sonno e altro da Apple Health o Health Connect",
-  "whatsNewAlarms": "Sveglie per le abitudini che suonano finché non le spegni",
-  "whatsNewShowAgain": "Le abitudini settimanali e mensili mancate possono riapparire",
-  "whatsNewPlan": "Una vista Piano giornaliero con fasce orarie per la tua giornata",
-  "whatsNewStrength": "La forza dell'abitudine nel tempo nei dettagli",
-  "whatsNewThemes": "Nuovi colori del tema, gratis per tutti"
+  "whatsNewHealthTitle": "Sincronizzazione salute",
+  "whatsNewHealthDesc": "Collega un'abitudine a passi, sonno, allenamenti, minuti di mindfulness o calorie e Habitt compila i tuoi progressi in automatico.",
+  "whatsNewAlarmsTitle": "Sveglie per le abitudini",
+  "whatsNewAlarmsDesc": "Attiva la sveglia per un'abitudine e suonerà finché non la spegni. Perfetta per i farmaci e tutto ciò che non puoi dimenticare.",
+  "whatsNewPlanTitle": "Piano giornaliero",
+  "whatsNewPlanDesc": "Passa la schermata iniziale al Piano giornaliero per vedere le tue abitudini distribuite nella giornata.",
+  "whatsNewStrengthTitle": "Forza nel tempo",
+  "whatsNewStrengthDesc": "Guarda come ogni abitudine si rafforza con un grafico nei suoi dettagli.",
+  "whatsNewThemesTitle": "Nuovi colori del tema",
+  "whatsNewThemesDesc": "Rendi Habitt tuo con nuovi colori d'accento, gratis per tutti."
 }

@@ -1326,11 +1326,14 @@
   "notificationsOffInSystemDesc": "Habitt can't send reminders because notifications are turned off for it in your device settings.",
   "openSettings": "Open settings",
   "whatsNewTitle": "What's new in 2.5.0",
-  "whatsNewDesc": "A few things we added since the last update.",
-  "whatsNewHealth": "Sync steps, sleep and more from Apple Health or Health Connect",
-  "whatsNewAlarms": "Habit alarms that ring until you dismiss them",
-  "whatsNewShowAgain": "Missed weekly and monthly habits can show up again",
-  "whatsNewPlan": "A Daily Plan view with time ranges for your day",
-  "whatsNewStrength": "Habit strength over time in the habit details",
-  "whatsNewThemes": "New theme colors, free for everyone"
+  "whatsNewHealthTitle": "Health sync",
+  "whatsNewHealthDesc": "Link a habit to steps, sleep, workouts, mindful minutes or calories and Habitt fills in your progress automatically.",
+  "whatsNewAlarmsTitle": "Habit alarms",
+  "whatsNewAlarmsDesc": "Turn on Alarm for a habit and it rings until you dismiss it. Perfect for medicine and other things you can't miss.",
+  "whatsNewPlanTitle": "Daily Plan",
+  "whatsNewPlanDesc": "Switch your home screen to the Daily Plan to see your habits laid out across the day.",
+  "whatsNewStrengthTitle": "Strength over time",
+  "whatsNewStrengthDesc": "Watch each habit grow stronger with a chart right in its details.",
+  "whatsNewThemesTitle": "New theme colors",
+  "whatsNewThemesDesc": "Make Habitt yours with new accent colors, free for everyone."
 }

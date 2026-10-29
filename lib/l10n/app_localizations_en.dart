@@ -3585,26 +3585,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatsNewTitle => 'What\'s new in 2.5.0';
 
   @override
-  String get whatsNewDesc => 'A few things we added since the last update.';
+  String get whatsNewHealthTitle => 'Health sync';
 
   @override
-  String get whatsNewHealth =>
-      'Sync steps, sleep and more from Apple Health or Health Connect';
+  String get whatsNewHealthDesc =>
+      'Link a habit to steps, sleep, workouts, mindful minutes or calories and Habitt fills in your progress automatically.';
 
   @override
-  String get whatsNewAlarms => 'Habit alarms that ring until you dismiss them';
+  String get whatsNewAlarmsTitle => 'Habit alarms';
 
   @override
-  String get whatsNewShowAgain =>
-      'Missed weekly and monthly habits can show up again';
+  String get whatsNewAlarmsDesc =>
+      'Turn on Alarm for a habit and it rings until you dismiss it. Perfect for medicine and other things you can\'t miss.';
 
   @override
-  String get whatsNewPlan => 'A Daily Plan view with time ranges for your day';
+  String get whatsNewPlanTitle => 'Daily Plan';
 
   @override
-  String get whatsNewStrength =>
-      'Habit strength over time in the habit details';
+  String get whatsNewPlanDesc =>
+      'Switch your home screen to the Daily Plan to see your habits laid out across the day.';
 
   @override
-  String get whatsNewThemes => 'New theme colors, free for everyone';
+  String get whatsNewStrengthTitle => 'Strength over time';
+
+  @override
+  String get whatsNewStrengthDesc =>
+      'Watch each habit grow stronger with a chart right in its details.';
+
+  @override
+  String get whatsNewThemesTitle => 'New theme colors';
+
+  @override
+  String get whatsNewThemesDesc =>
+      'Make Habitt yours with new accent colors, free for everyone.';
 }
