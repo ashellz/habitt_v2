@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/models/app_theme.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/theme_catalog.dart';
@@ -100,10 +101,12 @@ class _ThemeCard extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
-            child: const Icon(
-              Icons.check_rounded,
-              size: 19,
-              color: Colors.white,
+            child: SvgPicture.asset(
+              'assets/images/new-svg/check.svg',
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           const Spacer(),
