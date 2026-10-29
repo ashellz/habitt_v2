@@ -72,11 +72,17 @@ class _WhatsNewDialogState extends State<WhatsNewDialog> {
               controller: _controller,
               onPageChanged: (i) => setState(() => _index = i),
               children: [
-                const WhatsNewHealthGraphic(),
-                const WhatsNewAlarmGraphic(),
-                WhatsNewPlanGraphic(active: _index == 2),
-                const WhatsNewStrengthGraphic(),
-                const WhatsNewThemesGraphic(),
+                for (final graphic in [
+                  const WhatsNewHealthGraphic(),
+                  const WhatsNewAlarmGraphic(),
+                  WhatsNewPlanGraphic(active: _index == 2),
+                  const WhatsNewStrengthGraphic(),
+                  const WhatsNewThemesGraphic(),
+                ])
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: graphic,
+                  ),
               ],
             ),
           ),

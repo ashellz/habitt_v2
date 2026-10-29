@@ -34,7 +34,6 @@ enum Colorfulness {
 
 class PreferencesProvider extends ChangeNotifier {
   static const String _kShowUploadActivityKey = 'show_upload_activity';
-  static const String _kShowStreakCelebrationKey = 'show_streak_celebration';
   static const String _kShowCategoriesOnMainPageKey =
       'show_categories_on_main_page';
   static const String _kHasSelectedPastDayKey = 'has_selected_past_day';
@@ -50,7 +49,6 @@ class PreferencesProvider extends ChangeNotifier {
   Colorfulness _colorfulness = Colorfulness.standard;
   bool _americanTimeFormat = false;
   bool _showUploadActivity = true;
-  bool _showStreakCelebration = true;
   bool _showCategoriesOnMainPage = false;
   bool _hasSelectedPastDay = false;
   bool _playCompletionSound = true;
@@ -66,7 +64,6 @@ class PreferencesProvider extends ChangeNotifier {
   Colorfulness get colorfulness => _colorfulness;
   bool get americanTimeFormat => _americanTimeFormat;
   bool get showUploadActivity => _showUploadActivity;
-  bool get showStreakCelebration => _showStreakCelebration;
   bool get showCategoriesOnMainPage => _showCategoriesOnMainPage;
   bool get hasSelectedPastDay => _hasSelectedPastDay;
   bool get playCompletionSound => _playCompletionSound;
@@ -87,8 +84,6 @@ class PreferencesProvider extends ChangeNotifier {
     _glassFeel = _prefs?.getBool('glassFeel') ?? true;
     _americanTimeFormat = _prefs?.getBool('americanTimeFormat') ?? false;
     _showUploadActivity = _prefs?.getBool(_kShowUploadActivityKey) ?? true;
-    _showStreakCelebration =
-        _prefs?.getBool(_kShowStreakCelebrationKey) ?? true;
     _showCategoriesOnMainPage =
         _prefs?.getBool(_kShowCategoriesOnMainPageKey) ?? false;
     _hasSelectedPastDay = _prefs?.getBool(_kHasSelectedPastDayKey) ?? false;
@@ -127,12 +122,6 @@ class PreferencesProvider extends ChangeNotifier {
   void setShowUploadActivity(bool value) {
     _showUploadActivity = value;
     _prefs?.setBool(_kShowUploadActivityKey, value);
-    notifyListeners();
-  }
-
-  void setShowStreakCelebration(bool value) {
-    _showStreakCelebration = value;
-    _prefs?.setBool(_kShowStreakCelebrationKey, value);
     notifyListeners();
   }
 

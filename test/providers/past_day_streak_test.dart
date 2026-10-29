@@ -11,6 +11,8 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/providers/support_provider.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +66,6 @@ void main() {
       'daySnapshotsSanitized_v1': true,
       'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
       'play_completion_sound': false,
-      'show_streak_celebration': false,
     });
     final prefs = await SharedPreferences.getInstance();
     await habitBox.clear();
@@ -102,6 +103,16 @@ void main() {
           ChangeNotifierProvider<HabitStatsProvider>.value(value: statsProvider),
           ChangeNotifierProvider(create: (_) => CategoryProvider(habitProvider)),
           ChangeNotifierProvider(create: (_) => StateProvider(prefs)),
+          ChangeNotifierProvider(create: (_) => StatsProvider(prefs: prefs)),
+          ChangeNotifierProvider(
+            create:
+                (_) => SupportProvider(
+                  prefs,
+                  readSupporter: () => false,
+                  checkSupporter: () async => false,
+                  platformSupportsAsks: false,
+                ),
+          ),
           ChangeNotifierProvider(create: (_) => PreferencesProvider(prefs)),
         ],
         child: MaterialApp(

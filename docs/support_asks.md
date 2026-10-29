@@ -74,14 +74,13 @@ User-opened surfaces (the sheet, the rows, the support page) are exempt.
 [`runStreakMoment`](../lib/util/streak_moment.dart) is the single entry point
 for everything that can happen when the perfect-days streak may have grown. It is
 called from `home_page` on launch and on resume, and from the past-day completion
-path (with `celebrationOnly: true`, where it does nothing if the celebration
-preference is off). Steps:
+path. The celebration is always on; there is no preference for it. Steps:
 
 1. Hold `StateProvider.streakCelebrationPendingOrActive` so the insight sheet
    defers. A second trigger while one is running is ignored.
 2. Recompute the streak and record whether it ever reached 7
    (`SupportProvider.noteStreak`).
-3. Evaluate the celebration when its preference is on
+3. Evaluate the celebration
    ([`evaluateStreakCelebration`](../lib/util/perfect_streak_celebration.dart)).
 4. Pick at most one ask with `planMomentAsk`, in the order of
    `kMomentAskPriority`: **review first, then the milestone card**. The review is

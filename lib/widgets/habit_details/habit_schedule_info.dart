@@ -22,7 +22,7 @@ class HabitScheduleInfo extends StatelessWidget {
   final ColorProvider cp;
 
   // Fixed brand purple of the reset card; its tint is derived per mode.
-  static const Color _resetPurple = Color(0xFF8165C8);
+  static const Color _resetPurple = Color(0xFF433E48);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class HabitScheduleInfo extends StatelessWidget {
     }
 
     return _card(
-      color: cp.isDark ? cp.field : cp.bg,
+      color: cp.bg,
       border: Border.all(color: cp.border),
       title: loc.nextScheduledTitle,
       titleColor: cp.isDark ? cp.lightGreyText : cp.greyText,
@@ -82,16 +82,10 @@ class HabitScheduleInfo extends StatelessWidget {
     final localeTag = Localizations.localeOf(context).toString();
 
     return _card(
-      color:
-          cp.isDark
-              ? _resetPurple.withValues(alpha: 0.1)
-              : const Color(0xFFF9F5FC),
+      color: cp.isDark ? const Color(0xFF2F2D31) : const Color(0xFFF9F5FC),
       title: loc.nextResetTitle,
       titleColor: cp.text,
-      pillColor:
-          cp.isDark
-              ? _resetPurple.withValues(alpha: 0.2)
-              : const Color(0xFFF2E8FF),
+      pillColor: cp.isDark ? _resetPurple : const Color(0xFFF2E8FF),
       onPillTap: () => _showResetInfo(context),
       pill: Row(
         mainAxisSize: MainAxisSize.min,

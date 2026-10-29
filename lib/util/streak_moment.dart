@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
@@ -20,22 +19,11 @@ bool _running = false;
 ///
 /// 1. holds the shared gate so the insight sheet defers,
 /// 2. recomputes the streak and records whether it reached the review milestone,
-/// 3. evaluates the celebration (when its preference is ON),
+/// 3. evaluates the celebration,
 /// 4. picks at most one ask via the daily budget (review first, then the
 ///    milestone support card), never claiming before it knows the ask can show,
 /// 5. shows the celebration, then the review AFTER the dialog is dismissed.
-///
-/// [celebrationOnly] is for the past-day completion hook, where only the
-/// celebration is worth reacting to in the moment: with the celebration
-/// preference OFF it does nothing, and a due review waits for the next
-/// launch/resume.
-Future<void> runStreakMoment(
-  BuildContext context, {
-  bool celebrationOnly = false,
-}) async {
-  final prefsProvider = context.read<PreferencesProvider>();
-  if (celebrationOnly && !prefsProvider.showStreakCelebration) return;
-
+Future<void> runStreakMoment(BuildContext context) async {
   // A second trigger while one is running (launch + resume, or a past-day
   // completion) would otherwise clear the gate early or repeat an ask.
   if (_running) return;
@@ -52,10 +40,10 @@ Future<void> runStreakMoment(
     statsProvider.perfectDaysStreak = streak;
     support.noteStreak(streak);
 
-    StreakCelebration? celebration;
-    if (prefsProvider.showStreakCelebration) {
-      celebration = await evaluateStreakCelebration(context, streak: streak);
-    }
+    final celebration = await evaluateStreakCelebration(
+      context,
+      streak: streak,
+    );
     if (!context.mounted) return;
 
     final crossed =

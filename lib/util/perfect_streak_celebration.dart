@@ -39,7 +39,7 @@ class StreakCelebration {
 
 /// Decides whether the streak celebration should show for [streak], a freshly
 /// recomputed value (never the queued/stale one). Returns null when it should
-/// not. The caller checks the "Streak celebration" preference first.
+/// not.
 ///
 /// Rules (see the `perfect-streak-celebration` spec):
 /// - First run / post-restore seeds the celebrated value without showing.

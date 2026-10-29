@@ -263,7 +263,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                         children: [
                           const SizedBox(height: 14),
                           _summaryCard(cp, habit, displayHabit, stats),
-                          HabitScheduleInfo(habit: habit, cp: cp),
+
                           const SizedBox(height: 18),
                           _notesSection(cp),
                           const SizedBox(height: 24),
@@ -279,6 +279,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 child: Column(
                   children: [
                     SizedBox(height: 24),
+                    HabitScheduleInfo(habit: habit, cp: cp),
+                    SizedBox(height: 12),
                     if (habit.healthMetric != null) ...[
                       HealthStatsCard(habit: habit),
                       SizedBox(height: 24),

@@ -935,7 +935,7 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple != yesterday || !context.mounted) {
       return;
     }
-    unawaited(runStreakMoment(context, celebrationOnly: true));
+    unawaited(runStreakMoment(context));
   }
 
   Map<DateTime, double> getThisWeekProgress({DateTime? anchorDate}) {
