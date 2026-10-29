@@ -121,4 +121,46 @@ void main() {
   test('paused habit has no next date', () {
     expect(provider.nextScheduledDate(_habit(isPaused: true)), isNull);
   });
+
+  group('nextAppearance', () {
+    // "every 3 days" anchored 8 days ago: scheduled -8, -5, -2, +1, +4, ...
+    Habit custom({bool completed = false}) {
+      final anchor = today.subtract(const Duration(days: 8));
+      return Habit(
+        id: 1,
+        name: 'omega 3',
+        iconPath: '',
+        categoryId: 0,
+        scheduleType: ScheduleType.custom,
+        customIntervalDays: 3,
+        showIfMissed: true,
+        completed: completed,
+        createdAt: today.subtract(const Duration(days: 100)),
+        lastCustomUpdate: anchor,
+        customAppearance: [
+          for (var i = 0; i < 365; i += 3)
+            _dayKey(anchor.add(Duration(days: i))),
+        ],
+      );
+    }
+
+    test('missed custom habit kept on by show if missed is today', () {
+      expect(provider.nextAppearance(custom()), today);
+    });
+
+    test('once completed it points at the next scheduled day', () {
+      expect(
+        provider.nextAppearance(custom(completed: true)),
+        DateTime(today.year, today.month, today.day + 1),
+      );
+    });
+
+    test('paused habit has none', () {
+      expect(provider.nextAppearance(_habit(isPaused: true)), isNull);
+    });
+
+    test('daily habit still to do is today', () {
+      expect(provider.nextAppearance(_habit()), today);
+    });
+  });
 }

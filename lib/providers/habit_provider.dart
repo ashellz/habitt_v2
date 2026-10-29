@@ -711,6 +711,16 @@ class HabitProvider extends ChangeNotifier {
   // anything that is scheduled at all.
   static const int _nextScheduledLookaheadDays = 62;
 
+  /// What a "next scheduled" display shows: today while the habit is still to
+  /// do today (scheduled, or kept on by "show again if missed"), otherwise the
+  /// next scheduled day. Null when paused or nothing is coming up.
+  DateTime? nextAppearance(Habit habit) {
+    if (habit.isPaused == true) return null;
+    final today = _normalizeDate(DateTime.now());
+    if (_appearsOnDay(habit, today) && !habit.completed) return today;
+    return nextScheduledDate(habit);
+  }
+
   /// The first day after [from] (default today) the habit is scheduled on, or
   /// null when it is paused or nothing is scheduled within the lookahead.
   /// Callers that want today as well check [appearsOnDay] first.

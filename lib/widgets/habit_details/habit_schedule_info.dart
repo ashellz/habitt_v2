@@ -33,11 +33,7 @@ class HabitScheduleInfo extends StatelessWidget {
     final habitProvider = context.watch<HabitProvider>();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    // still to do today: "Today", otherwise the next day it comes up
-    final nextDate =
-        habitProvider.appearsOnDay(habit, today) && !habit.completed
-            ? today
-            : habitProvider.nextScheduledDate(habit);
+    final nextDate = habitProvider.nextAppearance(habit);
     final resetDate = nextProgressReset(habit, today);
     if (nextDate == null && resetDate == null) return const SizedBox.shrink();
 
