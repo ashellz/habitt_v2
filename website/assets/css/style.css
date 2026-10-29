@@ -412,6 +412,7 @@ section { position: relative; }
   position: absolute; width: 900px; height: 900px; left: 50%; top: -420px; transform: translateX(-50%);
   background: radial-gradient(circle, rgba(17, 242, 155, .16), transparent 60%); pointer-events: none;
 }
+.privacy .container { max-width: 1360px; }
 .no-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .no-card {
   position: relative; padding: 32px; border-radius: var(--radius);
@@ -421,10 +422,10 @@ section { position: relative; }
 }
 .no-card:hover { transform: translateY(-6px); border-color: #3a3b3b; }
 .no-card .big {
-  font-size: clamp(54px, 6vw, 84px); font-weight: 900; letter-spacing: -.05em; line-height: .9; margin: 18px 0 14px;
+  font-size: clamp(48px, 5.6vw, 80px); font-weight: 900; letter-spacing: -.05em; line-height: .9; margin: 18px 0 14px;
   background: linear-gradient(180deg, #fff, #8c909e); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.no-card .big s { text-decoration-color: #ff6464; text-decoration-thickness: 6px; }
+.no-card .big s { padding-right: .06em; text-decoration-color: #ff6464; text-decoration-thickness: 6px; }
 .no-card p { color: #a4a7ae; }
 .no-card .icon {
   width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center;
@@ -639,6 +640,13 @@ section { position: relative; }
   padding: 40px calc(50vw - 130px) 70px; scrollbar-width: none; perspective: 1400px;
 }
 .gallery-track::-webkit-scrollbar { display: none; }
+/* Spotlight: page colour on both sides fading to clear in the middle */
+.gallery-stage { position: relative; }
+.gallery-stage::before, .gallery-stage::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 34%; z-index: 2; pointer-events: none;
+}
+.gallery-stage::before { left: 0; background: linear-gradient(90deg, var(--bg) 4%, transparent); }
+.gallery-stage::after { right: 0; background: linear-gradient(270deg, var(--bg) 4%, transparent); }
 /* preserve-3d lets the track's perspective reach the phone (it is a grandchild) */
 .gallery-item { flex: none; width: 260px; scroll-snap-align: center; display: grid; gap: 22px; justify-items: center; transform-style: preserve-3d; }
 .gallery-item .phone { --depth: 22px; width: 100%; transition: transform .2s linear; }

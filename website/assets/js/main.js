@@ -475,10 +475,12 @@
         var c = Math.max(-2.5, Math.min(2.5, off));
         var phone = $(".phone", it);
         // Screens face away from the middle: left phones turn left, right ones right
-        phone.style.setProperty("--ry", (c * 24).toFixed(2) + "deg");
-        phone.style.setProperty("--ty", (Math.abs(c) * 18).toFixed(1) + "px");
+        // Tilt saturates after ~1.5 slots so far phones sit flat-ish instead of edge-on
+        var t = Math.max(-1.5, Math.min(1.5, c));
+        phone.style.setProperty("--ry", (t * 11).toFixed(2) + "deg");
+        phone.style.setProperty("--ty", (Math.min(Math.abs(c), 1.5) * 14).toFixed(1) + "px");
         phone.style.transition = "transform .15s linear";
-        phone.style.setProperty("--fade", Math.min(0.35, Math.abs(c) * 0.14).toFixed(2));
+        phone.style.setProperty("--fade", Math.min(0.8, Math.abs(c) * 0.3).toFixed(2));
         // Captions only show under the centred phone and fade in/out with scroll,
         // so they never sit visibly skewed under a tilted phone
         $("figcaption", it).style.opacity = Math.max(0, 1 - Math.abs(off) * 1.8).toFixed(2);
