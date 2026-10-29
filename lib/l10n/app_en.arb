@@ -1324,5 +1324,18 @@
   "supportHabittRow": "Support Habitt",
   "notificationsOffInSystemTitle": "Notifications are turned off",
   "notificationsOffInSystemDesc": "Habitt can't send reminders because notifications are turned off for it in your device settings.",
-  "openSettings": "Open settings"
+  "openSettings": "Open settings",
+  "pausedTag": "Paused",
+  "tomorrow": "Tomorrow",
+  "dayMonthLabel": "{day}{daySuffix} {month}",
+  "@dayMonthLabel": {"placeholders": {"day": {"type": "String"}, "daySuffix": {"type": "String"}, "month": {"type": "String"}}},
+  "dayMonthYearLabel": "{day}{daySuffix} {month} {year}",
+  "@dayMonthYearLabel": {"placeholders": {"day": {"type": "String"}, "daySuffix": {"type": "String"}, "month": {"type": "String"}, "year": {"type": "String"}}},
+  "nextScheduledTitle": "Next scheduled",
+  "nextResetTitle": "Next reset",
+  "dateWithTimeLabel": "{date}, {time}",
+  "@dateWithTimeLabel": {"placeholders": {"date": {"type": "String"}, "time": {"type": "String"}}},
+  "weeklyResetInfo": "Weekly progress resets every Monday.\nYour overall goal and streak won't be affected.",
+  "monthlyResetInfo": "Monthly progress resets on the 1st of every month.\nYour overall goal and streak won't be affected.",
+  "ok": "Ok"
 }

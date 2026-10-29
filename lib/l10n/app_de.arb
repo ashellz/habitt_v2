@@ -1299,5 +1299,15 @@
   "supportHabittRow": "Unterstütze Habitt",
   "notificationsOffInSystemTitle": "Benachrichtigungen sind ausgeschaltet",
   "notificationsOffInSystemDesc": "Habitt kann keine Erinnerungen senden, weil Benachrichtigungen in den Geräteeinstellungen für die App ausgeschaltet sind.",
-  "openSettings": "Einstellungen öffnen"
+  "openSettings": "Einstellungen öffnen",
+  "pausedTag": "Pausiert",
+  "tomorrow": "Morgen",
+  "dayMonthLabel": "{day}. {month}",
+  "dayMonthYearLabel": "{day}. {month} {year}",
+  "nextScheduledTitle": "Nächster Termin",
+  "nextResetTitle": "Nächster Reset",
+  "dateWithTimeLabel": "{date}, {time}",
+  "weeklyResetInfo": "Der Wochenfortschritt wird jeden Montag zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.",
+  "monthlyResetInfo": "Der Monatsfortschritt wird am 1. jedes Monats zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.",
+  "ok": "OK"
 }

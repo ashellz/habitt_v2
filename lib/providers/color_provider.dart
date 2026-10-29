@@ -144,6 +144,13 @@ class ColorProvider extends ChangeNotifier {
   Color get mainTint => main.withValues(alpha: 0.1);
   Color get mainBorder => main.withValues(alpha: 0.2);
 
+  /// Yellow for things that are happening "now" or are on hold: the Plan
+  /// habit whose time interval matches the current time, and the Paused tag.
+  /// Fixed in both modes and for every theme, like the neutrals.
+  static const Color current = Color(0xFFFFC21A);
+  Color get currentTint => current.withValues(alpha: 0.1);
+  Color get currentBorder => current.withValues(alpha: 0.3);
+
   bool get isDark =>
       _mode == ColorMode.dark ||
       (_mode == ColorMode.system &&

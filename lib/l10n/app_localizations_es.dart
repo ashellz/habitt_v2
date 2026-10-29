@@ -3603,4 +3603,47 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get openSettings => 'Abrir ajustes';
+
+  @override
+  String get pausedTag => 'En pausa';
+
+  @override
+  String get tomorrow => 'Mañana';
+
+  @override
+  String dayMonthLabel(String day, String daySuffix, String month) {
+    return '$day $month';
+  }
+
+  @override
+  String dayMonthYearLabel(
+    String day,
+    String daySuffix,
+    String month,
+    String year,
+  ) {
+    return '$day $month $year';
+  }
+
+  @override
+  String get nextScheduledTitle => 'Próxima vez';
+
+  @override
+  String get nextResetTitle => 'Próximo reinicio';
+
+  @override
+  String dateWithTimeLabel(String date, String time) {
+    return '$date, $time';
+  }
+
+  @override
+  String get weeklyResetInfo =>
+      'El progreso semanal se reinicia cada lunes.\nTu objetivo general y tu racha no se verán afectados.';
+
+  @override
+  String get monthlyResetInfo =>
+      'El progreso mensual se reinicia el día 1 de cada mes.\nTu objetivo general y tu racha no se verán afectados.';
+
+  @override
+  String get ok => 'Aceptar';
 }

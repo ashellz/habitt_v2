@@ -6082,6 +6082,71 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open settings'**
   String get openSettings;
+
+  /// No description provided for @pausedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get pausedTag;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @dayMonthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}{daySuffix} {month}'**
+  String dayMonthLabel(String day, String daySuffix, String month);
+
+  /// No description provided for @dayMonthYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}{daySuffix} {month} {year}'**
+  String dayMonthYearLabel(
+    String day,
+    String daySuffix,
+    String month,
+    String year,
+  );
+
+  /// No description provided for @nextScheduledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Next scheduled'**
+  String get nextScheduledTitle;
+
+  /// No description provided for @nextResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Next reset'**
+  String get nextResetTitle;
+
+  /// No description provided for @dateWithTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, {time}'**
+  String dateWithTimeLabel(String date, String time);
+
+  /// No description provided for @weeklyResetInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly progress resets every Monday.\nYour overall goal and streak won\'t be affected.'**
+  String get weeklyResetInfo;
+
+  /// No description provided for @monthlyResetInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly progress resets on the 1st of every month.\nYour overall goal and streak won\'t be affected.'**
+  String get monthlyResetInfo;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Ok'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

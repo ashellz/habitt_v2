@@ -3614,4 +3614,47 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get openSettings => 'Einstellungen öffnen';
+
+  @override
+  String get pausedTag => 'Pausiert';
+
+  @override
+  String get tomorrow => 'Morgen';
+
+  @override
+  String dayMonthLabel(String day, String daySuffix, String month) {
+    return '$day. $month';
+  }
+
+  @override
+  String dayMonthYearLabel(
+    String day,
+    String daySuffix,
+    String month,
+    String year,
+  ) {
+    return '$day. $month $year';
+  }
+
+  @override
+  String get nextScheduledTitle => 'Nächster Termin';
+
+  @override
+  String get nextResetTitle => 'Nächster Reset';
+
+  @override
+  String dateWithTimeLabel(String date, String time) {
+    return '$date, $time';
+  }
+
+  @override
+  String get weeklyResetInfo =>
+      'Der Wochenfortschritt wird jeden Montag zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.';
+
+  @override
+  String get monthlyResetInfo =>
+      'Der Monatsfortschritt wird am 1. jedes Monats zurückgesetzt.\nDein Gesamtziel und dein Streak bleiben unberührt.';
+
+  @override
+  String get ok => 'OK';
 }

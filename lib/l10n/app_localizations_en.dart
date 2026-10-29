@@ -3580,4 +3580,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSettings => 'Open settings';
+
+  @override
+  String get pausedTag => 'Paused';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String dayMonthLabel(String day, String daySuffix, String month) {
+    return '$day$daySuffix $month';
+  }
+
+  @override
+  String dayMonthYearLabel(
+    String day,
+    String daySuffix,
+    String month,
+    String year,
+  ) {
+    return '$day$daySuffix $month $year';
+  }
+
+  @override
+  String get nextScheduledTitle => 'Next scheduled';
+
+  @override
+  String get nextResetTitle => 'Next reset';
+
+  @override
+  String dateWithTimeLabel(String date, String time) {
+    return '$date, $time';
+  }
+
+  @override
+  String get weeklyResetInfo =>
+      'Weekly progress resets every Monday.\nYour overall goal and streak won\'t be affected.';
+
+  @override
+  String get monthlyResetInfo =>
+      'Monthly progress resets on the 1st of every month.\nYour overall goal and streak won\'t be affected.';
+
+  @override
+  String get ok => 'Ok';
 }
