@@ -6154,47 +6154,65 @@ abstract class AppLocalizations {
   /// **'What\'s new in 2.5.0'**
   String get whatsNewTitle;
 
-  /// No description provided for @whatsNewDesc.
+  /// No description provided for @whatsNewHealthTitle.
   ///
   /// In en, this message translates to:
-  /// **'A few things we added since the last update.'**
-  String get whatsNewDesc;
+  /// **'Health sync'**
+  String get whatsNewHealthTitle;
 
-  /// No description provided for @whatsNewHealth.
+  /// No description provided for @whatsNewHealthDesc.
   ///
   /// In en, this message translates to:
-  /// **'Sync steps, sleep and more from Apple Health or Health Connect'**
-  String get whatsNewHealth;
+  /// **'Link a habit to steps, sleep, workouts, mindful minutes or calories and Habitt fills in your progress automatically.'**
+  String get whatsNewHealthDesc;
 
-  /// No description provided for @whatsNewAlarms.
+  /// No description provided for @whatsNewAlarmsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Habit alarms that ring until you dismiss them'**
-  String get whatsNewAlarms;
+  /// **'Habit alarms'**
+  String get whatsNewAlarmsTitle;
 
-  /// No description provided for @whatsNewShowAgain.
+  /// No description provided for @whatsNewAlarmsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Missed weekly and monthly habits can show up again'**
-  String get whatsNewShowAgain;
+  /// **'Turn on Alarm for a habit and it rings until you dismiss it. Perfect for medicine and other things you can\'t miss.'**
+  String get whatsNewAlarmsDesc;
 
-  /// No description provided for @whatsNewPlan.
+  /// No description provided for @whatsNewPlanTitle.
   ///
   /// In en, this message translates to:
-  /// **'A Daily Plan view with time ranges for your day'**
-  String get whatsNewPlan;
+  /// **'Daily Plan'**
+  String get whatsNewPlanTitle;
 
-  /// No description provided for @whatsNewStrength.
+  /// No description provided for @whatsNewPlanDesc.
   ///
   /// In en, this message translates to:
-  /// **'Habit strength over time in the habit details'**
-  String get whatsNewStrength;
+  /// **'Switch your home screen to the Daily Plan to see your habits laid out across the day.'**
+  String get whatsNewPlanDesc;
 
-  /// No description provided for @whatsNewThemes.
+  /// No description provided for @whatsNewStrengthTitle.
   ///
   /// In en, this message translates to:
-  /// **'New theme colors, free for everyone'**
-  String get whatsNewThemes;
+  /// **'Strength over time'**
+  String get whatsNewStrengthTitle;
+
+  /// No description provided for @whatsNewStrengthDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch each habit grow stronger with a chart right in its details.'**
+  String get whatsNewStrengthDesc;
+
+  /// No description provided for @whatsNewThemesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New theme colors'**
+  String get whatsNewThemesTitle;
+
+  /// No description provided for @whatsNewThemesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Make Habitt yours with new accent colors, free for everyone.'**
+  String get whatsNewThemesDesc;
 }
 
 class _AppLocalizationsDelegate

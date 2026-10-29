@@ -1311,11 +1311,14 @@
   "monthlyResetInfo": "El progreso mensual se reinicia el día 1 de cada mes.\nTu objetivo general y tu racha no se verán afectados.",
   "ok": "Aceptar",
   "whatsNewTitle": "Novedades de la 2.5.0",
-  "whatsNewDesc": "Algunas cosas que hemos añadido desde la última actualización.",
-  "whatsNewHealth": "Sincroniza pasos, sueño y más desde Apple Health o Health Connect",
-  "whatsNewAlarms": "Alarmas de hábitos que suenan hasta que las desactives",
-  "whatsNewShowAgain": "Los hábitos semanales y mensuales perdidos pueden volver a aparecer",
-  "whatsNewPlan": "Una vista de Plan diario con rangos de tiempo para tu día",
-  "whatsNewStrength": "La fuerza del hábito a lo largo del tiempo en los detalles",
-  "whatsNewThemes": "Nuevos colores de tema, gratis para todos"
+  "whatsNewHealthTitle": "Sincronización de salud",
+  "whatsNewHealthDesc": "Vincula un hábito con pasos, sueño, entrenamientos, minutos de atención plena o calorías y Habitt rellena tu progreso automáticamente.",
+  "whatsNewAlarmsTitle": "Alarmas de hábitos",
+  "whatsNewAlarmsDesc": "Activa la alarma de un hábito y sonará hasta que la desactives. Perfecta para medicinas y todo lo que no puedes olvidar.",
+  "whatsNewPlanTitle": "Plan diario",
+  "whatsNewPlanDesc": "Cambia tu pantalla de inicio al Plan diario para ver tus hábitos repartidos a lo largo del día.",
+  "whatsNewStrengthTitle": "Fuerza a lo largo del tiempo",
+  "whatsNewStrengthDesc": "Mira cómo cada hábito se fortalece con un gráfico en sus detalles.",
+  "whatsNewThemesTitle": "Nuevos colores de tema",
+  "whatsNewThemesDesc": "Haz Habitt tuyo con nuevos colores de acento, gratis para todos."
 }

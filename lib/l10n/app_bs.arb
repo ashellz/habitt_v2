@@ -1301,11 +1301,14 @@
   "monthlyResetInfo": "Mjesečni napredak se resetuje prvog u svakom mjesecu.\nTvoj ukupni cilj i streak neće biti pogođeni.",
   "ok": "U redu",
   "whatsNewTitle": "Šta je novo u 2.5.0",
-  "whatsNewDesc": "Nekoliko stvari koje smo dodali od prošlog ažuriranja.",
-  "whatsNewHealth": "Sinhronizuj korake, san i više iz Apple Health ili Health Connect",
-  "whatsNewAlarms": "Alarmi za navike koji zvone dok ih ne isključiš",
-  "whatsNewShowAgain": "Propuštene sedmične i mjesečne navike mogu se ponovo prikazati",
-  "whatsNewPlan": "Prikaz Dnevnog plana s vremenskim rasponima za tvoj dan",
-  "whatsNewStrength": "Snaga navike kroz vrijeme u detaljima navike",
-  "whatsNewThemes": "Nove boje tema, besplatne za sve"
+  "whatsNewHealthTitle": "Sinhronizacija zdravlja",
+  "whatsNewHealthDesc": "Poveži naviku s koracima, snom, treninzima, minutama svjesnosti ili kalorijama i Habitt automatski unosi tvoj napredak.",
+  "whatsNewAlarmsTitle": "Alarmi za navike",
+  "whatsNewAlarmsDesc": "Uključi Alarm za naviku i zvonit će dok ga ne isključiš. Savršeno za lijekove i sve što ne smiješ propustiti.",
+  "whatsNewPlanTitle": "Dnevni plan",
+  "whatsNewPlanDesc": "Prebaci početni ekran na Dnevni plan da vidiš svoje navike raspoređene kroz dan.",
+  "whatsNewStrengthTitle": "Snaga kroz vrijeme",
+  "whatsNewStrengthDesc": "Prati kako svaka navika jača, s grafikonom odmah u njenim detaljima.",
+  "whatsNewThemesTitle": "Nove boje tema",
+  "whatsNewThemesDesc": "Učini Habitt svojim s novim bojama naglaska, besplatno za sve."
 }
