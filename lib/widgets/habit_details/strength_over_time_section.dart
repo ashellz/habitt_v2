@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
-import 'package:habitt/util/habit_age.dart';
 import 'package:habitt/util/stats_range.dart';
 import 'package:habitt/widgets/habit_details/strength_chart.dart';
 import 'package:habitt/widgets/stats/stats_range_selector.dart';
 import 'package:provider/provider.dart';
 
-/// A milestone message for how long the habit has run, plus the
-/// strength-over-time chart.
+/// The strength-over-time chart with its range selector.
 class StrengthOverTimeSection extends StatefulWidget {
   const StrengthOverTimeSection({super.key, required this.stats});
 
@@ -51,14 +49,6 @@ class _StrengthOverTimeSectionState extends State<StrengthOverTimeSection> {
               onChanged: (range) => setState(() => _range = range),
             ),
           ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          _milestoneLabel(
-            loc,
-            habitAge(stats.createdAt, DateTime.now()).milestone,
-          ),
-          style: TextStyle(color: cp.lightGreyText),
         ),
         const SizedBox(height: 14),
         // ─── Chart ────────────────────────────────────────────
@@ -112,19 +102,6 @@ class _StrengthOverTimeSectionState extends State<StrengthOverTimeSection> {
     }
 
     return _Window(from: from, to: today, dates: dates, values: values);
-  }
-
-  String _milestoneLabel(AppLocalizations loc, HabitAgeMilestone milestone) {
-    return switch (milestone) {
-      HabitAgeMilestone.startedToday => loc.habitAgeStartedToday,
-      HabitAgeMilestone.starting => loc.habitAgeMilestoneStarting,
-      HabitAgeMilestone.rhythm => loc.habitAgeMilestoneRhythm,
-      HabitAgeMilestone.routine => loc.habitAgeMilestoneRoutine,
-      HabitAgeMilestone.impressive => loc.habitAgeMilestoneImpressive,
-      HabitAgeMilestone.outstanding => loc.habitAgeMilestoneOutstanding,
-      HabitAgeMilestone.dedication => loc.habitAgeMilestoneDedication,
-      HabitAgeMilestone.legendary => loc.habitAgeMilestoneLegendary,
-    };
   }
 }
 

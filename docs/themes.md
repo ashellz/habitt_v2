@@ -10,6 +10,8 @@ in every theme, so every theme is still recognisably Habitt:
 - neutrals (`bg`, `habitBg`, `text`, greys, `border`, `field`, `pill`),
 - semantic colours (`fail`, `error`, `mid`),
 - the streak orange family (`orange*`, the fading-orange gradients),
+- the day progress arcs in the week strip and month calendar, which use
+  `cp.progressGreen` (Habitt green for the current light/dark mode, not `cp.main`),
 - brand surfaces: the support page and its artwork, the app icon, the splash
   screen and onboarding artwork.
 

@@ -360,7 +360,7 @@ class _MonthProgressCalendarState extends State<MonthProgressCalendar> {
     }
 
     Color progressColor() {
-      if (progressValue >= 0.5) return cp.main;
+      if (progressValue >= 0.5) return cp.progressGreen;
       if (progressValue >= 0.3) return cp.mid;
       return cp.fail;
     }

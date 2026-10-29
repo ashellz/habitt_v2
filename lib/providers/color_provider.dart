@@ -144,6 +144,10 @@ class ColorProvider extends ChangeNotifier {
   Color get mainTint => main.withValues(alpha: 0.1);
   Color get mainBorder => main.withValues(alpha: 0.2);
 
+  /// Habitt green for the current mode, whatever theme is selected. For day
+  /// progress arcs, which read as "done" and must not follow the accent.
+  Color get progressGreen => ThemeCatalog.habitt.accent(isDark: isDark).main;
+
   /// Yellow for things that are happening "now" or are on hold: the Plan
   /// habit whose time interval matches the current time, and the Paused tag.
   /// Fixed in both modes and for every theme, like the neutrals.
