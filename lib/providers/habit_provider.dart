@@ -103,6 +103,13 @@ class HabitProvider extends ChangeNotifier {
     init(animateStreakEntry: true);
   }
 
+  final Completer<void> _firstLoad = Completer<void>();
+
+  /// Completes once the first [init] has loaded the habits and [dateJoined].
+  /// The constructor starts it without waiting, so anything that needs those
+  /// values at launch awaits this.
+  Future<void> get firstLoadDone => _firstLoad.future;
+
   // Method to be called by the ProxyProvider's update callback
   void updateDependencies(StatsProvider newStatsProvider) {
     // Give StatsProvider a back-reference so it can schedule-filter day
@@ -160,6 +167,7 @@ class HabitProvider extends ChangeNotifier {
     dataVersion++;
     if (animateStreakEntry) streakEntryEpoch++;
     notifyListeners();
+    if (!_firstLoad.isCompleted) _firstLoad.complete();
   }
 
   static const String _daySnapshotSanitizedKey = 'daySnapshotsSanitized_v1';

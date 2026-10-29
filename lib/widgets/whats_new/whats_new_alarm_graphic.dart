@@ -99,7 +99,11 @@ class _WhatsNewAlarmGraphicState extends State<WhatsNewAlarmGraphic>
                   'assets/images/new-svg/notify.svg',
                   width: 22,
                   height: 22,
-                  colorFilter: ColorFilter.mode(cp.orange, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                    // dark mode's `orange` is fully transparent, use a solid one
+                    cp.isDark ? cp.rightOrangeGradient : cp.orange,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

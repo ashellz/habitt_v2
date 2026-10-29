@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
@@ -8,8 +10,8 @@ import 'package:habitt/widgets/dialogs/whats_new_dialog.dart';
 import 'package:provider/provider.dart';
 
 /// Shows the one-time "What's new" sheet if it is due, see
-/// [shouldShowWhatsNew]. Call it once the habits have loaded, as the join date
-/// is only valid then (it reads as today before, which counts as a new user).
+/// [shouldShowWhatsNew]. Waits for the habits to load first, as the join date
+/// is only valid then.
 ///
 /// It is not a support ask: it has none inside and never touches the ask
 /// budget. It is skipped while anything else is on screen or the streak
@@ -18,9 +20,19 @@ import 'package:provider/provider.dart';
 Future<void> maybeShowWhatsNew(BuildContext context) async {
   if (!context.mounted) return;
 
+  // the join date reads as today until the habits have loaded, which would
+  // wrongly count an existing user as new
+  final habits = context.read<HabitProvider>();
+  try {
+    await habits.firstLoadDone.timeout(const Duration(seconds: 15));
+  } on TimeoutException {
+    return;
+  }
+  if (!context.mounted) return;
+
   final prefs = context.read<PreferencesProvider>();
   final due = shouldShowWhatsNew(
-    dateJoined: context.read<HabitProvider>().dateJoined,
+    dateJoined: habits.dateJoined,
     lastSeenVersion: prefs.lastSeenVersion,
   );
   if (!due) return;

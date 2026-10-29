@@ -99,6 +99,11 @@ class _HomePageState extends State<HomePage>
         if (mounted) {
           await runStreakMoment(context);
         }
+
+        // still due if the launch check was skipped (something was open)
+        if (mounted) {
+          await maybeShowWhatsNew(context);
+        }
       });
     }
   }
