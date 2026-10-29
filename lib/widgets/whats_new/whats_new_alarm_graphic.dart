@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/default/animated_checkbox.dart';
@@ -94,10 +95,11 @@ class _WhatsNewAlarmGraphicState extends State<WhatsNewAlarmGraphic>
               angle: 0.14,
               child: _chip(
                 cp,
-                child: Icon(
-                  Icons.notifications_active_rounded,
-                  size: 22,
-                  color: cp.orange,
+                child: SvgPicture.asset(
+                  'assets/images/new-svg/notify.svg',
+                  width: 22,
+                  height: 22,
+                  colorFilter: ColorFilter.mode(cp.orange, BlendMode.srcIn),
                 ),
               ),
             ),
