@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/stats_range.dart';
+import 'package:habitt/widgets/stats/stats_range_selector.dart';
 import 'package:provider/provider.dart';
 
 class CompletionRatioText extends StatelessWidget {
-  const CompletionRatioText({super.key});
+  const CompletionRatioText({
+    super.key,
+    required this.range,
+    required this.onRangeChanged,
+  });
+
+  final StatsRange range;
+  final ValueChanged<StatsRange> onRangeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +31,7 @@ class CompletionRatioText extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        Text(loc.last7Days, style: TextStyle(color: cp.lightGreyText)),
+        StatsRangeSelector(range: range, onChanged: onRangeChanged),
       ],
     );
   }

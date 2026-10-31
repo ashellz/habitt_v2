@@ -3,6 +3,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/models/streak_health.dart';
+import 'package:habitt/util/stats_range.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -127,6 +128,9 @@ int computeLongestStreak(List<DayCompletionStatus> chronological) {
   return longest;
 }
 
+/// Required (non-optional) and completed habits of one day.
+typedef _CompletionCounts = ({int required, int completed});
+
 class StatsProvider extends ChangeNotifier {
   final daysBox = Hive.box<Day>('days');
 
@@ -159,6 +163,7 @@ class StatsProvider extends ChangeNotifier {
   Object? _cachedHabitsRef;
   Map<DateTime, double>? _cachedAllDaysProgress;
   Map<DateTime, DayCompletionStatus>? _cachedDayStatuses;
+  Map<DateTime, _CompletionCounts>? _cachedPastCompletionCounts;
 
   /// Back-reference set by [HabitProvider.updateDependencies]. Used only to
   /// schedule-filter day snapshots via [HabitProvider.habitsCountingForDay] so
@@ -259,6 +264,7 @@ class StatsProvider extends ChangeNotifier {
         !identical(_cachedHabitsRef, hp.todaysHabits)) {
       _cachedAllDaysProgress = null;
       _cachedDayStatuses = null;
+      _cachedPastCompletionCounts = null;
       _cachedVersion = _dataVersion;
       _cachedHabitsRef = hp.todaysHabits;
     }
@@ -365,7 +371,7 @@ class StatsProvider extends ChangeNotifier {
   }
 
   // not cached: today's completions change it all day long
-  int getCompletionRateLastWeek() => refreshCompletionRateLastWeek();
+  int getCompletionRateLastWeek() => getCompletionRate(StatsRange.week);
 
   int getPerfectStreak() {
     if (_perfectDaysStreak == -1) {
@@ -460,46 +466,27 @@ class StatsProvider extends ChangeNotifier {
     return highestAmountOfHabits;
   }
 
-  int refreshCompletionRateLastWeek() {
+  int getCompletionRate(StatsRange range) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final start = range.startFor(today);
+    final hp = _habitProvider;
+
     int totalHabits = 0;
     int completedHabits = 0;
 
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    // The last days that are over, newest first
-    final orderedDays =
-        _daysUpToToday
-            .where((day) => !_isSameDay(day.date, today))
-            .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
-
-    for (int i = 0; i < 6 && i < orderedDays.length; i++) {
-      for (final habit in _countingHabits(orderedDays[i])) {
-        if (habit.optional) continue;
-        totalHabits++;
-        if (habit.completed) {
-          completedHabits++;
-        }
-      }
-    }
+    // The days inside the range that are over
+    _pastCompletionCounts(hp).forEach((date, counts) {
+      if (start != null && date.isBefore(start)) return;
+      totalHabits += counts.required;
+      completedHabits += counts.completed;
+    });
 
     // Today isn't over: a habit that is already completed counts straight
     // away, one that isn't yet is not a miss and stays out of the ratio.
-    final hp = _habitProvider;
-    final todayDay =
-        hp != null
-            ? Day(date: today, habits: hp.todaysHabits, timestamp: now)
-            : _daysUpToToday
-                .where((day) => _isSameDay(day.date, today))
-                .firstOrNull;
-    if (todayDay != null) {
-      for (final habit in _countingHabits(todayDay)) {
-        if (habit.optional || !habit.completed) continue;
-        totalHabits++;
-        completedHabits++;
-      }
-    }
+    final todayCounts = _todayCompletionCounts(hp);
+    totalHabits += todayCounts.completed;
+    completedHabits += todayCounts.completed;
 
     if (totalHabits == 0) {
       return 0;
@@ -508,48 +495,141 @@ class StatsProvider extends ChangeNotifier {
     return (completedHabits / totalHabits * 100).clamp(0, 100).toInt();
   }
 
-  static bool _isSameDay(DateTime a, DateTime b) =>
-      a.year == b.year && a.month == b.month && a.day == b.day;
+  /// Completion rate (0-100) for each of the last [days] days, oldest first,
+  /// ending today. Today shows its progress so far, a day without data is 0.
+  List<double> getCompletionRateByDay(HabitProvider hp, int days) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final past = _pastCompletionCounts(hp);
 
-  List<double> getCompletionRateLastWeekByDay(HabitProvider hp) {
-    final allDays = _allDaysIncludingToday(hp);
-    final daysByDate = <DateTime, Day>{};
+    return List.generate(days, (index) {
+      final daysAgo = days - 1 - index;
+      final counts =
+          daysAgo == 0
+              ? _todayCompletionCounts(hp)
+              : past[DateTime(today.year, today.month, today.day - daysAgo)];
 
-    for (final day in allDays) {
-      daysByDate[DateTime(day.date.year, day.date.month, day.date.day)] = day;
-    }
-
-    return List.generate(7, (index) {
-      final targetDate = DateTime.now().subtract(Duration(days: 6 - index));
-      final normalizedDate = DateTime(
-        targetDate.year,
-        targetDate.month,
-        targetDate.day,
-      );
-      final day = daysByDate[normalizedDate];
-
-      if (day == null) {
+      if (counts == null || counts.required == 0) {
         return 0.0;
       }
 
-      int requiredHabits = 0;
-      int completedHabits = 0;
-
-      for (final habit in _countingHabits(day)) {
-        if (habit.optional) continue;
-        requiredHabits++;
-        if (habit.completed) {
-          completedHabits++;
-        }
-      }
-
-      if (requiredHabits == 0) {
-        return 0.0;
-      }
-
-      return (completedHabits / requiredHabits * 100).clamp(0, 100);
+      return (counts.completed / counts.required * 100).clamp(0, 100);
     });
   }
+
+  /// The earliest stored day, null before anything was tracked.
+  DateTime? get firstTrackedDay {
+    DateTime? first;
+    for (final date in _pastCompletionCounts(_habitProvider).keys) {
+      if (first == null || date.isBefore(first)) first = date;
+    }
+    if (first != null) return first;
+
+    // nothing before today, so today is the first day if it is stored
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final hasToday = _daysUpToToday.any(
+      (day) => DateTime(day.date.year, day.date.month, day.date.day) == today,
+    );
+    return hasToday ? today : null;
+  }
+
+  /// Completion rate (0-1) of the whole history in 7-day windows counting back
+  /// from today, oldest first, each dated by its last day, so the newest one
+  /// is the 7D rate. Today counts only its completed habits, like
+  /// [getCompletionRate]. Windows without a required habit are left out.
+  ({List<DateTime> dates, List<double> values}) getWeeklyCompletionRates(
+    HabitProvider hp,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final todayCounts = _todayCompletionCounts(hp);
+    final requiredByWeek = <int, int>{0: todayCounts.completed};
+    final completedByWeek = <int, int>{0: todayCounts.completed};
+
+    _pastCompletionCounts(hp).forEach((date, counts) {
+      final week = _daysBetween(date, today) ~/ 7;
+      requiredByWeek[week] = (requiredByWeek[week] ?? 0) + counts.required;
+      completedByWeek[week] = (completedByWeek[week] ?? 0) + counts.completed;
+    });
+
+    final weeks =
+        requiredByWeek.keys.where((week) => requiredByWeek[week]! > 0).toList()
+          ..sort((a, b) => b.compareTo(a));
+    return (
+      dates: [
+        for (final week in weeks)
+          DateTime(today.year, today.month, today.day - week * 7),
+      ],
+      values: [
+        for (final week in weeks)
+          completedByWeek[week]! / requiredByWeek[week]!,
+      ],
+    );
+  }
+
+  /// Required and completed habits of every stored day that is over, the base
+  /// of the completion rates. Cached like [getAllDaysProgress] once a
+  /// HabitProvider is attached; today changes all day long and is counted
+  /// live by [_todayCompletionCounts].
+  Map<DateTime, _CompletionCounts> _pastCompletionCounts(HabitProvider? hp) {
+    if (hp != null) {
+      _maybeInvalidateMapCache(hp);
+      final cached = _cachedPastCompletionCounts;
+      if (cached != null) return cached;
+    }
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final counts = <DateTime, _CompletionCounts>{};
+    for (final day in _daysUpToToday) {
+      final date = DateTime(day.date.year, day.date.month, day.date.day);
+      if (date == today) continue;
+      counts[date] = _countCompletion(_countingHabits(day));
+    }
+
+    if (hp != null) _cachedPastCompletionCounts = counts;
+    return counts;
+  }
+
+  /// Today's live counts, from the HabitProvider when one is around.
+  _CompletionCounts _todayCompletionCounts(HabitProvider? hp) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final todayDay =
+        hp != null
+            ? Day(date: today, habits: hp.todaysHabits, timestamp: now)
+            : _daysUpToToday
+                .where(
+                  (day) =>
+                      DateTime(day.date.year, day.date.month, day.date.day) ==
+                      today,
+                )
+                .firstOrNull;
+    if (todayDay == null) return (required: 0, completed: 0);
+    return _countCompletion(_countingHabits(todayDay));
+  }
+
+  static _CompletionCounts _countCompletion(List<Habit> habits) {
+    int requiredHabits = 0;
+    int completedHabits = 0;
+    for (final habit in habits) {
+      if (habit.optional) continue;
+      requiredHabits++;
+      if (habit.completed) {
+        completedHabits++;
+      }
+    }
+    return (required: requiredHabits, completed: completedHabits);
+  }
+
+  // calendar days apart, immune to daylight-saving hour shifts
+  static int _daysBetween(DateTime from, DateTime to) =>
+      DateTime.utc(
+        to.year,
+        to.month,
+        to.day,
+      ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
 
   List<double> refreshHabitsCompletedLastWeek() {
     List<double> habitsCompletedLastWeek = List.generate(7, (i) => 0);

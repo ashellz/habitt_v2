@@ -1,11 +1,14 @@
 import 'dart:math';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/stats_range.dart';
+import 'package:habitt/widgets/default/blur_fade.dart';
+import 'package:habitt/widgets/habit_details/strength_chart.dart';
+import 'package:habitt/widgets/stats/completion_bar_chart.dart';
 import 'package:habitt/widgets/stats/completion_rate.dart';
 import 'package:habitt/widgets/stats/completion_ratio_text.dart';
 import 'package:habitt/widgets/stats/consistency_calendar.dart';
@@ -27,7 +30,6 @@ class CalendarPage extends StatelessWidget {
     final hp = context.watch<HabitProvider>();
     final allStats = sp.getAllDaysProgress(hp);
     final dayStatuses = sp.getDayCompletionStatuses(hp);
-    final completionRateLastWeek = sp.getCompletionRateLastWeekByDay(hp);
 
     final streak = sp.perfectDaysStreak;
     final longestStreak = sp.longestPerfectDaysStreak;
@@ -43,35 +45,32 @@ class CalendarPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            Text(
-              loc.calendar,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: cp.text,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              Text(
+                loc.calendar,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: cp.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            SizedBox(height: 24),
-            StreakCalendarSection(
-              streak: streak,
-              longestStreak: longestStreak,
-              allStats: allStats,
-              dayStatuses: dayStatuses,
-              isActive: isActive,
-              isLoading: hp.isRecalculatingLongestStreak,
-            ),
-            SizedBox(height: 32),
-            CompletionRatio(
-              cp: cp,
-              completionRateLastWeek: completionRateLastWeek,
-            ),
-            SizedBox(height: 32),
-            ConsistencyCalendar(allStats: allStats),
-            SizedBox(height: 145),
-          ],
+              SizedBox(height: 24),
+              StreakCalendarSection(
+                streak: streak,
+                longestStreak: longestStreak,
+                allStats: allStats,
+                dayStatuses: dayStatuses,
+                isActive: isActive,
+                isLoading: hp.isRecalculatingLongestStreak,
+              ),
+              SizedBox(height: 32),
+              CompletionRatio(cp: cp),
+              SizedBox(height: 32),
+              ConsistencyCalendar(allStats: allStats),
+              SizedBox(height: 145),
+            ],
           ),
         ),
       ),
@@ -79,58 +78,47 @@ class CalendarPage extends StatelessWidget {
   }
 }
 
-class CompletionRatio extends StatelessWidget {
+class CompletionRatio extends StatefulWidget {
   const CompletionRatio({
     super.key,
     required this.cp,
-    required this.completionRateLastWeek,
+    this.overrideRatesByDay,
     this.today,
     this.overridePercentage,
   });
 
   final ColorProvider cp;
-  final List<double> completionRateLastWeek;
+  final List<double>? overrideRatesByDay;
   final DateTime? today;
   final int? overridePercentage;
 
   @override
+  State<CompletionRatio> createState() => _CompletionRatioState();
+}
+
+class _CompletionRatioState extends State<CompletionRatio> {
+  // what the selector shows, it moves the moment it is tapped
+  StatsRange _range = StatsRange.week;
+  // what the number and chart show, they follow a frame later
+  StatsRange _shownRange = StatsRange.week;
+
+  // ALL needs at least this many tracked days for a weekly trend line,
+  // shorter histories get daily bars like 30D
+  static const int _minDaysForTrend = 31;
+
+  @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
+    final cp = widget.cp;
 
-    String getDay(int day) {
-      final DateTime now = today ?? DateTime.now();
-      final DateTime targetDay = now.subtract(Duration(days: 6 - day));
-
-      String raw;
-      switch (targetDay.weekday) {
-        case DateTime.monday:
-          raw = loc.mon;
-        case DateTime.tuesday:
-          raw = loc.tue;
-        case DateTime.wednesday:
-          raw = loc.wed;
-        case DateTime.thursday:
-          raw = loc.thu;
-        case DateTime.friday:
-          raw = loc.fri;
-        case DateTime.saturday:
-          raw = loc.sat;
-        case DateTime.sunday:
-          raw = loc.sun;
-        default:
-          return "";
-      }
-      return raw.isEmpty ? raw : '${raw[0].toUpperCase()}${raw.substring(1)}';
-    }
-
+    // the demo passes its own numbers and never reads the providers
     final percentage =
-        overridePercentage ??
-        context.watch<StatsProvider>().completionRateLastWeek;
+        widget.overridePercentage ??
+        context.watch<StatsProvider>().getCompletionRate(_shownRange);
 
     return Column(
       spacing: 20,
       children: [
-        CompletionRatioText(),
+        CompletionRatioText(range: _range, onRangeChanged: _onRangeChanged),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: ShapeDecoration(
@@ -143,100 +131,17 @@ class CompletionRatio extends StatelessWidget {
             spacing: 20,
             children: [
               CompletionRate(percentage: percentage),
-              SizedBox(
-                height: 132,
-                child: BarChart(
-                  BarChartData(
-                    // add horizontal lines for each interval 1
-                    barTouchData: BarTouchData(enabled: false),
-                    gridData: FlGridData(
-                      show: true,
-                      drawVerticalLine: false,
-                      drawHorizontalLine: true,
-                      horizontalInterval: 50,
-                      getDrawingHorizontalLine:
-                          (value) => FlLine(color: cp.border, strokeWidth: 1),
-                    ),
-                    barGroups: List.generate(
-                      7,
-                      (index) => BarChartGroupData(
-                        x: index,
-                        barRods: [
-                          BarChartRodData(
-                            toY: completionRateLastWeek[index],
-                            // today in the full accent, the other days as a
-                            // soft step of it (opaque, so the grid lines
-                            // don't show through the bars)
-                            color:
-                                index == 6
-                                    ? cp.main
-                                    : Color.alphaBlend(
-                                      cp.main.withValues(
-                                        alpha: cp.isDark ? 0.4 : 0.24,
-                                      ),
-                                      cp.habitBg,
-                                    ),
-                            width: 30,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.symmetric(
-                        horizontal: BorderSide(color: cp.border, width: 1),
-                      ),
-                    ),
-                    titlesData: FlTitlesData(
-                      topTitles: AxisTitles(),
-                      rightTitles: AxisTitles(),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 43,
-                          getTitlesWidget:
-                              (value, meta) => Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Text(
-                                  value == 0
-                                      ? '0%'
-                                      : value == 50
-                                      ? '50%'
-                                      : value == 100
-                                      ? '100%'
-                                      : '',
-
-                                  style: TextStyle(
-                                    color: cp.lightGreyText,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                        ),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-
-                          getTitlesWidget:
-                              (value, meta) => Padding(
-                                padding: const EdgeInsets.only(top: 6),
-                                child: Text(
-                                  getDay(value.toInt()),
-                                  style: TextStyle(
-                                    color: cp.lightGreyText,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                        ),
-                      ),
-                    ),
-                    maxY: 100,
+              AnimatedSize(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: BlurFade.transition,
+                  child: KeyedSubtree(
+                    key: ValueKey(_shownRange),
+                    child: _chart(context),
                   ),
                 ),
               ),
@@ -245,6 +150,64 @@ class CompletionRatio extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  // the selector updates in this frame, the chart in the next one, so the tap
+  // never waits on the new chart being built
+  void _onRangeChanged(StatsRange range) {
+    setState(() => _range = range);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _shownRange == _range) return;
+      setState(() => _shownRange = _range);
+    });
+  }
+
+  // ─── Chart ────────────────────────────────────────────
+  // 7D and 30D: a bar per day. ALL: a weekly trend line, or daily bars while
+  // the history is too short for one.
+  Widget _chart(BuildContext context) {
+    final override = widget.overrideRatesByDay;
+    if (override != null) {
+      return CompletionBarChart(rates: override, today: widget.today);
+    }
+
+    final sp = context.watch<StatsProvider>();
+    final hp = context.watch<HabitProvider>();
+    final days = _shownRange.days ?? _trackedDays(sp);
+
+    if (days != null) {
+      return CompletionBarChart(rates: sp.getCompletionRateByDay(hp, days));
+    }
+
+    final weekly = sp.getWeeklyCompletionRates(hp);
+    // a line needs two points on a real time axis
+    if (weekly.dates.length < 2) {
+      return CompletionBarChart(rates: sp.getCompletionRateByDay(hp, 30));
+    }
+
+    return StrengthChart(
+      dates: weekly.dates,
+      values: weekly.values,
+      from: weekly.dates.first,
+      to: weekly.dates.last,
+    );
+  }
+
+  // days from the first tracked one to today (at least a week), null once
+  // there are enough for the trend line
+  int? _trackedDays(StatsProvider sp) {
+    final first = sp.firstTrackedDay;
+    if (first == null) return 7;
+    final now = DateTime.now();
+    final days =
+        DateTime.utc(
+          now.year,
+          now.month,
+          now.day,
+        ).difference(DateTime.utc(first.year, first.month, first.day)).inDays +
+        1;
+    if (days >= _minDaysForTrend) return null;
+    return max(days, 7);
   }
 }
 
@@ -383,7 +346,7 @@ class _DemoCalendarBody extends StatelessWidget {
             const SizedBox(height: 32),
             CompletionRatio(
               cp: cp,
-              completionRateLastWeek: completionRateLastWeek,
+              overrideRatesByDay: completionRateLastWeek,
               today: demoToday,
               overridePercentage: completionPercentage,
             ),

@@ -73,7 +73,6 @@ dependencies:
   in_app_review: ^2.0.11
   dotted_border: ^3.1.0
   image_picker: ^1.2.2
-  shimmer: ^3.0.0
   icloud_storage: ^2.1.0
   audioplayers: ^6.8.0
   health: 

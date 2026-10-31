@@ -7,7 +7,6 @@ import 'package:habitt/widgets/habit_details/strength_chart.dart';
 import 'package:habitt/widgets/stats/stats_range_selector.dart';
 import 'package:provider/provider.dart';
 
-/// The strength-over-time chart with its range selector.
 class StrengthOverTimeSection extends StatefulWidget {
   const StrengthOverTimeSection({super.key, required this.stats});
 

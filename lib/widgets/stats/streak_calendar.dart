@@ -1,11 +1,12 @@
+import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/widgets/default/blur_fade.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class StreakCalendar extends StatefulWidget {
@@ -38,6 +39,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
   int? _activeMonthKey;
   bool _isMonthMetadataReady = false;
   bool _streakCacheReady = false;
+  bool _streakCacheScheduled = false;
   int _monthLoadToken = 0;
   int? _scheduledMonthKey;
 
@@ -46,32 +48,46 @@ class _StreakCalendarState extends State<StreakCalendar> {
     super.initState();
     final now = widget.today ?? DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
-    if (widget.isActive) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _computeAndScheduleStreakCache(),
-      );
-    }
+    if (widget.isActive) _computeAndScheduleStreakCache();
   }
 
   @override
   void didUpdateWidget(covariant StreakCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final dataChanged =
-        !identical(oldWidget.allStats, widget.allStats) ||
-        !identical(oldWidget.dayStatuses, widget.dayStatuses);
-    final becameActive = !oldWidget.isActive && widget.isActive;
-
-    if (becameActive || (widget.isActive && dataChanged)) {
-      if (dataChanged) _invalidateStreakCaches();
-      _computeAndScheduleStreakCache();
-    }
+    if (!widget.isActive || _isStreakCacheCurrent()) return;
+    _computeAndScheduleStreakCache();
   }
 
+  /// Whether the computed runs still match the data. Opening the page
+  /// refreshes the stats into new maps even when nothing changed, so equal
+  /// contents count as current and the runs are kept.
+  bool _isStreakCacheCurrent() {
+    final today = _normalize(widget.today ?? DateTime.now());
+    if (_cachedSelectableFirstDay == null || _cachedToday != today) {
+      return false;
+    }
+    if (identical(_cachedAllStatsReference, widget.allStats) &&
+        identical(_cachedDayStatusesReference, widget.dayStatuses)) {
+      return true;
+    }
+    if (!mapEquals(_cachedAllStatsReference, widget.allStats) ||
+        !mapEquals(_cachedDayStatusesReference, widget.dayStatuses)) {
+      return false;
+    }
+
+    _cachedAllStatsReference = widget.allStats;
+    _cachedDayStatusesReference = widget.dayStatuses;
+    return true;
+  }
+
+  // Runs on the next frame. The calendar keeps showing what it has meanwhile,
+  // only the very first load shows the blurred loading state.
   void _computeAndScheduleStreakCache() {
-    if (!mounted) return;
-    setState(() => _streakCacheReady = false);
+    if (!mounted || _streakCacheScheduled) return;
+    _streakCacheScheduled = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _streakCacheScheduled = false;
       if (!mounted) return;
       final today = _normalize(widget.today ?? DateTime.now());
       _ensureStreakCachesUpToDate(today);
@@ -82,14 +98,29 @@ class _StreakCalendarState extends State<StreakCalendar> {
         _monthStart(selectableFirstDay),
         today,
       );
+      final key = _monthKey(focusedDay);
 
-      _scheduleMonthMetadataLoad(
+      // the focused month right away, so its connectors never blink out
+      setState(() {
+        _monthMetadataCache.putIfAbsent(
+          key,
+          () => _buildStreakVisualMetadata(
+            runs: _cachedRuns,
+            selectableFirstDay: selectableFirstDay,
+            today: today,
+            focusedDay: focusedDay,
+          ),
+        );
+        _activeMonthKey = key;
+        _isMonthMetadataReady = true;
+        _streakCacheReady = true;
+      });
+
+      _prefetchAdjacentMonthMetadata(
         focusedDay: focusedDay,
         selectableFirstDay: selectableFirstDay,
         today: today,
       );
-
-      if (mounted) setState(() => _streakCacheReady = true);
     });
   }
 
@@ -117,18 +148,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
     }
 
     return value[0].toUpperCase() + value.substring(1);
-  }
-
-  void _invalidateStreakCaches() {
-    _cachedRuns = const [];
-    _cachedToday = null;
-    _cachedAllStatsReference = null;
-    _cachedDayStatusesReference = null;
-    _monthMetadataCache = {};
-    _activeMonthKey = null;
-    _isMonthMetadataReady = false;
-    _scheduledMonthKey = null;
-    _monthLoadToken++;
   }
 
   DateTime _resolveSelectableFirstDay(DateTime today) {
@@ -437,27 +456,11 @@ class _StreakCalendarState extends State<StreakCalendar> {
       ],
     );
 
-    final shimmerWidget = Shimmer.fromColors(
-      baseColor: cp.bg,
-      highlightColor: cp.field,
-      child: Container(
-        height: 320,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-    );
-
-    return AnimatedCrossFade(
-      duration: const Duration(milliseconds: 350),
-      crossFadeState:
-          _streakCacheReady
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-      firstChild: shimmerWidget,
-      secondChild: calendarWidget,
-      sizeCurve: Curves.easeInOut,
+    // the days are drawn from the start, only the streak runs are pending
+    return AnimatedBlurFade(
+      ready: _streakCacheReady,
+      minOpacity: 0.35,
+      child: calendarWidget,
     );
   }
 
@@ -808,13 +811,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
           toleratedMissesUsed = 0;
           currentDays.add(normalizedCursor);
           currentCompletedDays.add(normalizedCursor);
-          debugPrint(
-            '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — COMPLETED (run start)',
-          );
-        } else {
-          debugPrint(
-            '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — skipping (no run yet, status=${status.name})',
-          );
         }
         cursor = cursor.add(const Duration(days: 1));
         continue;
@@ -824,24 +820,12 @@ class _StreakCalendarState extends State<StreakCalendar> {
         currentDays.add(normalizedCursor);
         currentCompletedDays.add(normalizedCursor);
         toleratedMissesUsed = 0;
-        debugPrint(
-          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — COMPLETED',
-        );
       } else if (isNeutral) {
         currentDays.add(normalizedCursor);
-        debugPrint(
-          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — ${status.name.toUpperCase()} (neutral skip)',
-        );
       } else if (toleratedMissesUsed < 2) {
         currentDays.add(normalizedCursor);
         toleratedMissesUsed++;
-        debugPrint(
-          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — MISS tolerated ($toleratedMissesUsed/2)',
-        );
       } else {
-        debugPrint(
-          '[calendar] ${normalizedCursor.toIso8601String().split("T").first} — BREAK (3rd consecutive miss), saving run of ${currentDays.length} days',
-        );
         // Third consecutive miss — remove all trailing non-completed days that
         // were added as tolerated misses / neutral skips but never bridged to a
         // completion.

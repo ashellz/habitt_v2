@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 
 /// Habit strength (0-100%) over every day the habit was scheduled, plotted on
 /// a real time axis from [from] to [to] so days without the habit show up as
-/// gaps in the x spacing. Changing the window or data animates.
+/// gaps in the x spacing. Changing the window or data animates. Also draws the
+/// calendar page's weekly completion trend.
 class StrengthChart extends StatelessWidget {
   const StrengthChart({
     super.key,

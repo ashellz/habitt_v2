@@ -56,7 +56,7 @@ void main() {
   ) async {
     await _pumpBanner(tester);
 
-    expect(find.textContaining('no ads, no tracking'), findsOneWidget);
+    expect(find.textContaining('no ads and no paywalls'), findsOneWidget);
     expect(find.text('See ways to support'), findsOneWidget);
     expect(find.text('I already donated'), findsOneWidget);
   });

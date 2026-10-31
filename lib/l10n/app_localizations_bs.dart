@@ -3514,7 +3514,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get supportBannerText =>
-      'Habitt nema reklama, praćenja ni naloga. Nastavlja postojati samo ako ga ljudi koji ga vole podrže.';
+      'Habitt nema reklama ni paywallova. Pomozi da tako i ostane donacijom.';
 
   @override
   String get supportSeeWays => 'Pogledaj načine podrške';
@@ -3530,11 +3530,11 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get supporterThankYouDesc =>
-      'Pomažeš da ostane bez reklama i praćenja za sve.';
+      'Pomažeš da ostane bez reklama i paywallova za sve.';
 
   @override
   String get supportMilestoneText =>
-      'Habitt nema reklama ni praćenja. Ako ti pomaže, ti možeš pomoći da nastavi postojati.';
+      'Habitt nema reklama ni paywallova. Ako ti se sviđa, razmisli o podršci.';
 
   @override
   String get themeSettingTitle => 'Tema';

@@ -3545,7 +3545,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get supportBannerText =>
-      'Habitt non ha pubblicità, tracciamento né account. Va avanti solo se chi lo apprezza contribuisce.';
+      'Habitt non ha pubblicità né paywall. Aiutaci a mantenerlo così con una donazione.';
 
   @override
   String get supportSeeWays => 'Scopri come sostenere';
@@ -3561,11 +3561,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get supporterThankYouDesc =>
-      'Ci aiuti a mantenerlo senza pubblicità e tracciamento per tutti.';
+      'Ci aiuti a mantenerlo libero da pubblicità e paywall per tutti.';
 
   @override
   String get supportMilestoneText =>
-      'Habitt non ha pubblicità né tracciamento. Se ti aiuta, puoi aiutarlo ad andare avanti.';
+      'Habitt non ha pubblicità né paywall. Se ti piace, valuta di sostenerlo.';
 
   @override
   String get themeSettingTitle => 'Tema';

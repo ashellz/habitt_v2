@@ -5960,7 +5960,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportBannerText.
   ///
   /// In en, this message translates to:
-  /// **'Habitt has no ads, no tracking and no account. It only keeps going if people who like it chip in.'**
+  /// **'Habitt has no ads and no paywalls. Keep it that way by donating.'**
   String get supportBannerText;
 
   /// No description provided for @supportSeeWays.
@@ -5990,13 +5990,13 @@ abstract class AppLocalizations {
   /// No description provided for @supporterThankYouDesc.
   ///
   /// In en, this message translates to:
-  /// **'You help keep it free of ads and tracking for everyone.'**
+  /// **'You help keep it free of ads and paywalls for everyone.'**
   String get supporterThankYouDesc;
 
   /// No description provided for @supportMilestoneText.
   ///
   /// In en, this message translates to:
-  /// **'Habitt has no ads and no tracking. If it\'s helping you, you can help it keep going.'**
+  /// **'Habitt has no ads and no paywalls. If you\'re enjoying it, consider supporting.'**
   String get supportMilestoneText;
 
   /// No description provided for @themeSettingTitle.

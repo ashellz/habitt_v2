@@ -3548,7 +3548,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get supportBannerText =>
-      'Habitt hat keine Werbung, kein Tracking und kein Konto. Es besteht nur weiter, wenn Menschen, die es mögen, etwas beitragen.';
+      'Habitt hat keine Werbung und keine Paywalls. Halte es so, indem du spendest.';
 
   @override
   String get supportSeeWays => 'Möglichkeiten zur Unterstützung ansehen';
@@ -3564,11 +3564,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get supporterThankYouDesc =>
-      'Du hilfst, es für alle frei von Werbung und Tracking zu halten.';
+      'Du hilfst, es für alle frei von Werbung und Paywalls zu halten.';
 
   @override
   String get supportMilestoneText =>
-      'Habitt hat keine Werbung und kein Tracking. Wenn es dir hilft, kannst du helfen, dass es weitergeht.';
+      'Habitt hat keine Werbung und keine Paywalls. Wenn es dir gefällt, denk über eine Unterstützung nach.';
 
   @override
   String get themeSettingTitle => 'Farbthema';
