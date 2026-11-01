@@ -6213,6 +6213,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Make Habitt yours with new accent colors, free for everyone.'**
   String get whatsNewThemesDesc;
+
+  /// No description provided for @scheduleReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your reminder?'**
+  String get scheduleReminderTitle;
+
+  /// No description provided for @scheduleReminderDescReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current reminders will be replaced by a single reminder at the time you choose.'**
+  String get scheduleReminderDescReplace;
+
+  /// No description provided for @scheduleReminderDescAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick when you want to be reminded about this habit.'**
+  String get scheduleReminderDescAdd;
+
+  /// No description provided for @scheduleReminderDescOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are off for this habit. Choosing a time turns them on with a single reminder.'**
+  String get scheduleReminderDescOff;
+
+  /// No description provided for @scheduleReminderSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Change reminder'**
+  String get scheduleReminderSet;
+
+  /// No description provided for @scheduleReminderKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep my reminder'**
+  String get scheduleReminderKeep;
+
+  /// No description provided for @scheduleReminderAtTime.
+  ///
+  /// In en, this message translates to:
+  /// **'At the exact time'**
+  String get scheduleReminderAtTime;
+
+  /// No description provided for @scheduleReminderAtStart.
+  ///
+  /// In en, this message translates to:
+  /// **'At the start time'**
+  String get scheduleReminderAtStart;
+
+  /// No description provided for @scheduleReminderMinutesBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes before'**
+  String scheduleReminderMinutesBefore(int minutes);
 }
 
 class _AppLocalizationsDelegate

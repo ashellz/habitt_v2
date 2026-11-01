@@ -1320,5 +1320,14 @@
   "whatsNewStrengthTitle": "Forza nel tempo",
   "whatsNewStrengthDesc": "Guarda come ogni abitudine si rafforza con un grafico nei suoi dettagli.",
   "whatsNewThemesTitle": "Nuovi colori del tema",
-  "whatsNewThemesDesc": "Rendi Habitt tuo con nuovi colori d'accento, gratis per tutti."
+  "whatsNewThemesDesc": "Rendi Habitt tuo con nuovi colori d'accento, gratis per tutti.",
+  "scheduleReminderTitle": "Aggiornare il promemoria?",
+  "scheduleReminderDescReplace": "I tuoi promemoria attuali saranno sostituiti da un unico promemoria all'orario che scegli.",
+  "scheduleReminderDescAdd": "Scegli quando vuoi ricevere il promemoria per questa abitudine.",
+  "scheduleReminderDescOff": "I promemoria sono disattivati per questa abitudine. Scegliendo un orario verranno attivati con un unico promemoria.",
+  "scheduleReminderSet": "Cambia promemoria",
+  "scheduleReminderKeep": "Mantieni il mio promemoria",
+  "scheduleReminderAtTime": "All'orario esatto",
+  "scheduleReminderAtStart": "All'orario di inizio",
+  "scheduleReminderMinutesBefore": "{minutes} minuti prima"
 }

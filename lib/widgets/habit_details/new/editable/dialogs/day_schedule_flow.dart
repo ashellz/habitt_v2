@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/util/category_for_minutes.dart';
+import 'package:habitt/util/schedule_reminder.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/habit_details/new/editable/dialogs/schedule_reminder_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/day_schedule_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/schedule_time_picker_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/time_range_dialog.dart';
@@ -85,13 +87,44 @@ Future<void> showDayScheduleFlow(BuildContext context) async {
       );
       if (result == null || !context.mounted) return;
       if (result == ScheduleTimePickerDialog.back) continue;
+      final changed = _intervalChanged(sp, result, result);
       _applyInterval(sp, result, result);
+      if (changed) await _offerReminder(context, sp, result, isRange: false);
       return;
     }
 
     final finished = await _timeRangeSteps(context, sp, loc);
     if (finished != false) return;
   }
+}
+
+// whether applying this interval changes what the sheet holds
+bool _intervalChanged(StateProvider sp, int start, int end) =>
+    !sp.timeIntervalEnabled ||
+    sp.timeIntervalStart != start ||
+    sp.timeIntervalEnd != end;
+
+/// Asks whether the habit's reminder should follow the new schedule time and,
+/// if so, replaces the reminders in the editor state with a single one. Only
+/// the sheet's draft changes; closing the sheet discards it.
+Future<void> _offerReminder(
+  BuildContext context,
+  StateProvider sp,
+  int startMinutes, {
+  required bool isRange,
+}) async {
+  if (!context.mounted) return;
+  final offset = await showDialogSheet<int>(
+    context: context,
+    builder:
+        (_) => ScheduleReminderDialog(
+          hasReminders: sp.habitNotificationTimes.isNotEmpty,
+          remindersEnabled: sp.habitNotificationsEnabled,
+          isRange: isRange,
+        ),
+  );
+  if (offset == null) return;
+  sp.replaceHabitNotificationTimes(reminderMinutesFor(startMinutes, offset));
 }
 
 /// Time range dialog and its start / end pickers. Returns true when applied,
@@ -120,7 +153,9 @@ Future<bool?> _timeRangeSteps(
       case TimeRangeAction.back:
         return false;
       case TimeRangeAction.done:
+        final changed = _intervalChanged(sp, start, end);
         _applyInterval(sp, start, end);
+        if (changed) await _offerReminder(context, sp, start, isRange: true);
         return true;
       case TimeRangeAction.editStart:
       case TimeRangeAction.editEnd:

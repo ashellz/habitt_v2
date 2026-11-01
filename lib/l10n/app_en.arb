@@ -1348,5 +1348,21 @@
   "whatsNewStrengthTitle": "Strength over time",
   "whatsNewStrengthDesc": "Watch each habit grow stronger with a chart right in its details.",
   "whatsNewThemesTitle": "New theme colors",
-  "whatsNewThemesDesc": "Make Habitt yours with new accent colors, free for everyone."
+  "whatsNewThemesDesc": "Make Habitt yours with new accent colors, free for everyone.",
+  "scheduleReminderTitle": "Update your reminder?",
+  "scheduleReminderDescReplace": "Your current reminders will be replaced by a single reminder at the time you choose.",
+  "scheduleReminderDescAdd": "Pick when you want to be reminded about this habit.",
+  "scheduleReminderDescOff": "Reminders are off for this habit. Choosing a time turns them on with a single reminder.",
+  "scheduleReminderSet": "Change reminder",
+  "scheduleReminderKeep": "Keep my reminder",
+  "scheduleReminderAtTime": "At the exact time",
+  "scheduleReminderAtStart": "At the start time",
+  "scheduleReminderMinutesBefore": "{minutes} minutes before",
+  "@scheduleReminderMinutesBefore": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

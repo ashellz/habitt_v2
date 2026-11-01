@@ -1310,5 +1310,14 @@
   "whatsNewStrengthTitle": "Snaga kroz vrijeme",
   "whatsNewStrengthDesc": "Prati kako svaka navika jača, s grafikonom odmah u njenim detaljima.",
   "whatsNewThemesTitle": "Nove boje tema",
-  "whatsNewThemesDesc": "Učini Habitt svojim s novim bojama naglaska, besplatno za sve."
+  "whatsNewThemesDesc": "Učini Habitt svojim s novim bojama naglaska, besplatno za sve.",
+  "scheduleReminderTitle": "Ažurirati podsjetnik?",
+  "scheduleReminderDescReplace": "Tvoji trenutni podsjetnici bit će zamijenjeni jednim podsjetnikom u vrijeme koje odabereš.",
+  "scheduleReminderDescAdd": "Odaberi kada želiš dobiti podsjetnik za ovu naviku.",
+  "scheduleReminderDescOff": "Podsjetnici su isključeni za ovu naviku. Odabirom vremena uključit će se s jednim podsjetnikom.",
+  "scheduleReminderSet": "Promijeni podsjetnik",
+  "scheduleReminderKeep": "Zadrži moj podsjetnik",
+  "scheduleReminderAtTime": "U tačno vrijeme",
+  "scheduleReminderAtStart": "U vrijeme početka",
+  "scheduleReminderMinutesBefore": "{minutes} minuta prije"
 }

@@ -3660,4 +3660,36 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Učini Habitt svojim s novim bojama naglaska, besplatno za sve.';
+
+  @override
+  String get scheduleReminderTitle => 'Ažurirati podsjetnik?';
+
+  @override
+  String get scheduleReminderDescReplace =>
+      'Tvoji trenutni podsjetnici bit će zamijenjeni jednim podsjetnikom u vrijeme koje odabereš.';
+
+  @override
+  String get scheduleReminderDescAdd =>
+      'Odaberi kada želiš dobiti podsjetnik za ovu naviku.';
+
+  @override
+  String get scheduleReminderDescOff =>
+      'Podsjetnici su isključeni za ovu naviku. Odabirom vremena uključit će se s jednim podsjetnikom.';
+
+  @override
+  String get scheduleReminderSet => 'Promijeni podsjetnik';
+
+  @override
+  String get scheduleReminderKeep => 'Zadrži moj podsjetnik';
+
+  @override
+  String get scheduleReminderAtTime => 'U tačno vrijeme';
+
+  @override
+  String get scheduleReminderAtStart => 'U vrijeme početka';
+
+  @override
+  String scheduleReminderMinutesBefore(int minutes) {
+    return '$minutes minuta prije';
+  }
 }

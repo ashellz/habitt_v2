@@ -1320,5 +1320,14 @@
   "whatsNewStrengthTitle": "Stärke im Zeitverlauf",
   "whatsNewStrengthDesc": "Sieh mit einem Diagramm direkt in den Details, wie jede Gewohnheit stärker wird.",
   "whatsNewThemesTitle": "Neue Designfarben",
-  "whatsNewThemesDesc": "Mach Habitt zu deinem mit neuen Akzentfarben, kostenlos für alle."
+  "whatsNewThemesDesc": "Mach Habitt zu deinem mit neuen Akzentfarben, kostenlos für alle.",
+  "scheduleReminderTitle": "Erinnerung anpassen?",
+  "scheduleReminderDescReplace": "Deine aktuellen Erinnerungen werden durch eine einzelne Erinnerung zur gewählten Zeit ersetzt.",
+  "scheduleReminderDescAdd": "Wähle, wann du an diese Gewohnheit erinnert werden möchtest.",
+  "scheduleReminderDescOff": "Erinnerungen sind für diese Gewohnheit aus. Wenn du eine Zeit wählst, werden sie mit einer einzelnen Erinnerung eingeschaltet.",
+  "scheduleReminderSet": "Erinnerung ändern",
+  "scheduleReminderKeep": "Erinnerung behalten",
+  "scheduleReminderAtTime": "Zur genauen Zeit",
+  "scheduleReminderAtStart": "Zur Startzeit",
+  "scheduleReminderMinutesBefore": "{minutes} Minuten vorher"
 }

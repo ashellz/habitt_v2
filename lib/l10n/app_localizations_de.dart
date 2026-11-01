@@ -3695,4 +3695,36 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Mach Habitt zu deinem mit neuen Akzentfarben, kostenlos für alle.';
+
+  @override
+  String get scheduleReminderTitle => 'Erinnerung anpassen?';
+
+  @override
+  String get scheduleReminderDescReplace =>
+      'Deine aktuellen Erinnerungen werden durch eine einzelne Erinnerung zur gewählten Zeit ersetzt.';
+
+  @override
+  String get scheduleReminderDescAdd =>
+      'Wähle, wann du an diese Gewohnheit erinnert werden möchtest.';
+
+  @override
+  String get scheduleReminderDescOff =>
+      'Erinnerungen sind für diese Gewohnheit aus. Wenn du eine Zeit wählst, werden sie mit einer einzelnen Erinnerung eingeschaltet.';
+
+  @override
+  String get scheduleReminderSet => 'Erinnerung ändern';
+
+  @override
+  String get scheduleReminderKeep => 'Erinnerung behalten';
+
+  @override
+  String get scheduleReminderAtTime => 'Zur genauen Zeit';
+
+  @override
+  String get scheduleReminderAtStart => 'Zur Startzeit';
+
+  @override
+  String scheduleReminderMinutesBefore(int minutes) {
+    return '$minutes Minuten vorher';
+  }
 }

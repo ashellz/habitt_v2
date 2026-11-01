@@ -666,6 +666,19 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Replaces every reminder with one at [minutesOfDay] (following the habit
+  /// schedule) and turns reminders on. Editor state only; the sheet saves it.
+  void replaceHabitNotificationTimes(int minutesOfDay) {
+    _habitNotificationsEnabled = true;
+    _habitNotificationTimes = [
+      HabitNotificationTime(
+        id: DateTime.now().microsecondsSinceEpoch,
+        minutesOfDay: minutesOfDay.clamp(0, (24 * 60) - 1),
+      ),
+    ];
+    notifyListeners();
+  }
+
   bool removeHabitNotificationTime(int id) {
     final previousLength = _habitNotificationTimes.length;
     _habitNotificationTimes =

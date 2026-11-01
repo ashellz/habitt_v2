@@ -3684,4 +3684,36 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Haz Habitt tuyo con nuevos colores de acento, gratis para todos.';
+
+  @override
+  String get scheduleReminderTitle => '¿Actualizar tu recordatorio?';
+
+  @override
+  String get scheduleReminderDescReplace =>
+      'Tus recordatorios actuales se sustituirán por un único recordatorio a la hora que elijas.';
+
+  @override
+  String get scheduleReminderDescAdd =>
+      'Elige cuándo quieres que te recordemos este hábito.';
+
+  @override
+  String get scheduleReminderDescOff =>
+      'Los recordatorios están desactivados para este hábito. Si eliges una hora, se activarán con un único recordatorio.';
+
+  @override
+  String get scheduleReminderSet => 'Cambiar recordatorio';
+
+  @override
+  String get scheduleReminderKeep => 'Mantener mi recordatorio';
+
+  @override
+  String get scheduleReminderAtTime => 'A la hora exacta';
+
+  @override
+  String get scheduleReminderAtStart => 'A la hora de inicio';
+
+  @override
+  String scheduleReminderMinutesBefore(int minutes) {
+    return '$minutes minutos antes';
+  }
 }

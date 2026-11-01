@@ -3661,4 +3661,36 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Make Habitt yours with new accent colors, free for everyone.';
+
+  @override
+  String get scheduleReminderTitle => 'Update your reminder?';
+
+  @override
+  String get scheduleReminderDescReplace =>
+      'Your current reminders will be replaced by a single reminder at the time you choose.';
+
+  @override
+  String get scheduleReminderDescAdd =>
+      'Pick when you want to be reminded about this habit.';
+
+  @override
+  String get scheduleReminderDescOff =>
+      'Reminders are off for this habit. Choosing a time turns them on with a single reminder.';
+
+  @override
+  String get scheduleReminderSet => 'Change reminder';
+
+  @override
+  String get scheduleReminderKeep => 'Keep my reminder';
+
+  @override
+  String get scheduleReminderAtTime => 'At the exact time';
+
+  @override
+  String get scheduleReminderAtStart => 'At the start time';
+
+  @override
+  String scheduleReminderMinutesBefore(int minutes) {
+    return '$minutes minutes before';
+  }
 }

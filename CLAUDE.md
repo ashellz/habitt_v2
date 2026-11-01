@@ -98,6 +98,10 @@ Selectable stock notification sounds (global default + per-habit override) are i
 
 Habits can be set to "alarm" instead of a normal notification (rings until dismissed). Documented at [`docs/habit_alarms.md`](docs/habit_alarms.md).
 
+### Schedule → Reminder Prompt
+
+Setting an exact time / time range in the habit sheet offers to move the habit's reminder to match (editor state only, offsets clamp at 00:00). Documented at [`docs/schedule_reminder.md`](docs/schedule_reminder.md).
+
 ### Support Asks
 
 Where and how often the app asks for support (main-page banner, streak milestone card, support sheet, review prompt), the shared daily ask budget, the "I already donated" flag and all their local state are documented in full at [`docs/support_asks.md`](docs/support_asks.md). Read it before touching `SupportProvider`, `AskBudget`, `runStreakMoment` or any support surface.

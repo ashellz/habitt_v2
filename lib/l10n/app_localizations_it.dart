@@ -3691,4 +3691,36 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Rendi Habitt tuo con nuovi colori d\'accento, gratis per tutti.';
+
+  @override
+  String get scheduleReminderTitle => 'Aggiornare il promemoria?';
+
+  @override
+  String get scheduleReminderDescReplace =>
+      'I tuoi promemoria attuali saranno sostituiti da un unico promemoria all\'orario che scegli.';
+
+  @override
+  String get scheduleReminderDescAdd =>
+      'Scegli quando vuoi ricevere il promemoria per questa abitudine.';
+
+  @override
+  String get scheduleReminderDescOff =>
+      'I promemoria sono disattivati per questa abitudine. Scegliendo un orario verranno attivati con un unico promemoria.';
+
+  @override
+  String get scheduleReminderSet => 'Cambia promemoria';
+
+  @override
+  String get scheduleReminderKeep => 'Mantieni il mio promemoria';
+
+  @override
+  String get scheduleReminderAtTime => 'All\'orario esatto';
+
+  @override
+  String get scheduleReminderAtStart => 'All\'orario di inizio';
+
+  @override
+  String scheduleReminderMinutesBefore(int minutes) {
+    return '$minutes minuti prima';
+  }
 }
