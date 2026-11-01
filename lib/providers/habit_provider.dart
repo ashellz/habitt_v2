@@ -17,6 +17,7 @@ import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/services/completion_sound_player.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
+import 'package:habitt/util/custom_appearance.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/health_override_notice.dart';
 import 'package:habitt/util/optional_habit_order.dart';
@@ -154,6 +155,10 @@ class HabitProvider extends ChangeNotifier {
       daysBox: daysBox,
       prefs: prefs,
     );
+
+    // one time repair of custom-interval schedules that the old DST-unsafe
+    // builders shifted a day early after an autumn clock change
+    await migrateDstShiftedCustomAppearance(habitBox: habitBox, prefs: prefs);
 
     await _loadHabits();
     await _seedDeletedAtTimestamps();
@@ -526,20 +531,9 @@ class HabitProvider extends ChangeNotifier {
     required DateTime anchor,
     required int intervalDays,
   }) {
-    final normalizedAnchor = _normalizeDate(anchor);
-    final value = intervalDays.clamp(1, 365);
-    final output = <String>[];
-    for (int i = 0; i < 365; i += value) {
-      // Starting from the current day (anchor date), add dates to the appearance list based on the custom interval until we have a full year of appearances
-      output.add(
-        normalizedAnchor
-            .add(Duration(days: i))
-            .toIso8601String()
-            .split('T')
-            .first,
-      );
-    }
-    return output;
+    // Starting from the anchor date, a full year of appearances. Calendar
+    // arithmetic, so a DST fall-back day can't shift later dates a day early.
+    return buildCustomAppearance(anchor: anchor, intervalDays: intervalDays);
   }
 
   // Ensures that a habit with custom schedule has its customAppearance list updated with future dates if needed
@@ -610,7 +604,7 @@ class HabitProvider extends ChangeNotifier {
     final createdDay = _normalizeDate(habit.createdAt.toLocal());
     DateTime? lastScheduled;
     for (var i = 1; i <= _missedCarryOverLookbackDays; i++) {
-      final candidate = today.subtract(Duration(days: i));
+      final candidate = DateTime(today.year, today.month, today.day - i);
       if (candidate.isBefore(createdDay)) return false;
       if (_isScheduledOnDay(habit, candidate)) {
         lastScheduled = candidate;

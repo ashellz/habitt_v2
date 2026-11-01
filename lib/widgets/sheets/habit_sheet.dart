@@ -20,6 +20,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/color_converting.dart';
+import 'package:habitt/util/custom_appearance.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/show_emoji_picker_dialog.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
@@ -508,7 +509,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
-  Future<bool> _showEnableNotificationsDialog(BuildContext dialogContext) async {
+  Future<bool> _showEnableNotificationsDialog(
+    BuildContext dialogContext,
+  ) async {
     if (!dialogContext.mounted) return false;
     final loc = AppLocalizations.of(dialogContext)!;
     bool result = false;
@@ -632,7 +635,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.isAlarm = sp.habitIsAlarm;
 
       if (habit.scheduleType == ScheduleType.custom) {
-        habit.customAppearance = buildCustomAppearance(
+        habit.customAppearance = buildCustomAppearanceFromToday(
           habit.customIntervalDays,
         );
         habit.lastCustomUpdate = DateTime.now().toUtc();
@@ -698,7 +701,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       customIntervalDays: sp.customIntervalDays,
       selectedDaysAWeek: sp.selectedDaysAWeek.toList()..sort(),
       selectedDaysAMonth: sp.selectedDaysAMonth.toList()..sort(),
-      customAppearance: buildCustomAppearance(sp.customIntervalDays),
+      customAppearance: buildCustomAppearanceFromToday(sp.customIntervalDays),
       showIfMissed:
           sp.selectedScheduleOption == ScheduleType.custom && sp.showIfMissed,
       timesCompletedThisWeek: 0,
@@ -1352,16 +1355,4 @@ int getUniqueId() {
   final timeComponent = now.millisecondsSinceEpoch;
   final random = Random().nextInt(1000);
   return timeComponent * 1000 + random;
-}
-
-List<String> buildCustomAppearance(int intervalDays) {
-  final start = DateTime.now();
-  final anchor = DateTime(start.year, start.month, start.day);
-  final output = <String>[];
-  for (int i = 0; i < 180; i += intervalDays) {
-    output.add(
-      anchor.add(Duration(days: i)).toIso8601String().split('T').first,
-    );
-  }
-  return output;
 }
