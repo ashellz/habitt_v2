@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/whats_new.dart';
 
 void main() {
@@ -38,7 +39,7 @@ void main() {
   test('defaults to the app constants', () {
     expect(
       shouldShowWhatsNew(
-        dateJoined: kWhatsNewCutoff.subtract(const Duration(days: 1)),
+        dateJoined: addCalendarDays(kWhatsNewCutoff, -1),
         lastSeenVersion: null,
       ),
       isTrue,
@@ -49,7 +50,7 @@ void main() {
     );
     expect(
       shouldShowWhatsNew(
-        dateJoined: kWhatsNewCutoff.subtract(const Duration(days: 1)),
+        dateJoined: addCalendarDays(kWhatsNewCutoff, -1),
         lastSeenVersion: kWhatsNewVersion,
       ),
       isFalse,

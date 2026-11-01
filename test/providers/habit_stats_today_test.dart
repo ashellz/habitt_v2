@@ -7,6 +7,7 @@ import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/stats_range.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -49,7 +50,7 @@ void main() {
     final today = _normalize(DateTime.now());
     final habit = buildTestHabit(id: 1, trackingType: null);
     for (var i = 0; i < completedByDay.length; i++) {
-      final date = today.subtract(Duration(days: completedByDay.length - 1 - i));
+      final date = addCalendarDays(today, -(completedByDay.length - 1 - i));
       final snapshot = buildTestHabit(id: 1, trackingType: null)
         ..completed = completedByDay[i];
       await daysBox.add(

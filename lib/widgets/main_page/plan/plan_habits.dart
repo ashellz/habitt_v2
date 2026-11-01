@@ -11,6 +11,7 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/util/build_plan_sections.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/format_minutes_of_day.dart';
 import 'package:habitt/widgets/main_page/add_habit_button.dart';
 import 'package:habitt/widgets/main_page/habits/empty_habits_widget.dart';
@@ -84,7 +85,7 @@ class _PlanHabitsState extends State<PlanHabits> {
       scheduledYesterdayIds:
           isToday
               ? habitProvider
-                  .getHabitsForDate(today.subtract(const Duration(days: 1)))
+                  .getHabitsForDate(addCalendarDays(today, -1))
                   .map((habit) => habit.id)
                   .toSet()
               : const {},

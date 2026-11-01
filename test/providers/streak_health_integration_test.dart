@@ -8,6 +8,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/models/streak_health.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,7 +48,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -60).toIso8601String(),
     });
     await habitBox.clear();
     await daysBox.clear();
@@ -74,7 +75,7 @@ void main() {
 
     final today = _normalize(DateTime.now());
     for (int i = 0; i < history.length; i++) {
-      final date = today.subtract(Duration(days: history.length - i));
+      final date = addCalendarDays(today, -(history.length - i));
       await daysBox.put(
         _dayKey(date),
         Day(
@@ -231,7 +232,7 @@ void main() {
     Future<void> seedFutureMisses(int count) async {
       final today = _normalize(DateTime.now());
       for (int i = 1; i <= count; i++) {
-        final date = today.add(Duration(days: i));
+        final date = addCalendarDays(today, i);
         await daysBox.put(
           _dayKey(date),
           Day(

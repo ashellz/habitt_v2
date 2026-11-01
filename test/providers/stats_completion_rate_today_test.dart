@@ -6,6 +6,7 @@ import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 
 import '../fixtures/habit_factory.dart';
@@ -44,7 +45,7 @@ void main() {
   Future<void> seed(List<bool> completedByDay) async {
     final today = _normalize(DateTime.now());
     for (var i = 0; i < completedByDay.length; i++) {
-      final date = today.subtract(Duration(days: completedByDay.length - 1 - i));
+      final date = addCalendarDays(today, -(completedByDay.length - 1 - i));
       final habit = buildTestHabit(id: 1, trackingType: null)
         ..completed = completedByDay[i];
       await daysBox.add(

@@ -12,6 +12,7 @@ import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
 import 'package:habitt/util/custom_amount_label.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/widgets/notification/system_notifications_disabled_dialog.dart';
 
 class NotificationService {
@@ -295,7 +296,7 @@ class NotificationService {
     for (final habit in habits) {
       if (habit.notificationTimes.isEmpty) continue;
       for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
-        final day = startDay.add(Duration(days: dayOffset));
+        final day = addCalendarDays(startDay, dayOffset);
         for (final slot in habit.notificationTimes) {
           await AwesomeNotifications().cancel(
             _getHabitNotificationId(habit.id, slot.id, day),
@@ -350,7 +351,7 @@ class NotificationService {
       dayOffset < horizonDays + startDayOffset;
       dayOffset++
     ) {
-      final day = startDay.add(Duration(days: dayOffset));
+      final day = addCalendarDays(startDay, dayOffset);
       if (!appearsOnDay(habit, day)) {
         continue;
       }
@@ -460,7 +461,7 @@ class NotificationService {
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day);
     for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
-      final day = startDay.add(Duration(days: dayOffset));
+      final day = addCalendarDays(startDay, dayOffset);
       for (final slot in habit.notificationTimes) {
         final id = _getHabitNotificationId(habit.id, slot.id, day);
         await AwesomeNotifications().cancel(id);

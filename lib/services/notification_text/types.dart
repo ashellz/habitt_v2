@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/premade_habit_type.dart';
+import 'package:habitt/util/date_key.dart';
 
 import 'template_catalog.dart';
 
@@ -75,7 +76,7 @@ class HabitNotificationContext {
   }
 
   int get daysSinceCreated {
-    return math.max(0, scheduledDay.difference(createdDay).inDays);
+    return math.max(0, calendarDaysBetween(createdDay, scheduledDay));
   }
 }
 

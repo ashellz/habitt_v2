@@ -6,6 +6,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/past_day_hint.dart';
 import 'package:habitt/widgets/default/past_day_hint_dot.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
@@ -222,7 +223,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     if (!mounted) return;
     final today = _normalizeDate(DateTime.now());
     final target = _normalizeDate(day);
-    final daysBack = today.difference(target).inDays;
+    final daysBack = calendarDaysBetween(target, today);
     if (daysBack < 0) return;
 
     if (daysBack > _pastDaysLoaded) {
@@ -306,7 +307,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     final habitProvider = context.read<HabitProvider>();
     final today = _normalizeDate(DateTime.now());
     final joined = _normalizeDate(habitProvider.dateJoined);
-    final sinceJoined = today.difference(joined).inDays;
+    final sinceJoined = calendarDaysBetween(joined, today);
     return max(sinceJoined, _initialPastDays);
   }
 
@@ -332,7 +333,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
     if (!eligible) return;
 
     final today = _normalizeDate(DateTime.now());
-    final yesterday = today.subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(today, -1);
     final index = _allDates.indexWhere((d) => _isSameDay(d, yesterday));
     if (index == -1 || index < _visibleDays) return;
 
@@ -380,9 +381,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
       dateJoined: habitProvider.dateJoined,
       hasSelectedPastDay: preferencesProvider.hasSelectedPastDay,
     );
-    final yesterday = _normalizeDate(
-      DateTime.now(),
-    ).subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(DateTime.now(), -1);
 
     final strip = SizedBox(
       height: 79,

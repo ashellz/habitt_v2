@@ -40,6 +40,40 @@ List<String> buildCustomAppearanceFromToday(int intervalDays) {
   );
 }
 
+/// Extends a stored custom-appearance list so it covers [through], plus
+/// [aheadDays] of headroom.
+///
+/// New dates continue the existing grid from the last stored date (last + N,
+/// last + 2N, ...), so extending never moves the habit's schedule. Only when
+/// there is no usable last date does it start a fresh grid at
+/// [fallbackAnchor]. Entries before [keepFrom] are dropped so the list (which
+/// is also copied into every day snapshot) doesn't grow forever.
+List<String> extendCustomAppearance({
+  required List<String> dates,
+  required int intervalDays,
+  required DateTime through,
+  required DateTime fallbackAnchor,
+  required DateTime keepFrom,
+  int aheadDays = 365,
+}) {
+  final last = dates.isEmpty ? null : DateTime.tryParse(dates.last);
+  final start = last ?? fallbackAnchor;
+  final spanDays = calendarDaysBetween(start, through) + aheadDays;
+  final extension = buildCustomAppearance(
+    anchor: start,
+    intervalDays: intervalDays,
+    spanDays: spanDays < 1 ? 1 : spanDays,
+  );
+
+  final keepKey = dateKey(keepFrom);
+  final merged =
+      last == null
+          ? extension
+          // extension.first is the last stored date itself
+          : [...dates, ...extension.skip(1)];
+  return merged.where((d) => d.compareTo(keepKey) >= 0).toList();
+}
+
 // Day number of a calendar date, computed in UTC so DST can't skew the gap.
 int _dayNumber(DateTime d) =>
     DateTime.utc(d.year, d.month, d.day).millisecondsSinceEpoch ~/

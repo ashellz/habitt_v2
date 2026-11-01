@@ -6,6 +6,7 @@ import 'package:habitt/hive/hive_registrar.g.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,7 +47,7 @@ void main() {
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
       'dateJoined':
-          today.subtract(const Duration(days: 60)).toIso8601String(),
+          addCalendarDays(today, -60).toIso8601String(),
     });
     await habitBox.clear();
     await daysBox.clear();
@@ -84,9 +85,7 @@ void main() {
 
   group('day progress cache', () {
     test('dayProgress computes from the day snapshot and caches it', () async {
-      final pastDay = _normalize(
-        DateTime.now().subtract(const Duration(days: 10)),
-      );
+      final pastDay = addCalendarDays(DateTime.now(), -10);
       await seedDay(pastDay, amountCompleted: 5);
       final provider = await createInitializedProvider();
 
@@ -96,17 +95,13 @@ void main() {
     });
 
     test('priming one day caches its whole week', () async {
-      final pastDay = _normalize(
-        DateTime.now().subtract(const Duration(days: 10)),
-      );
+      final pastDay = addCalendarDays(DateTime.now(), -10);
       await seedDay(pastDay, amountCompleted: 5);
       final provider = await createInitializedProvider();
 
       provider.primeDayProgress([pastDay]);
 
-      final weekStart = pastDay.subtract(
-        Duration(days: pastDay.weekday - 1),
-      );
+      final weekStart = addCalendarDays(pastDay, -(pastDay.weekday - 1));
       for (int i = 0; i < 7; i++) {
         final day = DateTime(
           weekStart.year,
@@ -122,9 +117,7 @@ void main() {
     });
 
     test('dataVersion bump clears the cache', () async {
-      final pastDay = _normalize(
-        DateTime.now().subtract(const Duration(days: 10)),
-      );
+      final pastDay = addCalendarDays(DateTime.now(), -10);
       await seedDay(pastDay, amountCompleted: 5);
       final provider = await createInitializedProvider();
 
@@ -140,9 +133,7 @@ void main() {
     test(
       'refreshDayProgress recomputes changed data without a version bump',
       () async {
-        final pastDay = _normalize(
-          DateTime.now().subtract(const Duration(days: 10)),
-        );
+        final pastDay = addCalendarDays(DateTime.now(), -10);
         await seedDay(pastDay, amountCompleted: 5);
         final provider = await createInitializedProvider();
 
@@ -160,9 +151,7 @@ void main() {
 
     test('future days are cached as zero progress', () async {
       final provider = await createInitializedProvider();
-      final tomorrow = _normalize(
-        DateTime.now().add(const Duration(days: 1)),
-      );
+      final tomorrow = addCalendarDays(DateTime.now(), 1);
 
       expect(provider.dayProgress(tomorrow), 0.0);
     });

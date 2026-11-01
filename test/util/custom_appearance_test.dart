@@ -137,6 +137,64 @@ void main() {
     }, skip: localZoneHasFallBack ? false : dstSkipReason);
   });
 
+  group('extendCustomAppearance', () {
+    test('continues the grid from the last stored date', () {
+      final stored = buildCustomAppearance(
+        anchor: DateTime(2026, 4, 1),
+        intervalDays: 3,
+        spanDays: 180,
+      );
+      final extended = extendCustomAppearance(
+        dates: stored,
+        intervalDays: 3,
+        through: DateTime(2026, 11, 1),
+        // an off-grid anchor that must not be used when a list exists
+        fallbackAnchor: DateTime(2026, 9, 1),
+        keepFrom: DateTime(2026, 1, 1),
+      );
+
+      expect(extended.take(stored.length), stored);
+      expect(_gaps(extended), everyElement(3));
+      expect(extended.last.compareTo('2027-11-01') < 0, isTrue);
+      expect(extended.last.compareTo('2027-10-29') >= 0, isTrue);
+      final grid = buildCustomAppearance(
+        anchor: DateTime(2026, 4, 1),
+        intervalDays: 3,
+        spanDays: 1000,
+      );
+      expect(grid, containsAll(extended));
+    });
+
+    test('drops dates before keepFrom', () {
+      final stored = buildCustomAppearance(
+        anchor: DateTime(2026, 1, 1),
+        intervalDays: 2,
+        spanDays: 100,
+      );
+      final extended = extendCustomAppearance(
+        dates: stored,
+        intervalDays: 2,
+        through: DateTime(2026, 6, 1),
+        fallbackAnchor: DateTime(2026, 1, 1),
+        keepFrom: DateTime(2026, 3, 1),
+      );
+      expect(extended.first, '2026-03-02');
+      expect(_gaps(extended), everyElement(2));
+    });
+
+    test('with no list it starts a fresh grid at the fallback anchor', () {
+      final extended = extendCustomAppearance(
+        dates: const [],
+        intervalDays: 4,
+        through: DateTime(2026, 10, 30),
+        fallbackAnchor: DateTime(2026, 10, 20, 22, 15),
+        keepFrom: DateTime(2026, 1, 1),
+      );
+      expect(extended.take(3), ['2026-10-20', '2026-10-24', '2026-10-28']);
+      expect(_gaps(extended), everyElement(4));
+    });
+  });
+
   group('repairDstShiftedCustomAppearance', () {
     test('re-spaces future dates of the issue example, keeps the past', () {
       final anchor = DateTime(2026, 10, 1);

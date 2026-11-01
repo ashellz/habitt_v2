@@ -18,6 +18,7 @@ import 'package:habitt/services/completion_sound_player.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/custom_appearance.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/health_override_notice.dart';
 import 'package:habitt/util/optional_habit_order.dart';
@@ -331,7 +332,7 @@ class HabitProvider extends ChangeNotifier {
       }
 
       // Move to the next day
-      currentDay = currentDay.add(const Duration(days: 1));
+      currentDay = addCalendarDays(currentDay, 1);
     }
   }
 
@@ -471,9 +472,9 @@ class HabitProvider extends ChangeNotifier {
   // Function to check what week a date is in
   int _weekKey(DateTime date) {
     final normalized = _normalizeDate(date);
-    final monday = normalized.subtract(Duration(days: normalized.weekday - 1));
+    final monday = addCalendarDays(normalized, -(normalized.weekday - 1));
     final startOfYear = DateTime(monday.year, 1, 1);
-    final dayOfYear = monday.difference(startOfYear).inDays + 1;
+    final dayOfYear = calendarDaysBetween(startOfYear, monday) + 1;
     return (monday.year * 1000) + dayOfYear;
   }
 
@@ -536,13 +537,16 @@ class HabitProvider extends ChangeNotifier {
     return buildCustomAppearance(anchor: anchor, intervalDays: intervalDays);
   }
 
+  // How far back a custom schedule keeps past dates when it gets extended.
+  // Past days normally read their own day snapshot; this only covers the
+  // live-list fallbacks (show-if-missed lookback, snapshots without a list).
+  static const int _customAppearanceKeepPastDays = 365;
+
   // Ensures that a habit with custom schedule has its customAppearance list updated with future dates if needed
   void _ensureCustomAppearance(Habit habit, DateTime day) {
-    final now = DateTime.now().toUtc();
     final normalizedDay = _normalizeDate(day);
 
-    // If custom schedule settings arent empty
-    if (habit.customAppearance.isNotEmpty && habit.lastCustomUpdate != null) {
+    if (habit.customAppearance.isNotEmpty) {
       final latest = DateTime.tryParse(habit.customAppearance.last);
       // If the latest scheduled appearance is after the day we are checking, then we dont need to update the schedule appearances yet
       if (latest != null && !normalizedDay.isAfter(latest)) {
@@ -550,17 +554,21 @@ class HabitProvider extends ChangeNotifier {
       }
     }
 
-    // If last update is null then we go from today (the given date), otherwise from the last update
-    final anchor =
-        habit.lastCustomUpdate == null
-            ? normalizedDay
-            : _normalizeDate(habit.lastCustomUpdate!);
-
-    // Updating habit data
-    habit.customAppearance = _buildCustomAppearance(
-      anchor: anchor,
+    // Continue the existing grid from its last date, so extending never moves
+    // the schedule. Only a habit with no list at all starts a fresh grid: from
+    // the local day of its last update, or from the day being checked.
+    final lastUpdate = habit.lastCustomUpdate;
+    final today = _normalizeDate(DateTime.now());
+    final earliest = normalizedDay.isBefore(today) ? normalizedDay : today;
+    habit.customAppearance = extendCustomAppearance(
+      dates: habit.customAppearance,
       intervalDays: habit.customIntervalDays,
+      through: normalizedDay,
+      fallbackAnchor: lastUpdate == null ? normalizedDay : lastUpdate.toLocal(),
+      keepFrom: addCalendarDays(earliest, -_customAppearanceKeepPastDays),
     );
+
+    final now = DateTime.now().toUtc();
     habit.lastCustomUpdate = now;
     habit.timestamps['customAppearance'] = now;
     habit.timestamps['lastCustomUpdate'] = now;
@@ -971,15 +979,15 @@ class HabitProvider extends ChangeNotifier {
 
   Map<DateTime, double> getThisWeekProgress({DateTime? anchorDate}) {
     final baseDate = _normalizeDate(anchorDate ?? DateTime.now());
-    final startOfWeek = baseDate.subtract(Duration(days: baseDate.weekday - 1));
+    final startOfWeek = addCalendarDays(baseDate, -(baseDate.weekday - 1));
 
     List<Day> thisWeekDays = [];
 
     for (int i = 0; i < 7; i++) {
       thisWeekDays.add(
         Day(
-          date: startOfWeek.add(Duration(days: i)),
-          habits: getHabitsFromDay(startOfWeek.add(Duration(days: i))),
+          date: addCalendarDays(startOfWeek, i),
+          habits: getHabitsFromDay(addCalendarDays(startOfWeek, i)),
           timestamp: DateTime.now().toUtc(),
         ),
       );
@@ -1527,7 +1535,7 @@ class HabitProvider extends ChangeNotifier {
     final today = DateTime.now();
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(day.year, day.month, day.day);
-    final dayBefore = daySimple.subtract(const Duration(days: 1));
+    final dayBefore = addCalendarDays(daySimple, -1);
 
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);

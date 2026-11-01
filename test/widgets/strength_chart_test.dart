@@ -67,7 +67,7 @@ void main() {
 
   testWidgets('renders a habit spanning more than a year', (tester) async {
     final dates = [
-      for (var i = 0; i < 500; i++) DateTime(2025, 1, 1).add(Duration(days: i)),
+      for (var i = 0; i < 500; i++) DateTime(2025, 1, 1 + i),
     ];
     await _pump(tester, dates, [for (var i = 0; i < 500; i++) i / 500]);
 

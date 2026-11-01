@@ -7,6 +7,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/stats_range.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,7 +51,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -60).toIso8601String(),
     });
     await habitBox.clear();
     await daysBox.clear();

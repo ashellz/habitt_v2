@@ -5,6 +5,7 @@ import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/util/activity_sessions.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/health_history.dart';
 import 'package:habitt/util/sleep_sessions.dart';
 import 'package:habitt/util/workout_sessions.dart';
@@ -326,7 +327,7 @@ class HealthService {
 
       if (metric == HealthMetricType.steps) {
         final start = DateTime(day.year, day.month, day.day);
-        final end = start.add(const Duration(days: 1));
+        final end = addCalendarDays(start, 1);
         return _health.getTotalStepsInInterval(start, end);
       }
 
@@ -468,6 +469,6 @@ class HealthService {
 
   ({DateTime start, DateTime end}) _windowFor(DateTime day) {
     final dayStart = DateTime(day.year, day.month, day.day);
-    return (start: dayStart, end: dayStart.add(const Duration(days: 1)));
+    return (start: dayStart, end: addCalendarDays(dayStart, 1));
   }
 }

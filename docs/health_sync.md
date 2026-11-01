@@ -123,7 +123,10 @@ on iOS and Android only:
 ## Day attribution (sleep sessions)
 
 Most metrics are read midnight-to-midnight for the day being synced. The
-sleep-derived metrics (`sleep`, `bedtime`, `wakeTime`) are not cut by a clock
+window's end is the next calendar day's local midnight
+(`addCalendarDays(dayStart, 1)`), not `dayStart + 24 h`, so on DST change days
+the window is 23 or 25 hours and neither drops nor double-counts the shifted
+hour. The sleep-derived metrics (`sleep`, `bedtime`, `wakeTime`) are not cut by a clock
 window. `HealthService._fetchSleepSessions` reads the day before through the
 day after, groups the samples into sessions (`lib/util/sleep_sessions.dart`:
 samples less than `sleepSessionMaxGap`, 3 h, apart are one session, so a nap

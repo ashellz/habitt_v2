@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/widgets/habit_details/strength_chart.dart';
 import 'package:habitt/widgets/whats_new/whats_new_graphic_frame.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,7 @@ class WhatsNewStrengthGraphic extends StatelessWidget {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final dates = [
-      for (var i = 0; i < _days; i++)
-        today.subtract(Duration(days: _days - 1 - i)),
+      for (var i = 0; i < _days; i++) addCalendarDays(today, -(_days - 1 - i)),
     ];
     final values = [
       for (var i = 0; i < _days; i++)

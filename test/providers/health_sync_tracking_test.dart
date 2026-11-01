@@ -12,6 +12,7 @@ import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/services/health_service.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,7 +106,7 @@ void main() {
       // seeded durations are already seconds, skip the minutes -> seconds migration
       'durationSecondsMigrated_habits_v1': true,
       'durationSecondsMigrated_days_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -60).toIso8601String(),
     });
     await habitBox.clear();
     await daysBox.clear();
@@ -391,7 +392,7 @@ void main() {
         'lastNotificationSyncDate': _dayKey(today),
         'daySnapshotsSanitized_v1': true,
         'dateJoined':
-            today.subtract(const Duration(days: 60)).toIso8601String(),
+            addCalendarDays(today, -60).toIso8601String(),
         'durationSecondsMigrated_habits_v1': true,
         'durationSecondsMigrated_days_v1': true,
       });
