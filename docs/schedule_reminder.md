@@ -26,11 +26,10 @@ so). Existing reminders are replaced; the copy states that.
 - No link is stored between schedule and reminder; the reminder is a plain copy
   of the chosen time (no model / Hive / backup change).
 - Not shown for categories (any time / morning / afternoon / evening), when the
-  flow is dismissed, or when the picked time equals what the sheet already held.
+  flow is dismissed, or when the start time is unchanged (changing only the end of a range never asks).
 - Not shown for the inline start/end edits on the sheet (`editScheduleTime`).
-- `reminderMinutesFor` **clamps to 00:00** instead of wrapping: a reminder's
-  weekday (`days`, or the habit's schedule days when empty) is fixed, so 23:55
-  would ring the day before the habit is due. Schedule 00:10 + 15 min before →
-  00:00.
+- `reminderMinutesFor` **wraps** around midnight: schedule 00:10 + 15 min
+  before → 23:55. (The reminder's weekdays still follow the habit schedule, so
+  for a day-restricted habit that early reminder lands on the scheduled day.)
 - The alarm flag and sound choice are untouched (they live on the habit, not on
   the slots); reminder text doesn't depend on the slot's time.

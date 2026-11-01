@@ -27,13 +27,14 @@ void main() {
       expect(reminderMinutesFor(10 * 60 + 5, 15), 9 * 60 + 50);
     });
 
-    test('midnight edge: clamps to 00:00 instead of wrapping to 23:55', () {
+    test('midnight edge: wraps to the previous evening', () {
       // 00:10, 15 minutes before
-      expect(reminderMinutesFor(10, 15), 0);
-      expect(reminderMinutesFor(0, 30), 0);
-      expect(reminderMinutesFor(0, 0), 0);
+      expect(reminderMinutesFor(10, 15), 23 * 60 + 55);
+      expect(reminderMinutesFor(0, 30), 23 * 60 + 30);
+      expect(reminderMinutesFor(0, 5), 23 * 60 + 55);
       // exactly reaching midnight is fine
       expect(reminderMinutesFor(15, 15), 0);
+      expect(reminderMinutesFor(0, 0), 0);
     });
 
     test('latest minute of the day stays valid', () {

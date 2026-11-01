@@ -87,7 +87,7 @@ Future<void> showDayScheduleFlow(BuildContext context) async {
       );
       if (result == null || !context.mounted) return;
       if (result == ScheduleTimePickerDialog.back) continue;
-      final changed = _intervalChanged(sp, result, result);
+      final changed = _startChanged(sp, result);
       _applyInterval(sp, result, result);
       if (changed) await _offerReminder(context, sp, result, isRange: false);
       return;
@@ -98,11 +98,10 @@ Future<void> showDayScheduleFlow(BuildContext context) async {
   }
 }
 
-// whether applying this interval changes what the sheet holds
-bool _intervalChanged(StateProvider sp, int start, int end) =>
-    !sp.timeIntervalEnabled ||
-    sp.timeIntervalStart != start ||
-    sp.timeIntervalEnd != end;
+// whether the start time differs from what the sheet held (a habit that had
+// no timed schedule yet counts as changed). The end time alone never asks.
+bool _startChanged(StateProvider sp, int start) =>
+    !sp.timeIntervalEnabled || sp.timeIntervalStart != start;
 
 /// Asks whether the habit's reminder should follow the new schedule time and,
 /// if so, replaces the reminders in the editor state with a single one. Only
@@ -153,7 +152,7 @@ Future<bool?> _timeRangeSteps(
       case TimeRangeAction.back:
         return false;
       case TimeRangeAction.done:
-        final changed = _intervalChanged(sp, start, end);
+        final changed = _startChanged(sp, start);
         _applyInterval(sp, start, end);
         if (changed) await _offerReminder(context, sp, start, isRange: true);
         return true;
