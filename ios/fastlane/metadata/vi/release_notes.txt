@@ -1,1 +1,8 @@
-Sửa lỗi và cải tiến liên quan đến thói quen đã xóa.
+• Đồng bộ sức khỏe: liên kết thói quen với số bước, giấc ngủ, buổi tập, phút chánh niệm hoặc calo (Apple Health).
+• Báo thức cho các thói quen khẩn cấp.
+• Kế hoạch trong ngày: xem các thói quen được sắp xếp theo giờ trong ngày.
+• Biểu đồ sức mạnh theo thời gian trong chi tiết thói quen.
+• Màu chủ đề mới, miễn phí cho mọi người.
+• Thói quen có chu kỳ tùy chỉnh chưa hoàn thành có thể hiện lại vào ngày hôm sau, cùng âm thanh hoàn thành và pháo giấy.
+
+Còn có nhiều điều nhỏ khác như cải tiến và sửa lỗi.

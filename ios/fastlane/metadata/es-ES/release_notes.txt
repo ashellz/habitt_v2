@@ -1,1 +1,8 @@
-Corrección de errores y mejoras relacionadas con los hábitos eliminados.
+• Sincronización de salud: vincula hábitos con pasos, sueño, entrenamientos, minutos de atención plena o calorías (Apple Health).
+• Alarmas para hábitos urgentes.
+• Plan diario: mira tus hábitos repartidos a lo largo del día.
+• Gráfico de fuerza a lo largo del tiempo en los detalles del hábito.
+• Nuevos colores de tema, gratis para todos.
+• Los hábitos con intervalo personalizado que no completes pueden volver a aparecer al día siguiente, además de sonido al completar y confeti.
+
+Incluye también muchas pequeñas cosas, como mejoras y corrección de errores.

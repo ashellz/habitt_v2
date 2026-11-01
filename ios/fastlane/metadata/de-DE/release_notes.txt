@@ -1,1 +1,8 @@
-Fehlerbehebungen und Verbesserungen bei gelöschten Gewohnheiten.
+• Health-Sync: Verknüpfe Gewohnheiten mit Schritten, Schlaf, Workouts, Achtsamkeitsminuten oder Kalorien (Apple Health).
+• Gewohnheits-Wecker für dringende Gewohnheiten.
+• Tagesplan: Sieh deine Gewohnheiten über den Tag verteilt.
+• Diagramm zur Stärke im Zeitverlauf in den Details einer Gewohnheit.
+• Neue Designfarben, kostenlos für alle.
+• Verpasste Gewohnheiten mit eigenem Intervall können am nächsten Tag erneut erscheinen, dazu Abschlusston und Konfetti.
+
+Dazu kommen viele kleine Dinge wie Verbesserungen und Fehlerbehebungen.

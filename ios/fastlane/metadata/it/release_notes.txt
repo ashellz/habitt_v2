@@ -1,1 +1,8 @@
-Correzioni di bug e miglioramenti relativi alle abitudini eliminate.
+• Sincronizzazione salute: collega le abitudini a passi, sonno, allenamenti, minuti di mindfulness o calorie (Apple Health).
+• Sveglie per le abitudini urgenti.
+• Piano giornaliero: guarda le tue abitudini distribuite nella giornata.
+• Grafico della forza nel tempo nei dettagli dell'abitudine.
+• Nuovi colori del tema, gratis per tutti.
+• Le abitudini con intervallo personalizzato non completate possono riapparire il giorno dopo, più suono di completamento e coriandoli.
+
+Include anche tante piccole cose, come miglioramenti e correzioni di bug.

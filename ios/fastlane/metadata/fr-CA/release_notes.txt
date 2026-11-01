@@ -1,1 +1,8 @@
-Corrections de bugs et améliorations concernant les habitudes supprimées.
+• Synchronisation santé : associez vos habitudes aux pas, au sommeil, aux entraînements, aux minutes de pleine conscience ou aux calories (Apple Health).
+• Alarmes pour les habitudes urgentes.
+• Plan du jour : voyez vos habitudes réparties sur la journée.
+• Graphique de la force dans le temps dans les détails d'une habitude.
+• Nouvelles couleurs de thème, gratuites pour tous.
+• Les habitudes à intervalle personnalisé non terminées peuvent réapparaître le lendemain, plus un son de validation et des confettis.
+
+De nombreuses petites choses sont aussi incluses, comme des améliorations et des corrections de bugs.

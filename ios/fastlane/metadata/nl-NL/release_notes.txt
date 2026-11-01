@@ -1,1 +1,8 @@
-Bugfixes en verbeteringen met betrekking tot verwijderde gewoontes.
+• Gezondheidssync: koppel gewoontes aan stappen, slaap, workouts, mindfulnessminuten of calorieën (Apple Health).
+• Gewoontealarmen voor urgente gewoontes.
+• Dagplanning: zie je gewoontes verdeeld over de dag.
+• Grafiek van kracht in de tijd in de details van een gewoonte.
+• Nieuwe themakleuren, gratis voor iedereen.
+• Niet-voltooide gewoontes met een eigen interval kunnen de volgende dag opnieuw verschijnen, plus voltooiingsgeluid en confetti.
+
+Ook inbegrepen: een hoop kleine dingen zoals verbeteringen en bugfixes.

@@ -1,1 +1,8 @@
-Silinen alışkanlıklarla ilgili hata düzeltmeleri ve iyileştirmeler.
+• Sağlık senkronizasyonu: alışkanlıkları adımlara, uykuya, antrenmanlara, farkındalık dakikalarına veya kalorilere bağlayın (Apple Health).
+• Acil alışkanlıklar için alarmlar.
+• Günlük Plan: alışkanlıklarınızı gün boyunca dağılmış şekilde görün.
+• Alışkanlık ayrıntılarında zaman içinde güç grafiği.
+• Yeni tema renkleri, herkese ücretsiz.
+• Özel aralıklı ve tamamlanmayan alışkanlıklar ertesi gün tekrar görünebilir; ayrıca tamamlama sesi ve konfeti.
+
+Ayrıca iyileştirmeler ve hata düzeltmeleri gibi bir sürü küçük şey de dahil.
