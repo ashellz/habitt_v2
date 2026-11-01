@@ -45,8 +45,8 @@ class _ScheduleReminderDialogState extends State<ScheduleReminderDialog> {
     return NewDefaultDialog(
       title: loc.scheduleReminderTitle,
       desc: desc,
-      primaryButtonLabel: loc.scheduleReminderSet,
-      secondaryButtonLabel: loc.scheduleReminderKeep,
+      primaryButtonLabel: loc.apply,
+      secondaryButtonLabel: loc.cancel,
       onPrimaryButtonPressed: () => Navigator.of(context).pop(_selected),
       onSecondaryButtonPressed: () => Navigator.of(context).pop(),
       child: Column(
