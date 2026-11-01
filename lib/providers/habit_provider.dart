@@ -19,6 +19,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:habitt/util/health_override_notice.dart';
+import 'package:habitt/util/health_value_guard.dart';
 import 'package:habitt/util/optional_habit_order.dart';
 import 'package:habitt/util/streak_moment.dart';
 import 'package:habitt/util/premade_habit_type_migration.dart';
@@ -1902,13 +1903,34 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // applies a value read from Health to the habit it's linked to
-  Future<void> syncHabitFromHealth(
+  // the habit's snapshot for [day] as a Health sync would write to it, or null
+  // when the habit isn't on that day (not created yet, paused, not scheduled).
+  // Past days are created on demand like everywhere else a past day is opened.
+  Habit? _habitForHealthSync(int id, DateTime daySimple) {
+    final today = _normalizeDate(DateTime.now());
+    final source =
+        daySimple == today
+            ? habits
+            : getHabitsFromDay(daySimple, hydrateMissing: true);
+    final match = source.where((h) => h.id == id);
+    return match.isEmpty ? null : match.first;
+  }
+
+  /// Whether a Health sync could write to habit [id] on [day]. Lets a catch-up
+  /// skip the Health read for days the habit doesn't appear on.
+  bool canSyncHealthDay(int id, DateTime day) =>
+      _habitForHealthSync(id, _normalizeDate(day)) != null;
+
+  // applies a value read from Health to the habit it's linked to.
+  // [refreshStreaks] is off while catching up on several past days, so the
+  // caller can run assignStreaks once at the end instead of once per day
+  Future<HealthApplyOutcome> syncHabitFromHealth(
     int id,
     HealthMetricType metric,
     int rawValue, {
     required DateTime day,
     List<HealthSessionDetail> sessions = const [],
+    bool refreshStreaks = true,
   }) async {
     habitStatsProvider?.invalidateHabit(id);
 
@@ -1916,21 +1938,16 @@ class HabitProvider extends ChangeNotifier {
     final todaySimple = DateTime(now.year, now.month, now.day);
     final daySimple = DateTime(day.year, day.month, day.day);
 
-    late Habit habit;
-    if (daySimple == todaySimple) {
-      final match = habits.where((h) => h.id == id);
-      if (match.isEmpty) return;
-      habit = match.first;
-    } else {
-      final dayHabits = getHabitsFromDay(daySimple, hydrateMissing: true);
-      final match = dayHabits.where((h) => h.id == id);
-      if (match.isEmpty) return;
-      habit = match.first;
+    final habit = _habitForHealthSync(id, daySimple);
+    if (habit == null) {
+      return const HealthApplyOutcome(HealthApplyStatus.skipped);
     }
 
     // if habit got unlinked by user, dont apply wrongly,
     // instead wait for next sync to reapply if linked differently
-    if (habit.healthMetric != metric) return;
+    if (habit.healthMetric != metric) {
+      return const HealthApplyOutcome(HealthApplyStatus.skipped);
+    }
 
     // user edited this day by hand: leave the progress alone but keep the
     // session list current, it's informational only
@@ -1938,7 +1955,7 @@ class HabitProvider extends ChangeNotifier {
       habit.healthSessions = sessions.map((s) => s.copy()).toList();
       await updateHabitInDB(habit, day: daySimple);
       notifyListeners();
-      return;
+      return const HealthApplyOutcome(HealthApplyStatus.applied);
     }
 
     final wasCompleted = habit.completed;
@@ -1948,6 +1965,21 @@ class HabitProvider extends ChangeNotifier {
         metric.supportsTrackingChoice
             ? (habit.trackingType ?? metric.trackingType)
             : metric.trackingType;
+
+    // an empty or corrupt read must not wipe what the day already has
+    final existingProgress =
+        effectiveTrackingType == HabitTrackingType.duration
+            ? habit.durationCompleted
+            : habit.amountCompleted;
+    if (shouldDiscardHealthValue(
+      metric,
+      rawValue,
+      existingProgress,
+      trackingType: effectiveTrackingType,
+    )) {
+      return const HealthApplyOutcome(HealthApplyStatus.discarded);
+    }
+
     switch (effectiveTrackingType) {
       case HabitTrackingType.amount:
         habit.updateHabitAmountCompleted(rawValue);
@@ -2000,10 +2032,14 @@ class HabitProvider extends ChangeNotifier {
         todaySimple: todaySimple,
       );
       _refreshPerfectStreakForDayIfNeeded(daySimple);
-      if (daySimple != todaySimple) await assignStreaks(id);
+      if (daySimple != todaySimple && refreshStreaks) await assignStreaks(id);
       refreshTodaysHabits(notify: false);
     }
     notifyListeners();
+    return HealthApplyOutcome(
+      HealthApplyStatus.applied,
+      completionChanged: wasCompleted != isNowCompleted,
+    );
   }
 
   void updateHabitDurationCompleted(

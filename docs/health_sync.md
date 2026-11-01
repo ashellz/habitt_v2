@@ -16,7 +16,9 @@ It fits the app's local-first, no-server-collection design.
 
 Sync runs on app open and app resume only — there is no background
 delivery/observer registration, so progress updates the next time Habitt is
-opened, not the instant new Health data appears.
+opened, not the instant new Health data appears. Days the app wasn't opened on
+are caught up on the next open, up to 14 days back (see "Catching up on past
+days").
 
 ## Data model
 
@@ -83,8 +85,88 @@ opened, not the instant new Health data appears.
    until the next app open. It reads just that one habit, so it's safe while a
    `syncNow()` is running. Editing an existing habit does not trigger it.
 5. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
-   `HealthService.fetchValueForDay` is read and, if non-null, applied via
-   `HabitProvider.syncHabitFromHealth`.
+   `HealthProvider._catchUpHabit` reads the habit's sync day and the days it
+   missed (next section). Each day goes through
+   `HealthService.fetchValueForDay` and, if non-null, is applied via
+   `HabitProvider.syncHabitFromHealth`, which throws away empty or corrupt
+   reads (see "Empty and corrupt reads").
+
+## Catching up on past days
+
+A sync used to write only the current sync day, so a day the app wasn't opened
+on (a night's sleep, a bedtime, a workout) stayed empty. Each habit now keeps a
+**cursor** — the last day its sync reached — and a run reads the days since it.
+It never re-reads a fixed window on every open.
+
+- **Cursor:** per habit, a date (not a timestamp), stored as a JSON map
+  `habitId -> yyyy-MM-dd` in `SharedPreferences` (`healthSyncCursors`). It is
+  sync bookkeeping, not habit data, so it stays out of Hive and the backup
+  system. `lastSyncedAt` (`healthLastSyncedAt`) is separate and only drives the
+  "Last synced" label.
+- **Range:** `healthCatchUpDays`
+  ([`lib/util/health_sync_range.dart`](../lib/util/health_sync_range.dart))
+  returns the habit's sync day first (what the user is looking at), then the
+  days from the cursor up to it, oldest to newest. The cursor day itself is read
+  **again**, so a night a watch uploaded after midnight settles on the next
+  open; after that it is final. A second open the same day just re-reads
+  today.
+- **Cap:** `kHealthBackfillMaxDays` = 14 days before the sync day. Health
+  Connect only lets an app read the 30 days before its first permission grant;
+  `READ_HEALTH_DATA_HISTORY` (declared in the manifest, but a separate user
+  grant that isn't requested yet) lifts that. Two weeks stays well inside the
+  default window and bounds the reads after a long absence. A "backfill
+  everything" option is planned for later and would use that permission.
+- **No cursor = no backfill.** A habit that was just linked
+  (`HealthProvider.syncHabit` sets the cursor to the link day) or that has
+  never synced reads only its sync day, so it never fills days before it was
+  linked. Habits that were linked before this existed get their cursor on the
+  first run.
+- **Floor:** `healthBackfillFloor` — never before the habit's `createdAt`, and
+  never before the day it was last paused or unpaused (`timestamps['isPaused']`).
+- **Paused, unlinked and deleted habits lose their cursor.** `syncNow` drops the
+  cursor of any habit it doesn't sync, so unpausing (or relinking) starts from
+  that day. Paused habits don't appear on past days, and unpausing must not
+  re-add the paused stretch.
+- **Which days are written:** days the habit isn't on (before it existed, not
+  scheduled) are skipped without a Health read
+  (`HabitProvider.canSyncHealthDay`). Days with `healthManualOverride` keep
+  their progress, as before (only the sessions list refreshes). Completed days
+  in range are refreshed: Health is the source of truth for a linked habit.
+- **Failures:** the new cursor is the earliest day whose read failed (`null`),
+  so it is retried next open, or the sync day when every read went through. An
+  empty or corrupt read that was discarded does not count as a failure.
+- **Day attribution:** every day goes through `syncDayFor`/`_syncHabitDay`, so
+  bedtime "day before" and sleep land on the right day. Switching a bedtime
+  habit to "day before" moves its sync day back one; a cursor on or after the
+  sync day just reads the sync day.
+- **Streaks:** past days are written with `refreshStreaks: false`, and
+  `assignStreaks(habitId)` runs once at the end of a habit's catch-up if any
+  past day flipped its completion.
+- **Timing and UX:** it is the same fire-and-forget `syncNow()` as before and
+  yields between habits and days, so app open isn't delayed. It is silent: no
+  toast or dialog, the days just show up in the calendar and the details chart.
+
+## Empty and corrupt reads
+
+Health is followed, even where it is lower than what was recorded (the user
+may have edited Health by hand). Only two kinds of read are thrown away, for
+today and past days alike — the existing value is kept
+([`lib/util/health_value_guard.dart`](../lib/util/health_value_guard.dart),
+checked in `HabitProvider.syncHabitFromHealth`):
+
+- **Empty:** `0` where the day already has progress. iOS can't report revoked
+  read access, it just answers with nothing, and Health Connect returns nothing
+  outside its readable window; without this a revoked permission would zero
+  every day it read. An empty read on an empty day is a normal write.
+  Consequence: deleting everything for a day in Health doesn't clear it in
+  Habitt (a hand edit or `useHealthValues` still can).
+- **Corrupt:** a value no real day has (`isPlausibleHealthValue`): negative,
+  over 200k steps, over 20k kcal, over 24 h of sleep/exercise, over 200
+  workout sessions, a time of day out of range.
+
+`syncHabitFromHealth` returns a `HealthApplyOutcome` (`applied`, `skipped` or
+`discarded`, plus whether the completion flipped). A discarded read doesn't
+stamp `lastSyncedAt` and doesn't hold the cursor back.
 
 ## Habit details Health card
 
@@ -162,7 +244,8 @@ whole. `HealthService.syncDayFor` returns today for everything except a
 day-before bedtime, which returns yesterday (the night that ended this
 morning). The session list stored on the habit is these grouped sessions, not
 the raw samples. Changing the setting does not move bedtimes already recorded
-— sync only touches the current target day.
+— sync only writes the days in its catch-up range (see "Catching up on past
+days").
 
 ## Workouts/mindfulness tracking mode
 
@@ -312,7 +395,8 @@ When a sync flips a habit's `completed` flag, `syncHabitFromHealth` does the
 same bookkeeping as a manual completion (`completeHabit`): it updates the
 weekly/monthly `timesCompletedThisWeek`/`timesCompletedThisMonth` counters on
 the real habit (`_updatePeriodCountersForId`), reschedules notifications,
-refreshes the perfect-streak flag, and for past days re-runs `assignStreaks`.
+refreshes the perfect-streak flag, and for past days re-runs `assignStreaks`
+(once per habit at the end of a catch-up, not once per day).
 Timer commits (`commitTimerDuration`) and the progress dialogs do likewise.
 
 ## Habit notifications
