@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -241,10 +239,7 @@ class Preferences extends StatelessWidget {
                   ),
                 ],
               ),
-              if (Platform.isIOS || Platform.isAndroid) ...[
-                Divider(color: cp.border, height: 32),
-                const PremadeHealthSetting(),
-              ],
+              const PremadeHealthSetting(),
               if (kDebugMode) ...[
                 Divider(color: cp.border, height: 32),
                 Row(

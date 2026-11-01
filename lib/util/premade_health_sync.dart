@@ -1,8 +1,10 @@
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// SharedPreferences string holding the user's standing answer to the "use
-/// Health?" dialog shown for premade habits. Absent means "ask".
+/// SharedPreferences string holding the user's standing answer for premade
+/// Health habits. Absent means the dialog has never been answered; the first
+/// answer fills it in, after that only the Settings row changes it (an explicit
+/// "ask" stays "ask", the dialog never overwrites it).
 const String kPremadeHealthSyncChoiceKey = 'premadeHealthSyncChoice';
 
 /// The user's standing answer for premade Health habits. Asked once; the
@@ -55,27 +57,24 @@ PremadeHealthDecision decidePremadeHealthPrompt({
   }
 }
 
-Future<PremadeHealthChoice> loadPremadeHealthChoice() async {
+/// The stored answer, or `null` when the user was never asked.
+Future<PremadeHealthChoice?> loadPremadeHealthChoice() async {
   try {
     final prefs = await SharedPreferences.getInstance();
     final name = prefs.getString(kPremadeHealthSyncChoiceKey);
-    return PremadeHealthChoice.values.firstWhere(
-      (c) => c.name == name,
-      orElse: () => PremadeHealthChoice.ask,
-    );
+    for (final c in PremadeHealthChoice.values) {
+      if (c.name == name) return c;
+    }
   } catch (_) {
-    return PremadeHealthChoice.ask;
+    // treated as never answered
   }
+  return null;
 }
 
 Future<void> savePremadeHealthChoice(PremadeHealthChoice choice) async {
   try {
     final prefs = await SharedPreferences.getInstance();
-    if (choice == PremadeHealthChoice.ask) {
-      await prefs.remove(kPremadeHealthSyncChoiceKey);
-    } else {
-      await prefs.setString(kPremadeHealthSyncChoiceKey, choice.name);
-    }
+    await prefs.setString(kPremadeHealthSyncChoiceKey, choice.name);
   } catch (_) {
     // worst case the dialog shows once more
   }

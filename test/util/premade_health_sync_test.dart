@@ -103,15 +103,21 @@ void main() {
   group('saved choice', () {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
-    test('defaults to ask, round-trips, and ask clears it', () async {
-      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.ask);
-      await savePremadeHealthChoice(PremadeHealthChoice.manual);
-      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.manual);
-      await savePremadeHealthChoice(PremadeHealthChoice.health);
-      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.health);
-      await savePremadeHealthChoice(PremadeHealthChoice.ask);
-      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.ask);
+    test('is null until set, then round-trips every value', () async {
+      expect(await loadPremadeHealthChoice(), isNull);
+      for (final c in PremadeHealthChoice.values) {
+        await savePremadeHealthChoice(c);
+        expect(await loadPremadeHealthChoice(), c);
+      }
     });
+
+    test(
+      'an explicit "ask" is stored, not treated as never answered',
+      () async {
+        await savePremadeHealthChoice(PremadeHealthChoice.ask);
+        expect(await loadPremadeHealthChoice(), PremadeHealthChoice.ask);
+      },
+    );
   });
 
   group('StateProvider.disablePremadeHealthSync', () {

@@ -70,14 +70,14 @@ Future<bool> askPremadeHealthSync(
 
   final health = context.read<HealthProvider>();
   await health.ensureAvailabilityChecked();
-  final saved = await loadPremadeHealthChoice();
+  final stored = await loadPremadeHealthChoice();
   if (!context.mounted) return false;
 
   final decision = decidePremadeHealthPrompt(
     template: template,
     isAvailable: health.isAvailable,
     isMetricSupported: health.isMetricSupported(template.defaultHealthMetric!),
-    savedChoice: saved,
+    savedChoice: stored ?? PremadeHealthChoice.ask,
   );
 
   switch (decision) {
@@ -95,10 +95,13 @@ Future<bool> askPremadeHealthSync(
         builder: (_) => const PremadeHealthSyncDialog(),
       );
       if (result == null) return false;
-      // asked once: the answer is reused for every later premade Health habit
-      await savePremadeHealthChoice(
-        result ? PremadeHealthChoice.health : PremadeHealthChoice.manual,
-      );
+      // only the very first dialog ever sets the standing answer; after that
+      // (including a deliberate "Ask" in Settings) the setting is left alone
+      if (stored == null) {
+        await savePremadeHealthChoice(
+          result ? PremadeHealthChoice.health : PremadeHealthChoice.manual,
+        );
+      }
       return result;
   }
 }

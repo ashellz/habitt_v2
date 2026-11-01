@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/util/health_source_name.dart';
 import 'package:habitt/util/premade_health_sync.dart';
 import 'package:habitt/widgets/default/multiple_option_selector.dart';
@@ -24,13 +25,19 @@ class _PremadeHealthSettingState extends State<PremadeHealthSetting> {
   void initState() {
     super.initState();
     loadPremadeHealthChoice().then((c) {
-      if (mounted) setState(() => _choice = c);
+      if (mounted && c != null) setState(() => _choice = c);
     });
+    context.read<HealthProvider>().ensureAvailabilityChecked();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!Platform.isIOS && !Platform.isAndroid) return const SizedBox.shrink();
+
+    // nothing to configure where Health can't be used
+    if (!context.watch<HealthProvider>().isAvailable) {
+      return const SizedBox.shrink();
+    }
 
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
@@ -39,6 +46,7 @@ class _PremadeHealthSettingState extends State<PremadeHealthSetting> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 12,
       children: [
+        Divider(color: cp.border, height: 32),
         Text(
           loc.premadeHealthSettingTitle,
           style: TextStyle(
