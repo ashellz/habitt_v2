@@ -3684,4 +3684,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Haz Habitt tuyo con nuevos colores de acento, gratis para todos.';
+
+  @override
+  String get requestFeature => 'Sugerir una función';
 }

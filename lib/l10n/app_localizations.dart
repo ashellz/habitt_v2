@@ -6213,6 +6213,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Make Habitt yours with new accent colors, free for everyone.'**
   String get whatsNewThemesDesc;
+
+  /// No description provided for @requestFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a feature'**
+  String get requestFeature;
 }
 
 class _AppLocalizationsDelegate

@@ -3660,4 +3660,7 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Učini Habitt svojim s novim bojama naglaska, besplatno za sve.';
+
+  @override
+  String get requestFeature => 'Predloži funkciju';
 }
