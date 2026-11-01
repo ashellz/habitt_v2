@@ -133,9 +133,13 @@ user is asked in-app first, so the OS prompt is never a surprise:
 - Template has no Health metric: nothing to ask, nothing changes.
 - Health isn't available (web/desktop, Health Connect missing) or the platform
   doesn't support the metric: the sheet opens with sync **off**, no dialog.
-- The user accepted the dialog before **and** the OS permission is still
-  granted (`HealthProvider.permissionGranted`): sync is linked without asking.
-  If they accepted before but access was revoked, they are asked again.
+- **Android only:** the user accepted the dialog before **and** the OS
+  permission is still granted (`HealthProvider.permissionGranted`): sync is
+  linked without asking. If they accepted before but access was revoked, they
+  are asked again. iOS never skips (its granted state isn't reliable, see
+  below), so every premade Health habit, Activity included, asks there.
+- Android also silently opens manual for premades whose metric Health Connect
+  doesn't support (Mindfulness).
 - A decline is never remembered, so a later premade Health habit asks again.
 - `iosOnly` templates (Activity) are only offered on iOS; there the flow is
   identical.

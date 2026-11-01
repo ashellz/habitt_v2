@@ -3,6 +3,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/util/premade_health_sync.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,12 +21,14 @@ void main() {
     bool supported = true,
     bool granted = false,
     bool accepted = false,
+    bool reliable = true,
   }) => decidePremadeHealthPrompt(
     template: hasMetric ? steps : buildTestTemplate(amount: 1),
     isAvailable: available,
     isMetricSupported: supported,
     permissionGranted: granted,
     previouslyAccepted: accepted,
+    platformReportsPermission: reliable,
   );
 
   group('decidePremadeHealthPrompt', () {
@@ -55,6 +58,39 @@ void main() {
         PremadeHealthDecision.syncWithoutAsking,
       );
     });
+
+    test('iOS never skips: its permission state is not reliable', () {
+      expect(
+        decide(granted: true, accepted: true, reliable: false),
+        PremadeHealthDecision.ask,
+      );
+    });
+
+    test(
+      'every Health premade in the catalog asks on a supported platform',
+      () {
+        var count = 0;
+        for (final section in PremadeHabitCatalog.sections) {
+          for (final t in section.habits) {
+            if (t.defaultHealthMetric == null) continue;
+            count++;
+            expect(
+              decidePremadeHealthPrompt(
+                template: t,
+                isAvailable: true,
+                isMetricSupported: true,
+                permissionGranted: true,
+                previouslyAccepted: true,
+                platformReportsPermission: false,
+              ),
+              PremadeHealthDecision.ask,
+              reason: t.type.name,
+            );
+          }
+        }
+        expect(count, greaterThan(0));
+      },
+    );
 
     test('asks again if accepted before but access is no longer granted', () {
       expect(decide(accepted: true), PremadeHealthDecision.ask);

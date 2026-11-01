@@ -28,7 +28,10 @@ enum PremadeHealthDecision {
 /// The dialog is skipped only when Health is unusable, or when the user has
 /// accepted it before **and** the OS permission is still granted. If they
 /// accepted but access was since revoked (or never granted), they are asked
-/// again, since syncing would silently do nothing otherwise. A user who
+/// again, since syncing would silently do nothing otherwise. iOS never says
+/// whether read access was granted (`permissionGranted` is only set because
+/// the request returned), so there [platformReportsPermission] is false and the
+/// dialog is never skipped: every premade Health habit asks. A user who
 /// declined is asked again next time: declining is per habit, not a setting.
 PremadeHealthDecision decidePremadeHealthPrompt({
   required PremadeHabitTemplate template,
@@ -36,6 +39,7 @@ PremadeHealthDecision decidePremadeHealthPrompt({
   required bool isMetricSupported,
   required bool permissionGranted,
   required bool previouslyAccepted,
+  required bool platformReportsPermission,
 }) {
   if (template.defaultHealthMetric == null) {
     return PremadeHealthDecision.notHealthLinked;
@@ -43,7 +47,7 @@ PremadeHealthDecision decidePremadeHealthPrompt({
   if (!isAvailable || !isMetricSupported) {
     return PremadeHealthDecision.manualOnly;
   }
-  if (permissionGranted && previouslyAccepted) {
+  if (platformReportsPermission && permissionGranted && previouslyAccepted) {
     return PremadeHealthDecision.syncWithoutAsking;
   }
   return PremadeHealthDecision.ask;

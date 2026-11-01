@@ -79,6 +79,7 @@ Future<bool> askPremadeHealthSync(
     isMetricSupported: health.isMetricSupported(template.defaultHealthMetric!),
     permissionGranted: health.permissionGranted,
     previouslyAccepted: accepted,
+    platformReportsPermission: Platform.isAndroid,
   );
 
   switch (decision) {
