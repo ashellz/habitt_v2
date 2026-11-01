@@ -104,13 +104,16 @@ user is asked in-app first, so the OS prompt is never a surprise:
    using the What's New health graphic (`WhatsNewHealthGraphic` in a
    `WhatsNewGraphicFrame`). It isn't dismissible by tapping outside; the answer
    is explicit.
-2. **Accept** — the sheet stays open with the metric linked, and
-   only then `requestHealthAccessOrExplain` asks the OS
-   (`HealthProvider.requestPermissionIfNeeded()`). If the OS **denies**, the
-   habit is reverted to manual (`StateProvider.disablePremadeHealthSync`) and
-   the same explanation dialog as the manual toggle is shown, so no habit is
-   left linked to a metric that can't update. `premadeHealthSyncAccepted` is
-   saved to `SharedPreferences`.
+2. **Accept** — the dialog warns that the phone will ask for access next and
+   that it must be allowed for syncing to work. The sheet stays open with the
+   metric linked, and only then `requestHealthAccessOrRevert` asks the OS
+   (`HealthProvider.requestPermissionIfNeeded()`). If the OS **denies**
+   (Android only, see below), the habit is silently reverted to manual
+   (`StateProvider.disablePremadeHealthSync`). Turning Health on again with the
+   toggle asks the OS again; if that fails too,
+   `showHealthPermissionDeniedDialog` explains the habit won't update and has
+   an "Open Settings" button (`openAppSettings`).
+   `premadeHealthSyncAccepted` is saved to `SharedPreferences`.
 3. **Decline** — the template stays applied but sync is turned off:
    `disablePremadeHealthSync` clears `selectedHealthMetric`, the workout
    filter and tolerance, and resets the target for manual tracking. Bedtime and
@@ -136,6 +139,17 @@ user is asked in-app first, so the OS prompt is never a surprise:
 - A decline is never remembered, so a later premade Health habit asks again.
 - `iosOnly` templates (Activity) are only offered on iOS; there the flow is
   identical.
+
+**iOS can't report a refusal.** HealthKit never discloses read access:
+`requestAuthorization` returns `true` once the sheet was shown and
+`hasPermissions` returns `null`, so a declined iOS prompt looks like a granted
+one, the habit stays linked, and iOS won't show the sheet again for a type
+already answered. Instead, the details-page `HealthStatsCard` shows a hint with
+an "Open Settings" button when a linked habit has had no data (null or 0) for
+the last 3 days (`shouldHintHealthAccess` in
+[`lib/util/health_missing_data.dart`](../lib/util/health_missing_data.dart);
+habits younger than 3 days are never flagged). Android reports denial reliably,
+so it gets the full revert / re-ask / Settings flow above.
 
 Demo habits (`lib/demo/`) and onboarding never create Health-linked habits
 from templates, so they don't touch this flow.

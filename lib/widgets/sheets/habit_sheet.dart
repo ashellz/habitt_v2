@@ -161,7 +161,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       _sp.disablePremadeHealthSync(template);
       return;
     }
-    await requestHealthAccessOrExplain(
+    await requestHealthAccessOrRevert(
       context,
       onDenied: () {
         if (_sp.selectedHealthMetric == template.defaultHealthMetric) {

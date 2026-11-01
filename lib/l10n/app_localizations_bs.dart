@@ -3383,7 +3383,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String premadeHealthSyncDesc(Object source) {
-    return 'Habitt može čitati $source kako bi sinhronizirao tvoje podatke i automatski završio ovu naviku umjesto tebe. Samo je za čitanje, a tvoji podaci ostaju na tvom uređaju.';
+    return 'Habitt može čitati $source kako bi sinhronizirao tvoje podatke i automatski završio ovu naviku umjesto tebe. Odmah nakon toga telefon će tražiti pristup: moraš ga dozvoliti da bi sinhronizacija radila. Samo je za čitanje, a tvoji podaci ostaju na tvom uređaju.';
   }
 
   @override
@@ -3393,6 +3393,14 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get premadeHealthSyncDecline => 'Prati ručno';
+
+  @override
+  String healthNoRecentDataHintIos(Object source) {
+    return 'Nema $source podataka već nekoliko dana. Ako nisi dozvolio pristup za Habitt, otvori Postavke → Zdravlje → Pristup podacima i uređajima → Habitt i uključi podatke koji su mu potrebni.';
+  }
+
+  @override
+  String get healthOpenSettings => 'Otvori postavke';
 
   @override
   String get separateOptionalHabits => 'Odvoji opcionalne navike';

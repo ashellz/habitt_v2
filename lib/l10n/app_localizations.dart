@@ -5714,7 +5714,7 @@ abstract class AppLocalizations {
   /// No description provided for @premadeHealthSyncDesc.
   ///
   /// In en, this message translates to:
-  /// **'Habitt can read {source} to sync your data and complete this habit for you automatically. It\'s read-only and your data stays on your device.'**
+  /// **'Habitt can read {source} to sync your data and complete this habit for you automatically. Right after, your phone will ask for access: you need to allow it for syncing to work. It\'s read-only and your data stays on your device.'**
   String premadeHealthSyncDesc(Object source);
 
   /// No description provided for @premadeHealthSyncAccept.
@@ -5728,6 +5728,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track manually'**
   String get premadeHealthSyncDecline;
+
+  /// No description provided for @healthNoRecentDataHintIos.
+  ///
+  /// In en, this message translates to:
+  /// **'No {source} data for the last few days. If you didn\'t allow Habitt access, open Settings → Health → Data Access & Devices → Habitt and turn on the data it needs.'**
+  String healthNoRecentDataHintIos(Object source);
+
+  /// No description provided for @healthOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get healthOpenSettings;
 
   /// No description provided for @separateOptionalHabits.
   ///

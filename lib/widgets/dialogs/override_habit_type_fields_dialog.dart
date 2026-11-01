@@ -81,7 +81,7 @@ class _OverrideHabitTypeFieldsDialogState
     );
 
     if (syncHealth) {
-      await requestHealthAccessOrExplain(
+      await requestHealthAccessOrRevert(
         context,
         onDenied: () {
           // same revert as the manual toggle

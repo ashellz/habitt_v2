@@ -11,6 +11,7 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/whats_new/whats_new_graphic_frame.dart';
 import 'package:habitt/widgets/whats_new/whats_new_health_graphic.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 /// Asks whether a premade habit should sync with Apple Health / Health Connect.
@@ -90,19 +91,18 @@ Future<bool> askPremadeHealthSync(
 }
 
 /// Requests the OS permission after the user accepted. When it is denied,
-/// [onDenied] reverts the habit to manual tracking and the same explanation as
-/// the manual toggle is shown. Returns whether access was granted.
-Future<bool> requestHealthAccessOrExplain(
+/// [onDenied] reverts the habit to manual tracking, silently: the user just
+/// refused in the OS prompt. Turning sync on again later asks again and, if
+/// that fails too, shows [showHealthPermissionDeniedDialog]. Returns whether
+/// access was granted. (iOS never reports a refusal, only Android does.)
+Future<bool> requestHealthAccessOrRevert(
   BuildContext context, {
   required VoidCallback onDenied,
 }) async {
   final granted =
       await context.read<HealthProvider>().requestPermissionIfNeeded();
-  if (granted) return true;
-
-  onDenied();
-  if (context.mounted) await showHealthPermissionDeniedDialog(context);
-  return false;
+  if (!granted) onDenied();
+  return granted;
 }
 
 Future<void> showHealthPermissionDeniedDialog(BuildContext context) async {
@@ -110,14 +110,19 @@ Future<void> showHealthPermissionDeniedDialog(BuildContext context) async {
   await showDialogSheet(
     context: context,
     builder:
-        (_) => NewDefaultDialog(
+        (dialogContext) => NewDefaultDialog(
           title:
               Platform.isIOS
                   ? loc.healthSyncSectionTitleApple
                   : loc.healthSyncSectionTitleAndroid,
           desc: loc.healthPermissionDeniedMessage,
-          showSecondaryButton: false,
-          primaryButtonLabel: loc.gotIt,
+          primaryButtonLabel: loc.healthOpenSettings,
+          secondaryButtonLabel: loc.cancel,
+          onPrimaryButtonPressed: () {
+            Navigator.of(dialogContext).pop();
+            openAppSettings();
+          },
+          onSecondaryButtonPressed: () => Navigator.of(dialogContext).pop(),
         ),
   );
 }

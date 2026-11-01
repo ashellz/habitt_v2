@@ -3414,7 +3414,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String premadeHealthSyncDesc(Object source) {
-    return 'Habitt kann $source lesen, um deine Daten zu synchronisieren und diese Gewohnheit automatisch für dich abzuschließen. Der Zugriff ist schreibgeschützt und deine Daten bleiben auf deinem Gerät.';
+    return 'Habitt kann $source lesen, um deine Daten zu synchronisieren und diese Gewohnheit automatisch für dich abzuschließen. Direkt danach fragt dein Telefon nach dem Zugriff: Du musst ihn erlauben, damit die Synchronisierung funktioniert. Der Zugriff ist schreibgeschützt und deine Daten bleiben auf deinem Gerät.';
   }
 
   @override
@@ -3424,6 +3424,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get premadeHealthSyncDecline => 'Manuell erfassen';
+
+  @override
+  String healthNoRecentDataHintIos(Object source) {
+    return 'Seit einigen Tagen keine $source-Daten. Falls du Habitt den Zugriff nicht erlaubt hast, öffne Einstellungen → Health → Datenzugriff & Geräte → Habitt und aktiviere die benötigten Daten.';
+  }
+
+  @override
+  String get healthOpenSettings => 'Einstellungen öffnen';
 
   @override
   String get separateOptionalHabits => 'Optionale Gewohnheiten trennen';
