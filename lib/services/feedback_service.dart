@@ -1,10 +1,16 @@
 import 'package:flutter/foundation.dart';
+import 'package:habitt/models/backup_metadata.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackService {
-  static const String bugReportTemplate =
+  static String bugReportTemplate({
+    required String version,
+    required String phone,
+    required String os,
+  }) =>
       'Thanks for helping make Habitt better! 🐞\n'
       '\n'
       'Tips for a great bug report:\n'
@@ -15,21 +21,11 @@ class FeedbackService {
       '\n'
       '──────────\n'
       '\n'
-      'Summary:\n'
+      'Version: $version\n'
+      'Phone: $phone\n'
+      'OS: $os\n'
+      'Bug:\n'
       '\n'
-      '\n'
-      'Steps to reproduce:\n'
-      '1. \n'
-      '2. \n'
-      '3. \n'
-      '\n'
-      'What I expected:\n'
-      '\n'
-      '\n'
-      'What actually happened:\n'
-      '\n'
-      '\n'
-      'Device & Habitt version (e.g. iPhone 15, iOS 18, Habitt 2.3.0):\n'
       '\n';
 
   static const String featureRequestTemplate =
@@ -45,14 +41,6 @@ class FeedbackService {
       '\n'
       'Feature idea:\n'
       '\n'
-      '\n'
-      'What problem does it solve?\n'
-      '\n'
-      '\n'
-      'How would you like it to work?\n'
-      '\n'
-      '\n'
-      'Anything else?\n'
       '\n';
 
   static const String habitRequestTemplate =
@@ -134,8 +122,29 @@ class FeedbackService {
     }
   }
 
-  static Future<void> sendBugReport() =>
-      _sendMail('Bug Report', bugReportTemplate);
+  static Future<void> sendBugReport() async {
+    var version = 'unknown';
+    var phone = 'unknown';
+    var os = 'unknown';
+
+    try {
+      final package = await PackageInfo.fromPlatform();
+      version = '${package.version} (${package.buildNumber})';
+    } catch (_) {}
+
+    try {
+      final device = await DeviceIdentity.deviceInfo();
+      final manufacturer = device['manufacturer'];
+      final model = device['model'] ?? 'unknown';
+      phone = manufacturer == null ? model : '$manufacturer $model';
+      os = device['os'] ?? 'unknown';
+    } catch (_) {}
+
+    await _sendMail(
+      'Bug Report',
+      bugReportTemplate(version: version, phone: phone, os: os),
+    );
+  }
 
   static Future<void> sendFeatureRequest() =>
       _sendMail('Feature Request', featureRequestTemplate);
