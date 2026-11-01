@@ -3408,6 +3408,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Verstanden';
 
   @override
+  String premadeHealthSyncTitle(Object source) {
+    return 'Mit $source synchronisieren?';
+  }
+
+  @override
+  String premadeHealthSyncDesc(Object source) {
+    return 'Habitt kann $source lesen, um deine Daten zu synchronisieren und diese Gewohnheit automatisch für dich abzuschließen. Der Zugriff ist schreibgeschützt und deine Daten bleiben auf deinem Gerät.';
+  }
+
+  @override
+  String premadeHealthSyncAccept(Object source) {
+    return '$source verwenden';
+  }
+
+  @override
+  String get premadeHealthSyncDecline => 'Manuell erfassen';
+
+  @override
   String get separateOptionalHabits => 'Optionale Gewohnheiten trennen';
 
   @override

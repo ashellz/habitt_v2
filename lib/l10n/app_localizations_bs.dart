@@ -3377,6 +3377,24 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Razumijem';
 
   @override
+  String premadeHealthSyncTitle(Object source) {
+    return 'Sinhronizovati s $source?';
+  }
+
+  @override
+  String premadeHealthSyncDesc(Object source) {
+    return 'Habitt može čitati $source kako bi sinhronizirao tvoje podatke i automatski završio ovu naviku umjesto tebe. Samo je za čitanje, a tvoji podaci ostaju na tvom uređaju.';
+  }
+
+  @override
+  String premadeHealthSyncAccept(Object source) {
+    return 'Koristi $source';
+  }
+
+  @override
+  String get premadeHealthSyncDecline => 'Prati ručno';
+
+  @override
   String get separateOptionalHabits => 'Odvoji opcionalne navike';
 
   @override

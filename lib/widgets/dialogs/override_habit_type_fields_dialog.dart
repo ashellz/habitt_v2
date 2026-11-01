@@ -1,14 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/widgets/default/animated_checkbox.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:provider/provider.dart';
 
 class OverrideHabitTypeFieldsDialog extends StatefulWidget {
@@ -55,6 +53,47 @@ class _OverrideHabitTypeFieldsDialogState
     });
   }
 
+  bool _busy = false;
+
+  Future<void> _apply(StateProvider sp, AppLocalizations loc) async {
+    if (_busy) return;
+    _busy = true;
+    final template = widget.template;
+    final fields = {..._selected};
+    final linkingHealth =
+        sp.selectedHealthMetric == null &&
+        fields.contains(PremadeTemplateField.healthSync) &&
+        template.defaultHealthMetric != null;
+
+    // same in-app question as when a premade habit is first picked; declining
+    // just leaves the health field out, the rest of the template still applies
+    var syncHealth = linkingHealth;
+    if (linkingHealth) {
+      syncHealth = await askPremadeHealthSync(context, template);
+      if (!mounted || !context.mounted) return;
+      if (!syncHealth) fields.remove(PremadeTemplateField.healthSync);
+    }
+
+    sp.applyPremadeHabitTemplateSelectively(
+      template,
+      fields: fields,
+      localizedName: template.localizedName(loc),
+    );
+
+    if (syncHealth) {
+      await requestHealthAccessOrExplain(
+        context,
+        onDenied: () {
+          // same revert as the manual toggle
+          sp.selectedHealthMetric = null;
+          sp.selectedHealthWorkoutFilter = null;
+        },
+      );
+    }
+    if (!mounted || !context.mounted) return;
+    Navigator.of(widget.dialogContext).pop();
+  }
+
   void _selectAll() => setState(() => _selected = _defaultSelection());
 
   void _deselectAll() {
@@ -66,7 +105,6 @@ class _OverrideHabitTypeFieldsDialogState
   @override
   Widget build(BuildContext context) {
     final sp = context.read<StateProvider>();
-    final healthProvider = context.read<HealthProvider>();
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
 
@@ -77,20 +115,7 @@ class _OverrideHabitTypeFieldsDialogState
       showSecondaryButton: true,
       secondaryButtonLabel: loc.cancel,
       onSecondaryButtonPressed: () => Navigator.of(widget.dialogContext).pop(),
-      onPrimaryButtonPressed: () {
-        final healthWasOff = sp.selectedHealthMetric == null;
-        sp.applyPremadeHabitTemplateSelectively(
-          widget.template,
-          fields: _selected,
-          localizedName: widget.template.localizedName(loc),
-        );
-        if (healthWasOff &&
-            _selected.contains(PremadeTemplateField.healthSync) &&
-            widget.template.defaultHealthMetric != null) {
-          unawaited(healthProvider.requestPermissionIfNeeded());
-        }
-        Navigator.of(widget.dialogContext).pop();
-      },
+      onPrimaryButtonPressed: () => _apply(sp, loc),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

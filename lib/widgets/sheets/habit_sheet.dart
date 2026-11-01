@@ -30,6 +30,7 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_text_field.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/override_habit_type_fields_dialog.dart';
+import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:habitt/widgets/habit_details/health_widget.dart';
 import 'package:habitt/widgets/habit_details/new/editable/dialogs/delete_notification_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_day_schedule.dart';
@@ -55,11 +56,16 @@ class HabitSheet extends StatefulWidget {
     super.key,
     this.habit,
     this.initialPremadeTemplate,
+    this.initialPremadeHealthSync = true,
     this.reopenPremadeOnTopBack = false,
   });
 
   final Habit? habit;
   final PremadeHabitTemplate? initialPremadeTemplate;
+
+  // the answer to the in-app Health dialog shown before this sheet opened;
+  // false opens the premade habit tracked manually
+  final bool initialPremadeHealthSync;
   final bool reopenPremadeOnTopBack;
 
   @override
@@ -127,9 +133,11 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             localizedName: initialTemplate.localizedName(loc),
           );
           if (initialTemplate.defaultHealthMetric != null) {
-            unawaited(
-              context.read<HealthProvider>().requestPermissionIfNeeded(),
-            );
+            if (widget.initialPremadeHealthSync) {
+              unawaited(_requestPremadeHealthAccess(initialTemplate));
+            } else {
+              _sp.disablePremadeHealthSync(initialTemplate);
+            }
           }
         }
       }
@@ -142,6 +150,22 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         _isInitializing = false;
       });
     });
+  }
+
+  // The user accepted the in-app Health dialog: ask the OS now. On denial the
+  // habit goes back to manual tracking and the same explanation as the manual
+  // Health toggle is shown, so no habit is left linked to a dead metric.
+  Future<void> _requestPremadeHealthAccess(
+    PremadeHabitTemplate template,
+  ) async {
+    await requestHealthAccessOrExplain(
+      context,
+      onDenied: () {
+        if (_sp.selectedHealthMetric == template.defaultHealthMetric) {
+          _sp.disablePremadeHealthSync(template);
+        }
+      },
+    );
   }
 
   @override
@@ -508,7 +532,9 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
     await _showExitConfirmation(closeResult);
   }
 
-  Future<bool> _showEnableNotificationsDialog(BuildContext dialogContext) async {
+  Future<bool> _showEnableNotificationsDialog(
+    BuildContext dialogContext,
+  ) async {
     if (!dialogContext.mounted) return false;
     final loc = AppLocalizations.of(dialogContext)!;
     bool result = false;

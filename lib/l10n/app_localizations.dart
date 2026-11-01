@@ -5705,6 +5705,30 @@ abstract class AppLocalizations {
   /// **'Understood'**
   String get healthOverrideNoticeUnderstood;
 
+  /// No description provided for @premadeHealthSyncTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with {source}?'**
+  String premadeHealthSyncTitle(Object source);
+
+  /// No description provided for @premadeHealthSyncDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt can read {source} to sync your data and complete this habit for you automatically. It\'s read-only and your data stays on your device.'**
+  String premadeHealthSyncDesc(Object source);
+
+  /// No description provided for @premadeHealthSyncAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {source}'**
+  String premadeHealthSyncAccept(Object source);
+
+  /// No description provided for @premadeHealthSyncDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Track manually'**
+  String get premadeHealthSyncDecline;
+
   /// No description provided for @separateOptionalHabits.
   ///
   /// In en, this message translates to:

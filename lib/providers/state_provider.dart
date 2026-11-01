@@ -418,6 +418,41 @@ class StateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Turns Health sync off after [template] was applied (the user declined it,
+  /// or the OS permission was denied), leaving a manually tracked habit.
+  ///
+  /// Clears the metric, workout filter and tolerance, and resets the target to
+  /// something that makes sense by hand: bedtime / wake time were times of day
+  /// (no manual equivalent) so they become a plain done/not-done habit, sleep
+  /// becomes a duration of the same length, and the rest keep their template
+  /// amount or duration.
+  void disablePremadeHealthSync(PremadeHabitTemplate template) {
+    _selectedHealthMetric = null;
+    _selectedHealthWorkoutFilter = null;
+    _toleranceMinutes = 0;
+
+    switch (template.defaultHealthMetric) {
+      case HealthMetricType.bedtime:
+      case HealthMetricType.wakeTime:
+        _habitAmount = 0;
+        _habitDuration = Duration.zero;
+      case HealthMetricType.sleep:
+        _habitAmount = 0;
+        _habitDuration = Duration(minutes: template.amount);
+      default:
+        _habitAmount = template.amount;
+        _habitDuration = Duration(minutes: template.durationMinutes);
+    }
+
+    _selectedHabitTrackingType =
+        _habitAmount >= 1
+            ? HabitTrackingType.amount
+            : _habitDuration.inMinutes > 0
+            ? HabitTrackingType.duration
+            : null;
+    notifyListeners();
+  }
+
   void applyPremadeHabitTemplateSelectively(
     PremadeHabitTemplate template, {
     required Set<PremadeTemplateField> fields,

@@ -72,7 +72,10 @@ opened, not the instant new Health data appears.
    render at all.
 2. **User links a habit** — toggling the section on calls
    `requestPermissionIfNeeded()`; on denial the toggle reverts and a dialog
-   explains the habit won't auto-update until access is granted in Settings.
+   explains the habit won't auto-update until access is granted in Settings
+   (`showHealthPermissionDeniedDialog`).
+   Picking a **premade** habit with a Health metric goes through the dialog
+   below first (see "Premade habits and the permission flow").
 3. **App open / resume** ([`lib/pages/home_page.dart`](../lib/pages/home_page.dart)) —
    `HealthProvider.syncNow()` runs alongside the existing backup-sync /
    `updateLastOpenedDate` calls, fire-and-forget (`unawaited`), so it never
@@ -85,6 +88,57 @@ opened, not the instant new Health data appears.
 5. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
    `HealthService.fetchValueForDay` is read and, if non-null, applied via
    `HabitProvider.syncHabitFromHealth`.
+
+## Premade habits and the permission flow
+
+The habit sheet no longer fires the OS permission prompt by itself when a
+premade template with `defaultHealthMetric` is applied (task 58). Instead the
+user is asked in-app first, so the OS prompt is never a surprise:
+
+1. **Pick a premade habit** — `showNewHabitCreationFlow`
+   ([`lib/util/show_new_habit_creation_flow.dart`](../lib/util/show_new_habit_creation_flow.dart))
+   calls `askPremadeHealthSync` before opening the habit sheet.
+   `PremadeHealthSyncDialog`
+   ([`lib/widgets/dialogs/premade_health_sync_dialog.dart`](../lib/widgets/dialogs/premade_health_sync_dialog.dart))
+   asks whether to sync with Apple Health (iOS) or Health Connect (Android),
+   using the What's New health graphic (`WhatsNewHealthGraphic` in a
+   `WhatsNewGraphicFrame`). It isn't dismissible by tapping outside; the answer
+   is explicit.
+2. **Accept** — the sheet opens with the template applied (metric linked), and
+   only then `requestHealthAccessOrExplain` asks the OS
+   (`HealthProvider.requestPermissionIfNeeded()`). If the OS **denies**, the
+   habit is reverted to manual (`StateProvider.disablePremadeHealthSync`) and
+   the same explanation dialog as the manual toggle is shown, so no habit is
+   left linked to a metric that can't update. `premadeHealthSyncAccepted` is
+   saved to `SharedPreferences`.
+3. **Decline** — the sheet opens with the template applied but sync off:
+   `disablePremadeHealthSync` clears `selectedHealthMetric`, the workout
+   filter and tolerance, and resets the target for manual tracking. Bedtime and
+   wake time (times of day) become a plain done/not-done habit; sleep becomes a
+   duration of the same length; steps/calories keep their amount and
+   workouts/mindfulness/activity keep their duration. The user can still link
+   Health later from the sheet's toggle.
+4. **Field-by-field apply** — `OverrideHabitTypeFieldsDialog` (the sheet's
+   "apply a premade type" path, `PremadeTemplateField.healthSync`) asks the same
+   question when the habit isn't linked yet and the Health field is ticked.
+   Declining just drops the Health field from the applied set; denial reverts
+   the toggle like above.
+
+**When the dialog is skipped** (`decidePremadeHealthPrompt` in
+[`lib/util/premade_health_sync.dart`](../lib/util/premade_health_sync.dart)):
+
+- Template has no Health metric: nothing to ask, nothing changes.
+- Health isn't available (web/desktop, Health Connect missing) or the platform
+  doesn't support the metric: the sheet opens with sync **off**, no dialog.
+- The user accepted the dialog before **and** the OS permission is still
+  granted (`HealthProvider.permissionGranted`): sync is linked without asking.
+  If they accepted before but access was revoked, they are asked again.
+- A decline is never remembered, so a later premade Health habit asks again.
+- `iosOnly` templates (Activity) are only offered on iOS; there the flow is
+  identical.
+
+Demo habits (`lib/demo/`) and onboarding never create Health-linked habits
+from templates, so they don't touch this flow.
 
 ## Habit details Health card
 
