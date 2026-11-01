@@ -84,7 +84,7 @@ class _LeaveFeedbackSheetState extends State<LeaveFeedbackSheet> {
                             ProfileOption(
                               cp: cp,
                               text: loc.rateUs,
-                              svgPath: 'assets/images/new-svg/rate.svg',
+                              svgPath: 'assets/images/new-svg/rate-star.svg',
                               onTap: () async {
                                 try {
                                   await FeedbackService.rateUs();
@@ -107,10 +107,34 @@ class _LeaveFeedbackSheetState extends State<LeaveFeedbackSheet> {
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               cp: cp,
                               text: loc.reportBug,
-                              svgPath: 'assets/images/new-svg/rate.svg',
+                              svgPath: 'assets/images/new-svg/bug-report.svg',
                               onTap: () async {
                                 try {
                                   await FeedbackService.sendBugReport();
+                                } catch (e) {
+                                  if (mounted) {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Unable to open email. Please try again.',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                            Divider(color: cp.border, height: 0),
+                            ProfileOption(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              cp: cp,
+                              text: loc.requestFeature,
+                              svgPath:
+                                  'assets/images/new-svg/feature-request.svg',
+                              onTap: () async {
+                                try {
+                                  await FeedbackService.sendFeatureRequest();
                                 } catch (e) {
                                   if (mounted) {
                                     // ignore: use_build_context_synchronously

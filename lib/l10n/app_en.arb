@@ -1362,5 +1362,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "requestFeature": "Request a feature"
 }

@@ -1327,5 +1327,6 @@
   "scheduleReminderDescOff": "Los recordatorios están desactivados para este hábito. Si eliges una hora, se activarán con un único recordatorio.",
   "scheduleReminderAtTime": "A la hora exacta",
   "scheduleReminderAtStart": "A la hora de inicio",
-  "scheduleReminderMinutesBefore": "{minutes} minutos antes"
+  "scheduleReminderMinutesBefore": "{minutes} minutos antes",
+  "requestFeature": "Sugerir una función"
 }

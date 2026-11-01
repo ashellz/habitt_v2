@@ -1327,5 +1327,6 @@
   "scheduleReminderDescOff": "Erinnerungen sind für diese Gewohnheit aus. Wenn du eine Zeit wählst, werden sie mit einer einzelnen Erinnerung eingeschaltet.",
   "scheduleReminderAtTime": "Zur genauen Zeit",
   "scheduleReminderAtStart": "Zur Startzeit",
-  "scheduleReminderMinutesBefore": "{minutes} Minuten vorher"
+  "scheduleReminderMinutesBefore": "{minutes} Minuten vorher",
+  "requestFeature": "Funktion vorschlagen"
 }

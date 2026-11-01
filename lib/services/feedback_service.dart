@@ -5,7 +5,55 @@ import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackService {
   static const String bugReportTemplate =
-      'Name:\nDescription/summary:\nEnvironment/platform:\nVisual proof/screenshot/video:\nSteps to reproduce:\nExpected result vs. actual result:';
+      'Thanks for helping make Habitt better! 🐞\n'
+      '\n'
+      'Tips for a great bug report:\n'
+      '• Be specific: what did you do, and what went wrong?\n'
+      '• List the steps so we can reproduce it.\n'
+      '• Add a screenshot or screen recording if you can.\n'
+      '• Delete these tips before sending.\n'
+      '\n'
+      '──────────\n'
+      '\n'
+      'Summary:\n'
+      '\n'
+      '\n'
+      'Steps to reproduce:\n'
+      '1. \n'
+      '2. \n'
+      '3. \n'
+      '\n'
+      'What I expected:\n'
+      '\n'
+      '\n'
+      'What actually happened:\n'
+      '\n'
+      '\n'
+      'Device & Habitt version (e.g. iPhone 15, iOS 18, Habitt 2.3.0):\n'
+      '\n';
+
+  static const String featureRequestTemplate =
+      'Thanks for sharing your idea! 💡\n'
+      '\n'
+      'Tips for a great feature request:\n'
+      '• Describe the problem you want solved, not just the solution.\n'
+      '• Explain how you would use it day to day.\n'
+      '• Sketches or examples from other apps are welcome.\n'
+      '• Delete these tips before sending.\n'
+      '\n'
+      '──────────\n'
+      '\n'
+      'Feature idea:\n'
+      '\n'
+      '\n'
+      'What problem does it solve?\n'
+      '\n'
+      '\n'
+      'How would you like it to work?\n'
+      '\n'
+      '\n'
+      'Anything else?\n'
+      '\n';
 
   static const String habitRequestTemplate =
       'Habit name:\nWhy it\'d be useful:\nSuggested tracking (amount/duration/count):\nPlatform:';
@@ -72,11 +120,13 @@ class FeedbackService {
     }
   }
 
-  static Future<void> sendBugReport() async {
-    final Uri uri = Uri(
-      scheme: 'mailto',
-      path: supportEmail,
-      queryParameters: {'subject': 'Bug Report', 'body': bugReportTemplate},
+  // Built by hand because Uri(queryParameters:) form-encodes spaces as '+',
+  // which mail apps show literally instead of as spaces.
+  static Future<void> _sendMail(String subject, String body) async {
+    final Uri uri = Uri.parse(
+      'mailto:$supportEmail'
+      '?subject=${Uri.encodeComponent(subject)}'
+      '&body=${Uri.encodeComponent(body)}',
     );
 
     if (!await launchUrl(uri)) {
@@ -84,18 +134,12 @@ class FeedbackService {
     }
   }
 
-  static Future<void> sendHabitRequest() async {
-    final Uri uri = Uri(
-      scheme: 'mailto',
-      path: supportEmail,
-      queryParameters: {
-        'subject': 'Habit Request',
-        'body': habitRequestTemplate,
-      },
-    );
+  static Future<void> sendBugReport() =>
+      _sendMail('Bug Report', bugReportTemplate);
 
-    if (!await launchUrl(uri)) {
-      throw Exception('Could not launch email client');
-    }
-  }
+  static Future<void> sendFeatureRequest() =>
+      _sendMail('Feature Request', featureRequestTemplate);
+
+  static Future<void> sendHabitRequest() =>
+      _sendMail('Habit Request', habitRequestTemplate);
 }

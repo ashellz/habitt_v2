@@ -1317,5 +1317,6 @@
   "scheduleReminderDescOff": "Podsjetnici su isključeni za ovu naviku. Odabirom vremena uključit će se s jednim podsjetnikom.",
   "scheduleReminderAtTime": "U tačno vrijeme",
   "scheduleReminderAtStart": "U vrijeme početka",
-  "scheduleReminderMinutesBefore": "{minutes} minuta prije"
+  "scheduleReminderMinutesBefore": "{minutes} minuta prije",
+  "requestFeature": "Predloži funkciju"
 }

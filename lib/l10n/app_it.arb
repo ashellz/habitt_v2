@@ -1327,5 +1327,6 @@
   "scheduleReminderDescOff": "I promemoria sono disattivati per questa abitudine. Scegliendo un orario verranno attivati con un unico promemoria.",
   "scheduleReminderAtTime": "All'orario esatto",
   "scheduleReminderAtStart": "All'orario di inizio",
-  "scheduleReminderMinutesBefore": "{minutes} minuti prima"
+  "scheduleReminderMinutesBefore": "{minutes} minuti prima",
+  "requestFeature": "Suggerisci una funzione"
 }

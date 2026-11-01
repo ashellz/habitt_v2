@@ -6255,6 +6255,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} minutes before'**
   String scheduleReminderMinutesBefore(int minutes);
+
+  /// No description provided for @requestFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a feature'**
+  String get requestFeature;
 }
 
 class _AppLocalizationsDelegate

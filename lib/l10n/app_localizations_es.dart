@@ -3710,4 +3710,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String scheduleReminderMinutesBefore(int minutes) {
     return '$minutes minutos antes';
   }
+
+  @override
+  String get requestFeature => 'Sugerir una función';
 }

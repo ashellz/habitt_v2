@@ -3686,4 +3686,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String scheduleReminderMinutesBefore(int minutes) {
     return '$minutes minuta prije';
   }
+
+  @override
+  String get requestFeature => 'Predloži funkciju';
 }
