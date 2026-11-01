@@ -14,6 +14,7 @@ import 'package:habitt/widgets/main_page/add_habit_button.dart';
 import 'package:habitt/widgets/main_page/habits/empty_habits_widget.dart';
 import 'package:habitt/widgets/main_page/habits/new_habit_category.dart';
 import 'package:habitt/widgets/main_page/habits/new_optional_habits.dart';
+import 'package:habitt/widgets/main_page/habits/new_other_habits.dart';
 import 'package:provider/provider.dart';
 
 /// Height the habits area needs to fill the rest of the home page, used to
@@ -400,11 +401,40 @@ class _NewHabitsState extends State<NewHabits>
     );
   }
 
+  /// Past days only: habits that weren't scheduled that day (of the selected
+  /// category, or all of them), so they can still be logged late.
+  List<Habit> _otherHabits(
+    HabitProvider habitProvider,
+    int? selectedCategoryId,
+  ) {
+    final selectedDay = _effectiveSelectedDay(habitProvider);
+    if (selectedDay == null) return const [];
+    return habitProvider
+        .otherHabitsForDay(selectedDay)
+        .where(
+          (habit) =>
+              selectedCategoryId == 0 || habit.categoryId == selectedCategoryId,
+        )
+        .toList();
+  }
+
+  Widget _otherHabitsSection(List<Habit> otherHabits, String dayKey) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: NewOtherHabits(
+        key: const ValueKey('other-habits-section'),
+        habits: otherHabits,
+        dayKey: dayKey,
+      ),
+    );
+  }
+
   double _calculateContentHeight(
     List<Category> categories,
     BuildContext context,
     int? selectedCategoryId,
     int optionalHabitsCount,
+    int otherHabitsCount,
   ) {
     const double categoryTitleHeight = 26;
     const double habitHeight = 74; // 42 icon + 32 padding
@@ -448,6 +478,11 @@ class _NewHabitsState extends State<NewHabits>
       totalHeight += categorySpacing * (optionalHabitsCount - 1);
     }
 
+    // collapsed by default, so only its title takes room up front
+    if (otherHabitsCount > 0) {
+      totalHeight += categoryTopPadding + categoryTitleHeight;
+    }
+
     return totalHeight;
   }
 
@@ -482,6 +517,11 @@ class _NewHabitsState extends State<NewHabits>
     final categoryProvider = context.watch<CategoryProvider>();
     final selectedCategoryId = categoryProvider.selectedCategoryId;
 
+    final otherHabits = _otherHabits(
+      context.watch<HabitProvider>(),
+      selectedCategoryId,
+    );
+
     final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
     final habitsListHeight = calculateHabitsListHeight(
       context,
@@ -489,26 +529,42 @@ class _NewHabitsState extends State<NewHabits>
     );
 
     if (habits.isEmpty) {
+      final emptyHabits = EmptyHabitsWidget(
+        variant:
+            context.read<HabitProvider>().habits.any(
+                  (habit) => habit.isDeleted != true,
+                )
+                ? EmptyHabitsVariant.noneScheduled
+                : EmptyHabitsVariant.noHabits,
+        isToday: _isTodayView(),
+      );
+
+      // A past day with nothing scheduled can still have "Other habits" to
+      // log. That section expands, so it can't live in the fixed-height,
+      // centered layout below without overflowing.
+      if (otherHabits.isNotEmpty) {
+        return ConstrainedBox(
+          constraints: BoxConstraints(minHeight: habitsListHeight),
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              emptyHabits,
+              const SizedBox(height: 12),
+              _otherHabitsSection(otherHabits, dayKey),
+              const SizedBox(height: 16),
+              AddHabitButton(),
+            ],
+          ),
+        );
+      }
+
       return SizedBox(
         height: habitsListHeight,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 16,
-          children: [
-            Spacer(),
-            EmptyHabitsWidget(
-              variant:
-                  context.read<HabitProvider>().habits.any(
-                        (habit) => habit.isDeleted != true,
-                      )
-                      ? EmptyHabitsVariant.noneScheduled
-                      : EmptyHabitsVariant.noHabits,
-              isToday: _isTodayView(),
-            ),
-            const Spacer(),
-            AddHabitButton(),
-          ],
+          children: [Spacer(), emptyHabits, const Spacer(), AddHabitButton()],
         ),
       );
     }
@@ -549,6 +605,7 @@ class _NewHabitsState extends State<NewHabits>
       context,
       selectedCategoryId,
       optionalHabits.length,
+      otherHabits.length,
     );
     final bottomSpacing = (habitsListHeight - contentHeight).clamp(
       0.0,
@@ -589,6 +646,8 @@ class _NewHabitsState extends State<NewHabits>
                 dayKey: dayKey,
               ),
             ),
+          if (otherHabits.isNotEmpty)
+            _otherHabitsSection(otherHabits, dayKey),
           if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
         ],
       );
@@ -622,6 +681,9 @@ class _NewHabitsState extends State<NewHabits>
                   dayKey: dayKey,
                 ),
               ),
+
+            if (otherHabits.isNotEmpty)
+              _otherHabitsSection(otherHabits, dayKey),
 
             AddHabitButton(),
             if (Platform.isAndroid) SizedBox(height: 24),

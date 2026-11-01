@@ -1383,6 +1383,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get orToChangeLabel => 'oder die Mengeneinheit';
 
   @override
+  String get otherHabits => 'Andere Gewohnheiten';
+
+  @override
   String get passphrase => 'Passphrase';
 
   @override

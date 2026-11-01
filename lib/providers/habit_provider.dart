@@ -296,7 +296,9 @@ class HabitProvider extends ChangeNotifier {
       if (affectsCurrentPeriod) {
         await syncSingleHabitNotifications(habit);
       }
-      // Daily/custom past-day toggle: no effect on future notifications, skipped
+      // Daily/custom past-day toggle: no effect on future notifications,
+      // skipped. (A "show if missed" restart from a past day does move the
+      // schedule, updateHabitInDB resyncs its reminders when that happens.)
     }
   }
 
@@ -595,10 +597,12 @@ class HabitProvider extends ChangeNotifier {
   // "Show if missed" toggle (custom interval habits only; weekly/monthly
   // habits already stay visible until their target is reached): a custom habit
   // that was scheduled on an earlier day and not completed since keeps
-  // appearing every day until it is completed (see
-  // _rescheduleCustomAfterLateCompletion for what happens then). Only ever
-  // applies to today — past days keep their recorded snapshot, so a carry-over
-  // day can never add a miss to the streak, only a bonus completion.
+  // appearing every day until it is completed (see _syncCustomRestartForDay
+  // for what happens then). Only ever applies to today — past days keep their
+  // recorded snapshot, whose schedule never lists a carry-over day, so a
+  // carry-over day can never add a miss to the streak, only a bonus
+  // completion. A missed carry-over day is listed under "Other habits" on that
+  // past day (otherHabitsForDay), so it can still be ticked late.
   bool _isMissedCarryOverDay(Habit habit, DateTime day) {
     if (!habit.showIfMissed || habit.scheduleType != ScheduleType.custom) {
       return false;
@@ -606,11 +610,20 @@ class HabitProvider extends ChangeNotifier {
 
     final today = _normalizeDate(DateTime.now());
     if (_normalizeDate(day) != today) return false;
+    return _isCarryOverDay(habit, today);
+  }
 
+  // Whether [day] falls in a carry-over stretch: the habit's last scheduled
+  // day before it was missed and nothing was completed from then until the
+  // day before [day]. Unlike _isMissedCarryOverDay it works for past days
+  // too, which is what lets a late completion logged on a past day (from
+  // "Other habits") restart the interval from that day.
+  bool _isCarryOverDay(Habit habit, DateTime day) {
+    final target = _normalizeDate(day);
     final createdDay = _normalizeDate(habit.createdAt.toLocal());
     DateTime? lastScheduled;
     for (var i = 1; i <= _missedCarryOverLookbackDays; i++) {
-      final candidate = today.subtract(Duration(days: i));
+      final candidate = DateTime(target.year, target.month, target.day - i);
       if (candidate.isBefore(createdDay)) return false;
       if (_isScheduledOnDay(habit, candidate)) {
         lastScheduled = candidate;
@@ -619,48 +632,154 @@ class HabitProvider extends ChangeNotifier {
     }
     if (lastScheduled == null) return false;
 
-    // Any completion from that scheduled day up to yesterday settles it.
+    // Any completion from that scheduled day up to the day before settles it.
     for (
       var d = lastScheduled;
-      d.isBefore(today);
+      d.isBefore(target);
       d = DateTime(d.year, d.month, d.day + 1)
     ) {
-      final key = d.toIso8601String().split('T').first;
-      final snapshot = daysBox.get(key);
-      if (snapshot == null) continue;
-      for (final recorded in snapshot.habits) {
-        if (recorded.id == habit.id && recorded.completed) return false;
-      }
+      if (_completedOnDay(habit.id, d)) return false;
     }
     return true;
   }
 
-  // A custom habit completed late (on a carry-over day, not a scheduled one)
-  // restarts its interval from that day: "every 3 days" means the next
-  // occurrence is 3 days after the late completion. Dates before the
-  // completion day are kept so past streak calculations are unchanged.
-  void _rescheduleCustomAfterLateCompletion(Habit habit, DateTime day) {
-    if (!habit.showIfMissed ||
-        habit.scheduleType != ScheduleType.custom ||
-        !habit.completed) {
-      return;
+  // Whether the habit is recorded as completed on [day]: the live habit for
+  // today, the day snapshot for any other day.
+  bool _completedOnDay(int habitId, DateTime day) {
+    final normalized = _normalizeDate(day);
+    if (normalized == _normalizeDate(DateTime.now())) {
+      for (final h in habits) {
+        if (h.id == habitId) return h.completed;
+      }
+      return false;
     }
-    final completionDay = _normalizeDate(day);
-    if (completionDay != _normalizeDate(DateTime.now())) return;
-    final key = completionDay.toIso8601String().split('T').first;
-    if (habit.customAppearance.contains(key)) return; // on schedule
+    final snapshot = daysBox.get(_dayKeyOf(normalized));
+    if (snapshot == null) return false;
+    for (final recorded in snapshot.habits) {
+      if (recorded.id == habitId) return recorded.completed;
+    }
+    return false;
+  }
 
+  // Whether the habit was completed on any day after [day], up to and
+  // including today.
+  bool _completedAfter(int habitId, DateTime day) {
+    final today = _normalizeDate(DateTime.now());
+    var d = _normalizeDate(day);
+    while (d.isBefore(today)) {
+      d = DateTime(d.year, d.month, d.day + 1);
+      if (_completedOnDay(habitId, d)) return true;
+    }
+    return false;
+  }
+
+  String _dayKeyOf(DateTime day) =>
+      _normalizeDate(day).toIso8601String().split('T').first;
+
+  // Midday of [day] in UTC, so lastCustomUpdate (an anchor read back through
+  // _normalizeDate) names that calendar day in any time zone.
+  DateTime _anchorStamp(DateTime day) =>
+      DateTime(day.year, day.month, day.day, 12).toUtc();
+
+  // Keeps a "show if missed" custom habit's interval in step with a completion
+  // change on [day] (today or a past day). Mutates [habit], which must be the
+  // live habit, never a day snapshot copy: snapshots keep the schedule they
+  // were recorded with so past streaks don't move. Returns whether the
+  // schedule changed.
+  //
+  // Completed late (on a carry-over day, not a scheduled one): the interval
+  // restarts from that day, "every 3 days" means the next occurrence is 3 days
+  // after the late completion. Dates before the completion day are kept.
+  //
+  // Unticked again: the restart is undone. A restart is the only thing that
+  // leaves two kept dates closer together than the interval (editing the
+  // schedule and _ensureCustomAppearance rebuild the list without keeping
+  // earlier dates), so [day] being less than an interval after the date
+  // before it means it was a restart point, and the old grid is rebuilt from
+  // that earlier date. Without this, unticking left [day] scheduled (so it
+  // counted as a miss) and the interval shifted.
+  //
+  // Both are skipped when the habit was completed on a later day, so a later
+  // restart is never overwritten by editing an older day.
+  bool _syncCustomRestartForDay(
+    Habit habit,
+    DateTime day, {
+    required bool completedOnDay,
+  }) {
+    if (!habit.showIfMissed || habit.scheduleType != ScheduleType.custom) {
+      return false;
+    }
+    final target = _normalizeDate(day);
+    final today = _normalizeDate(DateTime.now());
+    if (target.isAfter(today)) return false;
+    if (_completedAfter(habit.id, target)) return false;
+
+    final key = _dayKeyOf(target);
+    final interval = habit.customIntervalDays.clamp(1, 365);
     final now = DateTime.now().toUtc();
-    habit.customAppearance = [
-      ...habit.customAppearance.where((d) => d.compareTo(key) < 0),
-      ..._buildCustomAppearance(
-        anchor: completionDay,
-        intervalDays: habit.customIntervalDays,
-      ),
-    ];
-    habit.lastCustomUpdate = now;
+
+    if (completedOnDay) {
+      if (habit.customAppearance.contains(key)) return false; // on schedule
+      if (!_isCarryOverDay(habit, target)) return false; // not a late one
+      habit.customAppearance = [
+        ...habit.customAppearance.where((d) => d.compareTo(key) < 0),
+        ..._buildCustomAppearance(anchor: target, intervalDays: interval),
+      ];
+      habit.lastCustomUpdate = target == today ? now : _anchorStamp(target);
+    } else {
+      if (!habit.customAppearance.contains(key)) return false;
+      final earlier =
+          habit.customAppearance.where((d) => d.compareTo(key) < 0).toList()
+            ..sort();
+      if (earlier.isEmpty) return false;
+      final previous = DateTime.tryParse(earlier.last);
+      if (previous == null) return false;
+      final gap =
+          DateTime.utc(target.year, target.month, target.day)
+              .difference(
+                DateTime.utc(previous.year, previous.month, previous.day),
+              )
+              .inDays;
+      if (gap >= interval) return false; // a regular scheduled day
+      habit.customAppearance = [
+        ...earlier.where((d) => d.compareTo(earlier.last) < 0),
+        ..._buildCustomAppearance(anchor: previous, intervalDays: interval),
+      ];
+      habit.lastCustomUpdate = _anchorStamp(previous);
+    }
     habit.timestamps['customAppearance'] = now;
     habit.timestamps['lastCustomUpdate'] = now;
+    return true;
+  }
+
+  // After a past-day completion moved the live schedule, today's snapshot
+  // still holds the schedule from this morning. Bring its copy in line so a
+  // day the habit no longer shows on isn't recorded as a miss (and the
+  // other way round).
+  Future<void> _syncTodaySnapshotSchedule(Habit habit) async {
+    final today = _normalizeDate(DateTime.now());
+    final key = _dayKeyOf(today);
+    final entry = daysBox.get(key);
+    if (entry == null) return;
+    final index = entry.habits.indexWhere((h) => h.id == habit.id);
+    if (index != -1) {
+      final recorded = entry.habits[index];
+      if (identical(recorded, habit)) return;
+      recorded.customAppearance = List<String>.from(habit.customAppearance);
+      recorded.lastCustomUpdate = habit.lastCustomUpdate;
+    } else if (_appearsOnDay(habit, today)) {
+      entry.habits.add(habit.copy());
+    } else {
+      return;
+    }
+    await daysBox.put(
+      key,
+      Day(
+        date: entry.date,
+        habits: entry.habits,
+        timestamp: DateTime.now().toUtc(),
+      ),
+    );
   }
 
   bool _isScheduledOnDay(Habit habit, DateTime day, {Habit? progressHabit}) {
@@ -757,6 +876,49 @@ class HabitProvider extends ChangeNotifier {
     for (var i = 1; i <= _nextScheduledLookaheadDays; i++) {
       final day = DateTime(start.year, start.month, start.day + i);
       if (_appearsOnDay(habit, day)) return day;
+    }
+    return null;
+  }
+
+  /// "Other habits" of a past day: habits that existed then but weren't
+  /// scheduled and have no progress, so the user can still log one they did
+  /// off-schedule (or forgot to tick on a carry-over day). Nothing is written
+  /// until the user actually logs progress: the habit is then saved into that
+  /// day's snapshot and, having progress, moves into the regular list, where
+  /// it counts as a bonus for the streak, never as a miss. Today has none,
+  /// off-schedule habits are completed from their details page there.
+  List<Habit> otherHabitsForDay(DateTime day) {
+    final normalizedDay = _normalizeDate(day);
+    if (!normalizedDay.isBefore(_normalizeDate(DateTime.now()))) {
+      return const [];
+    }
+    final snapshot = daysBox.get(_dayKeyOf(normalizedDay));
+    final recorded = {for (final h in snapshot?.habits ?? <Habit>[]) h.id: h};
+
+    final result = <Habit>[];
+    for (final live in habits) {
+      if (live.isDeleted == true || live.isPaused == true) continue;
+      if (_normalizeDate(live.createdAt.toLocal()).isAfter(normalizedDay)) {
+        continue;
+      }
+      final candidate = recorded[live.id] ?? live.copyResetCompletion();
+      if (candidate.hasAnyProgress()) continue; // already in the regular list
+      if (_appearsOnDay(candidate, normalizedDay)) continue; // scheduled
+      result.add(candidate);
+    }
+    _sortHabitsByCategoryAndOrder(result);
+    return result;
+  }
+
+  // The habit to edit on a past day: the scheduled one from that day's list,
+  // or an "Other habits" one (the snapshot copy if the day recorded it, else a
+  // fresh copy that updateHabitInDB adds to the snapshot on save).
+  Habit? _habitForPastDayEdit(int id, DateTime day) {
+    for (final h in getHabitsFromDay(day, hydrateMissing: true)) {
+      if (h.id == id) return h;
+    }
+    for (final h in otherHabitsForDay(day)) {
+      if (h.id == id) return h;
     }
     return null;
   }
@@ -1099,9 +1261,19 @@ class HabitProvider extends ChangeNotifier {
       orElse: () => habit, // fallback to current one if not found
     );
 
-    _rescheduleCustomAfterLateCompletion(habit, usedDay);
-    if (!identical(realHabit, habit)) {
-      _rescheduleCustomAfterLateCompletion(realHabit, usedDay);
+    // Only the live habit's schedule moves, a past day's snapshot keeps the
+    // schedule it was recorded with
+    final scheduleMoved = _syncCustomRestartForDay(
+      realHabit,
+      usedDay,
+      completedOnDay: habit.completed,
+    );
+    final isPastDay =
+        _normalizeDate(usedDay) != _normalizeDate(DateTime.now());
+    if (scheduleMoved && isPastDay) {
+      await _syncTodaySnapshotSchedule(realHabit);
+      // the future schedule moved, so do its reminders
+      unawaited(syncSingleHabitNotifications(realHabit));
     }
 
     // Only save if habit is in box (not a detached copy)
@@ -1419,11 +1591,10 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(
-        daySimple,
-        hydrateMissing: true,
-      );
-      habit = dayHabits.firstWhere((h) => h.id == id);
+      // includes "Other habits", which aren't in the day's regular list
+      final dayHabit = _habitForPastDayEdit(id, daySimple);
+      if (dayHabit == null) return;
+      habit = dayHabit;
       if (!stateProvider.shouldUpdateStreaks) {
         stateProvider.shouldUpdateStreaks = true;
       }
@@ -1724,11 +1895,10 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(
-        daySimple,
-        hydrateMissing: true,
-      );
-      habit = dayHabits.firstWhere((h) => h.id == id);
+      // includes "Other habits", which aren't in the day's regular list
+      final dayHabit = _habitForPastDayEdit(id, daySimple);
+      if (dayHabit == null) return;
+      habit = dayHabit;
     }
 
     final wasCompleted = habit.completed;
@@ -2026,11 +2196,10 @@ class HabitProvider extends ChangeNotifier {
     if (daySimple == todaySimple) {
       habit = habits.firstWhere((h) => h.id == id);
     } else {
-      final List<Habit> dayHabits = getHabitsFromDay(
-        daySimple,
-        hydrateMissing: true,
-      );
-      habit = dayHabits.firstWhere((h) => h.id == id);
+      // includes "Other habits", which aren't in the day's regular list
+      final dayHabit = _habitForPastDayEdit(id, daySimple);
+      if (dayHabit == null) return;
+      habit = dayHabit;
     }
 
     final wasCompleted = habit.completed;
