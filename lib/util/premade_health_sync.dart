@@ -1,9 +1,13 @@
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// SharedPreferences bool, set once the user accepts the "use Health?" dialog
-/// shown when picking a premade habit. See `docs/health_sync.md`.
-const String kPremadeHealthSyncAcceptedKey = 'premadeHealthSyncAccepted';
+/// SharedPreferences string holding the user's standing answer to the "use
+/// Health?" dialog shown for premade habits. Absent means "ask".
+const String kPremadeHealthSyncChoiceKey = 'premadeHealthSyncChoice';
+
+/// The user's standing answer for premade Health habits. Asked once; the
+/// answer is reused until it is changed in Settings.
+enum PremadeHealthChoice { ask, health, manual }
 
 /// What picking a premade template does about Health sync.
 enum PremadeHealthDecision {
@@ -11,35 +15,29 @@ enum PremadeHealthDecision {
   notHealthLinked,
 
   /// Health can't be used here (web/desktop, Health Connect missing, or the
-  /// platform doesn't support this metric): open the sheet with sync off,
-  /// without asking.
+  /// platform doesn't support this metric): open with sync off, no dialog.
   manualOnly,
 
-  /// Show the in-app dialog first.
+  /// No standing answer yet: show the in-app dialog.
   ask,
 
-  /// The user already accepted before and access is still granted: link
-  /// Health without asking again.
-  syncWithoutAsking,
+  /// Standing answer "Health": link it without asking.
+  useHealth,
+
+  /// Standing answer "manual": open with sync off without asking.
+  useManual,
 }
 
 /// Decides whether the in-app Health dialog is shown for [template].
 ///
-/// The dialog is skipped only when Health is unusable, or when the user has
-/// accepted it before **and** the OS permission is still granted. If they
-/// accepted but access was since revoked (or never granted), they are asked
-/// again, since syncing would silently do nothing otherwise. iOS never says
-/// whether read access was granted (`permissionGranted` is only set because
-/// the request returned), so there [platformReportsPermission] is false and the
-/// dialog is never skipped: every premade Health habit asks. A user who
-/// declined is asked again next time: declining is per habit, not a setting.
+/// Health being unusable always wins (nothing to sync, nothing to ask, and the
+/// saved answer is left alone). Otherwise the dialog is shown only while
+/// [savedChoice] is still [PremadeHealthChoice.ask].
 PremadeHealthDecision decidePremadeHealthPrompt({
   required PremadeHabitTemplate template,
   required bool isAvailable,
   required bool isMetricSupported,
-  required bool permissionGranted,
-  required bool previouslyAccepted,
-  required bool platformReportsPermission,
+  required PremadeHealthChoice savedChoice,
 }) {
   if (template.defaultHealthMetric == null) {
     return PremadeHealthDecision.notHealthLinked;
@@ -47,25 +45,37 @@ PremadeHealthDecision decidePremadeHealthPrompt({
   if (!isAvailable || !isMetricSupported) {
     return PremadeHealthDecision.manualOnly;
   }
-  if (platformReportsPermission && permissionGranted && previouslyAccepted) {
-    return PremadeHealthDecision.syncWithoutAsking;
+  switch (savedChoice) {
+    case PremadeHealthChoice.ask:
+      return PremadeHealthDecision.ask;
+    case PremadeHealthChoice.health:
+      return PremadeHealthDecision.useHealth;
+    case PremadeHealthChoice.manual:
+      return PremadeHealthDecision.useManual;
   }
-  return PremadeHealthDecision.ask;
 }
 
-Future<bool> loadPremadeHealthSyncAccepted() async {
+Future<PremadeHealthChoice> loadPremadeHealthChoice() async {
   try {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(kPremadeHealthSyncAcceptedKey) ?? false;
+    final name = prefs.getString(kPremadeHealthSyncChoiceKey);
+    return PremadeHealthChoice.values.firstWhere(
+      (c) => c.name == name,
+      orElse: () => PremadeHealthChoice.ask,
+    );
   } catch (_) {
-    return false;
+    return PremadeHealthChoice.ask;
   }
 }
 
-Future<void> savePremadeHealthSyncAccepted() async {
+Future<void> savePremadeHealthChoice(PremadeHealthChoice choice) async {
   try {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(kPremadeHealthSyncAcceptedKey, true);
+    if (choice == PremadeHealthChoice.ask) {
+      await prefs.remove(kPremadeHealthSyncChoiceKey);
+    } else {
+      await prefs.setString(kPremadeHealthSyncChoiceKey, choice.name);
+    }
   } catch (_) {
     // worst case the dialog shows once more
   }

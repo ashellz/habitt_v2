@@ -127,22 +127,33 @@ user is asked in-app first, so the OS prompt is never a surprise:
    Declining just drops the Health field from the applied set; denial reverts
    the toggle like above.
 
-**When the dialog is skipped** (`decidePremadeHealthPrompt` in
-[`lib/util/premade_health_sync.dart`](../lib/util/premade_health_sync.dart)):
+**Asked once, then remembered.** The first time a premade Health habit is
+picked, the user answers the dialog and the answer is stored as
+`premadeHealthSyncChoice` (`SharedPreferences`; absent = ask). From then on
+`decidePremadeHealthPrompt`
+([`lib/util/premade_health_sync.dart`](../lib/util/premade_health_sync.dart))
+decides without asking:
 
 - Template has no Health metric: nothing to ask, nothing changes.
 - Health isn't available (web/desktop, Health Connect missing) or the platform
-  doesn't support the metric: the sheet opens with sync **off**, no dialog.
-- **Android only:** the user accepted the dialog before **and** the OS
-  permission is still granted (`HealthProvider.permissionGranted`): sync is
-  linked without asking. If they accepted before but access was revoked, they
-  are asked again. iOS never skips (its granted state isn't reliable, see
-  below), so every premade Health habit, Activity included, asks there.
-- Android also silently opens manual for premades whose metric Health Connect
-  doesn't support (Mindfulness).
-- A decline is never remembered, so a later premade Health habit asks again.
-- `iosOnly` templates (Activity) are only offered on iOS; there the flow is
-  identical.
+  doesn't support the metric (Mindfulness on Android): the sheet opens with sync
+  **off**, no dialog, and the saved answer is left alone.
+- Saved **Health**: Health is linked without asking; the OS permission request
+  still runs (silent when access is already granted, and the first time it asks
+  for any newer data type such as Activity or Workouts). If Android refuses it,
+  the habit reverts to manual silently and the saved answer stays "Health".
+- Saved **manual**: the sheet opens with sync off.
+- The answer can be changed any time in Settings → Preferences → "Health sync
+  for premade habits" (Ask / Sync / Manual, `PremadeHealthSetting`); Ask clears
+  it so the dialog returns. The per-habit Health toggle always works too.
+- `iosOnly` templates (Activity) are only offered on iOS; the flow is identical.
+
+**Access revoked later (Android).** `HealthProvider.syncNow` re-reads
+`hasPermissions()` on every run. If access was taken away it sets `accessLost`
+and skips the sync; `HomePage._syncHealth` then shows
+`showHealthAccessLostDialog` once per app run, explaining that syncing no longer
+works, with an "Open Settings" button (`openAppSettings`). The flag clears on the
+next sync once access is back.
 
 **iOS can't report a refusal.** HealthKit never discloses read access:
 `requestAuthorization` returns `true` once the sheet was shown and

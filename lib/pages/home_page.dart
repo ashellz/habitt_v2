@@ -21,6 +21,7 @@ import 'package:habitt/util/streak_moment.dart';
 import 'package:habitt/util/whats_new_flow.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/dialogs/outdated_other_device_dialog.dart';
+import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage>
           context.read<StatsProvider>(),
         );
 
-        unawaited(context.read<HealthProvider>().syncNow());
+        unawaited(_syncHealth());
         unawaited(context.read<SupportProvider>().refreshSupporter());
 
         categoryProvider.reorderCategoriesBasedOnTime();
@@ -152,7 +153,7 @@ class _HomePageState extends State<HomePage>
         stateProvider,
         statsProvider,
       );
-      unawaited(context.read<HealthProvider>().syncNow());
+      unawaited(_syncHealth());
       await backupProvider.initializationDone;
       await backupProvider.performSync();
 
@@ -179,6 +180,15 @@ class _HomePageState extends State<HomePage>
         await maybeShowWhatsNew(context);
       }
     });
+  }
+
+  // syncs Health, then tells the user once per app run if its access was
+  // revoked (Android) so linked habits aren't silently stale
+  Future<void> _syncHealth() async {
+    final health = context.read<HealthProvider>();
+    await health.syncNow();
+    if (!mounted || !health.takeAccessLostNotice()) return;
+    await showHealthAccessLostDialog(context);
   }
 
   void _maybeShowSyncOverlay() {

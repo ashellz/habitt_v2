@@ -3404,6 +3404,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get healthOpenSettings => 'Open Settings';
 
   @override
+  String get premadeHealthSettingTitle => 'Health sync for premade habits';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Whether premade habits like Sleep or Steps sync with $source.';
+  }
+
+  @override
+  String get premadeHealthChoiceAsk => 'Ask';
+
+  @override
+  String get premadeHealthChoiceSync => 'Sync';
+
+  @override
+  String get premadeHealthChoiceManual => 'Manual';
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'Syncing with $source no longer works because Habitt doesn\'t have permission. Your Health habits won\'t update until you allow access in Settings.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Separate optional habits';
 
   @override

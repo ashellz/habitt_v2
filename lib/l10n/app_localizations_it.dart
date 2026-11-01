@@ -3431,6 +3431,29 @@ class AppLocalizationsIt extends AppLocalizations {
   String get healthOpenSettings => 'Apri Impostazioni';
 
   @override
+  String get premadeHealthSettingTitle =>
+      'Sincronizzazione Salute per abitudini predefinite';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Se le abitudini predefinite come Sonno o Passi si sincronizzano con $source.';
+  }
+
+  @override
+  String get premadeHealthChoiceAsk => 'Chiedi';
+
+  @override
+  String get premadeHealthChoiceSync => 'Sincronizza';
+
+  @override
+  String get premadeHealthChoiceManual => 'Manuale';
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'La sincronizzazione con $source non funziona più perché Habitt non ha il permesso. Le tue abitudini Salute non si aggiorneranno finché non consenti l\'accesso in Impostazioni.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Separa le abitudini facoltative';
 
   @override

@@ -5741,6 +5741,42 @@ abstract class AppLocalizations {
   /// **'Open Settings'**
   String get healthOpenSettings;
 
+  /// No description provided for @premadeHealthSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health sync for premade habits'**
+  String get premadeHealthSettingTitle;
+
+  /// No description provided for @premadeHealthSettingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Whether premade habits like Sleep or Steps sync with {source}.'**
+  String premadeHealthSettingDesc(Object source);
+
+  /// No description provided for @premadeHealthChoiceAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get premadeHealthChoiceAsk;
+
+  /// No description provided for @premadeHealthChoiceSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get premadeHealthChoiceSync;
+
+  /// No description provided for @premadeHealthChoiceManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get premadeHealthChoiceManual;
+
+  /// No description provided for @healthAccessLostMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing with {source} no longer works because Habitt doesn\'t have permission. Your Health habits won\'t update until you allow access in Settings.'**
+  String healthAccessLostMessage(Object source);
+
   /// No description provided for @separateOptionalHabits.
   ///
   /// In en, this message translates to:

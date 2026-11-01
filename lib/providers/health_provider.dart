@@ -21,6 +21,19 @@ class HealthProvider extends ChangeNotifier {
   bool isSyncing = false;
   DateTime? lastSyncedAt;
   bool _availabilityChecked = false;
+
+  /// Android only: a sync found Health Connect access was taken away after it
+  /// had been granted (iOS can't tell). Cleared when access is back.
+  bool accessLost = false;
+  bool _accessLostNoticeShown = false;
+
+  /// True once per app run when [accessLost] and the user hasn't been told yet.
+  bool takeAccessLostNotice() {
+    if (!accessLost || _accessLostNoticeShown) return false;
+    _accessLostNoticeShown = true;
+    return true;
+  }
+
   bool _iosAccessRequested = false;
 
   List<HealthMetricType> get supportedMetrics => _service.supportedMetrics;
@@ -105,7 +118,21 @@ class HealthProvider extends ChangeNotifier {
     if (!isAvailable) return;
 
     // android is reliable, ios can give false even if okay so this is required
-    if (Platform.isAndroid && !permissionGranted) return;
+    if (Platform.isAndroid) {
+      // re-check every run: access can be revoked in Health Connect after the
+      // first check, and the cached value would never notice
+      try {
+        permissionGranted = await _service.hasPermissions();
+      } catch (_) {
+        // keep the last known value
+      }
+      final lost = !permissionGranted;
+      if (lost != accessLost) {
+        accessLost = lost;
+        notifyListeners();
+      }
+      if (!permissionGranted) return;
+    }
 
     final targetDay = day ?? DateTime.now();
     isSyncing = true;

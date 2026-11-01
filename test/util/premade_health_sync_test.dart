@@ -19,16 +19,12 @@ void main() {
     bool hasMetric = true,
     bool available = true,
     bool supported = true,
-    bool granted = false,
-    bool accepted = false,
-    bool reliable = true,
+    PremadeHealthChoice saved = PremadeHealthChoice.ask,
   }) => decidePremadeHealthPrompt(
     template: hasMetric ? steps : buildTestTemplate(amount: 1),
     isAvailable: available,
     isMetricSupported: supported,
-    permissionGranted: granted,
-    previouslyAccepted: accepted,
-    platformReportsPermission: reliable,
+    savedChoice: saved,
   );
 
   group('decidePremadeHealthPrompt', () {
@@ -36,78 +32,85 @@ void main() {
       expect(decide(hasMetric: false), PremadeHealthDecision.notHealthLinked);
     });
 
-    test('asks on a fresh device', () {
+    test('asks while there is no standing answer', () {
       expect(decide(), PremadeHealthDecision.ask);
     });
 
-    test('skips and opens manual when Health is unavailable', () {
-      expect(decide(available: false), PremadeHealthDecision.manualOnly);
+    test('a saved "Health" answer links it without asking', () {
       expect(
-        decide(available: false, granted: true, accepted: true),
-        PremadeHealthDecision.manualOnly,
+        decide(saved: PremadeHealthChoice.health),
+        PremadeHealthDecision.useHealth,
       );
     });
 
-    test('skips and opens manual when the platform lacks the metric', () {
-      expect(decide(supported: false), PremadeHealthDecision.manualOnly);
-    });
-
-    test('skips the dialog when accepted before and access is granted', () {
+    test('a saved "manual" answer opens manual without asking', () {
       expect(
-        decide(granted: true, accepted: true),
-        PremadeHealthDecision.syncWithoutAsking,
-      );
-    });
-
-    test('iOS never skips: its permission state is not reliable', () {
-      expect(
-        decide(granted: true, accepted: true, reliable: false),
-        PremadeHealthDecision.ask,
+        decide(saved: PremadeHealthChoice.manual),
+        PremadeHealthDecision.useManual,
       );
     });
 
     test(
-      'every Health premade in the catalog asks on a supported platform',
+      'unavailable Health or unsupported metric is manual, answer or not',
       () {
-        var count = 0;
-        for (final section in PremadeHabitCatalog.sections) {
-          for (final t in section.habits) {
-            if (t.defaultHealthMetric == null) continue;
-            count++;
-            expect(
+        for (final saved in PremadeHealthChoice.values) {
+          expect(
+            decide(available: false, saved: saved),
+            PremadeHealthDecision.manualOnly,
+          );
+          expect(
+            decide(supported: false, saved: saved),
+            PremadeHealthDecision.manualOnly,
+          );
+        }
+      },
+    );
+
+    test('every Health premade in the catalog asks until answered', () {
+      var count = 0;
+      for (final section in PremadeHabitCatalog.sections) {
+        for (final t in section.habits) {
+          if (t.defaultHealthMetric == null) continue;
+          count++;
+          PremadeHealthDecision d(PremadeHealthChoice c) =>
               decidePremadeHealthPrompt(
                 template: t,
                 isAvailable: true,
                 isMetricSupported: true,
-                permissionGranted: true,
-                previouslyAccepted: true,
-                platformReportsPermission: false,
-              ),
-              PremadeHealthDecision.ask,
-              reason: t.type.name,
-            );
-          }
+                savedChoice: c,
+              );
+          expect(
+            d(PremadeHealthChoice.ask),
+            PremadeHealthDecision.ask,
+            reason: t.type.name,
+          );
+          expect(
+            d(PremadeHealthChoice.health),
+            PremadeHealthDecision.useHealth,
+            reason: t.type.name,
+          );
+          expect(
+            d(PremadeHealthChoice.manual),
+            PremadeHealthDecision.useManual,
+            reason: t.type.name,
+          );
         }
-        expect(count, greaterThan(0));
-      },
-    );
-
-    test('asks again if accepted before but access is no longer granted', () {
-      expect(decide(accepted: true), PremadeHealthDecision.ask);
-    });
-
-    test('asks if access is granted but the dialog was never accepted', () {
-      expect(decide(granted: true), PremadeHealthDecision.ask);
+      }
+      expect(count, greaterThan(0));
     });
   });
 
-  group('accepted flag', () {
+  group('saved choice', () {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
-    test('defaults to false and sticks once saved', () async {
-      expect(await loadPremadeHealthSyncAccepted(), isFalse);
-      await savePremadeHealthSyncAccepted();
-      expect(await loadPremadeHealthSyncAccepted(), isTrue);
+    test('defaults to ask, round-trips, and ask clears it', () async {
+      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.ask);
+      await savePremadeHealthChoice(PremadeHealthChoice.manual);
+      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.manual);
+      await savePremadeHealthChoice(PremadeHealthChoice.health);
+      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.health);
+      await savePremadeHealthChoice(PremadeHealthChoice.ask);
+      expect(await loadPremadeHealthChoice(), PremadeHealthChoice.ask);
     });
   });
 

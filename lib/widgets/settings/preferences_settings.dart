@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +8,7 @@ import 'package:habitt/pages/other_pages/notification_settings_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
+import 'package:habitt/widgets/settings/premade_health_setting.dart';
 import 'package:provider/provider.dart';
 
 class Preferences extends StatelessWidget {
@@ -238,6 +241,10 @@ class Preferences extends StatelessWidget {
                   ),
                 ],
               ),
+              if (Platform.isIOS || Platform.isAndroid) ...[
+                Divider(color: cp.border, height: 32),
+                const PremadeHealthSetting(),
+              ],
               if (kDebugMode) ...[
                 Divider(color: cp.border, height: 32),
                 Row(

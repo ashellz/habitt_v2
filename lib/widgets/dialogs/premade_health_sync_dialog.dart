@@ -70,23 +70,22 @@ Future<bool> askPremadeHealthSync(
 
   final health = context.read<HealthProvider>();
   await health.ensureAvailabilityChecked();
-  final accepted = await loadPremadeHealthSyncAccepted();
+  final saved = await loadPremadeHealthChoice();
   if (!context.mounted) return false;
 
   final decision = decidePremadeHealthPrompt(
     template: template,
     isAvailable: health.isAvailable,
     isMetricSupported: health.isMetricSupported(template.defaultHealthMetric!),
-    permissionGranted: health.permissionGranted,
-    previouslyAccepted: accepted,
-    platformReportsPermission: Platform.isAndroid,
+    savedChoice: saved,
   );
 
   switch (decision) {
     case PremadeHealthDecision.notHealthLinked:
-    case PremadeHealthDecision.syncWithoutAsking:
+    case PremadeHealthDecision.useHealth:
       return true;
     case PremadeHealthDecision.manualOnly:
+    case PremadeHealthDecision.useManual:
       return false;
     case PremadeHealthDecision.ask:
       // not dismissible: leaving by tapping outside would be an ambiguous answer
@@ -95,8 +94,12 @@ Future<bool> askPremadeHealthSync(
         dismissible: false,
         builder: (_) => const PremadeHealthSyncDialog(),
       );
-      if (result == true) await savePremadeHealthSyncAccepted();
-      return result ?? false;
+      if (result == null) return false;
+      // asked once: the answer is reused for every later premade Health habit
+      await savePremadeHealthChoice(
+        result ? PremadeHealthChoice.health : PremadeHealthChoice.manual,
+      );
+      return result;
   }
 }
 
@@ -126,6 +129,26 @@ Future<void> showHealthPermissionDeniedDialog(BuildContext context) async {
                   ? loc.healthSyncSectionTitleApple
                   : loc.healthSyncSectionTitleAndroid,
           desc: loc.healthPermissionDeniedMessage,
+          primaryButtonLabel: loc.healthOpenSettings,
+          secondaryButtonLabel: loc.cancel,
+          onPrimaryButtonPressed: () {
+            Navigator.of(dialogContext).pop();
+            openAppSettings();
+          },
+          onSecondaryButtonPressed: () => Navigator.of(dialogContext).pop(),
+        ),
+  );
+}
+
+/// Shown when a sync finds Health access was taken away after it was granted.
+Future<void> showHealthAccessLostDialog(BuildContext context) async {
+  final loc = AppLocalizations.of(context)!;
+  await showDialogSheet(
+    context: context,
+    builder:
+        (dialogContext) => NewDefaultDialog(
+          title: healthSourceName(),
+          desc: loc.healthAccessLostMessage(healthSourceName()),
           primaryButtonLabel: loc.healthOpenSettings,
           secondaryButtonLabel: loc.cancel,
           onPrimaryButtonPressed: () {

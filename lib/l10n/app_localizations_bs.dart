@@ -3403,6 +3403,29 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthOpenSettings => 'Otvori postavke';
 
   @override
+  String get premadeHealthSettingTitle =>
+      'Sinhronizacija zdravlja za gotove navike';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Da li se gotove navike poput Sna ili Koraka sinhroniziraju s $source.';
+  }
+
+  @override
+  String get premadeHealthChoiceAsk => 'Pitaj';
+
+  @override
+  String get premadeHealthChoiceSync => 'Sinhroniziraj';
+
+  @override
+  String get premadeHealthChoiceManual => 'Ručno';
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'Sinhronizacija s $source više ne radi jer Habitt nema dozvolu. Tvoje navike vezane za zdravlje neće se ažurirati dok ne dozvoliš pristup u Postavkama.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Odvoji opcionalne navike';
 
   @override
