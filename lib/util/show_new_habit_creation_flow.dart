@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/premade_habit_template.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
-import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:habitt/widgets/sheets/habit_sheet.dart';
 import 'package:habitt/widgets/sheets/premade_habits_sheet.dart';
 import 'package:provider/provider.dart';
@@ -28,19 +27,9 @@ Future<void> showNewHabitCreationFlow(BuildContext context) async {
       continue;
     }
 
-    // before the sheet opens and before any OS prompt
-    var healthSync = true;
-    if (initialTemplate != null) {
-      healthSync = await askPremadeHealthSync(context, initialTemplate);
-      if (!context.mounted) {
-        return;
-      }
-    }
-
     final habitResult = await _showHabitSheet(
       context,
       initialPremadeTemplate: initialTemplate,
-      initialPremadeHealthSync: healthSync,
     );
 
     if (!context.mounted) {
@@ -74,7 +63,6 @@ Future<PremadeHabitSheetResult?> _showPremadeSheet(BuildContext context) {
 Future<HabitSheetCloseResult?> _showHabitSheet(
   BuildContext context, {
   PremadeHabitTemplate? initialPremadeTemplate,
-  bool initialPremadeHealthSync = true,
 }) {
   final cp = context.read<ColorProvider>();
 
@@ -86,7 +74,6 @@ Future<HabitSheetCloseResult?> _showHabitSheet(
     builder:
         (_) => HabitSheet(
           initialPremadeTemplate: initialPremadeTemplate,
-          initialPremadeHealthSync: initialPremadeHealthSync,
           reopenPremadeOnTopBack: true,
         ),
   );

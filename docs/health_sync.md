@@ -95,23 +95,23 @@ The habit sheet no longer fires the OS permission prompt by itself when a
 premade template with `defaultHealthMetric` is applied (task 58). Instead the
 user is asked in-app first, so the OS prompt is never a surprise:
 
-1. **Pick a premade habit** — `showNewHabitCreationFlow`
-   ([`lib/util/show_new_habit_creation_flow.dart`](../lib/util/show_new_habit_creation_flow.dart))
-   calls `askPremadeHealthSync` before opening the habit sheet.
+1. **Pick a premade habit** — the habit sheet opens first with the template
+   applied, then `HabitSheet._resolvePremadeHealthSync` calls
+   `askPremadeHealthSync` and the dialog appears over the open sheet.
    `PremadeHealthSyncDialog`
    ([`lib/widgets/dialogs/premade_health_sync_dialog.dart`](../lib/widgets/dialogs/premade_health_sync_dialog.dart))
    asks whether to sync with Apple Health (iOS) or Health Connect (Android),
    using the What's New health graphic (`WhatsNewHealthGraphic` in a
    `WhatsNewGraphicFrame`). It isn't dismissible by tapping outside; the answer
    is explicit.
-2. **Accept** — the sheet opens with the template applied (metric linked), and
+2. **Accept** — the sheet stays open with the metric linked, and
    only then `requestHealthAccessOrExplain` asks the OS
    (`HealthProvider.requestPermissionIfNeeded()`). If the OS **denies**, the
    habit is reverted to manual (`StateProvider.disablePremadeHealthSync`) and
    the same explanation dialog as the manual toggle is shown, so no habit is
    left linked to a metric that can't update. `premadeHealthSyncAccepted` is
    saved to `SharedPreferences`.
-3. **Decline** — the sheet opens with the template applied but sync off:
+3. **Decline** — the template stays applied but sync is turned off:
    `disablePremadeHealthSync` clears `selectedHealthMetric`, the workout
    filter and tolerance, and resets the target for manual tracking. Bedtime and
    wake time (times of day) become a plain done/not-done habit; sleep becomes a

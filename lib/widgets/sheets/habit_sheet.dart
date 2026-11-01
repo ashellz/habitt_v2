@@ -56,16 +56,11 @@ class HabitSheet extends StatefulWidget {
     super.key,
     this.habit,
     this.initialPremadeTemplate,
-    this.initialPremadeHealthSync = true,
     this.reopenPremadeOnTopBack = false,
   });
 
   final Habit? habit;
   final PremadeHabitTemplate? initialPremadeTemplate;
-
-  // the answer to the in-app Health dialog shown before this sheet opened;
-  // false opens the premade habit tracked manually
-  final bool initialPremadeHealthSync;
   final bool reopenPremadeOnTopBack;
 
   @override
@@ -121,6 +116,7 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
         return;
       }
 
+      PremadeHabitTemplate? premadeHealthTemplate;
       if (_isEditMode) {
         _setEditInitialValues(_sp, widget.habit!);
       } else {
@@ -132,13 +128,10 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
             initialTemplate,
             localizedName: initialTemplate.localizedName(loc),
           );
-          if (initialTemplate.defaultHealthMetric != null) {
-            if (widget.initialPremadeHealthSync) {
-              unawaited(_requestPremadeHealthAccess(initialTemplate));
-            } else {
-              _sp.disablePremadeHealthSync(initialTemplate);
-            }
-          }
+          premadeHealthTemplate =
+              initialTemplate.defaultHealthMetric != null
+                  ? initialTemplate
+                  : null;
         }
       }
 
@@ -149,15 +142,25 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       setState(() {
         _isInitializing = false;
       });
+
+      // the sheet is open first, the Health question goes over it
+      if (premadeHealthTemplate != null) {
+        unawaited(_resolvePremadeHealthSync(premadeHealthTemplate));
+      }
     });
   }
 
-  // The user accepted the in-app Health dialog: ask the OS now. On denial the
-  // habit goes back to manual tracking and the same explanation as the manual
-  // Health toggle is shown, so no habit is left linked to a dead metric.
-  Future<void> _requestPremadeHealthAccess(
-    PremadeHabitTemplate template,
-  ) async {
+  // Asks the in-app Health question over the open sheet, before any OS prompt.
+  // Decline (or Health unusable) turns sync off; accept asks the OS, and on
+  // denial the habit goes back to manual tracking with the same explanation as
+  // the manual Health toggle, so no habit is left linked to a dead metric.
+  Future<void> _resolvePremadeHealthSync(PremadeHabitTemplate template) async {
+    final sync = await askPremadeHealthSync(context, template);
+    if (!mounted) return;
+    if (!sync) {
+      _sp.disablePremadeHealthSync(template);
+      return;
+    }
     await requestHealthAccessOrExplain(
       context,
       onDenied: () {
