@@ -152,6 +152,7 @@ class HealthProvider extends ChangeNotifier {
     // a habit that is unlinked, deleted or paused loses its cursor, so when it
     // comes back it starts from that day instead of backfilling the gap
     final cursors = await _loadCursors();
+    final loadedCursors = Map<int, DateTime>.of(cursors);
     final linkedIds = linkedHabits.map((h) => h.id).toSet();
     final before = cursors.length;
     cursors.removeWhere((id, _) => !linkedIds.contains(id));
@@ -181,7 +182,8 @@ class HealthProvider extends ChangeNotifier {
         // let the UI draw a frame between habits, a catch-up can be many reads
         await Future<void>.delayed(Duration.zero);
       }
-      await _saveCursors(cursors);
+      // most opens end on the cursors they started with, skip the write then
+      if (!mapEquals(cursors, loadedCursors)) await _saveCursors(cursors);
       lastSyncedAt = DateTime.now();
       await _saveLastSyncedAt(lastSyncedAt!);
     } catch (_) {

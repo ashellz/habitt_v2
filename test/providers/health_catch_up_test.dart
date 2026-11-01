@@ -13,6 +13,7 @@ import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/services/health_service.dart';
+import 'package:habitt/util/health_value_guard.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -382,7 +383,137 @@ void main() {
         day: DateTime.now(),
       );
 
-      expect(outcome.status.name, 'discarded');
+      expect(outcome.status, HealthApplyStatus.discarded);
+    });
+  });
+
+  group('a sync that changes nothing', () {
+    List<HealthSessionDetail> sessionsAt(int hour) => [
+      HealthSessionDetail(
+        start: DateTime(2026, 1, 1, hour),
+        end: DateTime(2026, 1, 1, hour + 1),
+      ),
+    ];
+
+    test('writes nothing: no notify, no timestamp bump', () async {
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+        sessions: sessionsAt(8),
+      );
+      final habit = habitProvider.habits.firstWhere((h) => h.id == 1);
+      final stamp = habit.timestamps['amountCompleted'];
+      var notified = 0;
+      habitProvider.addListener(() => notified++);
+
+      final outcome = await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+        sessions: sessionsAt(8),
+      );
+
+      expect(outcome.status, HealthApplyStatus.applied);
+      expect(outcome.completionChanged, isFalse);
+      expect(notified, 0);
+      expect(habit.timestamps['amountCompleted'], stamp);
+    });
+
+    test('a different value is still written', () async {
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+      );
+      var notified = 0;
+      habitProvider.addListener(() => notified++);
+
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4500,
+        day: DateTime.now(),
+      );
+
+      expect(notified, greaterThan(0));
+      expect(
+        habitProvider.habits.firstWhere((h) => h.id == 1).amountCompleted,
+        4500,
+      );
+    });
+
+    test('same value but new sessions is still written', () async {
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+        sessions: sessionsAt(8),
+      );
+
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+        sessions: sessionsAt(9),
+      );
+
+      expect(
+        habitProvider.habits
+            .firstWhere((h) => h.id == 1)
+            .healthSessions
+            .single
+            .start,
+        DateTime(2026, 1, 1, 9),
+      );
+    });
+
+    test('a hand-edited day with the same sessions is left alone', () async {
+      final habit = stepsHabit(id: 1)..healthManualOverride = true;
+      await habitBox.put(1, habit);
+      final habitProvider = await createInitializedProvider();
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+        sessions: sessionsAt(8),
+      );
+      var notified = 0;
+      habitProvider.addListener(() => notified++);
+
+      await habitProvider.syncHabitFromHealth(
+        1,
+        HealthMetricType.steps,
+        4000,
+        day: DateTime.now(),
+        sessions: sessionsAt(8),
+      );
+
+      expect(notified, 0);
+    });
+
+    test('syncNow cursors are not rewritten when they did not change', () async {
+      await seedPrefs(cursors: {1: _ago(0)});
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      final health = HealthProvider(service: _PerDayHealthService((_) => 4000))
+        ..attachHabitProvider(habitProvider);
+
+      await health.syncNow();
+
+      expect((await storedCursors())[1], _dayKey(_ago(0)));
     });
   });
 

@@ -1,5 +1,6 @@
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_session_detail.dart';
 
 // Protects what is already recorded from a Health read that isn't real data.
 // A normal read is always followed, even when it is lower than before (the
@@ -82,4 +83,22 @@ bool shouldDiscardHealthValue(
     return true;
   }
   return incoming == 0 && existing > 0;
+}
+
+/// Whether two session lists describe the same Health sessions, so a sync can
+/// tell a re-read that changed nothing from one that did. Compared by moment,
+/// not by DateTime object (one side may be local, the other stored as UTC).
+bool sameHealthSessions(
+  List<HealthSessionDetail> a,
+  List<HealthSessionDetail> b,
+) {
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (!a[i].start.isAtSameMomentAs(b[i].start) ||
+        !a[i].end.isAtSameMomentAs(b[i].end) ||
+        a[i].workoutType != b[i].workoutType) {
+      return false;
+    }
+  }
+  return true;
 }

@@ -142,6 +142,15 @@ It never re-reads a fixed window on every open.
 - **Streaks:** past days are written with `refreshStreaks: false`, and
   `assignStreaks(habitId)` runs once at the end of a habit's catch-up if any
   past day flipped its completion.
+- **Unchanged reads write nothing.** Today and the cursor day are re-read on
+  every open, so `syncHabitFromHealth` compares the result with what the day
+  holds. Same progress, same completion and same sessions
+  (`sameHealthSessions`) means no Hive write, no `notifyListeners`, no
+  notification or streak work and no `scheduleAutoSync` (a cloud backup).
+  `Habit.updateHabit*Completed` stamp their timestamps even for an identical
+  value, and backup merge goes by those, so the sync restores them when nothing
+  changed instead of looking like a fresh edit. The cursors are only written
+  back when they moved.
 - **Timing and UX:** it is the same fire-and-forget `syncNow()` as before and
   yields between habits and days, so app open isn't delayed. It is silent: no
   toast or dialog, the days just show up in the calendar and the details chart.

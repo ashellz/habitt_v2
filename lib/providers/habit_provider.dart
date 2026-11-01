@@ -1932,8 +1932,9 @@ class HabitProvider extends ChangeNotifier {
     List<HealthSessionDetail> sessions = const [],
     bool refreshStreaks = true,
   }) async {
-    habitStatsProvider?.invalidateHabit(id);
-
+    // no stats invalidation here: every path that writes goes through
+    // updateHabitInDB, which does it, and a sync that changes nothing must
+    // leave caches, the DB, notifications and backup alone
     final now = DateTime.now();
     final todaySimple = DateTime(now.year, now.month, now.day);
     final daySimple = DateTime(day.year, day.month, day.day);
@@ -1952,6 +1953,9 @@ class HabitProvider extends ChangeNotifier {
     // user edited this day by hand: leave the progress alone but keep the
     // session list current, it's informational only
     if (habit.healthManualOverride) {
+      if (sameHealthSessions(habit.healthSessions, sessions)) {
+        return const HealthApplyOutcome(HealthApplyStatus.applied);
+      }
       habit.healthSessions = sessions.map((s) => s.copy()).toList();
       await updateHabitInDB(habit, day: daySimple);
       notifyListeners();
@@ -1979,6 +1983,15 @@ class HabitProvider extends ChangeNotifier {
     )) {
       return const HealthApplyOutcome(HealthApplyStatus.discarded);
     }
+
+    // the update methods stamp the progress/completed timestamps even when the
+    // value is the same, and backup merge goes by those. Remember them, so a
+    // read that changes nothing can put them back instead of looking like an edit
+    const stampedKeys = ['amountCompleted', 'durationCompleted', 'completed'];
+    final savedStamps = <String, DateTime?>{
+      for (final key in stampedKeys) key: habit.timestamps[key],
+    };
+    final previousSessions = habit.healthSessions;
 
     switch (effectiveTrackingType) {
       case HabitTrackingType.amount:
@@ -2011,6 +2024,26 @@ class HabitProvider extends ChangeNotifier {
     }
 
     final isNowCompleted = habit.completed;
+
+    // same progress, same completion, same sessions: nothing to save, notify
+    // or back up (this is the common case, today is re-read on every app open)
+    final newProgress =
+        effectiveTrackingType == HabitTrackingType.duration
+            ? habit.durationCompleted
+            : habit.amountCompleted;
+    if (newProgress == existingProgress &&
+        wasCompleted == isNowCompleted &&
+        sameHealthSessions(previousSessions, sessions)) {
+      savedStamps.forEach((key, stamp) {
+        if (stamp == null) {
+          habit.timestamps.remove(key);
+        } else {
+          habit.timestamps[key] = stamp;
+        }
+      });
+      return const HealthApplyOutcome(HealthApplyStatus.applied);
+    }
+
     if (wasCompleted != isNowCompleted) {
       _updatePeriodCountersForId(
         id,

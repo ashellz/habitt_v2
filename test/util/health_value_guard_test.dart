@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
+import 'package:habitt/models/health_session_detail.dart';
+import 'package:habitt/models/health_workout_type.dart';
 import 'package:habitt/util/health_value_guard.dart';
 
 void main() {
@@ -113,6 +115,47 @@ void main() {
         isTrue,
       );
       expect(shouldDiscardHealthValue(HealthMetricType.sleep, -5, 0), isTrue);
+    });
+  });
+
+  group('sameHealthSessions', () {
+    HealthSessionDetail session(int h, {HealthWorkoutType? type}) =>
+        HealthSessionDetail(
+          start: DateTime(2026, 1, 1, h),
+          end: DateTime(2026, 1, 1, h + 1),
+          workoutType: type,
+        );
+
+    test('two empty lists match', () {
+      expect(sameHealthSessions(const [], const []), isTrue);
+    });
+
+    test('equal sessions match', () {
+      expect(sameHealthSessions([session(8)], [session(8)]), isTrue);
+    });
+
+    test('the same moment in local and UTC matches', () {
+      final local = HealthSessionDetail(
+        start: DateTime(2026, 1, 1, 8),
+        end: DateTime(2026, 1, 1, 9),
+      );
+      final utc = HealthSessionDetail(
+        start: DateTime(2026, 1, 1, 8).toUtc(),
+        end: DateTime(2026, 1, 1, 9).toUtc(),
+      );
+      expect(sameHealthSessions([local], [utc]), isTrue);
+    });
+
+    test('a different count, time or workout type does not match', () {
+      expect(sameHealthSessions([session(8)], const []), isFalse);
+      expect(sameHealthSessions([session(8)], [session(9)]), isFalse);
+      expect(
+        sameHealthSessions(
+          [session(8, type: HealthWorkoutType.running)],
+          [session(8, type: HealthWorkoutType.walking)],
+        ),
+        isFalse,
+      );
     });
   });
 }
