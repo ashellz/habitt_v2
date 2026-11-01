@@ -33,21 +33,16 @@ class _FakeHealthService extends HealthService {
   bool isMetricSupported(HealthMetricType metric) => true;
 
   @override
-  Future<int?> fetchValueForDay(
+  Future<HealthDayReading?> fetchDay(
     HealthMetricType metric,
     DateTime day, {
     HabitTrackingType? trackingType,
     HealthWorkoutType? workoutFilter,
     bool bedtimeDayBefore = false,
-  }) async => value;
-
-  @override
-  Future<List<HealthSessionDetail>> fetchSessionsForDay(
-    HealthMetricType metric,
-    DateTime day, {
-    HealthWorkoutType? workoutFilter,
-    bool bedtimeDayBefore = false,
-  }) async => _sessions(1);
+  }) async {
+    final v = value;
+    return v == null ? null : HealthDayReading(v, _sessions(1));
+  }
 }
 
 DateTime _normalize(DateTime date) => DateTime(date.year, date.month, date.day);

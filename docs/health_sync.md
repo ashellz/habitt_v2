@@ -30,7 +30,7 @@ days").
 - `HealthMetricType` maps to a `HabitTrackingType`: `steps` /
   `activeCalories` / `totalCalories` are amount goals (a raw count);
   `sleep` is an amount goal in **minutes** (so `toleranceMinutes` can apply
-  to it — `HealthService.fetchValueForDay` returns sleep in minutes, and the
+  to it — `HealthService.fetchDay` returns sleep in minutes, and the
   habit card formats it as a duration via `getSleepAmountString`);
   `workouts` / `mindfulness` are duration goals by default (seconds,
   matching the app's post-migration duration schema — see
@@ -48,9 +48,13 @@ days").
 
 - [`lib/services/health_service.dart`](../lib/services/health_service.dart) —
   the only file that imports `package:health`. Wraps availability/permission
-  checks and `fetchValueForDay(metric, day)`, which returns the metric's
-  value in the habit's native unit (steps/calories as a plain count,
-  everything else in seconds), or `null` on any failure.
+  checks and `fetchDay(metric, day)`, which reads the day **once** and returns a
+  `HealthDayReading`: the metric's value in the habit's native unit
+  (steps/calories as a plain count, sleep in minutes, time of day in minutes
+  since midnight, everything else in seconds) and the sessions behind it
+  (empty for steps and calories). It is `null` on any failure, or for a
+  bedtime/wake time with no sleep that day. Value and sessions come from the
+  same read, so they can't disagree and a sync never reads a day twice.
 - [`lib/providers/health_provider.dart`](../lib/providers/health_provider.dart) —
   `ChangeNotifier` holding `isAvailable`/`permissionGranted`/`isSyncing`
   state. `requestPermissionIfNeeded()` drives the OS permission prompt
@@ -87,7 +91,7 @@ days").
 5. **Per-habit sync** — for each linked, non-deleted, non-paused habit,
    `HealthProvider._catchUpHabit` reads the habit's sync day and the days it
    missed (next section). Each day goes through
-   `HealthService.fetchValueForDay` and, if non-null, is applied via
+   `HealthService.fetchDay` and, if non-null, is applied via
    `HabitProvider.syncHabitFromHealth`, which throws away empty or corrupt
    reads (see "Empty and corrupt reads").
 
@@ -263,7 +267,7 @@ days").
 `mindfulness` both default to `duration`, but the habit editor lets the user
 choose Amount instead — a session count — for either one, for any workout
 filter including "Any"). `HealthMetricTypeMapping.supportsTrackingChoice`
-marks these two metrics; `HealthService.fetchValueForDay` already reads the
+marks these two metrics; `HealthService.fetchDay` already reads the
 right raw value for either mode (session count in Amount mode, summed
 seconds in Duration mode), and `HabitProvider.syncHabitFromHealth` routes
 that value into `amountCompleted` or `durationCompleted` by the *habit's*
@@ -278,8 +282,8 @@ normal `amountCompleted/durationCompleted >= target` comparison is
 vacuously true against a target of 0, `syncHabitFromHealth` overrides
 `habit.completed` in that case to `sessions.isNotEmpty` instead — complete
 only if at least one matching session was logged that day, using the same
-`sessions` list already fetched via `fetchSessionsForDay` for that sync
-pass (no extra Health read).
+`sessions` list from the same `fetchDay` read for that sync pass (no extra
+Health read).
 
 ## Workout reads
 
@@ -486,7 +490,7 @@ editor's metric picker only offers what's actually supported.
   separately via `permission_handler` (`Permission.activityRecognition`)
   before requesting Health Connect access, per the `health` package's own
   setup docs. A denial there isn't fatal — it only affects steps reads,
-  which `fetchValueForDay` already returns `null` for on any failure.
+  which `fetchDay` already returns `null` for on any failure.
 
 ## Maintenance rule
 

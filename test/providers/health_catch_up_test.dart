@@ -37,7 +37,7 @@ class _PerDayHealthService extends HealthService {
   bool isMetricSupported(HealthMetricType metric) => true;
 
   @override
-  Future<int?> fetchValueForDay(
+  Future<HealthDayReading?> fetchDay(
     HealthMetricType metric,
     DateTime day, {
     HabitTrackingType? trackingType,
@@ -45,16 +45,9 @@ class _PerDayHealthService extends HealthService {
     bool bedtimeDayBefore = false,
   }) async {
     reads.add(DateTime(day.year, day.month, day.day));
-    return valueFor(day);
+    final v = valueFor(day);
+    return v == null ? null : HealthDayReading(v, const []);
   }
-
-  @override
-  Future<List<HealthSessionDetail>> fetchSessionsForDay(
-    HealthMetricType metric,
-    DateTime day, {
-    HealthWorkoutType? workoutFilter,
-    bool bedtimeDayBefore = false,
-  }) async => const [];
 }
 
 DateTime _normalize(DateTime date) => DateTime(date.year, date.month, date.day);

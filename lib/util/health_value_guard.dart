@@ -38,7 +38,7 @@ const int _kMaxDaySeconds = 24 * 60 * 60;
 const int _kMaxSessionCount = 200;
 
 /// Whether [value] is a number a real day could produce for [metric], in the
-/// habit's native unit (see `HealthService.fetchValueForDay`).
+/// habit's native unit (see `HealthService.fetchDay`).
 /// [trackingType] matters for workouts/mindfulness, where the value is a
 /// session count in Amount mode and seconds in Duration mode.
 bool isPlausibleHealthValue(
