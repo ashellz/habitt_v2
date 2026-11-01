@@ -3411,7 +3411,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String premadeHealthSyncDesc(Object source) {
-    return 'Habitt può leggere $source per sincronizzare i tuoi dati e completare questa abitudine per te in automatico. Subito dopo, il telefono chiederà l\'accesso: devi consentirlo perché la sincronizzazione funzioni. È di sola lettura e i tuoi dati restano sul tuo dispositivo.';
+    return 'Habitt può leggere $source per sincronizzare i tuoi dati e completare questa abitudine per te.';
   }
 
   @override
@@ -3717,4 +3717,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Rendi Habitt tuo con nuovi colori d\'accento, gratis per tutti.';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'Devi consentire l\'accesso a $source perché la sincronizzazione funzioni.';
+  }
 }

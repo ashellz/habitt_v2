@@ -32,7 +32,7 @@ Habit buildTestHabit({
   return Habit(
     id: id,
     name: name,
-    iconPath: 'assets/images/icons/water.png',
+    iconPath: '📚',
     categoryId: 1,
     amount: amount,
     amountCompleted: amountCompleted,

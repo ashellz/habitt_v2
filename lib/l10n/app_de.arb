@@ -1238,7 +1238,7 @@
   "healthOverrideNoticeBody": "Du hast den Fortschritt selbst geändert, deshalb überschreibt Habitt ihn für diesen Tag nicht mit Daten aus {source}. Dein Wert bleibt genau so, wie du ihn eingegeben hast.\n\nMöchtest du {source} zurück? Tippe bei dieser Gewohnheit auf \"{source}-Werte verwenden\".",
   "healthOverrideNoticeUnderstood": "Verstanden",
   "premadeHealthSyncTitle": "Mit {source} synchronisieren?",
-  "premadeHealthSyncDesc": "Habitt kann {source} lesen, um deine Daten zu synchronisieren und diese Gewohnheit automatisch für dich abzuschließen. Direkt danach fragt dein Telefon nach dem Zugriff: Du musst ihn erlauben, damit die Synchronisierung funktioniert. Der Zugriff ist schreibgeschützt und deine Daten bleiben auf deinem Gerät.",
+  "premadeHealthSyncDesc": "Habitt kann {source} lesen, um deine Daten zu synchronisieren und diese Gewohnheit für dich abzuschließen.",
   "premadeHealthSyncAccept": "{source} verwenden",
   "premadeHealthSyncDecline": "Manuell erfassen",
   "healthNoRecentDataHintIos": "Seit einigen Tagen keine {source}-Daten. Falls du Habitt den Zugriff nicht erlaubt hast, öffne Einstellungen → Health → Datenzugriff & Geräte → Habitt und aktiviere die benötigten Daten.",
@@ -1326,5 +1326,6 @@
   "whatsNewStrengthTitle": "Stärke im Zeitverlauf",
   "whatsNewStrengthDesc": "Sieh mit einem Diagramm direkt in den Details, wie jede Gewohnheit stärker wird.",
   "whatsNewThemesTitle": "Neue Designfarben",
-  "whatsNewThemesDesc": "Mach Habitt zu deinem mit neuen Akzentfarben, kostenlos für alle."
+  "whatsNewThemesDesc": "Mach Habitt zu deinem mit neuen Akzentfarben, kostenlos für alle.",
+  "premadeHealthSyncAllow": "Du musst den Zugriff auf {source} erlauben, damit die Synchronisierung funktioniert."
 }

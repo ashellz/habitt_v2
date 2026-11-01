@@ -8,9 +8,6 @@ import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
 
-/// The sheet shown when a user picks a new theme or opens cloud backup setup, at
-/// most once every 30 days. Both are free for everyone, so it only says so and
-/// leaves the choice to them. Shown through [maybeShowSupportSheet].
 class SupportSheet extends StatelessWidget {
   const SupportSheet({super.key});
 
@@ -20,6 +17,7 @@ class SupportSheet extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return NewDefaultDialog(
+      titleIconPath: 'assets/images/icons/gift.png',
       title: loc.supportSheetTitle,
       desc: loc.supportSheetDesc,
       // the actions are stacked in the body instead of the side-by-side footer

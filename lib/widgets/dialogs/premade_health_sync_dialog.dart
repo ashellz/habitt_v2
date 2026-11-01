@@ -40,9 +40,18 @@ class PremadeHealthSyncDialog extends StatelessWidget {
             height: WhatsNewGraphicFrame.height,
             child: WhatsNewHealthGraphic(),
           ),
-          Text(
-            loc.premadeHealthSyncDesc(source),
-            style: TextStyle(color: cp.greyText, fontSize: 16, height: 1.35),
+          Text.rich(
+            TextSpan(
+              style: TextStyle(color: cp.greyText, fontSize: 16, height: 1.35),
+              children: [
+                TextSpan(text: loc.premadeHealthSyncDesc(source)),
+                const TextSpan(text: ' '),
+                TextSpan(
+                  text: loc.premadeHealthSyncAllow(source),
+                  style: TextStyle(color: cp.main),
+                ),
+              ],
+            ),
           ),
         ],
       ),

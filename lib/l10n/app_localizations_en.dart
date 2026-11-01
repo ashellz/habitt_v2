@@ -3384,7 +3384,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String premadeHealthSyncDesc(Object source) {
-    return 'Habitt can read $source to sync your data and complete this habit for you automatically. Right after, your phone will ask for access: you need to allow it for syncing to work. It\'s read-only and your data stays on your device.';
+    return 'Habitt can read $source to sync your data and complete this habit for you.';
   }
 
   @override
@@ -3589,7 +3589,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportSheetDesc =>
-      'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.';
+      'Themes and cloud backup are free for everyone. Supporters help keep Habitt going.';
 
   @override
   String get supportNotNow => 'Not now';
@@ -3687,4 +3687,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Make Habitt yours with new accent colors, free for everyone.';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'You need to allow $source access for syncing to work.';
+  }
 }

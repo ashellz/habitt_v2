@@ -469,7 +469,7 @@
   "notificationEncourageGym1": "jedan trening danas za bolje sutra",
   "notificationEncourageGym2": "ne zaboravi zbog čega si počeo",
   "notificationEncourageGym3": "ustaj, rezultati se ne ostvaruju sami",
-  "notificationEncourageMedications1": "pravilno održavanje štiti tvoju zdravstvenu rutinu",
+  "notificationEncourageMedications1": "redovno pridržavanje lijekova štiti tvoju zdravlje",
   "notificationEncourageMedications2": "pridržavanje rasporeda lijekova je ključno za tvoje zdravlje",
   "notificationEncourageMedications3": "lijekovi podržavaju tvoju dugoročnu dobrobit",
   "notificationEncourageNutrition1": "pravilnom ishranom održavaš svoje zdravlje i energiju",
@@ -1228,7 +1228,7 @@
   "healthOverrideNoticeBody": "Napredak je ručno promijenjen, pa ga Habitt za ovaj dan neće prepisati podacima iz {source}. Broj ostaje tačno onakav kakav je unesen.\n\nŽeliš vratiti {source}? Dodirni \"Koristi vrijednosti iz {source}\" na ovoj navici.",
   "healthOverrideNoticeUnderstood": "Razumijem",
   "premadeHealthSyncTitle": "Sinhronizovati s {source}?",
-  "premadeHealthSyncDesc": "Habitt može čitati {source} kako bi sinhronizirao tvoje podatke i automatski završio ovu naviku umjesto tebe. Odmah nakon toga telefon će tražiti pristup: moraš ga dozvoliti da bi sinhronizacija radila. Samo je za čitanje, a tvoji podaci ostaju na tvom uređaju.",
+  "premadeHealthSyncDesc": "Habitt može čitati {source} kako bi sinhronizirao tvoje podatke i umjesto tebe završio ovu naviku.",
   "premadeHealthSyncAccept": "Koristi {source}",
   "premadeHealthSyncDecline": "Prati ručno",
   "healthNoRecentDataHintIos": "Nema {source} podataka već nekoliko dana. Ako nisi dozvolio pristup za Habitt, otvori Postavke → Zdravlje → Pristup podacima i uređajima → Habitt i uključi podatke koji su mu potrebni.",
@@ -1290,7 +1290,7 @@
   "themeNameViolet": "Ljubičasta",
   "themeNameOrchid": "Orhideja",
   "supportSheetTitle": "Besplatno za sve",
-  "supportSheetDesc": "Teme i sigurnosna kopija u oblaku su besplatne za sve. Podržavaoci su ono što drži Habitt u životu.",
+  "supportSheetDesc": "Boje i backup su besplatni za sve. Budi donator kako bi podržao razvoj Habitta.",
   "supportNotNow": "Ne sada",
   "supportHabittRow": "Podrži Habitt",
   "notificationsOffInSystemTitle": "Obavijesti su isključene",
@@ -1316,5 +1316,6 @@
   "whatsNewStrengthTitle": "Snaga kroz vrijeme",
   "whatsNewStrengthDesc": "Prati kako svaka navika jača, s grafikonom odmah u njenim detaljima.",
   "whatsNewThemesTitle": "Nove boje tema",
-  "whatsNewThemesDesc": "Učini Habitt svojim s novim bojama naglaska, besplatno za sve."
+  "whatsNewThemesDesc": "Učini Habitt svojim s novim bojama naglaska, besplatno za sve.",
+  "premadeHealthSyncAllow": "Moraš dozvoliti pristup {source} da bi sinhronizacija radila."
 }

@@ -26,7 +26,7 @@ class NewDefaultDialog extends StatelessWidget {
     this.overrideDefaultButtons = false,
     this.tip,
     this.titleIcon,
-    this.titleIconSvgPath,
+    this.titleIconPath,
   });
 
   final Widget? child;
@@ -46,7 +46,12 @@ class NewDefaultDialog extends StatelessWidget {
   final String? tip;
 
   final Widget? titleIcon;
-  final String? titleIconSvgPath;
+  final String? titleIconPath;
+
+  Widget _assetIcon(String path) =>
+      path.toLowerCase().endsWith('.png')
+          ? Image.asset(path)
+          : SvgPicture.asset(path);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,7 @@ class NewDefaultDialog extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     final headerWidgets = <Widget>[
-      if (titleIcon != null || titleIconSvgPath != null)
+      if (titleIcon != null || titleIconPath != null)
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.all(10),
@@ -65,7 +70,7 @@ class NewDefaultDialog extends StatelessWidget {
             color: cp.isDark ? cp.field : cp.habitBg,
             shape: BoxShape.circle,
           ),
-          child: titleIcon ?? SvgPicture.asset(titleIconSvgPath!),
+          child: titleIcon ?? _assetIcon(titleIconPath!),
         ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

@@ -977,7 +977,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageMedications1 =>
-      'pravilno održavanje štiti tvoju zdravstvenu rutinu';
+      'redovno pridržavanje lijekova štiti tvoju zdravlje';
 
   @override
   String get notificationEncourageMedications2 =>
@@ -3383,7 +3383,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String premadeHealthSyncDesc(Object source) {
-    return 'Habitt može čitati $source kako bi sinhronizirao tvoje podatke i automatski završio ovu naviku umjesto tebe. Odmah nakon toga telefon će tražiti pristup: moraš ga dozvoliti da bi sinhronizacija radila. Samo je za čitanje, a tvoji podaci ostaju na tvom uređaju.';
+    return 'Habitt može čitati $source kako bi sinhronizirao tvoje podatke i umjesto tebe završio ovu naviku.';
   }
 
   @override
@@ -3588,7 +3588,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get supportSheetDesc =>
-      'Teme i sigurnosna kopija u oblaku su besplatne za sve. Podržavaoci su ono što drži Habitt u životu.';
+      'Boje i backup su besplatni za sve. Budi donator kako bi podržao razvoj Habitta.';
 
   @override
   String get supportNotNow => 'Ne sada';
@@ -3686,4 +3686,9 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get whatsNewThemesDesc =>
       'Učini Habitt svojim s novim bojama naglaska, besplatno za sve.';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'Moraš dozvoliti pristup $source da bi sinhronizacija radila.';
+  }
 }

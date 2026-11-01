@@ -5714,7 +5714,7 @@ abstract class AppLocalizations {
   /// No description provided for @premadeHealthSyncDesc.
   ///
   /// In en, this message translates to:
-  /// **'Habitt can read {source} to sync your data and complete this habit for you automatically. Right after, your phone will ask for access: you need to allow it for syncing to work. It\'s read-only and your data stays on your device.'**
+  /// **'Habitt can read {source} to sync your data and complete this habit for you.'**
   String premadeHealthSyncDesc(Object source);
 
   /// No description provided for @premadeHealthSyncAccept.
@@ -6086,7 +6086,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportSheetDesc.
   ///
   /// In en, this message translates to:
-  /// **'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.'**
+  /// **'Themes and cloud backup are free for everyone. Supporters help keep Habitt going.'**
   String get supportSheetDesc;
 
   /// No description provided for @supportNotNow.
@@ -6249,6 +6249,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Make Habitt yours with new accent colors, free for everyone.'**
   String get whatsNewThemesDesc;
+
+  /// No description provided for @premadeHealthSyncAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to allow {source} access for syncing to work.'**
+  String premadeHealthSyncAllow(Object source);
 }
 
 class _AppLocalizationsDelegate
