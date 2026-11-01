@@ -120,6 +120,7 @@ Future<void> _offerReminder(
           hasReminders: sp.habitNotificationTimes.isNotEmpty,
           remindersEnabled: sp.habitNotificationsEnabled,
           isRange: isRange,
+          startMinutes: startMinutes,
         ),
   );
   if (offset == null) return;

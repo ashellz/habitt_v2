@@ -15,11 +15,13 @@ class ScheduleReminderDialog extends StatefulWidget {
     required this.hasReminders,
     required this.remindersEnabled,
     required this.isRange,
+    required this.startMinutes,
   });
 
   final bool hasReminders;
   final bool remindersEnabled;
   final bool isRange;
+  final int startMinutes;
 
   @override
   State<ScheduleReminderDialog> createState() => _ScheduleReminderDialogState();
@@ -50,7 +52,7 @@ class _ScheduleReminderDialogState extends State<ScheduleReminderDialog> {
       child: Column(
         spacing: 10,
         children: [
-          for (final offset in scheduleReminderOffsets)
+          for (final offset in availableReminderOffsets(widget.startMinutes))
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => setState(() => _selected = offset),

@@ -27,14 +27,26 @@ void main() {
       expect(reminderMinutesFor(10 * 60 + 5, 15), 9 * 60 + 50);
     });
 
-    test('midnight edge: wraps to the previous evening', () {
-      // 00:10, 15 minutes before
-      expect(reminderMinutesFor(10, 15), 23 * 60 + 55);
-      expect(reminderMinutesFor(0, 30), 23 * 60 + 30);
-      expect(reminderMinutesFor(0, 5), 23 * 60 + 55);
-      // exactly reaching midnight is fine
-      expect(reminderMinutesFor(15, 15), 0);
-      expect(reminderMinutesFor(0, 0), 0);
+    test('midnight edge: offsets crossing midnight are not offered', () {
+      expect(availableReminderOffsets(10), [0, 5, 10]); // 00:10
+      expect(availableReminderOffsets(1), [0]); // 00:01
+      expect(availableReminderOffsets(0), [0]); // 00:00
+      expect(availableReminderOffsets(15), [0, 5, 10, 15]); // 00:15 → 00:00
+      expect(availableReminderOffsets(30), scheduleReminderOffsets);
+      expect(availableReminderOffsets(9 * 60), scheduleReminderOffsets);
+    });
+
+    test('available offsets never go below 00:00', () {
+      for (var m = 0; m < 24 * 60; m++) {
+        for (final o in availableReminderOffsets(m)) {
+          expect(m - o, greaterThanOrEqualTo(0));
+          expect(reminderMinutesFor(m, o), m - o);
+        }
+      }
+    });
+
+    test('reminderMinutesFor clamps defensively at 00:00', () {
+      expect(reminderMinutesFor(10, 15), 0);
     });
 
     test('latest minute of the day stays valid', () {

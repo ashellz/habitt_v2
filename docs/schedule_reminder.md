@@ -10,7 +10,8 @@ After **Done** on the specific-time picker or on the time range dialog,
 `_offerReminder` shows `ScheduleReminderDialog` (a `NewDefaultDialog`):
 
 - At the exact time (start time for a range), 5 / 10 / 15 / 30 minutes before
-  (`scheduleReminderOffsets` in `lib/util/schedule_reminder.dart`).
+  (`scheduleReminderOffsets` in `lib/util/schedule_reminder.dart`), minus any
+  offset that would cross midnight.
 - **Change reminder** pops the offset; **Keep my reminder** / dismiss changes
   nothing.
 
@@ -28,8 +29,10 @@ so). Existing reminders are replaced; the copy states that.
 - Not shown for categories (any time / morning / afternoon / evening), when the
   flow is dismissed, or when the start time is unchanged (changing only the end of a range never asks).
 - Not shown for the inline start/end edits on the sheet (`editScheduleTime`).
-- `reminderMinutesFor` **wraps** around midnight: schedule 00:10 + 15 min
-  before → 23:55. (The reminder's weekdays still follow the habit schedule, so
-  for a day-restricted habit that early reminder lands on the scheduled day.)
+- Offsets that would cross midnight are **not offered**
+  (`availableReminderOffsets`): the reminder's weekdays follow the habit's
+  schedule (daily / weekly / monthly / every N days), so it can't be moved to
+  the previous day. 00:10 → at time, 5, 10 min before; 00:01 → at time only;
+  00:15 + 15 min = 00:00 is fine.
 - The alarm flag and sound choice are untouched (they live on the habit, not on
   the slots); reminder text doesn't depend on the slot's time.

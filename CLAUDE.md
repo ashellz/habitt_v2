@@ -100,7 +100,7 @@ Habits can be set to "alarm" instead of a normal notification (rings until dismi
 
 ### Schedule → Reminder Prompt
 
-Setting an exact time / time range in the habit sheet offers to move the habit's reminder to match (editor state only, offsets wrap around midnight). Documented at [`docs/schedule_reminder.md`](docs/schedule_reminder.md).
+Setting an exact time / time range in the habit sheet offers to move the habit's reminder to match (editor state only, offsets that would cross midnight aren't offered). Documented at [`docs/schedule_reminder.md`](docs/schedule_reminder.md).
 
 ### Support Asks
 
