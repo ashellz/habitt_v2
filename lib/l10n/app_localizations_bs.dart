@@ -3677,12 +3677,6 @@ class AppLocalizationsBs extends AppLocalizations {
       'Podsjetnici su isključeni za ovu naviku. Odabirom vremena uključit će se s jednim podsjetnikom.';
 
   @override
-  String get scheduleReminderSet => 'Promijeni podsjetnik';
-
-  @override
-  String get scheduleReminderKeep => 'Zadrži moj podsjetnik';
-
-  @override
   String get scheduleReminderAtTime => 'U tačno vrijeme';
 
   @override

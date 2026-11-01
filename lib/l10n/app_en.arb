@@ -1353,8 +1353,6 @@
   "scheduleReminderDescReplace": "Your current reminders will be replaced by a single reminder at the time you choose.",
   "scheduleReminderDescAdd": "Pick when you want to be reminded about this habit.",
   "scheduleReminderDescOff": "Reminders are off for this habit. Choosing a time turns them on with a single reminder.",
-  "scheduleReminderSet": "Change reminder",
-  "scheduleReminderKeep": "Keep my reminder",
   "scheduleReminderAtTime": "At the exact time",
   "scheduleReminderAtStart": "At the start time",
   "scheduleReminderMinutesBefore": "{minutes} minutes before",

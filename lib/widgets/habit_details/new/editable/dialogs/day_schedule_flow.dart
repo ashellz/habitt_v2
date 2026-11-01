@@ -87,9 +87,7 @@ Future<void> showDayScheduleFlow(BuildContext context) async {
       );
       if (result == null || !context.mounted) return;
       if (result == ScheduleTimePickerDialog.back) continue;
-      final changed = _startChanged(sp, result);
-      _applyInterval(sp, result, result);
-      if (changed) await _offerReminder(context, sp, result, isRange: false);
+      await _applyAndOfferReminder(context, sp, result, result);
       return;
     }
 
@@ -98,10 +96,27 @@ Future<void> showDayScheduleFlow(BuildContext context) async {
   }
 }
 
-// whether the start time differs from what the sheet held (a habit that had
-// no timed schedule yet counts as changed). The end time alone never asks.
-bool _startChanged(StateProvider sp, int start) =>
-    !sp.timeIntervalEnabled || sp.timeIntervalStart != start;
+/// Applies the interval, then offers to move the reminder if the start time
+/// changed or the schedule kind did (category / range → specific time, etc.).
+/// Changing only the end of a range never asks.
+Future<void> _applyAndOfferReminder(
+  BuildContext context,
+  StateProvider sp,
+  int start,
+  int end,
+) async {
+  final before = currentDaySchedule(sp);
+  final startBefore = sp.timeIntervalStart;
+  _applyInterval(sp, start, end);
+  final after = currentDaySchedule(sp);
+  if (before == after && startBefore == start) return;
+  await _offerReminder(
+    context,
+    sp,
+    start,
+    isRange: after == DaySchedule.timeRange,
+  );
+}
 
 /// Asks whether the habit's reminder should follow the new schedule time and,
 /// if so, replaces the reminders in the editor state with a single one. Only
@@ -153,9 +168,7 @@ Future<bool?> _timeRangeSteps(
       case TimeRangeAction.back:
         return false;
       case TimeRangeAction.done:
-        final changed = _startChanged(sp, start);
-        _applyInterval(sp, start, end);
-        if (changed) await _offerReminder(context, sp, start, isRange: true);
+        await _applyAndOfferReminder(context, sp, start, end);
         return true;
       case TimeRangeAction.editStart:
       case TimeRangeAction.editEnd:
@@ -216,16 +229,20 @@ Future<void> editScheduleTime(
     title: editingStart ? loc.setStartTime : loc.setEndTime,
     initialMinutes: editingStart ? sp.timeIntervalStart : sp.timeIntervalEnd,
   );
-  if (result == null || result == ScheduleTimePickerDialog.back) return;
+  if (result == null ||
+      result == ScheduleTimePickerDialog.back ||
+      !context.mounted) {
+    return;
+  }
 
   if (isSpecific) {
-    _applyInterval(sp, result, result);
+    await _applyAndOfferReminder(context, sp, result, result);
   } else if (editingStart) {
     // a range can't collapse into a specific time from here
     if (result == sp.timeIntervalEnd) return;
-    _applyInterval(sp, result, sp.timeIntervalEnd);
+    await _applyAndOfferReminder(context, sp, result, sp.timeIntervalEnd);
   } else {
     if (result == sp.timeIntervalStart) return;
-    _applyInterval(sp, sp.timeIntervalStart, result);
+    await _applyAndOfferReminder(context, sp, sp.timeIntervalStart, result);
   }
 }

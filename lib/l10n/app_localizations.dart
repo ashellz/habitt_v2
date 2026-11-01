@@ -6238,18 +6238,6 @@ abstract class AppLocalizations {
   /// **'Reminders are off for this habit. Choosing a time turns them on with a single reminder.'**
   String get scheduleReminderDescOff;
 
-  /// No description provided for @scheduleReminderSet.
-  ///
-  /// In en, this message translates to:
-  /// **'Change reminder'**
-  String get scheduleReminderSet;
-
-  /// No description provided for @scheduleReminderKeep.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep my reminder'**
-  String get scheduleReminderKeep;
-
   /// No description provided for @scheduleReminderAtTime.
   ///
   /// In en, this message translates to:

@@ -3712,12 +3712,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Erinnerungen sind für diese Gewohnheit aus. Wenn du eine Zeit wählst, werden sie mit einer einzelnen Erinnerung eingeschaltet.';
 
   @override
-  String get scheduleReminderSet => 'Erinnerung ändern';
-
-  @override
-  String get scheduleReminderKeep => 'Erinnerung behalten';
-
-  @override
   String get scheduleReminderAtTime => 'Zur genauen Zeit';
 
   @override

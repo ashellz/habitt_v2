@@ -3708,12 +3708,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'I promemoria sono disattivati per questa abitudine. Scegliendo un orario verranno attivati con un unico promemoria.';
 
   @override
-  String get scheduleReminderSet => 'Cambia promemoria';
-
-  @override
-  String get scheduleReminderKeep => 'Mantieni il mio promemoria';
-
-  @override
   String get scheduleReminderAtTime => 'All\'orario esatto';
 
   @override

@@ -1325,8 +1325,6 @@
   "scheduleReminderDescReplace": "Tus recordatorios actuales se sustituirán por un único recordatorio a la hora que elijas.",
   "scheduleReminderDescAdd": "Elige cuándo quieres que te recordemos este hábito.",
   "scheduleReminderDescOff": "Los recordatorios están desactivados para este hábito. Si eliges una hora, se activarán con un único recordatorio.",
-  "scheduleReminderSet": "Cambiar recordatorio",
-  "scheduleReminderKeep": "Mantener mi recordatorio",
   "scheduleReminderAtTime": "A la hora exacta",
   "scheduleReminderAtStart": "A la hora de inicio",
   "scheduleReminderMinutesBefore": "{minutes} minutos antes"

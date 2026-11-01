@@ -3701,12 +3701,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Los recordatorios están desactivados para este hábito. Si eliges una hora, se activarán con un único recordatorio.';
 
   @override
-  String get scheduleReminderSet => 'Cambiar recordatorio';
-
-  @override
-  String get scheduleReminderKeep => 'Mantener mi recordatorio';
-
-  @override
   String get scheduleReminderAtTime => 'A la hora exacta';
 
   @override

@@ -3678,12 +3678,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reminders are off for this habit. Choosing a time turns them on with a single reminder.';
 
   @override
-  String get scheduleReminderSet => 'Change reminder';
-
-  @override
-  String get scheduleReminderKeep => 'Keep my reminder';
-
-  @override
   String get scheduleReminderAtTime => 'At the exact time';
 
   @override

@@ -1325,8 +1325,6 @@
   "scheduleReminderDescReplace": "Deine aktuellen Erinnerungen werden durch eine einzelne Erinnerung zur gewählten Zeit ersetzt.",
   "scheduleReminderDescAdd": "Wähle, wann du an diese Gewohnheit erinnert werden möchtest.",
   "scheduleReminderDescOff": "Erinnerungen sind für diese Gewohnheit aus. Wenn du eine Zeit wählst, werden sie mit einer einzelnen Erinnerung eingeschaltet.",
-  "scheduleReminderSet": "Erinnerung ändern",
-  "scheduleReminderKeep": "Erinnerung behalten",
   "scheduleReminderAtTime": "Zur genauen Zeit",
   "scheduleReminderAtStart": "Zur Startzeit",
   "scheduleReminderMinutesBefore": "{minutes} Minuten vorher"
