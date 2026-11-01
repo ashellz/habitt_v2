@@ -217,7 +217,7 @@ void main() {
       expect(provider.appearsOnDay(habit, today), isTrue);
     });
 
-    test('an off-schedule completion with nothing missed keeps the interval',
+    test('an off-schedule completion with nothing missed restarts too',
         () async {
       final provider = await createInitializedProvider();
       // scheduled yesterday (done) and in two days, today is off-schedule
@@ -229,6 +229,29 @@ void main() {
       );
 
       habit.completed = true; // e.g. from the habit details page
+      await provider.updateHabitInDB(habit);
+
+      expect(
+        habit.customAppearance,
+        containsAll([
+          _key(today.subtract(const Duration(days: 1))), // history kept
+          _key(today),
+          _key(today.add(const Duration(days: 3))),
+        ]),
+      );
+      expect(
+        habit.customAppearance,
+        isNot(contains(_key(today.add(const Duration(days: 2))))),
+      );
+    });
+
+    test('without "show if missed" an off-schedule completion keeps the grid',
+        () async {
+      final provider = await createInitializedProvider();
+      final habit = _customHabit(anchorDaysAgo: 1, showIfMissed: false);
+      await habitBox.add(habit);
+
+      habit.completed = true;
       await provider.updateHabitInDB(habit);
 
       expect(habit.customAppearance, isNot(contains(_key(today))));

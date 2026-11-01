@@ -615,9 +615,7 @@ class HabitProvider extends ChangeNotifier {
 
   // Whether [day] falls in a carry-over stretch: the habit's last scheduled
   // day before it was missed and nothing was completed from then until the
-  // day before [day]. Unlike _isMissedCarryOverDay it works for past days
-  // too, which is what lets a late completion logged on a past day (from
-  // "Other habits") restart the interval from that day.
+  // day before [day].
   bool _isCarryOverDay(Habit habit, DateTime day) {
     final target = _normalizeDate(day);
     final createdDay = _normalizeDate(habit.createdAt.toLocal());
@@ -687,9 +685,11 @@ class HabitProvider extends ChangeNotifier {
   // were recorded with so past streaks don't move. Returns whether the
   // schedule changed.
   //
-  // Completed late (on a carry-over day, not a scheduled one): the interval
-  // restarts from that day, "every 3 days" means the next occurrence is 3 days
-  // after the late completion. Dates before the completion day are kept.
+  // Completed on a day it wasn't scheduled (a carry-over day, or an extra
+  // completion from the details page or "Other habits"): the interval restarts
+  // from that day, "every 3 days" means the next occurrence is 3 days after
+  // that completion. Dates before the completion day are kept. Only for
+  // habits with "show if missed" ticked, every other habit keeps its grid.
   //
   // Unticked again: the restart is undone. A restart is the only thing that
   // leaves two kept dates closer together than the interval (editing the
@@ -720,7 +720,6 @@ class HabitProvider extends ChangeNotifier {
 
     if (completedOnDay) {
       if (habit.customAppearance.contains(key)) return false; // on schedule
-      if (!_isCarryOverDay(habit, target)) return false; // not a late one
       habit.customAppearance = [
         ...habit.customAppearance.where((d) => d.compareTo(key) < 0),
         ..._buildCustomAppearance(anchor: target, intervalDays: interval),
