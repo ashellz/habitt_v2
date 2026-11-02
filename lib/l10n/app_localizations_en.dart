@@ -1377,6 +1377,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orToChangeLabel => 'or the amount label';
 
   @override
+  String get otherHabits => 'Other habits';
+
+  @override
   String get passphrase => 'Passphrase';
 
   @override

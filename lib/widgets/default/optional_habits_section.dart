@@ -19,6 +19,7 @@ class OptionalHabitsSection extends StatefulWidget {
     this.expanded = true,
     this.onToggle,
     this.horizontalPadding = 0,
+    this.title,
   });
 
   /// Number of optional habits [builder] lays out.
@@ -37,6 +38,10 @@ class OptionalHabitsSection extends StatefulWidget {
   final VoidCallback? onToggle;
 
   final double horizontalPadding;
+
+  /// Title text, "Optional habits" when null. Lets the same collapsible
+  /// section back "Other habits" on past days.
+  final String? title;
 
   @override
   State<OptionalHabitsSection> createState() => _OptionalHabitsSectionState();
@@ -158,7 +163,10 @@ class _OptionalHabitsSectionState extends State<OptionalHabitsSection>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(loc.optionalHabits, style: TextStyle(color: cp.greyText)),
+            Text(
+              widget.title ?? loc.optionalHabits,
+              style: TextStyle(color: cp.greyText),
+            ),
             if (widget.onToggle != null)
               AnimatedBuilder(
                 animation: _controller,

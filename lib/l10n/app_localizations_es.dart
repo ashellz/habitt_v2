@@ -1379,6 +1379,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get orToChangeLabel => 'o la etiqueta de cantidad';
 
   @override
+  String get otherHabits => 'Otros hábitos';
+
+  @override
   String get passphrase => 'Frase de contraseña';
 
   @override

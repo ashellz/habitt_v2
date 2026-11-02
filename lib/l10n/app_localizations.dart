@@ -2127,6 +2127,12 @@ abstract class AppLocalizations {
   /// **'or the amount label'**
   String get orToChangeLabel;
 
+  /// No description provided for @otherHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Other habits'**
+  String get otherHabits;
+
   /// No description provided for @passphrase.
   ///
   /// In en, this message translates to:

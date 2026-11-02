@@ -1375,6 +1375,9 @@ class AppLocalizationsBs extends AppLocalizations {
   String get orToChangeLabel => 'ili etiketa iznosa';
 
   @override
+  String get otherHabits => 'Ostale navike';
+
+  @override
   String get passphrase => 'Šifra';
 
   @override

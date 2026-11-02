@@ -1382,6 +1382,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get orToChangeLabel => 'o l\'unità di misura';
 
   @override
+  String get otherHabits => 'Altre abitudini';
+
+  @override
   String get passphrase => 'Passphrase';
 
   @override
