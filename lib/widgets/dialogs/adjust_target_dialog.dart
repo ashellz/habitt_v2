@@ -58,7 +58,7 @@ class AdjustTargetDialog extends StatelessWidget {
       secondaryButtonLabel: loc.later,
       onSecondaryButtonPressed: onSecondaryButtonPressed,
       onPrimaryButtonPressed: onPrimaryButtonPressed,
-      titleIconSvgPath: getIcon(),
+      titleIconPath: getIcon(),
       child:
           showSecondaryButton &&
                   currentAmount != null &&

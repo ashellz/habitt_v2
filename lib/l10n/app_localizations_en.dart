@@ -3378,6 +3378,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Understood';
 
   @override
+  String premadeHealthSyncTitle(Object source) {
+    return 'Sync with $source?';
+  }
+
+  @override
+  String premadeHealthSyncDesc(Object source) {
+    return 'Habitt can read $source to sync your data and complete this habit for you.';
+  }
+
+  @override
+  String premadeHealthSyncAccept(Object source) {
+    return 'Use $source';
+  }
+
+  @override
+  String get premadeHealthSyncDecline => 'Track manually';
+
+  @override
+  String healthNoRecentDataHintIos(Object source) {
+    return 'No $source data for the last few days. If you didn\'t allow Habitt access, open Settings → Health → Data Access & Devices → Habitt and turn on the data it needs.';
+  }
+
+  @override
+  String get healthOpenSettings => 'Open Settings';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Whether $source is enabled automatically for new habits that support it.';
+  }
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'Syncing with $source no longer works because Habitt doesn\'t have permission. Your Health habits won\'t update until you allow access in Settings.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Separate optional habits';
 
   @override
@@ -3563,7 +3599,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportSheetDesc =>
-      'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.';
+      'Themes and cloud backup are free for everyone. Supporters help keep Habitt going.';
 
   @override
   String get supportNotNow => 'Not now';
@@ -3690,4 +3726,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requestFeature => 'Request a feature';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'You need to allow $source access for syncing to work.';
+  }
 }

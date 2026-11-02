@@ -3405,6 +3405,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Ho capito';
 
   @override
+  String premadeHealthSyncTitle(Object source) {
+    return 'Sincronizzare con $source?';
+  }
+
+  @override
+  String premadeHealthSyncDesc(Object source) {
+    return 'Habitt può leggere $source per sincronizzare i tuoi dati e completare questa abitudine per te.';
+  }
+
+  @override
+  String premadeHealthSyncAccept(Object source) {
+    return 'Usa $source';
+  }
+
+  @override
+  String get premadeHealthSyncDecline => 'Traccia manualmente';
+
+  @override
+  String healthNoRecentDataHintIos(Object source) {
+    return 'Nessun dato di $source da alcuni giorni. Se non hai consentito l\'accesso a Habitt, apri Impostazioni → Salute → Accesso ai dati e dispositivi → Habitt e attiva i dati necessari.';
+  }
+
+  @override
+  String get healthOpenSettings => 'Apri Impostazioni';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Se $source viene attivato automaticamente per le nuove abitudini che lo supportano.';
+  }
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'La sincronizzazione con $source non funziona più perché Habitt non ha il permesso. Le tue abitudini Salute non si aggiorneranno finché non consenti l\'accesso in Impostazioni.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Separa le abitudini facoltative';
 
   @override
@@ -3720,4 +3756,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get requestFeature => 'Suggerisci una funzione';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'Devi consentire l\'accesso a $source perché la sincronizzazione funzioni.';
+  }
 }

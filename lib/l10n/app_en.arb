@@ -1248,6 +1248,14 @@
   "healthOverrideNoticeTitle": "{source} is paused for this day",
   "healthOverrideNoticeBody": "You changed this progress yourself, so Habitt won't overwrite it with {source} data for this day. Your number stays exactly as you entered it.\n\nWant {source} back? Tap \"Use {source} values\" on this habit.",
   "healthOverrideNoticeUnderstood": "Understood",
+  "premadeHealthSyncTitle": "Sync with {source}?",
+  "premadeHealthSyncDesc": "Habitt can read {source} to sync your data and complete this habit for you.",
+  "premadeHealthSyncAccept": "Use {source}",
+  "premadeHealthSyncDecline": "Track manually",
+  "healthNoRecentDataHintIos": "No {source} data for the last few days. If you didn't allow Habitt access, open Settings → Health → Data Access & Devices → Habitt and turn on the data it needs.",
+  "healthOpenSettings": "Open Settings",
+  "premadeHealthSettingDesc": "Whether {source} is enabled automatically for new habits that support it.",
+  "healthAccessLostMessage": "Syncing with {source} no longer works because Habitt doesn't have permission. Your Health habits won't update until you allow access in Settings.",
   "separateOptionalHabits": "Separate optional habits",
   "separateOptionalHabitsDesc": "Optional habits move out of their categories into their own section at the bottom, which you can collapse.",
   "strengthOverTime": "Strength over time",
@@ -1319,7 +1327,7 @@
   "themeNameViolet": "Violet",
   "themeNameOrchid": "Orchid",
   "supportSheetTitle": "Free for everyone",
-  "supportSheetDesc": "Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.",
+  "supportSheetDesc": "Themes and cloud backup are free for everyone. Supporters help keep Habitt going.",
   "supportNotNow": "Not now",
   "supportHabittRow": "Support Habitt",
   "notificationsOffInSystemTitle": "Notifications are turned off",
@@ -1363,5 +1371,6 @@
       }
     }
   },
-  "requestFeature": "Request a feature"
+  "requestFeature": "Request a feature",
+  "premadeHealthSyncAllow": "You need to allow {source} access for syncing to work."
 }

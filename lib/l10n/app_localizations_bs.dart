@@ -977,7 +977,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get notificationEncourageMedications1 =>
-      'pravilno održavanje štiti tvoju zdravstvenu rutinu';
+      'redovno pridržavanje lijekova štiti tvoju zdravlje';
 
   @override
   String get notificationEncourageMedications2 =>
@@ -3377,6 +3377,42 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Razumijem';
 
   @override
+  String premadeHealthSyncTitle(Object source) {
+    return 'Sinhronizovati s $source?';
+  }
+
+  @override
+  String premadeHealthSyncDesc(Object source) {
+    return 'Habitt može čitati $source kako bi sinhronizirao tvoje podatke i umjesto tebe završio ovu naviku.';
+  }
+
+  @override
+  String premadeHealthSyncAccept(Object source) {
+    return 'Koristi $source';
+  }
+
+  @override
+  String get premadeHealthSyncDecline => 'Prati ručno';
+
+  @override
+  String healthNoRecentDataHintIos(Object source) {
+    return 'Nema $source podataka već nekoliko dana. Ako nisi dozvolio pristup za Habitt, otvori Postavke → Zdravlje → Pristup podacima i uređajima → Habitt i uključi podatke koji su mu potrebni.';
+  }
+
+  @override
+  String get healthOpenSettings => 'Otvori postavke';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Da li se $source automatski uključuje za nove navike koje to podržavaju.';
+  }
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'Sinhronizacija s $source više ne radi jer Habitt nema dozvolu. Tvoje navike vezane za zdravlje neće se ažurirati dok ne dozvoliš pristup u Postavkama.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Odvoji opcionalne navike';
 
   @override
@@ -3562,7 +3598,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get supportSheetDesc =>
-      'Teme i sigurnosna kopija u oblaku su besplatne za sve. Podržavaoci su ono što drži Habitt u životu.';
+      'Boje i backup su besplatni za sve. Budi donator kako bi podržao razvoj Habitta.';
 
   @override
   String get supportNotNow => 'Ne sada';
@@ -3689,4 +3725,9 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get requestFeature => 'Predloži funkciju';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'Moraš dozvoliti pristup $source da bi sinhronizacija radila.';
+  }
 }

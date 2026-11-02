@@ -5705,6 +5705,54 @@ abstract class AppLocalizations {
   /// **'Understood'**
   String get healthOverrideNoticeUnderstood;
 
+  /// No description provided for @premadeHealthSyncTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with {source}?'**
+  String premadeHealthSyncTitle(Object source);
+
+  /// No description provided for @premadeHealthSyncDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Habitt can read {source} to sync your data and complete this habit for you.'**
+  String premadeHealthSyncDesc(Object source);
+
+  /// No description provided for @premadeHealthSyncAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {source}'**
+  String premadeHealthSyncAccept(Object source);
+
+  /// No description provided for @premadeHealthSyncDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Track manually'**
+  String get premadeHealthSyncDecline;
+
+  /// No description provided for @healthNoRecentDataHintIos.
+  ///
+  /// In en, this message translates to:
+  /// **'No {source} data for the last few days. If you didn\'t allow Habitt access, open Settings → Health → Data Access & Devices → Habitt and turn on the data it needs.'**
+  String healthNoRecentDataHintIos(Object source);
+
+  /// No description provided for @healthOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get healthOpenSettings;
+
+  /// No description provided for @premadeHealthSettingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Whether {source} is enabled automatically for new habits that support it.'**
+  String premadeHealthSettingDesc(Object source);
+
+  /// No description provided for @healthAccessLostMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing with {source} no longer works because Habitt doesn\'t have permission. Your Health habits won\'t update until you allow access in Settings.'**
+  String healthAccessLostMessage(Object source);
+
   /// No description provided for @separateOptionalHabits.
   ///
   /// In en, this message translates to:
@@ -6050,7 +6098,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportSheetDesc.
   ///
   /// In en, this message translates to:
-  /// **'Themes and cloud backup are free for everyone. Supporters are what keep Habitt going.'**
+  /// **'Themes and cloud backup are free for everyone. Supporters help keep Habitt going.'**
   String get supportSheetDesc;
 
   /// No description provided for @supportNotNow.
@@ -6261,6 +6309,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request a feature'**
   String get requestFeature;
+
+  /// No description provided for @premadeHealthSyncAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to allow {source} access for syncing to work.'**
+  String premadeHealthSyncAllow(Object source);
 }
 
 class _AppLocalizationsDelegate

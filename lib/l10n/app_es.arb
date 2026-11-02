@@ -1237,6 +1237,15 @@
   "healthOverrideNoticeTitle": "{source} está en pausa para este día",
   "healthOverrideNoticeBody": "Has cambiado el progreso manualmente, así que Habitt no lo sobrescribirá con datos de {source} en este día. Tu cifra se queda exactamente como la introdujiste.\n\n¿Quieres volver a {source}? Toca \"Usar los valores de {source}\" en este hábito.",
   "healthOverrideNoticeUnderstood": "Entendido",
+  "premadeHealthSyncTitle": "¿Sincronizar con {source}?",
+  "premadeHealthSyncDesc": "Habitt puede leer {source} para sincronizar tus datos y completar este hábito por ti.",
+  "premadeHealthSyncAccept": "Usar {source}",
+  "premadeHealthSyncDecline": "Registrar manualmente",
+  "healthNoRecentDataHintIos": "No hay datos de {source} desde hace unos días. Si no permitiste el acceso a Habitt, abre Ajustes → Salud → Acceso a datos y dispositivos → Habitt y activa los datos que necesita.",
+  "healthOpenSettings": "Abrir Ajustes",
+  "premadeHealthSettingDesc": "Si {source} se activa automáticamente para los nuevos hábitos que lo admiten.",
+  
+  "healthAccessLostMessage": "La sincronización con {source} ya no funciona porque Habitt no tiene permiso. Tus hábitos de Salud no se actualizarán hasta que permitas el acceso en Ajustes.",
   "separateOptionalHabits": "Separar hábitos opcionales",
   "separateOptionalHabitsDesc": "Los hábitos opcionales salen de sus categorías y pasan a su propia sección al final, que puedes contraer.",
   "strengthOverTime": "Fuerza a lo largo del tiempo",
@@ -1328,5 +1337,6 @@
   "scheduleReminderAtTime": "A la hora exacta",
   "scheduleReminderAtStart": "A la hora de inicio",
   "scheduleReminderMinutesBefore": "{minutes} minutos antes",
-  "requestFeature": "Sugerir una función"
+  "requestFeature": "Sugerir una función",
+  "premadeHealthSyncAllow": "Debes permitir el acceso a {source} para que la sincronización funcione."
 }

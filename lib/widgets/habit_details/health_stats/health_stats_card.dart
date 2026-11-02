@@ -9,10 +9,12 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/util/health_history.dart';
+import 'package:habitt/util/health_missing_data.dart';
 import 'package:habitt/widgets/default/health_override_tag.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_sessions_list.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_week_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 // health stats widget for details page
@@ -59,6 +61,13 @@ class HealthStatsCard extends StatelessWidget {
         spacing: 16,
         children: [
           _Header(),
+          if (Platform.isIOS &&
+              shouldHintHealthAccess(
+                history: history,
+                createdAt: habit.createdAt.toLocal(),
+                today: today,
+              ))
+            _AccessHint(),
           if (latest != null)
             HealthOverrideTag(habit: latest, day: history.points.last.day),
           _chartSection(cp, loc, history),
@@ -126,6 +135,38 @@ extension on HealthMetricType {
       this != HealthMetricType.steps &&
       this != HealthMetricType.activeCalories &&
       this != HealthMetricType.totalCalories;
+}
+
+// iOS can't report a refused Health prompt, so after a few empty days we ask
+// the user to check the access themselves
+class _AccessHint extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cp = context.watch<ColorProvider>();
+    final loc = AppLocalizations.of(context)!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        Text(
+          loc.healthNoRecentDataHintIos('Apple Health'),
+          style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+        ),
+        GestureDetector(
+          onTap: openAppSettings,
+          child: Text(
+            loc.healthOpenSettings,
+            style: TextStyle(
+              color: cp.main,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 // ─── Header ─────────────────────────────────────────────

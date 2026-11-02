@@ -17,10 +17,10 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/dual_option_selector.dart';
 import 'package:habitt/widgets/default/multiple_option_selector.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
-import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/healt_metric_picker_dialog.dart';
 import 'package:habitt/widgets/dialogs/health_time_of_day_dialog.dart';
+import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:habitt/widgets/dialogs/workout_type_picker_dialog.dart';
 import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.dart';
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
@@ -61,8 +61,6 @@ class _HealthWidgetState extends State<HealthWidget> {
   Future<void> _handleToggle(bool value) async {
     final sp = context.read<StateProvider>();
     final healthProvider = context.read<HealthProvider>();
-    final loc = AppLocalizations.of(context)!;
-
     if (!value) {
       sp.selectedHealthMetric = null;
       sp.selectedHealthWorkoutFilter = null;
@@ -72,7 +70,7 @@ class _HealthWidgetState extends State<HealthWidget> {
     final granted = await healthProvider.requestPermissionIfNeeded();
     if (!mounted) return;
     if (!granted) {
-      await _showHealthPermissionDeniedDialog(loc);
+      await showHealthPermissionDeniedDialog(context);
       return;
     }
 
@@ -675,22 +673,6 @@ class _HealthWidgetState extends State<HealthWidget> {
       default:
         return '';
     }
-  }
-
-  Future<void> _showHealthPermissionDeniedDialog(AppLocalizations loc) async {
-    await showDialogSheet(
-      context: context,
-      builder:
-          (dialogContext) => NewDefaultDialog(
-            title:
-                Platform.isIOS
-                    ? loc.healthSyncSectionTitleApple
-                    : loc.healthSyncSectionTitleAndroid,
-            desc: loc.healthPermissionDeniedMessage,
-            showSecondaryButton: false,
-            primaryButtonLabel: loc.gotIt,
-          ),
-    );
   }
 }
 

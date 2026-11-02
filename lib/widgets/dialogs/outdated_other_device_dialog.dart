@@ -20,7 +20,7 @@ class OutdatedOtherDeviceDialog extends StatelessWidget {
       showSecondaryButton: false,
       primaryButtonLabel: loc.gotIt,
       onPrimaryButtonPressed: () => Navigator.pop(context),
-      titleIconSvgPath: 'assets/images/new-svg/update.svg',
+      titleIconPath: 'assets/images/new-svg/update.svg',
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(

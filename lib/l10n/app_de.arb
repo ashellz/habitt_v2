@@ -1237,6 +1237,15 @@
   "healthOverrideNoticeTitle": "{source} ist für diesen Tag pausiert",
   "healthOverrideNoticeBody": "Du hast den Fortschritt selbst geändert, deshalb überschreibt Habitt ihn für diesen Tag nicht mit Daten aus {source}. Dein Wert bleibt genau so, wie du ihn eingegeben hast.\n\nMöchtest du {source} zurück? Tippe bei dieser Gewohnheit auf \"{source}-Werte verwenden\".",
   "healthOverrideNoticeUnderstood": "Verstanden",
+  "premadeHealthSyncTitle": "Mit {source} synchronisieren?",
+  "premadeHealthSyncDesc": "Habitt kann {source} lesen, um deine Daten zu synchronisieren und diese Gewohnheit für dich abzuschließen.",
+  "premadeHealthSyncAccept": "{source} verwenden",
+  "premadeHealthSyncDecline": "Manuell erfassen",
+  "healthNoRecentDataHintIos": "Seit einigen Tagen keine {source}-Daten. Falls du Habitt den Zugriff nicht erlaubt hast, öffne Einstellungen → Health → Datenzugriff & Geräte → Habitt und aktiviere die benötigten Daten.",
+  "healthOpenSettings": "Einstellungen öffnen",
+  "premadeHealthSettingDesc": "Ob {source} automatisch für neue Gewohnheiten aktiviert wird, die dies unterstützen.",
+  
+  "healthAccessLostMessage": "Die Synchronisierung mit {source} funktioniert nicht mehr, weil Habitt keine Berechtigung hat. Deine Health-Gewohnheiten werden erst wieder aktualisiert, wenn du den Zugriff in den Einstellungen erlaubst.",
   "separateOptionalHabits": "Optionale Gewohnheiten trennen",
   "separateOptionalHabitsDesc": "Optionale Gewohnheiten wandern aus ihren Kategorien in einen eigenen Bereich am Ende, den du einklappen kannst.",
   "strengthOverTime": "Stärke im Zeitverlauf",
@@ -1328,5 +1337,6 @@
   "scheduleReminderAtTime": "Zur genauen Zeit",
   "scheduleReminderAtStart": "Zur Startzeit",
   "scheduleReminderMinutesBefore": "{minutes} Minuten vorher",
-  "requestFeature": "Funktion vorschlagen"
+  "requestFeature": "Funktion vorschlagen",
+  "premadeHealthSyncAllow": "Du musst den Zugriff auf {source} erlauben, damit die Synchronisierung funktioniert."
 }

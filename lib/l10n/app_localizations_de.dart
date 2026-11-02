@@ -3408,6 +3408,42 @@ class AppLocalizationsDe extends AppLocalizations {
   String get healthOverrideNoticeUnderstood => 'Verstanden';
 
   @override
+  String premadeHealthSyncTitle(Object source) {
+    return 'Mit $source synchronisieren?';
+  }
+
+  @override
+  String premadeHealthSyncDesc(Object source) {
+    return 'Habitt kann $source lesen, um deine Daten zu synchronisieren und diese Gewohnheit für dich abzuschließen.';
+  }
+
+  @override
+  String premadeHealthSyncAccept(Object source) {
+    return '$source verwenden';
+  }
+
+  @override
+  String get premadeHealthSyncDecline => 'Manuell erfassen';
+
+  @override
+  String healthNoRecentDataHintIos(Object source) {
+    return 'Seit einigen Tagen keine $source-Daten. Falls du Habitt den Zugriff nicht erlaubt hast, öffne Einstellungen → Health → Datenzugriff & Geräte → Habitt und aktiviere die benötigten Daten.';
+  }
+
+  @override
+  String get healthOpenSettings => 'Einstellungen öffnen';
+
+  @override
+  String premadeHealthSettingDesc(Object source) {
+    return 'Ob $source automatisch für neue Gewohnheiten aktiviert wird, die dies unterstützen.';
+  }
+
+  @override
+  String healthAccessLostMessage(Object source) {
+    return 'Die Synchronisierung mit $source funktioniert nicht mehr, weil Habitt keine Berechtigung hat. Deine Health-Gewohnheiten werden erst wieder aktualisiert, wenn du den Zugriff in den Einstellungen erlaubst.';
+  }
+
+  @override
   String get separateOptionalHabits => 'Optionale Gewohnheiten trennen';
 
   @override
@@ -3724,4 +3760,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get requestFeature => 'Funktion vorschlagen';
+
+  @override
+  String premadeHealthSyncAllow(Object source) {
+    return 'Du musst den Zugriff auf $source erlauben, damit die Synchronisierung funktioniert.';
+  }
 }
