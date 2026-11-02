@@ -1244,9 +1244,7 @@
   "healthNoRecentDataHintIos": "Seit einigen Tagen keine {source}-Daten. Falls du Habitt den Zugriff nicht erlaubt hast, öffne Einstellungen → Health → Datenzugriff & Geräte → Habitt und aktiviere die benötigten Daten.",
   "healthOpenSettings": "Einstellungen öffnen",
   "premadeHealthSettingDesc": "Ob {source} automatisch für neue Gewohnheiten aktiviert wird, die dies unterstützen.",
-  "premadeHealthChoiceAsk": "Fragen",
-  "premadeHealthChoiceSync": "Sync",
-  "premadeHealthChoiceManual": "Manuell",
+  
   "healthAccessLostMessage": "Die Synchronisierung mit {source} funktioniert nicht mehr, weil Habitt keine Berechtigung hat. Deine Health-Gewohnheiten werden erst wieder aktualisiert, wenn du den Zugriff in den Einstellungen erlaubst.",
   "separateOptionalHabits": "Optionale Gewohnheiten trennen",
   "separateOptionalHabitsDesc": "Optionale Gewohnheiten wandern aus ihren Kategorien in einen eigenen Bereich am Ende, den du einklappen kannst.",

@@ -5747,24 +5747,6 @@ abstract class AppLocalizations {
   /// **'Whether {source} is enabled automatically for new habits that support it.'**
   String premadeHealthSettingDesc(Object source);
 
-  /// No description provided for @premadeHealthChoiceAsk.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask'**
-  String get premadeHealthChoiceAsk;
-
-  /// No description provided for @premadeHealthChoiceSync.
-  ///
-  /// In en, this message translates to:
-  /// **'Sync'**
-  String get premadeHealthChoiceSync;
-
-  /// No description provided for @premadeHealthChoiceManual.
-  ///
-  /// In en, this message translates to:
-  /// **'Manual'**
-  String get premadeHealthChoiceManual;
-
   /// No description provided for @healthAccessLostMessage.
   ///
   /// In en, this message translates to:

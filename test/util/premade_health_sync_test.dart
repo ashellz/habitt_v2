@@ -19,12 +19,12 @@ void main() {
     bool hasMetric = true,
     bool available = true,
     bool supported = true,
-    PremadeHealthChoice saved = PremadeHealthChoice.ask,
+    bool? saved,
   }) => decidePremadeHealthPrompt(
     template: hasMetric ? steps : buildTestTemplate(amount: 1),
     isAvailable: available,
     isMetricSupported: supported,
-    savedChoice: saved,
+    savedSync: saved,
   );
 
   group('decidePremadeHealthPrompt', () {
@@ -32,65 +32,47 @@ void main() {
       expect(decide(hasMetric: false), PremadeHealthDecision.notHealthLinked);
     });
 
-    test('asks while there is no standing answer', () {
+    test('asks while the user has never decided', () {
       expect(decide(), PremadeHealthDecision.ask);
     });
 
-    test('a saved "Health" answer links it without asking', () {
-      expect(
-        decide(saved: PremadeHealthChoice.health),
-        PremadeHealthDecision.useHealth,
-      );
+    test('setting on links Health without asking', () {
+      expect(decide(saved: true), PremadeHealthDecision.useHealth);
     });
 
-    test('a saved "manual" answer opens manual without asking', () {
-      expect(
-        decide(saved: PremadeHealthChoice.manual),
-        PremadeHealthDecision.useManual,
-      );
+    test('setting off opens manual without asking', () {
+      expect(decide(saved: false), PremadeHealthDecision.useManual);
     });
 
-    test(
-      'unavailable Health or unsupported metric is manual, answer or not',
-      () {
-        for (final saved in PremadeHealthChoice.values) {
-          expect(
-            decide(available: false, saved: saved),
-            PremadeHealthDecision.manualOnly,
-          );
-          expect(
-            decide(supported: false, saved: saved),
-            PremadeHealthDecision.manualOnly,
-          );
-        }
-      },
-    );
+    test('unavailable Health or unsupported metric is manual, set or not', () {
+      for (final saved in [null, true, false]) {
+        expect(
+          decide(available: false, saved: saved),
+          PremadeHealthDecision.manualOnly,
+        );
+        expect(
+          decide(supported: false, saved: saved),
+          PremadeHealthDecision.manualOnly,
+        );
+      }
+    });
 
-    test('every Health premade in the catalog asks until answered', () {
+    test('every Health premade in the catalog asks only until decided', () {
       var count = 0;
       for (final section in PremadeHabitCatalog.sections) {
         for (final t in section.habits) {
           if (t.defaultHealthMetric == null) continue;
           count++;
-          PremadeHealthDecision d(PremadeHealthChoice c) =>
-              decidePremadeHealthPrompt(
-                template: t,
-                isAvailable: true,
-                isMetricSupported: true,
-                savedChoice: c,
-              );
-          expect(
-            d(PremadeHealthChoice.ask),
-            PremadeHealthDecision.ask,
-            reason: t.type.name,
+          PremadeHealthDecision d(bool? saved) => decidePremadeHealthPrompt(
+            template: t,
+            isAvailable: true,
+            isMetricSupported: true,
+            savedSync: saved,
           );
+          expect(d(null), PremadeHealthDecision.ask, reason: t.type.name);
+          expect(d(true), PremadeHealthDecision.useHealth, reason: t.type.name);
           expect(
-            d(PremadeHealthChoice.health),
-            PremadeHealthDecision.useHealth,
-            reason: t.type.name,
-          );
-          expect(
-            d(PremadeHealthChoice.manual),
+            d(false),
             PremadeHealthDecision.useManual,
             reason: t.type.name,
           );
@@ -100,24 +82,16 @@ void main() {
     });
   });
 
-  group('saved choice', () {
+  group('saved setting', () {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
-    test('is null until set, then round-trips every value', () async {
-      expect(await loadPremadeHealthChoice(), isNull);
-      for (final c in PremadeHealthChoice.values) {
-        await savePremadeHealthChoice(c);
-        expect(await loadPremadeHealthChoice(), c);
-      }
+    test('is null until decided, then keeps whatever was saved', () async {
+      expect(await loadPremadeHealthSync(), isNull);
+      await savePremadeHealthSync(false);
+      expect(await loadPremadeHealthSync(), isFalse);
+      await savePremadeHealthSync(true);
+      expect(await loadPremadeHealthSync(), isTrue);
     });
-
-    test(
-      'an explicit "ask" is stored, not treated as never answered',
-      () async {
-        await savePremadeHealthChoice(PremadeHealthChoice.ask);
-        expect(await loadPremadeHealthChoice(), PremadeHealthChoice.ask);
-      },
-    );
   });
 
   group('StateProvider.disablePremadeHealthSync', () {

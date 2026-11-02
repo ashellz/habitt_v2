@@ -1233,10 +1233,9 @@
   "premadeHealthSyncDecline": "Prati ručno",
   "healthNoRecentDataHintIos": "Nema {source} podataka već nekoliko dana. Ako nisi dozvolio pristup za Habitt, otvori Postavke → Zdravlje → Pristup podacima i uređajima → Habitt i uključi podatke koji su mu potrebni.",
   "healthOpenSettings": "Otvori postavke",
-  "premadeHealthSettingDesc": "Da li je {source} automatski uključen za nove navike koje ga podržavaju.",
-  "premadeHealthChoiceAsk": "Pitaj",
-  "premadeHealthChoiceSync": "Sinhroniziraj",
-  "premadeHealthChoiceManual": "Ručno",
+  "premadeHealthSettingTitle": "Sinhronizacija zdravlja za gotove navike",
+  "premadeHealthSettingDesc": "Da li se gotove navike poput Sna ili Koraka sinhroniziraju s {source}.",
+
   "healthAccessLostMessage": "Sinhronizacija s {source} više ne radi jer Habitt nema dozvolu. Tvoje navike vezane za zdravlje neće se ažurirati dok ne dozvoliš pristup u Postavkama.",
   "separateOptionalHabits": "Odvoji opcionalne navike",
   "separateOptionalHabitsDesc": "Opcionalne navike izlaze iz svojih kategorija u zasebnu sekciju pri dnu, koju možeš sklopiti.",

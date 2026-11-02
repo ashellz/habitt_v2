@@ -127,30 +127,28 @@ user is asked in-app first, so the OS prompt is never a surprise:
    Declining just drops the Health field from the applied set; denial reverts
    the toggle like above.
 
-**Asked once, then remembered.** The first premade Health habit ever picked
-shows the dialog, and only that very first answer is written to
-`premadeHealthSyncChoice` (`SharedPreferences`; absent = never answered, which
-behaves like Ask). After that the dialog never writes the setting again: only
-the Settings row changes it, so a deliberate "Ask" stays "Ask" and keeps
-showing the dialog, and a chosen Sync / Manual is never replaced by anything.
+**Asked once ever, then a setting.** Whether premade Health habits sync is a
+plain on/off stored as `premadeHealthSync` (`SharedPreferences`; absent = not
+decided yet). The first premade Health habit picked while it's absent shows the
+dialog; the answer is saved there and the dialog never shows again. Toggling
+Settings → Preferences → "Health sync for premade habits" (`PremadeHealthSetting`)
+also sets it, and from then on only that toggle changes it. The toggle is shown
+on iOS / Android only when Health is available; not decided yet reads as off.
 `decidePremadeHealthPrompt`
 ([`lib/util/premade_health_sync.dart`](../lib/util/premade_health_sync.dart))
 decides:
-decides without asking:
 
 - Template has no Health metric: nothing to ask, nothing changes.
 - Health isn't available (web/desktop, Health Connect missing) or the platform
   doesn't support the metric (Mindfulness on Android): the sheet opens with sync
-  **off**, no dialog, and the saved answer is left alone.
-- Saved **Health**: Health is linked without asking; the OS permission request
+  **off**, no dialog, and the setting is left alone.
+- Not decided yet: the dialog.
+- Setting **on**: Health is linked without asking; the OS permission request
   still runs (silent when access is already granted, and the first time it asks
   for any newer data type such as Activity or Workouts). If Android refuses it,
-  the habit reverts to manual silently and the saved answer stays "Health".
-- Saved **manual**: the sheet opens with sync off.
-- The answer can be changed any time in Settings → Preferences → "Health sync
-  for premade habits" (Ask / Sync / Manual, `PremadeHealthSetting`), shown only
-  when Health is available on the device. The per-habit Health toggle always
-  works too.
+  the habit reverts to manual silently and the setting stays on.
+- Setting **off**: the sheet opens with sync off.
+- The per-habit Health toggle in the sheet always works regardless.
 - `iosOnly` templates (Activity) are only offered on iOS; the flow is identical.
 
 **Access revoked later (Android).** `HealthProvider.syncNow` re-reads

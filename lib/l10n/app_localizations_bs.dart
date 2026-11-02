@@ -3408,15 +3408,6 @@ class AppLocalizationsBs extends AppLocalizations {
   }
 
   @override
-  String get premadeHealthChoiceAsk => 'Pitaj';
-
-  @override
-  String get premadeHealthChoiceSync => 'Sinhroniziraj';
-
-  @override
-  String get premadeHealthChoiceManual => 'Ručno';
-
-  @override
   String healthAccessLostMessage(Object source) {
     return 'Sinhronizacija s $source više ne radi jer Habitt nema dozvolu. Tvoje navike vezane za zdravlje neće se ažurirati dok ne dozvoliš pristup u Postavkama.';
   }

@@ -3436,15 +3436,6 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get premadeHealthChoiceAsk => 'Chiedi';
-
-  @override
-  String get premadeHealthChoiceSync => 'Sincronizza';
-
-  @override
-  String get premadeHealthChoiceManual => 'Manuale';
-
-  @override
   String healthAccessLostMessage(Object source) {
     return 'La sincronizzazione con $source non funziona più perché Habitt non ha il permesso. Le tue abitudini Salute non si aggiorneranno finché non consenti l\'accesso in Impostazioni.';
   }
