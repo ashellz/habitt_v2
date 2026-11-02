@@ -5071,7 +5071,7 @@ abstract class AppLocalizations {
   /// No description provided for @healthMetricPickerTitle.
   ///
   /// In en, this message translates to:
-  /// **'Choose what to sync'**
+  /// **'What to sync?'**
   String get healthMetricPickerTitle;
 
   /// No description provided for @premadeRequestHabitPrompt.

@@ -1135,7 +1135,7 @@
   "healthToleranceRegular": "Regular",
   "healthToleranceStrict": "Strict",
   "healthLastNight": "Last night",
-  "healthMetricPickerTitle": "Choose what to sync",
+  "healthMetricPickerTitle": "What to sync?",
   "premadeRequestHabitPrompt": "Don't see your habit?",
   "premadeRequestHabitLink": "Suggest one",
   "habitRequestEmailSubject": "Habit Request",

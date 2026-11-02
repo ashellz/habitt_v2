@@ -23,6 +23,7 @@ class NewDefaultDialog extends StatelessWidget {
     this.primaryButtonColor,
     this.showCloseButton = false,
     this.onClose,
+    this.headerAction,
     this.overrideDefaultButtons = false,
     this.tip,
     this.titleIcon,
@@ -42,6 +43,9 @@ class NewDefaultDialog extends StatelessWidget {
 
   final bool showCloseButton;
   final VoidCallback? onClose;
+
+  // Custom widget in the header's trailing slot, e.g. a small Cancel button.
+  final Widget? headerAction;
   final bool overrideDefaultButtons;
   final String? tip;
 
@@ -117,6 +121,11 @@ class NewDefaultDialog extends StatelessWidget {
                     }
                   },
                 ),
+              )
+            else if (headerAction != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: headerAction!,
               ),
           ],
         ),
@@ -132,8 +141,8 @@ class NewDefaultDialog extends StatelessWidget {
     ];
 
     // The header scrolls with the content, except when it holds the close
-    // button: that has to stay reachable.
-    final pinHeader = showCloseButton;
+    // button or a header action: those have to stay reachable.
+    final pinHeader = showCloseButton || headerAction != null;
     final scrolling =
         pinHeader ? contentWidgets : [...headerWidgets, ...contentWidgets];
 

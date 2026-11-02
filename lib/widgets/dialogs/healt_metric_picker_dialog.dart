@@ -5,6 +5,7 @@ import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
+import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,13 @@ class HealthMetricPickerDialog extends StatelessWidget {
     return NewDefaultDialog(
       title: loc.healthMetricPickerTitle,
       overrideDefaultButtons: true,
+      headerAction: NewDefaultButton.secondarySmall(
+        width: null,
+        label: loc.cancel,
+        onPressed: () {
+          if (Navigator.canPop(context)) Navigator.pop(context);
+        },
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         spacing: 8,

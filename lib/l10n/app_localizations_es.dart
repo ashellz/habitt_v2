@@ -2987,7 +2987,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get healthLastNight => 'Anoche';
 
   @override
-  String get healthMetricPickerTitle => 'Elige qué sincronizar';
+  String get healthMetricPickerTitle => '¿Qué sincronizar?';
 
   @override
   String get premadeRequestHabitPrompt => '¿No ves tu hábito?';

@@ -1125,7 +1125,7 @@
   "healthToleranceRegular": "Uobičajeno",
   "healthToleranceStrict": "Strogo",
   "healthLastNight": "Prošle noći",
-  "healthMetricPickerTitle": "Odaberi šta sinhronizovati",
+  "healthMetricPickerTitle": "Šta sinhronizovati?",
   "premadeRequestHabitPrompt": "Ne vidiš svoju naviku?",
   "premadeRequestHabitLink": "Predloži je",
   "habitRequestEmailSubject": "Prijedlog navike",

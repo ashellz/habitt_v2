@@ -2967,7 +2967,7 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthLastNight => 'Prošle noći';
 
   @override
-  String get healthMetricPickerTitle => 'Odaberi šta sinhronizovati';
+  String get healthMetricPickerTitle => 'Šta sinhronizovati?';
 
   @override
   String get premadeRequestHabitPrompt => 'Ne vidiš svoju naviku?';

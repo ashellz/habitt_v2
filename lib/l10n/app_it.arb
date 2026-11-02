@@ -1135,7 +1135,7 @@
   "healthToleranceRegular": "Normale",
   "healthToleranceStrict": "Rigido",
   "healthLastNight": "Stanotte",
-  "healthMetricPickerTitle": "Scegli cosa sincronizzare",
+  "healthMetricPickerTitle": "Cosa sincronizzare?",
   "premadeRequestHabitPrompt": "Non trovi la tua abitudine?",
   "premadeRequestHabitLink": "Suggeriscine una",
   "habitRequestEmailSubject": "Richiesta di abitudine",
