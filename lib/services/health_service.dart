@@ -33,6 +33,15 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 /// `sleep_sessions.dart`) rather than a fixed clock window, so a night that
 /// ends at 13:00 — or a night shift's 07:00–17:00 sleep — lands on the right
 /// day.
+/// One day of one metric as [HealthService.fetchDay] read it: the [value] a
+/// habit is credited with and the [sessions] behind it.
+class HealthDayReading {
+  const HealthDayReading(this.value, this.sessions);
+
+  final int value;
+  final List<HealthSessionDetail> sessions;
+}
+
 class HealthService {
   HealthService({Health? health}) : _health = health ?? Health();
 
@@ -194,7 +203,7 @@ class HealthService {
       // Doesn't gate on the result — sleep/exercise/calories don't depend
       // on this permission, so a denial here shouldn't block requesting
       // those. A denied ACTIVITY_RECOGNITION just means steps reads come
-      // back empty afterwards, which fetchValueForDay already handles.
+      // back empty afterwards, which fetchDay already handles.
       await ph.Permission.activityRecognition.request();
     }
 
@@ -300,11 +309,20 @@ class HealthService {
     }).toList();
   }
 
-  /// The value for [metric] on the calendar [day], in the habit's native
-  /// unit — a raw count for [HealthMetricType.steps]/calories, minutes for
-  /// [HealthMetricType.sleep], seconds for duration-tracked metrics,
-  /// minutes-since-midnight for [bedtime]/[wakeTime]. Returns `null` if the metric isn't supported on this
-  /// platform or the read fails.
+  /// Reads [metric] for the calendar [day] once and returns both the value and
+  /// the sessions behind it, so a sync never reads the same Health data twice
+  /// and the two can't disagree. Returns `null` if the metric isn't supported
+  /// on this platform, the read fails, or a bedtime/wake time has no sleep
+  /// session that day.
+  ///
+  /// The value is in the habit's native unit — a raw count for
+  /// [HealthMetricType.steps]/calories, minutes for [HealthMetricType.sleep],
+  /// seconds for duration-tracked metrics, minutes-since-midnight for
+  /// [HealthMetricType.bedtime]/[HealthMetricType.wakeTime].
+  ///
+  /// The sessions are for display (which workout, what time range), not for
+  /// completion math, and are empty for metrics with no session concept
+  /// (steps, calories).
   ///
   /// [trackingType] only matters for [HealthMetricType.workouts] and
   /// [HealthMetricType.mindfulness]: a habit tracking `amount` gets the
@@ -312,7 +330,7 @@ class HealthService {
   /// underlying read, different aggregation. [workoutFilter] narrows
   /// workout reads to one [HealthWorkoutType]. [bedtimeDayBefore] only
   /// matters for [HealthMetricType.bedtime] — see [_fetchSleepSessions].
-  Future<int?> fetchValueForDay(
+  Future<HealthDayReading?> fetchDay(
     HealthMetricType metric,
     DateTime day, {
     HabitTrackingType? trackingType,
@@ -327,7 +345,8 @@ class HealthService {
       if (metric == HealthMetricType.steps) {
         final start = DateTime(day.year, day.month, day.day);
         final end = start.add(const Duration(days: 1));
-        return _health.getTotalStepsInInterval(start, end);
+        final steps = await _health.getTotalStepsInInterval(start, end);
+        return steps == null ? null : HealthDayReading(steps, const []);
       }
 
       if (_sleepMetrics.contains(metric)) {
@@ -336,13 +355,24 @@ class HealthService {
           day,
           bedtimeDayBefore: bedtimeDayBefore,
         );
+        final details =
+            sessions
+                .map((s) => HealthSessionDetail(start: s.start, end: s.end))
+                .toList();
         switch (metric) {
           case HealthMetricType.bedtime:
             final main = mainSleepSession(sessions);
-            return main == null ? null : _bedtimeMinutesOfDay(main.start);
+            return main == null
+                ? null
+                : HealthDayReading(_bedtimeMinutesOfDay(main.start), details);
           case HealthMetricType.wakeTime:
             final main = mainSleepSession(sessions);
-            return main == null ? null : main.end.hour * 60 + main.end.minute;
+            return main == null
+                ? null
+                : HealthDayReading(
+                  main.end.hour * 60 + main.end.minute,
+                  details,
+                );
           default:
             // Sleep is an amount habit whose target and tolerance are in
             // minutes, not a seconds-based duration habit.
@@ -350,27 +380,46 @@ class HealthService {
               0,
               (sum, session) => sum + session.minutes,
             );
-            return totalMinutes.round();
+            return HealthDayReading(totalMinutes.round(), details);
         }
       }
 
       if (metric == HealthMetricType.workouts) {
         final sessions = await _fetchWorkoutSessions(day, workoutFilter);
-        if (trackingType == HabitTrackingType.amount) return sessions.length;
+        if (trackingType == HabitTrackingType.amount) {
+          return HealthDayReading(sessions.length, sessions);
+        }
         // Workout records carry no duration value — it's the time each
         // session covers.
-        return sessions.fold<int>(
-          0,
-          (sum, session) => sum + session.duration.inSeconds,
+        return HealthDayReading(
+          sessions.fold<int>(
+            0,
+            (sum, session) => sum + session.duration.inSeconds,
+          ),
+          sessions,
         );
       }
 
       if (metric == HealthMetricType.activity) {
         final samples = await _fetchActivitySamples(day);
-        return activeTimeCovered(samples).inSeconds;
+        return HealthDayReading(
+          activeTimeCovered(samples).inSeconds,
+          groupActivityPeriods(samples),
+        );
       }
 
       final points = await _fetchPoints(metric, day);
+      final sessions =
+          _sessionMetrics.contains(metric)
+              ? points
+                  .map(
+                    (point) => HealthSessionDetail(
+                      start: point.dateFrom,
+                      end: point.dateTo,
+                    ),
+                  )
+                  .toList()
+              : const <HealthSessionDetail>[];
 
       if (_countMetrics.contains(metric)) {
         final total = points.fold<double>(0, (sum, point) {
@@ -379,12 +428,12 @@ class HealthService {
               ? sum + value.numericValue.toDouble()
               : sum;
         });
-        return total.round();
+        return HealthDayReading(total.round(), sessions);
       }
 
       if (_dualModeMetrics.contains(metric) &&
           trackingType == HabitTrackingType.amount) {
-        return points.length;
+        return HealthDayReading(points.length, sessions);
       }
 
       // Mindfulness samples are declared in MINUTE units by the plugin, so
@@ -396,58 +445,9 @@ class HealthService {
         }
         return sum;
       });
-      return (totalMinutes * 60).round();
+      return HealthDayReading((totalMinutes * 60).round(), sessions);
     } catch (_) {
       return null;
-    }
-  }
-
-  /// The individual sessions behind [fetchValueForDay]'s summed/counted
-  /// value — for display (which workout, what time range), not for
-  /// completion math. Returns an empty list for metrics with no session
-  /// concept (steps, calories) or on any read failure.
-  Future<List<HealthSessionDetail>> fetchSessionsForDay(
-    HealthMetricType metric,
-    DateTime day, {
-    HealthWorkoutType? workoutFilter,
-    bool bedtimeDayBefore = false,
-  }) async {
-    if (!_sessionMetrics.contains(metric) || !isMetricSupported(metric)) {
-      return const [];
-    }
-
-    try {
-      await _ensureConfigured();
-
-      if (_sleepMetrics.contains(metric)) {
-        final sessions = await _fetchSleepSessions(
-          metric,
-          day,
-          bedtimeDayBefore: bedtimeDayBefore,
-        );
-        return sessions
-            .map((s) => HealthSessionDetail(start: s.start, end: s.end))
-            .toList();
-      }
-
-      if (metric == HealthMetricType.workouts) {
-        return _fetchWorkoutSessions(day, workoutFilter);
-      }
-
-      if (metric == HealthMetricType.activity) {
-        return groupActivityPeriods(await _fetchActivitySamples(day));
-      }
-
-      final points = await _fetchPoints(metric, day);
-
-      return points
-          .map(
-            (point) =>
-                HealthSessionDetail(start: point.dateFrom, end: point.dateTo),
-          )
-          .toList();
-    } catch (_) {
-      return const [];
     }
   }
 
