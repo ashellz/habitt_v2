@@ -2337,6 +2337,13 @@ class HabitProvider extends ChangeNotifier {
       clonedHabits,
     );
 
+    debugPrint(
+      "[DAYSAVE] $dayKey resetCompletion=$resetCompletion "
+      "autoCreated=$isAutoCreated live=${habits.length} "
+      "scheduled=${scheduledForDay.length} "
+      "existing=${daysBox.get(dayKey)?.habits.length}",
+    );
+
     daysBox.put(
       dayKey,
       Day(

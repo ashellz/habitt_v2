@@ -39,7 +39,35 @@ Future<void> updateLastOpenedDate(
   }
 }
 
+// lastOpenedDate is only written once the whole new-day routine has finished,
+// so a second call while one is running (startup plus a resume, say after a
+// system dialog) would still see the old date. It would then save the last
+// opened day again from habits the first run already reset, wiping that day's
+// progress, so overlapping calls are dropped.
+bool _newDayCheckRunning = false;
+
 void checkForNewDay(
+  SharedPreferences prefs,
+  DateTime lastOpenedDate,
+  HabitProvider habitProvider,
+  StateProvider stateProvider,
+  StatsProvider statsProvider,
+) {
+  if (_newDayCheckRunning) {
+    debugPrint("[NEWDAY] already running, skipping overlapping check");
+    return;
+  }
+  _newDayCheckRunning = true;
+  _checkForNewDay(
+    prefs,
+    lastOpenedDate,
+    habitProvider,
+    stateProvider,
+    statsProvider,
+  ).whenComplete(() => _newDayCheckRunning = false);
+}
+
+Future<void> _checkForNewDay(
   SharedPreferences prefs,
   DateTime lastOpenedDate,
   HabitProvider habitProvider,
@@ -47,6 +75,10 @@ void checkForNewDay(
   StatsProvider statsProvider,
 ) async {
   DateTime today = DateTime.now();
+  debugPrint(
+    "[NEWDAY] check lastOpened=$lastOpenedDate now=$today "
+    "habits=${habitProvider.habits.length}",
+  );
   final crossedWeekBoundary = !_isSameWeek(lastOpenedDate, today);
   final crossedMonthBoundary =
       lastOpenedDate.month != today.month || lastOpenedDate.year != today.year;
