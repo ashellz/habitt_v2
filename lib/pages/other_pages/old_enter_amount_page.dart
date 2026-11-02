@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -327,3 +328,4 @@ class EnterAmountPageState extends State<EnterAmountPage> {
     );
   }
 }
+ */
