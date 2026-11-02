@@ -56,7 +56,7 @@ class _PremadeHealthSettingState extends State<PremadeHealthSetting> {
                 spacing: 4,
                 children: [
                   Text(
-                    loc.premadeHealthSettingTitle,
+                    healthSourceName(),
                     style: TextStyle(
                       color: cp.text,
                       fontSize: 16,

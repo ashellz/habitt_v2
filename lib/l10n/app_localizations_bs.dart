@@ -3404,7 +3404,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String premadeHealthSettingDesc(Object source) {
-    return 'Da li je $source automatski uključen za nove navike koje ga podržavaju.';
+    return 'Da li se $source automatski uključuje za nove navike koje to podržavaju.';
   }
 
   @override
