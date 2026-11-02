@@ -17,6 +17,10 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/apps
   $AssetsImagesAppsGen get apps => const $AssetsImagesAppsGen();
 
+  /// Directory path: assets/images/health-icons
+  $AssetsImagesHealthIconsGen get healthIcons =>
+      const $AssetsImagesHealthIconsGen();
+
   /// File path: assets/images/icon-dark-android.png
   AssetGenImage get iconDarkAndroid =>
       const AssetGenImage('assets/images/icon-dark-android.png');
@@ -88,6 +92,12 @@ class $AssetsImagesGen {
 class $AssetsSoundGen {
   const $AssetsSoundGen();
 
+  /// File path: assets/sound/completion.mp3
+  String get completion => 'assets/sound/completion.mp3';
+
+  /// File path: assets/sound/completion_all.mp3
+  String get completionAll => 'assets/sound/completion_all.mp3';
+
   /// File path: assets/sound/sound_01.mp3
   String get sound01 => 'assets/sound/sound_01.mp3';
 
@@ -120,6 +130,8 @@ class $AssetsSoundGen {
 
   /// List of all assets
   List<String> get values => [
+    completion,
+    completionAll,
     sound01,
     sound02,
     sound03,
@@ -144,27 +156,67 @@ class $AssetsImagesAppsGen {
   List<AssetGenImage> get values => [habitkit];
 }
 
+class $AssetsImagesHealthIconsGen {
+  const $AssetsImagesHealthIconsGen();
+
+  /// File path: assets/images/health-icons/activity.png
+  AssetGenImage get activity =>
+      const AssetGenImage('assets/images/health-icons/activity.png');
+
+  /// File path: assets/images/health-icons/bedtime.png
+  AssetGenImage get bedtime =>
+      const AssetGenImage('assets/images/health-icons/bedtime.png');
+
+  /// File path: assets/images/health-icons/burned_calories.png
+  AssetGenImage get burnedCalories =>
+      const AssetGenImage('assets/images/health-icons/burned_calories.png');
+
+  /// File path: assets/images/health-icons/mindfullnes.png
+  AssetGenImage get mindfullnes =>
+      const AssetGenImage('assets/images/health-icons/mindfullnes.png');
+
+  /// File path: assets/images/health-icons/sleep.png
+  AssetGenImage get sleep =>
+      const AssetGenImage('assets/images/health-icons/sleep.png');
+
+  /// File path: assets/images/health-icons/steps.png
+  AssetGenImage get steps =>
+      const AssetGenImage('assets/images/health-icons/steps.png');
+
+  /// File path: assets/images/health-icons/total_calories.png
+  AssetGenImage get totalCalories =>
+      const AssetGenImage('assets/images/health-icons/total_calories.png');
+
+  /// File path: assets/images/health-icons/wake.png
+  AssetGenImage get wake =>
+      const AssetGenImage('assets/images/health-icons/wake.png');
+
+  /// File path: assets/images/health-icons/workout.png
+  AssetGenImage get workout =>
+      const AssetGenImage('assets/images/health-icons/workout.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    activity,
+    bedtime,
+    burnedCalories,
+    mindfullnes,
+    sleep,
+    steps,
+    totalCalories,
+    wake,
+    workout,
+  ];
+}
+
 class $AssetsImagesIconsGen {
   const $AssetsImagesIconsGen();
 
-  /// File path: assets/images/icons/counter.png
-  AssetGenImage get counter =>
-      const AssetGenImage('assets/images/icons/counter.png');
-
-  /// File path: assets/images/icons/duration.png
-  AssetGenImage get duration =>
-      const AssetGenImage('assets/images/icons/duration.png');
-
-  /// File path: assets/images/icons/streak.png
-  AssetGenImage get streak =>
-      const AssetGenImage('assets/images/icons/streak.png');
-
-  /// File path: assets/images/icons/water.png
-  AssetGenImage get water =>
-      const AssetGenImage('assets/images/icons/water.png');
+  /// File path: assets/images/icons/gift.png
+  AssetGenImage get gift => const AssetGenImage('assets/images/icons/gift.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [counter, duration, streak, water];
+  List<AssetGenImage> get values => [gift];
 }
 
 class $AssetsImagesNewSvgGen {
@@ -190,6 +242,9 @@ class $AssetsImagesNewSvgGen {
 
   /// File path: assets/images/new-svg/backup.svg
   String get backup => 'assets/images/new-svg/backup.svg';
+
+  /// File path: assets/images/new-svg/bug-report.svg
+  String get bugReport => 'assets/images/new-svg/bug-report.svg';
 
   /// File path: assets/images/new-svg/calendar.svg
   String get calendar => 'assets/images/new-svg/calendar.svg';
@@ -270,6 +325,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/eye.svg
   String get eye => 'assets/images/new-svg/eye.svg';
 
+  /// File path: assets/images/new-svg/feature-request.svg
+  String get featureRequest => 'assets/images/new-svg/feature-request.svg';
+
   /// File path: assets/images/new-svg/google.svg
   String get google => 'assets/images/new-svg/google.svg';
 
@@ -294,12 +352,18 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/increase.svg
   String get increase => 'assets/images/new-svg/increase.svg';
 
+  /// File path: assets/images/new-svg/info.svg
+  String get info => 'assets/images/new-svg/info.svg';
+
   /// File path: assets/images/new-svg/it.svg
   String get it => 'assets/images/new-svg/it.svg';
 
   /// Directory path: assets/images/new-svg/languages
   $AssetsImagesNewSvgLanguagesGen get languages =>
       const $AssetsImagesNewSvgLanguagesGen();
+
+  /// File path: assets/images/new-svg/list-view.svg
+  String get listView => 'assets/images/new-svg/list-view.svg';
 
   /// File path: assets/images/new-svg/local-backup.svg
   String get localBackup => 'assets/images/new-svg/local-backup.svg';
@@ -346,6 +410,9 @@ class $AssetsImagesNewSvgGen {
   /// File path: assets/images/new-svg/pin.svg
   String get pin => 'assets/images/new-svg/pin.svg';
 
+  /// File path: assets/images/new-svg/plan-view.svg
+  String get planView => 'assets/images/new-svg/plan-view.svg';
+
   /// File path: assets/images/new-svg/plus.svg
   String get plus => 'assets/images/new-svg/plus.svg';
 
@@ -354,6 +421,9 @@ class $AssetsImagesNewSvgGen {
 
   /// File path: assets/images/new-svg/profile.svg
   String get profile => 'assets/images/new-svg/profile.svg';
+
+  /// File path: assets/images/new-svg/rate-star.svg
+  String get rateStar => 'assets/images/new-svg/rate-star.svg';
 
   /// File path: assets/images/new-svg/rate.svg
   String get rate => 'assets/images/new-svg/rate.svg';
@@ -421,6 +491,7 @@ class $AssetsImagesNewSvgGen {
     arrow,
     back,
     backup,
+    bugReport,
     calendar,
     checkOffDark,
     checkOffInvertedDark,
@@ -446,6 +517,7 @@ class $AssetsImagesNewSvgGen {
     exportBackup,
     eyeShut,
     eye,
+    featureRequest,
     google,
     heatmap,
     home,
@@ -454,7 +526,9 @@ class $AssetsImagesNewSvgGen {
     importApps,
     importBackup,
     increase,
+    info,
     it,
+    listView,
     localBackup,
     logOut,
     longestStreak,
@@ -470,9 +544,11 @@ class $AssetsImagesNewSvgGen {
     pause,
     perSession,
     pin,
+    planView,
     plus,
     privacyPolicy,
     profile,
+    rateStar,
     rate,
     reorder,
     restore,

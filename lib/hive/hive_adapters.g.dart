@@ -24,7 +24,6 @@ class HabitAdapter extends TypeAdapter<Habit> {
       categoryId: (fields[4] as num).toInt(),
       order: fields[36] == null ? 0 : (fields[36] as num).toInt(),
       optionalOrder: fields[53] == null ? 0 : (fields[53] as num).toInt(),
-      isAlarm: fields[54] == null ? false : fields[54] as bool,
       amountLabel:
           fields[13] == null
               ? AmountLabelPreset.defaultAmountLabel
@@ -50,6 +49,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       selectedDaysAWeek: (fields[30] as List?)?.cast<int>(),
       selectedDaysAMonth: (fields[31] as List?)?.cast<int>(),
       customAppearance: (fields[32] as List?)?.cast<String>(),
+      showIfMissed: fields[55] == null ? false : fields[55] as bool,
       timesCompletedThisWeek:
           fields[33] == null ? 0 : (fields[33] as num).toInt(),
       timesCompletedThisMonth:
@@ -60,6 +60,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       notificationsEnabled: fields[40] == null ? false : fields[40] as bool,
       notificationTimes: (fields[41] as List?)?.cast<HabitNotificationTime>(),
       soundKey: fields[45] as String?,
+      isAlarm: fields[54] == null ? false : fields[54] as bool,
       premadeHabitType: fields[38] as PremadeHabitType?,
       trackingType: fields[39] as HabitTrackingType?,
       healthMetric: fields[47] as HealthMetricType?,
@@ -80,7 +81,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(52)
+      ..writeByte(53)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -184,7 +185,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(53)
       ..write(obj.optionalOrder)
       ..writeByte(54)
-      ..write(obj.isAlarm);
+      ..write(obj.isAlarm)
+      ..writeByte(55)
+      ..write(obj.showIfMissed);
   }
 
   @override
