@@ -70,14 +70,14 @@ Future<bool> askPremadeHealthSync(
 
   final health = context.read<HealthProvider>();
   await health.ensureAvailabilityChecked();
-  final stored = await loadPremadeHealthChoice();
+  final stored = await loadPremadeHealthSync();
   if (!context.mounted) return false;
 
   final decision = decidePremadeHealthPrompt(
     template: template,
     isAvailable: health.isAvailable,
     isMetricSupported: health.isMetricSupported(template.defaultHealthMetric!),
-    savedChoice: stored ?? PremadeHealthChoice.ask,
+    savedSync: stored,
   );
 
   switch (decision) {
@@ -95,13 +95,9 @@ Future<bool> askPremadeHealthSync(
         builder: (_) => const PremadeHealthSyncDialog(),
       );
       if (result == null) return false;
-      // only the very first dialog ever sets the standing answer; after that
-      // (including a deliberate "Ask" in Settings) the setting is left alone
-      if (stored == null) {
-        await savePremadeHealthChoice(
-          result ? PremadeHealthChoice.health : PremadeHealthChoice.manual,
-        );
-      }
+      // asked once ever: the answer becomes the Settings toggle and the
+      // dialog never shows again
+      await savePremadeHealthSync(result);
       return result;
   }
 }

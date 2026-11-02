@@ -3412,15 +3412,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get premadeHealthChoiceAsk => 'Ask';
-
-  @override
-  String get premadeHealthChoiceSync => 'Sync';
-
-  @override
-  String get premadeHealthChoiceManual => 'Manual';
-
-  @override
   String healthAccessLostMessage(Object source) {
     return 'Syncing with $source no longer works because Habitt doesn\'t have permission. Your Health habits won\'t update until you allow access in Settings.';
   }
