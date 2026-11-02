@@ -3434,12 +3434,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get healthOpenSettings => 'Einstellungen öffnen';
 
   @override
-  String get premadeHealthSettingTitle =>
-      'Health-Sync für vorgefertigte Gewohnheiten';
-
-  @override
   String premadeHealthSettingDesc(Object source) {
-    return 'Ob vorgefertigte Gewohnheiten wie Schlaf oder Schritte mit $source synchronisiert werden.';
+    return 'Ob $source automatisch für neue Gewohnheiten aktiviert wird, die dies unterstützen.';
   }
 
   @override

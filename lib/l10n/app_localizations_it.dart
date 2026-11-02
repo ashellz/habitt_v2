@@ -3431,12 +3431,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get healthOpenSettings => 'Apri Impostazioni';
 
   @override
-  String get premadeHealthSettingTitle =>
-      'Sincronizzazione Salute per abitudini predefinite';
-
-  @override
   String premadeHealthSettingDesc(Object source) {
-    return 'Se le abitudini predefinite come Sonno o Passi si sincronizzano con $source.';
+    return 'Se $source viene attivato automaticamente per le nuove abitudini che lo supportano.';
   }
 
   @override

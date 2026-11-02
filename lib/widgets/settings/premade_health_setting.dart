@@ -48,7 +48,7 @@ class _PremadeHealthSettingState extends State<PremadeHealthSetting> {
       children: [
         Divider(color: cp.border, height: 32),
         Text(
-          loc.premadeHealthSettingTitle,
+          healthSourceName(),
           style: TextStyle(
             color: cp.text,
             fontSize: 16,

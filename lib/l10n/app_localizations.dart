@@ -5741,16 +5741,10 @@ abstract class AppLocalizations {
   /// **'Open Settings'**
   String get healthOpenSettings;
 
-  /// No description provided for @premadeHealthSettingTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Health sync for premade habits'**
-  String get premadeHealthSettingTitle;
-
   /// No description provided for @premadeHealthSettingDesc.
   ///
   /// In en, this message translates to:
-  /// **'Whether premade habits like Sleep or Steps sync with {source}.'**
+  /// **'Whether {source} is enabled automatically for new habits that support it.'**
   String premadeHealthSettingDesc(Object source);
 
   /// No description provided for @premadeHealthChoiceAsk.

@@ -3424,12 +3424,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get healthOpenSettings => 'Abrir Ajustes';
 
   @override
-  String get premadeHealthSettingTitle =>
-      'Sincronización de Salud en hábitos predefinidos';
-
-  @override
   String premadeHealthSettingDesc(Object source) {
-    return 'Si los hábitos predefinidos como Sueño o Pasos se sincronizan con $source.';
+    return 'Si $source se activa automáticamente para los nuevos hábitos que lo admiten.';
   }
 
   @override

@@ -3403,12 +3403,8 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthOpenSettings => 'Otvori postavke';
 
   @override
-  String get premadeHealthSettingTitle =>
-      'Sinhronizacija zdravlja za gotove navike';
-
-  @override
   String premadeHealthSettingDesc(Object source) {
-    return 'Da li se gotove navike poput Sna ili Koraka sinhroniziraju s $source.';
+    return 'Da li je $source automatski uključen za nove navike koje ga podržavaju.';
   }
 
   @override

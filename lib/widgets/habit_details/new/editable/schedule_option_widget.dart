@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:provider/provider.dart';
 
 class ScheduleOptionWidget extends StatelessWidget {
@@ -102,7 +102,7 @@ class ScheduleOptionWidget extends StatelessWidget {
                       duration: _selectionDuration,
                       curve: Curves.easeOutBack,
                       turns: isSelected ? 0 : _iconTurns,
-                      child: SvgPicture.asset(svgPath),
+                      child: AccentSvg(svgPath),
                     ),
                   ),
                 ),

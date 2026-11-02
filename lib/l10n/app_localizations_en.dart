@@ -3404,11 +3404,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get healthOpenSettings => 'Open Settings';
 
   @override
-  String get premadeHealthSettingTitle => 'Health sync for premade habits';
-
-  @override
   String premadeHealthSettingDesc(Object source) {
-    return 'Whether premade habits like Sleep or Steps sync with $source.';
+    return 'Whether $source is enabled automatically for new habits that support it.';
   }
 
   @override
