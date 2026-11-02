@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:provider/provider.dart';
 
 class StreakDayStrip extends StatelessWidget {
@@ -33,14 +34,14 @@ class StreakDayStrip extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final todayNorm = _normalize(today ?? DateTime.now());
     // The celebrated day is always yesterday.
-    final hero = todayNorm.subtract(const Duration(days: 1));
+    final hero = addCalendarDays(todayNorm, -1);
 
     // Render 8 days [hero-4 .. hero+3]; the visible 7-wide window slides from
     // [hero-4 .. hero+2] (hero just right of centre) to [hero-3 .. hero+3]
     // (hero centred) as progress goes 0 → 1.
     final days = List<DateTime>.generate(
       8,
-      (i) => _normalize(hero.add(Duration(days: i - 4))),
+      (i) => addCalendarDays(hero, i - 4),
     );
 
     final normalizedStatuses = {
@@ -139,10 +140,10 @@ class StreakDayStrip extends StatelessWidget {
 
     // animating connections for hero and solid for regular days
     final heroLeftSegment = day == hero; // left half of hero
-    final heroRightSegment = day == hero.subtract(const Duration(days: 1));
+    final heroRightSegment = day == addCalendarDays(hero, -1);
 
     // most left day removes left connection after animation
-    final leftmostFinal = day == hero.subtract(const Duration(days: 3));
+    final leftmostFinal = day == addCalendarDays(hero, -3);
     double leftConnOpacity = connectsLeft ? 1.0 : 0.0;
     double rightConnOpacity = connectsRight ? 1.0 : 0.0;
     if (heroLeftSegment) leftConnOpacity = connectsLeft ? reveal : 0.0;
@@ -308,7 +309,7 @@ class StreakDayStrip extends StatelessWidget {
         toleratedMissesUsed = 0;
       }
 
-      cursor = cursor.add(const Duration(days: 1));
+      cursor = addCalendarDays(cursor, 1);
     }
     flushRun();
 

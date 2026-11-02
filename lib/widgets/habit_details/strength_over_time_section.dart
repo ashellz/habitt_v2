@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/stats_range.dart';
 import 'package:habitt/widgets/habit_details/strength_chart.dart';
 import 'package:habitt/widgets/stats/stats_range_selector.dart';
@@ -117,5 +118,5 @@ class _Window {
   final List<DateTime> dates;
   final List<double> values;
 
-  int get spanDays => to.difference(from).inDays;
+  int get spanDays => calendarDaysBetween(from, to);
 }

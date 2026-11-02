@@ -7,6 +7,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,7 +59,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 400)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -400).toIso8601String(),
     });
     provider = HabitProvider();
     final deadline = DateTime.now().add(const Duration(seconds: 5));
@@ -125,7 +126,7 @@ void main() {
   group('nextAppearance', () {
     // "every 3 days" anchored 8 days ago: scheduled -8, -5, -2, +1, +4, ...
     Habit custom({bool completed = false}) {
-      final anchor = today.subtract(const Duration(days: 8));
+      final anchor = addCalendarDays(today, -8);
       return Habit(
         id: 1,
         name: 'omega 3',
@@ -135,11 +136,11 @@ void main() {
         customIntervalDays: 3,
         showIfMissed: true,
         completed: completed,
-        createdAt: today.subtract(const Duration(days: 100)),
+        createdAt: addCalendarDays(today, -100),
         lastCustomUpdate: anchor,
         customAppearance: [
           for (var i = 0; i < 365; i += 3)
-            _dayKey(anchor.add(Duration(days: i))),
+            _dayKey(addCalendarDays(anchor, i)),
         ],
       );
     }
@@ -161,6 +162,60 @@ void main() {
 
     test('daily habit still to do is today', () {
       expect(provider.nextAppearance(_habit()), today);
+    });
+  });
+
+  group('custom schedule extension', () {
+    // Grid anchored 201 days ago (so today is on it), stored for only 180
+    // days, last rebuilt 5 days ago. Extending must continue the grid, not
+    // restart it from the last-update day (which would put it on tomorrow).
+    Habit expired() {
+      final anchor = addCalendarDays(today, -201);
+      return Habit(
+        id: 1,
+        name: 'stretch',
+        iconPath: '',
+        categoryId: 0,
+        scheduleType: ScheduleType.custom,
+        customIntervalDays: 3,
+        createdAt: addCalendarDays(today, -300),
+        lastCustomUpdate: addCalendarDays(today, -5).toUtc(),
+        customAppearance: [
+          for (var i = 0; i < 180; i += 3) _dayKey(addCalendarDays(anchor, i)),
+        ],
+      );
+    }
+
+    test('continues the stored grid once it runs out', () {
+      final habit = expired();
+      expect(provider.appearsOnDay(habit, today), isTrue);
+      expect(provider.appearsOnDay(habit, addCalendarDays(today, 1)), isFalse);
+      expect(provider.appearsOnDay(habit, addCalendarDays(today, 2)), isFalse);
+      expect(provider.appearsOnDay(habit, addCalendarDays(today, 3)), isTrue);
+    });
+
+    test('extended list stays evenly spaced and bounded', () {
+      final habit = expired();
+      provider.appearsOnDay(habit, today);
+      final keys = habit.customAppearance;
+      for (var i = 1; i < keys.length; i++) {
+        expect(
+          calendarDaysBetween(
+            DateTime.parse(keys[i - 1]),
+            DateTime.parse(keys[i]),
+          ),
+          3,
+        );
+      }
+      // keeps about a year of past dates, plus a year ahead
+      expect(
+        keys.first.compareTo(_dayKey(addCalendarDays(today, -366))) >= 0,
+        isTrue,
+      );
+      expect(
+        keys.last.compareTo(_dayKey(addCalendarDays(today, 362))) >= 0,
+        isTrue,
+      );
     });
   });
 }

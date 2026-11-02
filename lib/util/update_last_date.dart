@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> updateLastOpenedDate(
@@ -80,18 +81,14 @@ void checkForNewDay(
     debugPrint("New day, resetting completion");
     await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
 
-    DateTime gapDay = DateTime(
-      lastOpenedDate.year,
-      lastOpenedDate.month,
-      lastOpenedDate.day,
-    ).add(const Duration(days: 1));
+    DateTime gapDay = addCalendarDays(lastOpenedDate, 1);
     while (gapDay.isBefore(normalizedToday)) {
       await habitProvider.saveHabitDay(
         gapDay,
         resetCompletion: true,
         isAutoCreated: true,
       );
-      gapDay = gapDay.add(const Duration(days: 1));
+      gapDay = addCalendarDays(gapDay, 1);
     }
 
     await habitProvider.resetCompletion();
@@ -111,9 +108,9 @@ void checkForNewDay(
 
 int _weekKey(DateTime date) {
   final normalized = DateTime(date.year, date.month, date.day);
-  final monday = normalized.subtract(Duration(days: normalized.weekday - 1));
+  final monday = addCalendarDays(normalized, -(normalized.weekday - 1));
   final startOfYear = DateTime(monday.year, 1, 1);
-  final dayOfYear = monday.difference(startOfYear).inDays + 1;
+  final dayOfYear = calendarDaysBetween(startOfYear, monday) + 1;
   return (monday.year * 1000) + dayOfYear;
 }
 

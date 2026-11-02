@@ -7,6 +7,7 @@ import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +27,7 @@ Habit _customHabit({
   bool completed = false,
 }) {
   final today = _normalize(DateTime.now());
-  final anchor = today.subtract(Duration(days: anchorDaysAgo));
+  final anchor = addCalendarDays(today, -(anchorDaysAgo));
   return Habit(
     id: 1,
     name: 'omega 3',
@@ -36,10 +37,10 @@ Habit _customHabit({
     customIntervalDays: 3,
     showIfMissed: showIfMissed,
     completed: completed,
-    createdAt: today.subtract(const Duration(days: 100)),
+    createdAt: addCalendarDays(today, -100),
     lastCustomUpdate: anchor,
     customAppearance: [
-      for (var i = 0; i < 365; i += 3) _key(anchor.add(Duration(days: i))),
+      for (var i = 0; i < 365; i += 3) _key(addCalendarDays(anchor, i)),
     ],
   );
 }
@@ -69,7 +70,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 400)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -400).toIso8601String(),
     });
     await habitBox.clear();
     await daysBox.clear();
@@ -106,7 +107,7 @@ void main() {
       final provider = await createInitializedProvider();
       final habit = _customHabit(anchorDaysAgo: 8);
       await recordDay(
-        today.subtract(const Duration(days: 2)),
+        addCalendarDays(today, -2),
         _customHabit(anchorDaysAgo: 8),
       );
 
@@ -124,7 +125,7 @@ void main() {
       final provider = await createInitializedProvider();
       final habit = _customHabit(anchorDaysAgo: 8);
       await recordDay(
-        today.subtract(const Duration(days: 2)),
+        addCalendarDays(today, -2),
         _customHabit(anchorDaysAgo: 8, completed: true),
       );
 
@@ -136,7 +137,7 @@ void main() {
       final habit = _customHabit(anchorDaysAgo: 8);
 
       expect(
-        provider.appearsOnDay(habit, today.subtract(const Duration(days: 1))),
+        provider.appearsOnDay(habit, addCalendarDays(today, -1)),
         isFalse,
       );
     });
@@ -149,9 +150,9 @@ void main() {
         iconPath: '',
         categoryId: 0,
         scheduleType: ScheduleType.weekly,
-        selectedDaysAWeek: [today.subtract(const Duration(days: 2)).weekday],
+        selectedDaysAWeek: [addCalendarDays(today, -2).weekday],
         showIfMissed: true,
-        createdAt: today.subtract(const Duration(days: 100)),
+        createdAt: addCalendarDays(today, -100),
       );
 
       expect(provider.appearsOnDay(habit, today), isFalse);
@@ -162,7 +163,7 @@ void main() {
       final habit = _customHabit(anchorDaysAgo: 8);
       await habitBox.add(habit);
       await recordDay(
-        today.subtract(const Duration(days: 2)),
+        addCalendarDays(today, -2),
         _customHabit(anchorDaysAgo: 8),
       );
       expect(provider.appearsOnDay(habit, today), isTrue);
@@ -173,13 +174,13 @@ void main() {
       expect(
         habit.customAppearance,
         containsAll([
-          _key(today.subtract(const Duration(days: 2))), // history kept
+          _key(addCalendarDays(today, -2)), // history kept
           _key(today),
-          _key(today.add(const Duration(days: 3))),
+          _key(addCalendarDays(today, 3)),
         ]),
       );
       expect(
-        habit.customAppearance.contains(_key(today.add(const Duration(days: 1)))),
+        habit.customAppearance.contains(_key(addCalendarDays(today, 1))),
         isFalse,
       );
     });

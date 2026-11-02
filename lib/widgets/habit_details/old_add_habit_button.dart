@@ -7,6 +7,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/category_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/util/custom_appearance.dart';
 import 'package:habitt/widgets/default/custom_switcher_wrapper.dart';
 import 'package:habitt/widgets/default/old_default_button.dart';
 
@@ -45,18 +46,6 @@ class OldAddHabitButton extends StatelessWidget {
       // Combine them. This makes the ID much more unique.
       // The multiplication shifts the time component to make space for the random part.
       return timeComponent * 1000 + random;
-    }
-
-    List<String> buildCustomAppearance(int intervalDays) {
-      final start = DateTime.now();
-      final anchor = DateTime(start.year, start.month, start.day);
-      final output = <String>[];
-      for (int i = 0; i < 180; i += intervalDays) {
-        output.add(
-          anchor.add(Duration(days: i)).toIso8601String().split('T').first,
-        );
-      }
-      return output;
     }
 
     return ValueListenableBuilder<TextEditingValue>(
@@ -102,7 +91,7 @@ class OldAddHabitButton extends StatelessWidget {
                       stateProvider.selectedDaysAWeek.toList()..sort(),
                   selectedDaysAMonth:
                       stateProvider.selectedDaysAMonth.toList()..sort(),
-                  customAppearance: buildCustomAppearance(
+                  customAppearance: buildCustomAppearanceFromToday(
                     stateProvider.customIntervalDays,
                   ),
                   showIfMissed:

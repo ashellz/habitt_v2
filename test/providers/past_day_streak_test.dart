@@ -13,6 +13,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 60)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -60).toIso8601String(),
       'play_completion_sound': false,
     });
     final prefs = await SharedPreferences.getInstance();
@@ -153,7 +154,7 @@ void main() {
     Habit habit,
   ) async {
     final today = _normalize(DateTime.now());
-    final yesterday = today.subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(today, -1);
 
     await tester.runAsync(() async {
       habitProvider.setSelectedDate(yesterday);

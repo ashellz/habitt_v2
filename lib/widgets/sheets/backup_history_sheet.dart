@@ -4,6 +4,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/drive_backup_file.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/dialogs/backup_passphrase_dialog.dart';
@@ -40,7 +41,7 @@ class _BackupHistorySheetState extends State<BackupHistorySheet> {
     dt = dt.toLocal();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(today, -1);
     final day = DateTime(dt.year, dt.month, dt.day);
 
     final hour = dt.hour.toString().padLeft(2, '0');

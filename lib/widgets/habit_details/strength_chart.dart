@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -88,7 +89,7 @@ class StrengthChart extends StatelessWidget {
                   // start, middle and end of the range
                   interval: spanDays / 2,
                   getTitlesWidget: (value, meta) {
-                    final day = first.add(Duration(days: value.round()));
+                    final day = addCalendarDays(first, value.round());
                     return SideTitleWidget(
                       meta: meta,
                       fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
@@ -108,7 +109,7 @@ class StrengthChart extends StatelessWidget {
                     (touched) => [
                       for (final spot in touched)
                         LineTooltipItem(
-                          '${tooltipFormat.format(first.add(Duration(days: spot.x.round())))}\n'
+                          '${tooltipFormat.format(addCalendarDays(first, spot.x.round()))}\n'
                           '${spot.y.round()}%',
                           TextStyle(color: cp.text, fontSize: 13),
                         ),

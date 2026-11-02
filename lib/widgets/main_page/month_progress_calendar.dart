@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/past_day_hint.dart';
 import 'package:habitt/widgets/default/past_day_hint_dot.dart';
 import 'package:habitt/widgets/main_page/last_week_progress.dart'
@@ -385,9 +386,7 @@ class _MonthProgressCalendarState extends State<MonthProgressCalendar> {
       dateJoined: habitProvider.dateJoined,
       hasSelectedPastDay: preferencesProvider.hasSelectedPastDay,
     );
-    final yesterday = _normalize(
-      DateTime.now(),
-    ).subtract(const Duration(days: 1));
+    final yesterday = addCalendarDays(DateTime.now(), -1);
 
     final showHintDot = pastDayHintEligible && _normalize(day) == yesterday;
 

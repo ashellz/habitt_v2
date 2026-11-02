@@ -8,6 +8,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,7 +93,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
       'daySnapshotsSanitized_v1': true,
-      'dateJoined': today.subtract(const Duration(days: 400)).toIso8601String(),
+      'dateJoined': addCalendarDays(today, -400).toIso8601String(),
     });
     await habitBox.clear();
     await daysBox.clear();
@@ -119,10 +120,8 @@ void main() {
   // regardless of when the suite runs.
   DateTime mondayWeeksAgo(int weeks) {
     final now = DateTime.now();
-    final thisMonday = _normalize(
-      now,
-    ).subtract(Duration(days: now.weekday - 1));
-    return thisMonday.subtract(Duration(days: 7 * weeks));
+    final thisMonday = addCalendarDays(now, -(now.weekday - 1));
+    return addCalendarDays(thisMonday, -(7 * weeks));
   }
 
   group('appearsOnDay — weekly target-only critical window', () {
@@ -151,7 +150,7 @@ void main() {
       expect(provider.appearsOnDay(habit, monday), isFalse);
       // Thursday: 4 days left, 3 owed -> not critical.
       expect(
-        provider.appearsOnDay(habit, monday.add(const Duration(days: 3))),
+        provider.appearsOnDay(habit, addCalendarDays(monday, 3)),
         isFalse,
       );
     });
@@ -166,10 +165,10 @@ void main() {
         weekTimestamp: monday.add(const Duration(hours: 12)).toUtc(),
       );
       // Friday: 3 days left, 3 owed -> critical.
-      final friday = monday.add(const Duration(days: 4));
+      final friday = addCalendarDays(monday, 4);
       expect(provider.appearsOnDay(habit, friday), isTrue);
       // Sunday: 1 day left, 3 owed -> critical.
-      final sunday = monday.add(const Duration(days: 6));
+      final sunday = addCalendarDays(monday, 6);
       expect(provider.appearsOnDay(habit, sunday), isTrue);
     });
 
@@ -183,10 +182,10 @@ void main() {
         weekTimestamp: monday.add(const Duration(hours: 12)).toUtc(),
       );
       // Friday is now non-critical: 2 owed, 3 days left.
-      final friday = monday.add(const Duration(days: 4));
+      final friday = addCalendarDays(monday, 4);
       expect(provider.appearsOnDay(habit, friday), isFalse);
       // Saturday becomes the new critical start: 2 owed, 2 days left.
-      final saturday = monday.add(const Duration(days: 5));
+      final saturday = addCalendarDays(monday, 5);
       expect(provider.appearsOnDay(habit, saturday), isTrue);
     });
 
@@ -199,7 +198,7 @@ void main() {
         timesCompletedThisWeek: 3,
         weekTimestamp: monday.add(const Duration(hours: 12)).toUtc(),
       );
-      final sunday = monday.add(const Duration(days: 6));
+      final sunday = addCalendarDays(monday, 6);
       expect(provider.appearsOnDay(habit, sunday), isFalse);
     });
 
@@ -217,7 +216,7 @@ void main() {
       );
       expect(provider.appearsOnDay(habit, monday), isTrue); // Monday selected
       expect(
-        provider.appearsOnDay(habit, monday.add(const Duration(days: 1))),
+        provider.appearsOnDay(habit, addCalendarDays(monday, 1)),
         isFalse, // Tuesday not selected
       );
     });
@@ -285,7 +284,7 @@ void main() {
     test('day is downgraded when a critical target habit is missed', () async {
       final provider = await createInitializedProvider();
       final monday = mondayWeeksAgo(5);
-      final friday = monday.add(const Duration(days: 4));
+      final friday = addCalendarDays(monday, 4);
 
       final dailyHabit = Habit(
         id: 1,
@@ -321,7 +320,7 @@ void main() {
     }) async {
       int cumulative = 0;
       for (int i = 0; i < 7; i++) {
-        final day = monday.add(Duration(days: i));
+        final day = addCalendarDays(monday, i);
         final completedToday = completedByWeekday[i];
         if (completedToday) cumulative++;
         await daysBox.put(

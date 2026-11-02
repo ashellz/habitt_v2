@@ -4,6 +4,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/services/notification_text/template_catalog.dart';
 import 'package:habitt/services/notification_text/types.dart';
+import 'package:habitt/util/date_key.dart';
 
 class ScheduleRuleResult {
   const ScheduleRuleResult({
@@ -260,9 +261,9 @@ class ScheduleNotificationRule {
 
   static int _weekKey(DateTime date) {
     final normalized = _normalizeDate(date);
-    final monday = normalized.subtract(Duration(days: normalized.weekday - 1));
+    final monday = addCalendarDays(normalized, -(normalized.weekday - 1));
     final startOfYear = DateTime(monday.year, 1, 1);
-    final dayOfYear = monday.difference(startOfYear).inDays + 1;
+    final dayOfYear = calendarDaysBetween(startOfYear, monday) + 1;
     return (monday.year * 1000) + dayOfYear;
   }
 
@@ -294,14 +295,14 @@ class ScheduleNotificationRule {
     HabitNotificationContext context,
   ) {
     final day = context.scheduledDay;
-    final weekStart = day.subtract(Duration(days: day.weekday - 1));
-    final weekEnd = weekStart.add(const Duration(days: 6));
+    final weekStart = addCalendarDays(day, -(day.weekday - 1));
+    final weekEnd = addCalendarDays(weekStart, 6);
 
     int opportunities = 0;
     for (
       DateTime cursor = day;
       !cursor.isAfter(weekEnd);
-      cursor = cursor.add(const Duration(days: 1))
+      cursor = addCalendarDays(cursor, 1)
     ) {
       if (context.appearsOnDay(context.habit, cursor)) {
         opportunities += 1;
@@ -321,7 +322,7 @@ class ScheduleNotificationRule {
     for (
       DateTime cursor = day;
       !cursor.isAfter(monthEnd);
-      cursor = cursor.add(const Duration(days: 1))
+      cursor = addCalendarDays(cursor, 1)
     ) {
       if (context.appearsOnDay(context.habit, cursor)) {
         opportunities += 1;

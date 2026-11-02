@@ -1,14 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/util/past_day_hint.dart';
 
 void main() {
   final today = DateTime.now();
-  final yesterday = today.subtract(const Duration(days: 1));
+  final yesterday = addCalendarDays(today, -1);
 
   test('eligible when not yet discovered and yesterday is trackable', () {
     expect(
       isPastDayHintEligible(
-        dateJoined: today.subtract(const Duration(days: 60)),
+        dateJoined: addCalendarDays(today, -60),
         hasSelectedPastDay: false,
       ),
       isTrue,
@@ -18,7 +19,7 @@ void main() {
   test('not eligible once the hint has been discovered', () {
     expect(
       isPastDayHintEligible(
-        dateJoined: today.subtract(const Duration(days: 60)),
+        dateJoined: addCalendarDays(today, -60),
         hasSelectedPastDay: true,
       ),
       isFalse,

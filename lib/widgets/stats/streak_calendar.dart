@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/widgets/default/blur_fade.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -769,15 +770,15 @@ class _StreakCalendarState extends State<StreakCalendar> {
     final monthEnd = DateTime(focusedDay.year, focusedDay.month + 1, 0);
 
     final daysBefore = (monthStart.weekday - DateTime.monday) % 7;
-    final start = monthStart.subtract(Duration(days: daysBefore));
+    final start = addCalendarDays(monthStart, -daysBefore);
 
     final daysAfter = (DateTime.sunday - monthEnd.weekday) % 7;
-    final end = monthEnd.add(Duration(days: daysAfter));
+    final end = addCalendarDays(monthEnd, daysAfter);
 
-    final dayCount = end.difference(start).inDays + 1;
+    final dayCount = calendarDaysBetween(start, end) + 1;
     return List<DateTime>.generate(
       dayCount,
-      (index) => _normalize(start.add(Duration(days: index))),
+      (index) => addCalendarDays(start, index),
     );
   }
 
@@ -794,7 +795,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     var toleratedMissesUsed = 0;
     var cursor = selectableFirstDay;
 
-    while (!cursor.isAfter(today.add(const Duration(days: 1)))) {
+    while (!cursor.isAfter(addCalendarDays(today, 1))) {
       final normalizedCursor = _normalize(cursor);
       final status = statuses[normalizedCursor] ?? DayCompletionStatus.none;
       final isCompleted = status == DayCompletionStatus.perfect;
@@ -812,7 +813,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
           currentDays.add(normalizedCursor);
           currentCompletedDays.add(normalizedCursor);
         }
-        cursor = cursor.add(const Duration(days: 1));
+        cursor = addCalendarDays(cursor, 1);
         continue;
       }
 
@@ -850,7 +851,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
         toleratedMissesUsed = 0;
       }
 
-      cursor = cursor.add(const Duration(days: 1));
+      cursor = addCalendarDays(cursor, 1);
     }
 
     if (hasCompletion &&

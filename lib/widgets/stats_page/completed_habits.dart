@@ -4,6 +4,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 
+import 'package:habitt/util/date_key.dart';
 import 'package:habitt/widgets/default/glass_feel_container.dart';
 import 'package:habitt/widgets/stats_page/value_text.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class CompletedHabits extends StatelessWidget {
   Widget build(BuildContext context) {
     String getDay(int day) {
       final DateTime now = DateTime.now();
-      final DateTime targetDay = now.subtract(Duration(days: 6 - day));
+      final DateTime targetDay = addCalendarDays(now, -(6 - day));
 
       // Get weekday name
       switch (targetDay.weekday) {
