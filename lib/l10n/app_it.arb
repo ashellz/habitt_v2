@@ -1343,5 +1343,10 @@
   "healthDeviceDesc": "Solo il dispositivo scelto legge i dati sulla salute. Gli altri dispositivi ricevono i suoi valori tramite la sincronizzazione, e i progressi si possono comunque modificare a mano su ognuno di essi.",
   "healthDeviceThisDevice": "Questo dispositivo",
   "healthDeviceIosOnlyNote": "Le abitudini Attività e Mindfulness si sincronizzano solo da un iPhone.",
-  "healthCardFromDevice": "Da {device}"
+  "healthCardFromDevice": "Da {device}",
+  "backupFoundDescICloud": "Il tuo iCloud ha un backup. Come vorresti ripristinare?",
+  "ignoreBackupUploadMine": "Ignora il backup e carica il mio",
+  "replaceCloudBackupTitle": "Sostituire il backup esistente?",
+  "replaceCloudBackupDesc": "Il backup esistente su {cloud} verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Gli altri dispositivi si sincronizzeranno con questi dati. Questa azione non può essere annullata.",
+  "replaceCloudBackup": "Sostituisci backup"
 }

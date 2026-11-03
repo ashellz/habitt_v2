@@ -23,6 +23,27 @@ When `habit.isAlarm`:
   `locked: true`;
 - action buttons: **Dismiss** (`DismissAction`) plus the usual **Complete**.
 
+## Replaced / removed reminder slots
+
+Each reminder is scheduled per slot × day (7 days ahead, non-repeating) with an
+id derived from `habitId × slotId × day`. Cancelling by id only reaches the
+habit's *current* slots, so a slot that was replaced or removed (new id from the
+schedule → reminder prompt, or the slot deleted in the sheet) would keep its
+pending notifications/alarms and ring at the old time for up to 7 days (a habit
+moved from 00:00 to 20:00 rang at both). Two guards:
+
+- `HabitProvider.updateHabit` diffs the slots before/after
+  (`HabitNotificationTime.removedSlots`) and calls
+  `NotificationService.cancelRemovedSlotNotifications` for the removed ones, so
+  an edit takes effect immediately. Slots that only changed time keep their id
+  and are simply overwritten.
+- `scheduleAllHabitNotifications` (full sync: app start at most once a day,
+  forced syncs, toggles) first calls `cancelAllHabitNotifications`, which lists
+  every pending habit-typed notification and cancels it, catching anything the
+  id-based paths can't reach (e.g. slots changed by a backup / device-sync
+  merge). An earlier optimisation replaced this with per-id cancels and let
+  orphans pile up.
+
 ## Permissions
 
 `NotificationService.requestAlarmPermissions()` runs when the checkbox is checked

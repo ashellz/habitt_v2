@@ -3753,4 +3753,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String healthCardFromDevice(Object device) {
     return 'From $device';
   }
+
+  @override
+  String get backupFoundDescICloud =>
+      'Your iCloud has a backup. How would you like to restore?';
+
+  @override
+  String get ignoreBackupUploadMine => 'Ignore backup and upload mine';
+
+  @override
+  String get replaceCloudBackupTitle => 'Replace the existing backup?';
+
+  @override
+  String replaceCloudBackupDesc(String cloud) {
+    return 'The existing backup in $cloud will be permanently deleted and replaced with the data on this device. Other devices will sync from this data. This action cannot be undone.';
+  }
+
+  @override
+  String get replaceCloudBackup => 'Replace backup';
 }

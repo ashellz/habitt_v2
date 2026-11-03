@@ -6351,6 +6351,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From {device}'**
   String healthCardFromDevice(Object device);
+
+  /// No description provided for @backupFoundDescICloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Your iCloud has a backup. How would you like to restore?'**
+  String get backupFoundDescICloud;
+
+  /// No description provided for @ignoreBackupUploadMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore backup and upload mine'**
+  String get ignoreBackupUploadMine;
+
+  /// No description provided for @replaceCloudBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace the existing backup?'**
+  String get replaceCloudBackupTitle;
+
+  /// No description provided for @replaceCloudBackupDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The existing backup in {cloud} will be permanently deleted and replaced with the data on this device. Other devices will sync from this data. This action cannot be undone.'**
+  String replaceCloudBackupDesc(String cloud);
+
+  /// No description provided for @replaceCloudBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace backup'**
+  String get replaceCloudBackup;
 }
 
 class _AppLocalizationsDelegate

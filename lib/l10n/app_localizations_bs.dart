@@ -3752,4 +3752,22 @@ class AppLocalizationsBs extends AppLocalizations {
   String healthCardFromDevice(Object device) {
     return 'Sa uređaja $device';
   }
+
+  @override
+  String get backupFoundDescICloud =>
+      'Tvoj iCloud već ima backup. Kako bi ga želio obnoviti?';
+
+  @override
+  String get ignoreBackupUploadMine => 'Zanemari backup i otpremi moje';
+
+  @override
+  String get replaceCloudBackupTitle => 'Zamijeniti postojeći backup?';
+
+  @override
+  String replaceCloudBackupDesc(String cloud) {
+    return 'Postojeći backup na usluzi $cloud bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ostali uređaji će se sinhronizirati s ovim podacima. Ova radnja se ne može poništiti.';
+  }
+
+  @override
+  String get replaceCloudBackup => 'Zamijeni backup';
 }

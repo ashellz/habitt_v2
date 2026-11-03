@@ -318,7 +318,12 @@ performSync(force, mode)
 When the user connects an account for the first time (no prior sync history) or after signing out, `performSync(force: true)` is always called. `force=true` sets `useDelta = false` regardless of `_lastSyncTime`, so the full-backup path is guaranteed:
 
 - **Cloud empty + local data** — full backup uploaded immediately (else branch in `signIn()`).
-- **Cloud has data + local data** — RestoreChoiceDialog shown; Merge triggers `performSync(true)` which downloads, merges, and re-uploads the entire DB, then starts the periodic sync timer so future cross-device changes are polled.
+- **Cloud has data + local data** — `RestoreChoiceDialog` is shown (`pendingRestoreDecision`), for **both** Google Drive (`signIn()`) and iCloud (`activateICloud()`); with an empty local DB, or an empty cloud, the dialog is skipped and `performSync(true)` runs straight away. Three choices:
+  - **Merge** (`confirmMerge()`) — `performSync(true)` downloads, merges, and re-uploads the entire DB, then starts the periodic sync timer so future cross-device changes are polled.
+  - **Delete** (`confirmReplace()`, behind `OverwriteLocalDataDialog`) — wipes local data and restores from the cloud (`_replaceFromCloud`).
+  - **Ignore backup and upload mine** (`confirmUploadMine()`, behind `ReplaceCloudBackupDialog`, which warns the existing cloud backup is permanently deleted) — the found backup is never downloaded or decrypted. `adapter.deleteAll()` removes everything in `habitt_backups/` (full backups, deltas, `metadata.meta`, Drive `key.key`), the applied-delta / last-applied-backup / last-sync cursors are cleared, `_ensureKeySync()` re-uploads the local key (Drive; iCloud's key already lives in the synced keychain), and this device's data is uploaded as a new full backup. Local data is untouched. If the upload fails after the delete, the cloud is simply empty and the next sync cycle uploads the local DB (cursor is null → full path).
+  - Other devices that were syncing against the replaced backup pick up the new full backup via the normal compaction-recovery check (`_checkAndApplyNewerBackup`) and merge it by timestamp.
+  - iCloud previously merged silently on connect; it now asks. If the dialog is dismissed without choosing, the next app launch auto-merges (`_lastSyncTime == null`), same as Drive.
 
 This guarantees Device B can always download a complete snapshot containing all changes made before and after the account was connected.
 
@@ -335,7 +340,7 @@ This guarantees Device B can always download a complete snapshot containing all 
 | Empty | Empty | Proceed, nothing to do |
 | Empty | Has data | Upload full backup immediately |
 | Has backups | Empty | Auto-merge (safe, merging into nothing) |
-| Has backups | Has data | Show merge/replace dialog to user |
+| Has backups | Has data | Show merge / replace local / ignore-backup-and-upload-mine dialog to user |
 | Has PIN-wrapped key | No key | Prompt for PIN before proceeding |
 
 ---

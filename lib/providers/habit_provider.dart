@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/category.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/schedule_type.dart';
@@ -1747,9 +1748,22 @@ class HabitProvider extends ChangeNotifier {
   void updateHabit(Habit habit) {
     habitStatsProvider?.invalidateHabit(habit.id);
     final persistedHabit = habits.where((h) => h.id == habit.id).first;
+    final previousSlots =
+        persistedHabit.notificationTimes.map((slot) => slot.copy()).toList();
     persistedHabit.updateHabit(habit);
     updateHabitInDB(habit);
     refreshTodaysHabits(notify: false);
+    // The reschedule below only cancels the habit's current slots, so slots the
+    // edit replaced or removed would keep ringing at their old time.
+    unawaited(
+      NotificationService.cancelRemovedSlotNotifications(
+        persistedHabit.id,
+        HabitNotificationTime.removedSlots(
+          previousSlots,
+          persistedHabit.notificationTimes,
+        ),
+      ),
+    );
     syncSingleHabitNotifications(persistedHabit);
 
     notifyListeners();

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/services/alarm_kit_service.dart';
@@ -285,25 +286,13 @@ class NotificationService {
       return;
     }
 
-    // Cancel existing notifications by deterministic IDs instead of using the
-    // expensive listScheduledNotifications() platform call. Since IDs are computed
-    // from habitId × slotId × day, we can cancel exactly the right set without
-    // fetching anything from the platform first.
-    // Note: notification slots removed from a habit since the last sync are
-    // non-repeating, so any orphaned entries fire at most once then disappear.
-    final now = DateTime.now();
-    final startDay = DateTime(now.year, now.month, now.day);
-    for (final habit in habits) {
-      if (habit.notificationTimes.isEmpty) continue;
-      for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
-        final day = addCalendarDays(startDay, dayOffset);
-        for (final slot in habit.notificationTimes) {
-          await AwesomeNotifications().cancel(
-            _getHabitNotificationId(habit.id, slot.id, day),
-          );
-        }
-      }
-    }
+    // Full sync: wipe every pending habit notification, not just the ids of the
+    // habits' current slots. Slots replaced or removed since the last sync (edit
+    // path, backup / device-sync merge) are unreachable by id and, being
+    // non-repeating but scheduled up to horizonDays ahead, would otherwise keep
+    // ringing at their old time (task 61). This runs at most once a day (plus
+    // forced syncs), so the single listScheduledNotifications() call is fine.
+    await cancelAllHabitNotifications();
 
     final localizations =
         await HabitNotificationLocaleResolver.resolveFromPreferences();
@@ -464,6 +453,29 @@ class NotificationService {
       final day = addCalendarDays(startDay, dayOffset);
       for (final slot in habit.notificationTimes) {
         final id = _getHabitNotificationId(habit.id, slot.id, day);
+        await AwesomeNotifications().cancel(id);
+        await AlarmKitService.cancel(id);
+      }
+    }
+  }
+
+  // Cancels the pending notifications of reminder slots that were replaced or
+  // removed from [habit] (see HabitNotificationTime.removedSlots). Rescheduling
+  // only cancels the habit's *current* slots, so without this the old slots'
+  // already-scheduled notifications (up to [horizonDays] days of them) would
+  // still fire, e.g. an alarm at the old time after moving it to a new one.
+  static Future<void> cancelRemovedSlotNotifications(
+    int habitId,
+    Iterable<HabitNotificationTime> removedSlots, {
+    int horizonDays = 7,
+  }) async {
+    if (removedSlots.isEmpty) return;
+    final now = DateTime.now();
+    final startDay = DateTime(now.year, now.month, now.day);
+    for (int dayOffset = 0; dayOffset < horizonDays; dayOffset++) {
+      final day = addCalendarDays(startDay, dayOffset);
+      for (final slot in removedSlots) {
+        final id = _getHabitNotificationId(habitId, slot.id, day);
         await AwesomeNotifications().cancel(id);
         await AlarmKitService.cancel(id);
       }

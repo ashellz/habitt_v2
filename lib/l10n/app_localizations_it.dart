@@ -3783,4 +3783,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String healthCardFromDevice(Object device) {
     return 'Da $device';
   }
+
+  @override
+  String get backupFoundDescICloud =>
+      'Il tuo iCloud ha un backup. Come vorresti ripristinare?';
+
+  @override
+  String get ignoreBackupUploadMine => 'Ignora il backup e carica il mio';
+
+  @override
+  String get replaceCloudBackupTitle => 'Sostituire il backup esistente?';
+
+  @override
+  String replaceCloudBackupDesc(String cloud) {
+    return 'Il backup esistente su $cloud verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Gli altri dispositivi si sincronizzeranno con questi dati. Questa azione non può essere annullata.';
+  }
+
+  @override
+  String get replaceCloudBackup => 'Sostituisci backup';
 }

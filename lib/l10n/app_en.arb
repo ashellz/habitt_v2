@@ -1378,5 +1378,11 @@
   "healthDeviceDesc": "Only the chosen device reads health data. Your other devices get its values through sync, and progress can still be edited by hand on any of them.",
   "healthDeviceThisDevice": "This device",
   "healthDeviceIosOnlyNote": "Activity and Mindfulness habits only sync from an iPhone.",
-  "healthCardFromDevice": "From {device}"
+  "healthCardFromDevice": "From {device}",
+  "backupFoundDescICloud": "Your iCloud has a backup. How would you like to restore?",
+  "ignoreBackupUploadMine": "Ignore backup and upload mine",
+  "replaceCloudBackupTitle": "Replace the existing backup?",
+  "replaceCloudBackupDesc": "The existing backup in {cloud} will be permanently deleted and replaced with the data on this device. Other devices will sync from this data. This action cannot be undone.",
+  "@replaceCloudBackupDesc": {"placeholders": {"cloud": {"type": "String"}}},
+  "replaceCloudBackup": "Replace backup"
 }

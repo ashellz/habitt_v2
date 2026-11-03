@@ -199,6 +199,10 @@ class BackupProvider extends ChangeNotifier {
   bool get hasPendingBackupPassphrase => _failedBackupFileId != null;
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
+
+  /// True when the backend a restore decision is pending for is iCloud (as
+  /// opposed to Google Drive); picks the wording of the restore-choice dialogs.
+  bool get restoreDecisionIsICloud => _adapter is ICloudStorageAdapter;
   bool get hasPendingSync => _hasPendingSync;
   int get syncTotalDeltas => _syncTotalDeltas;
   int get syncCurrentDelta => _syncCurrentDelta;
@@ -1022,6 +1026,64 @@ class BackupProvider extends ChangeNotifier {
     } catch (e) {
       syncState = SyncState.error;
       lastError = 'Restore failed: $e';
+      debugPrint(lastError);
+      notifyListeners();
+    }
+  }
+
+  /// Called when the user picks "Ignore backup and upload mine": the backup
+  /// found on sign-in is never read. Everything in the cloud folder (full
+  /// backups, deltas, metadata, key.key) is deleted and this device's data is
+  /// uploaded as the new, only backup. Local data is left untouched.
+  Future<void> confirmUploadMine() async {
+    _pendingRestoreDecision = false;
+    notifyListeners();
+
+    if (_syncState == SyncState.syncing || _adapter == null) return;
+
+    progressMessage = 'Replacing cloud backup...';
+    _syncPillDismissed = false;
+    syncState = SyncState.syncing;
+    lastError = null;
+
+    try {
+      await _adapter!.deleteAll();
+
+      // Nothing from the old cloud state applies to the new backup.
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kAppliedDeltaIdsKey);
+      await prefs.remove(_kLastAppliedBackupIdKey);
+      _lastSyncTime = null;
+      await prefs.remove(_kLastSyncTimeKey);
+
+      // key.key is gone, so this re-uploads the local key (Drive); on iCloud
+      // the key already lives in the synced keychain.
+      await _ensureKeySync();
+      if (_pendingCloudPinEntry) {
+        syncState = SyncState.idle;
+        progressMessage = null;
+        return;
+      }
+      final key = await _getKey();
+      if (key == null) {
+        syncState = SyncState.idle;
+        progressMessage = null;
+        return;
+      }
+
+      progressMessage = 'Uploading your data...';
+      _syncIsUploading = true;
+      notifyListeners();
+      await _uploadBackupToCloud(key);
+      _syncIsUploading = false;
+
+      _dataExists = true;
+      await _onSyncSuccess();
+      _startPeriodicSync();
+    } catch (e) {
+      _syncIsUploading = false;
+      syncState = SyncState.error;
+      lastError = 'Upload failed: $e';
       debugPrint(lastError);
       notifyListeners();
     }
@@ -2633,8 +2695,17 @@ class BackupProvider extends ChangeNotifier {
     await prefs.setString(_kActiveBackendKey, BackupBackend.iCloud.name);
 
     _dataExists = await _checkDataExists();
-    notifyListeners();
 
+    final localIsEmpty = Hive.box<Habit>('habits').isEmpty;
+    if (_dataExists && !localIsEmpty) {
+      // Local data exists and iCloud has a backup — let the user decide
+      // (merge / replace local / ignore backup and upload mine).
+      _pendingRestoreDecision = true;
+      notifyListeners();
+      return;
+    }
+
+    notifyListeners();
     await performSync(true);
     _startPeriodicSync();
   }

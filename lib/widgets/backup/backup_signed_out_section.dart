@@ -48,6 +48,13 @@ class _BackupSignedOutSectionState extends State<BackupSignedOutSection> {
     await bp.activateICloud();
     if (mounted) setState(() => _connectingICloud = false);
     if (!mounted) return;
+    if (context.read<BackupProvider>().pendingRestoreDecision) {
+      await showDialogSheet<void>(
+        context: context,
+        builder: (_) => const RestoreChoiceDialog(),
+      );
+    }
+    if (!mounted) return;
     widget.onAfterSignIn();
   }
 

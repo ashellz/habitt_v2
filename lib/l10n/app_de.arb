@@ -1344,5 +1344,10 @@
   "healthDeviceDesc": "Nur das ausgewählte Gerät liest Gesundheitsdaten. Deine anderen Geräte erhalten die Werte per Synchronisierung, und der Fortschritt lässt sich auf jedem von ihnen weiterhin manuell bearbeiten.",
   "healthDeviceThisDevice": "Dieses Gerät",
   "healthDeviceIosOnlyNote": "Gewohnheiten für Aktivität und Achtsamkeit werden nur von einem iPhone synchronisiert.",
-  "healthCardFromDevice": "Von {device}"
+  "healthCardFromDevice": "Von {device}",
+  "backupFoundDescICloud": "Dein iCloud hat ein Backup. Wie möchtest du wiederherstellen?",
+  "ignoreBackupUploadMine": "Backup ignorieren und meine Daten hochladen",
+  "replaceCloudBackupTitle": "Vorhandenes Backup ersetzen?",
+  "replaceCloudBackupDesc": "Das vorhandene Backup in {cloud} wird dauerhaft gelöscht und durch die Daten auf diesem Gerät ersetzt. Andere Geräte synchronisieren sich mit diesen Daten. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "replaceCloudBackup": "Backup ersetzen"
 }

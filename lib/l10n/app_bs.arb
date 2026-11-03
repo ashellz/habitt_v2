@@ -1334,5 +1334,10 @@
   "healthDeviceDesc": "Samo odabrani uređaj čita zdravstvene podatke. Ostali uređaji dobijaju njegove vrijednosti kroz sinhronizaciju, a napredak se i dalje može ručno mijenjati na bilo kojem od njih.",
   "healthDeviceThisDevice": "Ovaj uređaj",
   "healthDeviceIosOnlyNote": "Navike Aktivnost i Svjesnost se sinhronizuju samo sa iPhonea.",
-  "healthCardFromDevice": "Sa uređaja {device}"
+  "healthCardFromDevice": "Sa uređaja {device}",
+  "backupFoundDescICloud": "Tvoj iCloud već ima backup. Kako bi ga želio obnoviti?",
+  "ignoreBackupUploadMine": "Zanemari backup i otpremi moje",
+  "replaceCloudBackupTitle": "Zamijeniti postojeći backup?",
+  "replaceCloudBackupDesc": "Postojeći backup na usluzi {cloud} bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ostali uređaji će se sinhronizirati s ovim podacima. Ova radnja se ne može poništiti.",
+  "replaceCloudBackup": "Zamijeni backup"
 }
