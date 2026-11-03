@@ -16,6 +16,7 @@ import 'package:habitt/models/drive_backup_file.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/services/cloud_storage_adapter.dart';
 import 'package:habitt/services/drive_storage_adapter.dart';
@@ -53,7 +54,15 @@ enum SyncMode {
 }
 
 class BackupProvider extends ChangeNotifier {
-  BackupProvider();
+  BackupProvider({SyncDevicesProvider? syncDevices})
+    : _syncDevices = syncDevices;
+
+  // the devices syncing this account and the Health device pick; it travels
+  // inside Drive backups only (iCloud devices share one Apple Health anyway)
+  final SyncDevicesProvider? _syncDevices;
+
+  bool get _sharesDevices =>
+      _activeBackend == BackupBackend.googleDrive && _adapter != null;
 
   static const String _kBackupUserEmailKey = 'backup_user_email';
   static const String _kBackupUserIdKey = 'backup_user_id';
@@ -171,7 +180,9 @@ class BackupProvider extends ChangeNotifier {
 
   GoogleSignInAccount? get currentUser => _currentUser;
   User? get firebaseUser => _firebaseUser;
-  bool get isLoggedIn => _currentUser != null && _firebaseUser != null;
+  /// Signed in to Google Drive, or connected to iCloud.
+  bool get isLoggedIn =>
+      (_currentUser != null && _firebaseUser != null) || isICloudConnected;
   BackupMetadata? get localMetadata => _localMetadata;
   SyncState get syncState => _syncState;
   bool get isBackingUp => _isBackingUp;
@@ -705,6 +716,7 @@ class BackupProvider extends ChangeNotifier {
     await prefs.remove(_kBackupUserIdKey);
     await prefs.remove(_kLastSyncTimeKey);
     await prefs.remove(_kAppliedDeltaIdsKey);
+    await _syncDevices?.clear();
     notifyListeners();
   }
 
@@ -811,6 +823,7 @@ class BackupProvider extends ChangeNotifier {
       await prefs.remove(_kLastSyncTimeKey);
       await prefs.remove(_kAppliedDeltaIdsKey);
       _lastSyncTime = null;
+      await _syncDevices?.clear();
 
       _autoSyncTimer?.cancel();
       _autoSyncTimer = null;
@@ -1755,6 +1768,7 @@ class BackupProvider extends ChangeNotifier {
     final encryptedDatabase = await BackupService.exportDataForGoogleDrive(
       secretKey: key,
       habitProvider: _habitProvider!,
+      devices: _sharesDevices ? await _syncDevices?.listForUpload() : null,
     );
     if (encryptedDatabase == null) {
       _lastError = 'Failed to export database.';
@@ -2023,10 +2037,15 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
+    final devices =
+        _sharesDevices ? await _syncDevices?.listForUpload() : null;
     final bytes = await BackupService.exportDeltaForGoogleDrive(
       secretKey: key,
       habitProvider: _habitProvider!,
       fromTime: _lastSyncTime!,
+      devices: devices,
+      devicesChanged:
+          devices != null && _syncDevices!.changedSince(_lastSyncTime!),
     );
     if (bytes == null) {
       debugPrint(
@@ -2150,6 +2169,13 @@ class BackupProvider extends ChangeNotifier {
 
     if (backupData.isDelta && backupData.wasUpconvertedFromLegacy) {
       _outdatedPeerVersionDetected = true;
+    }
+
+    if (_sharesDevices) {
+      await _syncDevices?.mergeIncoming(
+        backupData.devices,
+        backupData.metadata,
+      );
     }
 
     // ── Habits (master records) ──────────────────────────────────────────────
@@ -2600,6 +2626,8 @@ class BackupProvider extends ChangeNotifier {
     await _adapter?.dispose();
     _adapter = candidate;
     _activeBackend = BackupBackend.iCloud;
+    // off Drive this device no longer shares with Android or other accounts
+    await _syncDevices?.clear();
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_kActiveBackendKey, BackupBackend.iCloud.name);

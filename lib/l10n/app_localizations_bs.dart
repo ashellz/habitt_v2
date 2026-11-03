@@ -3733,4 +3733,23 @@ class AppLocalizationsBs extends AppLocalizations {
   String premadeHealthSyncAllow(Object source) {
     return 'Moraš dozvoliti pristup $source da bi sinhronizacija radila.';
   }
+
+  @override
+  String get healthDeviceTitle => 'Uređaj za sinhronizaciju zdravlja';
+
+  @override
+  String get healthDeviceDesc =>
+      'Samo odabrani uređaj čita zdravstvene podatke. Ostali uređaji dobijaju njegove vrijednosti kroz sinhronizaciju, a napredak se i dalje može ručno mijenjati na bilo kojem od njih.';
+
+  @override
+  String get healthDeviceThisDevice => 'Ovaj uređaj';
+
+  @override
+  String get healthDeviceIosOnlyNote =>
+      'Navike Aktivnost i Svjesnost se sinhronizuju samo sa iPhonea.';
+
+  @override
+  String healthCardFromDevice(Object device) {
+    return 'Sa uređaja $device';
+  }
 }

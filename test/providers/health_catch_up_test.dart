@@ -10,8 +10,10 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/health_session_detail.dart';
 import 'package:habitt/models/health_workout_type.dart';
+import 'package:habitt/models/sync_device.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/services/health_service.dart';
 import 'package:habitt/util/health_value_guard.dart';
 import 'package:hive_ce/hive.dart';
@@ -90,7 +92,10 @@ void main() {
         });
   });
 
-  Future<void> seedPrefs({Map<int, DateTime> cursors = const {}}) async {
+  Future<void> seedPrefs({
+    Map<int, DateTime> cursors = const {},
+    SyncDeviceList? devices,
+  }) async {
     final today = _normalize(DateTime.now());
     SharedPreferences.setMockInitialValues({
       'lastNotificationSyncDate': _dayKey(today),
@@ -102,6 +107,7 @@ void main() {
         'healthSyncCursors': jsonEncode({
           for (final e in cursors.entries) '${e.key}': _dayKey(e.value),
         }),
+      if (devices != null) 'syncDevices': jsonEncode(devices.toMap()),
     });
   }
 
@@ -520,6 +526,86 @@ void main() {
       await health.syncHabit(habitProvider.habits.firstWhere((h) => h.id == 1));
 
       expect((await storedCursors())[1], _dayKey(_ago(0)));
+    });
+  });
+
+  group('several devices on one Drive backup', () {
+    SyncDevice phone(String id, {required int installedDaysAgo}) => SyncDevice(
+      id: id,
+      model: id,
+      os: '',
+      platform: 'android',
+      firstSeen: _ago(installedDaysAgo),
+      lastSeen: _ago(0),
+    );
+
+    // phone-a has had the app longest, so it reads Health unless one is picked
+    final twoPhones = SyncDeviceList(
+      devices: {
+        'phone-a': phone('phone-a', installedDaysAgo: 300),
+        'phone-b': phone('phone-b', installedDaysAgo: 10),
+      },
+    );
+
+    test('a device that does not read Health reads nothing and drops its cursors', () async {
+      await seedPrefs(cursors: {1: _ago(3)}, devices: twoPhones);
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      final service = _PerDayHealthService((_) => 4000);
+      final health = HealthProvider(
+        service: service,
+        devices: SyncDevicesProvider(selfId: 'phone-b'),
+      )..attachHabitProvider(habitProvider);
+
+      await health.syncNow();
+
+      expect(service.reads, isEmpty);
+      expect(await storedCursors(), isEmpty);
+      // linking a habit here doesn't ask this device for Health access
+      expect(await health.requestPermissionIfNeeded(), isTrue);
+    });
+
+    test('the picked device reads Health', () async {
+      await seedPrefs(
+        devices: twoPhones.withHealthSource(
+          HealthSourceChoice(deviceId: 'phone-b', changedAt: _ago(1)),
+        ),
+      );
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      final service = _PerDayHealthService((_) => 4000);
+      final health = HealthProvider(
+        service: service,
+        devices: SyncDevicesProvider(selfId: 'phone-b'),
+      )..attachHabitProvider(habitProvider);
+
+      await health.syncNow();
+
+      expect(service.reads, [_ago(0)]);
+    });
+
+    test('handing a day back to Health elsewhere clears the override and wins the merge', () async {
+      await seedPrefs(devices: twoPhones);
+      await habitBox.put(1, stepsHabit(id: 1)..healthManualOverride = true);
+      final habitProvider = await createInitializedProvider();
+      final service = _PerDayHealthService((_) => 4000);
+      final health = HealthProvider(
+        service: service,
+        devices: SyncDevicesProvider(selfId: 'phone-b'),
+      )..attachHabitProvider(habitProvider);
+      final before = DateTime.now().toUtc();
+
+      await health.useHealthValues(
+        habitProvider.habits.firstWhere((h) => h.id == 1),
+        DateTime.now(),
+      );
+
+      final habit = habitProvider.habitForDay(1, day: DateTime.now())!;
+      expect(habit.healthManualOverride, isFalse);
+      // stamped, so the reading device takes the cleared flag in a merge
+      expect(habit.timestamps['completed']!.isBefore(before), isFalse);
+      // the reading device fills the value, not this one
+      expect(service.reads, isEmpty);
     });
   });
 }

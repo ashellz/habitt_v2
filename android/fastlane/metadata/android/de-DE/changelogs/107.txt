@@ -1,0 +1,8 @@
+• Health-Sync: Verknüpfe Gewohnheiten mit Schritten, Schlaf, Workouts, Achtsamkeitsminuten oder Kalorien (Health Connect).
+• Gewohnheits-Wecker für dringende Gewohnheiten.
+• Tagesplan: deine Gewohnheiten über den Tag verteilt.
+• Diagramm zur Stärke im Zeitverlauf in den Gewohnheitsdetails.
+• Neue Designfarben, kostenlos für alle.
+• Verpasste Gewohnheiten mit eigenem Intervall erscheinen am nächsten Tag erneut, plus Abschlusston und Konfetti.
+
+Dazu viele kleine Verbesserungen und Bugfixes.

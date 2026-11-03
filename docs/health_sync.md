@@ -20,6 +20,9 @@ opened, not the instant new Health data appears. Days the app wasn't opened on
 are caught up on the next open, up to 14 days back (see "Catching up on past
 days").
 
+With several phones on one Google Drive backup, only one of them reads Health;
+the others get its values through sync (see "Several devices").
+
 ## Data model
 
 - `Habit.healthMetric` (`HealthMetricType?`, [`lib/models/health_metric_type.dart`](../lib/models/health_metric_type.dart)) —
@@ -266,6 +269,57 @@ so it gets the full revert / re-ask / Settings flow above.
 
 Demo habits (`lib/demo/`) and onboarding never create Health-linked habits
 from templates, so they don't touch this flow.
+
+## Several devices
+
+Health stores don't sync with each other: an iPhone and an Android phone (or
+two Android phones — Health Connect stays on the device) each hold their own
+numbers. Before this, every phone synced its own Health into the shared habit,
+each write won the backup merge (latest timestamp), and the phones overwrote
+each other on every open, flipping completion and streaks.
+
+So with two or more phones on one **Google Drive** backup, exactly one reads
+Health — the **Health sync device**. The others never read Health and just
+receive its values through backup sync. iCloud is left out: iCloud devices
+share one Apple ID, so one Apple Health already.
+
+- **Device list:** `SyncDevicesProvider`
+  ([`lib/providers/sync_devices_provider.dart`](../lib/providers/sync_devices_provider.dart))
+  holds every phone syncing the account and the pick; it travels inside Drive
+  backups and deltas (`backup_system.md` § "Device List" has the format, merge
+  and cost). Only iOS / Android list themselves.
+- **Who reads:** the picked device while it's listed; with no pick, the device
+  that has had the app longest (earliest install time, then id). Every phone
+  computes the same answer from the same list. One phone alone (or no Drive)
+  always reads, exactly as before. `SyncDeviceList.healthSourceId` in
+  [`lib/models/sync_device.dart`](../lib/models/sync_device.dart).
+- **The others** (`readsHealthHere == false`): `syncNow` reads nothing and drops
+  every catch-up cursor, so if the phone is picked later it starts from that
+  day instead of backfilling over the other phone's history. `syncHabit` and
+  `requestPermissionIfNeeded` skip Health too (linking a habit there asks for
+  no access), and `accessLost` is cleared, so no access dialogs show for a
+  phone that doesn't read.
+- **Hand edits** work on every phone as before (`healthManualOverride` travels
+  with the day). "Use … values" clears the override anywhere; on a phone that
+  doesn't read, the reading phone applies the Health value on its next open.
+  Clearing stamps the day-state so it wins the merge (`backup_system.md`,
+  "Companion day-state fields").
+- **Settings → Sync → Health sync device** (`HealthDeviceSetting`,
+  [`lib/widgets/settings/health_device_setting.dart`](../lib/widgets/settings/health_device_setting.dart)):
+  shown on every phone once two are listed. One row per phone ("iPhone 17 ·
+  iOS 26.6", then "This device" or the day it last synced), a check on the
+  reading one. Picking uploads on the next auto-sync; picking this phone also
+  asks for Health access and syncs right away. With an Android phone picked, a
+  note says Activity and Mindfulness habits (`HealthMetricType.isIosOnly`)
+  only sync from an iPhone; it shows only when such a habit exists.
+- **Details card:** on a phone that doesn't read, the header shows the reading
+  phone's store (logo and name) and "From iPhone 17 · iOS 26.6" instead of the
+  last-synced time, and the iOS no-data access hint is hidden.
+  `HealthOverrideTag` names the reading phone's store too
+  (`SyncDevicesProvider.healthBrand`).
+- **Older app versions** don't know the pick and keep reading Health. They're
+  listed from their backup metadata, so picking one simply stops the updated
+  phones from fighting it.
 
 ## Habit details Health card
 

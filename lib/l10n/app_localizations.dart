@@ -6321,6 +6321,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You need to allow {source} access for syncing to work.'**
   String premadeHealthSyncAllow(Object source);
+
+  /// No description provided for @healthDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health sync device'**
+  String get healthDeviceTitle;
+
+  /// No description provided for @healthDeviceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the chosen device reads health data. Your other devices get its values through sync, and progress can still be edited by hand on any of them.'**
+  String get healthDeviceDesc;
+
+  /// No description provided for @healthDeviceThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This device'**
+  String get healthDeviceThisDevice;
+
+  /// No description provided for @healthDeviceIosOnlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity and Mindfulness habits only sync from an iPhone.'**
+  String get healthDeviceIosOnlyNote;
+
+  /// No description provided for @healthCardFromDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'From {device}'**
+  String healthCardFromDevice(Object device);
 }
 
 class _AppLocalizationsDelegate

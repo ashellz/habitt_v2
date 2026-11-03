@@ -11,6 +11,7 @@ import 'package:habitt/models/backup_data.dart';
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/sync_device.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:hive_ce/hive.dart';
@@ -596,9 +597,12 @@ class BackupService {
 
   /// Export all Hive data as encrypted bytes for uploading to Google Drive.
   /// Uses the device keychain key (v2 format — no passphrase required).
+  /// [devices] is the Drive device list (see `SyncDevicesProvider`), null
+  /// on iCloud.
   static Future<Uint8List?> exportDataForGoogleDrive({
     required SecretKey secretKey,
     required HabitProvider habitProvider,
+    SyncDeviceList? devices,
   }) async {
     try {
       final habitsBox = Hive.box<Habit>('habits');
@@ -613,6 +617,7 @@ class BackupService {
         'habits': habitsBox.values.map((h) => h.toMap()).toList(),
         'days': daysBox.values.map((d) => d.toMap()).toList(),
         'dateJoined': dateJoined.toIso8601String(),
+        if (devices != null) 'devices': devices.toMap(),
       };
 
       final backupWrapper = await _encryptWithKey(payload, secretKey);
@@ -627,10 +632,14 @@ class BackupService {
 
   /// Returns null when there are no changes — skips the
   /// upload step, not writing an empty delta file to Drive.
+  /// [devices] rides along in every delta (Drive only); [devicesChanged]
+  /// uploads one for it alone when this device changed the list.
   static Future<Uint8List?> exportDeltaForGoogleDrive({
     required SecretKey secretKey,
     required HabitProvider habitProvider,
     required DateTime fromTime,
+    SyncDeviceList? devices,
+    bool devicesChanged = false,
   }) async {
     try {
       final habits = habitProvider.habitBox.values.toList();
@@ -667,7 +676,9 @@ class BackupService {
         );
       }
 
-      if (changedHabits.isEmpty && changedDays.isEmpty) return null;
+      if (changedHabits.isEmpty && changedDays.isEmpty && !devicesChanged) {
+        return null;
+      }
 
       final metadata = await buildMetadata();
       final payload = <String, dynamic>{
@@ -679,6 +690,7 @@ class BackupService {
         'habits': changedHabits.map((h) => h.toMap()).toList(),
         'days': changedDays.map((d) => d.toMap()).toList(),
         'dateJoined': habitProvider.dateJoined.toIso8601String(),
+        if (devices != null) 'devices': devices.toMap(),
       };
 
       final backupWrapper = await _encryptWithKey(payload, secretKey);

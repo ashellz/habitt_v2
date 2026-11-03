@@ -2070,6 +2070,10 @@ class HabitProvider extends ChangeNotifier {
     if (!habit.healthManualOverride) return;
 
     habit.healthManualOverride = false;
+    // the flag has no timestamp of its own and follows the completion tuple
+    // in a merge, so stamp the tuple: otherwise the cleared flag loses to the
+    // other device's (identical) tuple and Health never takes the day back
+    habit.timestamps['completed'] = DateTime.now().toUtc();
     await updateHabitInDB(habit, day: daySimple);
     notifyListeners();
   }

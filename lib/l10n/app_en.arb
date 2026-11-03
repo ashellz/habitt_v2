@@ -1373,5 +1373,10 @@
     }
   },
   "requestFeature": "Request a feature",
-  "premadeHealthSyncAllow": "You need to allow {source} access for syncing to work."
+  "premadeHealthSyncAllow": "You need to allow {source} access for syncing to work.",
+  "healthDeviceTitle": "Health sync device",
+  "healthDeviceDesc": "Only the chosen device reads health data. Your other devices get its values through sync, and progress can still be edited by hand on any of them.",
+  "healthDeviceThisDevice": "This device",
+  "healthDeviceIosOnlyNote": "Activity and Mindfulness habits only sync from an iPhone.",
+  "healthCardFromDevice": "From {device}"
 }

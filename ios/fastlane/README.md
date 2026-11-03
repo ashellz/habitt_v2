@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios internal
+
+```sh
+[bundle exec] fastlane ios internal
+```
+
+Upload the built IPA to TestFlight with per-locale What's New from release_notes.txt
+
 ### ios release
 
 ```sh

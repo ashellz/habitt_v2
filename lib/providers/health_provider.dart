@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/habit_provider.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/services/health_service.dart';
 import 'package:habitt/util/health_sync_range.dart';
 import 'package:habitt/util/health_value_guard.dart';
@@ -18,11 +19,16 @@ const String _kLastSyncedAtKey = 'healthLastSyncedAt';
 const String _kSyncCursorsKey = 'healthSyncCursors';
 
 class HealthProvider extends ChangeNotifier {
-  HealthProvider({HealthService? service})
-    : _service = service ?? HealthService();
+  HealthProvider({HealthService? service, SyncDevicesProvider? devices})
+    : _service = service ?? HealthService(),
+      _devices = devices;
 
   final HealthService _service;
   HabitProvider? _habitProvider;
+
+  // with several devices on one Drive backup only the chosen one reads
+  // Health; the others get its values through sync (see health_sync.md)
+  final SyncDevicesProvider? _devices;
 
   bool isAvailable = false;
   bool permissionGranted = false;
@@ -91,7 +97,6 @@ class HealthProvider extends ChangeNotifier {
     }
   }
 
-
   String _dayKey(DateTime d) =>
       DateTime(d.year, d.month, d.day).toIso8601String().split('T').first;
 
@@ -130,8 +135,17 @@ class HealthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> _readsHealthHere() async {
+    final devices = _devices;
+    if (devices == null) return true;
+    await devices.ensureLoaded();
+    return devices.readsHealthHere;
+  }
+
   // used when user tries to link a habit to Health for the first ime
   Future<bool> requestPermissionIfNeeded() async {
+    // another device reads Health: linking here needs no access of its own
+    if (!await _readsHealthHere()) return true;
     await ensureAvailabilityChecked();
     if (!isAvailable) return false;
     try {
@@ -163,15 +177,23 @@ class HealthProvider extends ChangeNotifier {
             .toList();
 
     // a habit that is unlinked, deleted or paused loses its cursor, so when it
-    // comes back it starts from that day instead of backfilling the gap
+    // comes back it starts from that day instead of backfilling the gap. A
+    // device that doesn't read Health drops them all: if it's picked later it
+    // starts from that day, never backfilling over the other device's values
+    final readsHere = await _readsHealthHere();
     final cursors = await _loadCursors();
     final loadedCursors = Map<int, DateTime>.of(cursors);
-    final linkedIds = linkedHabits.map((h) => h.id).toSet();
+    final linkedIds =
+        readsHere ? linkedHabits.map((h) => h.id).toSet() : const <int>{};
     final before = cursors.length;
     cursors.removeWhere((id, _) => !linkedIds.contains(id));
     if (cursors.length != before) await _saveCursors(cursors);
 
-    if (linkedHabits.isEmpty) return;
+    if (!readsHere && accessLost) {
+      accessLost = false;
+      notifyListeners();
+    }
+    if (linkedIds.isEmpty) return;
 
     await ensureAvailabilityChecked();
     if (!isAvailable) return;
@@ -287,6 +309,7 @@ class HealthProvider extends ChangeNotifier {
     final habitProvider = _habitProvider;
     final metric = habit.healthMetric;
     if (habitProvider == null || metric == null) return;
+    if (!await _readsHealthHere()) return;
 
     try {
       await ensureAvailabilityChecked();
@@ -340,6 +363,10 @@ class HealthProvider extends ChangeNotifier {
     if (habitProvider == null || habit.healthMetric == null) return;
 
     await habitProvider.clearHealthManualOverride(habit.id, day: day);
+
+    // the device that reads Health applies the value once the cleared
+    // override reaches it
+    if (!await _readsHealthHere()) return;
 
     // a running syncNow already owns the syncing flag
     final ownsSyncingFlag = !isSyncing;

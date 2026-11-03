@@ -3734,4 +3734,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String premadeHealthSyncAllow(Object source) {
     return 'You need to allow $source access for syncing to work.';
   }
+
+  @override
+  String get healthDeviceTitle => 'Health sync device';
+
+  @override
+  String get healthDeviceDesc =>
+      'Only the chosen device reads health data. Your other devices get its values through sync, and progress can still be edited by hand on any of them.';
+
+  @override
+  String get healthDeviceThisDevice => 'This device';
+
+  @override
+  String get healthDeviceIosOnlyNote =>
+      'Activity and Mindfulness habits only sync from an iPhone.';
+
+  @override
+  String healthCardFromDevice(Object device) {
+    return 'From $device';
+  }
 }

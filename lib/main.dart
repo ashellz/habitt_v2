@@ -28,6 +28,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/providers/color_provider.dart';
@@ -156,7 +157,10 @@ Future<void> main() async {
 
   // init backup provider, not awaited so it doesn't freeze splash
   // homepage makes sure its initalized before performing sync
-  final backupProvider = BackupProvider();
+  // devices syncing through Drive and which one reads Health, shared by the
+  // backup (fills it) and Health (follows it) providers
+  final syncDevicesProvider = SyncDevicesProvider()..ensureLoaded();
+  final backupProvider = BackupProvider(syncDevices: syncDevicesProvider);
   backupProvider.initialize();
 
   final notificationsProvider = NotificationsProvider(prefs);
@@ -257,8 +261,11 @@ Future<void> main() async {
 
         // HealthProvider: reads from HabitProvider one-way, same shape as
         // TimerProvider above. HabitProvider has no dependency back on it.
+        ChangeNotifierProvider<SyncDevicesProvider>.value(
+          value: syncDevicesProvider,
+        ),
         ChangeNotifierProxyProvider<HabitProvider, HealthProvider>(
-          create: (_) => HealthProvider(),
+          create: (_) => HealthProvider(devices: syncDevicesProvider),
           update: (_, habitProvider, previous) {
             previous!.attachHabitProvider(habitProvider);
             return previous;

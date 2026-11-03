@@ -4,7 +4,7 @@ import 'package:habitt/widgets/settings/appearance_setting.dart';
 import 'package:habitt/widgets/settings/language_setting.dart';
 import 'package:habitt/widgets/settings/preferences_settings.dart';
 import 'package:habitt/widgets/settings/settings_top_section.dart';
-import 'package:habitt/widgets/settings/sync_speed_setting.dart';
+import 'package:habitt/widgets/settings/sync_settings.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -33,7 +33,7 @@ class SettingsPage extends StatelessWidget {
                 children: [
                   LanguageSetting(),
                   AppearanceSetting(),
-                  SyncSpeedSetting(),
+                  SyncSettings(),
                   Preferences(),
                 ],
               ),

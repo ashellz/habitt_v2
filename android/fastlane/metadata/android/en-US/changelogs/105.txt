@@ -1,0 +1,8 @@
+• Health sync: link habits to steps, sleep, workouts, mindful minutes or calories (Health Connect).
+• Habit alarms for urgent habits.
+• Daily Plan: see your habits laid out across your day.
+• Strength over time chart in habit details.
+• New theme colors, free for everyone.
+• Missed custom interval habits can show next day if not completed, plus completion sound and confetti.
+
+A bunch of small things such as improvements and bug fixes are included.

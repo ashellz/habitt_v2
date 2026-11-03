@@ -1329,5 +1329,10 @@
   "scheduleReminderAtStart": "U vrijeme početka",
   "scheduleReminderMinutesBefore": "{minutes} minuta prije",
   "requestFeature": "Predloži funkciju",
-  "premadeHealthSyncAllow": "Moraš dozvoliti pristup {source} da bi sinhronizacija radila."
+  "premadeHealthSyncAllow": "Moraš dozvoliti pristup {source} da bi sinhronizacija radila.",
+  "healthDeviceTitle": "Uređaj za sinhronizaciju zdravlja",
+  "healthDeviceDesc": "Samo odabrani uređaj čita zdravstvene podatke. Ostali uređaji dobijaju njegove vrijednosti kroz sinhronizaciju, a napredak se i dalje može ručno mijenjati na bilo kojem od njih.",
+  "healthDeviceThisDevice": "Ovaj uređaj",
+  "healthDeviceIosOnlyNote": "Navike Aktivnost i Svjesnost se sinhronizuju samo sa iPhonea.",
+  "healthCardFromDevice": "Sa uređaja {device}"
 }

@@ -45,8 +45,11 @@ class _ProfileTopPartState extends State<ProfileTopPart> {
     final bp = context.watch<BackupProvider>();
     final googleName = bp.currentUser?.displayName;
     final name = this.name ?? googleName ?? loc.guest;
-    final googlePhotoUrl = bp.isLoggedIn ? bp.currentUser?.photoUrl : null;
-    final email = bp.isLoggedIn ? (bp.currentUser?.email ?? this.email ?? '') : '';
+    final isGoogleLoggedIn = bp.currentUser != null && bp.firebaseUser != null;
+    final googlePhotoUrl = isGoogleLoggedIn ? bp.currentUser?.photoUrl : null;
+    final email = isGoogleLoggedIn
+        ? (bp.currentUser?.email ?? this.email ?? '')
+        : '';
 
     return Container(
       color: widget.cp.bg,

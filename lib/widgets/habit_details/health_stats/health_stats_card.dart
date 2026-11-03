@@ -8,6 +8,7 @@ import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/util/health_history.dart';
 import 'package:habitt/util/health_missing_data.dart';
 import 'package:habitt/widgets/default/health_override_tag.dart';
@@ -62,6 +63,7 @@ class HealthStatsCard extends StatelessWidget {
         children: [
           _Header(),
           if (Platform.isIOS &&
+              context.watch<SyncDevicesProvider>().readsHealthHere &&
               shouldHintHealthAccess(
                 history: history,
                 createdAt: habit.createdAt.toLocal(),
@@ -177,13 +179,18 @@ class _Header extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
     final health = context.watch<HealthProvider>();
+    final devices = context.watch<SyncDevicesProvider>();
 
-    final needsPermission = Platform.isAndroid && !health.permissionGranted;
+    // with another device reading Health, the card shows that device's store
+    final readsHere = devices.readsHealthHere;
+    final isAppleHealth = devices.healthPlatform == 'ios';
+    final needsPermission =
+        readsHere && Platform.isAndroid && !health.permissionGranted;
 
     return Row(
       spacing: 12,
       children: [
-        Platform.isIOS
+        isAppleHealth
             ? SvgPicture.asset(
               'assets/images/widget-images/apple-health.svg',
               width: 36,
@@ -199,9 +206,8 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 2,
             children: [
-              // brand names, the same in every language
               Text(
-                Platform.isIOS ? 'Apple Health' : 'Health Connect',
+                devices.healthBrand,
                 style: TextStyle(
                   color: cp.text,
                   fontSize: 16,
@@ -211,7 +217,11 @@ class _Header extends StatelessWidget {
               GestureDetector(
                 onTap: needsPermission ? () => _requestAccess(context) : null,
                 child: Text(
-                  _status(context, loc, health, needsPermission),
+                  readsHere
+                      ? _status(context, loc, health, needsPermission)
+                      : loc.healthCardFromDevice(
+                        devices.healthSource?.displayName ?? '',
+                      ),
                   style: TextStyle(
                     color: needsPermission ? cp.main : cp.lightGreyText,
                     fontSize: 13,

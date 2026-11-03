@@ -1,6 +1,7 @@
 import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/sync_device.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 
 class BackupData {
@@ -18,6 +19,10 @@ class BackupData {
 
   final bool wasUpconvertedFromLegacy;
 
+  // the devices syncing this account and the Health device pick (Google Drive
+  // only); null when the payload came from an app version without it
+  final SyncDeviceList? devices;
+
   BackupData({
     required this.version,
     required this.metadata,
@@ -27,6 +32,7 @@ class BackupData {
     this.isDelta = false,
     this.durationSchemaVersion = kDurationSecondsDataVersion,
     this.wasUpconvertedFromLegacy = false,
+    this.devices,
   });
 
   bool get isLegacyDurationMinutes =>
@@ -40,6 +46,7 @@ class BackupData {
     'habits': habits.map((h) => h.toMap()).toList(),
     'days': days.map((d) => d.toMap()).toList(),
     'dateJoined': dateJoined.toIso8601String(),
+    if (devices != null) 'devices': devices!.toMap(),
   };
 
   factory BackupData.fromMap(Map<String, dynamic> map) {
@@ -80,6 +87,10 @@ class BackupData {
       habits: habits,
       days: days,
       dateJoined: DateTime.parse(map['dateJoined'] as String),
+      devices:
+          map['devices'] == null
+              ? null
+              : SyncDeviceList.fromMap(map['devices']),
     );
   }
 }

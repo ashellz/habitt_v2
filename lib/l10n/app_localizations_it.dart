@@ -3764,4 +3764,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String premadeHealthSyncAllow(Object source) {
     return 'Devi consentire l\'accesso a $source perché la sincronizzazione funzioni.';
   }
+
+  @override
+  String get healthDeviceTitle => 'Dispositivo per i dati sulla salute';
+
+  @override
+  String get healthDeviceDesc =>
+      'Solo il dispositivo scelto legge i dati sulla salute. Gli altri dispositivi ricevono i suoi valori tramite la sincronizzazione, e i progressi si possono comunque modificare a mano su ognuno di essi.';
+
+  @override
+  String get healthDeviceThisDevice => 'Questo dispositivo';
+
+  @override
+  String get healthDeviceIosOnlyNote =>
+      'Le abitudini Attività e Mindfulness si sincronizzano solo da un iPhone.';
+
+  @override
+  String healthCardFromDevice(Object device) {
+    return 'Da $device';
+  }
 }

@@ -16,6 +16,23 @@
 default_platform(:ios)
 
 platform :ios do
+  desc "Upload the built IPA to TestFlight with per-locale What's New from release_notes.txt"
+  lane :internal do
+    whats_new = {}
+    Dir.glob("metadata/*/release_notes.txt").each do |path|
+      text = File.read(path).strip
+      whats_new[File.basename(File.dirname(path))] = { whats_new: text } unless text.empty?
+    end
+
+    upload_to_testflight(
+      api_key_path: File.expand_path("~/.appstoreconnect/private_keys/api_key.json"),
+      ipa: Dir.glob(File.expand_path("../../build/ios/ipa/*.ipa", __dir__)).first || UI.user_error!("No IPA in build/ios/ipa, run flutter build ipa first"),
+      localized_build_info: whats_new,
+      distribute_external: false,
+      skip_waiting_for_build_processing: false
+    )
+  end
+
   desc "Push a new release build to the App Store"
   lane :release do
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")

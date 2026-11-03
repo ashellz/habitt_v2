@@ -1339,5 +1339,10 @@
   "scheduleReminderAtStart": "Zur Startzeit",
   "scheduleReminderMinutesBefore": "{minutes} Minuten vorher",
   "requestFeature": "Funktion vorschlagen",
-  "premadeHealthSyncAllow": "Du musst den Zugriff auf {source} erlauben, damit die Synchronisierung funktioniert."
+  "premadeHealthSyncAllow": "Du musst den Zugriff auf {source} erlauben, damit die Synchronisierung funktioniert.",
+  "healthDeviceTitle": "Gerät für Gesundheitsdaten",
+  "healthDeviceDesc": "Nur das ausgewählte Gerät liest Gesundheitsdaten. Deine anderen Geräte erhalten die Werte per Synchronisierung, und der Fortschritt lässt sich auf jedem von ihnen weiterhin manuell bearbeiten.",
+  "healthDeviceThisDevice": "Dieses Gerät",
+  "healthDeviceIosOnlyNote": "Gewohnheiten für Aktivität und Achtsamkeit werden nur von einem iPhone synchronisiert.",
+  "healthCardFromDevice": "Von {device}"
 }

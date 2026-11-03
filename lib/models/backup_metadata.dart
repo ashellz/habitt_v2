@@ -18,7 +18,8 @@ class DeviceIdentity {
     return id;
   }
 
-  /// Human-friendly metadata.
+  /// Human-friendly metadata. `name` is what a person calls the device
+  /// ("iPhone 17", "Samsung SM-S921B"), shown in the Health device picker.
   static Future<Map<String, String>> deviceInfo() async {
     final info = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -26,12 +27,17 @@ class DeviceIdentity {
       return {
         'model': a.model,
         'manufacturer': a.manufacturer,
+        'name': _androidName(a.manufacturer, a.model),
         'os': 'Android ${a.version.release}',
       };
     }
     if (Platform.isIOS) {
       final i = await info.iosInfo;
-      return {'model': i.utsname.machine, 'os': 'iOS ${i.systemVersion}'};
+      return {
+        'model': i.utsname.machine,
+        'name': i.modelName,
+        'os': 'iOS ${i.systemVersion}',
+      };
     }
     if (Platform.isLinux) {
       final l = await info.linuxInfo;
@@ -46,6 +52,17 @@ class DeviceIdentity {
       return {'model': w.computerName, 'os': 'Windows ${w.displayVersion}'};
     }
     return {'model': 'unknown', 'os': 'unknown'};
+  }
+
+  // "samsung" + "SM-S921B" -> "Samsung SM-S921B"; "Google" + "Pixel 9" stays
+  // "Google Pixel 9", but a model that already names the maker isn't doubled
+  static String _androidName(String manufacturer, String model) {
+    if (manufacturer.isEmpty) return model;
+    if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+      return model;
+    }
+    final maker = manufacturer[0].toUpperCase() + manufacturer.substring(1);
+    return '$maker $model';
   }
 }
 

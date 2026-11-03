@@ -42,7 +42,7 @@ class _BackupSheetState extends State<BackupSheet> {
     await Future<void>.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     final bp = context.read<BackupProvider>();
-    if (bp.isLoggedIn || bp.isICloudConnected) return;
+    if (bp.isLoggedIn) return;
     maybeShowSupportSheet(context);
   }
 
@@ -128,7 +128,7 @@ class _BackupSheetState extends State<BackupSheet> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    if (!bp.isLoggedIn && !bp.isICloudConnected)
+                    if (!bp.isLoggedIn)
                       BackupSignedOutSection(
                         onAfterSignIn: _checkAndShowPinDialog,
                       )

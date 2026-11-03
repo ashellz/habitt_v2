@@ -1338,5 +1338,10 @@
   "scheduleReminderAtStart": "All'orario di inizio",
   "scheduleReminderMinutesBefore": "{minutes} minuti prima",
   "requestFeature": "Suggerisci una funzione",
-  "premadeHealthSyncAllow": "Devi consentire l'accesso a {source} perché la sincronizzazione funzioni."
+  "premadeHealthSyncAllow": "Devi consentire l'accesso a {source} perché la sincronizzazione funzioni.",
+  "healthDeviceTitle": "Dispositivo per i dati sulla salute",
+  "healthDeviceDesc": "Solo il dispositivo scelto legge i dati sulla salute. Gli altri dispositivi ricevono i suoi valori tramite la sincronizzazione, e i progressi si possono comunque modificare a mano su ognuno di essi.",
+  "healthDeviceThisDevice": "Questo dispositivo",
+  "healthDeviceIosOnlyNote": "Le abitudini Attività e Mindfulness si sincronizzano solo da un iPhone.",
+  "healthCardFromDevice": "Da {device}"
 }

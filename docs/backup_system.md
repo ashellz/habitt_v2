@@ -104,7 +104,7 @@ Old passphrase-encrypted local backups are detected by `version: 1`. The user is
 - Contains **only changed** records since `_lastSyncTime`
 - A habit is included if: created after `fromTime` OR any per-field timestamp is newer than `fromTime`
 - A day is included if its `timestamp` is after `fromTime`
-- Returns `null` (no upload) when nothing changed
+- Returns `null` (no upload) when nothing changed — unless this device changed the device list (see § Device List), which uploads a delta on its own
 - Deleted 7 days after creation; max 20 before compaction triggers
 
 ---
@@ -138,7 +138,7 @@ Without this, a completion made on day *N* by a device that has not yet rolled o
 
 Without this, importing a file exported on day *N* onto a device now on day *N+1* pre-filled today with day *N*'s progress: the file has no snapshot for day *N+1*, but every master habit record still carried day *N*'s `completed`/`amountCompleted`/`durationCompleted`.
 
-**Companion day-state fields.** `healthSessions` and `healthManualOverride` (Health sync, see `health_sync.md`) are not in `dayStateKeys` and have no timestamp of their own; they follow whichever side wins the completion tuple (`pickDayState`), and `adoptDayState` / `clearDayState` copy / reset them with the tuple. A backup written before `healthManualOverride` existed reads it as `false`.
+**Companion day-state fields.** `healthSessions` and `healthManualOverride` (Health sync, see `health_sync.md`) are not in `dayStateKeys` and have no timestamp of their own; they follow whichever side wins the completion tuple (`pickDayState`), and `adoptDayState` / `clearDayState` copy / reset them with the tuple. A backup written before `healthManualOverride` existed reads it as `false`. Because the flag has no timestamp, clearing it ("Use Apple Health / Health Connect values", `HabitProvider.clearHealthManualOverride`) stamps `timestamps['completed']`; otherwise the cleared flag would lose the tuple tie to the other device's identical day-state and never reach it.
 
 **Completion tuple resolves as a unit.** Within a single day's per-habit merge, the four day-state fields are resolved together: the side whose day-state was modified most recently (latest timestamp among the tuple keys; tie → local) wins all four. They are never resolved independently, so a merge can no longer produce a contradictory `completed = true` with `amountCompleted = 0`.
 
@@ -213,6 +213,16 @@ the user to update the other device, guarded by an in-memory flag and the
 
 **Known follow-ups (not yet done):**
 - The purge above is local-only and does not propagate to other synced devices. If a second device was offline for 30+ days and still holds the habit as an active (non-deleted) record, a later sync could re-introduce it here as a "new" habit, since there is nothing in the incoming payload marking it as deleted and no local record left to out-rank it (the same shape of problem the "new-to-this-device" tombstone rule above solves for normal deletes, but the tombstone itself is gone once purged). Closing this gap needs a synced `purgedHabitIds: {habitId: purgedAt}` set — uploaded like any other field, checked on every "new-to-this-device" merge before adding an incoming habit, and used to propagate the purge to any device that syncs in later still holding the habit active. Scoped as a dedicated follow-up rather than bundled with the purge sweep itself, since it touches `BackupData`, full/delta export, and `_mergeBackupData` directly.
+
+### Device List (Google Drive only)
+Every Drive backup and delta also carries `devices`: the phones syncing this account and which one reads Health (`SyncDeviceList`, [`lib/models/sync_device.dart`](../lib/models/sync_device.dart)). Health sync uses it so two Health stores (iPhone + Android, or two Androids) never overwrite each other's values — the rules and UI are in [`health_sync.md`](health_sync.md) § "Several devices". It adds no cloud requests: it rides inside files that are uploaded and downloaded anyway.
+
+- **Owner:** `SyncDevicesProvider` ([`lib/providers/sync_devices_provider.dart`](../lib/providers/sync_devices_provider.dart)), shared by `BackupProvider` (fills it) and `HealthProvider` (follows it). Stored in `SharedPreferences` (`syncDevices`, `syncDevicesChangedAt`), not Hive: it is sync bookkeeping.
+- **Entry:** `{id, model, os, platform, firstSeen, lastSeen}`. `id` is `DeviceIdentity.getOrCreateId()` (the same UUID as delta filenames); `model` is the marketing name (`DeviceIdentity.deviceInfo()['name']`, e.g. "iPhone 17", "Samsung SM-S921B"); `firstSeen` is the app's install time on that device (`PackageInfo.installTime`). Only iOS / Android list themselves; web and desktop pass the list on untouched.
+- **Upload:** `listForUpload()` refreshes this device's own entry when it is missing, its name/OS changed, or it is ~20 h old, then `_uploadBackupToCloud` / `_uploadDeltaToCloud` pass the list to `exportDataForGoogleDrive` / `exportDeltaForGoogleDrive`. A delta is uploaded for the list alone only when this device changed it after `_lastSyncTime` (`changedSince`): the daily refresh or a new Health pick. So an idle day costs at most one tiny delta.
+- **Merge:** `_mergeBackupData` calls `mergeIncoming` before the habits. Union by id; per device the entry with the later `lastSeen` gives name/OS/platform and the earliest `firstSeen` is kept. The Health pick (`healthSource: {deviceId, changedAt}`) goes to the latest `changedAt`. A payload without `devices` (older app version) lists its sender from `metadata` instead, iOS / Android only.
+- **Pruning:** devices not seen for `kSyncDeviceActiveDays` (60) are dropped on every merge/refresh, except the picked Health device.
+- **Cleared** (`SyncDevicesProvider.clear()`) on sign-out, `_clearLocalAuthState` (account deletion, revoked scope) and `activateICloud`: off Drive the device is on its own again. iCloud never carries or merges the list — iCloud devices share one Apple ID, so one Apple Health.
 
 ---
 
@@ -384,6 +394,7 @@ BackupMetadata metadata
 List<Habit> habits
 List<Day> days
 DateTime? dateJoined
+SyncDeviceList? devices   // Drive only; null from older app versions
 ```
 
 ### `BackupMetadata`

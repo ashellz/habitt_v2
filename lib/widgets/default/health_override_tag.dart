@@ -3,7 +3,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
-import 'package:habitt/util/health_source_name.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:provider/provider.dart';
 
 class HealthOverrideTag extends StatelessWidget {
@@ -34,7 +34,8 @@ class HealthOverrideTag extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
 
-    final source = healthSourceName();
+    // the store the values come back from, another device's when it reads
+    final source = context.watch<SyncDevicesProvider>().healthBrand;
 
     return Wrap(
       alignment: alignment,

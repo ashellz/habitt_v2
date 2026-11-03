@@ -105,9 +105,7 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
       _dismissTimer = Timer(const Duration(milliseconds: 1200), _animateOut);
     } else if (state == SyncState.error) {
       _animateOut();
-    } else if (state == SyncState.idle &&
-        !bp.isLoggedIn &&
-        !bp.isICloudConnected) {
+    } else if (state == SyncState.idle && !bp.isLoggedIn) {
       // User disconnected or signed out while sync was in progress.
       _animateOut();
     }

@@ -19,6 +19,11 @@ extension HealthMetricTypeMapping on HealthMetricType {
   bool get supportsTrackingChoice =>
       this == HealthMetricType.workouts || this == HealthMetricType.mindfulness;
 
+  // Health Connect has no record for these (see HealthService._androidTypes),
+  // so they only sync when an iPhone reads Health
+  bool get isIosOnly =>
+      this == HealthMetricType.mindfulness || this == HealthMetricType.activity;
+
   // for updating habit amount if tolerance will be accounted for
   bool get supportsTolerance =>
       this == HealthMetricType.sleep ||
