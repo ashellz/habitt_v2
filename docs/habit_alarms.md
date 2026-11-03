@@ -44,15 +44,54 @@ moved from 00:00 to 20:00 rang at both). Two guards:
   merge). An earlier optimisation replaced this with per-id cancels and let
   orphans pile up.
 
+## Full-screen alarm page (Android)
+
+awesome_notifications uses the same intent for a tap and for the full-screen
+intent: it opens `MainActivity` with action `SELECT_NOTIFICATION` and the
+notification in the `notificationJson` extra. So:
+
+- `MainActivity.kt` checks that extra for the alarm channel key and only then
+  calls `setShowWhenLocked(true)` / `setTurnScreenOn(true)`, so the app shows
+  over the lock screen for alarms and never otherwise.
+- `NotificationActionHandler` sends actions on the alarm channel (tap /
+  full-screen, not the buttons) to `_openAlarm`, which pushes
+  `HabitAlarmPage` (`lib/pages/other_pages/habit_alarm_page.dart`, widgets in
+  `lib/widgets/habit_alarm/`) instead of the habit details / log dialog. A
+  cold start stores it in `_pendingAlarm` until the navigator is ready.
+- The page shows the time, the habit's emoji and the notification text, with
+  **Complete** (hidden for Health-linked habits, same as the notification
+  button; goes through `PendingCompletionQueue`) and **Dismiss**. Both dismiss
+  the notification, which is what stops the sound. Back is blocked.
+- On close it calls `AlarmScreenService.setShowOverLockScreen(false)`
+  (method channel `habitt/alarm_screen`), so the keyguard covers the app again.
+
+Android itself decides between full screen and heads-up: the page opens by
+itself only when the screen is off or locked. While the phone is in use the
+alarm is a heads-up notification (same as the Clock app); tapping it opens
+the page.
+
 ## Permissions
 
 `NotificationService.requestAlarmPermissions()` runs when the checkbox is checked
-and asks for FullScreenIntent, PreciseAlarms, CriticalAlert and OverrideDnD.
-Denial is not fatal; the reminder degrades to a high-priority notification.
+and asks only for the permissions that are still missing
+(`checkPermissionList` first, since awesome_notifications opens a Settings page
+for each special permission it requests). Denial is not fatal; the reminder
+degrades to a high-priority notification.
 
-- **Android:** manifest declares `USE_FULL_SCREEN_INTENT` and
-  `SCHEDULE_EXACT_ALARM` (user-revocable). `USE_EXACT_ALARM` is deliberately
-  not used: Google Play restricts it to alarm-clock/calendar apps.
+- **Android:** asks for FullScreenIntent and PreciseAlarms. Manifest declares
+  `USE_FULL_SCREEN_INTENT` and `SCHEDULE_EXACT_ALARM` (user-revocable).
+  `USE_EXACT_ALARM` is deliberately not used: Google Play restricts it to
+  alarm-clock/calendar apps.
+  - CriticalAlert / OverrideDnD are **not** requested on Android:
+    awesome_notifications maps them to the Do Not Disturb access page, which
+    needs `ACCESS_NOTIFICATION_POLICY` and so could never be granted; every
+    check of the Alarm box sent the user to Settings. Alarm-category
+    notifications already ring through DND (alarms are allowed by default).
+  - Android 14+ turns full-screen intents off for apps that aren't clock or
+    phone apps, and awesome_notifications can't see that (it only checks the
+    manifest permission, which always reads granted). `AlarmScreenService`
+    asks `NotificationManager.canUseFullScreenIntent()` and, when it's off,
+    opens the system "Full screen notifications" toggle for Habitt.
 - **iOS 26+:** alarm habits use **AlarmKit** (rings through silent mode and
   Focus, lock-screen Stop button) instead of a notification. Bridge:
   `HabitAlarmKitBridge` in `ios/Runner/AppDelegate.swift` (method channel
@@ -101,3 +140,7 @@ Written without a Flutter toolchain, Xcode or device (the Swift AlarmKit code is
 generated files were edited by hand (regenerate with
 `flutter pub run build_runner build --delete-conflicting-outputs` and
 `flutter gen-l10n`) and on-device ringing behaviour needs manual testing.
+
+The Android full-screen alarm page, the `MainActivity` lock-screen flags and
+the full-screen-intent permission check compile (debug APK) but haven't been
+tested on a device yet.

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resources awesome_notifications loads by name from Dart
+     ("resource://drawable/..." / "resource://raw/..."): keep them from being
+     stripped by release resource shrinking. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/res_notification_icon,@raw/*" />

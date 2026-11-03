@@ -96,7 +96,9 @@ Future<void> main() async {
   );
 
   await AwesomeNotifications().initialize(
-    null,
+    // Android status bar icon: a transparent white glyph (the launcher icon
+    // would show as a plain square). Ignored on iOS.
+    'resource://drawable/res_notification_icon',
     [
       NotificationChannel(
         channelGroupKey: 'basic_channel_group',

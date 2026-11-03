@@ -9,6 +9,7 @@ import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/services/alarm_kit_service.dart';
+import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/notification_text/locale_resolver.dart';
@@ -131,18 +132,40 @@ class NotificationService {
     // iOS 26+: AlarmKit is the real alarm; it has its own permission prompt.
     await AlarmKitService.requestAuthorization();
     try {
-      await AwesomeNotifications().requestPermissionToSendNotifications(
-        channelKey: alarmChannelKey,
-        permissions: const [
-          NotificationPermission.Alert,
-          NotificationPermission.Sound,
-          NotificationPermission.Vibration,
-          NotificationPermission.FullScreenIntent,
-          NotificationPermission.PreciseAlarms,
+      final wanted = [
+        NotificationPermission.Alert,
+        NotificationPermission.Sound,
+        NotificationPermission.Vibration,
+        NotificationPermission.FullScreenIntent,
+        NotificationPermission.PreciseAlarms,
+        // Android maps these two to the Do Not Disturb access page, which
+        // needs ACCESS_NOTIFICATION_POLICY and could never be granted, so
+        // every request sent the user to Settings. Alarm-category
+        // notifications already ring through DND (alarms are allowed by
+        // default), so Android doesn't need them.
+        if (Platform.isIOS) ...[
           NotificationPermission.CriticalAlert,
           NotificationPermission.OverrideDnD,
         ],
+      ];
+      // Only ask for what's missing: awesome_notifications opens a Settings
+      // page for each special permission it requests.
+      final allowed = await AwesomeNotifications().checkPermissionList(
+        channelKey: alarmChannelKey,
+        permissions: wanted,
       );
+      final missing = wanted.where((p) => !allowed.contains(p)).toList();
+      if (missing.isNotEmpty) {
+        await AwesomeNotifications().requestPermissionToSendNotifications(
+          channelKey: alarmChannelKey,
+          permissions: missing,
+        );
+      }
+      // Android 14+: without this the alarm is only a heads-up notification
+      // and never opens the full-screen alarm page.
+      if (!await AlarmScreenService.canUseFullScreenIntent()) {
+        await AlarmScreenService.openFullScreenIntentSettings();
+      }
     } catch (e) {
       debugPrint('alarm permission request failed: $e');
     }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status bar icon for notifications: the Habitt logo as a white silhouette.
+     Android only uses the alpha channel of small icons, so this has to be a
+     transparent glyph (the launcher icon would render as a solid square). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="300"
+    android:viewportHeight="300">
+    <group
+        android:translateX="-67"
+        android:translateY="-66">
+        <!-- half sun, with a hole for the clock hub -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M217,128 A88,88 0 0,0 217,304 L217,229 A13,13 0 0,1 217,203 Z" />
+        <!-- clock hub -->
+        <path
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="6"
+            android:pathData="M218,200 A16,16 0 1,1 218,232 A16,16 0 1,1 218,200" />
+        <!-- clock hands -->
+        <path
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:pathData="M228,193.5 L251,155 M232,231 L252,251" />
+        <!-- clock rim -->
+        <path
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="16"
+            android:strokeLineCap="round"
+            android:pathData="M225.3,97.3 A119,119 0 0,1 225.3,334.7" />
+        <!-- sun rays -->
+        <path
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:pathData="M112,216 L93,216 M126.1,163.5 L109.6,154 M126.1,268.5 L109.6,278 M164.5,125.1 L155,108.6 M164.5,306.9 L155,323.4" />
+    </group>
+</vector>

@@ -4,6 +4,7 @@ import 'dart:ui' show DartPluginRegistrant;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/pages/other_pages/habit_alarm_page.dart';
 import 'package:habitt/pages/other_pages/habit_details_page.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/habit_route_tracker.dart';
@@ -43,6 +44,14 @@ class NotificationActionHandler {
   /// Notification day paired with [_pendingHabitRoute], so cold-start replay
   /// still applies the correct `selectedDate`.
   static DateTime? _pendingHabitDay;
+
+  /// Alarm captured before the navigator was ready (cold start from a
+  /// full-screen intent). Consumed by [consumePendingRoute].
+  static HabitAlarm? _pendingAlarm;
+
+  /// Notification id of the alarm page on screen, so a repeated launch for the
+  /// same alarm doesn't stack a second page.
+  static int? _openAlarmId;
 
   /// True while the log-progress dialog opened by a tap is on screen, so a
   /// second tap can't stack another one on top.
@@ -99,6 +108,10 @@ class NotificationActionHandler {
     // if user just tapped it takes them to habit details page
     // with the correct day when the notification was fired on
     final day = _parseDay(payload[_payloadDayKey]);
+    if (action.channelKey == NotificationService.alarmChannelKey) {
+      _openAlarm(_alarmFrom(action, habitId, day));
+      return;
+    }
     _navigateToHabit(habitId, day);
   }
 
@@ -116,8 +129,61 @@ class NotificationActionHandler {
     final habitId = int.tryParse(payload[_payloadHabitIdKey] ?? '');
     if (habitId != null) {
       final day = _parseDay(payload[_payloadDayKey]);
+      if (action.channelKey == NotificationService.alarmChannelKey) {
+        _openAlarm(_alarmFrom(action, habitId, day));
+        return;
+      }
       _navigateToHabit(habitId, day);
     }
+  }
+
+  static HabitAlarm _alarmFrom(
+    ReceivedAction action,
+    int habitId,
+    DateTime? day,
+  ) {
+    return HabitAlarm(
+      notificationId: action.id ?? -1,
+      habitId: habitId,
+      day: day,
+      title: action.title ?? '',
+      body: action.body ?? '',
+    );
+  }
+
+  /// An alarm notification was tapped or opened the app through its
+  /// full-screen intent: show the full-screen alarm page on top of whatever is
+  /// open. The alarm keeps ringing until the page dismisses its notification.
+  static void _openAlarm(HabitAlarm alarm) {
+    final nav = navigatorKey.currentState;
+    if (nav == null) {
+      _pendingAlarm = alarm;
+      return;
+    }
+    if (_openAlarmId == alarm.notificationId) return;
+
+    _openAlarmId = alarm.notificationId;
+    unawaited(
+      nav
+          .push(
+            MaterialPageRoute<void>(
+              fullscreenDialog: true,
+              builder: (_) => HabitAlarmPage(alarm: alarm),
+            ),
+          )
+          .whenComplete(() {
+            if (_openAlarmId == alarm.notificationId) _openAlarmId = null;
+          }),
+    );
+  }
+
+  /// Completes the alarm's habit through the same queue as the notification's
+  /// "Complete" button.
+  static Future<void> completeFromAlarm(HabitAlarm alarm) async {
+    final day = alarm.day;
+    if (day == null) return;
+    await PendingCompletionQueue.enqueue(alarm.habitId, day);
+    await drainPending?.call();
   }
 
   /// Resolves a notification tap.
@@ -240,6 +306,12 @@ class NotificationActionHandler {
   /// navigator existed (cold start). Routes back through [_navigateToHabit]
   /// so the cold-start tap gets the same handling as any other tap.
   static void consumePendingRoute() {
+    final alarm = _pendingAlarm;
+    if (alarm != null) {
+      _pendingAlarm = null;
+      _openAlarm(alarm);
+    }
+
     final habitId = _pendingHabitRoute;
     if (habitId == null) return;
     final day = _pendingHabitDay;
