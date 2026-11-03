@@ -1339,14 +1339,13 @@
   "scheduleReminderMinutesBefore": "{minutes} minuti prima",
   "requestFeature": "Suggerisci una funzione",
   "premadeHealthSyncAllow": "Devi consentire l'accesso a {source} perché la sincronizzazione funzioni.",
-  "healthDeviceTitle": "Dispositivo per i dati sulla salute",
-  "healthDeviceDesc": "Solo il dispositivo scelto legge i dati sulla salute. Gli altri dispositivi ricevono i suoi valori tramite la sincronizzazione, e i progressi si possono comunque modificare a mano su ognuno di essi.",
+  "healthDeviceTitle": "Sincronizza i dati sulla salute da",
   "healthDeviceThisDevice": "Questo dispositivo",
   "healthDeviceIosOnlyNote": "Le abitudini Attività e Mindfulness si sincronizzano solo da un iPhone.",
   "healthCardFromDevice": "Da {device}",
   "backupFoundDescICloud": "Il tuo iCloud ha un backup. Come vorresti ripristinare?",
-  "ignoreBackupUploadMine": "Ignora il backup e carica il mio",
+  "ignoreBackupUploadMine": "Ignora il backup",
   "replaceCloudBackupTitle": "Sostituire il backup esistente?",
-  "replaceCloudBackupDesc": "Il backup esistente su {cloud} verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Gli altri dispositivi si sincronizzeranno con questi dati. Questa azione non può essere annullata.",
+  "replaceCloudBackupDesc": "Il backup esistente su {cloud} verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Questa azione non può essere annullata.",
   "replaceCloudBackup": "Sostituisci backup"
 }

@@ -6325,14 +6325,8 @@ abstract class AppLocalizations {
   /// No description provided for @healthDeviceTitle.
   ///
   /// In en, this message translates to:
-  /// **'Health sync device'**
+  /// **'Health sync from'**
   String get healthDeviceTitle;
-
-  /// No description provided for @healthDeviceDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Only the chosen device reads health data. Your other devices get its values through sync, and progress can still be edited by hand on any of them.'**
-  String get healthDeviceDesc;
 
   /// No description provided for @healthDeviceThisDevice.
   ///
@@ -6361,7 +6355,7 @@ abstract class AppLocalizations {
   /// No description provided for @ignoreBackupUploadMine.
   ///
   /// In en, this message translates to:
-  /// **'Ignore backup and upload mine'**
+  /// **'Ignore backup'**
   String get ignoreBackupUploadMine;
 
   /// No description provided for @replaceCloudBackupTitle.
@@ -6373,7 +6367,7 @@ abstract class AppLocalizations {
   /// No description provided for @replaceCloudBackupDesc.
   ///
   /// In en, this message translates to:
-  /// **'The existing backup in {cloud} will be permanently deleted and replaced with the data on this device. Other devices will sync from this data. This action cannot be undone.'**
+  /// **'The existing backup in {cloud} will be permanently deleted and replaced with the data on this device. This action cannot be undone.'**
   String replaceCloudBackupDesc(String cloud);
 
   /// No description provided for @replaceCloudBackup.

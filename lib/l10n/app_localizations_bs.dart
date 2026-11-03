@@ -3738,10 +3738,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get healthDeviceTitle => 'Uređaj za sinhronizaciju zdravlja';
 
   @override
-  String get healthDeviceDesc =>
-      'Samo odabrani uređaj čita zdravstvene podatke. Ostali uređaji dobijaju njegove vrijednosti kroz sinhronizaciju, a napredak se i dalje može ručno mijenjati na bilo kojem od njih.';
-
-  @override
   String get healthDeviceThisDevice => 'Ovaj uređaj';
 
   @override
@@ -3758,14 +3754,14 @@ class AppLocalizationsBs extends AppLocalizations {
       'Tvoj iCloud već ima backup. Kako bi ga želio obnoviti?';
 
   @override
-  String get ignoreBackupUploadMine => 'Zanemari backup i otpremi moje';
+  String get ignoreBackupUploadMine => 'Zanemari backup';
 
   @override
   String get replaceCloudBackupTitle => 'Zamijeniti postojeći backup?';
 
   @override
   String replaceCloudBackupDesc(String cloud) {
-    return 'Postojeći backup na usluzi $cloud bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ostali uređaji će se sinhronizirati s ovim podacima. Ova radnja se ne može poništiti.';
+    return 'Postojeći backup na usluzi $cloud bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ova radnja se ne može poništiti.';
   }
 
   @override

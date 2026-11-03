@@ -72,10 +72,6 @@ class HealthDeviceSetting extends StatelessWidget {
                 ),
             ],
           ),
-          Text(
-            loc.healthDeviceDesc,
-            style: TextStyle(color: cp.lightGreyText, fontSize: 13),
-          ),
           if (showIosOnlyNote)
             Text(
               loc.healthDeviceIosOnlyNote,

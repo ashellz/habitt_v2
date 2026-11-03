@@ -3766,11 +3766,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get healthDeviceTitle => 'Dispositivo per i dati sulla salute';
-
-  @override
-  String get healthDeviceDesc =>
-      'Solo il dispositivo scelto legge i dati sulla salute. Gli altri dispositivi ricevono i suoi valori tramite la sincronizzazione, e i progressi si possono comunque modificare a mano su ognuno di essi.';
+  String get healthDeviceTitle => 'Sincronizza i dati sulla salute da';
 
   @override
   String get healthDeviceThisDevice => 'Questo dispositivo';
@@ -3789,14 +3785,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il tuo iCloud ha un backup. Come vorresti ripristinare?';
 
   @override
-  String get ignoreBackupUploadMine => 'Ignora il backup e carica il mio';
+  String get ignoreBackupUploadMine => 'Ignora il backup';
 
   @override
   String get replaceCloudBackupTitle => 'Sostituire il backup esistente?';
 
   @override
   String replaceCloudBackupDesc(String cloud) {
-    return 'Il backup esistente su $cloud verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Gli altri dispositivi si sincronizzeranno con questi dati. Questa azione non può essere annullata.';
+    return 'Il backup esistente su $cloud verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Questa azione non può essere annullata.';
   }
 
   @override

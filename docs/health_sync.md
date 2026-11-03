@@ -304,7 +304,7 @@ share one Apple ID, so one Apple Health already.
   doesn't read, the reading phone applies the Health value on its next open.
   Clearing stamps the day-state so it wins the merge (`backup_system.md`,
   "Companion day-state fields").
-- **Settings → Sync → Health sync device** (`HealthDeviceSetting`,
+- **Settings → Sync → Health sync from** (`HealthDeviceSetting`,
   [`lib/widgets/settings/health_device_setting.dart`](../lib/widgets/settings/health_device_setting.dart)):
   shown on every phone once two are listed. One row per phone ("iPhone 17 ·
   iOS 26.6", then "This device" or the day it last synced), a check on the
