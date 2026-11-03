@@ -3,13 +3,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/util/date_key.dart';
+import 'package:habitt/util/format_backup_date.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/pin_dialog.dart';
+import 'package:habitt/widgets/dialogs/restore_choice_dialog.dart';
 import 'package:habitt/widgets/profile/profile_options.dart';
 import 'package:habitt/widgets/sheets/backup_history_sheet.dart';
 import 'package:habitt/widgets/sheets/import_from_apps_sheet.dart';
@@ -45,38 +46,18 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
 
   String _formatLastSync(DateTime? lastSync, AppLocalizations loc) {
     if (lastSync == null) return loc.neverBackedUp;
+    return formatBackupDate(lastSync, loc);
+  }
 
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = addCalendarDays(today, -1);
-    final syncDay = DateTime(lastSync.year, lastSync.month, lastSync.day);
-
-    final hour = lastSync.hour.toString().padLeft(2, '0');
-    final minute = lastSync.minute.toString().padLeft(2, '0');
-    final time = '$hour:$minute';
-
-    if (syncDay == today) return loc.backupDateToday(time);
-    if (syncDay == yesterday) return loc.backupDateYesterday(time);
-
-    final months = [
-      loc.monthJan,
-      loc.monthFeb,
-      loc.monthMar,
-      loc.monthApr,
-      loc.monthMay,
-      loc.monthJun,
-      loc.monthJul,
-      loc.monthAug,
-      loc.monthSep,
-      loc.monthOct,
-      loc.monthNov,
-      loc.monthDec,
-    ];
-    return loc.backupDateOther(
-      months[lastSync.month - 1],
-      '${lastSync.day}',
-      time,
+  /// Syncing is paused until the restore choice is made, so the sync buttons
+  /// ask it again instead of doing nothing. True when it was shown.
+  bool _askRestoreChoiceIfPending(BackupProvider bp) {
+    if (!bp.pendingRestoreDecision) return false;
+    showDialogSheet<void>(
+      context: context,
+      builder: (_) => const RestoreChoiceDialog(),
     );
+    return true;
   }
 
   void _openBackupHistory(BuildContext context, ColorProvider cp) {
@@ -252,7 +233,12 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                 child: NewDefaultButton.secondary(
                   enabled: !isSyncing,
                   onPressed:
-                      (isSyncing || isBackingUp) ? null : () => bp.backupNow(),
+                      (isSyncing || isBackingUp)
+                          ? null
+                          : () {
+                            if (_askRestoreChoiceIfPending(bp)) return;
+                            bp.backupNow();
+                          },
                   label: loc.backUpNow,
                   isLoading: isBackingUp,
                 ),
@@ -265,6 +251,7 @@ class _BackupSignedInSectionState extends State<BackupSignedInSection> {
                       (isSyncing || isBackingUp)
                           ? null
                           : () async {
+                            if (_askRestoreChoiceIfPending(bp)) return;
                             setState(() => _localSyncLoading = true);
                             try {
                               await bp.performSync(false, SyncMode.syncOnly);

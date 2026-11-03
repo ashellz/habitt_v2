@@ -2326,7 +2326,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get backupFoundDesc =>
-      'Il tuo Google Drive ha un backup. Come vorresti ripristinare?';
+      'Il tuo Google Drive ha un backup. Come vorresti ripristinare? La sincronizzazione non partirà finché non scegli un’opzione.';
 
   @override
   String get merge => 'Unisci';
@@ -3782,7 +3782,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get backupFoundDescICloud =>
-      'Il tuo iCloud ha un backup. Come vorresti ripristinare?';
+      'Il tuo iCloud ha un backup. Come vorresti ripristinare? La sincronizzazione non partirà finché non scegli un’opzione.';
 
   @override
   String get ignoreBackupUploadMine => 'Ignora il backup';
@@ -3797,4 +3797,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get replaceCloudBackup => 'Sostituisci backup';
+
+  @override
+  String overwriteLocalDataDescWithDate(String date) {
+    return 'Vuoi davvero sovrascrivere i tuoi dati locali con il backup più recente ($date)? Questa azione non può essere annullata.';
+  }
 }

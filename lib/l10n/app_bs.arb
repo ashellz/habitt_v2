@@ -880,7 +880,7 @@
   "accountDeletedSuccessfully": "Račun je uspješno obrisan",
   "accountDeletionFailed": "Brisanje računa nije uspjelo: {errorMessage}",
   "backupFound": "Pronađen backup",
-  "backupFoundDesc": "Tvoj Google Drive već ima backup. Kako bi ga želio obnoviti?",
+  "backupFoundDesc": "Tvoj Google Drive već ima backup. Kako bi ga želio obnoviti? Sinhronizacija neće početi dok ne odabereš jednu opciju.",
   "merge": "Spoji",
   "overwriteLocalDataTitle": "Obrisati trenutne podatke?",
   "overwriteLocalDataDesc": "Ovo će trajno zamijeniti sve tvoje lokalne podatke backupom. Ova radnja se ne može poništiti.",
@@ -1334,9 +1334,10 @@
   "healthDeviceThisDevice": "Ovaj uređaj",
   "healthDeviceIosOnlyNote": "Navike Aktivnost i Svjesnost se sinhronizuju samo sa iPhonea.",
   "healthCardFromDevice": "Sa uređaja {device}",
-  "backupFoundDescICloud": "Tvoj iCloud već ima backup. Kako bi ga želio obnoviti?",
+  "backupFoundDescICloud": "Tvoj iCloud već ima backup. Kako bi ga želio obnoviti? Sinhronizacija neće početi dok ne odabereš jednu opciju.",
   "ignoreBackupUploadMine": "Zanemari backup",
   "replaceCloudBackupTitle": "Zamijeniti postojeći backup?",
   "replaceCloudBackupDesc": "Postojeći backup na usluzi {cloud} bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ova radnja se ne može poništiti.",
-  "replaceCloudBackup": "Zamijeni backup"
+  "replaceCloudBackup": "Zamijeni backup",
+  "overwriteLocalDataDescWithDate": "Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ({date})? Ova radnja se ne može poništiti."
 }

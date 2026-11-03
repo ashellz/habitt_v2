@@ -91,6 +91,11 @@ class BackupProvider extends ChangeNotifier {
 
   static const String _kActiveBackendKey = 'backup_active_backend';
 
+  /// Set while the post-sign-in restore choice is unanswered, so a dismissed
+  /// dialog is asked again on the next app open. No syncing until it's cleared.
+  static const String _kPendingRestoreDecisionKey =
+      'backup_pending_restore_decision';
+
   GoogleSignInAccount? _currentUser;
   User? _firebaseUser;
   late final GoogleSignIn _googleSignIn;
@@ -118,9 +123,14 @@ class BackupProvider extends ChangeNotifier {
 
   bool _dataExists = false;
 
-  /// Set after login when Drive has data and local DB is non-empty.
-  /// The UI should watch this and present the merge/replace choice dialog.
+  /// Set after login when the cloud has data and local DB is non-empty, and
+  /// persisted until the user picks merge / replace / upload mine. While set,
+  /// every sync path is a no-op. The UI presents the restore choice dialog.
   bool _pendingRestoreDecision = false;
+
+  /// Newest file (full backup or delta) in the cloud when the restore
+  /// decision was raised, shown in the "overwrite local data" confirmation.
+  DateTime? _restoreDecisionBackupTime;
 
   bool _isPinEnabled = false;
   // Decrypted keychain key cached in memory after PIN entry. Cleared on restart.
@@ -180,6 +190,7 @@ class BackupProvider extends ChangeNotifier {
 
   GoogleSignInAccount? get currentUser => _currentUser;
   User? get firebaseUser => _firebaseUser;
+
   /// Signed in to Google Drive, or connected to iCloud.
   bool get isLoggedIn =>
       (_currentUser != null && _firebaseUser != null) || isICloudConnected;
@@ -199,6 +210,22 @@ class BackupProvider extends ChangeNotifier {
   bool get hasPendingBackupPassphrase => _failedBackupFileId != null;
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
+  DateTime? get restoreDecisionBackupTime => _restoreDecisionBackupTime;
+
+  Future<void> _setPendingRestoreDecision(bool pending) async {
+    _pendingRestoreDecision = pending;
+    if (pending) {
+      _restoreDecisionBackupTime = await _latestCloudChangeTime();
+    } else {
+      _restoreDecisionBackupTime = null;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    if (pending) {
+      await prefs.setBool(_kPendingRestoreDecisionKey, true);
+    } else {
+      await prefs.remove(_kPendingRestoreDecisionKey);
+    }
+  }
 
   /// True when the backend a restore decision is pending for is iCloud (as
   /// opposed to Google Drive); picks the wording of the restore-choice dialogs.
@@ -380,7 +407,9 @@ class BackupProvider extends ChangeNotifier {
   // --- Auto-sync ---------------------------------------------------------
 
   void scheduleAutoSync() {
-    if (_adapter == null || !_isAutoSyncEnabled) return;
+    if (_adapter == null || !_isAutoSyncEnabled || _pendingRestoreDecision) {
+      return;
+    }
 
     _autoSyncTimer?.cancel();
 
@@ -425,7 +454,9 @@ class BackupProvider extends ChangeNotifier {
   /// doubled on each consecutive failure up to [_kMaxBackoffDuration].
   void _startPeriodicSync() {
     _periodicSyncTimer?.cancel();
-    if (_adapter == null || !_isAutoSyncEnabled) return;
+    if (_adapter == null || !_isAutoSyncEnabled || _pendingRestoreDecision) {
+      return;
+    }
 
     _periodicSyncTimer = Timer.periodic(_currentBackoffInterval, (_) {
       // Only run when not already syncing and no upload is pending.
@@ -591,6 +622,9 @@ class BackupProvider extends ChangeNotifier {
         }
       }
 
+      _pendingRestoreDecision =
+          prefs.getBool(_kPendingRestoreDecisionKey) ?? false;
+
       final lastSyncMs = prefs.getInt(_kLastSyncTimeKey);
       if (lastSyncMs != null) {
         _lastSyncTime = DateTime.fromMillisecondsSinceEpoch(lastSyncMs);
@@ -609,6 +643,12 @@ class BackupProvider extends ChangeNotifier {
           _activeBackend = BackupBackend.iCloud;
           _adapter = candidate;
           _dataExists = await _checkDataExists();
+          if (_pendingRestoreDecision) {
+            // asked again by the home page; refresh the date it shows
+            await _setPendingRestoreDecision(true);
+            notifyListeners();
+            return;
+          }
           notifyListeners();
           if (_dataExists && _lastSyncTime == null) {
             await performSync(true);
@@ -627,8 +667,7 @@ class BackupProvider extends ChangeNotifier {
       if (savedEmail != null) {
         final lightweightFuture =
             _googleSignIn.attemptLightweightAuthentication();
-        final user =
-            lightweightFuture != null ? await lightweightFuture : null;
+        final user = lightweightFuture != null ? await lightweightFuture : null;
         if (user != null) {
           // If the user revoked Drive scope (e.g. from Google account settings),
           // silently sign out so they're prompted to re-authorize on next sign-in.
@@ -674,12 +713,18 @@ class BackupProvider extends ChangeNotifier {
           _needsMigration = _legacyPassphrase != null;
 
           _dataExists = await _checkDataExists();
+          if (_pendingRestoreDecision) {
+            // asked again by the home page; refresh the date it shows
+            await _setPendingRestoreDecision(true);
+            notifyListeners();
+            return;
+          }
           notifyListeners();
 
-          // If the user logged in on a previous session but never completed the
-          // restore-choice dialog (i.e. _lastSyncTime is still null), auto-merge
-          // on the next app open. Merge is always safe — it never overwrites
-          // local data, it only brings in cloud data.
+          // First sync on this account that never reached a full sync (e.g.
+          // the app was killed mid sign-in). Merge is always safe — it never
+          // overwrites local data, it only brings in cloud data. A dismissed
+          // restore choice is handled above instead.
           if (!_needsMigration && _dataExists && _lastSyncTime == null) {
             await performSync(true);
           }
@@ -697,6 +742,7 @@ class BackupProvider extends ChangeNotifier {
   // --- Sign-in / Sign-out ------------------------------------------------
 
   Future<void> _clearLocalAuthState(SharedPreferences prefs) async {
+    await _setPendingRestoreDecision(false);
     _currentUser = null;
     _firebaseUser = null;
     _syncState = SyncState.idle;
@@ -787,9 +833,10 @@ class BackupProvider extends ChangeNotifier {
         final localIsEmpty = Hive.box<Habit>('habits').isEmpty;
         if (_dataExists && !localIsEmpty) {
           // Local data exists and Drive has a backup — let the user decide.
-          _pendingRestoreDecision = true;
+          await _setPendingRestoreDecision(true);
           notifyListeners();
         } else {
+          await _setPendingRestoreDecision(false);
           // Empty local DB → auto-restore from cloud (merge into empty = full
           // restore). No cloud data → upload local as first backup.
           notifyListeners();
@@ -827,6 +874,7 @@ class BackupProvider extends ChangeNotifier {
       await prefs.remove(_kLastSyncTimeKey);
       await prefs.remove(_kAppliedDeltaIdsKey);
       _lastSyncTime = null;
+      await _setPendingRestoreDecision(false);
       await _syncDevices?.clear();
 
       _autoSyncTimer?.cancel();
@@ -998,7 +1046,7 @@ class BackupProvider extends ChangeNotifier {
   /// Called when the user picks "Merge": pulls cloud data and merges it into
   /// the existing local DB using timestamp-based conflict resolution.
   Future<void> confirmMerge() async {
-    _pendingRestoreDecision = false;
+    await _setPendingRestoreDecision(false);
     notifyListeners();
     await performSync(true); // force=true: bypass same-device skip
     _startPeriodicSync();
@@ -1007,7 +1055,7 @@ class BackupProvider extends ChangeNotifier {
   /// Called when the user picks "Start fresh": wipes the local DB and
   /// restores entirely from the latest cloud backup + all deltas.
   Future<void> confirmReplace() async {
-    _pendingRestoreDecision = false;
+    await _setPendingRestoreDecision(false);
     notifyListeners();
 
     if (_syncState == SyncState.syncing) return;
@@ -1036,7 +1084,7 @@ class BackupProvider extends ChangeNotifier {
   /// backups, deltas, metadata, key.key) is deleted and this device's data is
   /// uploaded as the new, only backup. Local data is left untouched.
   Future<void> confirmUploadMine() async {
-    _pendingRestoreDecision = false;
+    await _setPendingRestoreDecision(false);
     notifyListeners();
 
     if (_syncState == SyncState.syncing || _adapter == null) return;
@@ -1187,6 +1235,12 @@ class BackupProvider extends ChangeNotifier {
     if (_adapter == null) {
       debugPrint("Adapter is null");
       return; // No backup backend active.
+    }
+
+    // Nothing syncs until the user answers the restore choice dialog.
+    if (_pendingRestoreDecision) {
+      debugPrint('Sync paused: pending restore decision');
+      return;
     }
 
     if (_needsMigration) {
@@ -1387,7 +1441,7 @@ class BackupProvider extends ChangeNotifier {
 
   /// Download the latest Drive backup and merge it into local data.
   Future<void> restoreFromCloud() async {
-    if (_syncState == SyncState.syncing) return;
+    if (_syncState == SyncState.syncing || _pendingRestoreDecision) return;
     if (_adapter == null) {
       lastError = 'No backup backend active.';
       return;
@@ -1805,6 +1859,27 @@ class BackupProvider extends ChangeNotifier {
     return backups.isNotEmpty;
   }
 
+  /// Latest modified time across the cloud's full backups and deltas, i.e.
+  /// how recent the data a replace would restore is. Null when unknown.
+  Future<DateTime?> _latestCloudChangeTime() async {
+    if (_adapter == null) return null;
+    try {
+      final files = [
+        ...await _adapter!.listFiles(nameContains: 'habitt-backup'),
+        ...await _adapter!.listFiles(nameContains: 'habitt-delta'),
+      ];
+      DateTime? latest;
+      for (final f in files) {
+        final t = f.modifiedTime ?? f.createdTime;
+        if (t != null && (latest == null || t.isAfter(latest))) latest = t;
+      }
+      return latest?.toLocal();
+    } catch (e) {
+      debugPrint('Failed to read latest cloud change time: $e');
+      return null;
+    }
+  }
+
   Future<BackupMetadata?> _fetchCloudMetadata(SecretKey key) async {
     if (_adapter == null) return null;
     final metadataBytes = await _adapter!.download('metadata.meta');
@@ -2099,8 +2174,7 @@ class BackupProvider extends ChangeNotifier {
       return;
     }
 
-    final devices =
-        _sharesDevices ? await _syncDevices?.listForUpload() : null;
+    final devices = _sharesDevices ? await _syncDevices?.listForUpload() : null;
     final bytes = await BackupService.exportDeltaForGoogleDrive(
       secretKey: key,
       habitProvider: _habitProvider!,
@@ -2700,10 +2774,11 @@ class BackupProvider extends ChangeNotifier {
     if (_dataExists && !localIsEmpty) {
       // Local data exists and iCloud has a backup — let the user decide
       // (merge / replace local / ignore backup and upload mine).
-      _pendingRestoreDecision = true;
+      await _setPendingRestoreDecision(true);
       notifyListeners();
       return;
     }
+    await _setPendingRestoreDecision(false);
 
     notifyListeners();
     await performSync(true);
@@ -2713,6 +2788,7 @@ class BackupProvider extends ChangeNotifier {
   /// Called when iCloud becomes unavailable mid-session (E_CTR).
   /// Drops the adapter silently with no error state shown to the user.
   Future<void> _silentlyDeactivateICloud() async {
+    await _setPendingRestoreDecision(false);
     await _adapter?.dispose();
     _adapter =
         _currentUser != null
@@ -2733,6 +2809,8 @@ class BackupProvider extends ChangeNotifier {
 
   /// Switch back to Google Drive (or no backend if not signed in).
   Future<void> deactivateICloud() async {
+    // the pending choice was about the iCloud backup
+    await _setPendingRestoreDecision(false);
     await _adapter?.dispose();
     _adapter =
         _currentUser != null

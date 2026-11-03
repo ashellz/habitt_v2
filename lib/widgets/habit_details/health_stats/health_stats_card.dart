@@ -14,6 +14,7 @@ import 'package:habitt/util/health_missing_data.dart';
 import 'package:habitt/widgets/default/health_override_tag.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_sessions_list.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_week_chart.dart';
+import 'package:habitt/widgets/default/health_connect_icon.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -196,11 +197,7 @@ class _Header extends StatelessWidget {
               width: 36,
               height: 36,
             )
-            : Image.asset(
-              'assets/images/widget-images/health-connect.png',
-              width: 36,
-              height: 36,
-            ),
+            : const HealthConnectIcon(size: 36),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

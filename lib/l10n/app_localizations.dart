@@ -3859,7 +3859,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupFoundDesc.
   ///
   /// In en, this message translates to:
-  /// **'Your Google Drive has a backup. How would you like to restore?'**
+  /// **'Your Google Drive has a backup. How would you like to restore? Syncing won’t start until you choose an option.'**
   String get backupFoundDesc;
 
   /// No description provided for @merge.
@@ -6349,7 +6349,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupFoundDescICloud.
   ///
   /// In en, this message translates to:
-  /// **'Your iCloud has a backup. How would you like to restore?'**
+  /// **'Your iCloud has a backup. How would you like to restore? Syncing won’t start until you choose an option.'**
   String get backupFoundDescICloud;
 
   /// No description provided for @ignoreBackupUploadMine.
@@ -6375,6 +6375,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replace backup'**
   String get replaceCloudBackup;
+
+  /// No description provided for @overwriteLocalDataDescWithDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to overwrite your local data with the most recent backup ({date})? This action cannot be undone.'**
+  String overwriteLocalDataDescWithDate(String date);
 }
 
 class _AppLocalizationsDelegate

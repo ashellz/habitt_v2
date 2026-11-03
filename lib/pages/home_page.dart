@@ -22,6 +22,7 @@ import 'package:habitt/util/whats_new_flow.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/dialogs/outdated_other_device_dialog.dart';
 import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
+import 'package:habitt/widgets/dialogs/restore_choice_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:habitt/util/status_overlay_popup.dart';
 import 'package:habitt/util/supports_liquid_glass.dart';
@@ -155,6 +156,16 @@ class _HomePageState extends State<HomePage>
       );
       unawaited(_syncHealth());
       await backupProvider.initializationDone;
+
+      // a restore choice dismissed in an earlier run: syncing stays paused
+      // until it's answered, so ask again (still dismissible)
+      if (backupProvider.pendingRestoreDecision && mounted) {
+        await showDialogSheet<void>(
+          context: context,
+          builder: (_) => const RestoreChoiceDialog(),
+        );
+      }
+
       await backupProvider.performSync();
 
       if (mounted) {

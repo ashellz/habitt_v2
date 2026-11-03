@@ -6,9 +6,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/notification_action_handler.dart';
 import 'package:habitt/widgets/default/default_annotated_region.dart';
-import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/habit_alarm/alarm_clock.dart';
-import 'package:habitt/widgets/habit_alarm/alarm_pulse_icon.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +70,8 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
     _closing = true;
     // stops the ringing
     await AwesomeNotifications().dismiss(widget.alarm.notificationId);
-    if (complete) await NotificationActionHandler.completeFromAlarm(widget.alarm);
+    if (complete)
+      await NotificationActionHandler.completeFromAlarm(widget.alarm);
     await AlarmScreenService.setShowOverLockScreen(false);
     if (mounted) Navigator.of(context).pop();
   }
@@ -94,54 +93,46 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
           backgroundColor: cp.bg,
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 48),
               child: Column(
                 children: [
                   // ─── Clock ────────────────────────────────────────────
-                  _alarmLabel(cp, loc),
-                  const SizedBox(height: 12),
+                  const Spacer(flex: 3),
                   const AlarmClock(),
+                  const SizedBox(height: 56),
 
                   // ─── Habit ────────────────────────────────────────────
-                  const Spacer(),
-                  AlarmPulseIcon(emoji: _habit?.iconPath ?? '⏰'),
-                  const SizedBox(height: 24),
                   Text(
                     title,
                     textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: cp.text,
                       fontSize: 28,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  if (widget.alarm.body.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.alarm.body,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: cp.greyText,
-                        fontSize: 17,
-                        height: 1.35,
-                      ),
-                    ),
-                  ],
-                  const Spacer(),
+                  const Spacer(flex: 2),
 
                   // ─── Actions ──────────────────────────────────────────
-                  if (_canComplete) ...[
-                    NewDefaultButton.primary(
-                      height: 60,
-                      label: loc.notificationCompleteAction,
-                      onPressed: () => _close(complete: true),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                  NewDefaultButton.secondary(
-                    height: 60,
-                    label: loc.notificationDismissAction,
-                    onPressed: () => _close(complete: false),
+                  Row(
+                    spacing: 8,
+                    children: [
+                      if (_canComplete)
+                        _actionButton(
+                          label: loc.notificationCompleteAction,
+                          color: cp.main,
+                          textColor: cp.bg,
+                          onTap: () => _close(complete: true),
+                        ),
+                      _actionButton(
+                        label: loc.notificationDismissAction,
+                        color: cp.secondaryButton,
+                        textColor: cp.text,
+                        onTap: () => _close(complete: false),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -152,21 +143,36 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
     );
   }
 
-  Widget _alarmLabel(ColorProvider cp, AppLocalizations loc) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: 6,
-      children: [
-        Icon(Icons.alarm_rounded, color: cp.main, size: 20),
-        Text(
-          loc.habitAlarmTitle,
-          style: TextStyle(
-            color: cp.main,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+  Widget _actionButton({
+    required String label,
+    required Color color,
+    required Color textColor,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: Material(
+        color: color,
+        shape: const StadiumBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            height: 96,
+            child: Center(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

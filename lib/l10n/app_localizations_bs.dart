@@ -2309,7 +2309,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get backupFoundDesc =>
-      'Tvoj Google Drive već ima backup. Kako bi ga želio obnoviti?';
+      'Tvoj Google Drive već ima backup. Kako bi ga želio obnoviti? Sinhronizacija neće početi dok ne odabereš jednu opciju.';
 
   @override
   String get merge => 'Spoji';
@@ -3751,7 +3751,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get backupFoundDescICloud =>
-      'Tvoj iCloud već ima backup. Kako bi ga želio obnoviti?';
+      'Tvoj iCloud već ima backup. Kako bi ga želio obnoviti? Sinhronizacija neće početi dok ne odabereš jednu opciju.';
 
   @override
   String get ignoreBackupUploadMine => 'Zanemari backup';
@@ -3766,4 +3766,9 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get replaceCloudBackup => 'Zamijeni backup';
+
+  @override
+  String overwriteLocalDataDescWithDate(String date) {
+    return 'Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ($date)? Ova radnja se ne može poništiti.';
+  }
 }

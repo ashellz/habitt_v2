@@ -58,10 +58,12 @@ notification in the `notificationJson` extra. So:
   `HabitAlarmPage` (`lib/pages/other_pages/habit_alarm_page.dart`, widgets in
   `lib/widgets/habit_alarm/`) instead of the habit details / log dialog. A
   cold start stores it in `_pendingAlarm` until the navigator is ready.
-- The page shows the time, the habit's emoji and the notification text, with
-  **Complete** (hidden for Health-linked habits, same as the notification
-  button; goes through `PendingCompletionQueue`) and **Dismiss**. Both dismiss
-  the notification, which is what stops the sound. Back is blocked.
+- The page mirrors the stock Android Clock ringing screen: the large time,
+  the notification title (habit emoji + name) and two pill buttons side by
+  side, **Complete** on the left (hidden for Health-linked habits, same as the
+  notification button; goes through `PendingCompletionQueue`) and **Dismiss**
+  on the right. Both dismiss the notification, which is what stops the sound.
+  Back is blocked.
 - On close it calls `AlarmScreenService.setShowOverLockScreen(false)`
   (method channel `habitt/alarm_screen`), so the keyguard covers the app again.
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/widgets/whats_new/whats_new_graphic_frame.dart';
+import 'package:habitt/widgets/default/health_connect_icon.dart';
 import 'package:provider/provider.dart';
 
 /// Apple Health on iOS, Health Connect elsewhere, with the metrics a habit can
@@ -74,9 +75,7 @@ class WhatsNewHealthGraphic extends StatelessWidget {
                         ? SvgPicture.asset(
                           'assets/images/widget-images/apple-health.svg',
                         )
-                        : Image.asset(
-                          'assets/images/widget-images/health-connect.png',
-                        ),
+                        : const HealthConnectIcon(),
               ),
               Flexible(
                 child: Text(

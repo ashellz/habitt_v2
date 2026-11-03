@@ -26,6 +26,7 @@ import 'package:habitt/widgets/habit_details/new/editable/enter_habit_duration.d
 import 'package:habitt/widgets/habit_details/new/editable/select_habit_type_widgets.dart';
 import 'package:habitt/widgets/habit_widget/progress_inputs/amount_progress_input.dart';
 import 'package:habitt/widgets/habit_widget/text_icon.dart';
+import 'package:habitt/widgets/default/health_connect_icon.dart';
 import 'package:provider/provider.dart';
 
 class HealthWidget extends StatefulWidget {
@@ -46,11 +47,7 @@ class _HealthWidgetState extends State<HealthWidget> {
         height: 46,
       );
     }
-    return Image.asset(
-      "assets/images/widget-images/health-connect.png",
-      width: 46,
-      height: 46,
-    );
+    return const HealthConnectIcon(size: 46);
   }
 
   PremadeHabitTemplate? _selectedTemplate(StateProvider sp) {

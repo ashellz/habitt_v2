@@ -896,7 +896,7 @@
   "accountDeletedSuccessfully": "Account eliminato con successo",
   "accountDeletionFailed": "Eliminazione account non riuscita: {errorMessage}",
   "backupFound": "Backup trovato",
-  "backupFoundDesc": "Il tuo Google Drive ha un backup. Come vorresti ripristinare?",
+  "backupFoundDesc": "Il tuo Google Drive ha un backup. Come vorresti ripristinare? La sincronizzazione non partirà finché non scegli un’opzione.",
   "merge": "Unisci",
   "overwriteLocalDataTitle": "Sovrascrivere i dati locali?",
   "overwriteLocalDataDesc": "Questo sostituirà definitivamente tutti i tuoi dati locali con il backup. Questa azione non può essere annullata.",
@@ -1343,9 +1343,10 @@
   "healthDeviceThisDevice": "Questo dispositivo",
   "healthDeviceIosOnlyNote": "Le abitudini Attività e Mindfulness si sincronizzano solo da un iPhone.",
   "healthCardFromDevice": "Da {device}",
-  "backupFoundDescICloud": "Il tuo iCloud ha un backup. Come vorresti ripristinare?",
+  "backupFoundDescICloud": "Il tuo iCloud ha un backup. Come vorresti ripristinare? La sincronizzazione non partirà finché non scegli un’opzione.",
   "ignoreBackupUploadMine": "Ignora il backup",
   "replaceCloudBackupTitle": "Sostituire il backup esistente?",
   "replaceCloudBackupDesc": "Il backup esistente su {cloud} verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Questa azione non può essere annullata.",
-  "replaceCloudBackup": "Sostituisci backup"
+  "replaceCloudBackup": "Sostituisci backup",
+  "overwriteLocalDataDescWithDate": "Vuoi davvero sovrascrivere i tuoi dati locali con il backup più recente ({date})? Questa azione non può essere annullata."
 }

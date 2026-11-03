@@ -896,7 +896,7 @@
   "accountDeletedSuccessfully": "Konto erfolgreich gelöscht",
   "accountDeletionFailed": "Konto konnte nicht gelöscht werden: {errorMessage}",
   "backupFound": "Backup gefunden",
-  "backupFoundDesc": "Dein Google Drive hat ein Backup. Wie möchtest du wiederherstellen?",
+  "backupFoundDesc": "Dein Google Drive hat ein Backup. Wie möchtest du wiederherstellen? Die Synchronisierung startet erst, wenn du eine Option wählst.",
   "merge": "Zusammenführen",
   "overwriteLocalDataTitle": "Lokale Daten überschreiben?",
   "overwriteLocalDataDesc": "Dadurch werden alle deine lokalen Daten dauerhaft durch das Backup ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -1344,9 +1344,10 @@
   "healthDeviceThisDevice": "Dieses Gerät",
   "healthDeviceIosOnlyNote": "Gewohnheiten für Aktivität und Achtsamkeit werden nur von einem iPhone synchronisiert.",
   "healthCardFromDevice": "Von {device}",
-  "backupFoundDescICloud": "Dein iCloud hat ein Backup. Wie möchtest du wiederherstellen?",
+  "backupFoundDescICloud": "Dein iCloud hat ein Backup. Wie möchtest du wiederherstellen? Die Synchronisierung startet erst, wenn du eine Option wählst.",
   "ignoreBackupUploadMine": "Backup ignorieren",
   "replaceCloudBackupTitle": "Vorhandenes Backup ersetzen?",
   "replaceCloudBackupDesc": "Das vorhandene Backup in {cloud} wird dauerhaft gelöscht und durch die Daten auf diesem Gerät ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "replaceCloudBackup": "Backup ersetzen"
+  "replaceCloudBackup": "Backup ersetzen",
+  "overwriteLocalDataDescWithDate": "Möchtest du deine lokalen Daten wirklich mit dem neuesten Backup ({date}) überschreiben? Diese Aktion kann nicht rückgängig gemacht werden."
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
+import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
@@ -17,6 +18,7 @@ class RestoreChoiceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final cp = context.watch<ColorProvider>();
     final bp = context.read<BackupProvider>();
     final isICloud = bp.restoreDecisionIsICloud;
 
@@ -28,36 +30,47 @@ class RestoreChoiceDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         spacing: 8,
         children: [
-          // ─── Merge ────────────────────────────────────────────
-          NewDefaultButton.primary(
-            label: loc.merge,
-            onPressed: () {
-              bp.confirmMerge();
-              if (Navigator.canPop(context)) Navigator.pop(context);
-            },
-          ),
-          // ─── Replace local data with the backup ───────────────
-          NewDefaultButton.secondary(
-            label: loc.delete,
-            onPressed: () {
-              showDialogSheet<void>(
-                context: context,
-                builder:
-                    (_) => OverwriteLocalDataDialog(
-                      onConfirmed: () {
-                        bp.confirmReplace();
-                        if (context.mounted && Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        }
-                      },
-                    ),
-              );
-            },
+          Row(
+            spacing: 8,
+            children: [
+              // ─── Merge ────────────────────────────────────────────
+              Expanded(
+                child: NewDefaultButton.primary(
+                  label: loc.merge,
+                  onPressed: () {
+                    bp.confirmMerge();
+                    if (Navigator.canPop(context)) Navigator.pop(context);
+                  },
+                ),
+              ),
+              // ─── Replace local data with the backup ───────────────
+              Expanded(
+                child: NewDefaultButton.secondary(
+                  label: loc.delete,
+                  onPressed: () {
+                    showDialogSheet<void>(
+                      context: context,
+                      builder:
+                          (_) => OverwriteLocalDataDialog(
+                            backupTime: bp.restoreDecisionBackupTime,
+                            onConfirmed: () {
+                              bp.confirmReplace();
+                              if (context.mounted &&
+                                  Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+                            },
+                          ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           // ─── Ignore the backup and upload mine ────────────────
-          NewDefaultButton.secondary(
-            label: loc.ignoreBackupUploadMine,
-            onPressed: () {
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
               showDialogSheet<void>(
                 context: context,
                 builder:
@@ -72,6 +85,22 @@ class RestoreChoiceDialog extends StatelessWidget {
                     ),
               );
             },
+            child: SizedBox(
+              height: 40,
+              width: double.infinity,
+              child: Center(
+                child: Text(
+                  loc.ignoreBackupUploadMine,
+                  style: TextStyle(
+                    color: cp.main,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
+                    decorationColor: cp.main,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

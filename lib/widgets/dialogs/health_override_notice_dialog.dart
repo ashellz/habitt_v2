@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/util/health_source_name.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
+import 'package:habitt/widgets/default/health_connect_icon.dart';
 
 // shown once, the first time a hand-edit pauses Health sync for a day
 // the button stays disabled for [countdownSeconds] so it actually gets read
@@ -56,7 +57,7 @@ class _HealthOverrideNoticeDialogState
         titleIcon:
             defaultTargetPlatform == TargetPlatform.iOS
                 ? SvgPicture.asset('assets/images/widget-images/apple-health.svg')
-                : Image.asset('assets/images/widget-images/health-connect.png'),
+                : const HealthConnectIcon(),
         showSecondaryButton: false,
         primaryButtonEnabled: ready,
         primaryButtonLabel:

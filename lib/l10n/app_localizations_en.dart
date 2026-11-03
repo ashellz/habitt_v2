@@ -2310,7 +2310,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupFoundDesc =>
-      'Your Google Drive has a backup. How would you like to restore?';
+      'Your Google Drive has a backup. How would you like to restore? Syncing won’t start until you choose an option.';
 
   @override
   String get merge => 'Merge';
@@ -3752,7 +3752,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupFoundDescICloud =>
-      'Your iCloud has a backup. How would you like to restore?';
+      'Your iCloud has a backup. How would you like to restore? Syncing won’t start until you choose an option.';
 
   @override
   String get ignoreBackupUploadMine => 'Ignore backup';
@@ -3767,4 +3767,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get replaceCloudBackup => 'Replace backup';
+
+  @override
+  String overwriteLocalDataDescWithDate(String date) {
+    return 'Are you sure you want to overwrite your local data with the most recent backup ($date)? This action cannot be undone.';
+  }
 }

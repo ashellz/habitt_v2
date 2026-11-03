@@ -892,7 +892,7 @@
   "accountDeletedSuccessfully": "Account deleted successfully",
   "accountDeletionFailed": "Account deletion failed: {errorMessage}",
   "backupFound": "Backup found",
-  "backupFoundDesc": "Your Google Drive has a backup. How would you like to restore?",
+  "backupFoundDesc": "Your Google Drive has a backup. How would you like to restore? Syncing won’t start until you choose an option.",
   "merge": "Merge",
   "overwriteLocalDataTitle": "Overwrite local data?",
   "overwriteLocalDataDesc": "This will permanently replace all your local data with the backup. This action cannot be undone.",
@@ -1378,10 +1378,12 @@
   "healthDeviceThisDevice": "This device",
   "healthDeviceIosOnlyNote": "Activity and Mindfulness habits only sync from an iPhone.",
   "healthCardFromDevice": "From {device}",
-  "backupFoundDescICloud": "Your iCloud has a backup. How would you like to restore?",
+  "backupFoundDescICloud": "Your iCloud has a backup. How would you like to restore? Syncing won’t start until you choose an option.",
   "ignoreBackupUploadMine": "Ignore backup",
   "replaceCloudBackupTitle": "Replace the existing backup?",
   "replaceCloudBackupDesc": "The existing backup in {cloud} will be permanently deleted and replaced with the data on this device. This action cannot be undone.",
   "@replaceCloudBackupDesc": {"placeholders": {"cloud": {"type": "String"}}},
-  "replaceCloudBackup": "Replace backup"
+  "replaceCloudBackup": "Replace backup",
+  "overwriteLocalDataDescWithDate": "Are you sure you want to overwrite your local data with the most recent backup ({date})? This action cannot be undone.",
+  "@overwriteLocalDataDescWithDate": {"placeholders": {"date": {"type": "String"}}}
 }

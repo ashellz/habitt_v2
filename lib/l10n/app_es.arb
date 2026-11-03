@@ -896,7 +896,7 @@
   "accountDeletedSuccessfully": "Cuenta eliminada correctamente",
   "accountDeletionFailed": "Error al eliminar la cuenta: {errorMessage}",
   "backupFound": "Copia de seguridad encontrada",
-  "backupFoundDesc": "Tu Google Drive tiene una copia de seguridad. ¿Cómo te gustaría restaurar?",
+  "backupFoundDesc": "Tu Google Drive tiene una copia de seguridad. ¿Cómo te gustaría restaurar? La sincronización no empezará hasta que elijas una opción.",
   "merge": "Combinar",
   "overwriteLocalDataTitle": "¿Sobreescribir datos locales?",
   "overwriteLocalDataDesc": "Esto reemplazará permanentemente todos tus datos locales con la copia de seguridad. Esta acción no se puede deshacer.",
@@ -1344,9 +1344,10 @@
   "healthDeviceThisDevice": "Este dispositivo",
   "healthDeviceIosOnlyNote": "Los hábitos de Actividad y Mindfulness solo se sincronizan desde un iPhone.",
   "healthCardFromDevice": "Desde {device}",
-  "backupFoundDescICloud": "Tu iCloud tiene una copia de seguridad. ¿Cómo te gustaría restaurar?",
+  "backupFoundDescICloud": "Tu iCloud tiene una copia de seguridad. ¿Cómo te gustaría restaurar? La sincronización no empezará hasta que elijas una opción.",
   "ignoreBackupUploadMine": "Ignorar la copia",
   "replaceCloudBackupTitle": "¿Reemplazar la copia de seguridad existente?",
   "replaceCloudBackupDesc": "La copia de seguridad existente en {cloud} se eliminará permanentemente y se reemplazará con los datos de este dispositivo. Esta acción no se puede deshacer.",
-  "replaceCloudBackup": "Reemplazar copia"
+  "replaceCloudBackup": "Reemplazar copia",
+  "overwriteLocalDataDescWithDate": "¿Seguro que quieres sobrescribir tus datos locales con la copia de seguridad más reciente ({date})? Esta acción no se puede deshacer."
 }
