@@ -31,6 +31,9 @@ import 'package:habitt/models/streak_health.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// See [HabitProvider.reminderStateSnapshot].
+typedef HabitReminderState = ({bool completed, int weekCount, int monthCount});
+
 class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
   List<Habit> todaysHabits = [];
@@ -254,6 +257,58 @@ class HabitProvider extends ChangeNotifier {
       habit: habit,
       appearsOnDay: appearsOnDay,
     );
+  }
+
+  /// What a sync merge can change about each habit's reminders without
+  /// touching its definition: today's completion, and the weekly/monthly
+  /// progress that decides which days a target habit still shows up on.
+  /// Taken before the merge, handed to [resyncRemindersAfterMerge] after it.
+  Map<int, HabitReminderState> reminderStateSnapshot() {
+    final today = _normalizeDate(DateTime.now());
+    return {
+      for (final habit in habits) habit.id: _reminderState(habit, today),
+    };
+  }
+
+  HabitReminderState _reminderState(Habit habit, DateTime today) => (
+    completed: habit.completed,
+    weekCount: _effectiveTimesCompletedThisWeek(habit, today),
+    monthCount: _effectiveTimesCompletedThisMonth(habit, today),
+  );
+
+  /// A completion that arrives through sync never goes through the local
+  /// completion paths, and the merge's init() skips the daily notification
+  /// sync once it already ran today, so reminders would keep firing for a
+  /// habit the other device completed. Runs the same reminder update a local
+  /// completion does for every habit whose state [before] the merge differs.
+  Future<void> resyncRemindersAfterMerge(
+    Map<int, HabitReminderState> before,
+  ) async {
+    final today = _normalizeDate(DateTime.now());
+    for (final habit in habits) {
+      final previous = before[habit.id];
+      if (previous == null) continue;
+      final current = _reminderState(habit, today);
+
+      if (previous.completed != current.completed) {
+        // also covers weekly/monthly: the merged period counters are already
+        // on the habit, so its reschedule sees the other device's progress
+        await _syncNotificationsOnCompletionChange(
+          habit: habit,
+          wasCompleted: previous.completed,
+          isNowCompleted: current.completed,
+          daySimple: today,
+          todaySimple: today,
+        );
+      } else if ((habit.scheduleType == ScheduleType.weekly &&
+              previous.weekCount != current.weekCount) ||
+          (habit.scheduleType == ScheduleType.monthly &&
+              previous.monthCount != current.monthCount)) {
+        // a past day of the current week/month was completed elsewhere: the
+        // days the habit still has to show up on this period moved
+        await syncSingleHabitNotifications(habit);
+      }
+    }
   }
 
   Future<void> _syncNotificationsOnCompletionChange({

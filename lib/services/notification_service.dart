@@ -337,6 +337,20 @@ class NotificationService {
     debugPrint('Scheduled notifications for all habits');
   }
 
+  // Whether the live habit is completed for [now]'s day. The live habit only
+  // holds today's state once the day rollover has reset it, so the completion
+  // must also be stamped today: a "completed" left over from yesterday (app
+  // opened on a new day, scheduling before the reset) must not swallow
+  // today's reminders. No stamp counts as not done, so a doubt costs an extra
+  // reminder rather than a missing one.
+  @visibleForTesting
+  static bool isCompletedToday(Habit habit, DateTime now) {
+    if (!habit.completed) return false;
+    final ts = habit.timestamps['completed']?.toLocal();
+    if (ts == null) return false;
+    return ts.year == now.year && ts.month == now.month && ts.day == now.day;
+  }
+
   static Future<void> _scheduleHabitNotifications({
     required Habit habit,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
@@ -365,6 +379,11 @@ class NotificationService {
     ) {
       final day = addCalendarDays(startDay, dayOffset);
       if (!appearsOnDay(habit, day)) {
+        continue;
+      }
+      // already done today: a reschedule must not put back the reminders that
+      // completing it cancelled
+      if (dayOffset == 0 && isCompletedToday(habit, now)) {
         continue;
       }
 

@@ -2361,6 +2361,10 @@ class BackupProvider extends ChangeNotifier {
 
     // legacy minutes to seconds happens in BackupData.fromMap
 
+    // what each habit's reminders depend on before the merge, so the ones the
+    // merge changes (a completion from the other device) get resynced below
+    final reminderStateBefore = _habitProvider?.reminderStateSnapshot();
+
     if (backupData.isDelta && backupData.wasUpconvertedFromLegacy) {
       _outdatedPeerVersionDetected = true;
     }
@@ -2520,6 +2524,9 @@ class BackupProvider extends ChangeNotifier {
 
     _habitProvider?.importDateJoined(backupData.dateJoined);
     await _habitProvider?.init();
+    if (reminderStateBefore != null) {
+      await _habitProvider?.resyncRemindersAfterMerge(reminderStateBefore);
+    }
     _pendingStreakRecalc = true;
     notifyListeners();
   }
