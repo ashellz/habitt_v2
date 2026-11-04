@@ -2362,7 +2362,8 @@ class BackupProvider extends ChangeNotifier {
     // legacy minutes to seconds happens in BackupData.fromMap
 
     // what each habit's reminders depend on before the merge, so the ones the
-    // merge changes (a completion from the other device) get resynced below
+    // merge changes (a completion, or a new/edited/paused/deleted habit from
+    // the other device) get resynced below
     final reminderStateBefore = _habitProvider?.reminderStateSnapshot();
 
     if (backupData.isDelta && backupData.wasUpconvertedFromLegacy) {

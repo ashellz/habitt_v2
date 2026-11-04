@@ -32,7 +32,8 @@ import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// See [HabitProvider.reminderStateSnapshot].
-typedef HabitReminderState = ({bool completed, int weekCount, int monthCount});
+typedef HabitReminderState =
+    ({bool completed, int weekCount, int monthCount, String definition});
 
 class HabitProvider extends ChangeNotifier {
   List<Habit> habits = [];
@@ -259,9 +260,10 @@ class HabitProvider extends ChangeNotifier {
     );
   }
 
-  /// What a sync merge can change about each habit's reminders without
-  /// touching its definition: today's completion, and the weekly/monthly
-  /// progress that decides which days a target habit still shows up on.
+  /// What a sync merge can change about each habit's reminders: today's
+  /// completion, the weekly/monthly progress that decides which days a target
+  /// habit still shows up on, and its reminder definition (slots, schedule,
+  /// pause/delete, ... see [NotificationService.reminderDefinitionKey]).
   /// Taken before the merge, handed to [resyncRemindersAfterMerge] after it.
   Map<int, HabitReminderState> reminderStateSnapshot() {
     final today = _normalizeDate(DateTime.now());
@@ -274,6 +276,7 @@ class HabitProvider extends ChangeNotifier {
     completed: habit.completed,
     weekCount: _effectiveTimesCompletedThisWeek(habit, today),
     monthCount: _effectiveTimesCompletedThisMonth(habit, today),
+    definition: NotificationService.reminderDefinitionKey(habit),
   );
 
   /// A completion that arrives through sync never goes through the local
@@ -281,10 +284,31 @@ class HabitProvider extends ChangeNotifier {
   /// sync once it already ran today, so reminders would keep firing for a
   /// habit the other device completed. Runs the same reminder update a local
   /// completion does for every habit whose state [before] the merge differs.
+  ///
+  /// Definition changes from the other device (a new habit, moved or removed
+  /// reminder times, a schedule edit, a pause or delete) instead get one full
+  /// forced resync: it wipes every pending habit reminder, so slots that no
+  /// longer exist and habits that are now paused/deleted stop firing, then
+  /// schedules all habits from their merged state. That also covers any
+  /// completion change in the same merge (today's slots of habits completed
+  /// today are never scheduled), so the per-habit pass is skipped. Merges
+  /// that change no definition don't pay for a full reschedule.
   Future<void> resyncRemindersAfterMerge(
     Map<int, HabitReminderState> before,
   ) async {
     final today = _normalizeDate(DateTime.now());
+    final definitionChanged = NotificationService.reminderDefinitionsChanged(
+      {for (final entry in before.entries) entry.key: entry.value.definition},
+      {
+        for (final habit in habits)
+          habit.id: NotificationService.reminderDefinitionKey(habit),
+      },
+    );
+    if (definitionChanged) {
+      await _syncAllHabitNotifications(force: true);
+      return;
+    }
+
     for (final habit in habits) {
       final previous = before[habit.id];
       if (previous == null) continue;

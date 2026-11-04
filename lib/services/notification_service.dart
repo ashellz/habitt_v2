@@ -351,6 +351,63 @@ class NotificationService {
     return ts.year == now.year && ts.month == now.month && ts.day == now.day;
   }
 
+  // Everything about a habit's definition that decides which reminders it
+  // has and what they say (slots, schedule, pause/delete, sound, text), as one
+  // comparable value. Day state (completion, progress) is left out on
+  // purpose: it changes all day long and is handled per habit. A deleted
+  // habit has no reminders whatever its fields say, so it collapses to one
+  // key and edits to it don't count as changes.
+  static String reminderDefinitionKey(Habit habit) {
+    if (habit.isDeleted == true) return 'deleted';
+    // sorted, so a merge that only reorders a list or map isn't a change
+    final slots = [
+      for (final slot in habit.notificationTimes)
+        '${slot.id}@${slot.minutesOfDay}:${slot.days.join(',')}',
+    ]..sort();
+    final localizedNames = [
+      for (final e in habit.localizedNames.entries) '${e.key}=${e.value}',
+    ]..sort();
+    return [
+      habit.isPaused == true,
+      habit.notificationsEnabled,
+      slots.join(';'),
+      habit.isAlarm,
+      habit.soundKey,
+      habit.scheduleType.name,
+      habit.weeklyTarget,
+      habit.monthlyTarget,
+      habit.customIntervalDays,
+      habit.selectedDaysAWeek.join(','),
+      habit.selectedDaysAMonth.join(','),
+      habit.customAppearance.join(','),
+      habit.showIfMissed,
+      habit.createdAt.millisecondsSinceEpoch,
+      habit.name,
+      localizedNames.join(','),
+      habit.iconPath,
+      habit.premadeHabitType?.name,
+      habit.trackingType?.name,
+      habit.amount,
+      habit.amountLabel,
+      habit.duration,
+      habit.healthMetric?.name,
+    ].join('|');
+  }
+
+  // Whether a reminder definition changed between [before] and [after]
+  // (habit id -> [reminderDefinitionKey]): a habit appeared or disappeared,
+  // or one's key differs.
+  static bool reminderDefinitionsChanged(
+    Map<int, String> before,
+    Map<int, String> after,
+  ) {
+    if (before.length != after.length) return true;
+    for (final entry in after.entries) {
+      if (before[entry.key] != entry.value) return true;
+    }
+    return false;
+  }
+
   static Future<void> _scheduleHabitNotifications({
     required Habit habit,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
