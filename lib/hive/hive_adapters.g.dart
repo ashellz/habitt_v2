@@ -71,6 +71,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
       healthManualOverride: fields[52] == null ? false : fields[52] as bool,
       isDeleted: fields[24] as bool?,
       isPaused: fields[43] as bool?,
+      pausedRanges: (fields[56] as List?)?.cast<DateTime>(),
       deletedAt: fields[46] as DateTime?,
       timestamps: (fields[23] as Map?)?.cast<String, DateTime>(),
       insightPopstonedUntil: fields[42] as DateTime?,
@@ -81,7 +82,7 @@ class HabitAdapter extends TypeAdapter<Habit> {
   @override
   void write(BinaryWriter writer, Habit obj) {
     writer
-      ..writeByte(53)
+      ..writeByte(54)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -187,7 +188,9 @@ class HabitAdapter extends TypeAdapter<Habit> {
       ..writeByte(54)
       ..write(obj.isAlarm)
       ..writeByte(55)
-      ..write(obj.showIfMissed);
+      ..write(obj.showIfMissed)
+      ..writeByte(56)
+      ..write(obj.pausedRanges);
   }
 
   @override

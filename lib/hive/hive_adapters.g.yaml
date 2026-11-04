@@ -5,7 +5,7 @@ nextTypeId: 2
 types:
   Habit:
     typeId: 0
-    nextIndex: 56
+    nextIndex: 57
     fields:
       id:
         index: 0
@@ -113,6 +113,8 @@ types:
         index: 54
       showIfMissed:
         index: 55
+      pausedRanges:
+        index: 56
   Day:
     typeId: 1
     nextIndex: 4

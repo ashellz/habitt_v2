@@ -193,8 +193,9 @@ void main() {
 
     test('single-habit recalculation leaves other entries intact', () async {
       final today = _normalize(DateTime.now());
-      await habitBox.put(1, buildTestHabit(id: 1));
-      await habitBox.put(2, buildTestHabit(id: 2));
+      final created = addCalendarDays(today, -10);
+      await habitBox.put(1, buildTestHabit(id: 1, createdAt: created));
+      await habitBox.put(2, buildTestHabit(id: 2, createdAt: created));
 
       // Habit 1 has two trailing misses, habit 2 is clean.
       for (int daysAgo = 1; daysAgo <= 2; daysAgo++) {

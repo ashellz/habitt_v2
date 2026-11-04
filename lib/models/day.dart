@@ -26,7 +26,8 @@ class Day extends HiveObject {
           '${date.year.toString().padLeft(4, '0')}-'
           '${date.month.toString().padLeft(2, '0')}-'
           '${date.day.toString().padLeft(2, '0')}',
-      'habits': habits.map((h) => h.toMap()).toList(),
+      'habits':
+          habits.map((h) => h.toMap(includePauseHistory: false)).toList(),
       'timestamp': timestamp?.toIso8601String(),
       // isAutoCreated intentionally omitted — local-only flag, never synced
     };

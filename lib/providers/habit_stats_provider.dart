@@ -213,6 +213,13 @@ class HabitStatsProvider extends ChangeNotifier {
         continue;
       }
 
+      // a copy written into a day the habit was paused on or didn't exist yet
+      // (see HabitProvider.inactiveOnPastDay) is no miss
+      if (!dayHabit.hasAnyProgress() &&
+          (_habitProvider?.inactiveOnPastDay(habit.id, dayDate) ?? false)) {
+        continue;
+      }
+
       earliestDayWithHabit =
           earliestDayWithHabit == null || dayDate.isBefore(earliestDayWithHabit)
               ? dayDate

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:http/http.dart' as http;
 
@@ -17,13 +18,37 @@ class _GoogleAuthClient extends http.BaseClient {
   }
 }
 
+/// Drive-scope access token for [account], only if it can be had without any
+/// UI. Null means the scope isn't granted (revoked / never granted); errors
+/// (no network etc.) are thrown.
+///
+/// Goes through the platform interface rather than
+/// `GoogleSignInAccount.authorizationClient` so it also works for an account
+/// restored from saved state, without authenticating first. On Android
+/// authenticating on cold start means Credential Manager, which shows a
+/// "sign in with Google" sheet whenever it can't auto-select; authorization
+/// only needs the account email.
+Future<String?> driveAccessToken(GoogleIdentity account) async {
+  final tokens = await GoogleSignInPlatform.instance
+      .clientAuthorizationTokensForScopes(
+        ClientAuthorizationTokensForScopesParameters(
+          request: AuthorizationRequestDetails(
+            scopes: const [drive_api.DriveApi.driveFileScope],
+            userId: account.id,
+            email: account.email,
+            promptIfUnauthorized: false,
+          ),
+        ),
+      );
+  return tokens?.accessToken;
+}
+
 /// Google Drive implementation of [CloudStorageAdapter].
 /// All files live inside a single `habitt_backups/` folder in Drive root.
 class DriveStorageAdapter implements CloudStorageAdapter {
-  DriveStorageAdapter({required GoogleSignInAccount account})
-      : _account = account;
+  DriveStorageAdapter({required GoogleIdentity account}) : _account = account;
 
-  final GoogleSignInAccount _account;
+  final GoogleIdentity _account;
 
   // Cached after first lookup to avoid repeated Drive API round-trips.
   String? _cachedFolderId;
@@ -33,11 +58,14 @@ class DriveStorageAdapter implements CloudStorageAdapter {
 
   Future<drive_api.DriveApi?> _getDrive() async {
     try {
-      final headers = await _account.authorizationClient.authorizationHeaders(
-        [drive_api.DriveApi.driveFileScope],
+      final token = await driveAccessToken(_account);
+      if (token == null) return null;
+      return drive_api.DriveApi(
+        _GoogleAuthClient({
+          'Authorization': 'Bearer $token',
+          'X-Goog-AuthUser': '0',
+        }),
       );
-      if (headers == null) return null;
-      return drive_api.DriveApi(_GoogleAuthClient(headers));
     } catch (e) {
       debugPrint('[Drive] _getDrive error: $e');
       return null;

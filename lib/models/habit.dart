@@ -85,6 +85,12 @@ class Habit extends HiveObject {
   healthManualOverride; // per-day: user edited progress by hand, so Health sync leaves this day's progress alone
   bool? isDeleted;
   bool? isPaused;
+  // Stretches the habit was paused for, as [from, to] pairs (UTC): from is
+  // when it was paused, to when it was unpaused. The current pause, if any,
+  // isn't in here, it starts at timestamps['isPaused']. Lives on the habit
+  // only, a day snapshot copy never carries it (see [forDay]), and syncs as
+  // a union of both sides' stretches. See docs/backup_system.md.
+  List<DateTime> pausedRanges;
   DateTime? deletedAt;
   Map<String, DateTime> timestamps;
   DateTime? insightPopstonedUntil;
@@ -139,6 +145,7 @@ class Habit extends HiveObject {
     this.healthManualOverride = false,
     this.isDeleted,
     this.isPaused,
+    List<DateTime>? pausedRanges,
     this.deletedAt,
     Map<String, DateTime>? timestamps,
     this.insightPopstonedUntil,
@@ -155,6 +162,7 @@ class Habit extends HiveObject {
              ),
            ],
        healthSessions = healthSessions ?? [],
+       pausedRanges = pausedRanges ?? [],
        createdAt = (createdAt ?? DateTime.now()).toUtc(),
        timestamps = timestamps ?? {},
        localizedNames = localizedNames ?? {} {
@@ -254,11 +262,91 @@ class Habit extends HiveObject {
       healthManualOverride: healthManualOverride,
       isDeleted: isDeleted,
       isPaused: isPaused,
+      pausedRanges: List<DateTime>.from(pausedRanges),
       deletedAt: deletedAt,
       insightPopstonedUntil: insightPopstonedUntil,
       timestamps: Map<String, DateTime>.from(timestamps),
       localizedNames: Map<String, String>.from(localizedNames),
     );
+  }
+
+  /// A copy to store in a day snapshot: everything [copy] keeps except the
+  /// pause history, which only the habit itself holds.
+  Habit forDay() => copy()..pausedRanges = [];
+
+  // using habit pause history we see if it was paused on a day or not
+  bool pausedOnDay(DateTime day) {
+    final d = DateTime(day.year, day.month, day.day);
+    DateTime local(DateTime t) {
+      final l = t.toLocal();
+      return DateTime(l.year, l.month, l.day);
+    }
+
+    for (var i = 0; i + 1 < pausedRanges.length; i += 2) {
+      if (!d.isBefore(local(pausedRanges[i])) &&
+          d.isBefore(local(pausedRanges[i + 1]))) {
+        return true;
+      }
+    }
+    if (isPaused == true) {
+      final since = timestamps['isPaused'];
+      if (since != null && !d.isBefore(local(since))) return true;
+    }
+    return false;
+  }
+
+  // logs a pause end on the habit
+  // called right before the habit is unpaused
+  void _closePauseStretch(DateTime at) {
+    if (isPaused != true) return;
+    final since = timestamps['isPaused'];
+    if (since == null || !since.isBefore(at)) return;
+    pausedRanges = unionPauseRanges(pausedRanges, [since, at.toUtc()]);
+  }
+
+  /// Both sides' stretches, sorted by start, without exact duplicates.
+  static List<DateTime> unionPauseRanges(List<DateTime> a, List<DateTime> b) {
+    final pairs = <(DateTime, DateTime)>[];
+    void addAll(List<DateTime> source) {
+      for (var i = 0; i + 1 < source.length; i += 2) {
+        final pair = (source[i].toUtc(), source[i + 1].toUtc());
+        if (!pairs.any((p) => p.$1 == pair.$1 && p.$2 == pair.$2)) {
+          pairs.add(pair);
+        }
+      }
+    }
+
+    addAll(a);
+    addAll(b);
+    pairs.sort((x, y) => x.$1.compareTo(y.$1));
+    return [
+      for (final p in pairs) ...[p.$1, p.$2],
+    ];
+  }
+
+  static List<DateTime> _mergePauseRanges(
+    Habit local,
+    Habit incoming,
+    Habit merged,
+  ) {
+    var out = unionPauseRanges(local.pausedRanges, incoming.pausedRanges);
+    // Unpaused on a device running an app version from before pause history:
+    // the unpause arrives without its stretch, so the side that still had
+    // the habit paused records it, from its pause start to the unpause.
+    if (merged.isPaused == true) return out;
+    final unpausedAt = merged.timestamps['isPaused'];
+    if (unpausedAt == null) return out;
+    for (var i = 1; i < out.length; i += 2) {
+      if (out[i] == unpausedAt.toUtc()) return out;
+    }
+    for (final side in [local, incoming]) {
+      if (side.isPaused != true) continue;
+      final since = side.timestamps['isPaused'];
+      if (since != null && since.isBefore(unpausedAt)) {
+        out = unionPauseRanges(out, [since, unpausedAt]);
+      }
+    }
+    return out;
   }
 
   Habit copyResetCompletion() {
@@ -513,7 +601,9 @@ class Habit extends HiveObject {
       insightPopstonedUntil = habit.insightPopstonedUntil;
       timestamps['insightPopstonedUntil'] = now;
     }
+    pausedRanges = unionPauseRanges(pausedRanges, habit.pausedRanges);
     if (isPaused != habit.isPaused) {
+      if (habit.isPaused != true) _closePauseStretch(now);
       isPaused = habit.isPaused;
       timestamps['isPaused'] = now;
     }
@@ -610,6 +700,7 @@ class Habit extends HiveObject {
     healthManualOverride = merged.healthManualOverride;
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
+    pausedRanges = List<DateTime>.from(merged.pausedRanges);
     deletedAt = merged.deletedAt;
     insightPopstonedUntil = merged.insightPopstonedUntil;
     localizedNames = Map<String, String>.from(merged.localizedNames);
@@ -630,8 +721,10 @@ class Habit extends HiveObject {
   }
 
   Future<void> unpauseHabit() async {
+    final now = DateTime.now().toUtc();
+    _closePauseStretch(now);
     isPaused = false;
-    timestamps['isPaused'] = DateTime.now().toUtc();
+    timestamps['isPaused'] = now;
   }
 
   Future<void> restore() async {
@@ -870,7 +963,9 @@ class Habit extends HiveObject {
   // from Health, so a manual timer would only fight the synced value
   bool get supportsTimer => tracksDuration && healthMetric == null;
 
-  Map<String, dynamic> toMap() {
+  /// [includePauseHistory] is false for a day snapshot's copies: the pause
+  /// history belongs to the habit, not to the days.
+  Map<String, dynamic> toMap({bool includePauseHistory = true}) {
     return {
       'id': id,
       'name': name,
@@ -924,6 +1019,8 @@ class Habit extends HiveObject {
       'healthManualOverride': healthManualOverride,
       'isDeleted': isDeleted,
       'isPaused': isPaused,
+      if (includePauseHistory && pausedRanges.isNotEmpty)
+        'pausedRanges': pausedRanges.map((t) => t.toIso8601String()).toList(),
       'deletedAt': deletedAt?.toIso8601String(),
       'insightPopstonedUntil': insightPopstonedUntil?.toIso8601String(),
       'timestamps': timestamps.map(
@@ -1014,6 +1111,7 @@ class Habit extends HiveObject {
       healthManualOverride: (m['healthManualOverride'] as bool?) ?? false,
       isDeleted: m['isDeleted'] as bool?,
       isPaused: m['isPaused'] as bool?,
+      pausedRanges: _parsePauseRanges(m['pausedRanges']),
       deletedAt: DateTime.tryParse(m['deletedAt']?.toString() ?? '')?.toUtc(),
       insightPopstonedUntil:
           DateTime.tryParse(
@@ -1308,7 +1406,11 @@ class Habit extends HiveObject {
         healthBedtimeDayBefore,
         incoming.healthBedtimeDayBefore,
       ),
-      showIfMissed: resolve('showIfMissed', showIfMissed, incoming.showIfMissed),
+      showIfMissed: resolve(
+        'showIfMissed',
+        showIfMissed,
+        incoming.showIfMissed,
+      ),
       toleranceMinutes: resolve(
         'toleranceMinutes',
         toleranceMinutes,
@@ -1361,6 +1463,7 @@ class Habit extends HiveObject {
           localDelta <= incomingDelta ? localTs : incomingTs;
     }
 
+    merged.pausedRanges = _mergePauseRanges(this, incoming, merged);
     return merged;
   }
 
@@ -1409,6 +1512,16 @@ class Habit extends HiveObject {
         .map((e) => int.tryParse(e.toString()))
         .whereType<int>()
         .toList();
+  }
+
+  static List<DateTime> _parsePauseRanges(dynamic value) {
+    if (value is! List) return [];
+    final parsed = <DateTime>[
+      for (final v in value)
+        if (DateTime.tryParse(v?.toString() ?? '') case final t?) t.toUtc(),
+    ];
+    // a malformed list (odd length) keeps only whole pairs
+    return unionPauseRanges(parsed, const []);
   }
 
   static List<String> _parseStringList(dynamic value) {

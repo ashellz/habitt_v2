@@ -29,6 +29,11 @@ class StreakCalendar extends StatefulWidget {
 }
 
 class _StreakCalendarState extends State<StreakCalendar> {
+  /// What the live calendar last showed. Switching tabs rebuilds the calendar
+  /// page from scratch, so this outlives the state: opening the page again
+  /// with the same data restores it sharp instead of fading it in again.
+  static _StreakCalendarSnapshot? _lastShown;
+
   late DateTime _focusedDay;
 
   Map<int, Map<DateTime, _StreakVisualDayData>> _monthMetadataCache = {};
@@ -43,20 +48,86 @@ class _StreakCalendarState extends State<StreakCalendar> {
   bool _streakCacheScheduled = false;
   int _monthLoadToken = 0;
   int? _scheduledMonthKey;
+  // the calendar was restored from [_lastShown], so it starts sharp
+  bool _restoredFromSnapshot = false;
+  // bumped when shown data changes, replays the fade in
+  int _dataChangeCount = 0;
+
+  // the demo passes its own [StreakCalendar.today] and data, keep it apart
+  bool get _usesSnapshot => widget.today == null;
 
   @override
   void initState() {
     super.initState();
     final now = widget.today ?? DateTime.now();
     _focusedDay = DateTime(now.year, now.month, 1);
-    if (widget.isActive) _computeAndScheduleStreakCache();
+    if (!widget.isActive) return;
+    if (!_restoreSnapshot()) _computeAndScheduleStreakCache();
   }
 
   @override
   void didUpdateWidget(covariant StreakCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!widget.isActive || _isStreakCacheCurrent()) return;
+    if (!_streakCacheReady && _restoreSnapshot()) {
+      setState(() {});
+      return;
+    }
     _computeAndScheduleStreakCache();
+  }
+
+  /// Picks up what the previous calendar showed when the data is still the
+  /// same, so nothing has to be computed or faded in.
+  bool _restoreSnapshot() {
+    final snapshot = _lastShown;
+    if (!_usesSnapshot || snapshot == null) return false;
+    final today = _normalize(DateTime.now());
+    if (snapshot.today != today ||
+        !mapEquals(snapshot.allStats, widget.allStats) ||
+        !mapEquals(snapshot.dayStatuses, widget.dayStatuses)) {
+      return false;
+    }
+
+    _cachedRuns = snapshot.runs;
+    _cachedSelectableFirstDay = snapshot.selectableFirstDay;
+    _cachedToday = today;
+    _cachedAllStatsReference = widget.allStats;
+    _cachedDayStatusesReference = widget.dayStatuses;
+    _monthMetadataCache = snapshot.monthMetadata;
+
+    final focusedDay = _clampFocusedDay(
+      _focusedDay,
+      _monthStart(snapshot.selectableFirstDay),
+      today,
+    );
+    final key = _monthKey(focusedDay);
+    _monthMetadataCache.putIfAbsent(
+      key,
+      () => _buildStreakVisualMetadata(
+        runs: _cachedRuns,
+        selectableFirstDay: snapshot.selectableFirstDay,
+        today: today,
+        focusedDay: focusedDay,
+      ),
+    );
+    _activeMonthKey = key;
+    _isMonthMetadataReady = true;
+    _streakCacheReady = true;
+    _restoredFromSnapshot = true;
+    return true;
+  }
+
+  // shares the month cache, so months loaded later are restored too
+  void _saveSnapshot() {
+    if (!_usesSnapshot || _cachedSelectableFirstDay == null) return;
+    _lastShown = _StreakCalendarSnapshot(
+      allStats: widget.allStats,
+      dayStatuses: widget.dayStatuses,
+      today: _cachedToday!,
+      selectableFirstDay: _cachedSelectableFirstDay!,
+      runs: _cachedRuns,
+      monthMetadata: _monthMetadataCache,
+    );
   }
 
   /// Whether the computed runs still match the data. Opening the page
@@ -81,8 +152,9 @@ class _StreakCalendarState extends State<StreakCalendar> {
     return true;
   }
 
-  // Runs on the next frame. The calendar keeps showing what it has meanwhile,
-  // only the very first load shows the blurred loading state.
+  // Runs on the next frame. The calendar keeps showing what it has meanwhile.
+  // The first load fades in from the blurred loading state, later loads only
+  // replay the fade when the data really changed.
   void _computeAndScheduleStreakCache() {
     if (!mounted || _streakCacheScheduled) return;
     _streakCacheScheduled = true;
@@ -91,7 +163,8 @@ class _StreakCalendarState extends State<StreakCalendar> {
       _streakCacheScheduled = false;
       if (!mounted) return;
       final today = _normalize(widget.today ?? DateTime.now());
-      _ensureStreakCachesUpToDate(today);
+      final wasShowingData = _streakCacheReady;
+      final dataChanged = _ensureStreakCachesUpToDate(today);
 
       final selectableFirstDay = _cachedSelectableFirstDay ?? today;
       final focusedDay = _clampFocusedDay(
@@ -115,7 +188,9 @@ class _StreakCalendarState extends State<StreakCalendar> {
         _activeMonthKey = key;
         _isMonthMetadataReady = true;
         _streakCacheReady = true;
+        if (wasShowingData && dataChanged) _dataChangeCount++;
       });
+      _saveSnapshot();
 
       _prefetchAdjacentMonthMetadata(
         focusedDay: focusedDay,
@@ -162,12 +237,13 @@ class _StreakCalendarState extends State<StreakCalendar> {
     return createdAtRaw.isAfter(today) ? today : createdAtRaw;
   }
 
-  void _ensureStreakCachesUpToDate(DateTime today) {
+  /// Rebuilds the streak runs when the data moved on, returns whether it did.
+  bool _ensureStreakCachesUpToDate(DateTime today) {
     if (identical(_cachedAllStatsReference, widget.allStats) &&
         identical(_cachedDayStatusesReference, widget.dayStatuses) &&
         _cachedToday == today &&
         _cachedSelectableFirstDay != null) {
-      return;
+      return false;
     }
 
     final selectableFirstDay = _resolveSelectableFirstDay(today);
@@ -189,6 +265,7 @@ class _StreakCalendarState extends State<StreakCalendar> {
     _isMonthMetadataReady = false;
     _scheduledMonthKey = null;
     _monthLoadToken++;
+    return true;
   }
 
   int _monthKey(DateTime day) => day.year * 100 + day.month;
@@ -461,6 +538,8 @@ class _StreakCalendarState extends State<StreakCalendar> {
     return AnimatedBlurFade(
       ready: _streakCacheReady,
       minOpacity: 0.35,
+      skipInitialFade: _restoredFromSnapshot,
+      replayToken: _dataChangeCount,
       child: calendarWidget,
     );
   }
@@ -885,6 +964,24 @@ class _StreakCalendarState extends State<StreakCalendar> {
   static DateTime _normalize(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
+}
+
+class _StreakCalendarSnapshot {
+  const _StreakCalendarSnapshot({
+    required this.allStats,
+    required this.dayStatuses,
+    required this.today,
+    required this.selectableFirstDay,
+    required this.runs,
+    required this.monthMetadata,
+  });
+
+  final Map<DateTime, double> allStats;
+  final Map<DateTime, DayCompletionStatus> dayStatuses;
+  final DateTime today;
+  final DateTime selectableFirstDay;
+  final List<_ToleratedMissRun> runs;
+  final Map<int, Map<DateTime, _StreakVisualDayData>> monthMetadata;
 }
 
 class _StreakVisualDayData {

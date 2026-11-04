@@ -385,7 +385,8 @@ class HabitProvider extends ChangeNotifier {
     habits = habitBox.values.toList();
     await _normalizeHabitOrders();
     _sortHabitsByCategoryAndOrder(habits);
-    await _hydrateHabitCreatedAtFallbacks();
+    await _repairHabitCreatedAt();
+    await _seedPauseHistory();
   }
 
   static const String _deletedAtSeededKey = 'deletedAtSeeded_v1';
@@ -436,36 +437,106 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _hydrateHabitCreatedAtFallbacks() async {
+  // old createdAt was moving backward to the actual dateJoined, this fixes it by id
+  Future<void> _repairHabitCreatedAt() async {
     final now = DateTime.now().toUtc();
-
-    for (final habit in habits) {
-      DateTime? oldestDay;
-      for (final day in daysBox.values) {
-        final hasHabit = day.habits.any((h) => h.id == habit.id);
-        if (!hasHabit) {
-          continue;
+    final firstProgress = <int, DateTime>{};
+    for (final day in daysBox.values) {
+      final dayDate = _normalizeDate(day.date);
+      for (final h in day.habits) {
+        if (!h.hasAnyProgress()) continue;
+        final current = firstProgress[h.id];
+        if (current == null || dayDate.isBefore(current)) {
+          firstProgress[h.id] = dayDate;
         }
-
-        final normalizedDay = _normalizeDate(day.date);
-        if (oldestDay == null || normalizedDay.isBefore(oldestDay)) {
-          oldestDay = normalizedDay;
-        }
-      }
-
-      final normalizedCreatedAt = _normalizeDate(habit.createdAt);
-      final resolvedCreatedAt = oldestDay ?? normalizedCreatedAt;
-
-      if (!resolvedCreatedAt.isBefore(normalizedCreatedAt)) {
-        continue;
-      }
-
-      habit.createdAt = resolvedCreatedAt.toUtc();
-      habit.timestamps['createdAt'] = now;
-      if (habit.isInBox) {
-        await habit.save();
       }
     }
+
+    for (final habit in habits) {
+      final created = _normalizeDate(habit.createdAt.toLocal());
+      final progressDay = firstProgress[habit.id];
+      DateTime? repaired;
+
+      final idTime = _creationTimeFromId(habit.id);
+      if (idTime != null) {
+        final idDay = _normalizeDate(idTime.toLocal());
+        final loggedBefore = progressDay != null && progressDay.isBefore(idDay);
+        if (created.isBefore(idDay) && !loggedBefore) repaired = idTime;
+      }
+      if (repaired == null &&
+          progressDay != null &&
+          progressDay.isBefore(created)) {
+        repaired = progressDay.toUtc();
+      }
+      if (repaired == null) continue;
+
+      debugPrint(
+        '[CREATED] habit ${habit.id}: createdAt ${habit.createdAt} -> $repaired',
+      );
+      habit.createdAt = repaired.toUtc();
+      habit.timestamps['createdAt'] = now;
+      if (habit.isInBox) await habit.save();
+    }
+  }
+
+  // getting time created from habit id
+  // used for fixing createdAt
+  static DateTime? _creationTimeFromId(int id) {
+    if (id <= 0) return null;
+    final time = DateTime.fromMicrosecondsSinceEpoch(id, isUtc: true);
+    if (time.isBefore(DateTime.utc(2020))) return null;
+    if (time.isAfter(DateTime.now().toUtc().add(const Duration(days: 1)))) {
+      return null;
+    }
+    return time;
+  }
+
+  static const String _pauseHistorySeededKey = 'pauseHistorySeeded_v1';
+
+  // one time seeding pause history for habits that paused and unpaused before the logging feature was built
+  Future<void> _seedPauseHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_pauseHistorySeededKey) ?? false) return;
+
+    final now = DateTime.now().toUtc();
+    for (final habit in habits) {
+      if (habit.isPaused == true || habit.pausedRanges.isNotEmpty) continue;
+      final unpausedAt = habit.timestamps['isPaused'];
+      if (unpausedAt == null) continue;
+      final unpausedDay = _normalizeDate(unpausedAt.toLocal());
+      final createdDay = _normalizeDate(habit.createdAt.toLocal());
+
+      DateTime? pauseStart;
+      var day = addCalendarDays(unpausedDay, -1);
+      for (var i = 0; i < 730 && !day.isBefore(createdDay); i++) {
+        final record = daysBox.get(_dayKeyOf(day));
+        if (record != null && record.habits.isNotEmpty) {
+          Habit? copy;
+          for (final h in record.habits) {
+            if (h.id == habit.id) {
+              copy = h;
+              break;
+            }
+          }
+          if (copy != null && copy.hasAnyProgress()) break;
+          if (copy == null && _isScheduledOnDay(habit, day)) pauseStart = day;
+        }
+        day = addCalendarDays(day, -1);
+      }
+      if (pauseStart == null) continue;
+
+      debugPrint(
+        '[PAUSE] habit ${habit.id}: seeded stretch $pauseStart -> $unpausedAt',
+      );
+      habit.pausedRanges = Habit.unionPauseRanges(habit.pausedRanges, [
+        pauseStart.toUtc(),
+        unpausedAt,
+      ]);
+      habit.timestamps['pausedRanges'] = now;
+      if (habit.isInBox) await habit.save();
+    }
+
+    await prefs.setBool(_pauseHistorySeededKey, true);
   }
 
   // Normalizing a datetime to be shorter so they can compare and be the same
@@ -771,7 +842,7 @@ class HabitProvider extends ChangeNotifier {
       recorded.customAppearance = List<String>.from(habit.customAppearance);
       recorded.lastCustomUpdate = habit.lastCustomUpdate;
     } else if (_appearsOnDay(habit, today)) {
-      entry.habits.add(habit.copy());
+      entry.habits.add(habit.forDay());
     } else {
       return;
     }
@@ -839,6 +910,7 @@ class HabitProvider extends ChangeNotifier {
   // turn old off-days into misses). Pause still comes from the live habit.
   bool _appearedOnPastDay(Habit habit, Habit dayHabit, DateTime day) {
     if (habit.isPaused == true) return false;
+    if (_inactiveOnPastDay(habit.id, day)) return false;
     if (dayHabit.scheduleType == ScheduleType.custom) {
       // An empty list means the snapshot never got one, fall back to live.
       // Otherwise read it directly, _isScheduledOnDay would rebuild it in place
@@ -939,9 +1011,41 @@ class HabitProvider extends ChangeNotifier {
           (habit) =>
               (habit.isDeleted != true) &&
               (habit.isPaused != true) &&
-              (_appearsOnDay(habit, day) || habit.hasAnyProgress()),
+              (_countsOnDay(habit, day) || habit.hasAnyProgress()),
         )
         .toList();
+  }
+
+  // if habit was scheduled on a day and not paused nor didnt exist
+  bool _countsOnDay(Habit habit, DateTime day) =>
+      _appearsOnDay(habit, day) && !_inactiveOnPastDay(habit.id, day);
+
+  // whether habit was paused or didnt exit on a past day, so it doesn't count as a miss
+  // figured by the pause history and createdAt
+  bool inactiveOnPastDay(int habitId, DateTime day) =>
+      _inactiveOnPastDay(habitId, day);
+
+  bool _inactiveOnPastDay(int habitId, DateTime day) {
+    final normalizedDay = _normalizeDate(day);
+    if (!normalizedDay.isBefore(_normalizeDate(DateTime.now()))) return false;
+    final live = _liveHabit(habitId);
+    if (live == null) return false;
+    if (normalizedDay.isBefore(_normalizeDate(live.createdAt.toLocal()))) {
+      return true;
+    }
+    return live.pausedOnDay(normalizedDay);
+  }
+
+  // The habit record itself, not a day copy. The box too: a sync adds new
+  // habits there before they're loaded into [habits].
+  Habit? _liveHabit(int id) {
+    for (final h in habits) {
+      if (h.id == id) return h;
+    }
+    for (final h in habitBox.values) {
+      if (h.id == id) return h;
+    }
+    return null;
   }
 
   // Persistence-facing: what actually gets written into a Day snapshot.
@@ -954,7 +1058,7 @@ class HabitProvider extends ChangeNotifier {
         .where(
           (habit) =>
               (habit.isPaused != true) &&
-              (_appearsOnDay(habit, day) || habit.hasAnyProgress()),
+              (_countsOnDay(habit, day) || habit.hasAnyProgress()),
         )
         .toList();
   }
@@ -1066,7 +1170,10 @@ class HabitProvider extends ChangeNotifier {
         todayKey,
         Day(
           date: today,
-          habits: _scheduledHabitsForDaySnapshot(today, habits),
+          habits: [
+            for (final h in _scheduledHabitsForDaySnapshot(today, habits))
+              h.forDay(),
+          ],
           timestamp: DateTime.now().toUtc(),
         ),
       );
@@ -1271,8 +1378,7 @@ class HabitProvider extends ChangeNotifier {
       usedDay,
       completedOnDay: habit.completed,
     );
-    final isPastDay =
-        _normalizeDate(usedDay) != _normalizeDate(DateTime.now());
+    final isPastDay = _normalizeDate(usedDay) != _normalizeDate(DateTime.now());
     if (scheduleMoved && isPastDay) {
       await _syncTodaySnapshotSchedule(realHabit);
       // the future schedule moved, so do its reminders
@@ -1294,11 +1400,14 @@ class HabitProvider extends ChangeNotifier {
 
     if (dayEntry != null) {
       final index = dayEntry.habits.indexWhere((h) => h.id == habit.id);
+      // a copy, never the passed instance: that's often the live habit, and
+      // the snapshot would then change along with it (and hold its pause
+      // history, which stays on the habit)
       if (index != -1) {
-        dayEntry.habits[index] = habit;
+        dayEntry.habits[index] = habit.forDay();
       } else {
         debugPrint("Habit not found in day entry");
-        dayEntry.habits.add(habit);
+        dayEntry.habits.add(habit.forDay());
       }
       await daysBox.put(
         dayKey,
@@ -1751,7 +1860,10 @@ class HabitProvider extends ChangeNotifier {
     final previousSlots =
         persistedHabit.notificationTimes.map((slot) => slot.copy()).toList();
     persistedHabit.updateHabit(habit);
-    updateHabitInDB(habit);
+    // The persisted habit, not the edited copy: only it carries the timestamps
+    // of this edit. A copy keeps the pre-edit ones, so today's snapshot would
+    // lose the edit (optional, schedule, ...) to the other device on a sync.
+    updateHabitInDB(persistedHabit);
     refreshTodaysHabits(notify: false);
     // The reschedule below only cancels the habit's current slots, so slots the
     // edit replaced or removed would keep ringing at their old time.
@@ -2332,6 +2444,10 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  /// Whether [day] already has a snapshot with habits in it.
+  bool hasRecordedDay(DateTime day) =>
+      daysBox.get(_dayKeyOf(_normalizeDate(day)))?.habits.isNotEmpty ?? false;
+
   Future<void> saveHabitDay(
     DateTime day, {
     bool resetCompletion = false,
@@ -2347,7 +2463,7 @@ class HabitProvider extends ChangeNotifier {
     if (resetCompletion) {
       clonedHabits = habits.map((h) => h.copyResetCompletion()).toList();
     } else {
-      clonedHabits = habits.map((h) => h.copy()).toList();
+      clonedHabits = habits.map((h) => h.forDay()).toList();
     }
 
     final scheduledForDay = _scheduledHabitsForDaySnapshot(

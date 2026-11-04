@@ -21,6 +21,7 @@ import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/services/cloud_storage_adapter.dart';
 import 'package:habitt/services/drive_storage_adapter.dart';
 import 'package:habitt/services/icloud_storage_adapter.dart';
+import 'package:habitt/util/update_last_date.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -96,7 +97,10 @@ class BackupProvider extends ChangeNotifier {
   static const String _kPendingRestoreDecisionKey =
       'backup_pending_restore_decision';
 
-  GoogleSignInAccount? _currentUser;
+  /// The Drive account. After a cold start this is a [_SavedGoogleIdentity]
+  /// rebuilt from local state (see [initialize]), otherwise the account from
+  /// the sign-in flow.
+  GoogleIdentity? _currentUser;
   User? _firebaseUser;
   late final GoogleSignIn _googleSignIn;
   late final FlutterSecureStorage _secureStorage;
@@ -188,7 +192,7 @@ class BackupProvider extends ChangeNotifier {
 
   // --- Getters -----------------------------------------------------------
 
-  GoogleSignInAccount? get currentUser => _currentUser;
+  GoogleIdentity? get currentUser => _currentUser;
   User? get firebaseUser => _firebaseUser;
 
   /// Signed in to Google Drive, or connected to iCloud.
@@ -664,78 +668,122 @@ class BackupProvider extends ChangeNotifier {
       }
 
       // ── Restore Google Drive sign-in ───────────────────────────────────────
+      // Restored from local state, never by authenticating again: on Android
+      // that goes through Credential Manager, which shows a "sign in with
+      // Google" sheet whenever it can't auto-select (and dismissing it left
+      // the app signed out). Drive tokens only need the account email, and
+      // Firebase keeps its own session. The account is published right away
+      // so the UI (sync settings etc.) doesn't wait on the network checks.
       if (savedEmail != null) {
-        final lightweightFuture =
-            _googleSignIn.attemptLightweightAuthentication();
-        final user = lightweightFuture != null ? await lightweightFuture : null;
-        if (user != null) {
-          // If the user revoked Drive scope (e.g. from Google account settings),
-          // silently sign out so they're prompted to re-authorize on next sign-in.
-          final authorization = await user.authorizationClient
-              .authorizationForScopes([drive_api.DriveApi.driveFileScope]);
-          if (authorization == null) {
+        final firebaseUser = await _persistedFirebaseUser();
+        // No Firebase session to restore: stay signed out for this launch but
+        // keep the saved account (tried again next launch, a new sign-in
+        // overwrites it).
+        if (firebaseUser == null) return;
+
+        _firebaseUser = firebaseUser;
+        _currentUser = _SavedGoogleIdentity(
+          id: prefs.getString(_kBackupUserIdKey) ?? '',
+          email: savedEmail,
+          displayName: firebaseUser.displayName,
+          photoUrl: firebaseUser.photoURL,
+        );
+        _adapter = DriveStorageAdapter(account: _currentUser!);
+        notifyListeners();
+
+        // iOS / web hand out Drive tokens only for an authenticated session.
+        // Their lightweight auth is silent; Android's isn't, so it's skipped.
+        if (kIsWeb || !Platform.isAndroid) {
+          try {
+            final user = await _googleSignIn.attemptLightweightAuthentication();
+            if (user != null && user.email == savedEmail) {
+              _currentUser = user;
+              await _adapter?.dispose();
+              _adapter = DriveStorageAdapter(account: user);
+            }
+          } catch (e) {
+            debugPrint('Lightweight Google auth failed: $e');
+          }
+        }
+
+        // If the user revoked Drive scope (e.g. from Google account settings),
+        // sign out so they're prompted to re-authorize on next sign-in. Only a
+        // definite "not granted" counts; errors (offline etc.) keep the account
+        // and sync just retries later.
+        bool driveRevoked = false;
+        try {
+          driveRevoked = await driveAccessToken(_currentUser!) == null;
+        } catch (e) {
+          debugPrint('Drive authorization check failed: $e');
+        }
+        if (driveRevoked) {
+          await _googleSignIn.signOut();
+          await FirebaseAuth.instance.signOut();
+          _pendingNotification =
+              'Google Drive access was revoked. Please sign in again to re-enable backup.';
+          await _clearLocalAuthState(prefs);
+          return;
+        }
+
+        // Verify the Firebase account still exists — catches remote deletions
+        // (e.g. user deleted account on another device). Network errors don't
+        // count.
+        try {
+          await firebaseUser.reload();
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found' || e.code == 'user-disabled') {
             await _googleSignIn.signOut();
             await FirebaseAuth.instance.signOut();
-            _pendingNotification =
-                'Google Drive access was revoked. Please sign in again to re-enable backup.';
             await _clearLocalAuthState(prefs);
             return;
           }
-
-          _currentUser = user;
-          _firebaseUser = FirebaseAuth.instance.currentUser;
-
-          // Verify the Firebase account still exists — catches remote deletions
-          // (e.g. user deleted account on another device).
-          if (_firebaseUser != null) {
-            try {
-              await _firebaseUser!.reload();
-              _firebaseUser = FirebaseAuth.instance.currentUser;
-            } on FirebaseAuthException {
-              await _clearLocalAuthState(prefs);
-              return;
-            }
-          }
-
-          if (_firebaseUser == null) {
-            // Google session alive but Firebase account gone — sign out cleanly.
-            await _googleSignIn.signOut();
-            await _clearLocalAuthState(prefs);
-            return;
-          }
-
-          _adapter = DriveStorageAdapter(account: user);
-
-          // Check for legacy passphrase (old system) to surface migration UI
-          _legacyPassphrase = await _secureStorage.read(
-            key: _kLegacyPassphraseKey,
-          );
-          _needsMigration = _legacyPassphrase != null;
-
-          _dataExists = await _checkDataExists();
-          if (_pendingRestoreDecision) {
-            // asked again by the home page; refresh the date it shows
-            await _setPendingRestoreDecision(true);
-            notifyListeners();
-            return;
-          }
-          notifyListeners();
-
-          // First sync on this account that never reached a full sync (e.g.
-          // the app was killed mid sign-in). Merge is always safe — it never
-          // overwrites local data, it only brings in cloud data. A dismissed
-          // restore choice is handled above instead.
-          if (!_needsMigration && _dataExists && _lastSyncTime == null) {
-            await performSync(true);
-          }
-
-          _startPeriodicSync();
+          debugPrint('Firebase user reload failed: ${e.code}');
         }
+        _firebaseUser = FirebaseAuth.instance.currentUser ?? firebaseUser;
+
+        // Check for legacy passphrase (old system) to surface migration UI
+        _legacyPassphrase = await _secureStorage.read(
+          key: _kLegacyPassphraseKey,
+        );
+        _needsMigration = _legacyPassphrase != null;
+
+        _dataExists = await _checkDataExists();
+        if (_pendingRestoreDecision) {
+          // asked again by the home page; refresh the date it shows
+          await _setPendingRestoreDecision(true);
+          notifyListeners();
+          return;
+        }
+        notifyListeners();
+
+        // First sync on this account that never reached a full sync (e.g.
+        // the app was killed mid sign-in). Merge is always safe — it never
+        // overwrites local data, it only brings in cloud data. A dismissed
+        // restore choice is handled above instead.
+        if (!_needsMigration && _dataExists && _lastSyncTime == null) {
+          await performSync(true);
+        }
+
+        _startPeriodicSync();
       }
     } catch (e) {
       debugPrint('Failed to restore sign-in state: $e');
     } finally {
       if (!_initCompleter.isCompleted) _initCompleter.complete();
+    }
+  }
+
+  /// Firebase's persisted user. Waits for the first auth state, as the
+  /// session may still be loading this early in startup.
+  Future<User?> _persistedFirebaseUser() async {
+    final auth = FirebaseAuth.instance;
+    if (auth.currentUser != null) return auth.currentUser;
+    try {
+      return await auth.authStateChanges().first.timeout(
+        const Duration(seconds: 3),
+      );
+    } catch (_) {
+      return auth.currentUser;
     }
   }
 
@@ -1230,6 +1278,16 @@ class BackupProvider extends ChangeNotifier {
     bool force = false,
     SyncMode mode = SyncMode.full,
   ]) async {
+    if (_syncState == SyncState.syncing) return;
+    // never merge another device's days in while the new-day check is saving
+    // or filling days, or before it ran (see NewDayGate)
+    if (!await NewDayGate.readyForSync()) return;
+    final run = _performSync(force, mode);
+    NewDayGate.syncStarted(run);
+    await run;
+  }
+
+  Future<void> _performSync(bool force, SyncMode mode) async {
     if (_syncState == SyncState.syncing) return;
 
     if (_adapter == null) {
@@ -2829,4 +2887,25 @@ class BackupProvider extends ChangeNotifier {
     if (_adapter != null) _startPeriodicSync();
     notifyListeners();
   }
+}
+
+/// A Google account rebuilt from saved state on app start (email and id from
+/// prefs, name and photo from the Firebase user), so Drive works without
+/// authenticating again. See [BackupProvider.initialize].
+class _SavedGoogleIdentity implements GoogleIdentity {
+  const _SavedGoogleIdentity({
+    required this.id,
+    required this.email,
+    this.displayName,
+    this.photoUrl,
+  });
+
+  @override
+  final String id;
+  @override
+  final String email;
+  @override
+  final String? displayName;
+  @override
+  final String? photoUrl;
 }

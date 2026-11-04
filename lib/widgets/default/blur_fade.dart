@@ -46,14 +46,17 @@ class BlurFade extends StatelessWidget {
 }
 
 /// [BlurFade] that animates on its own: blurred while [ready] is false, sharp
-/// once it is true. Starts blurred so the first appearance fades in.
-class AnimatedBlurFade extends StatelessWidget {
+/// once it is true. Starts blurred so the first appearance fades in, unless
+/// [skipInitialFade] is set and it is already [ready].
+class AnimatedBlurFade extends StatefulWidget {
   const AnimatedBlurFade({
     super.key,
     required this.ready,
     required this.child,
     this.minOpacity = 0,
     this.duration = const Duration(milliseconds: 350),
+    this.skipInitialFade = false,
+    this.replayToken,
   });
 
   final bool ready;
@@ -61,17 +64,63 @@ class AnimatedBlurFade extends StatelessWidget {
   final double minOpacity;
   final Duration duration;
 
+  /// Starts sharp when [ready] is already true on the first build, for content
+  /// restored from a cache that the user has seen before.
+  final bool skipInitialFade;
+
+  /// Changing this while [ready] replays the fade in from blurred, for content
+  /// whose data changed under it. The child keeps its state.
+  final Object? replayToken;
+
+  @override
+  State<AnimatedBlurFade> createState() => _AnimatedBlurFadeState();
+}
+
+class _AnimatedBlurFadeState extends State<AnimatedBlurFade>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+    value: widget.ready && widget.skipInitialFade ? 1 : 0,
+  );
+  late final Animation<double> _progress = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeOutCubic,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.ready) _controller.forward();
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatedBlurFade oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.duration = widget.duration;
+
+    if (widget.ready && widget.replayToken != oldWidget.replayToken) {
+      _controller.forward(from: 0);
+    } else if (widget.ready != oldWidget.ready) {
+      widget.ready ? _controller.forward() : _controller.reverse();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: ready ? 1 : 0),
-      duration: duration,
-      curve: Curves.easeOutCubic,
-      child: child,
+    return AnimatedBuilder(
+      animation: _progress,
+      child: widget.child,
       builder:
-          (context, progress, child) => BlurFade(
-            progress: progress,
-            minOpacity: minOpacity,
+          (context, child) => BlurFade(
+            progress: _progress.value,
+            minOpacity: widget.minOpacity,
             child: child!,
           ),
     );
