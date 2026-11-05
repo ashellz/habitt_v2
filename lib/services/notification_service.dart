@@ -337,6 +337,77 @@ class NotificationService {
     debugPrint('Scheduled notifications for all habits');
   }
 
+  // Whether the live habit is completed for [now]'s day. The live habit only
+  // holds today's state once the day rollover has reset it, so the completion
+  // must also be stamped today: a "completed" left over from yesterday (app
+  // opened on a new day, scheduling before the reset) must not swallow
+  // today's reminders. No stamp counts as not done, so a doubt costs an extra
+  // reminder rather than a missing one.
+  @visibleForTesting
+  static bool isCompletedToday(Habit habit, DateTime now) {
+    if (!habit.completed) return false;
+    final ts = habit.timestamps['completed']?.toLocal();
+    if (ts == null) return false;
+    return ts.year == now.year && ts.month == now.month && ts.day == now.day;
+  }
+
+  // Everything about a habit's definition that decides which reminders it
+  // has and what they say (slots, schedule, pause/delete, sound, text), as one
+  // comparable value. Day state (completion, progress) is left out on
+  // purpose: it changes all day long and is handled per habit. A deleted
+  // habit has no reminders whatever its fields say, so it collapses to one
+  // key and edits to it don't count as changes.
+  static String reminderDefinitionKey(Habit habit) {
+    if (habit.isDeleted == true) return 'deleted';
+    // sorted, so a merge that only reorders a list or map isn't a change
+    final slots = [
+      for (final slot in habit.notificationTimes)
+        '${slot.id}@${slot.minutesOfDay}:${slot.days.join(',')}',
+    ]..sort();
+    final localizedNames = [
+      for (final e in habit.localizedNames.entries) '${e.key}=${e.value}',
+    ]..sort();
+    return [
+      habit.isPaused == true,
+      habit.notificationsEnabled,
+      slots.join(';'),
+      habit.isAlarm,
+      habit.soundKey,
+      habit.scheduleType.name,
+      habit.weeklyTarget,
+      habit.monthlyTarget,
+      habit.customIntervalDays,
+      habit.selectedDaysAWeek.join(','),
+      habit.selectedDaysAMonth.join(','),
+      habit.customAppearance.join(','),
+      habit.showIfMissed,
+      habit.createdAt.millisecondsSinceEpoch,
+      habit.name,
+      localizedNames.join(','),
+      habit.iconPath,
+      habit.premadeHabitType?.name,
+      habit.trackingType?.name,
+      habit.amount,
+      habit.amountLabel,
+      habit.duration,
+      habit.healthMetric?.name,
+    ].join('|');
+  }
+
+  // Whether a reminder definition changed between [before] and [after]
+  // (habit id -> [reminderDefinitionKey]): a habit appeared or disappeared,
+  // or one's key differs.
+  static bool reminderDefinitionsChanged(
+    Map<int, String> before,
+    Map<int, String> after,
+  ) {
+    if (before.length != after.length) return true;
+    for (final entry in after.entries) {
+      if (before[entry.key] != entry.value) return true;
+    }
+    return false;
+  }
+
   static Future<void> _scheduleHabitNotifications({
     required Habit habit,
     required bool Function(Habit habit, DateTime day) appearsOnDay,
@@ -365,6 +436,11 @@ class NotificationService {
     ) {
       final day = addCalendarDays(startDay, dayOffset);
       if (!appearsOnDay(habit, day)) {
+        continue;
+      }
+      // already done today: a reschedule must not put back the reminders that
+      // completing it cancelled
+      if (dayOffset == 0 && isCompletedToday(habit, now)) {
         continue;
       }
 
