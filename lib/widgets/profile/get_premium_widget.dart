@@ -5,6 +5,7 @@ import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/pages/other_pages/paywall_page.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/services/billing_service.dart';
+import 'package:habitt/util/expand_from_widget_route.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:intl/intl.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -23,6 +24,9 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget>
   EntitlementInfo? _entitlement;
   PackageType? _packageType;
   bool _hasPro = BillingService.hasPro;
+
+  final GlobalKey _cardKey = GlobalKey();
+  bool _cardHidden = false;
 
   late AnimationController _shineController;
   late Animation<double> _shineAnimation;
@@ -141,98 +145,123 @@ class _GetPremiumWidgetState extends State<GetPremiumWidget>
     return _buildGetPremiumWidget(context);
   }
 
+  Future<void> _openPaywall() async {
+    final loc = AppLocalizations.of(context)!;
+    await Navigator.of(context).push(
+      ExpandFromWidgetRoute<void>(
+        sourceKey: _cardKey,
+        builder: (_) => const PaywallPage(),
+        closedBackground: _premiumBackground(),
+        closedForeground: _premiumForeground(loc),
+        onSourceHiddenChanged: (hidden) {
+          if (mounted && _cardHidden != hidden) {
+            setState(() => _cardHidden = hidden);
+          }
+        },
+      ),
+    );
+    if (mounted) _refreshStatus();
+  }
+
   Widget _buildGetPremiumWidget(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
     return GestureDetector(
-      onTap: () async {
-        await Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const PaywallPage()));
-        if (mounted) _refreshStatus();
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.cp.widget,
-          borderRadius: BorderRadius.circular(24),
+      onTap: _openPaywall,
+      // Hidden (but still laid out) while the paywall grows out of / shrinks
+      // back into it, so it doesn't show twice.
+      child: Opacity(
+        opacity: _cardHidden ? 0 : 1,
+        child: Container(
+          key: _cardKey,
+          decoration: BoxDecoration(
+            color: widget.cp.widget,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: Stack(
+            children: [
+              Positioned.fill(child: _premiumBackground()),
+              _premiumForeground(loc),
+            ],
+          ),
         ),
-        clipBehavior: Clip.hardEdge,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset(
-                'assets/images/widget-images/premium-widget.png',
-                fit: BoxFit.cover,
-              ),
+      ),
+    );
+  }
+
+  // ─── Premium card parts (shared with the paywall transition) ───────
+
+  Widget _premiumBackground() => Image.asset(
+    'assets/images/widget-images/premium-widget.png',
+    fit: BoxFit.cover,
+  );
+
+  Widget _premiumForeground(AppLocalizations loc) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      child: Row(
+        spacing: 16,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8,
+              children: [
+                Text(
+                  loc.getPremium,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  loc.supportDeveloper,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-              child: Row(
-                spacing: 16,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 8,
-                      children: [
-                        Text(
-                          loc.getPremium,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+          ),
+          SizedBox(
+            height: 56,
+            width: 56,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Image.asset(
+                  'assets/images/widget-images/love-bubble.png',
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  left: 26,
+                  top: 8,
+                  child: AnimatedBuilder(
+                    animation: _shineAnimation,
+                    builder:
+                        (context, child) => Transform.rotate(
+                          angle: _shineAnimation.value * 0.4,
+                          child: Transform.scale(
+                            scale: _shineAnimation.value,
+                            child: child,
                           ),
                         ),
-                        Text(
-                          loc.supportDeveloper,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    child: const Icon(
+                      Icons.star,
+                      color: Colors.white,
+                      size: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: 56,
-                    width: 56,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Image.asset(
-                          'assets/images/widget-images/love-bubble.png',
-                          fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          left: 26,
-                          top: 8,
-                          child: AnimatedBuilder(
-                            animation: _shineAnimation,
-                            builder:
-                                (context, child) => Transform.rotate(
-                                  angle: _shineAnimation.value * 0.4,
-                                  child: Transform.scale(
-                                    scale: _shineAnimation.value,
-                                    child: child,
-                                  ),
-                                ),
-                            child: const Icon(
-                              Icons.star,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
