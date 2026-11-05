@@ -86,7 +86,11 @@ class HabitKitImportService {
       }
 
       days.add(
-        Day(date: date, habits: dayHabits, timestamp: DateTime.now().toUtc()),
+        Day(
+          date: date,
+          habits: [for (final h in dayHabits) h.forDay()],
+          timestamp: DateTime.now().toUtc(),
+        ),
       );
     }
 
@@ -191,7 +195,7 @@ class HabitKitImportService {
           key,
           Day(
             date: existingDay.date,
-            habits: merged,
+            habits: [for (final h in merged) h.forDay()],
             timestamp: DateTime.now().toUtc(),
           ),
         );

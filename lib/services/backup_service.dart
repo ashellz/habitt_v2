@@ -414,6 +414,10 @@ class BackupService {
                 day.date.month,
                 day.date.day,
               ).toIso8601String().split('T').first;
+          // a file from an older version holds full habit copies
+          for (final h in day.habits) {
+            h.clearHabitOnlyFields();
+          }
           await daysBox.put(dayKey, day);
         }
 

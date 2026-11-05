@@ -270,9 +270,78 @@ class Habit extends HiveObject {
     );
   }
 
-  /// A copy to store in a day snapshot: everything [copy] keeps except the
-  /// pause history, which only the habit itself holds.
-  Habit forDay() => copy()..pausedRanges = [];
+  /// Fields that belong to the habit, not to a day, so a day snapshot copy
+  /// doesn't keep them (nor their timestamps): reminders, translated names,
+  /// streak counters, the insight snooze, the deletion time and the
+  /// pause history. Kept in copies: the day-state, everything that decides
+  /// whether the habit was due that day (schedule, weekly/monthly counters,
+  /// lastCustomUpdate, optional, paused, deleted, createdAt), goals and
+  /// tracking, Health links, and what an older app version needs to show and
+  /// read the copy (name, icon, category, colour, time, order, tag), and the
+  /// notes (description).
+  /// Past-day readers get the dropped ones from the live habit
+  /// (HabitProvider.withLiveDetails).
+  static const List<String> habitOnlyKeys = [
+    'localizedNames',
+    'notificationsEnabled',
+    'notificationTimes',
+    'soundKey',
+    'isAlarm',
+    'streak',
+    'longestStreak',
+    'insightPopstonedUntil',
+    'deletedAt',
+    'pausedRanges',
+  ];
+
+  /// A copy to store in a day snapshot: [copy] without the [habitOnlyKeys].
+  Habit forDay() {
+    final c = copy();
+    c.clearHabitOnlyFields();
+    return c;
+  }
+
+  /// Drops the [habitOnlyKeys] from this instance (a day snapshot copy).
+  void clearHabitOnlyFields() {
+    localizedNames = {};
+    notificationsEnabled = false;
+    notificationTimes = [];
+    soundKey = null;
+    isAlarm = false;
+    streak = 0;
+    longestStreak = 0;
+    insightPopstonedUntil = null;
+    deletedAt = null;
+    pausedRanges = [];
+    timestamps.removeWhere((key, _) => habitOnlyKeys.contains(key));
+  }
+
+  /// Whether this copy still holds any of the [habitOnlyKeys].
+  bool get hasHabitOnlyFields =>
+      localizedNames.isNotEmpty ||
+      notificationsEnabled ||
+      notificationTimes.isNotEmpty ||
+      soundKey != null ||
+      isAlarm ||
+      streak != 0 ||
+      longestStreak != 0 ||
+      insightPopstonedUntil != null ||
+      deletedAt != null ||
+      pausedRanges.isNotEmpty ||
+      timestamps.keys.any(habitOnlyKeys.contains);
+
+  /// Fills the [habitOnlyKeys] in from [live], for showing a day snapshot
+  /// copy. Not written back: every day write stores [forDay] copies.
+  void adoptHabitOnlyFields(Habit live) {
+    localizedNames = Map<String, String>.from(live.localizedNames);
+    notificationsEnabled = live.notificationsEnabled;
+    notificationTimes = live.notificationTimes.map((t) => t.copy()).toList();
+    soundKey = live.soundKey;
+    isAlarm = live.isAlarm;
+    streak = live.streak;
+    longestStreak = live.longestStreak;
+    insightPopstonedUntil = live.insightPopstonedUntil;
+  }
 
   // using habit pause history we see if it was paused on a day or not
   bool pausedOnDay(DateTime day) {
@@ -963,9 +1032,10 @@ class Habit extends HiveObject {
   // from Health, so a manual timer would only fight the synced value
   bool get supportsTimer => tracksDuration && healthMetric == null;
 
-  /// [includePauseHistory] is false for a day snapshot's copies: the pause
-  /// history belongs to the habit, not to the days.
-  Map<String, dynamic> toMap({bool includePauseHistory = true}) {
+  /// [forDay] serializes a day snapshot's copy: the [habitOnlyKeys] and
+  /// their timestamps are left out (an older app version reads them as their
+  /// defaults).
+  Map<String, dynamic> toMap({bool forDay = false}) {
     return {
       'id': id,
       'name': name,
@@ -982,8 +1052,8 @@ class Habit extends HiveObject {
       'amountCompleted': amountCompleted,
       'duration': duration,
       'durationCompleted': durationCompleted,
-      'streak': streak,
-      'longestStreak': longestStreak,
+      if (!forDay) 'streak': streak,
+      if (!forDay) 'longestStreak': longestStreak,
       'optional': optional,
       'timeIntervalEnabled': timeIntervalEnabled,
       'timeIntervalStart': timeIntervalStart,
@@ -1001,13 +1071,15 @@ class Habit extends HiveObject {
       'lastCustomUpdate': lastCustomUpdate?.toIso8601String(),
       'colorName': colorName,
       'color': color,
-      'notificationsEnabled': notificationsEnabled,
-      'soundKey': soundKey,
-      'isAlarm': isAlarm,
-      'notificationTimes':
-          notificationTimes
-              .map((notification) => notification.toMap())
-              .toList(),
+      if (!forDay) ...{
+        'notificationsEnabled': notificationsEnabled,
+        'soundKey': soundKey,
+        'isAlarm': isAlarm,
+        'notificationTimes':
+            notificationTimes
+                .map((notification) => notification.toMap())
+                .toList(),
+      },
       'premadeHabitType': _serializePremadeHabitType(premadeHabitType),
       'trackingType': _serializeTrackingType(trackingType),
       'healthMetric': _serializeHealthMetricType(healthMetric),
@@ -1019,14 +1091,19 @@ class Habit extends HiveObject {
       'healthManualOverride': healthManualOverride,
       'isDeleted': isDeleted,
       'isPaused': isPaused,
-      if (includePauseHistory && pausedRanges.isNotEmpty)
-        'pausedRanges': pausedRanges.map((t) => t.toIso8601String()).toList(),
-      'deletedAt': deletedAt?.toIso8601String(),
-      'insightPopstonedUntil': insightPopstonedUntil?.toIso8601String(),
-      'timestamps': timestamps.map(
-        (key, value) => MapEntry(key, value.toIso8601String()),
-      ),
-      'localizedNames': localizedNames,
+      if (!forDay) ...{
+        if (pausedRanges.isNotEmpty)
+          'pausedRanges':
+              pausedRanges.map((t) => t.toIso8601String()).toList(),
+        'deletedAt': deletedAt?.toIso8601String(),
+        'insightPopstonedUntil': insightPopstonedUntil?.toIso8601String(),
+        'localizedNames': localizedNames,
+      },
+      'timestamps': {
+        for (final e in timestamps.entries)
+          if (!forDay || !habitOnlyKeys.contains(e.key))
+            e.key: e.value.toIso8601String(),
+      },
     };
   }
 

@@ -2508,7 +2508,11 @@ class BackupProvider extends ChangeNotifier {
 
       await daysBox.put(
         dayKey,
-        Day(date: day.date, habits: filteredDayHabits, timestamp: mergedTs),
+        Day(
+          date: day.date,
+          habits: [for (final h in filteredDayHabits) h.forDay()],
+          timestamp: mergedTs,
+        ),
       );
     }
 

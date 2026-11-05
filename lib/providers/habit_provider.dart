@@ -171,6 +171,7 @@ class HabitProvider extends ChangeNotifier {
     await _loadMissingDays();
     _fillToday();
     await _sanitizeDaySnapshots();
+    await _slimDaySnapshots();
     _syncAllHabitNotifications();
     dataVersion++;
     if (animateStreakEntry) streakEntryEpoch++;
@@ -179,6 +180,41 @@ class HabitProvider extends ChangeNotifier {
   }
 
   static const String _daySnapshotSanitizedKey = 'daySnapshotsSanitized_v1';
+  static const String _daySnapshotsSlimmedKey = 'daySnapshotsSlimmed_v1';
+
+  // One time: day snapshots written before Habit.forDay dropped the habit's
+  // own details (reminders, translated names, streaks, their
+  // timestamps) still hold full copies. Strip them in place. The day's
+  // timestamp and isAutoCreated stay as they are, so nothing is re-uploaded
+  // and the merge rules don't change: each device slims its own days, and
+  // the next full backup is written slim.
+  Future<void> _slimDaySnapshots() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_daySnapshotsSlimmedKey) ?? false) return;
+
+    var slimmed = 0;
+    for (final key in daysBox.keys.toList()) {
+      final day = daysBox.get(key);
+      if (day == null || !day.habits.any((h) => h.hasHabitOnlyFields)) {
+        continue;
+      }
+      await daysBox.put(
+        key,
+        Day(
+          date: day.date,
+          habits: [for (final h in day.habits) h.forDay()],
+          timestamp: day.timestamp,
+          isAutoCreated: day.isAutoCreated,
+        ),
+      );
+      slimmed++;
+    }
+    // reclaim the space the full copies took
+    if (slimmed > 0) await daysBox.compact();
+    debugPrint('[SLIM] slimmed $slimmed day snapshots');
+
+    await prefs.setBool(_daySnapshotsSlimmedKey, true);
+  }
 
   Future<void> _sanitizeDaySnapshots() async {
     final prefs = await SharedPreferences.getInstance();
@@ -202,7 +238,7 @@ class HabitProvider extends ChangeNotifier {
         key,
         Day(
           date: day.date,
-          habits: filtered,
+          habits: [for (final h in filtered) h.forDay()],
           timestamp: day.timestamp,
           isAutoCreated: day.isAutoCreated,
         ),
@@ -850,7 +886,7 @@ class HabitProvider extends ChangeNotifier {
       key,
       Day(
         date: entry.date,
-        habits: entry.habits,
+        habits: [for (final h in entry.habits) h.forDay()],
         timestamp: DateTime.now().toUtc(),
       ),
     );
@@ -976,7 +1012,8 @@ class HabitProvider extends ChangeNotifier {
       if (_normalizeDate(live.createdAt.toLocal()).isAfter(normalizedDay)) {
         continue;
       }
-      final candidate = recorded[live.id] ?? live.copyResetCompletion();
+      final candidate =
+          _withLiveDetails(recorded[live.id]) ?? live.copyResetCompletion();
       if (candidate.hasAnyProgress()) continue; // already in the regular list
       if (_appearsOnDay(candidate, normalizedDay)) continue; // scheduled
       result.add(candidate);
@@ -1034,6 +1071,17 @@ class HabitProvider extends ChangeNotifier {
       return true;
     }
     return live.pausedOnDay(normalizedDay);
+  }
+
+  // A day snapshot copy doesn't keep the habit's own details (reminders,
+  // translated names, streaks, see Habit.habitOnlyKeys), so a copy handed out
+  // for showing a past day gets them from the live habit. Filled in on the
+  // stored copy in memory only: every day write stores Habit.forDay copies.
+  Habit? _withLiveDetails(Habit? copy) {
+    if (copy == null) return null;
+    final live = _liveHabit(copy.id);
+    if (live != null && !identical(live, copy)) copy.adoptHabitOnlyFields(live);
+    return copy;
   }
 
   // The habit record itself, not a day copy. The box too: a sync adds new
@@ -1413,7 +1461,9 @@ class HabitProvider extends ChangeNotifier {
         dayKey,
         Day(
           date: dayEntry.date,
-          habits: dayEntry.habits,
+          // the rest of the day's copies may hold the live habit's details
+          // filled in for showing them (see _withLiveDetails)
+          habits: [for (final h in dayEntry.habits) h.forDay()],
           timestamp: DateTime.now().toUtc(),
         ),
       );
@@ -1447,6 +1497,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     final filteredHabits = _filteredHabitsForDay(normalizedDay, dayHabits);
+    filteredHabits.forEach(_withLiveDetails);
     _sortHabitsByCategoryAndOrder(filteredHabits);
     return filteredHabits;
   }
@@ -2107,7 +2158,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     for (final h in source) {
-      if (h.id == id) return h;
+      if (h.id == id) return _withLiveDetails(h);
     }
     return null;
   }
