@@ -1,0 +1,8 @@
+• Gezondheidssync: koppel gewoontes aan stappen, slaap, workouts, mindfulnessminuten of calorieën (Health Connect).
+• Gewoontealarmen voor urgente gewoontes.
+• Dagplanning: zie je gewoontes verdeeld over de dag.
+• Grafiek van kracht in de tijd in de details van een gewoonte.
+• Nieuwe themakleuren, gratis voor iedereen.
+• Niet-voltooide gewoontes met eigen interval kunnen de volgende dag terugkomen, plus voltooiingsgeluid en confetti.
+
+Ook veel kleine verbeteringen en bugfixes.

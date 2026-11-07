@@ -21,6 +21,7 @@ import 'package:habitt/services/backup_service.dart';
 import 'package:habitt/services/cloud_storage_adapter.dart';
 import 'package:habitt/services/drive_storage_adapter.dart';
 import 'package:habitt/services/icloud_storage_adapter.dart';
+import 'package:habitt/util/day_merge.dart';
 import 'package:habitt/util/update_last_date.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,7 +119,27 @@ class BackupProvider extends ChangeNotifier {
 
   bool _isAutoSyncEnabled = true;
   SyncSpeed _syncSpeed = SyncSpeed.optimized;
+
+  /// The sync cursor: when the last successful sync **started**. The next
+  /// delta exports local changes after it, and cloud files modified after it
+  /// (less [_kCloudClockSlack]) are checked for. Taking the start, not the
+  /// end, keeps a change written during a sync (Health sync runs alongside the
+  /// one on app open) in the next delta, and a delta the other device uploaded
+  /// during this sync in the next listing.
   DateTime? _lastSyncTime;
+
+  /// When the sync cycle now running started (set as [syncState] turns to
+  /// syncing); becomes [_lastSyncTime] when it succeeds.
+  DateTime? _syncCycleStartedAt;
+
+  /// Cloud modified times come from the server's clock, the cursor from this
+  /// device's. Listing cloud files this much before the cursor covers a
+  /// skewed clock; files already applied, or uploaded by this device, are
+  /// skipped by id/name anyway.
+  static const Duration _kCloudClockSlack = Duration(minutes: 2);
+
+  DateTime? get _cloudListingCursor =>
+      _lastSyncTime?.subtract(_kCloudClockSlack);
 
   // Set to true when the Drive has data encrypted with the old passphrase
   // system. The UI surfaces a migration prompt in this state.
@@ -288,6 +309,9 @@ class BackupProvider extends ChangeNotifier {
   }
 
   set syncState(SyncState state) {
+    if (state == SyncState.syncing && _syncState != SyncState.syncing) {
+      _syncCycleStartedAt = DateTime.now();
+    }
     _syncState = state;
     notifyListeners();
   }
@@ -360,7 +384,8 @@ class BackupProvider extends ChangeNotifier {
         final lastAppliedId = prefs.getString(_kLastAppliedBackupIdKey);
         if (lastAppliedId != latest.id &&
             modifiedTime != null &&
-            (_lastSyncTime == null || modifiedTime.isAfter(_lastSyncTime!))) {
+            (_cloudListingCursor == null ||
+                modifiedTime.isAfter(_cloudListingCursor!))) {
           _syncHasBackup = true;
           weight += 10;
         }
@@ -370,7 +395,7 @@ class BackupProvider extends ChangeNotifier {
     try {
       final allFiles = await _adapter!.listFiles(
         nameContains: 'habitt-delta',
-        modifiedAfter: _lastSyncTime,
+        modifiedAfter: _cloudListingCursor,
       );
       final prefs = await SharedPreferences.getInstance();
       final appliedRaw = prefs.getString(_kAppliedDeltaIdsKey);
@@ -1036,7 +1061,8 @@ class BackupProvider extends ChangeNotifier {
       _legacyPassphrase = null;
       _needsMigration = false;
 
-      _lastSyncTime = DateTime.now();
+      _lastSyncTime = _syncCycleStartedAt ?? DateTime.now();
+      _syncCycleStartedAt = null;
       await _persistLastSyncTime();
 
       if (_pendingStreakRecalc) {
@@ -1549,7 +1575,8 @@ class BackupProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    _lastSyncTime = DateTime.now();
+    _lastSyncTime = _syncCycleStartedAt ?? DateTime.now();
+    _syncCycleStartedAt = null;
     if (clearWarning) _syncWarning = null;
     await _persistLastSyncTime();
     if (_consecutiveSyncFailures > 0) {
@@ -1989,23 +2016,35 @@ class BackupProvider extends ChangeNotifier {
     await _adapter!.upload(backupFileName, encryptedDatabase);
     debugPrint('Uploaded backup: $backupFileName');
 
-    await _rotateOldBackups();
+    await _rotateOldBackups(uploadedName: backupFileName);
     await _replaceMetadataFile(encryptedMetadata);
 
     _localMetadata = metadata;
     notifyListeners();
   }
 
-  Future<void> _rotateOldBackups() async {
+  /// Keeps the newest 3 full backups. [uploadedName] is the backup this device
+  /// just uploaded: it is recorded as applied, so the next sync's newer-backup
+  /// check never downloads this device's own data back (the sync cursor is
+  /// the sync's start, so the upload is newer than it).
+  Future<void> _rotateOldBackups({String? uploadedName}) async {
     if (_adapter == null) return;
     final files = await _adapter!.listFiles(nameContains: 'habitt-backup');
-    if (files.length <= 3) return;
-    // Keep newest 3 — sort descending by createdTime/modifiedTime.
+    // Newest first — sort descending by createdTime/modifiedTime.
     files.sort((a, b) {
       final ta = b.createdTime ?? b.modifiedTime ?? DateTime(0);
       final tb = a.createdTime ?? a.modifiedTime ?? DateTime(0);
       return ta.compareTo(tb);
     });
+    if (uploadedName != null) {
+      for (final f in files) {
+        if (f.name != uploadedName) continue;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_kLastAppliedBackupIdKey, f.id);
+        break;
+      }
+    }
+    if (files.length <= 3) return;
     for (final f in files.skip(3)) {
       await _adapter!.delete(f.id);
       debugPrint('Deleted old backup: ${f.id}');
@@ -2065,9 +2104,10 @@ class BackupProvider extends ChangeNotifier {
     }
 
     // Skip if the backup predates our last successful sync (nothing new).
-    if (_lastSyncTime != null && !modifiedTime.isAfter(_lastSyncTime!)) {
+    final cursor = _cloudListingCursor;
+    if (cursor != null && !modifiedTime.isAfter(cursor)) {
       debugPrint(
-        '[SYNC] _checkAndApplyNewerBackup: SKIP — backup ($modifiedTime) is not newer than lastSyncTime ($_lastSyncTime).',
+        '[SYNC] _checkAndApplyNewerBackup: SKIP — backup ($modifiedTime) is not newer than lastSyncTime ($_lastSyncTime, less clock slack).',
       );
       return;
     }
@@ -2106,7 +2146,7 @@ class BackupProvider extends ChangeNotifier {
     // Pass modifiedTime hint so Drive can filter server-side; iCloud filters client-side.
     final allFiles = await _adapter!.listFiles(
       nameContains: 'habitt-delta',
-      modifiedAfter: _lastSyncTime,
+      modifiedAfter: _cloudListingCursor,
     );
     debugPrint(
       '[SYNC] _downloadAndApplyPendingDeltas: ${allFiles.length} delta file(s) found.',
@@ -2418,6 +2458,11 @@ class BackupProvider extends ChangeNotifier {
     }
 
     // ── Days (snapshots) ─────────────────────────────────────────────────────
+    // Every incoming day is merged habit by habit, whatever the two days' own
+    // timestamps say (see mergeDaySnapshot). So any later delivery of a day,
+    // a delta or the full backup every launch merges, repairs a day the
+    // devices disagree on.
+    var unchangedDays = 0;
     for (final day in backupData.days) {
       final dayKey =
           DateTime(
@@ -2427,98 +2472,39 @@ class BackupProvider extends ChangeNotifier {
           ).toIso8601String().split('T').first;
 
       final existingDay = daysBox.get(dayKey);
-      final localTs = existingDay?.timestamp;
-      final incomingTs = day.timestamp;
 
-      // Only apply directional skip when the existing day has real habit data
-      // AND was not auto-created by the day-rollover/backfill logic.
-      // Auto-created days (isAutoCreated=true) are blank reset snapshots with
-      // a current wall-clock timestamp — they must always lose to incoming
-      // backup data which may carry actual completions from a prior session or
-      // another device, even if that data is timestamped earlier.
-      // Placeholder days created after a wipe (habits.isEmpty) also never
-      // block incoming data.
-      if (existingDay != null &&
-          existingDay.habits.isNotEmpty &&
-          !existingDay.isAutoCreated) {
-        // Skip if incoming has no timestamp (can't be newer).
-        if (incomingTs == null) {
-          debugPrint(
-            '[SYNC]   day $dayKey: SKIP — incoming has no timestamp (local=$localTs).',
-          );
-          continue;
-        }
-        // Skip if local is the same moment or more recent than incoming.
-        if (localTs != null && !incomingTs.isAfter(localTs)) {
-          debugPrint(
-            '[SYNC]   day $dayKey: SKIP — local ($localTs) >= incoming ($incomingTs).',
-          );
-          continue;
-        }
+      // The merge unions both devices' habit lists. A union can pull in habits
+      // that are not scheduled on this day (and are left incomplete), which
+      // the streak/consistency stats would count as misses, so it is
+      // collapsed back to the schedule-filtered set the app writes natively
+      // (see saveHabitDay). Completed habits always survive the filter.
+      final mergedDay = mergeDaySnapshot(
+        local: existingDay,
+        incoming: day,
+        countingForDay:
+            (habits) =>
+                _habitProvider?.habitsCountingForDay(day.date, habits) ??
+                habits,
+        debugLabel: dayKey,
+      );
+
+      if (mergedDay == null) {
+        // A full backup carries every day; keep the UI responsive while the
+        // unchanged ones are compared.
+        if (++unchangedDays % 25 == 0) await Future<void>.delayed(Duration.zero);
+        continue;
       }
-
-      final existingById = <int, Habit>{};
-      if (existingDay != null) {
-        for (final h in existingDay.habits) {
-          if (h.isDeleted ?? false) continue;
-          existingById[h.id] = h;
-        }
-      }
-
-      final mergedDayHabits = <Habit>[];
-      for (final incomingHabit in day.habits) {
-        final local = existingById.remove(incomingHabit.id);
-        if (local != null) {
-          final beforeCompleted = local.completed;
-          final merged = local.merge(incomingHabit);
-          if (merged.completed != beforeCompleted) {
-            debugPrint(
-              '[SYNC]   day $dayKey habit id=${incomingHabit.id} "${incomingHabit.name}": '
-              'completed $beforeCompleted→${merged.completed} '
-              '(local completedTs=${local.timestamps["completed"]}, incoming completedTs=${incomingHabit.timestamps["completed"]})',
-            );
-          }
-          mergedDayHabits.add(merged);
-        } else {
-          if (incomingHabit.isDeleted ?? false) continue;
-          mergedDayHabits.add(incomingHabit);
-        }
-      }
-      mergedDayHabits.addAll(existingById.values);
-
-      // The steps above union the habit lists from both devices. A union can
-      // pull in habits that are not scheduled on this day (and are left
-      // incomplete) — e.g. a habit the other device materialised into its
-      // snapshot at a different time. The home "last week" view filters those
-      // out by schedule, but the raw streak/consistency stats would miscount
-      // them as unmet requirements, breaking streaks. Collapse the snapshot
-      // back to the same schedule-filtered set the app writes natively (see
-      // saveHabitDay) so all read paths agree. Completed habits always survive
-      // the filter, so no real completion is ever dropped.
-      final filteredDayHabits =
-          _habitProvider?.habitsCountingForDay(day.date, mergedDayHabits) ??
-          mergedDayHabits;
-
-      // Preserve the most recent modification timestamp from either device.
-      final mergedTs =
-          (localTs != null && incomingTs != null)
-              ? (incomingTs.isAfter(localTs) ? incomingTs : localTs)
-              : (localTs ?? incomingTs);
 
       debugPrint(
-        '[SYNC]   day $dayKey: MERGE — local=${existingDay != null ? "${existingDay.habits.length} habits, ts=$localTs, autoCreated=${existingDay.isAutoCreated}" : "none"} '
-        '| incoming=${day.habits.length} habits, ts=$incomingTs '
-        '| union=${mergedDayHabits.length} → filtered=${filteredDayHabits.length} habits, ts=$mergedTs',
+        '[SYNC]   day $dayKey: MERGE — local=${existingDay != null ? "${existingDay.habits.length} habits, ts=${existingDay.timestamp}" : "none"} '
+        '| incoming=${day.habits.length} habits, ts=${day.timestamp} '
+        '→ ${mergedDay.habits.length} habits, ts=${mergedDay.timestamp}',
       );
 
-      await daysBox.put(
-        dayKey,
-        Day(
-          date: day.date,
-          habits: [for (final h in filteredDayHabits) h.forDay()],
-          timestamp: mergedTs,
-        ),
-      );
+      await daysBox.put(dayKey, mergedDay);
+    }
+    if (unchangedDays > 0) {
+      debugPrint('[SYNC]   $unchangedDays day(s) unchanged by the merge.');
     }
 
     // Day-state is authoritative in the dated snapshots above; rebuild the live

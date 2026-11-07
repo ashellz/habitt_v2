@@ -7,10 +7,10 @@ class Day extends HiveObject {
   final DateTime? timestamp;
 
   /// True when this day was created locally by the day-rollover or backfill
-  /// logic — not by a real user action. Auto-created days always lose the
-  /// merge against incoming backup/delta data regardless of timestamps, so
-  /// that Drive data (with actual completions) is never rejected in favour of
-  /// a blank reset snapshot with a newer wall-clock stamp.
+  /// logic — not by a real user action. Local-only, never synced. The backup
+  /// merge used to let such days lose to incoming data regardless of
+  /// timestamps; it now merges every day habit by habit (`mergeDaySnapshot`),
+  /// so nothing reads the flag any more.
   final bool isAutoCreated;
 
   Day({

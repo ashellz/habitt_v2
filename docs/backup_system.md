@@ -107,6 +107,15 @@ Old passphrase-encrypted local backups are detected by `version: 1`. The user is
 - Returns `null` (no upload) when nothing changed — unless this device changed the device list (see § Device List), which uploads a delta on its own
 - Deleted 7 days after creation; max 20 before compaction triggers
 
+### Sync Cursor (`_lastSyncTime`)
+The cursor is when the last successful sync **started** (`_syncCycleStartedAt`, set when `syncState` turns to `syncing`, saved by `_onSyncSuccess`), not when it finished. It used to be the end, which lost changes in two ways:
+- **Local writes during a sync** (Health sync runs alongside the sync on app open) were older than the new cursor, so no delta ever carried them; only the next full backup did.
+- **A delta or full backup another device uploaded during this sync** had a cloud modified time older than the new cursor, so the next listing (`modifiedAfter`) never returned it.
+
+The delta export uses the cursor as is (local timestamps against the local clock). Cloud listings, the delta listing and the newer-full-backup check, use `_cloudListingCursor`: the cursor less `_kCloudClockSlack` (2 min), because cloud modified times come from the server's clock. Already-applied deltas are skipped by id and own deltas by device id, so the overlap costs nothing.
+
+Because the cursor is earlier than this device's own full-backup upload, `_uploadBackupToCloud` records the backup it just uploaded as the last applied one (`_rotateOldBackups(uploadedName:)` → `_kLastAppliedBackupIdKey`), so the next sync's `_checkAndApplyNewerBackup` doesn't download this device's own data back.
+
 ---
 
 ## Conflict Resolution
@@ -153,7 +162,11 @@ Without this, importing a file exported on day *N* onto a device now on day *N+1
 - The dateless day-state fields are still physically present in the uploaded habit blob (kept for backward compatibility). Stripping them from the upload is deferred until all devices are on the definition-only-on-receive version.
 
 ### Day Merge
-Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Incoming day is skipped if local has real habit data AND the local day was **not** auto-created AND the incoming timestamp is older. Otherwise the day's habits are merged using the same per-field logic above.
+Days are keyed by ISO 8601 date string (`YYYY-MM-DD`). Every incoming day is merged **habit by habit** (`mergeDaySnapshot`, [`lib/util/day_merge.dart`](../lib/util/day_merge.dart)), using the per-habit rules above (completion tuple as a unit, newest wins, tie → local). The two days' own timestamps never decide anything; the stored day keeps the later of the two.
+
+**Why not by day timestamp.** A day's `timestamp` moves on *any* write to that day (`updateHabitInDB`), whichever habit changed. The merge used to skip a whole incoming day when the local day's timestamp was the same or newer. So if one device completed habit A on a day (the iPhone's Health sync), and the other device then edited habit B on that day before it received the change, the second device dropped the whole incoming day, including A's newer completion. Merging the other way gave both devices the same day timestamp, so every later delivery was skipped too and the devices stayed different for good (a streak that differed between the two phones). With the per-habit merge, any later delivery of the day fixes it, including the full backup merged on every app launch. That launch-time merge is what keeps past days reconciled between devices.
+
+**Unchanged days aren't rewritten.** `mergeDaySnapshot` returns `null` when the merged habit copies equal the local ones (`sameDayHabits`: the `toMap(forDay: true)` maps, in any order), so merging a full backup only writes the days that actually changed. The loop yields every 25 unchanged days so a full-backup merge doesn't block the UI.
 
 **Schedule filtering of the merged snapshot (important).** The per-habit merge takes the **union** of habit IDs present in either device's snapshot of a day. A union can pull in habits that aren't scheduled on that day and are left incomplete (e.g. a habit the other device materialised into its snapshot at a different time, or a paused habit). The home "last week" view filters these out by schedule, but the raw streak/consistency stats would otherwise count them as unmet requirements — silently breaking streaks and dimming calendar days even though the home view shows the day complete. To keep all read paths consistent, the merged habit list is collapsed back through the same schedule filter the app uses when it writes a snapshot natively (`HabitProvider.habitsCountingForDay` → `_filteredHabitsForDay`, which keeps habits that are scheduled-or-completed, not paused, not deleted) before the `Day` is stored. Completed habits always survive the filter, so no real completion is ever dropped.
 
@@ -192,7 +205,7 @@ The merge still resolves `createdAt` by timestamp, so a repair reaches the other
 
 This invariant must be read consistently on the stats side too: `StatsProvider` schedule-filters every day snapshot via `habitsCountingForDay` before counting required/completed habits (`getDayProgress`, `_isPerfectDay`, `refreshPerfectStreak`, `recalculateLongestPerfectDaysStreak`, and the last-week rate methods). A one-time migration (`HabitProvider._sanitizeDaySnapshots`, guarded by the `daySnapshotsSanitized_v1` pref) rewrites any pre-existing snapshots that were poisoned by the old unfiltered union merge.
 
-**`Day.isAutoCreated`** — a local-only boolean (never serialised to backup files) that is set to `true` when a day is created by the day-rollover logic (`checkForNewDay`), the missing-day backfill (`_backfillMissingDays`), or the on-demand hydration path. These days are blank reset snapshots with a current wall-clock timestamp; without this flag they would incorrectly beat backup data timestamped earlier (e.g. actual completions from another device). When `isAutoCreated = true` the timestamp guard is bypassed and the incoming backup data is always merged in. The saved result clears the flag (`isAutoCreated = false`).
+**`Day.isAutoCreated`** — a local-only boolean (never serialised to backup files) that is set to `true` when a day is created by the day-rollover logic (`checkForNewDay`), the missing-day backfill (`_backfillMissingDays`), or the on-demand hydration path. It used to exempt such days from the day-timestamp skip. Since the merge no longer looks at day timestamps (see Day Merge), nothing reads it any more; it stays in the Hive layout.
 
 ### Duration Schema Version (minutes → seconds)
 
@@ -338,14 +351,14 @@ performSync(force, mode)
     ├─ Check if Drive has a newer full backup (compaction recovery)
     │   └─ If yes → _fullSyncPath()
     ├─ _downloadAndApplyPendingDeltas()
-    │   ├─ Drive query filtered by modifiedTime > _lastSyncTime (server-side)
+    │   ├─ Drive query filtered by modifiedTime > _lastSyncTime − 2 min slack (server-side)
     │   ├─ If returned IDs == cached IDs → early return (nothing new)
     │   ├─ Skip already-applied (SharedPrefs set)
     │   ├─ Skip own device's deltas (SHORTID in filename)
     │   ├─ Apply each: merge habits+days using timestamp logic
     │   └─ Update cached file ID set in SharedPrefs
     ├─ _uploadDeltaToCloud()
-    │   ├─ exportDeltaForGoogleDrive(fromTime: _lastSyncTime)
+    │   ├─ exportDeltaForGoogleDrive(fromTime: _lastSyncTime = start of last sync)
     │   ├─ Skip if null (no changes)
     │   └─ _rotateDeltaFiles() — throttled to once per 24 h; Drive query
     │       pre-filtered by createdTime < 7-days-ago
