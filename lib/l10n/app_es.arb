@@ -1349,5 +1349,18 @@
   "replaceCloudBackupTitle": "¿Reemplazar la copia de seguridad existente?",
   "replaceCloudBackupDesc": "La copia de seguridad existente en {cloud} se eliminará permanentemente y se reemplazará con los datos de este dispositivo. Esta acción no se puede deshacer.",
   "replaceCloudBackup": "Reemplazar copia",
-  "overwriteLocalDataDescWithDate": "¿Seguro que quieres sobrescribir tus datos locales con la copia de seguridad más reciente ({date})? Esta acción no se puede deshacer."
+  "overwriteLocalDataDescWithDate": "¿Seguro que quieres sobrescribir tus datos locales con la copia de seguridad más reciente ({date})? Esta acción no se puede deshacer.",
+  "healthForeignMetricOffTitle": "¿Desactivar la sincronización con Salud?",
+  "healthForeignMetricOffDesc": "{metric} no se puede leer en este teléfono, así que no podrás volver a activarlo desde aquí. El hábito conserva sus datos.",
+  "healthForeignMetricOffConfirm": "Desactivar",
+  "healthDeviceUnavailableInfo": "{source} no está disponible en este teléfono, así que no puede leer datos de salud. Instálalo y abre Habitt en ese teléfono para usarlo.",
+  "healthDeviceIosOnlyBlocked": "Los hábitos de Actividad y Mindfulness no se pueden registrar en Android, así que un teléfono Android no puede leer los datos de salud mientras los tengas. Mantén un iPhone como dispositivo de sincronización.",
+  "healthRestoreOfferTitle": "¿Sincronizar los hábitos de salud desde este teléfono?",
+  "healthRestoreOfferDesc": "Tus hábitos restaurados están vinculados a datos de salud. Este teléfono puede mantenerlos actualizados desde {source}.",
+  "healthRestoreNoneDesc": "Tus hábitos de salud conservan sus datos y se pueden editar a mano, pero no se actualizarán desde los datos de salud en este teléfono.",
+  "healthRestoreSyncHere": "Sincronizar",
+  "healthDeviceSwitchAnyway": "Cambiar igualmente",
+  "healthRestoreIosOnlyDesc": "Estos hábitos son exclusivos de Apple Health. No se pueden sincronizar en este teléfono.",
+  "healthSourceUnavailableTitle": "{source} no disponible",
+  "healthRestoreAppleHealthOnly": "Solo Apple Health"
 }

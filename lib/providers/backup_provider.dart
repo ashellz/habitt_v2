@@ -235,6 +235,33 @@ class BackupProvider extends ChangeNotifier {
   bool get hasPendingBackupPassphrase => _failedBackupFileId != null;
   String? get pendingNotification => _pendingNotification;
   bool get pendingRestoreDecision => _pendingRestoreDecision;
+
+  // ─── Health restore notice ─────────────────────────────
+
+  // set when a backup was restored onto this device, so the home page can
+  // compare its Health habits with what this phone can read (once per restore)
+  bool _healthRestoreNoticePending = false;
+
+  /// True once after each successful restore; the caller shows the notice.
+  bool takeHealthRestoreNotice() {
+    if (!_healthRestoreNoticePending || _syncState == SyncState.syncing) {
+      return false;
+    }
+    _healthRestoreNoticePending = false;
+    return true;
+  }
+
+  /// A backup was restored onto this device (also called by the local file
+  /// import, which doesn't run through this provider).
+  void markRestored() {
+    _healthRestoreNoticePending = true;
+    notifyListeners();
+  }
+
+  // for restores that run through performSync: only a sync that went through
+  void _markRestoredIfSynced() {
+    if (_syncState != SyncState.error) markRestored();
+  }
   DateTime? get restoreDecisionBackupTime => _restoreDecisionBackupTime;
 
   Future<void> _setPendingRestoreDecision(bool pending) async {
@@ -681,6 +708,7 @@ class BackupProvider extends ChangeNotifier {
           notifyListeners();
           if (_dataExists && _lastSyncTime == null) {
             await performSync(true);
+            _markRestoredIfSynced();
           }
           _startPeriodicSync();
           return;
@@ -787,6 +815,7 @@ class BackupProvider extends ChangeNotifier {
         // restore choice is handled above instead.
         if (!_needsMigration && _dataExists && _lastSyncTime == null) {
           await performSync(true);
+          _markRestoredIfSynced();
         }
 
         _startPeriodicSync();
@@ -914,6 +943,7 @@ class BackupProvider extends ChangeNotifier {
           // restore). No cloud data → upload local as first backup.
           notifyListeners();
           await performSync(true);
+          if (_dataExists) _markRestoredIfSynced();
           _startPeriodicSync();
         }
       } else {
@@ -1123,6 +1153,7 @@ class BackupProvider extends ChangeNotifier {
     await _setPendingRestoreDecision(false);
     notifyListeners();
     await performSync(true); // force=true: bypass same-device skip
+    _markRestoredIfSynced();
     _startPeriodicSync();
   }
 
@@ -1144,6 +1175,7 @@ class BackupProvider extends ChangeNotifier {
     try {
       await _replaceFromCloud(key);
       await _onSyncSuccess();
+      markRestored();
       _startPeriodicSync();
     } catch (e) {
       syncState = SyncState.error;
@@ -1545,6 +1577,7 @@ class BackupProvider extends ChangeNotifier {
         progressMessage = 'Merging...';
         await _mergeBackupData(backupData);
         await _onSyncSuccess();
+        markRestored();
       } else {
         lastError = 'No backup found in cloud.';
         syncState = SyncState.error;
@@ -2569,6 +2602,7 @@ class BackupProvider extends ChangeNotifier {
         progressMessage = 'Merging...';
         await _mergeBackupData(backupData);
         await _onSyncSuccess();
+        markRestored();
       } else {
         lastError = 'Failed to decrypt backup.';
         syncState = SyncState.error;
@@ -2647,6 +2681,7 @@ class BackupProvider extends ChangeNotifier {
       }
 
       await _onSyncSuccess();
+      markRestored();
     } catch (e) {
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
@@ -2700,6 +2735,7 @@ class BackupProvider extends ChangeNotifier {
       _failedBackupFileId = null;
       _failedBackupFileBytes = null;
       await _onSyncSuccess();
+      markRestored();
       return true;
     } catch (e) {
       lastError = 'Restore failed: $e';
@@ -2838,6 +2874,7 @@ class BackupProvider extends ChangeNotifier {
 
     notifyListeners();
     await performSync(true);
+    if (_dataExists) _markRestoredIfSynced();
     _startPeriodicSync();
   }
 

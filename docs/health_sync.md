@@ -289,7 +289,9 @@ share one Apple ID, so one Apple Health already.
   backups and deltas (`backup_system.md` § "Device List" has the format, merge
   and cost). Only iOS / Android list themselves.
 - **Who reads:** the picked device while it's listed; with no pick, the device
-  that has had the app longest (earliest install time, then id). Every phone
+  that has had the app longest (earliest install time, then id), skipping
+  devices whose entry says Health isn't available there (`healthAvailable ==
+  false`; with none able to read, the oldest still is the default). Every phone
   computes the same answer from the same list. One phone alone (or no Drive)
   always reads, exactly as before. `SyncDeviceList.healthSourceId` in
   [`lib/models/sync_device.dart`](../lib/models/sync_device.dart).
@@ -309,17 +311,95 @@ share one Apple ID, so one Apple Health already.
   shown on every phone once two are listed. One row per phone ("iPhone 17 ·
   iOS 26.6", then "This device" or the day it last synced), a check on the
   reading one. Picking uploads on the next auto-sync; picking this phone also
-  asks for Health access and syncs right away. With an Android phone picked, a
-  note says Activity and Mindfulness habits (`HealthMetricType.isIosOnly`)
-  only sync from an iPhone; it shows only when such a habit exists.
+  asks for Health access and syncs right away.
+  - A phone that can't be the reader (`SyncDevice.canReadHealth`: its entry
+    says Health isn't available, e.g. Health Connect not installed) is greyed
+    out and has an info button (`info.svg`) instead of the check; it and the
+    row open a `NewDefaultDialog` saying why. Older app versions don't send
+    the flag, so their phones stay pickable.
+  - Which metrics a phone can read follows from its platform
+    (`SyncDevice.canReadMetric`: Android has no `HealthMetricType.isIosOnly`
+    metric). Tapping a phone that can't read a metric some linked
+    (non-deleted) habit uses, i.e. an Android phone while an Activity or
+    Mindfulness habit exists, asks first (`confirmAndroidHealthSource`:
+    Cancel / "Switch anyway"). Switching is allowed: everything else syncs
+    from the Android phone, and those habits keep their data but stop
+    updating until an iPhone reads Health again.
 - **Details card:** on a phone that doesn't read, the header shows the reading
-  phone's store (logo and name) and "From iPhone 17 · iOS 26.6" instead of the
-  last-synced time, and the iOS no-data access hint is hidden.
+  phone's store (logo and name), "From iPhone 17 · iOS 26.6" and a
+  "Last synced: Today / 2 Nov" line from the reading phone's device entry
+  (`lastSeen`, refreshed about once a day, so a day, not a time), and the iOS
+  no-data access hint is hidden. The card only checks for iOS / Android, not
+  `isAvailable`, so a phone without Health Connect still shows the data.
+- **Editor** (`HealthWidget`): the logo, title and description show the
+  *incoming* store (`SyncDevicesProvider.healthPlatform`), but the metric
+  picker lists only *this* phone's `supportedMetrics`, so a new habit never
+  gets a metric that dies when the reader changes. A habit already linked to a
+  metric this phone can't read (Activity / Mindfulness viewed on Android)
+  keeps it as the selection in the pill and picker. Turning the toggle off for
+  such a metric asks first (it can't be turned on again from this phone);
+  normal metrics need no confirmation. The whole section is hidden on a phone
+  without Health (`!isAvailable`), and then the save keeps the habit's Health
+  link and targets (`keepHiddenHealthFields`, see "Editor without Health").
   `HealthOverrideTag` names the reading phone's store too
   (`SyncDevicesProvider.healthBrand`).
 - **Older app versions** don't know the pick and keep reading Health. They're
   listed from their backup metadata, so picking one simply stops the updated
   phones from fighting it.
+
+## Editor without Health
+
+`HealthWidget` hides itself on a phone without Health (web, desktop, Android
+without Health Connect, or before the sheet's availability check finished).
+The habit sheet hydrates every Health field from the habit and writes them all
+back on save, so to make sure such a save can never unlink a habit or change
+its goal, `_saveHabit` ends with `keepHiddenHealthFields`
+([`lib/util/health_editor_fields.dart`](../lib/util/health_editor_fields.dart)):
+when `healthEditorShown(...)` is false and the habit was linked, it puts back
+`healthMetric`, the workout filter, bedtime day, tolerance, tracking type,
+amount, duration and amount label from the stored habit. Unchanged values get
+no new field timestamp, so the save can't win a merge against the reading
+phone either. Covered by `test/util/health_editor_fields_test.dart`.
+
+## After a restore
+
+Every successful restore marks `BackupProvider.markRestored()`: Drive / iCloud
+auto-restore into an empty app, "Merge" and "Start fresh" from the restore
+choice, restore / replace from a backup file (also with a passphrase), the
+first sync after an interrupted sign-in, and the local file import
+(`BackupService.importLocalData`). `HomePage` takes the flag once
+(`takeHealthRestoreNotice`, not while a sync is running) and calls
+`showHealthRestoreNotice`
+([`lib/widgets/dialogs/health_restore_dialog.dart`](../lib/widgets/dialogs/health_restore_dialog.dart)).
+
+It shows nothing when Health is already being synced: another device is the
+reader (e.g. an iPhone reading Apple Health, whose values reach this phone
+through sync; switching is left to the picker), or this phone has synced
+Health before (`lastSyncedAt`, e.g. its own local file restored). Otherwise
+it splits the non-deleted Health habits by whether this phone can read their
+metric (`checkRestoredHealthHabits`,
+[`lib/util/health_restore_check.dart`](../lib/util/health_restore_check.dart)):
+
+- **All readable:** this phone's store logo, "Sync Health habits from this
+  phone?" (Not now / Sync).
+- **Some readable** (Apple Health exclusive habits restored onto Android, e.g.
+  from an iPhone's local file): the same logo and title, then two groups of
+  premade-style pills (`HealthRestoreHabitGroups`): the habits that will
+  sync, then "Apple Health only" (dimmed, with "These habits are Apple Health
+  exclusive…"). Cancel / Sync.
+- **None readable** (no Health Connect, web/desktop, or only iOS-only metrics
+  on Android): the logo, "{source} unavailable", and that they keep their
+  data and can be edited by hand but won't update here.
+
+"Sync from this phone": when any other device is listed, this phone lists
+itself (`listForUpload`) and becomes the pick (`setHealthSource`, uploaded on
+the next auto-sync); then Health access is requested and
+`HealthProvider.syncNowWithCatchUp()` runs, which gives every linked habit
+without a cursor one `kHealthBackfillMaxDays` back (a restored habit has none,
+so a plain `syncNow` would read only today). "Not now" changes nothing. Note
+that with no other device listed (e.g. a local file restore without Drive)
+this phone reads Health anyway, as before; "Not now" only skips the access
+prompt and the catch-up. Nothing is ever unlinked and no history is deleted.
 
 ## Habit details Health card
 

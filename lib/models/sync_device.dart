@@ -1,4 +1,5 @@
 import 'package:habitt/models/backup_metadata.dart';
+import 'package:habitt/models/health_metric_type.dart';
 
 /// Devices not seen for this long are dropped from the list (unless one is
 /// the chosen Health device), so reinstalls and old phones don't pile up.
@@ -14,6 +15,7 @@ class SyncDevice {
     required this.platform,
     required this.firstSeen,
     required this.lastSeen,
+    this.healthAvailable,
   });
 
   final String id;
@@ -34,9 +36,24 @@ class SyncDevice {
   // the last time the device uploaded its entry (refreshed about once a day)
   final DateTime lastSeen;
 
+  // whether Health can be read on that device (HealthKit, or Health Connect
+  // installed). Null when unknown: older app versions don't send it, and an
+  // unknown device counts as able to read
+  final bool? healthAvailable;
+
   String get displayName => os.isEmpty ? model : '$model · $os';
 
   bool get isIos => platform == 'ios';
+
+  /// Whether this device can be the one that reads Health: a phone whose
+  /// Health store isn't known to be missing.
+  bool get canReadHealth =>
+      (platform == 'ios' || platform == 'android') && healthAvailable != false;
+
+  /// Whether this device's Health store has [metric] at all (Health Connect
+  /// has no record for the iOS-only ones).
+  bool canReadMetric(HealthMetricType metric) =>
+      canReadHealth && (isIos || !metric.isIosOnly);
 
   /// Same device seen through two payloads: the fresher one has the current
   /// name and OS, the earliest first-seen is the real one.
@@ -50,6 +67,10 @@ class SyncDevice {
       firstSeen:
           other.firstSeen.isBefore(firstSeen) ? other.firstSeen : firstSeen,
       lastSeen: newer.lastSeen,
+      // an entry from an older app version has no flag; keep the known one
+      healthAvailable:
+          newer.healthAvailable ??
+          (identical(newer, this) ? other : this).healthAvailable,
     );
   }
 
@@ -80,6 +101,8 @@ class SyncDevice {
     'platform': platform,
     'firstSeen': firstSeen.toUtc().toIso8601String(),
     'lastSeen': lastSeen.toUtc().toIso8601String(),
+    // left out while unknown, exactly like an older app version's entry
+    if (healthAvailable != null) 'healthAvailable': healthAvailable,
   };
 
   static SyncDevice? fromMap(Object? raw) {
@@ -97,6 +120,10 @@ class SyncDevice {
       platform: raw['platform']?.toString() ?? '',
       firstSeen: firstSeen,
       lastSeen: lastSeen,
+      healthAvailable:
+          raw['healthAvailable'] is bool
+              ? raw['healthAvailable'] as bool
+              : null,
     );
   }
 }
@@ -136,12 +163,16 @@ class SyncDeviceList {
   bool get isMultiDevice => devices.length >= 2;
 
   /// The device that reads Health: the user's pick while it's still listed,
-  /// otherwise the device that has had the app longest. Every device computes
-  /// the same answer from the same list, so they agree without coordinating.
+  /// otherwise the device that has had the app longest, skipping devices
+  /// known to have no Health store (all of them count when none has one). Every device computes the same
+  /// answer from the same list, so they agree without coordinating.
   String? get healthSourceId {
     final picked = healthSource?.deviceId;
     if (picked != null && devices.containsKey(picked)) return picked;
-    return sortedDevices.firstOrNull?.id;
+    final sorted = sortedDevices;
+    return (sorted.where((d) => d.healthAvailable != false).firstOrNull ??
+            sorted.firstOrNull)
+        ?.id;
   }
 
   /// Oldest install first, by id on a tie so every device sorts the same.

@@ -12,6 +12,7 @@ import 'package:habitt/models/backup_metadata.dart';
 import 'package:habitt/models/day.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/sync_device.dart';
+import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/util/duration_seconds_migration.dart';
 import 'package:hive_ce/hive.dart';
@@ -444,6 +445,9 @@ class BackupService {
       await habitProvider.assignStreaks();
       await habitProvider.recalculateLongestStreaks();
       habitProvider.statsProvider?.refreshStats(force: true);
+
+      // the home page compares the restored Health habits with this phone
+      if (context.mounted) context.read<BackupProvider>().markRestored();
 
       return BackupOperationResult.success;
     } catch (e, st) {

@@ -3771,4 +3771,55 @@ class AppLocalizationsBs extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return 'Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ($date)? Ova radnja se ne može poništiti.';
   }
+
+  @override
+  String get healthForeignMetricOffTitle => 'Isključiti Health sinhronizaciju?';
+
+  @override
+  String healthForeignMetricOffDesc(String metric) {
+    return '$metric se ne može čitati na ovom telefonu, pa ga nećeš moći ponovo uključiti.';
+  }
+
+  @override
+  String get healthForeignMetricOffConfirm => 'Isključi';
+
+  @override
+  String healthDeviceUnavailableInfo(String source) {
+    return '$source nije dostupan na ovom telefonu, pa ne može čitati Health podatke.';
+  }
+
+  @override
+  String get healthDeviceIosOnlyBlocked =>
+      'Aktivnost i Mindfulness navike se ne mogu pratiti na Androidu, pa Android telefon ne može čitati Health dok ih imaš. Zadrži iPhone kao uređaj za Health sinhronizaciju.';
+
+  @override
+  String get healthRestoreOfferTitle =>
+      'Sinhronizovati Health navike s ovog telefona?';
+
+  @override
+  String healthRestoreOfferDesc(String source) {
+    return 'Tvoje vraćene navike su povezane s Healthom. Ovaj telefon ih može ažurirati iz aplikacije $source.';
+  }
+
+  @override
+  String get healthRestoreNoneDesc =>
+      'Tvoje Health navike zadržavaju svoje podatke i mogu se ručno uređivati, ali se na ovom telefonu neće ažurirati iz Healtha.';
+
+  @override
+  String get healthRestoreSyncHere => 'Sinhronizuj';
+
+  @override
+  String get healthDeviceSwitchAnyway => 'Ipak prebaci';
+
+  @override
+  String get healthRestoreIosOnlyDesc =>
+      'Ove navike su samo za Apple Health. Ne mogu se sinhronizovati na ovom telefonu.';
+
+  @override
+  String healthSourceUnavailableTitle(String source) {
+    return '$source nije dostupan';
+  }
+
+  @override
+  String get healthRestoreAppleHealthOnly => 'Samo Apple Health';
 }

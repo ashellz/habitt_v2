@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
-import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/models/sync_device.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/sync_devices_provider.dart';
+import 'package:habitt/widgets/dialogs/health_device_dialogs.dart';
 import 'package:habitt/widgets/settings/health_device_option.dart';
 import 'package:provider/provider.dart';
 
@@ -30,16 +30,6 @@ class HealthDeviceSetting extends StatelessWidget {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
     final source = devices.healthSource;
-
-    // an Android source can't fill these, worth saying only if they're in use
-    final showIosOnlyNote =
-        source != null &&
-        !source.isIos &&
-        context.select<HabitProvider, bool>(
-          (hp) => hp.habits.any(
-            (h) => h.isDeleted != true && h.healthMetric?.isIosOnly == true,
-          ),
-        );
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -68,15 +58,13 @@ class HealthDeviceSetting extends StatelessWidget {
                   device: device,
                   isSelected: device.id == source?.id,
                   isThisDevice: device.id == devices.selfId,
+                  enabled: device.canReadHealth,
+                  onInfoTap:
+                      () => showHealthDeviceUnavailableInfo(context, device),
                   onTap: () => _pick(context, device),
                 ),
             ],
           ),
-          if (showIosOnlyNote)
-            Text(
-              loc.healthDeviceIosOnlyNote,
-              style: TextStyle(color: cp.lightGreyText, fontSize: 13),
-            ),
         ],
       ),
     );
@@ -85,6 +73,21 @@ class HealthDeviceSetting extends StatelessWidget {
   Future<void> _pick(BuildContext context, SyncDevice device) async {
     final devices = context.read<SyncDevicesProvider>();
     if (device.id == devices.healthSource?.id) return;
+    if (!device.canReadHealth) {
+      return showHealthDeviceUnavailableInfo(context, device);
+    }
+
+    // an Android phone can't read Activity or Mindfulness: switching to it
+    // leaves those habits without a reader, so the user confirms first
+    final losesHabits = context.read<HabitProvider>().habits.any(
+      (h) =>
+          h.isDeleted != true &&
+          h.healthMetric != null &&
+          !device.canReadMetric(h.healthMetric!),
+    );
+    if (losesHabits && !await confirmAndroidHealthSource(context)) return;
+    if (!context.mounted) return;
+
     final backup = context.read<BackupProvider>();
     final health = context.read<HealthProvider>();
 

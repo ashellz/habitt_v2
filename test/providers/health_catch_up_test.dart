@@ -196,6 +196,34 @@ void main() {
       expect((await storedCursors())[1], _dayKey(_ago(0)));
     });
 
+    test('after a restore, a habit with no cursor catches up the full window', () async {
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      final service = _PerDayHealthService((_) => 3000);
+      final health = HealthProvider(service: service)
+        ..attachHabitProvider(habitProvider);
+
+      await health.syncNowWithCatchUp();
+
+      expect(service.reads.first, _ago(0));
+      expect(service.reads, hasLength(15));
+      expect(service.reads[1], _ago(14));
+      expect((await storedCursors())[1], _dayKey(_ago(0)));
+    });
+
+    test('a catch-up after a restore keeps an existing cursor', () async {
+      await seedPrefs(cursors: {1: _ago(2)});
+      await habitBox.put(1, stepsHabit(id: 1));
+      final habitProvider = await createInitializedProvider();
+      final service = _PerDayHealthService((_) => 3000);
+      final health = HealthProvider(service: service)
+        ..attachHabitProvider(habitProvider);
+
+      await health.syncNowWithCatchUp();
+
+      expect(service.reads, [_ago(0), _ago(2), _ago(1)]);
+    });
+
     test('goes back at most 14 days', () async {
       await seedPrefs(cursors: {1: _ago(30)});
       await habitBox.put(1, stepsHabit(id: 1));

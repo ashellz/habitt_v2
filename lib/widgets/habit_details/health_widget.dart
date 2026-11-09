@@ -10,6 +10,7 @@ import 'package:habitt/models/premade_habit_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
+import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/services/premade_habit_catalog.dart';
 import 'package:habitt/util/get_duration_string.dart';
 import 'package:habitt/util/health_workout_amount_label.dart';
@@ -19,6 +20,7 @@ import 'package:habitt/widgets/default/multiple_option_selector.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:habitt/widgets/dialogs/healt_metric_picker_dialog.dart';
+import 'package:habitt/widgets/dialogs/health_device_dialogs.dart';
 import 'package:habitt/widgets/dialogs/health_time_of_day_dialog.dart';
 import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:habitt/widgets/dialogs/workout_type_picker_dialog.dart';
@@ -39,8 +41,9 @@ class HealthWidget extends StatefulWidget {
 }
 
 class _HealthWidgetState extends State<HealthWidget> {
-  Widget _appIcon() {
-    if (Platform.isIOS) {
+  // apple health or android health connect, from the device that performs health sync
+  Widget _appIcon(bool isAppleHealth) {
+    if (isAppleHealth) {
       return SvgPicture.asset(
         "assets/images/widget-images/apple-health.svg",
         width: 46,
@@ -59,6 +62,14 @@ class _HealthWidgetState extends State<HealthWidget> {
     final sp = context.read<StateProvider>();
     final healthProvider = context.read<HealthProvider>();
     if (!value) {
+      // a metric this phone can't read (linked on an iPhone) can't be picked
+      // again here, so turning it off is worth a second thought
+      final metric = sp.selectedHealthMetric;
+      if (metric != null &&
+          !healthProvider.isMetricSupported(metric) &&
+          !await confirmUnlinkForeignHealthMetric(context, metric)) {
+        return;
+      }
       sp.selectedHealthMetric = null;
       sp.selectedHealthWorkoutFilter = null;
       return;
@@ -83,13 +94,21 @@ class _HealthWidgetState extends State<HealthWidget> {
     await _openMetricPicker(healthProvider);
   }
 
+  // this phone's own metrics only,
+  // a habit already linked to one it can't read keeps showing it
+  List<HealthMetricType> _pickerMetrics(HealthProvider healthProvider) {
+    final metrics = healthProvider.supportedMetrics;
+    final current = context.read<StateProvider>().selectedHealthMetric;
+    if (current == null || metrics.contains(current)) return metrics;
+    return [...metrics, current];
+  }
+
   Future<void> _openMetricPicker(HealthProvider healthProvider) async {
     await showDialogSheet(
       context: context,
       builder:
-          (_) => HealthMetricPickerDialog(
-            metrics: healthProvider.supportedMetrics,
-          ),
+          (_) =>
+              HealthMetricPickerDialog(metrics: _pickerMetrics(healthProvider)),
     );
   }
 
@@ -98,10 +117,15 @@ class _HealthWidgetState extends State<HealthWidget> {
     final cp = context.watch<ColorProvider>();
     final sp = context.watch<StateProvider>();
     final healthProvider = context.watch<HealthProvider>();
+    final devices = context.watch<SyncDevicesProvider>();
     final loc = AppLocalizations.of(context)!;
 
+    // keep in sync with healthEditorShown: the save keeps the habit's Health
+    // fields whenever this section isn't shown
     if (!Platform.isIOS && !Platform.isAndroid) return const SizedBox.shrink();
     if (!healthProvider.isAvailable) return const SizedBox.shrink();
+
+    final isAppleHealth = devices.healthPlatform == 'ios';
 
     final metric = sp.selectedHealthMetric;
     final enabled = metric != null;
@@ -120,14 +144,14 @@ class _HealthWidgetState extends State<HealthWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 10,
             children: [
-              SizedBox(width: 46, child: _appIcon()),
+              SizedBox(width: 46, child: _appIcon(isAppleHealth)),
               Expanded(
                 child: Column(
                   spacing: 8,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      Platform.isIOS
+                      isAppleHealth
                           ? loc.healthSyncSectionTitleApple
                           : loc.healthSyncSectionTitleAndroid,
                       style: TextStyle(
@@ -137,7 +161,7 @@ class _HealthWidgetState extends State<HealthWidget> {
                       ),
                     ),
                     Text(
-                      Platform.isIOS
+                      isAppleHealth
                           ? loc.healthSyncSectionDescApple
                           : loc.healthSyncSectionDescAndroid,
                       style: TextStyle(color: cp.lightGreyText, fontSize: 13),

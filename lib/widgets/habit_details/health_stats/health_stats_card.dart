@@ -11,6 +11,7 @@ import 'package:habitt/providers/health_provider.dart';
 import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/util/health_history.dart';
 import 'package:habitt/util/health_missing_data.dart';
+import 'package:habitt/util/sync_device_last_seen.dart';
 import 'package:habitt/widgets/default/health_override_tag.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_sessions_list.dart';
 import 'package:habitt/widgets/habit_details/health_stats/health_week_chart.dart';
@@ -184,6 +185,7 @@ class _Header extends StatelessWidget {
 
     // with another device reading Health, the card shows that device's store
     final readsHere = devices.readsHealthHere;
+    final source = devices.healthSource;
     final isAppleHealth = devices.healthPlatform == 'ios';
     final needsPermission =
         readsHere && Platform.isAndroid && !health.permissionGranted;
@@ -216,15 +218,19 @@ class _Header extends StatelessWidget {
                 child: Text(
                   readsHere
                       ? _status(context, loc, health, needsPermission)
-                      : loc.healthCardFromDevice(
-                        devices.healthSource?.displayName ?? '',
-                      ),
+                      : loc.healthCardFromDevice(source?.displayName ?? ''),
                   style: TextStyle(
                     color: needsPermission ? cp.main : cp.lightGreyText,
                     fontSize: 13,
                   ),
                 ),
               ),
+              // the reading phone's last sync, from its device list entry
+              if (!readsHere && source != null)
+                Text(
+                  loc.lastSynced(syncDeviceLastSeenLabel(context, loc, source)),
+                  style: TextStyle(color: cp.lightGreyText, fontSize: 13),
+                ),
             ],
           ),
         ),

@@ -1339,5 +1339,18 @@
   "replaceCloudBackupTitle": "Zamijeniti postojeći backup?",
   "replaceCloudBackupDesc": "Postojeći backup na usluzi {cloud} bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ova radnja se ne može poništiti.",
   "replaceCloudBackup": "Zamijeni backup",
-  "overwriteLocalDataDescWithDate": "Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ({date})? Ova radnja se ne može poništiti."
+  "overwriteLocalDataDescWithDate": "Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ({date})? Ova radnja se ne može poništiti.",
+  "healthForeignMetricOffTitle": "Isključiti Health sinhronizaciju?",
+  "healthForeignMetricOffDesc": "{metric} se ne može čitati na ovom telefonu, pa ga nećeš moći ponovo uključiti.",
+  "healthForeignMetricOffConfirm": "Isključi",
+  "healthDeviceUnavailableInfo": "{source} nije dostupan na ovom telefonu, pa ne može čitati Health podatke.",
+  "healthDeviceIosOnlyBlocked": "Aktivnost i Mindfulness navike se ne mogu pratiti na Androidu, pa Android telefon ne može čitati Health dok ih imaš. Zadrži iPhone kao uređaj za Health sinhronizaciju.",
+  "healthRestoreOfferTitle": "Sinhronizovati Health navike s ovog telefona?",
+  "healthRestoreOfferDesc": "Tvoje vraćene navike su povezane s Healthom. Ovaj telefon ih može ažurirati iz aplikacije {source}.",
+  "healthRestoreNoneDesc": "Tvoje Health navike zadržavaju svoje podatke i mogu se ručno uređivati, ali se na ovom telefonu neće ažurirati iz Healtha.",
+  "healthRestoreSyncHere": "Sinhronizuj",
+  "healthDeviceSwitchAnyway": "Ipak prebaci",
+  "healthRestoreIosOnlyDesc": "Ove navike su samo za Apple Health. Ne mogu se sinhronizovati na ovom telefonu.",
+  "healthSourceUnavailableTitle": "{source} nije dostupan",
+  "healthRestoreAppleHealthOnly": "Samo Apple Health"
 }

@@ -21,7 +21,13 @@ const String _kSyncCursorsKey = 'healthSyncCursors';
 class HealthProvider extends ChangeNotifier {
   HealthProvider({HealthService? service, SyncDevicesProvider? devices})
     : _service = service ?? HealthService(),
-      _devices = devices;
+      _devices = devices {
+    // the device list tells the other phones whether this one can read Health
+    devices?.healthAvailability = () async {
+      await ensureAvailabilityChecked();
+      return isAvailable;
+    };
+  }
 
   final HealthService _service;
   HabitProvider? _habitProvider;
@@ -241,6 +247,36 @@ class HealthProvider extends ChangeNotifier {
       isSyncing = false;
       notifyListeners();
     }
+  }
+
+  // this phone just took over reading Health (after a restore): a habit with
+  // no cursor would only sync today, so it starts the usual catch-up window
+  // back instead (never before the habit was created or last paused)
+  Future<void> syncNowWithCatchUp() async {
+    final habitProvider = _habitProvider;
+    if (habitProvider == null) return;
+    if (!await _readsHealthHere()) return;
+
+    final now = DateTime.now();
+    final start = DateTime(
+      now.year,
+      now.month,
+      now.day - kHealthBackfillMaxDays,
+    );
+    final cursors = await _loadCursors();
+    var changed = false;
+    for (final habit in habitProvider.habits) {
+      if (habit.healthMetric == null ||
+          habit.isDeleted == true ||
+          habit.isPaused == true ||
+          cursors.containsKey(habit.id)) {
+        continue;
+      }
+      cursors[habit.id] = start;
+      changed = true;
+    }
+    if (changed) await _saveCursors(cursors);
+    await syncNow();
   }
 
   // Syncs one habit's day (today, or yesterday for a "day before" bedtime)

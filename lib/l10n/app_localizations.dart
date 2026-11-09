@@ -6381,6 +6381,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to overwrite your local data with the most recent backup ({date})? This action cannot be undone.'**
   String overwriteLocalDataDescWithDate(String date);
+
+  /// No description provided for @healthForeignMetricOffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off Health sync?'**
+  String get healthForeignMetricOffTitle;
+
+  /// No description provided for @healthForeignMetricOffDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'{metric} can\'t be read on this phone, so you won\'t be able to turn it back on from here.'**
+  String healthForeignMetricOffDesc(String metric);
+
+  /// No description provided for @healthForeignMetricOffConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off'**
+  String get healthForeignMetricOffConfirm;
+
+  /// No description provided for @healthDeviceUnavailableInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'{source} isn\'t available on this phone, so it can\'t read Health.'**
+  String healthDeviceUnavailableInfo(String source);
+
+  /// No description provided for @healthDeviceIosOnlyBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity and Mindfulness habits can\'t be tracked on Android. Keep an iPhone as the Health sync device for them to sync.'**
+  String get healthDeviceIosOnlyBlocked;
+
+  /// No description provided for @healthRestoreOfferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Health habits from this phone?'**
+  String get healthRestoreOfferTitle;
+
+  /// No description provided for @healthRestoreOfferDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your restored habits are linked to Health. This phone can keep them updated from {source}.'**
+  String healthRestoreOfferDesc(String source);
+
+  /// No description provided for @healthRestoreNoneDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Health habits keep their data and can be edited by hand, but they won\'t update from Health on this phone.'**
+  String get healthRestoreNoneDesc;
+
+  /// No description provided for @healthRestoreSyncHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get healthRestoreSyncHere;
+
+  /// No description provided for @healthDeviceSwitchAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch anyway'**
+  String get healthDeviceSwitchAnyway;
+
+  /// No description provided for @healthRestoreIosOnlyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'These habits are Apple Health exclusive. They can\'t be synced on this phone.'**
+  String get healthRestoreIosOnlyDesc;
+
+  /// No description provided for @healthSourceUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{source} unavailable'**
+  String healthSourceUnavailableTitle(String source);
+
+  /// No description provided for @healthRestoreAppleHealthOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health only'**
+  String get healthRestoreAppleHealthOnly;
 }
 
 class _AppLocalizationsDelegate

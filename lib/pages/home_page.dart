@@ -20,6 +20,7 @@ import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/util/streak_moment.dart';
 import 'package:habitt/util/whats_new_flow.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
+import 'package:habitt/widgets/dialogs/health_restore_dialog.dart';
 import 'package:habitt/widgets/dialogs/outdated_other_device_dialog.dart';
 import 'package:habitt/widgets/dialogs/premade_health_sync_dialog.dart';
 import 'package:habitt/widgets/dialogs/restore_choice_dialog.dart';
@@ -138,6 +139,7 @@ class _HomePageState extends State<HomePage>
         _maybeShowBackupNotification(context.read<BackupProvider>());
         _maybeShowSyncOverlay();
         _maybeShowOutdatedPeerDialog(context.read<BackupProvider>());
+        _maybeShowHealthRestoreNotice(context.read<BackupProvider>());
       };
       backupProvider.addListener(_backupListener!);
 
@@ -167,6 +169,8 @@ class _HomePageState extends State<HomePage>
       }
 
       await backupProvider.performSync();
+      // a restore that finished before the listener was attached
+      _maybeShowHealthRestoreNotice(backupProvider);
 
       if (mounted) {
         statsProvider.addShouldRefresh(StatsType.perfectDaysStreak);
@@ -200,6 +204,14 @@ class _HomePageState extends State<HomePage>
     await health.syncNow();
     if (!mounted || !health.takeAccessLostNotice()) return;
     await showHealthAccessLostDialog(context);
+  }
+
+  // once per restore: compares the restored Health habits with this phone
+  Future<void> _maybeShowHealthRestoreNotice(
+    BackupProvider backupProvider,
+  ) async {
+    if (!mounted || !backupProvider.takeHealthRestoreNotice()) return;
+    await showHealthRestoreNotice(context);
   }
 
   void _maybeShowSyncOverlay() {

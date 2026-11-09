@@ -3772,4 +3772,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return 'Are you sure you want to overwrite your local data with the most recent backup ($date)? This action cannot be undone.';
   }
+
+  @override
+  String get healthForeignMetricOffTitle => 'Turn off Health sync?';
+
+  @override
+  String healthForeignMetricOffDesc(String metric) {
+    return '$metric can\'t be read on this phone, so you won\'t be able to turn it back on from here.';
+  }
+
+  @override
+  String get healthForeignMetricOffConfirm => 'Turn off';
+
+  @override
+  String healthDeviceUnavailableInfo(String source) {
+    return '$source isn\'t available on this phone, so it can\'t read Health.';
+  }
+
+  @override
+  String get healthDeviceIosOnlyBlocked =>
+      'Activity and Mindfulness habits can\'t be tracked on Android. Keep an iPhone as the Health sync device for them to sync.';
+
+  @override
+  String get healthRestoreOfferTitle => 'Sync Health habits from this phone?';
+
+  @override
+  String healthRestoreOfferDesc(String source) {
+    return 'Your restored habits are linked to Health. This phone can keep them updated from $source.';
+  }
+
+  @override
+  String get healthRestoreNoneDesc =>
+      'Your Health habits keep their data and can be edited by hand, but they won\'t update from Health on this phone.';
+
+  @override
+  String get healthRestoreSyncHere => 'Sync';
+
+  @override
+  String get healthDeviceSwitchAnyway => 'Switch anyway';
+
+  @override
+  String get healthRestoreIosOnlyDesc =>
+      'These habits are Apple Health exclusive. They can\'t be synced on this phone.';
+
+  @override
+  String healthSourceUnavailableTitle(String source) {
+    return '$source unavailable';
+  }
+
+  @override
+  String get healthRestoreAppleHealthOnly => 'Apple Health only';
 }

@@ -56,7 +56,9 @@ class _HealthOverrideNoticeDialogState
         desc: loc.healthOverrideNoticeBody(source),
         titleIcon:
             defaultTargetPlatform == TargetPlatform.iOS
-                ? SvgPicture.asset('assets/images/widget-images/apple-health.svg')
+                ? SvgPicture.asset(
+                  'assets/images/widget-images/apple-health.svg',
+                )
                 : const HealthConnectIcon(),
         showSecondaryButton: false,
         primaryButtonEnabled: ready,

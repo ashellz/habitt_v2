@@ -11,6 +11,7 @@ import 'package:habitt/models/schedule_type.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/health_provider.dart';
+import 'package:habitt/util/health_editor_fields.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/theme_provider.dart';
@@ -672,6 +673,15 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
       habit.color = colorToHex(sp.getHabitColor(tp) ?? tp.primaryColor);
 
       habit.localizedNames = Map<String, String>.from(sp.habitLocalizedNames);
+
+      // a phone that can't show the Health section never changes the link
+      keepHiddenHealthFields(
+        habit,
+        original: widget.habit!,
+        editorShown: healthEditorShown(
+          healthAvailable: context.read<HealthProvider>().isAvailable,
+        ),
+      );
 
       // Here we save the habit and reschedule its notifications if habit notifications exist
       // If no permission or disabled in settings we ask the user if they want to enable it via RQ

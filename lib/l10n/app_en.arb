@@ -1385,5 +1385,22 @@
   "@replaceCloudBackupDesc": {"placeholders": {"cloud": {"type": "String"}}},
   "replaceCloudBackup": "Replace backup",
   "overwriteLocalDataDescWithDate": "Are you sure you want to overwrite your local data with the most recent backup ({date})? This action cannot be undone.",
-  "@overwriteLocalDataDescWithDate": {"placeholders": {"date": {"type": "String"}}}
+  "@overwriteLocalDataDescWithDate": {"placeholders": {"date": {"type": "String"}}},
+  "healthForeignMetricOffTitle": "Turn off Health sync?",
+  "healthForeignMetricOffDesc": "{metric} can't be read on this phone, so you won't be able to turn it back on from here.",
+  "@healthForeignMetricOffDesc": {"placeholders": {"metric": {"type": "String"}}},
+  "healthForeignMetricOffConfirm": "Turn off",
+  "healthDeviceUnavailableInfo": "{source} isn't available on this phone, so it can't read Health.",
+  "@healthDeviceUnavailableInfo": {"placeholders": {"source": {"type": "String"}}},
+  "healthDeviceIosOnlyBlocked": "Activity and Mindfulness habits can't be tracked on Android. Keep an iPhone as the Health sync device for them to sync.",
+  "healthRestoreOfferTitle": "Sync Health habits from this phone?",
+  "healthRestoreOfferDesc": "Your restored habits are linked to Health. This phone can keep them updated from {source}.",
+  "@healthRestoreOfferDesc": {"placeholders": {"source": {"type": "String"}}},
+  "healthRestoreNoneDesc": "Your Health habits keep their data and can be edited by hand, but they won't update from Health on this phone.",
+  "healthRestoreSyncHere": "Sync",
+  "healthDeviceSwitchAnyway": "Switch anyway",
+  "healthRestoreIosOnlyDesc": "These habits are Apple Health exclusive. They can't be synced on this phone.",
+  "healthSourceUnavailableTitle": "{source} unavailable",
+  "@healthSourceUnavailableTitle": {"placeholders": {"source": {"type": "String"}}},
+  "healthRestoreAppleHealthOnly": "Apple Health only"
 }

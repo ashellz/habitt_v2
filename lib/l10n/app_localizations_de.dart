@@ -3806,4 +3806,55 @@ class AppLocalizationsDe extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return 'Möchtest du deine lokalen Daten wirklich mit dem neuesten Backup ($date) überschreiben? Diese Aktion kann nicht rückgängig gemacht werden.';
   }
+
+  @override
+  String get healthForeignMetricOffTitle => 'Health-Sync ausschalten?';
+
+  @override
+  String healthForeignMetricOffDesc(String metric) {
+    return '$metric kann auf diesem Handy nicht gelesen werden, daher kannst du es hier nicht wieder einschalten. Die Gewohnheit behält ihre Daten.';
+  }
+
+  @override
+  String get healthForeignMetricOffConfirm => 'Ausschalten';
+
+  @override
+  String healthDeviceUnavailableInfo(String source) {
+    return '$source ist auf diesem Handy nicht verfügbar, daher kann es keine Health-Daten lesen. Installiere es und öffne Habitt auf diesem Handy, um es zu nutzen.';
+  }
+
+  @override
+  String get healthDeviceIosOnlyBlocked =>
+      'Aktivitäts- und Achtsamkeits-Gewohnheiten können auf Android nicht erfasst werden, daher kann ein Android-Handy Health nicht lesen, solange du sie hast. Behalte ein iPhone als Health-Sync-Gerät.';
+
+  @override
+  String get healthRestoreOfferTitle =>
+      'Health-Gewohnheiten von diesem Handy synchronisieren?';
+
+  @override
+  String healthRestoreOfferDesc(String source) {
+    return 'Deine wiederhergestellten Gewohnheiten sind mit Health verknüpft. Dieses Handy kann sie mit $source aktuell halten.';
+  }
+
+  @override
+  String get healthRestoreNoneDesc =>
+      'Deine Health-Gewohnheiten behalten ihre Daten und können von Hand bearbeitet werden, werden auf diesem Handy aber nicht aus Health aktualisiert.';
+
+  @override
+  String get healthRestoreSyncHere => 'Synchronisieren';
+
+  @override
+  String get healthDeviceSwitchAnyway => 'Trotzdem wechseln';
+
+  @override
+  String get healthRestoreIosOnlyDesc =>
+      'Diese Gewohnheiten gibt es nur in Apple Health. Sie können auf diesem Handy nicht synchronisiert werden.';
+
+  @override
+  String healthSourceUnavailableTitle(String source) {
+    return '$source nicht verfügbar';
+  }
+
+  @override
+  String get healthRestoreAppleHealthOnly => 'Nur Apple Health';
 }

@@ -1348,5 +1348,18 @@
   "replaceCloudBackupTitle": "Sostituire il backup esistente?",
   "replaceCloudBackupDesc": "Il backup esistente su {cloud} verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Questa azione non può essere annullata.",
   "replaceCloudBackup": "Sostituisci backup",
-  "overwriteLocalDataDescWithDate": "Vuoi davvero sovrascrivere i tuoi dati locali con il backup più recente ({date})? Questa azione non può essere annullata."
+  "overwriteLocalDataDescWithDate": "Vuoi davvero sovrascrivere i tuoi dati locali con il backup più recente ({date})? Questa azione non può essere annullata.",
+  "healthForeignMetricOffTitle": "Disattivare la sincronizzazione con Salute?",
+  "healthForeignMetricOffDesc": "{metric} non può essere letto su questo telefono, quindi non potrai riattivarlo da qui. L'abitudine mantiene i suoi dati.",
+  "healthForeignMetricOffConfirm": "Disattiva",
+  "healthDeviceUnavailableInfo": "{source} non è disponibile su questo telefono, quindi non può leggere i dati di salute. Installalo e apri Habitt su quel telefono per usarlo.",
+  "healthDeviceIosOnlyBlocked": "Le abitudini Attività e Mindfulness non possono essere monitorate su Android, quindi un telefono Android non può leggere i dati di salute finché le hai. Mantieni un iPhone come dispositivo di sincronizzazione.",
+  "healthRestoreOfferTitle": "Sincronizzare le abitudini di salute da questo telefono?",
+  "healthRestoreOfferDesc": "Le abitudini ripristinate sono collegate ai dati di salute. Questo telefono può tenerle aggiornate da {source}.",
+  "healthRestoreNoneDesc": "Le tue abitudini di salute mantengono i loro dati e possono essere modificate a mano, ma non si aggiorneranno dai dati di salute su questo telefono.",
+  "healthRestoreSyncHere": "Sincronizza",
+  "healthDeviceSwitchAnyway": "Cambia comunque",
+  "healthRestoreIosOnlyDesc": "Queste abitudini sono esclusive di Apple Health. Non possono essere sincronizzate su questo telefono.",
+  "healthSourceUnavailableTitle": "{source} non disponibile",
+  "healthRestoreAppleHealthOnly": "Solo Apple Health"
 }

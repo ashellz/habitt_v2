@@ -27,6 +27,10 @@ class SyncDevicesProvider extends ChangeNotifier {
   // Health pick): a delta is uploaded for it even with no habit changes
   DateTime? _changedAt;
 
+  /// Tells whether Health can be read on this device; set by HealthProvider.
+  /// Without it this device's entry leaves the flag out (unknown).
+  Future<bool> Function()? healthAvailability;
+
   Future<void>? _loading;
   Future<({String name, String os, DateTime? installedAt})>? _selfInfo;
 
@@ -106,12 +110,15 @@ class SyncDevicesProvider extends ChangeNotifier {
     if (selfId == null || !_canReadHealth) return _list;
 
     final info = await (_selfInfo ??= _readSelfInfo());
+    final healthAvailable = await _readHealthAvailable();
     final now = DateTime.now().toUtc();
     final current = _list.devices[selfId];
     final isFresh =
         current != null &&
         current.model == info.name &&
         current.os == info.os &&
+        (healthAvailable == null ||
+            current.healthAvailable == healthAvailable) &&
         now.difference(current.lastSeen) < _kSelfRefreshInterval;
     if (isFresh) return _list;
 
@@ -124,6 +131,7 @@ class SyncDevicesProvider extends ChangeNotifier {
             platform: Platform.operatingSystem,
             firstSeen: info.installedAt ?? now,
             lastSeen: now,
+            healthAvailable: healthAvailable,
           ),
         )
         .pruned(now);
@@ -190,6 +198,16 @@ class SyncDevicesProvider extends ChangeNotifier {
       }
     } catch (_) {
       // the in-memory list still holds; it's saved again on the next change
+    }
+  }
+
+  Future<bool?> _readHealthAvailable() async {
+    final read = healthAvailability;
+    if (read == null) return null;
+    try {
+      return await read();
+    } catch (_) {
+      return null; // unknown, which counts as able to read
     }
   }
 
