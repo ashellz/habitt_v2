@@ -143,6 +143,8 @@ Without this, a completion made on day *N* by a device that has not yet rolled o
 
 **Today is a mirror of today's snapshot.** Because the home view reads today's completion off the live habit, `_mergeBackupData` ends with `BackupService.rehydrateTodayFromSnapshot()`: after the day loop it copies the day-state of each habit in **today's** dated snapshot back onto the matching live habit (`Habit.adoptDayState`). The same path runs after a full restore / new-device import (all cloud restore/replace paths wipe then call `_mergeBackupData`), so a fresh restore reads today from today's dated snapshot rather than the stale dateless master flag.
 
+**A tap made while a merge runs is kept.** The merge calls it as `rehydrateTodayFromSnapshot(keepNewerLocal: true, adoptAlways: <habits the merge added>)`: a live habit whose day state is newer than its entry in today's snapshot (`Habit.hasNewerDayStateThan`, the newest of the `dayStateKeys` timestamps, the same ones `Habit.merge` compares) keeps it. That only happens when the user completes / undoes a habit while the merge is running: `completeHabit` changes the live habit, and `updateHabitInDB` awaits its save before writing today's snapshot, while the rehydrate loop reads today's snapshot once and awaits a save per habit. Without the guard the loop could copy the older snapshot state over the tap, and the tap's own snapshot write would then store the undone state, losing it for good. Otherwise the snapshot state is always at least as new as the live one (the day loop already merged it newest-wins, and the new-day reset doesn't touch day-state timestamps), so this changes nothing. Habits the merge just added are always adopted: their live state is the other device's dateless value, not a local change. The local file restore (below) calls it without the guard and takes the file's state as is.
+
 **Reminders follow merged completions and definitions.** A completion or habit edit that arrives through a merge never passes through the local completion / edit paths, and the `init()` at the end of the merge skips the daily notification sync once it already ran that day. So `_mergeBackupData` takes `HabitProvider.reminderStateSnapshot()` before merging (per habit: today's `completed`, the effective `timesCompletedThisWeek` / `timesCompletedThisMonth`, and `NotificationService.reminderDefinitionKey`) and, after `init()`, calls `resyncRemindersAfterMerge` with it.
 
 *Definition changes* come first: the definition key is every field the scheduler or reminder text reads apart from day state (reminder slots with their ids, times and weekdays, `notificationsEnabled`, `isAlarm`, `soundKey`, `isPaused`, the schedule fields, `createdAt`, name / localized names / icon / premade type, tracking type, amount / label / duration, `healthMetric`; a deleted habit collapses to a single `deleted` key). If any habit's key differs, or a habit appeared on or disappeared from this device (`NotificationService.reminderDefinitionsChanged`), the merge runs one forced full `_syncAllHabitNotifications(force: true)`: `scheduleAllHabitNotifications` wipes every pending habit reminder first, so slots removed or moved on the other device and habits paused or deleted there stop firing, and new habits get theirs. The full sync also covers any completion change in the same merge (see the scheduler rule below), so the per-habit pass is skipped. A merge that changes no definition never pays for a full reschedule.
@@ -299,6 +301,8 @@ Every Drive backup and delta also carries `devices`: the phones syncing this acc
 
 ## Sync Lifecycle
 
+**Only one sync runs at a time.** `performSync` sets `_syncInFlight` before its first `await` and clears it when the run ends. `syncState` only becomes `syncing` after `NewDayGate.readyForSync()`, `_ensureKeySync()` (a network call) and `_getKey()`, so on its own it left a gap: two syncs asked for together (launch / resume plus the periodic timer or a debounced upload) both got through and ran the whole cycle twice: double merges, each one's `_onSyncSuccess` flipping the state to `success` while the other still ran, one clearing the applied-delta tracking under the other, and both optimizing over the one shared counter (which went negative). A `performSync` called while another runs (`_isSyncBusy`: `_syncInFlight` or `syncState == syncing`) is dropped; nothing is lost, since the running sync's cursor is its own start time, so the next sync still picks up anything changed after it started. A dropped `uploadOnly` sets `_uploadRequestedDuringSync`, and `scheduleAutoSync()` is called once the running sync ends, so a change made mid-sync goes up within the debounce delay rather than at the next periodic sync. The periodic timer and the user-started cloud restore / replace paths (`restoreFromCloud`, `restoreFromBackupFile`, `replaceFromBackupFile`, `confirmReplace`, `confirmUploadMine`) check `_isSyncBusy` too.
+
 Every `performSync` goes through `NewDayGate.readyForSync()` first (see Day Merge): it waits for, or runs, a due new-day check, and is skipped if the check is due and nothing has registered it yet.
 
 ### 1. App Launch (`initialize()`)
@@ -319,7 +323,7 @@ Every `performSync` goes through `NewDayGate.readyForSync()` first (see Day Merg
 ### 3. Periodic Timer
 - Fires every 30 s (fast) or 2 min (optimized) when there are no failures
 - Backs off exponentially on consecutive `performSync` failures (doubles each time, max 30 min), resets to normal interval on next success
-- Skipped if: already syncing, pending upload in queue, not signed in
+- Skipped if: a sync is running (`_isSyncBusy`), pending upload in queue, not signed in
 - Calls `performSync(false, SyncMode.full)`
 
 ### 4. App Resume (`didChangeAppLifecycleState(resumed)`)
@@ -367,6 +371,8 @@ performSync(force, mode)
         ├─ Delete all delta files
         └─ Reset applied-delta tracking
 ```
+
+Deleting the delta files after a full sync (`_clearAllDeltaFiles`) is what the pill shows as **Optimizing** with "N remaining": `_syncOptimizingRemaining` is set from that call's own file list and count of deleted files (clamped at 0), so it only ever counts down to 0.
 
 ---
 

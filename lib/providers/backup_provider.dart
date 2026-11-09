@@ -186,6 +186,24 @@ class BackupProvider extends ChangeNotifier {
   double _syncTotalWeight = 0.0;
   double _syncCompletedWeight = 0.0;
 
+  // Set by performSync before its first await and cleared when that run ends,
+  // so only one sync runs at a time. syncState only turns to syncing after
+  // the new-day check and the key sync, so it can't guard that gap on its own:
+  // two syncs started together (launch/resume plus the timer, say) both got
+  // through, ran the whole cycle twice and optimized twice over one counter.
+  bool _syncInFlight = false;
+
+  // An upload-only sync was asked for while another sync ran; scheduled again
+  // once that one ends so the change isn't held until the next periodic sync.
+  bool _uploadRequestedDuringSync = false;
+
+  /// Number of syncs [performSync] actually started (not counting the ones it
+  /// dropped because another was running).
+  @visibleForTesting
+  int debugStartedSyncRuns = 0;
+
+  bool get _isSyncBusy => _syncInFlight || _syncState == SyncState.syncing;
+
   // Used when sync pill is dismissed
   bool _syncPillDismissed = false;
 
@@ -489,7 +507,7 @@ class BackupProvider extends ChangeNotifier {
 
     _periodicSyncTimer = Timer.periodic(_currentBackoffInterval, (_) {
       // Only run when not already syncing and no upload is pending.
-      if (_syncState == SyncState.syncing || _hasPendingSync) return;
+      if (_isSyncBusy || _hasPendingSync) return;
       performSync(false, SyncMode.full).catchError((e) {
         debugPrint('Periodic sync failed: $e');
       });
@@ -1132,7 +1150,7 @@ class BackupProvider extends ChangeNotifier {
     await _setPendingRestoreDecision(false);
     notifyListeners();
 
-    if (_syncState == SyncState.syncing) return;
+    if (_isSyncBusy) return;
     await _ensureKeySync();
     final key = await _getKey();
     if (key == null) return;
@@ -1161,7 +1179,7 @@ class BackupProvider extends ChangeNotifier {
     await _setPendingRestoreDecision(false);
     notifyListeners();
 
-    if (_syncState == SyncState.syncing || _adapter == null) return;
+    if (_isSyncBusy || _adapter == null) return;
 
     progressMessage = 'Replacing cloud backup...';
     _syncPillDismissed = false;
@@ -1304,13 +1322,33 @@ class BackupProvider extends ChangeNotifier {
     bool force = false,
     SyncMode mode = SyncMode.full,
   ]) async {
-    if (_syncState == SyncState.syncing) return;
-    // never merge another device's days in while the new-day check is saving
-    // or filling days, or before it ran (see NewDayGate)
-    if (!await NewDayGate.readyForSync()) return;
-    final run = _performSync(force, mode);
-    NewDayGate.syncStarted(run);
-    await run;
+    // One sync at a time: taken here, before anything awaits (see
+    // _syncInFlight). A request that comes in meanwhile is dropped, the running
+    // sync's cursor is its own start time so a later sync still picks up
+    // anything changed after that; an upload is scheduled again afterwards.
+    if (_isSyncBusy) {
+      if (mode == SyncMode.uploadOnly) _uploadRequestedDuringSync = true;
+      debugPrint(
+        '[SYNC] performSync($mode) skipped: a sync is already running',
+      );
+      return;
+    }
+    _syncInFlight = true;
+    debugStartedSyncRuns++;
+    try {
+      // never merge another device's days in while the new-day check is saving
+      // or filling days, or before it ran (see NewDayGate)
+      if (!await NewDayGate.readyForSync()) return;
+      final run = _performSync(force, mode);
+      NewDayGate.syncStarted(run);
+      await run;
+    } finally {
+      _syncInFlight = false;
+      if (_uploadRequestedDuringSync) {
+        _uploadRequestedDuringSync = false;
+        scheduleAutoSync();
+      }
+    }
   }
 
   Future<void> _performSync(bool force, SyncMode mode) async {
@@ -1525,7 +1563,7 @@ class BackupProvider extends ChangeNotifier {
 
   /// Download the latest Drive backup and merge it into local data.
   Future<void> restoreFromCloud() async {
-    if (_syncState == SyncState.syncing || _pendingRestoreDecision) return;
+    if (_isSyncBusy || _pendingRestoreDecision) return;
     if (_adapter == null) {
       lastError = 'No backup backend active.';
       return;
@@ -2362,10 +2400,16 @@ class BackupProvider extends ChangeNotifier {
       _syncProgress = 0.0;
       notifyListeners();
     }
+    var deleted = 0;
     for (final f in files) {
       await _adapter!.delete(f.id);
       debugPrint('Cleared delta after full sync: ${f.id}');
-      _syncOptimizingRemaining--;
+      deleted++;
+      // from this call's own count, so it can't run below zero
+      _syncOptimizingRemaining = (files.length - deleted).clamp(
+        0,
+        files.length,
+      );
       _advanceProgress(1);
     }
     if (files.isNotEmpty) {
@@ -2418,6 +2462,7 @@ class BackupProvider extends ChangeNotifier {
     }
 
     // ── Habits (master records) ──────────────────────────────────────────────
+    final addedHabitIds = <int>{};
     for (final incoming in backupData.habits) {
       Habit? existing;
       for (final h in habitsBox.values) {
@@ -2453,6 +2498,7 @@ class BackupProvider extends ChangeNotifier {
           );
         }
       } else {
+        addedHabitIds.add(incoming.id);
         await habitsBox.add(incoming);
       }
     }
@@ -2510,8 +2556,12 @@ class BackupProvider extends ChangeNotifier {
     // Day-state is authoritative in the dated snapshots above; rebuild the live
     // habits' TODAY state from today's snapshot before init()/refreshTodaysHabits
     // reads the live records, so the home screen reflects the date-correct merge
-    // rather than the stale dateless master-record flag.
-    await BackupService.rehydrateTodayFromSnapshot();
+    // rather than the stale dateless master-record flag. A habit changed on
+    // this device while the merge ran keeps its newer state (see there).
+    await BackupService.rehydrateTodayFromSnapshot(
+      keepNewerLocal: true,
+      adoptAlways: addedHabitIds,
+    );
 
     _habitProvider?.importDateJoined(backupData.dateJoined);
     await _habitProvider?.init();
@@ -2553,7 +2603,7 @@ class BackupProvider extends ChangeNotifier {
 
   /// Restore from a specific Drive backup file by its file ID.
   Future<void> restoreFromBackupFile(String fileId) async {
-    if (_syncState == SyncState.syncing) return;
+    if (_isSyncBusy) return;
 
     await _ensureKeySync();
     final key = await _getKey();
@@ -2595,7 +2645,7 @@ class BackupProvider extends ChangeNotifier {
     String fileId, {
     bool includeDeltasSince = false,
   }) async {
-    if (_syncState == SyncState.syncing) return;
+    if (_isSyncBusy) return;
     syncState = SyncState.syncing;
     lastError = null;
 

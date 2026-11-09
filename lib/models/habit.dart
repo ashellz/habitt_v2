@@ -1226,6 +1226,16 @@ class Habit extends HiveObject {
     }
   }
 
+  /// Whether this habit's day state (see [dayStateKeys]) was changed after
+  /// [other]'s: it has a day-state timestamp and [other]'s newest is older or
+  /// missing. Same timestamps [merge] compares the day state by.
+  bool hasNewerDayStateThan(Habit other) {
+    final mine = _latestTs(timestamps, dayStateKeys);
+    if (mine == null) return false;
+    final theirs = _latestTs(other.timestamps, dayStateKeys);
+    return theirs == null || mine.isAfter(theirs);
+  }
+
   // clears a habit completely
   // used on backup restoring for habits that have no entry in today snapshot
   // their stored day-state belongs to the day the backup was made.
