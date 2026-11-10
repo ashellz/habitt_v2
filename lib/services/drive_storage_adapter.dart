@@ -4,11 +4,13 @@ import 'package:google_sign_in_platform_interface/google_sign_in_platform_interf
 import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:http/http.dart' as http;
 
+import 'cloud_stall.dart';
 import 'cloud_storage_adapter.dart';
 
 class _GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
-  final http.Client _client = http.Client();
+  // every Drive request gets time limits (see StallGuardClient)
+  final http.Client _client = StallGuardClient(http.Client());
   _GoogleAuthClient(this._headers);
 
   @override
@@ -28,20 +30,28 @@ class _GoogleAuthClient extends http.BaseClient {
 /// authenticating on cold start means Credential Manager, which shows a
 /// "sign in with Google" sheet whenever it can't auto-select; authorization
 /// only needs the account email.
+///
+/// A fetch that hasn't answered within [driveTokenLimit] throws
+/// [CloudStallException].
 Future<String?> driveAccessToken(GoogleIdentity account) async {
-  final tokens = await GoogleSignInPlatform.instance
-      .clientAuthorizationTokensForScopes(
-        ClientAuthorizationTokensForScopesParameters(
-          request: AuthorizationRequestDetails(
-            scopes: const [drive_api.DriveApi.driveFileScope],
-            userId: account.id,
-            email: account.email,
-            promptIfUnauthorized: false,
-          ),
+  final tokens = await withStallLimit(
+    GoogleSignInPlatform.instance.clientAuthorizationTokensForScopes(
+      ClientAuthorizationTokensForScopesParameters(
+        request: AuthorizationRequestDetails(
+          scopes: const [drive_api.DriveApi.driveFileScope],
+          userId: account.id,
+          email: account.email,
+          promptIfUnauthorized: false,
         ),
-      );
+      ),
+    ),
+    driveTokenLimit,
+    'Drive token',
+  );
   return tokens?.accessToken;
 }
+
+const Duration driveTokenLimit = Duration(seconds: 20);
 
 /// Google Drive implementation of [CloudStorageAdapter].
 /// All files live inside a single `habitt_backups/` folder in Drive root.
@@ -66,6 +76,9 @@ class DriveStorageAdapter implements CloudStorageAdapter {
           'X-Goog-AuthUser': '0',
         }),
       );
+    } on CloudStallException {
+      // ends the sync rather than every following call waiting out its own
+      rethrow;
     } catch (e) {
       debugPrint('[Drive] _getDrive error: $e');
       return null;
@@ -79,7 +92,8 @@ class DriveStorageAdapter implements CloudStorageAdapter {
     if (_cachedFolderId != null) return _cachedFolderId;
     try {
       final found = await drive.files.list(
-        q: "mimeType = '$_folderMime' and name = '$_folderName'"
+        q:
+            "mimeType = '$_folderMime' and name = '$_folderName'"
             " and trashed = false and 'root' in parents",
         $fields: 'files(id,name)',
         spaces: 'drive',
@@ -99,6 +113,8 @@ class DriveStorageAdapter implements CloudStorageAdapter {
       final created = await drive.files.create(folder, $fields: 'id');
       _cachedFolderId = created.id;
       return _cachedFolderId;
+    } on CloudStallException {
+      rethrow;
     } catch (e) {
       debugPrint('[Drive] _getFolderIdInternal error: $e');
       return null;
@@ -124,10 +140,18 @@ class DriveStorageAdapter implements CloudStorageAdapter {
 
   @override
   Future<void> upload(String filename, Uint8List bytes) async {
+    // a failed upload throws: returning quietly let the sync count it as done
+    // and move its cursor past changes that never went up
     final drive = await _getDrive();
-    if (drive == null) return;
+    if (drive == null) {
+      throw StateError('Drive unavailable, $filename not uploaded');
+    }
     final folderId = await _getFolderIdInternal(drive);
-    if (folderId == null) return;
+    if (folderId == null) {
+      throw StateError(
+        'Drive backup folder unavailable, $filename not uploaded',
+      );
+    }
 
     final media = drive_api.Media(Stream.value(bytes.toList()), bytes.length);
     final file =
@@ -167,6 +191,8 @@ class DriveStorageAdapter implements CloudStorageAdapter {
     if (drive == null) return;
     try {
       await drive.files.delete(id);
+    } on CloudStallException {
+      rethrow;
     } catch (e) {
       debugPrint('[Drive] delete($id) error: $e');
     }
@@ -186,6 +212,8 @@ class DriveStorageAdapter implements CloudStorageAdapter {
       if (f.id != null) {
         try {
           await drive.files.delete(f.id!);
+        } on CloudStallException {
+          rethrow;
         } catch (_) {}
       }
     }
@@ -256,8 +284,11 @@ class DriveStorageAdapter implements CloudStorageAdapter {
 
   @override
   Future<bool> get isAvailable async {
-    final drive = await _getDrive();
-    return drive != null;
+    try {
+      return await _getDrive() != null;
+    } on CloudStallException {
+      return false;
+    }
   }
 
   @override

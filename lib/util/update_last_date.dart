@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
@@ -49,8 +51,17 @@ class NewDayGate {
   NewDayGate._();
 
   static Future<void>? _check;
-  static Future<void>? _sync;
+  static _RunningSync? _sync;
   static Future<void> Function()? _runner;
+
+  /// A running sync showing no activity for this long is abandoned by the
+  /// new-day check waiting for it (see [waitForRunningSync]).
+  @visibleForTesting
+  static Duration stuckSyncLimit = const Duration(minutes: 2);
+
+  /// How often that wait looks at the sync's activity.
+  @visibleForTesting
+  static Duration stuckSyncPoll = const Duration(seconds: 10);
 
   /// Called by a sync before it starts. False when the new-day check is due
   /// and couldn't run yet (the home page runs it, then syncs, on its own).
@@ -67,12 +78,50 @@ class NewDayGate {
     return !await _checkDue();
   }
 
-  /// Marks [sync] as running until it completes.
-  static void syncStarted(Future<void> sync) {
-    _sync = sync;
+  /// Marks [sync] as running until it completes. [idleFor] says how long it
+  /// has shown no activity, [abandon] gives up on it (see
+  /// [waitForRunningSync]).
+  static void syncStarted(
+    Future<void> sync, {
+    Duration Function()? idleFor,
+    void Function()? abandon,
+  }) {
+    final running = _RunningSync(
+      sync,
+      idleFor ?? () => Duration.zero,
+      abandon ?? () {},
+    );
+    _sync = running;
     sync.whenComplete(() {
-      if (identical(_sync, sync)) _sync = null;
+      if (identical(_sync, running)) _sync = null;
     }).ignore();
+  }
+
+  /// Waits for the running sync, if any. One that shows no activity for
+  /// [stuckSyncLimit] is abandoned instead: the cloud calls have their own
+  /// time limits, but anything that never answers would otherwise hold the
+  /// new day back (today keeping yesterday's completions) until the app was
+  /// killed.
+  static Future<void> waitForRunningSync() async {
+    final running = _sync;
+    if (running == null) return;
+    final done = running.done.catchError((_) {});
+    while (true) {
+      try {
+        await done.timeout(stuckSyncPoll);
+        return;
+      } on TimeoutException {
+        final idle = running.idleFor();
+        if (idle < stuckSyncLimit) continue;
+        debugPrint(
+          '[NEWDAY] running sync showed no activity for ${idle.inSeconds}s, '
+          'abandoning it',
+        );
+        running.abandon();
+        if (identical(_sync, running)) _sync = null;
+        return;
+      }
+    }
   }
 
   static Future<bool> _checkDue() async {
@@ -92,7 +141,17 @@ class NewDayGate {
     _check = null;
     _sync = null;
     _runner = null;
+    stuckSyncLimit = const Duration(minutes: 2);
+    stuckSyncPoll = const Duration(seconds: 10);
   }
+}
+
+class _RunningSync {
+  _RunningSync(this.done, this.idleFor, this.abandon);
+
+  final Future<void> done;
+  final Duration Function() idleFor;
+  final void Function() abandon;
 }
 
 // lastOpenedDate is only written once the whole new-day routine has finished,
@@ -114,10 +173,16 @@ Future<void> checkForNewDay(
   }
   late final Future<void> check;
   check = () async {
-    final sync = NewDayGate._sync;
-    if (sync != null) {
+    // Today starts empty right away (live habits only, see
+    // HabitProvider.startNewDay); what writes day records waits for a
+    // running sync below. A sync that was stuck used to keep yesterday's
+    // completions on today until it ended.
+    if (_isForwardNewDay(lastOpenedDate)) {
+      await habitProvider.startNewDay(lastOpenedDate);
+    }
+    if (NewDayGate._sync != null) {
       debugPrint("[NEWDAY] waiting for the running sync");
-      await sync.catchError((_) {});
+      await NewDayGate.waitForRunningSync();
     }
     await _checkForNewDay(
       prefs,
@@ -131,6 +196,17 @@ Future<void> checkForNewDay(
   });
   NewDayGate._check = check;
   return check;
+}
+
+bool _isForwardNewDay(DateTime lastOpenedDate) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final lastOpened = DateTime(
+    lastOpenedDate.year,
+    lastOpenedDate.month,
+    lastOpenedDate.day,
+  );
+  return today.isAfter(lastOpened);
 }
 
 Future<void> _checkForNewDay(
@@ -176,8 +252,9 @@ Future<void> _checkForNewDay(
       return;
     }
 
-    debugPrint("New day, resetting completion");
-    await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
+    // The live habits were already cleared (checkForNewDay runs
+    // startNewDay first) and the last opened day's record kept as recorded.
+    debugPrint("New day, saving today");
 
     // Days the app wasn't opened on. One that already has a snapshot (synced in
     // from another device, or recorded already) is left alone: rewriting it
@@ -195,7 +272,7 @@ Future<void> _checkForNewDay(
       gapDay = addCalendarDays(gapDay, 1);
     }
 
-    await habitProvider.resetCompletion();
+    habitProvider.saveNewDayToday();
     await habitProvider.resetScheduleCountersIfNeeded(
       resetWeekly: crossedWeekBoundary,
       resetMonthly: crossedMonthBoundary,

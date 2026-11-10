@@ -457,7 +457,20 @@ class BackupService {
   }
 
   // updates todays habits with the real day habits from backup
-  static Future<void> rehydrateTodayFromSnapshot() async {
+  //
+  // keepNewerLocal (sync merges): a habit whose live day state is newer than
+  // its entry in today's snapshot keeps it. That's a tap made while the merge
+  // ran: the habit is changed before today's snapshot is written (with a save
+  // awaited in between), and this loop awaits a save per habit too, so it can
+  // read the snapshot before the tap reached it. Copying it over would undo
+  // the tap, and the tap's own snapshot write would then store the undone
+  // state. The merge itself keeps the newest state the same way.
+  // adoptAlways: habits taken as they are (the ones the merge just added, whose
+  // live state is the other device's dateless value, not a local change).
+  static Future<void> rehydrateTodayFromSnapshot({
+    bool keepNewerLocal = false,
+    Set<int> adoptAlways = const {},
+  }) async {
     final habitsBox = Hive.box<Habit>('habits');
     final daysBox = Hive.box<Day>('days');
 
@@ -476,6 +489,15 @@ class BackupService {
     for (final habit in habitsBox.values) {
       final snapshot = snapshotById[habit.id];
       if (snapshot == null) continue;
+      if (keepNewerLocal &&
+          !adoptAlways.contains(habit.id) &&
+          habit.hasNewerDayStateThan(snapshot)) {
+        debugPrint(
+          '[SYNC]   rehydrate: habit id=${habit.id} "${habit.name}" kept its '
+          'newer local day state (completed=${habit.completed})',
+        );
+        continue;
+      }
       habit.adoptDayState(snapshot);
       if (habit.isInBox) {
         await habit.save();

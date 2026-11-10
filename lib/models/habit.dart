@@ -879,7 +879,10 @@ class Habit extends HiveObject {
     timestamps['amountCompleted'] = DateTime.now().toUtc();
   }
 
-  Future<void> resetCompletion() async {
+  Future<void> resetCompletion() async => clearDayProgress();
+
+  /// [resetCompletion], synchronously.
+  void clearDayProgress() {
     completed = false;
     skipped = false;
     amountCompleted = 0;
@@ -1224,6 +1227,28 @@ class Habit extends HiveObject {
         timestamps.remove(key);
       }
     }
+  }
+
+  /// Whether this copy's day state (see [dayStateKeys]) was changed on [day]
+  /// (a local calendar day): its newest day-state timestamp falls on it. A
+  /// reset never stamps, so a day-state copy carried over from an earlier day
+  /// never counts.
+  bool dayStateChangedOn(DateTime day) {
+    final ts = _latestTs(timestamps, dayStateKeys)?.toLocal();
+    return ts != null &&
+        ts.year == day.year &&
+        ts.month == day.month &&
+        ts.day == day.day;
+  }
+
+  /// Whether this habit's day state (see [dayStateKeys]) was changed after
+  /// [other]'s: it has a day-state timestamp and [other]'s newest is older or
+  /// missing. Same timestamps [merge] compares the day state by.
+  bool hasNewerDayStateThan(Habit other) {
+    final mine = _latestTs(timestamps, dayStateKeys);
+    if (mine == null) return false;
+    final theirs = _latestTs(other.timestamps, dayStateKeys);
+    return theirs == null || mine.isAfter(theirs);
   }
 
   // clears a habit completely

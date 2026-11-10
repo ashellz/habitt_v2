@@ -18,6 +18,7 @@ import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/services/backup_service.dart';
+import 'package:habitt/services/cloud_stall.dart';
 import 'package:habitt/services/cloud_storage_adapter.dart';
 import 'package:habitt/services/drive_storage_adapter.dart';
 import 'package:habitt/services/icloud_storage_adapter.dart';
@@ -27,6 +28,32 @@ import 'package:hive_ce/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum SyncState { idle, syncing, success, error }
+
+/// One sync (or cloud replace), from the moment it's accepted until it ends.
+class _SyncRun {
+  /// Set when the new-day check gave up on it (see [NewDayGate]): the lock is
+  /// released and, should it ever carry on, it stops at its next checkpoint.
+  bool abandoned = false;
+
+  final Completer<void> _gaveUp = Completer<void>();
+
+  /// Completes when it's abandoned, so whoever awaits the sync (the "Back up
+  /// now" spinner, say) isn't left waiting on the stuck call.
+  Future<void> get gaveUp => _gaveUp.future;
+
+  void abandon() {
+    abandoned = true;
+    if (!_gaveUp.isCompleted) _gaveUp.complete();
+  }
+}
+
+/// Thrown at a checkpoint of an abandoned sync.
+class _SyncAbandoned implements Exception {
+  const _SyncAbandoned();
+
+  @override
+  String toString() => 'sync abandoned';
+}
 
 enum BackupBackend { googleDrive, iCloud }
 
@@ -108,7 +135,20 @@ class BackupProvider extends ChangeNotifier {
   HabitProvider? _habitProvider;
 
   BackupBackend _activeBackend = BackupBackend.googleDrive;
-  CloudStorageAdapter? _adapter;
+  CloudStorageAdapter? _adapterRef;
+
+  // Every cloud call goes through here: it counts as sync activity, and an
+  // abandoned sync stops at its next one (see _ensureRunActive).
+  CloudStorageAdapter? get _adapter {
+    _ensureRunActive();
+    _lastSyncActivity = DateTime.now();
+    return _adapterRef;
+  }
+
+  set _adapter(CloudStorageAdapter? adapter) => _adapterRef = adapter;
+
+  @visibleForTesting
+  void debugUseAdapter(CloudStorageAdapter adapter) => _adapterRef = adapter;
 
   SyncState _syncState = SyncState.idle;
   bool _isBackingUp = false;
@@ -185,6 +225,53 @@ class BackupProvider extends ChangeNotifier {
   double _syncProgress = 0.0;
   double _syncTotalWeight = 0.0;
   double _syncCompletedWeight = 0.0;
+
+  // The running sync, set by performSync (and confirmReplace) before the first
+  // await and cleared when that run ends, so only one runs at a time.
+  // syncState only turns to syncing after the new-day check and the key sync,
+  // so it can't guard that gap on its own: two syncs started together
+  // (launch/resume plus the timer, say) both got through, ran the whole cycle
+  // twice and optimized twice over one counter.
+  _SyncRun? _activeRun;
+
+  // The zone value performSync runs its sync under, so code anywhere in it
+  // can tell whether its run was abandoned.
+  static final Object _runZoneKey = Object();
+
+  // Last time a sync showed it's alive: a cloud call, a notifyListeners (all
+  // progress goes through it), a merged day. The new-day check reads it to
+  // tell a slow sync from a stuck one.
+  DateTime _lastSyncActivity = DateTime.now();
+
+  // A merge ran since HabitProvider.init last did; set by _mergeBackupData,
+  // which only does a light reload per merge (see _reloadAfterMerges).
+  bool _pendingHabitReload = false;
+
+  // An upload-only sync was asked for while another sync ran; scheduled again
+  // once that one ends so the change isn't held until the next periodic sync.
+  bool _uploadRequestedDuringSync = false;
+
+  /// Number of syncs [performSync] actually started (not counting the ones it
+  /// dropped because another was running).
+  @visibleForTesting
+  int debugStartedSyncRuns = 0;
+
+  bool get _isSyncBusy => _activeRun != null || _syncState == SyncState.syncing;
+
+  bool get _inAbandonedRun =>
+      (Zone.current[_runZoneKey] as _SyncRun?)?.abandoned ?? false;
+
+  /// Throws [_SyncAbandoned] when called from a sync that was abandoned, so it
+  /// can't merge, upload, or change the sync state after giving up the lock.
+  void _ensureRunActive() {
+    if (_inAbandonedRun) throw const _SyncAbandoned();
+  }
+
+  @override
+  void notifyListeners() {
+    _lastSyncActivity = DateTime.now();
+    super.notifyListeners();
+  }
 
   // Used when sync pill is dismissed
   bool _syncPillDismissed = false;
@@ -516,7 +603,7 @@ class BackupProvider extends ChangeNotifier {
 
     _periodicSyncTimer = Timer.periodic(_currentBackoffInterval, (_) {
       // Only run when not already syncing and no upload is pending.
-      if (_syncState == SyncState.syncing || _hasPendingSync) return;
+      if (_isSyncBusy || _hasPendingSync) return;
       performSync(false, SyncMode.full).catchError((e) {
         debugPrint('Periodic sync failed: $e');
       });
@@ -698,7 +785,7 @@ class BackupProvider extends ChangeNotifier {
         if (await candidate.isAvailable) {
           _activeBackend = BackupBackend.iCloud;
           _adapter = candidate;
-          _dataExists = await _checkDataExists();
+          _dataExists = await _checkDataExistsAtStartup();
           if (_pendingRestoreDecision) {
             // asked again by the home page; refresh the date it shows
             await _setPendingRestoreDecision(true);
@@ -800,7 +887,7 @@ class BackupProvider extends ChangeNotifier {
         );
         _needsMigration = _legacyPassphrase != null;
 
-        _dataExists = await _checkDataExists();
+        _dataExists = await _checkDataExistsAtStartup();
         if (_pendingRestoreDecision) {
           // asked again by the home page; refresh the date it shows
           await _setPendingRestoreDecision(true);
@@ -1095,6 +1182,7 @@ class BackupProvider extends ChangeNotifier {
       _syncCycleStartedAt = null;
       await _persistLastSyncTime();
 
+      await _reloadAfterMerges();
       if (_pendingStreakRecalc) {
         _pendingStreakRecalc = false;
         await _habitProvider?.assignStreaks();
@@ -1105,6 +1193,7 @@ class BackupProvider extends ChangeNotifier {
       syncState = SyncState.success;
       return true;
     } catch (e) {
+      await _reloadAfterMerges();
       lastError = 'Migration failed: $e';
       syncState = SyncState.error;
       debugPrint(lastError);
@@ -1163,25 +1252,34 @@ class BackupProvider extends ChangeNotifier {
     await _setPendingRestoreDecision(false);
     notifyListeners();
 
-    if (_syncState == SyncState.syncing) return;
-    await _ensureKeySync();
-    final key = await _getKey();
-    if (key == null) return;
-
-    progressMessage = 'Preparing restore...';
-    syncState = SyncState.syncing;
-    lastError = null;
-
+    if (_isSyncBusy) return;
+    // taken before the key sync awaits: syncState only turns to syncing after
+    // it, and a sync starting in between would run alongside the replace
+    final run = _SyncRun();
+    _activeRun = run;
     try {
-      await _replaceFromCloud(key);
-      await _onSyncSuccess();
-      markRestored();
-      _startPeriodicSync();
-    } catch (e) {
-      syncState = SyncState.error;
-      lastError = 'Restore failed: $e';
-      debugPrint(lastError);
-      notifyListeners();
+      await _ensureKeySync();
+      final key = await _getKey();
+      if (key == null) return;
+
+      progressMessage = 'Preparing restore...';
+      syncState = SyncState.syncing;
+      lastError = null;
+
+      try {
+        await _replaceFromCloud(key);
+        await _onSyncSuccess();
+        markRestored();
+        _startPeriodicSync();
+      } catch (e) {
+        syncState = SyncState.error;
+        lastError = 'Restore failed: $e';
+        debugPrint(lastError);
+        notifyListeners();
+      }
+    } finally {
+      await _reloadAfterMerges();
+      if (identical(_activeRun, run)) _endRun();
     }
   }
 
@@ -1193,7 +1291,7 @@ class BackupProvider extends ChangeNotifier {
     await _setPendingRestoreDecision(false);
     notifyListeners();
 
-    if (_syncState == SyncState.syncing || _adapter == null) return;
+    if (_isSyncBusy || _adapter == null) return;
 
     progressMessage = 'Replacing cloud backup...';
     _syncPillDismissed = false;
@@ -1336,13 +1434,83 @@ class BackupProvider extends ChangeNotifier {
     bool force = false,
     SyncMode mode = SyncMode.full,
   ]) async {
-    if (_syncState == SyncState.syncing) return;
-    // never merge another device's days in while the new-day check is saving
-    // or filling days, or before it ran (see NewDayGate)
-    if (!await NewDayGate.readyForSync()) return;
-    final run = _performSync(force, mode);
-    NewDayGate.syncStarted(run);
-    await run;
+    // One sync at a time: taken here, before anything awaits (see
+    // _syncInFlight). A request that comes in meanwhile is dropped, the running
+    // sync's cursor is its own start time so a later sync still picks up
+    // anything changed after that; an upload is scheduled again afterwards.
+    if (_isSyncBusy) {
+      if (mode == SyncMode.uploadOnly) _uploadRequestedDuringSync = true;
+      debugPrint(
+        '[SYNC] performSync($mode) skipped: a sync is already running',
+      );
+      return;
+    }
+    final run = _SyncRun();
+    _activeRun = run;
+    _lastSyncActivity = DateTime.now();
+    debugStartedSyncRuns++;
+    try {
+      // never merge another device's days in while the new-day check is saving
+      // or filling days, or before it ran (see NewDayGate)
+      if (!await NewDayGate.readyForSync()) return;
+      final work = runZoned(
+        () => _performSync(force, mode),
+        zoneValues: {_runZoneKey: run},
+      );
+      NewDayGate.syncStarted(
+        work,
+        idleFor: () => DateTime.now().difference(_lastSyncActivity),
+        abandon: () => _abandonRun(run),
+      );
+      await Future.any([work, run.gaveUp]);
+    } finally {
+      // a failed sync may have merged some deltas before it failed
+      await _reloadAfterMerges();
+      // an abandoned run already gave the lock up
+      if (identical(_activeRun, run)) _endRun();
+    }
+  }
+
+  void _endRun() {
+    _activeRun = null;
+    if (_uploadRequestedDuringSync) {
+      _uploadRequestedDuringSync = false;
+      scheduleAutoSync();
+    }
+  }
+
+  /// Gives up on [run], which has shown no activity for a long while: called by
+  /// the new-day check, which waits for a running sync. Without it a sync stuck
+  /// on something that never answers held the new day back (and every sync)
+  /// until the app was killed. The lock is released and the sync counts as
+  /// failed (retried with backoff); should the stuck call ever return, the run
+  /// stops at its next checkpoint (see _ensureRunActive).
+  void _abandonRun(_SyncRun run) {
+    if (!identical(_activeRun, run)) return;
+    run.abandon();
+    debugPrint('[SYNC] abandoned a sync that made no progress');
+    _syncCycleStartedAt = null;
+    _consecutiveSyncFailures++;
+    _startPeriodicSync();
+    _syncState = SyncState.error;
+    _lastError = 'Sync stopped: no progress';
+    _progressMessage = null;
+    _resetSyncProgress();
+    notifyListeners();
+    _endRun();
+  }
+
+  void _resetSyncProgress() {
+    _syncProgress = 0.0;
+    _syncTotalDeltas = 0;
+    _syncCurrentDelta = 0;
+    _syncHasBackup = false;
+    _syncIsUploading = false;
+    _syncIsOptimizing = false;
+    _syncOptimizingTotal = 0;
+    _syncOptimizingRemaining = 0;
+    _syncCompletedWeight = 0.0;
+    _syncTotalWeight = 0.0;
   }
 
   Future<void> _performSync(bool force, SyncMode mode) async {
@@ -1371,7 +1539,9 @@ class BackupProvider extends ChangeNotifier {
     // Must happen before _getKey() so the cached key is the Drive key.
     try {
       await _ensureKeySync();
+      _ensureRunActive();
     } catch (e) {
+      if (_inAbandonedRun) return;
       lastError = 'Failed to sync encryption key: $e';
       syncState = SyncState.error;
       debugPrint(lastError);
@@ -1387,6 +1557,7 @@ class BackupProvider extends ChangeNotifier {
     }
 
     final key = await _getKey();
+    if (_inAbandonedRun) return;
     if (key == null) {
       debugPrint('Sync paused: encryption key is null');
       syncState = SyncState.idle;
@@ -1456,6 +1627,21 @@ class BackupProvider extends ChangeNotifier {
 
       await _onSyncSuccess();
     } catch (e) {
+      if (e is _SyncAbandoned || _inAbandonedRun) {
+        debugPrint('[SYNC] abandoned sync stopped: $e');
+        return;
+      }
+      if (e is CloudStallException) {
+        // Usually a connection the OS dropped while the app was in the
+        // background; nothing the user can act on, so no popup. Retried with
+        // backoff like any failure.
+        _consecutiveSyncFailures++;
+        _startPeriodicSync();
+        syncState = SyncState.error;
+        lastError = 'Sync stalled: $e';
+        debugPrint('[SYNC] $e');
+        return;
+      }
       if (e is FormatException && e.message == 'legacy_v1') {
         // Cloud backup encrypted with the old passphrase — surface migration UI.
         _needsMigration = true;
@@ -1555,56 +1741,14 @@ class BackupProvider extends ChangeNotifier {
     return (await _adapter!.listFiles(nameContains: 'habitt-delta')).length;
   }
 
-  /// Download the latest Drive backup and merge it into local data.
-  Future<void> restoreFromCloud() async {
-    if (_syncState == SyncState.syncing || _pendingRestoreDecision) return;
-    if (_adapter == null) {
-      lastError = 'No backup backend active.';
-      return;
-    }
-
-    await _ensureKeySync();
-    final key = await _getKey();
-    if (key == null) return;
-
-    progressMessage = 'Downloading backup...';
-    syncState = SyncState.syncing;
-    lastError = null;
-
-    try {
-      final backupData = await _downloadBackupFromCloud(key);
-      if (backupData != null) {
-        progressMessage = 'Merging...';
-        await _mergeBackupData(backupData);
-        await _onSyncSuccess();
-        markRestored();
-      } else {
-        lastError = 'No backup found in cloud.';
-        syncState = SyncState.error;
-      }
-    } catch (e) {
-      lastError = 'Restore failed: $e';
-      syncState = SyncState.error;
-      debugPrint(lastError);
-    }
-  }
-
   Future<void> _onSyncSuccess({bool clearWarning = true}) async {
+    _ensureRunActive();
     // Guard: adapter was cleared mid-sync (user signed out or disconnected).
     // Do not persist the sync cursor or set success state for an aborted sync.
     if (_adapter == null) {
       _syncState = SyncState.idle;
       _progressMessage = null;
-      _syncProgress = 0.0;
-      _syncTotalDeltas = 0;
-      _syncCurrentDelta = 0;
-      _syncHasBackup = false;
-      _syncIsUploading = false;
-      _syncIsOptimizing = false;
-      _syncOptimizingTotal = 0;
-      _syncOptimizingRemaining = 0;
-      _syncCompletedWeight = 0.0;
-      _syncTotalWeight = 0.0;
+      _resetSyncProgress();
       notifyListeners();
       return;
     }
@@ -1617,6 +1761,7 @@ class BackupProvider extends ChangeNotifier {
       _consecutiveSyncFailures = 0;
       _startPeriodicSync();
     }
+    await _reloadAfterMerges();
     if (_pendingStreakRecalc) {
       _pendingStreakRecalc = false;
       await _habitProvider?.assignStreaks();
@@ -1625,16 +1770,7 @@ class BackupProvider extends ChangeNotifier {
     }
     syncState = SyncState.success;
     progressMessage = null;
-    _syncProgress = 0.0;
-    _syncTotalDeltas = 0;
-    _syncCurrentDelta = 0;
-    _syncHasBackup = false;
-    _syncIsUploading = false;
-    _syncIsOptimizing = false;
-    _syncOptimizingTotal = 0;
-    _syncOptimizingRemaining = 0;
-    _syncCompletedWeight = 0.0;
-    _syncTotalWeight = 0.0;
+    _resetSyncProgress();
     notifyListeners();
   }
 
@@ -1969,6 +2105,17 @@ class BackupProvider extends ChangeNotifier {
       return ta.compareTo(tb);
     });
     return _adapter!.downloadById(files.first.id);
+  }
+
+  /// [_checkDataExists] for startup: a stalled check counts as no data, so the
+  /// rest of startup (the periodic sync, which retries) still runs.
+  Future<bool> _checkDataExistsAtStartup() async {
+    try {
+      return await _checkDataExists();
+    } on CloudStallException catch (e) {
+      debugPrint('[SYNC] startup data check stalled: $e');
+      return false;
+    }
   }
 
   Future<bool> _checkDataExists() async {
@@ -2395,16 +2542,23 @@ class BackupProvider extends ChangeNotifier {
       _syncProgress = 0.0;
       notifyListeners();
     }
+    var deleted = 0;
     for (final f in files) {
       await _adapter!.delete(f.id);
       debugPrint('Cleared delta after full sync: ${f.id}');
-      _syncOptimizingRemaining--;
+      deleted++;
+      // from this call's own count, so it can't run below zero
+      _syncOptimizingRemaining = (files.length - deleted).clamp(
+        0,
+        files.length,
+      );
       _advanceProgress(1);
     }
     if (files.isNotEmpty) {
       _syncIsOptimizing = false;
       notifyListeners();
     }
+    _ensureRunActive();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_kAppliedDeltaIdsKey);
     await prefs.remove(_kLastKnownDeltaIdsKey);
@@ -2425,6 +2579,7 @@ class BackupProvider extends ChangeNotifier {
   // --- Merge -------------------------------------------------------------
 
   Future<void> _mergeBackupData(BackupData backupData) async {
+    _ensureRunActive();
     final habitsBox = Hive.box<Habit>('habits');
     final daysBox = Hive.box<Day>('days');
 
@@ -2451,6 +2606,7 @@ class BackupProvider extends ChangeNotifier {
     }
 
     // ── Habits (master records) ──────────────────────────────────────────────
+    final addedHabitIds = <int>{};
     for (final incoming in backupData.habits) {
       Habit? existing;
       for (final h in habitsBox.values) {
@@ -2486,6 +2642,7 @@ class BackupProvider extends ChangeNotifier {
           );
         }
       } else {
+        addedHabitIds.add(incoming.id);
         await habitsBox.add(incoming);
       }
     }
@@ -2497,6 +2654,7 @@ class BackupProvider extends ChangeNotifier {
     // devices disagree on.
     var unchangedDays = 0;
     for (final day in backupData.days) {
+      _lastSyncActivity = DateTime.now();
       final dayKey =
           DateTime(
             day.date.year,
@@ -2543,16 +2701,42 @@ class BackupProvider extends ChangeNotifier {
     // Day-state is authoritative in the dated snapshots above; rebuild the live
     // habits' TODAY state from today's snapshot before init()/refreshTodaysHabits
     // reads the live records, so the home screen reflects the date-correct merge
-    // rather than the stale dateless master-record flag.
-    await BackupService.rehydrateTodayFromSnapshot();
+    // rather than the stale dateless master-record flag. A habit changed on
+    // this device while the merge ran keeps its newer state (see there).
+    await BackupService.rehydrateTodayFromSnapshot(
+      keepNewerLocal: true,
+      adoptAlways: addedHabitIds,
+    );
 
-    _habitProvider?.importDateJoined(backupData.dateJoined);
-    await _habitProvider?.init();
+    // A light reload per merge (habit list, today's list, redraw) and the full
+    // HabitProvider.init once the flow's merges are done (_reloadAfterMerges):
+    // a sync can apply 20 delta files, and init per file reran its walk over
+    // every day since joining and its startup repairs each time. Reminders
+    // still follow each merge right away, so a reminder a delta cancelled is
+    // cancelled even if the app is killed before the sync ends.
+    await _habitProvider?.importDateJoined(backupData.dateJoined);
+    _habitProvider?.reloadAfterMerge();
+    _pendingHabitReload = true;
     if (reminderStateBefore != null) {
       await _habitProvider?.resyncRemindersAfterMerge(reminderStateBefore);
     }
     _pendingStreakRecalc = true;
     notifyListeners();
+  }
+
+  /// Runs the HabitProvider.init the merges since the last one put off (see
+  /// _mergeBackupData). Called when a merging flow ends, whether it succeeded
+  /// or not; a no-op when nothing merged.
+  Future<void> _reloadAfterMerges() async {
+    if (!_pendingHabitReload) return;
+    _pendingHabitReload = false;
+    // never throws: it runs in finally blocks that still have to release the
+    // sync lock
+    try {
+      await _habitProvider?.init();
+    } catch (e, st) {
+      debugPrint('[SYNC] reload after merges failed: $e\n$st');
+    }
   }
 
   // --- Version history ---------------------------------------------------
@@ -2584,36 +2768,6 @@ class BackupProvider extends ChangeNotifier {
     }
   }
 
-  /// Restore from a specific Drive backup file by its file ID.
-  Future<void> restoreFromBackupFile(String fileId) async {
-    if (_syncState == SyncState.syncing) return;
-
-    await _ensureKeySync();
-    final key = await _getKey();
-    if (key == null) return;
-
-    progressMessage = 'Downloading backup...';
-    syncState = SyncState.syncing;
-    lastError = null;
-
-    try {
-      final backupData = await _downloadBackupById(fileId, key);
-      if (backupData != null) {
-        progressMessage = 'Merging...';
-        await _mergeBackupData(backupData);
-        await _onSyncSuccess();
-        markRestored();
-      } else {
-        lastError = 'Failed to decrypt backup.';
-        syncState = SyncState.error;
-      }
-    } catch (e) {
-      lastError = 'Restore failed: $e';
-      syncState = SyncState.error;
-      debugPrint(lastError);
-    }
-  }
-
   /// Wipes the local DB and restores entirely from a specific Drive backup
   /// file. When [includeDeltasSince] is true, all Drive delta files are applied
   /// on top of the restored backup before completing.
@@ -2629,7 +2783,7 @@ class BackupProvider extends ChangeNotifier {
     String fileId, {
     bool includeDeltasSince = false,
   }) async {
-    if (_syncState == SyncState.syncing) return;
+    if (_isSyncBusy) return;
     syncState = SyncState.syncing;
     lastError = null;
 
@@ -2683,6 +2837,7 @@ class BackupProvider extends ChangeNotifier {
       await _onSyncSuccess();
       markRestored();
     } catch (e) {
+      await _reloadAfterMerges();
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
       debugPrint(lastError);
@@ -2738,6 +2893,7 @@ class BackupProvider extends ChangeNotifier {
       markRestored();
       return true;
     } catch (e) {
+      await _reloadAfterMerges();
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
       progressMessage = null;
@@ -2807,15 +2963,6 @@ class BackupProvider extends ChangeNotifier {
     } catch (_) {
       return false;
     }
-  }
-
-  Future<BackupData?> _downloadBackupById(String fileId, SecretKey key) async {
-    final bytes = await _fetchRawFileBytes(fileId);
-    if (bytes == null) return null;
-    return BackupService.importDataFromGoogleDrive(
-      encryptedBytes: bytes,
-      secretKey: key,
-    );
   }
 
   // --- Delete ------------------------------------------------------------
