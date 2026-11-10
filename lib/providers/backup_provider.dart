@@ -243,6 +243,10 @@ class BackupProvider extends ChangeNotifier {
   // tell a slow sync from a stuck one.
   DateTime _lastSyncActivity = DateTime.now();
 
+  // A merge ran since HabitProvider.init last did; set by _mergeBackupData,
+  // which only does a light reload per merge (see _reloadAfterMerges).
+  bool _pendingHabitReload = false;
+
   // An upload-only sync was asked for while another sync ran; scheduled again
   // once that one ends so the change isn't held until the next periodic sync.
   bool _uploadRequestedDuringSync = false;
@@ -1148,6 +1152,7 @@ class BackupProvider extends ChangeNotifier {
       _syncCycleStartedAt = null;
       await _persistLastSyncTime();
 
+      await _reloadAfterMerges();
       if (_pendingStreakRecalc) {
         _pendingStreakRecalc = false;
         await _habitProvider?.assignStreaks();
@@ -1158,6 +1163,7 @@ class BackupProvider extends ChangeNotifier {
       syncState = SyncState.success;
       return true;
     } catch (e) {
+      await _reloadAfterMerges();
       lastError = 'Migration failed: $e';
       syncState = SyncState.error;
       debugPrint(lastError);
@@ -1240,6 +1246,7 @@ class BackupProvider extends ChangeNotifier {
         notifyListeners();
       }
     } finally {
+      await _reloadAfterMerges();
       if (identical(_activeRun, run)) _endRun();
     }
   }
@@ -1425,6 +1432,8 @@ class BackupProvider extends ChangeNotifier {
       );
       await Future.any([work, run.gaveUp]);
     } finally {
+      // a failed sync may have merged some deltas before it failed
+      await _reloadAfterMerges();
       // an abandoned run already gave the lock up
       if (identical(_activeRun, run)) _endRun();
     }
@@ -1720,6 +1729,7 @@ class BackupProvider extends ChangeNotifier {
       _consecutiveSyncFailures = 0;
       _startPeriodicSync();
     }
+    await _reloadAfterMerges();
     if (_pendingStreakRecalc) {
       _pendingStreakRecalc = false;
       await _habitProvider?.assignStreaks();
@@ -2666,13 +2676,35 @@ class BackupProvider extends ChangeNotifier {
       adoptAlways: addedHabitIds,
     );
 
-    _habitProvider?.importDateJoined(backupData.dateJoined);
-    await _habitProvider?.init();
+    // A light reload per merge (habit list, today's list, redraw) and the full
+    // HabitProvider.init once the flow's merges are done (_reloadAfterMerges):
+    // a sync can apply 20 delta files, and init per file reran its walk over
+    // every day since joining and its startup repairs each time. Reminders
+    // still follow each merge right away, so a reminder a delta cancelled is
+    // cancelled even if the app is killed before the sync ends.
+    await _habitProvider?.importDateJoined(backupData.dateJoined);
+    _habitProvider?.reloadAfterMerge();
+    _pendingHabitReload = true;
     if (reminderStateBefore != null) {
       await _habitProvider?.resyncRemindersAfterMerge(reminderStateBefore);
     }
     _pendingStreakRecalc = true;
     notifyListeners();
+  }
+
+  /// Runs the HabitProvider.init the merges since the last one put off (see
+  /// _mergeBackupData). Called when a merging flow ends, whether it succeeded
+  /// or not; a no-op when nothing merged.
+  Future<void> _reloadAfterMerges() async {
+    if (!_pendingHabitReload) return;
+    _pendingHabitReload = false;
+    // never throws: it runs in finally blocks that still have to release the
+    // sync lock
+    try {
+      await _habitProvider?.init();
+    } catch (e, st) {
+      debugPrint('[SYNC] reload after merges failed: $e\n$st');
+    }
   }
 
   // --- Version history ---------------------------------------------------
@@ -2772,6 +2804,7 @@ class BackupProvider extends ChangeNotifier {
 
       await _onSyncSuccess();
     } catch (e) {
+      await _reloadAfterMerges();
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
       debugPrint(lastError);
@@ -2826,6 +2859,7 @@ class BackupProvider extends ChangeNotifier {
       await _onSyncSuccess();
       return true;
     } catch (e) {
+      await _reloadAfterMerges();
       lastError = 'Restore failed: $e';
       syncState = SyncState.error;
       progressMessage = null;

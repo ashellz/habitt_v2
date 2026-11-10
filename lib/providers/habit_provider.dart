@@ -183,6 +183,21 @@ class HabitProvider extends ChangeNotifier {
     if (!_firstLoad.isCompleted) _firstLoad.complete();
   }
 
+  /// What a sync needs after each merge it applies, instead of a full [init]
+  /// per delta file (that walks every day since joining and reruns the
+  /// startup repairs): the habit list (so habits the merge added are in it,
+  /// for the reminder resync) and today's list, and a redraw. Not deferring
+  /// the redraw too: a screen left stale for the whole sync invites a tap on a
+  /// habit the merge already completed, which would toggle it back off. The
+  /// sync runs [init] once when its merges are done.
+  void reloadAfterMerge() {
+    habits = habitBox.values.toList();
+    _sortHabitsByCategoryAndOrder(habits);
+    refreshTodaysHabits(notify: false);
+    dataVersion++;
+    notifyListeners();
+  }
+
   static const String _daySnapshotSanitizedKey = 'daySnapshotsSanitized_v1';
   static const String _daySnapshotsSlimmedKey = 'daySnapshotsSlimmed_v1';
 
