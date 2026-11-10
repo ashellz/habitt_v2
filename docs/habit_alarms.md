@@ -66,6 +66,29 @@ notification in the `notificationJson` extra. So:
   Back is blocked.
 - On close it calls `AlarmScreenService.setShowOverLockScreen(false)`
   (method channel `habitt/alarm_screen`), so the keyguard covers the app again.
+- **Look (Pixel Clock match).** Always dark. Colours come from
+  `AlarmPalette.fromAccent` (`lib/widgets/habit_alarm/alarm_palette.dart`):
+  HCT tones of the theme's dark accent hue, with the chroma/tone measured off
+  the Pixel ringing screen: background chroma 8 / tone 9, text tone 91,
+  secondary (Dismiss) pill chroma 17 / tone 25 with tone 80 text, primary
+  (Complete) pill = the accent with a tone 20 accent label.
+  Font: **Google Sans Flex** (OFL, `assets/fonts/google-sans-flex/`, family
+  `GoogleSansFlex`; instanced to slnt 0 and wght 300–600 to halve its size).
+  The clock is 116dp, `ROND 100` (rounded terminals), `wdth 78`, `wght 470`,
+  `opsz 72`, letter spacing −4dp; these were fitted by overlaying renders on a
+  Pixel screenshot (393dp wide) pixel by pixel. The font's contextual
+  alternates (`calt`, on by default) swap in `colon.time`, the raised colon
+  Pixel shows. Title 29.6dp wght 400 with a soft shadow, buttons 22.5dp wght
+  500. Layout is proportional to the screen height (digits centred at 43.7%,
+  title box 123dp below that, 91dp pills 22.5dp from the sides with a 3dp gap,
+  bottom at 13.3% of the height); see the constants in `HabitAlarmPage`.
+- **Nothing shows over it.** `AlarmScreenService.isOnScreen` (set by the page
+  in `initState`/`dispose`, counted so stacked alarms work) is checked by:
+  `showDialogSheet`, which waits until the alarm closes before opening (covers
+  the insight sheet, streak celebration, what's new and every other automatic
+  sheet; the user can't open one themselves while the alarm is up); the review
+  prompt in `runStreakMoment`; and the sync progress pill, which is kept
+  `Offstage` (state and timers kept) while the alarm is on screen.
 
 Android itself decides between full screen and heads-up: the page opens by
 itself only when the screen is off or locked. While the phone is in use the
