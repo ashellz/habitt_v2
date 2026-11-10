@@ -173,6 +173,13 @@ Future<void> checkForNewDay(
   }
   late final Future<void> check;
   check = () async {
+    // Today starts empty right away (live habits only, see
+    // HabitProvider.startNewDay); what writes day records waits for a
+    // running sync below. A sync that was stuck used to keep yesterday's
+    // completions on today until it ended.
+    if (_isForwardNewDay(lastOpenedDate)) {
+      await habitProvider.startNewDay(lastOpenedDate);
+    }
     if (NewDayGate._sync != null) {
       debugPrint("[NEWDAY] waiting for the running sync");
       await NewDayGate.waitForRunningSync();
@@ -189,6 +196,17 @@ Future<void> checkForNewDay(
   });
   NewDayGate._check = check;
   return check;
+}
+
+bool _isForwardNewDay(DateTime lastOpenedDate) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final lastOpened = DateTime(
+    lastOpenedDate.year,
+    lastOpenedDate.month,
+    lastOpenedDate.day,
+  );
+  return today.isAfter(lastOpened);
 }
 
 Future<void> _checkForNewDay(
@@ -234,8 +252,9 @@ Future<void> _checkForNewDay(
       return;
     }
 
-    debugPrint("New day, resetting completion");
-    await habitProvider.saveHabitDay(lastOpenedDate, isAutoCreated: true);
+    // The live habits were already cleared (checkForNewDay runs
+    // startNewDay first) and the last opened day's record kept as recorded.
+    debugPrint("New day, saving today");
 
     // Days the app wasn't opened on. One that already has a snapshot (synced in
     // from another device, or recorded already) is left alone: rewriting it
@@ -253,7 +272,7 @@ Future<void> _checkForNewDay(
       gapDay = addCalendarDays(gapDay, 1);
     }
 
-    await habitProvider.resetCompletion();
+    habitProvider.saveNewDayToday();
     await habitProvider.resetScheduleCountersIfNeeded(
       resetWeekly: crossedWeekBoundary,
       resetMonthly: crossedMonthBoundary,

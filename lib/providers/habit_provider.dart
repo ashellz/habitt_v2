@@ -2037,6 +2037,126 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// The new-day check's instant part (see checkForNewDay): today starts empty
+  /// right away, without waiting for a running sync.
+  ///
+  /// [lastOpenedDay]'s record is never rebuilt from the live habits: every
+  /// progress change already wrote it as it happened (updateHabitInDB), and
+  /// rebuilding it overwrote what a merge or a queued notification completion
+  /// had put in, or, after a reset cut short by the app being killed, wiped it
+  /// from half-reset habits. Only habits missing from it are added (one
+  /// created that day and never touched still counts as a miss), from the live
+  /// habits, before they're cleared.
+  ///
+  /// The live habits are then cleared without stamping (a reset never wins a
+  /// merge), except a habit whose entry in today's record was changed today
+  /// (merged in from another device before this ran): that's taken as is.
+  ///
+  /// Reading and writing records here never awaits in between, so a merge
+  /// can't land between a read and its write. Today's record is written by
+  /// [saveNewDayToday], after any running sync.
+  Future<void> startNewDay(DateTime lastOpenedDay) async {
+    habitStatsProvider?.clearAll();
+    final today = _normalizeDate(DateTime.now());
+    _addMissingHabitsToDay(_normalizeDate(lastOpenedDay));
+
+    final todayEntry = daysBox.get(_dayKeyOf(today));
+    final changedToday = {
+      for (final h in todayEntry?.habits ?? const <Habit>[])
+        if (h.dayStateChangedOn(today)) h.id: h,
+    };
+    for (final habit in habits) {
+      final entry = changedToday[habit.id];
+      if (entry != null) {
+        habit.adoptDayState(entry);
+      } else {
+        habit.clearDayProgress();
+      }
+      // what updateHabitInDB did for each habit when the reset went through it
+      _syncCustomRestartForDay(habit, today, completedOnDay: habit.completed);
+    }
+    refreshTodaysHabits(notify: false);
+    dataVersion++;
+    notifyListeners();
+    debugPrint(
+      '[NEWDAY] today cleared (${habits.length} habits, '
+      '${changedToday.length} already changed today)',
+    );
+
+    for (final habit in habits) {
+      if (habit.isInBox) await habit.save();
+    }
+    unawaited(_syncAllHabitNotifications(force: true));
+  }
+
+  /// Adds the live habits missing from [day]'s record, filtered like a
+  /// recorded day. No record at all: the day is saved from the live habits
+  /// (they still hold it). Synchronous, see [startNewDay].
+  void _addMissingHabitsToDay(DateTime day) {
+    final key = _dayKeyOf(day);
+    final existing = daysBox.get(key);
+    if (existing == null) {
+      unawaited(saveHabitDay(day, isAutoCreated: true));
+      return;
+    }
+    final recorded = {for (final h in existing.habits) h.id};
+    final missing = _scheduledHabitsForDaySnapshot(day, [
+      for (final h in habits)
+        if (!recorded.contains(h.id) && h.isDeleted != true) h.forDay(),
+    ]);
+    if (missing.isEmpty) return;
+    debugPrint('[NEWDAY] $key: adding ${missing.length} missing habits');
+    daysBox.put(
+      key,
+      Day(
+        date: existing.date,
+        habits: [for (final h in existing.habits) h.forDay(), ...missing],
+        timestamp: DateTime.now().toUtc(),
+        isAutoCreated: existing.isAutoCreated,
+      ),
+    );
+  }
+
+  /// The new-day check's part that waits for a running sync: today's record
+  /// from the live habits [startNewDay] cleared. An entry changed today is
+  /// kept as it is (merged in from another device, or a tap / health sync
+  /// since the reset, which also wrote the live habit), so neither a merge
+  /// landing before nor one landing after the reset is overwritten. Entries of
+  /// habits no longer live stay. Synchronous: one read, one write.
+  void saveNewDayToday() {
+    final today = _normalizeDate(DateTime.now());
+    final key = _dayKeyOf(today);
+    final existing = daysBox.get(key);
+    final liveById = {for (final h in habits) h.id: h};
+    final entries = <Habit>[];
+    final seen = <int>{};
+    for (final entry in existing?.habits ?? const <Habit>[]) {
+      seen.add(entry.id);
+      final live = liveById[entry.id];
+      entries.add(
+        live == null || entry.dayStateChangedOn(today)
+            ? entry.forDay()
+            : live.forDay(),
+      );
+    }
+    // today's record holds every live habit, as the reset through
+    // updateHabitInDB left it
+    for (final habit in habits) {
+      if (!seen.contains(habit.id)) entries.add(habit.forDay());
+    }
+    daysBox.put(
+      key,
+      Day(
+        date: today,
+        habits: entries,
+        timestamp: DateTime.now().toUtc(),
+        isAutoCreated: existing?.isAutoCreated ?? false,
+      ),
+    );
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+  }
+
   /// Restores today's day-state from today's stored snapshot, if one exists.
   ///
   /// Used when the device clock moves backwards (e.g. the user set the date a
