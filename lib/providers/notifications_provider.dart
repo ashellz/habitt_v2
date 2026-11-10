@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:habitt/services/alarm_ring_service.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/notification_sounds.dart';
 
@@ -20,6 +21,15 @@ class NotificationsProvider extends ChangeNotifier {
   static const String _periodsKey = 'notifications_periods_enabled';
   static const String _habitsKey = 'notifications_habits_enabled';
   static const String _globalSoundKeyPref = 'notifications_global_sound_key';
+  static const String _alarmRingDuringDndKey =
+      'notifications_alarm_ring_during_dnd';
+  static const String _alarmDndAskedKey = 'notifications_alarm_dnd_asked';
+
+  // Android only: whether habit alarms ring during Do Not Disturb (silent mode
+  // always rings). See docs/habit_alarms.md.
+  bool _alarmRingDuringDnd = false;
+  // whether the user was asked about it (first time turning on an alarm)
+  bool _alarmDndAsked = false;
 
   // App-wide default notification sound. Applies to any notification (period or
   // habit) that does not specify its own sound. Habits with a non-null soundKey
@@ -125,6 +135,10 @@ class NotificationsProvider extends ChangeNotifier {
     _globalSoundKey = NotificationSounds.resolveOrDefault(
       _prefs?.getString(_globalSoundKeyPref),
     );
+    _alarmRingDuringDnd = _prefs?.getBool(_alarmRingDuringDndKey) ?? false;
+    _alarmDndAsked = _prefs?.getBool(_alarmDndAskedKey) ?? false;
+    // the native alarm reads its own copy when it fires
+    unawaited(AlarmRingService.setRingDuringDnd(_alarmRingDuringDnd));
 
     for (final period in NotificationPeriod.values) {
       final key = 'notification_${period.name}';
@@ -327,6 +341,25 @@ class NotificationsProvider extends ChangeNotifier {
         horizonDays: horizonDays,
       );
     }
+  }
+
+  // --- Alarm Do Not Disturb API (Android) ---
+
+  bool get alarmRingDuringDnd => _alarmRingDuringDnd;
+
+  bool get alarmDndAsked => _alarmDndAsked;
+
+  Future<void> setAlarmRingDuringDnd(bool ring) async {
+    _alarmRingDuringDnd = ring;
+    await _prefs?.setBool(_alarmRingDuringDndKey, ring);
+    await AlarmRingService.setRingDuringDnd(ring);
+    notifyListeners();
+  }
+
+  Future<void> markAlarmDndAsked() async {
+    if (_alarmDndAsked) return;
+    _alarmDndAsked = true;
+    await _prefs?.setBool(_alarmDndAskedKey, true);
   }
 
   // --- Global toggles API ---

@@ -1348,5 +1348,14 @@
   "replaceCloudBackupTitle": "Sostituire il backup esistente?",
   "replaceCloudBackupDesc": "Il backup esistente su {cloud} verrà eliminato definitivamente e sostituito con i dati di questo dispositivo. Questa azione non può essere annullata.",
   "replaceCloudBackup": "Sostituisci backup",
-  "overwriteLocalDataDescWithDate": "Vuoi davvero sovrascrivere i tuoi dati locali con il backup più recente ({date})? Questa azione non può essere annullata."
+  "overwriteLocalDataDescWithDate": "Vuoi davvero sovrascrivere i tuoi dati locali con il backup più recente ({date})? Questa azione non può essere annullata.",
+  "alarmRingingChannelName": "Sveglie in corso",
+  "alarmSilenceAction": "Silenzia",
+  "alarmSettingsTitle": "Sveglie",
+  "alarmDndTitle": "Non disturbare",
+  "alarmDndOff": "Off",
+  "alarmDndAlarms": "Sveglie",
+  "alarmDndDesc": "Le sveglie suonano sempre quando il telefono è in silenzioso. Scegli se devono suonare anche con Non disturbare attivo. I promemoria normali restano comunque silenziosi.",
+  "alarmDndDialogTitle": "Suonare con Non disturbare?",
+  "alarmDndDialogTip": "Puoi cambiarlo quando vuoi nelle impostazioni delle notifiche."
 }

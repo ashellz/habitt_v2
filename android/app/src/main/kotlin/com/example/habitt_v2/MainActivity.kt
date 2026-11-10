@@ -43,6 +43,48 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "habitt/alarm_ring")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "canRing" -> result.success(HabitAlarmScheduler.canRing(this))
+                    "schedule" -> result.success(
+                        HabitAlarmScheduler.schedule(
+                            this,
+                            call.argument<Int>("id") ?: 0,
+                            call.argument<Number>("epochMs")?.toLong() ?: 0L,
+                            call.argument<String>("title") ?: "",
+                        )
+                    )
+                    "cancel" -> {
+                        HabitAlarmScheduler.cancel(this, call.argument<Int>("id") ?: 0)
+                        result.success(null)
+                    }
+                    "cancelAll" -> {
+                        HabitAlarmScheduler.cancelAll(this)
+                        result.success(null)
+                    }
+                    "setRingDuringDnd" -> {
+                        HabitAlarmScheduler.setRingDuringDnd(
+                            this,
+                            call.argument<Boolean>("ring") == true,
+                        )
+                        result.success(null)
+                    }
+                    "configure" -> {
+                        HabitAlarmScheduler.setLabels(
+                            this,
+                            call.argument<String>("channelName") ?: "",
+                            call.argument<String>("silenceLabel") ?: "",
+                        )
+                        result.success(null)
+                    }
+                    "stopRinging" -> {
+                        HabitAlarmRingService.stop(this)
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
     }
 
     // awesome_notifications opens the app with this action for both a tap and
@@ -50,7 +92,7 @@ class MainActivity : FlutterFragmentActivity() {
     private fun isAlarmLaunch(intent: Intent?): Boolean {
         if (intent?.action != "SELECT_NOTIFICATION") return false
         val json = intent.getStringExtra("notificationJson") ?: return false
-        return json.contains("\"$ALARM_CHANNEL_KEY\"")
+        return ALARM_CHANNEL_KEYS.any { json.contains("\"$it\"") }
     }
 
     private fun setShowOverLockScreen(show: Boolean) {
@@ -88,7 +130,8 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     companion object {
-        // Keep in sync with NotificationService.alarmChannelKey.
-        private const val ALARM_CHANNEL_KEY = "habit_alarm_channel"
+        // Keep in sync with NotificationService.alarmChannelKey and
+        // NotificationService.alarmSilentChannelKey.
+        private val ALARM_CHANNEL_KEYS = listOf("habit_alarm_channel", "habit_alarm_silent_channel")
     }
 }

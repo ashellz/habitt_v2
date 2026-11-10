@@ -3772,4 +3772,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return 'Are you sure you want to overwrite your local data with the most recent backup ($date)? This action cannot be undone.';
   }
+
+  @override
+  String get alarmRingingChannelName => 'Ringing alarms';
+
+  @override
+  String get alarmSilenceAction => 'Silence';
+
+  @override
+  String get alarmSettingsTitle => 'Alarms';
+
+  @override
+  String get alarmDndTitle => 'Do Not Disturb';
+
+  @override
+  String get alarmDndOff => 'Off';
+
+  @override
+  String get alarmDndAlarms => 'Alarms';
+
+  @override
+  String get alarmDndDesc =>
+      'Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.';
+
+  @override
+  String get alarmDndDialogTitle => 'Ring during Do Not Disturb?';
+
+  @override
+  String get alarmDndDialogTip =>
+      'You can change this anytime in Notification settings.';
 }

@@ -3806,4 +3806,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return 'Möchtest du deine lokalen Daten wirklich mit dem neuesten Backup ($date) überschreiben? Diese Aktion kann nicht rückgängig gemacht werden.';
   }
+
+  @override
+  String get alarmRingingChannelName => 'Klingelnde Alarme';
+
+  @override
+  String get alarmSilenceAction => 'Stumm';
+
+  @override
+  String get alarmSettingsTitle => 'Alarme';
+
+  @override
+  String get alarmDndTitle => 'Bitte nicht stören';
+
+  @override
+  String get alarmDndOff => 'Aus';
+
+  @override
+  String get alarmDndAlarms => 'Alarme';
+
+  @override
+  String get alarmDndDesc =>
+      'Alarme klingeln immer, wenn dein Handy stummgeschaltet ist. Wähle, ob sie auch bei „Bitte nicht stören“ klingeln. Normale Erinnerungen bleiben dabei immer still.';
+
+  @override
+  String get alarmDndDialogTitle => 'Bei „Bitte nicht stören“ klingeln?';
+
+  @override
+  String get alarmDndDialogTip =>
+      'Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern.';
 }

@@ -1385,5 +1385,14 @@
   "@replaceCloudBackupDesc": {"placeholders": {"cloud": {"type": "String"}}},
   "replaceCloudBackup": "Replace backup",
   "overwriteLocalDataDescWithDate": "Are you sure you want to overwrite your local data with the most recent backup ({date})? This action cannot be undone.",
-  "@overwriteLocalDataDescWithDate": {"placeholders": {"date": {"type": "String"}}}
+  "@overwriteLocalDataDescWithDate": {"placeholders": {"date": {"type": "String"}}},
+  "alarmRingingChannelName": "Ringing alarms",
+  "alarmSilenceAction": "Silence",
+  "alarmSettingsTitle": "Alarms",
+  "alarmDndTitle": "Do Not Disturb",
+  "alarmDndOff": "Off",
+  "alarmDndAlarms": "Alarms",
+  "alarmDndDesc": "Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.",
+  "alarmDndDialogTitle": "Ring during Do Not Disturb?",
+  "alarmDndDialogTip": "You can change this anytime in Notification settings."
 }

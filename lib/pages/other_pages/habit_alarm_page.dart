@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/alarm_ring_service.dart';
 import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/notification_action_handler.dart';
 import 'package:habitt/widgets/habit_alarm/alarm_clock.dart';
@@ -79,8 +80,10 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
   Future<void> _close({required bool complete}) async {
     if (_closing) return;
     _closing = true;
-    // stops the ringing
+    // stops the ringing (Android's native sound also stops by itself once the
+    // notification is gone, this just makes it immediate)
     await AwesomeNotifications().dismiss(widget.alarm.notificationId);
+    await AlarmRingService.stopRinging();
     if (complete)
       await NotificationActionHandler.completeFromAlarm(widget.alarm);
     await AlarmScreenService.setShowOverLockScreen(false);

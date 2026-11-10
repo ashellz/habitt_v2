@@ -1339,5 +1339,14 @@
   "replaceCloudBackupTitle": "Zamijeniti postojeći backup?",
   "replaceCloudBackupDesc": "Postojeći backup na usluzi {cloud} bit će trajno izbrisan i zamijenjen podacima s ovog uređaja. Ova radnja se ne može poništiti.",
   "replaceCloudBackup": "Zamijeni backup",
-  "overwriteLocalDataDescWithDate": "Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ({date})? Ova radnja se ne može poništiti."
+  "overwriteLocalDataDescWithDate": "Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ({date})? Ova radnja se ne može poništiti.",
+  "alarmRingingChannelName": "Alarmi koji zvone",
+  "alarmSilenceAction": "Utišaj",
+  "alarmSettingsTitle": "Alarmi",
+  "alarmDndTitle": "Ne uznemiravaj",
+  "alarmDndOff": "Isključeno",
+  "alarmDndAlarms": "Alarmi",
+  "alarmDndDesc": "Alarmi uvijek zvone kad je telefon na nečujnom. Odaberi da li zvone i dok je uključeno Ne uznemiravaj. Obični podsjetnici ostaju tihi u svakom slučaju.",
+  "alarmDndDialogTitle": "Zvoniti tokom Ne uznemiravaj?",
+  "alarmDndDialogTip": "Ovo uvijek možeš promijeniti u postavkama obavijesti."
 }
