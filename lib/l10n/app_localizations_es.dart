@@ -3796,4 +3796,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return '¿Seguro que quieres sobrescribir tus datos locales con la copia de seguridad más reciente ($date)? Esta acción no se puede deshacer.';
   }
+
+  @override
+  String get alarmRingingChannelName => 'Alarmas sonando';
+
+  @override
+  String get alarmSilenceAction => 'Silenciar';
+
+  @override
+  String get alarmSettingsTitle => 'Alarmas';
+
+  @override
+  String get alarmDndTitle => 'No molestar';
+
+  @override
+  String get alarmDndOff => 'Desactivado';
+
+  @override
+  String get alarmDndAlarms => 'Alarmas';
+
+  @override
+  String get alarmDndDesc =>
+      'Las alarmas siempre suenan cuando tu teléfono está en silencio. Elige si también suenan con No molestar activado. Los recordatorios normales siguen en silencio en cualquier caso.';
+
+  @override
+  String get alarmDndDialogTitle => '¿Sonar con No molestar?';
+
+  @override
+  String get alarmDndDialogTip =>
+      'Puedes cambiarlo cuando quieras en los ajustes de notificaciones.';
 }

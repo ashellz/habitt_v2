@@ -23,6 +23,69 @@ When `habit.isAlarm`:
   `locked: true`;
 - action buttons: **Dismiss** (`DismissAction`) plus the usual **Complete**.
 
+## Ringing in silent mode (Android)
+
+A notification channel's sound plays as a *notification*, which silent and
+vibrate mode mute, even with `DefaultRingtoneType.Alarm`. So on Android the
+sound is played natively on the **alarm audio stream** (`USAGE_ALARM`), which
+the ringer mode doesn't touch:
+
+- `_scheduleHabitNotifications` asks `AlarmRingService.canRing()` (Android with
+  the exact alarm permission). When true, the awesome notification goes on
+  `habit_alarm_silent_channel` (no sound, no vibration, registered in
+  `main.dart`) with `preciseAlarm: true`, and `AlarmRingService.schedule` sets
+  a native alarm with the same id and time. Otherwise it falls back to the
+  sounding `habit_alarm_channel` as before. `NotificationService.isAlarmChannel`
+  accepts both keys (action handler, `MainActivity`).
+- Native side (`android/app/src/main/kotlin/.../`, method channel
+  `habitt/alarm_ring`):
+  - `HabitAlarmScheduler`: `AlarmManager.setAlarmClock` (exact, survives Doze;
+    Android shows the alarm icon / "next alarm" for it). Scheduled alarms are
+    stored in the `habit_alarm_ring` prefs so `cancelAll` and restoring work.
+  - `HabitAlarmReceiver`: on fire, starts the ring service (allowed from the
+    background because an exact alarm started it). On `BOOT_COMPLETED`,
+    `MY_PACKAGE_REPLACED` and the exact-alarm permission being granted it
+    re-schedules the stored alarms.
+  - `HabitAlarmRingService`: foreground service (type `mediaPlayback`) that
+    loops the default alarm ringtone with `MediaPlayer` on `USAGE_ALARM`,
+    takes transient audio focus and vibrates with alarm usage. It watches the
+    app's active notifications every second and stops once the alarm's
+    notification is gone (Dismiss, Complete, the alarm page, a cancelled
+    reminder), when it never shows up within 60 s, or after 10 minutes. Its
+    own foreground notification is low-importance with a **Silence** button
+    (labels `alarmRingingChannelName` / `alarmSilenceAction`, pushed from Dart
+    via `configure` since the service runs without Flutter).
+- `HabitAlarmPage._close` also calls `AlarmRingService.stopRinging()` so the
+  sound stops at once instead of on the next watch tick.
+- Cancelling reminders (`cancelHabitNotifications`, removed slots, per day,
+  `cancelAllHabitNotifications`) cancels the native alarm too.
+
+### Do Not Disturb
+
+Alarm-stream sound already gets through DND (alarms are allowed in DND by
+default), so no DND access is needed. Whether alarms *should* ring during DND
+is a user setting: `NotificationsProvider.alarmRingDuringDnd` (pref
+`notifications_alarm_ring_during_dnd`, default `false`), pushed to native with
+`AlarmRingService.setRingDuringDnd` on app start and on change (the native side
+keeps its own copy because it reads it when the alarm fires, without Flutter).
+When it's off and DND is on
+(`currentInterruptionFilter != ALL`) the receiver doesn't start the sound;
+the alarm notification still shows. Ringer silent / vibrate mode always rings.
+DND "Total silence", or alarms turned off in the user's DND settings, mute the
+alarm stream regardless.
+
+UI (Android only, `AlarmDndSetting` in `lib/widgets/notification/`): an
+**Off / Alarms** selector ("Alarms" makes clear regular reminders still stay
+quiet) with a short explanation. It shows in two places:
+
+- Notification settings, "Alarms" section under the sound section. Part of the
+  page's draft, saved with Save like the rest.
+- `maybeShowAlarmDndDialog` (`alarm_dnd_dialog.dart`): the first time the user
+  checks Alarm on any habit, before the alarm permission requests, a dialog
+  with the same selector and a tip that it can be changed in Notification
+  settings. Asked once (`notifications_alarm_dnd_asked`), however the dialog
+  is closed; closing it keeps whatever the selector shows.
+
 ## Replaced / removed reminder slots
 
 Each reminder is scheduled per slot × day (7 days ahead, non-repeating) with an
@@ -81,14 +144,18 @@ for each special permission it requests). Denial is not fatal; the reminder
 degrades to a high-priority notification.
 
 - **Android:** asks for FullScreenIntent and PreciseAlarms. Manifest declares
-  `USE_FULL_SCREEN_INTENT` and `SCHEDULE_EXACT_ALARM` (user-revocable).
+  `USE_FULL_SCREEN_INTENT` and `SCHEDULE_EXACT_ALARM` (user-revocable; without
+  it alarms fall back to the sounding channel, which silent mode mutes), plus
+  `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PLAYBACK` for the ring
+  service (needs the foreground service declaration in the Play Console).
   `USE_EXACT_ALARM` is deliberately not used: Google Play restricts it to
   alarm-clock/calendar apps.
   - CriticalAlert / OverrideDnD are **not** requested on Android:
     awesome_notifications maps them to the Do Not Disturb access page, which
     needs `ACCESS_NOTIFICATION_POLICY` and so could never be granted; every
     check of the Alarm box sent the user to Settings. Alarm-category
-    notifications already ring through DND (alarms are allowed by default).
+    notifications already ring through DND (alarms are allowed by default),
+    and so does the native alarm-stream sound (see above).
   - Android 14+ turns full-screen intents off for apps that aren't clock or
     phone apps, and awesome_notifications can't see that (it only checks the
     manifest permission, which always reads granted). `AlarmScreenService`
@@ -142,6 +209,9 @@ Written without a Flutter toolchain, Xcode or device (the Swift AlarmKit code is
 generated files were edited by hand (regenerate with
 `flutter pub run build_runner build --delete-conflicting-outputs` and
 `flutter gen-l10n`) and on-device ringing behaviour needs manual testing.
+
+The native Android ringing (silent mode, DND gating, reboot restore, the
+watch-based stop) compiles in a debug APK but hasn't been tested on a device.
 
 The Android full-screen alarm page, the `MainActivity` lock-screen flags and
 the full-screen-intent permission check compile (debug APK) but haven't been

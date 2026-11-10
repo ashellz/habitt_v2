@@ -1349,5 +1349,14 @@
   "replaceCloudBackupTitle": "Vorhandenes Backup ersetzen?",
   "replaceCloudBackupDesc": "Das vorhandene Backup in {cloud} wird dauerhaft gelöscht und durch die Daten auf diesem Gerät ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
   "replaceCloudBackup": "Backup ersetzen",
-  "overwriteLocalDataDescWithDate": "Möchtest du deine lokalen Daten wirklich mit dem neuesten Backup ({date}) überschreiben? Diese Aktion kann nicht rückgängig gemacht werden."
+  "overwriteLocalDataDescWithDate": "Möchtest du deine lokalen Daten wirklich mit dem neuesten Backup ({date}) überschreiben? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "alarmRingingChannelName": "Klingelnde Alarme",
+  "alarmSilenceAction": "Stumm",
+  "alarmSettingsTitle": "Alarme",
+  "alarmDndTitle": "Bitte nicht stören",
+  "alarmDndOff": "Aus",
+  "alarmDndAlarms": "Alarme",
+  "alarmDndDesc": "Alarme klingeln immer, wenn dein Handy stummgeschaltet ist. Wähle, ob sie auch bei „Bitte nicht stören“ klingeln. Normale Erinnerungen bleiben dabei immer still.",
+  "alarmDndDialogTitle": "Bei „Bitte nicht stören“ klingeln?",
+  "alarmDndDialogTip": "Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern."
 }

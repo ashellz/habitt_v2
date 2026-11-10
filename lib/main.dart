@@ -130,6 +130,19 @@ Future<void> main() async {
         playSound: true,
         enableVibration: true,
       ),
+      // Android alarms whose sound is played natively on the alarm stream
+      // (AlarmRingService), so the notification itself stays quiet.
+      NotificationChannel(
+        channelGroupKey: 'basic_channel_group',
+        channelKey: NotificationService.alarmSilentChannelKey,
+        channelName: 'Habit alarms',
+        channelDescription:
+            'Alarm-style reminders that keep ringing until dismissed',
+        importance: NotificationImportance.Max,
+        locked: true,
+        playSound: false,
+        enableVibration: false,
+      ),
       // basic channel is used by the system default option, same as this notification update never happened
       timerCompletedChannel,
     ],

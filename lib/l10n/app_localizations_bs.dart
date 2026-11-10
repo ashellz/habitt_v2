@@ -3771,4 +3771,33 @@ class AppLocalizationsBs extends AppLocalizations {
   String overwriteLocalDataDescWithDate(String date) {
     return 'Jesi li siguran da želiš zamijeniti svoje lokalne podatke najnovijim backupom ($date)? Ova radnja se ne može poništiti.';
   }
+
+  @override
+  String get alarmRingingChannelName => 'Alarmi koji zvone';
+
+  @override
+  String get alarmSilenceAction => 'Utišaj';
+
+  @override
+  String get alarmSettingsTitle => 'Alarmi';
+
+  @override
+  String get alarmDndTitle => 'Ne uznemiravaj';
+
+  @override
+  String get alarmDndOff => 'Isključeno';
+
+  @override
+  String get alarmDndAlarms => 'Alarmi';
+
+  @override
+  String get alarmDndDesc =>
+      'Alarmi uvijek zvone kad je telefon na nečujnom. Odaberi da li zvone i dok je uključeno Ne uznemiravaj. Obični podsjetnici ostaju tihi u svakom slučaju.';
+
+  @override
+  String get alarmDndDialogTitle => 'Zvoniti tokom Ne uznemiravaj?';
+
+  @override
+  String get alarmDndDialogTip =>
+      'Ovo uvijek možeš promijeniti u postavkama obavijesti.';
 }
