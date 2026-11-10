@@ -1402,5 +1402,14 @@
   "healthRestoreIosOnlyDesc": "These habits are Apple Health exclusive. They can't be synced on this phone.",
   "healthSourceUnavailableTitle": "{source} unavailable",
   "@healthSourceUnavailableTitle": {"placeholders": {"source": {"type": "String"}}},
-  "healthRestoreAppleHealthOnly": "Apple Health only"
+  "healthRestoreAppleHealthOnly": "Apple Health only",
+  "alarmRingingChannelName": "Ringing alarms",
+  "alarmSilenceAction": "Silence",
+  "alarmSettingsTitle": "Alarms",
+  "alarmDndTitle": "Do Not Disturb",
+  "alarmDndOff": "Off",
+  "alarmDndAlarms": "Alarms",
+  "alarmDndDesc": "Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.",
+  "alarmDndDialogTitle": "Ring during Do Not Disturb?",
+  "alarmDndDialogTip": "You can change this anytime in Notification settings."
 }

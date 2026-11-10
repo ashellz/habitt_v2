@@ -5,6 +5,7 @@ import 'package:habitt/widgets/default/accent_svg.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/backup_provider.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/widgets/default/swipe_up_to_dismiss.dart';
 
 class SyncProgressOverlay {
@@ -167,131 +168,138 @@ class _SyncProgressOverlayWidgetState extends State<_SyncProgressOverlayWidget>
       top: widget.topPadding + 10,
       left: 16,
       right: 16,
-      child: SwipeUpToDismiss(
-        onDismiss: _onUserDismiss,
-        child: FadeTransition(
-          opacity: _entryAnimation,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, -0.35),
-              end: Offset.zero,
-            ).animate(_entryAnimation),
-            child: ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.94,
-                end: 1,
+      // hidden (state kept) while a ringing alarm page is on screen
+      child: ValueListenableBuilder<bool>(
+        valueListenable: AlarmScreenService.isOnScreen,
+        builder:
+            (context, onAlarm, pill) =>
+                Offstage(offstage: onAlarm, child: pill),
+        child: SwipeUpToDismiss(
+          onDismiss: _onUserDismiss,
+          child: FadeTransition(
+            opacity: _entryAnimation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, -0.35),
+                end: Offset.zero,
               ).animate(_entryAnimation),
-              child: Material(
-                color: Colors.transparent,
-                child: AnimatedBuilder(
-                  animation: widget.bp,
-                  builder: (context, _) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 12,
-                          ),
-                          decoration: ShapeDecoration(
-                            color: cp.field,
-                            shape: const StadiumBorder(),
-                            shadows: [
-                              BoxShadow(
-                                color: cp.bg.withValues(alpha: 0.6),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                spacing: 12,
-                                children: [
-                                  // Icon circle
-                                  Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: cp.main.withValues(alpha: 0.15),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child:
-                                          _showingSuccess
-                                              ? AccentSvg(
-                                                cp.isDark
-                                                    ? 'assets/images/new-svg/check-on-dark.svg'
-                                                    : 'assets/images/new-svg/check-on-light.svg',
-                                                width: 20,
-                                                height: 20,
-                                              )
-                                              : RotationTransition(
-                                                turns: _spinController,
-                                                child: Icon(
-                                                  Icons.sync,
-                                                  size: 20,
-                                                  color: cp.main,
+              child: ScaleTransition(
+                scale: Tween<double>(
+                  begin: 0.94,
+                  end: 1,
+                ).animate(_entryAnimation),
+                child: Material(
+                  color: Colors.transparent,
+                  child: AnimatedBuilder(
+                    animation: widget.bp,
+                    builder: (context, _) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            decoration: ShapeDecoration(
+                              color: cp.field,
+                              shape: const StadiumBorder(),
+                              shadows: [
+                                BoxShadow(
+                                  color: cp.bg.withValues(alpha: 0.6),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  spacing: 12,
+                                  children: [
+                                    // Icon circle
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: cp.main.withValues(alpha: 0.15),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child:
+                                            _showingSuccess
+                                                ? AccentSvg(
+                                                  cp.isDark
+                                                      ? 'assets/images/new-svg/check-on-dark.svg'
+                                                      : 'assets/images/new-svg/check-on-light.svg',
+                                                  width: 20,
+                                                  height: 20,
+                                                )
+                                                : RotationTransition(
+                                                  turns: _spinController,
+                                                  child: Icon(
+                                                    Icons.sync,
+                                                    size: 20,
+                                                    color: cp.main,
+                                                  ),
                                                 ),
-                                              ),
+                                      ),
                                     ),
-                                  ),
-                                  // Text
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      spacing: 2,
-                                      children: [
-                                        Text(
-                                          _titleText(),
-                                          style: TextStyle(
-                                            color: cp.text,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        if (!_showingSuccess)
+                                    // Text
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        spacing: 2,
+                                        children: [
                                           Text(
-                                            _bodyText(),
+                                            _titleText(),
                                             style: TextStyle(
-                                              color: cp.lightGreyText,
-                                              fontSize: 12,
+                                              color: cp.text,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                      ],
+                                          if (!_showingSuccess)
+                                            Text(
+                                              _bodyText(),
+                                              style: TextStyle(
+                                                color: cp.lightGreyText,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (!_showingSuccess) ...[
+                                  const SizedBox(height: 10),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      value:
+                                          widget.bp.syncIsUploading
+                                              ? null
+                                              : widget.bp.syncProgress,
+                                      semanticsLabel: _titleText(),
+                                      minHeight: 3,
+                                      backgroundColor: cp.border,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        cp.main,
+                                      ),
                                     ),
                                   ),
                                 ],
-                              ),
-                              if (!_showingSuccess) ...[
-                                const SizedBox(height: 10),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(2),
-                                  child: LinearProgressIndicator(
-                                    value:
-                                        widget.bp.syncIsUploading
-                                            ? null
-                                            : widget.bp.syncProgress,
-                                    semanticsLabel: _titleText(),
-                                    minHeight: 3,
-                                    backgroundColor: cp.border,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      cp.main,
-                                    ),
-                                  ),
-                                ),
                               ],
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

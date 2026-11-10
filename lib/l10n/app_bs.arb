@@ -1352,5 +1352,14 @@
   "healthDeviceSwitchAnyway": "Ipak prebaci",
   "healthRestoreIosOnlyDesc": "Ove navike su samo za Apple Health. Ne mogu se sinhronizovati na ovom telefonu.",
   "healthSourceUnavailableTitle": "{source} nije dostupan",
-  "healthRestoreAppleHealthOnly": "Samo Apple Health"
+  "healthRestoreAppleHealthOnly": "Samo Apple Health",
+  "alarmRingingChannelName": "Alarmi koji zvone",
+  "alarmSilenceAction": "Utišaj",
+  "alarmSettingsTitle": "Alarmi",
+  "alarmDndTitle": "Ne uznemiravaj",
+  "alarmDndOff": "Isključeno",
+  "alarmDndAlarms": "Alarmi",
+  "alarmDndDesc": "Alarmi uvijek zvone kad je telefon na nečujnom. Odaberi da li zvone i dok je uključeno Ne uznemiravaj. Obični podsjetnici ostaju tihi u svakom slučaju.",
+  "alarmDndDialogTitle": "Zvoniti tokom Ne uznemiravaj?",
+  "alarmDndDialogTip": "Ovo uvijek možeš promijeniti u postavkama obavijesti."
 }

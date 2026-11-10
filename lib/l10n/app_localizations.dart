@@ -6459,6 +6459,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Apple Health only'**
   String get healthRestoreAppleHealthOnly;
+
+  /// No description provided for @alarmRingingChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ringing alarms'**
+  String get alarmRingingChannelName;
+
+  /// No description provided for @alarmSilenceAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Silence'**
+  String get alarmSilenceAction;
+
+  /// No description provided for @alarmSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms'**
+  String get alarmSettingsTitle;
+
+  /// No description provided for @alarmDndTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get alarmDndTitle;
+
+  /// No description provided for @alarmDndOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get alarmDndOff;
+
+  /// No description provided for @alarmDndAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms'**
+  String get alarmDndAlarms;
+
+  /// No description provided for @alarmDndDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.'**
+  String get alarmDndDesc;
+
+  /// No description provided for @alarmDndDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring during Do Not Disturb?'**
+  String get alarmDndDialogTitle;
+
+  /// No description provided for @alarmDndDialogTip.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this anytime in Notification settings.'**
+  String get alarmDndDialogTip;
 }
 
 class _AppLocalizationsDelegate

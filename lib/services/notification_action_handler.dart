@@ -108,7 +108,7 @@ class NotificationActionHandler {
     // if user just tapped it takes them to habit details page
     // with the correct day when the notification was fired on
     final day = _parseDay(payload[_payloadDayKey]);
-    if (action.channelKey == NotificationService.alarmChannelKey) {
+    if (NotificationService.isAlarmChannel(action.channelKey)) {
       _openAlarm(_alarmFrom(action, habitId, day));
       return;
     }
@@ -129,7 +129,7 @@ class NotificationActionHandler {
     final habitId = int.tryParse(payload[_payloadHabitIdKey] ?? '');
     if (habitId != null) {
       final day = _parseDay(payload[_payloadDayKey]);
-      if (action.channelKey == NotificationService.alarmChannelKey) {
+      if (NotificationService.isAlarmChannel(action.channelKey)) {
         _openAlarm(_alarmFrom(action, habitId, day));
         return;
       }

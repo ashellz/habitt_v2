@@ -50,6 +50,7 @@ import 'package:cupertino_native_better/style/sf_symbol.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:habitt/l10n/app_localizations.dart';
+import 'package:habitt/widgets/notification/alarm_dnd_dialog.dart';
 
 enum HabitSheetCloseResult { saved, dismissed, reopenPremade }
 
@@ -1078,9 +1079,13 @@ class _HabitSheetState extends State<HabitSheet> with TickerProviderStateMixin {
   Widget _habitAlarmRow(ColorProvider cp, StateProvider sp) {
     final loc = AppLocalizations.of(context)!;
 
-    void setAlarm(bool value) {
+    Future<void> setAlarm(bool value) async {
       sp.habitIsAlarm = value;
-      if (value) NotificationService.requestAlarmPermissions();
+      if (!value) return;
+      // first alarm ever (Android): ask about Do Not Disturb before the
+      // permission requests, which may open system settings pages
+      await maybeShowAlarmDndDialog(context);
+      NotificationService.requestAlarmPermissions();
     }
 
     return GestureDetector(

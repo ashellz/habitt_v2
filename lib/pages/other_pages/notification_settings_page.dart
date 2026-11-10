@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:habitt/models/notification.dart';
@@ -10,6 +12,7 @@ import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/new_default_button.dart';
 import 'package:habitt/widgets/default/new_default_dialog.dart';
 import 'package:habitt/widgets/default/new_default_switch.dart';
+import 'package:habitt/widgets/notification/alarm_dnd_setting.dart';
 import 'package:habitt/widgets/notification/notification_card.dart';
 import 'package:habitt/widgets/notification/sound_picker_sheet.dart';
 import 'package:habitt/services/notification_sounds.dart';
@@ -47,6 +50,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   late bool _draftPeriodEnabled;
   late bool _draftHabitsEnabled;
   late String _draftSoundKey;
+  late bool _draftAlarmRingDuringDnd;
   final Map<NotificationPeriod, NotificationSettings> _draftSettings = {};
 
   bool _unsavedChangesCheck() =>
@@ -79,6 +83,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     _draftPeriodEnabled = np.arePeriodNotificationsEnabled;
     _draftHabitsEnabled = np.areHabitNotificationsEnabled;
     _draftSoundKey = np.globalSoundKey;
+    _draftAlarmRingDuringDnd = np.alarmRingDuringDnd;
     for (final period in NotificationPeriod.values) {
       _draftSettings[period] = np.getSettings(period);
     }
@@ -148,7 +153,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (_draftMasterEnabled != np.isMasterEnabled ||
         _draftPeriodEnabled != np.arePeriodNotificationsEnabled ||
         _draftHabitsEnabled != np.areHabitNotificationsEnabled ||
-        _draftSoundKey != np.globalSoundKey) {
+        _draftSoundKey != np.globalSoundKey ||
+        _draftAlarmRingDuringDnd != np.alarmRingDuringDnd) {
       return true;
     }
 
@@ -261,6 +267,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         habits: habitProvider.habits,
         appearsOnDay: habitProvider.appearsOnDay,
       );
+    }
+
+    if (_draftAlarmRingDuringDnd != np.alarmRingDuringDnd) {
+      await np.setAlarmRingDuringDnd(_draftAlarmRingDuringDnd);
     }
 
     if (!mounted) {
@@ -495,6 +505,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ],
                   ),
                   _soundSection(cp, np, loc),
+                  // only Android alarms can stay quiet during DND (iOS
+                  // AlarmKit always rings through Focus)
+                  if (Platform.isAndroid) _alarmSection(cp, loc),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -680,6 +693,27 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+
+  // ─── Alarms ───────────────────────────────────────────
+  // Whether habit alarms ring during Do Not Disturb. Part of the draft, saved
+  // with the rest of the page.
+  Widget _alarmSection(ColorProvider cp, AppLocalizations loc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: [
+        Text(
+          loc.alarmSettingsTitle,
+          style: TextStyle(color: cp.lightGreyText, fontSize: 16),
+        ),
+        AlarmDndSetting(
+          ringDuringDnd: _draftAlarmRingDuringDnd,
+          onChanged:
+              (value) => setState(() => _draftAlarmRingDuringDnd = value),
         ),
       ],
     );

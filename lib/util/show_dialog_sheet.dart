@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -10,6 +11,13 @@ Future<T?> showDialogSheet<T>({
   // dialog's own buttons
   bool dismissible = true,
 }) async {
+  // nothing opens over a ringing alarm: automatic sheets (insights, streak
+  // celebration, what's new...) wait until it's closed. The user can't open
+  // one themselves while it's up.
+  if (AlarmScreenService.isOnScreen.value) {
+    await AlarmScreenService.waitUntilClosed();
+    if (!context.mounted) return null;
+  }
   final cp = context.read<ColorProvider>();
   return await showModalBottomSheet<T>(
     backgroundColor: Colors.transparent,

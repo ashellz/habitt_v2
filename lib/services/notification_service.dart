@@ -9,6 +9,7 @@ import 'package:habitt/models/habit_notification_time.dart';
 import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/notifications_provider.dart';
 import 'package:habitt/services/alarm_kit_service.dart';
+import 'package:habitt/services/alarm_ring_service.dart';
 import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/habit_notification_text_builder.dart';
 import 'package:habitt/services/notification_sounds.dart';
@@ -36,6 +37,14 @@ class NotificationService {
   /// Channel for habits set to "alarm": max importance, system alarm ringtone,
   /// bypasses Do Not Disturb. See docs/habit_alarms.md.
   static const String alarmChannelKey = 'habit_alarm_channel';
+
+  /// Android alarm channel without sound: the sound is played natively on the
+  /// alarm audio stream instead (rings in silent mode), see [AlarmRingService].
+  /// [alarmChannelKey] remains the fallback when that can't be scheduled.
+  static const String alarmSilentChannelKey = 'habit_alarm_silent_channel';
+
+  static bool isAlarmChannel(String? key) =>
+      key == alarmChannelKey || key == alarmSilentChannelKey;
 
   /// Action button key for the "Dismiss" button on alarm reminders.
   static const String dismissActionKey = 'DISMISS_ALARM';
@@ -425,6 +434,16 @@ class NotificationService {
     // iOS 26+ with permission: schedule a real AlarmKit alarm instead of a
     // notification (rings through silent/Focus until stopped).
     final useAlarmKit = habit.isAlarm && await AlarmKitService.isAvailable();
+    // Android: ring natively on the alarm stream, the notification goes on a
+    // silent channel (see AlarmRingService).
+    final useNativeRing =
+        habit.isAlarm && !useAlarmKit && await AlarmRingService.canRing();
+    if (useNativeRing) {
+      await AlarmRingService.configure(
+        channelName: localizations.alarmRingingChannelName,
+        silenceLabel: localizations.alarmSilenceAction,
+      );
+    }
 
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day);
@@ -491,7 +510,7 @@ class NotificationService {
             id: notificationId,
             channelKey:
                 habit.isAlarm
-                    ? alarmChannelKey
+                    ? (useNativeRing ? alarmSilentChannelKey : alarmChannelKey)
                     : NotificationSounds.channelForKeyOrDefault(
                       habit.soundKey ?? globalSoundKey,
                     ),
@@ -532,8 +551,18 @@ class NotificationService {
             millisecond: 0,
             repeats: false,
             allowWhileIdle: true,
+            // alarms must show on time, together with the native sound
+            preciseAlarm: habit.isAlarm,
           ),
         );
+
+        if (useNativeRing) {
+          await AlarmRingService.schedule(
+            id: notificationId,
+            at: scheduledAt,
+            title: text.title,
+          );
+        }
       }
     }
   }
@@ -554,6 +583,7 @@ class NotificationService {
         final id = _getHabitNotificationId(habit.id, slot.id, day);
         await AwesomeNotifications().cancel(id);
         await AlarmKitService.cancel(id);
+        await AlarmRingService.cancel(id);
       }
     }
   }
@@ -577,6 +607,7 @@ class NotificationService {
         final id = _getHabitNotificationId(habitId, slot.id, day);
         await AwesomeNotifications().cancel(id);
         await AlarmKitService.cancel(id);
+        await AlarmRingService.cancel(id);
       }
     }
   }
@@ -593,11 +624,13 @@ class NotificationService {
       final id = _getHabitNotificationId(habit.id, slot.id, normalizedDay);
       await AwesomeNotifications().cancel(id);
       await AlarmKitService.cancel(id);
+      await AlarmRingService.cancel(id);
     }
   }
 
   static Future<void> cancelAllHabitNotifications() async {
     await AlarmKitService.cancelAll();
+    await AlarmRingService.cancelAll();
     final scheduled = await AwesomeNotifications().listScheduledNotifications();
     for (final model in scheduled) {
       final content = model.content;

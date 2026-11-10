@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/ask_budget.dart';
 import 'package:habitt/services/feedback_service.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
@@ -77,6 +78,8 @@ Future<void> runStreakMoment(BuildContext context) async {
 
     if (ask == AskKind.review) {
       await Future<void>.delayed(_kReviewDelay);
+      // never over a ringing alarm page
+      await AlarmScreenService.waitUntilClosed();
       await FeedbackService.requestReview();
     }
   } finally {

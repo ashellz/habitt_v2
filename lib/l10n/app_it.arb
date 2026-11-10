@@ -1361,5 +1361,14 @@
   "healthDeviceSwitchAnyway": "Cambia comunque",
   "healthRestoreIosOnlyDesc": "Queste abitudini sono esclusive di Apple Health. Non possono essere sincronizzate su questo telefono.",
   "healthSourceUnavailableTitle": "{source} non disponibile",
-  "healthRestoreAppleHealthOnly": "Solo Apple Health"
+  "healthRestoreAppleHealthOnly": "Solo Apple Health",
+  "alarmRingingChannelName": "Sveglie in corso",
+  "alarmSilenceAction": "Silenzia",
+  "alarmSettingsTitle": "Sveglie",
+  "alarmDndTitle": "Non disturbare",
+  "alarmDndOff": "Off",
+  "alarmDndAlarms": "Sveglie",
+  "alarmDndDesc": "Le sveglie suonano sempre quando il telefono è in silenzioso. Scegli se devono suonare anche con Non disturbare attivo. I promemoria normali restano comunque silenziosi.",
+  "alarmDndDialogTitle": "Suonare con Non disturbare?",
+  "alarmDndDialogTip": "Puoi cambiarlo quando vuoi nelle impostazioni delle notifiche."
 }

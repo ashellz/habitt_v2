@@ -3854,4 +3854,33 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get healthRestoreAppleHealthOnly => 'Solo Apple Health';
+
+  @override
+  String get alarmRingingChannelName => 'Sveglie in corso';
+
+  @override
+  String get alarmSilenceAction => 'Silenzia';
+
+  @override
+  String get alarmSettingsTitle => 'Sveglie';
+
+  @override
+  String get alarmDndTitle => 'Non disturbare';
+
+  @override
+  String get alarmDndOff => 'Off';
+
+  @override
+  String get alarmDndAlarms => 'Sveglie';
+
+  @override
+  String get alarmDndDesc =>
+      'Le sveglie suonano sempre quando il telefono è in silenzioso. Scegli se devono suonare anche con Non disturbare attivo. I promemoria normali restano comunque silenziosi.';
+
+  @override
+  String get alarmDndDialogTitle => 'Suonare con Non disturbare?';
+
+  @override
+  String get alarmDndDialogTip =>
+      'Puoi cambiarlo quando vuoi nelle impostazioni delle notifiche.';
 }

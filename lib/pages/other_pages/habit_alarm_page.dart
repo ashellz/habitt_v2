@@ -1,12 +1,16 @@
+import 'dart:math' as math;
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/providers/color_provider.dart';
+import 'package:habitt/services/alarm_ring_service.dart';
 import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/notification_action_handler.dart';
-import 'package:habitt/widgets/default/default_annotated_region.dart';
 import 'package:habitt/widgets/habit_alarm/alarm_clock.dart';
+import 'package:habitt/widgets/habit_alarm/alarm_palette.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +63,15 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
       widget.alarm.day != null && _habit != null && _habit.healthMetric == null;
 
   @override
+  void initState() {
+    super.initState();
+    // automatic sheets and the sync pill wait / hide while this is up
+    AlarmScreenService.markOpened();
+  }
+
+  @override
   void dispose() {
+    AlarmScreenService.markClosed();
     // the rest of the app must never show over the lock screen
     AlarmScreenService.setShowOverLockScreen(false);
     super.dispose();
@@ -68,74 +80,144 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
   Future<void> _close({required bool complete}) async {
     if (_closing) return;
     _closing = true;
-    // stops the ringing
+    // stops the ringing (Android's native sound also stops by itself once the
+    // notification is gone, this just makes it immediate)
     await AwesomeNotifications().dismiss(widget.alarm.notificationId);
+    await AlarmRingService.stopRinging();
     if (complete)
       await NotificationActionHandler.completeFromAlarm(widget.alarm);
     await AlarmScreenService.setShowOverLockScreen(false);
     if (mounted) Navigator.of(context).pop();
   }
 
+  // Layout measured from the Pixel Clock ringing screen (393 x 851dp): digits
+  // centred at 43.7% of the height, the title's box 123dp below that, 91dp
+  // pills 22.5dp from the sides with a 3dp gap, their bottom 13.3% of the
+  // height above the screen's bottom.
+  static const double _clockCenterFraction = 0.437;
+  static const double _titleTopFromClockCenter = 123;
+  static const double _buttonsBottomFraction = 0.133;
+  static const double _buttonHeight = 91;
+  static const double _sideMargin = 22.5;
+  static const double _buttonGap = 3;
+
+  static TextStyle _textStyle({
+    required Color color,
+    required double size,
+    required double weight,
+    double letterSpacing = 0,
+    List<Shadow>? shadows,
+  }) => TextStyle(
+    fontFamily: 'GoogleSansFlex',
+    fontSize: size,
+    letterSpacing: letterSpacing,
+    color: color,
+    shadows: shadows,
+    fontVariations: [
+      FontVariation('wght', weight),
+      const FontVariation('opsz', 24),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     final cp = context.watch<ColorProvider>();
     final loc = AppLocalizations.of(context)!;
+    final palette = AlarmPalette.fromAccent(cp.theme.accent(isDark: true).main);
     final title =
         widget.alarm.title.isNotEmpty
             ? widget.alarm.title
             : (_habit?.name ?? loc.habitAlarmTitle);
 
-    return DefaultAnnotatedRegion(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      // always dark, like a clock app's ringing screen
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark, // iOS
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarContrastEnforced: false,
+      ),
       // the alarm only ends with one of the buttons, like a clock app
       child: PopScope(
         canPop: false,
         child: Scaffold(
-          backgroundColor: cp.bg,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 48),
-              child: Column(
-                children: [
-                  // ─── Clock ────────────────────────────────────────────
-                  const Spacer(flex: 3),
-                  const AlarmClock(),
-                  const SizedBox(height: 56),
+          backgroundColor: palette.background,
+          body: MediaQuery.withClampedTextScaling(
+            maxScaleFactor: 1.3,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final height = constraints.maxHeight;
+                final clockCenter = height * _clockCenterFraction;
+                final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
+                final buttonsBottom = math.max(
+                  height * _buttonsBottomFraction,
+                  bottomInset + 16,
+                );
 
-                  // ─── Habit ────────────────────────────────────────────
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: cp.text,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w500,
+                return Stack(
+                  children: [
+                    // ─── Clock ──────────────────────────────────────────
+                    Positioned(
+                      top: clockCenter - AlarmClock.inkCenterFromTop,
+                      left: _sideMargin,
+                      right: _sideMargin,
+                      child: Center(child: AlarmClock(color: palette.text)),
                     ),
-                  ),
-                  const Spacer(flex: 2),
 
-                  // ─── Actions ──────────────────────────────────────────
-                  Row(
-                    spacing: 8,
-                    children: [
-                      if (_canComplete)
-                        _actionButton(
-                          label: loc.notificationCompleteAction,
-                          color: cp.main,
-                          textColor: cp.bg,
-                          onTap: () => _close(complete: true),
+                    // ─── Habit ──────────────────────────────────────────
+                    Positioned(
+                      top: clockCenter + _titleTopFromClockCenter,
+                      left: _sideMargin + 8,
+                      right: _sideMargin + 8,
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: _textStyle(
+                          color: palette.text,
+                          size: 29.6,
+                          weight: 400,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withValues(alpha: 0.45),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      _actionButton(
-                        label: loc.notificationDismissAction,
-                        color: cp.secondaryButton,
-                        textColor: cp.text,
-                        onTap: () => _close(complete: false),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+
+                    // ─── Actions ────────────────────────────────────────
+                    Positioned(
+                      left: _sideMargin,
+                      right: _sideMargin,
+                      bottom: buttonsBottom,
+                      child: Row(
+                        spacing: _buttonGap,
+                        children: [
+                          if (_canComplete)
+                            _actionButton(
+                              label: loc.notificationCompleteAction,
+                              color: palette.primaryButton,
+                              textColor: palette.onPrimaryButton,
+                              onTap: () => _close(complete: true),
+                            ),
+                          _actionButton(
+                            label: loc.notificationDismissAction,
+                            color: palette.secondaryButton,
+                            textColor: palette.onSecondaryButton,
+                            onTap: () => _close(complete: false),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -157,16 +239,20 @@ class _HabitAlarmPageState extends State<HabitAlarmPage> {
         child: InkWell(
           onTap: onTap,
           child: SizedBox(
-            height: 96,
+            height: _buttonHeight,
             child: Center(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: _textStyle(
+                    color: textColor,
+                    size: 22.5,
+                    weight: 500,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ),

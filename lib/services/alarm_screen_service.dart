@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,37 @@ import 'package:flutter/services.dart';
 /// docs/habit_alarms.md). Every method is a safe no-op on other platforms.
 class AlarmScreenService {
   static const MethodChannel _channel = MethodChannel('habitt/alarm_screen');
+
+  /// True while a ringing alarm page is on screen. Automatic sheets
+  /// ([showDialogSheet]), the review prompt and the sync pill wait or hide
+  /// until it closes, so nothing ever shows over a ringing alarm.
+  static final ValueNotifier<bool> isOnScreen = ValueNotifier<bool>(false);
+  static int _openPages = 0;
+
+  /// Called by the alarm page when it's created / disposed.
+  static void markOpened() {
+    _openPages++;
+    isOnScreen.value = true;
+  }
+
+  static void markClosed() {
+    if (_openPages > 0) _openPages--;
+    isOnScreen.value = _openPages > 0;
+  }
+
+  /// Completes once no alarm page is on screen (immediately if none is).
+  static Future<void> waitUntilClosed() {
+    if (!isOnScreen.value) return Future<void>.value();
+    final done = Completer<void>();
+    void listener() {
+      if (isOnScreen.value) return;
+      isOnScreen.removeListener(listener);
+      done.complete();
+    }
+
+    isOnScreen.addListener(listener);
+    return done.future;
+  }
 
   /// Android 14+ turns full-screen notifications off for most apps, and
   /// awesome_notifications can't tell (it reports the permission as granted).

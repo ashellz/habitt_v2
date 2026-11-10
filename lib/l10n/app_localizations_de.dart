@@ -3857,4 +3857,33 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get healthRestoreAppleHealthOnly => 'Nur Apple Health';
+
+  @override
+  String get alarmRingingChannelName => 'Klingelnde Alarme';
+
+  @override
+  String get alarmSilenceAction => 'Stumm';
+
+  @override
+  String get alarmSettingsTitle => 'Alarme';
+
+  @override
+  String get alarmDndTitle => 'Bitte nicht stören';
+
+  @override
+  String get alarmDndOff => 'Aus';
+
+  @override
+  String get alarmDndAlarms => 'Alarme';
+
+  @override
+  String get alarmDndDesc =>
+      'Alarme klingeln immer, wenn dein Handy stummgeschaltet ist. Wähle, ob sie auch bei „Bitte nicht stören“ klingeln. Normale Erinnerungen bleiben dabei immer still.';
+
+  @override
+  String get alarmDndDialogTitle => 'Bei „Bitte nicht stören“ klingeln?';
+
+  @override
+  String get alarmDndDialogTip =>
+      'Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern.';
 }

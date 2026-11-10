@@ -37,6 +37,8 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   provider: ^6.1.2
+  # pinned by Flutter; HCT tones for the alarm page palette
+  material_color_utilities: any
   flutter_spinbox: ^0.13.1
   tinycolor2: ^3.0.1
   build_runner: ^2.4.15
@@ -165,6 +167,11 @@ flutter:
           weight: 600
         - asset: assets/new-fonts/Satoshi-Black.otf
           weight: 700
+
+    # variable font (ROND/opsz/wdth/wght 300-600), alarm page only; OFL
+    - family: GoogleSansFlex
+      fonts:
+        - asset: assets/fonts/google-sans-flex/GoogleSansFlex.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
