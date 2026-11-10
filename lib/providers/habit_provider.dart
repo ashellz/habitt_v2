@@ -1813,16 +1813,19 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Toggles completion of habit [id] on [day], or on the day the main page
+  /// shows ([selectedDate], else today) when [day] is null.
   void completeHabit(
     int id,
     BuildContext context,
     StateProvider stateProvider, {
     bool playSound = true,
+    DateTime? day,
   }) async {
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = selectedDate ?? today;
+    final _selectedDate = day ?? selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -1929,7 +1932,15 @@ class HabitProvider extends ChangeNotifier {
     );
     if (habit == null || habit.completed) return; // missing or already done
     // Completed from the notification's button, not in-app — stay silent.
-    completeHabit(id, context, stateProvider, playSound: false);
+    // Pass the queued day: the main page may show another day, and a "Done"
+    // tapped before midnight can be drained after it.
+    completeHabit(
+      id,
+      context,
+      stateProvider,
+      playSound: false,
+      day: daySimple,
+    );
   }
 
   void skipHabit(
