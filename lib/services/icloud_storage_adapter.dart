@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:icloud_storage/icloud_storage.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'cloud_stall.dart';
 import 'cloud_storage_adapter.dart';
 
 // iCloud Documents implementation of [CloudStorageAdapter].
@@ -18,6 +19,39 @@ class ICloudStorageAdapter implements CloudStorageAdapter {
   static const _containerId = 'iCloud.com.shellz.habitt';
   static const _folder = 'habitt_backups';
 
+  // Time limits (see CloudStallException): a plugin call that doesn't answer,
+  // or a transfer whose progress goes quiet (offline, say), ends the sync
+  // instead of keeping it running forever.
+  static const _callLimit = Duration(seconds: 60);
+  static const _transferStallLimit = Duration(seconds: 60);
+
+  /// Runs a transfer that reports through [ICloudStorage]'s onProgress stream
+  /// and waits for it to end, failing when its progress stays quiet.
+  Future<void> _transfer(
+    String operation,
+    Future<void> Function(void Function(Stream<double>) onProgress) start,
+  ) async {
+    final watch = ProgressWatch(operation, _transferStallLimit);
+    StreamSubscription<double>? sub;
+    try {
+      await withStallLimit(
+        start((stream) {
+          sub = stream.listen(
+            (_) => watch.kick(),
+            onDone: watch.complete,
+            onError: watch.fail,
+            cancelOnError: true,
+          );
+        }),
+        _callLimit,
+        operation,
+      );
+      await watch.done;
+    } finally {
+      await sub?.cancel();
+    }
+  }
+
   Future<File> _tmpFile(String filename) async {
     final dir = await getTemporaryDirectory();
     final ts = DateTime.now().microsecondsSinceEpoch;
@@ -29,21 +63,15 @@ class ICloudStorageAdapter implements CloudStorageAdapter {
     final tmp = await _tmpFile(filename);
     try {
       await tmp.writeAsBytes(bytes);
-      final completer = Completer<void>();
-      await ICloudStorage.upload(
-        containerId: _containerId,
-        filePath: tmp.path,
-        destinationRelativePath: '$_folder/$filename',
-        onProgress: (stream) {
-          stream.listen(
-            (_) {},
-            onDone: completer.complete,
-            onError: completer.completeError,
-            cancelOnError: true,
-          );
-        },
+      await _transfer(
+        'iCloud upload $filename',
+        (onProgress) => ICloudStorage.upload(
+          containerId: _containerId,
+          filePath: tmp.path,
+          destinationRelativePath: '$_folder/$filename',
+          onProgress: onProgress,
+        ),
       );
-      await completer.future;
     } catch (e) {
       debugPrint('[iCloud] upload($filename) error: $e');
       rethrow;
@@ -64,23 +92,19 @@ class ICloudStorageAdapter implements CloudStorageAdapter {
     final filename = id.split('/').last;
     final tmp = await _tmpFile(filename);
     try {
-      final completer = Completer<void>();
-      await ICloudStorage.download(
-        containerId: _containerId,
-        relativePath: id,
-        destinationFilePath: tmp.path,
-        onProgress: (stream) {
-          stream.listen(
-            (_) {},
-            onDone: completer.complete,
-            onError: completer.completeError,
-            cancelOnError: true,
-          );
-        },
+      await _transfer(
+        'iCloud download $id',
+        (onProgress) => ICloudStorage.download(
+          containerId: _containerId,
+          relativePath: id,
+          destinationFilePath: tmp.path,
+          onProgress: onProgress,
+        ),
       );
-      await completer.future;
       final bytes = await tmp.readAsBytes();
       return bytes;
+    } on CloudStallException {
+      rethrow;
     } catch (e) {
       debugPrint('[iCloud] downloadById($id) error: $e');
       return null;
@@ -95,7 +119,13 @@ class ICloudStorageAdapter implements CloudStorageAdapter {
   Future<void> delete(String id) async {
     // id is the container-relative path
     try {
-      await ICloudStorage.delete(containerId: _containerId, relativePath: id);
+      await withStallLimit(
+        ICloudStorage.delete(containerId: _containerId, relativePath: id),
+        _callLimit,
+        'iCloud delete $id',
+      );
+    } on CloudStallException {
+      rethrow;
     } catch (e) {
       debugPrint('[iCloud] delete($id) error: $e');
     }
@@ -144,7 +174,13 @@ class ICloudStorageAdapter implements CloudStorageAdapter {
 
   Future<List<ICloudFile>> _gatherAll() async {
     try {
-      return await ICloudStorage.gather(containerId: _containerId);
+      return await withStallLimit(
+        ICloudStorage.gather(containerId: _containerId),
+        _callLimit,
+        'iCloud gather',
+      );
+    } on CloudStallException {
+      rethrow;
     } on PlatformException catch (e) {
       // E_CTR means iCloud is entirely inaccessible — propagate so the caller
       // can deactivate the backend and show the error. Swallow everything else.
@@ -171,7 +207,11 @@ class ICloudStorageAdapter implements CloudStorageAdapter {
   @override
   Future<bool> get isAvailable async {
     try {
-      await ICloudStorage.gather(containerId: _containerId);
+      await withStallLimit(
+        ICloudStorage.gather(containerId: _containerId),
+        _callLimit,
+        'iCloud gather',
+      );
       return true;
     } catch (_) {
       return false;
