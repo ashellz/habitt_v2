@@ -1241,6 +1241,28 @@ class Habit extends HiveObject {
         ts.day == day.day;
   }
 
+  /// Whether this copy holds any progress for its day (completed, skipped, an
+  /// amount, a duration or Health sessions).
+  bool get hasDayProgress =>
+      completed ||
+      skipped ||
+      amountCompleted > 0 ||
+      durationCompleted > 0 ||
+      healthSessions.isNotEmpty;
+
+  /// Whether this copy's day state was last changed on a local calendar day
+  /// before [day]: its newest day-state timestamp falls on an earlier date.
+  /// False without a timestamp, or with one on or after [day].
+  bool dayStateChangedBefore(DateTime day) {
+    final ts = _latestTs(timestamps, dayStateKeys)?.toLocal();
+    if (ts == null) return false;
+    return DateTime(
+      ts.year,
+      ts.month,
+      ts.day,
+    ).isBefore(DateTime(day.year, day.month, day.day));
+  }
+
   /// Whether this habit's day state (see [dayStateKeys]) was changed after
   /// [other]'s: it has a day-state timestamp and [other]'s newest is older or
   /// missing. Same timestamps [merge] compares the day state by.
