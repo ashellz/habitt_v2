@@ -2168,50 +2168,6 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Clears live progress that was last changed before today. The caller runs
-  /// it only once today's new-day check has already gone through
-  /// (lastOpenedDate is today).
-  ///
-  /// Today's live progress only ever comes from today: a tap, a timer, a
-  /// Health sync, or a merge of today's record (which brings its timestamps
-  /// along, see [Habit.adoptDayState]). Progress stamped on an earlier day was
-  /// carried over by a new-day reset that missed it: before the check waited
-  /// for [firstLoadDone], a cold start could run the reset on a habit list
-  /// that wasn't loaded yet, and the habits loaded right after kept the last
-  /// opened day's progress on today, through restarts and syncs. Progress
-  /// without a timestamp, or stamped on a later day (the clock moved
-  /// backwards), is left alone. Cleared without stamping, like the reset, and
-  /// today's record rewritten the same way ([saveNewDayToday]: entries changed
-  /// today stay). Returns how many habits were cleared.
-  Future<int> clearStaleDayProgress() async {
-    final today = _normalizeDate(DateTime.now());
-    final stale = [
-      for (final habit in habits)
-        if (habit.hasDayProgress && habit.dayStateChangedBefore(today)) habit,
-    ];
-    if (stale.isEmpty) return 0;
-
-    debugPrint(
-      '[NEWDAY] clearing ${stale.length} habits still holding progress '
-      'from an earlier day: ${stale.map((h) => h.id).join(', ')}',
-    );
-    habitStatsProvider?.clearAll();
-    for (final habit in stale) {
-      habit.clearDayProgress();
-      _syncCustomRestartForDay(habit, today, completedOnDay: false);
-    }
-    saveNewDayToday();
-    dataVersion++;
-    notifyListeners();
-
-    for (final habit in stale) {
-      if (habit.isInBox) await habit.save();
-    }
-    backupProvider?.scheduleAutoSync();
-    unawaited(_syncAllHabitNotifications(force: true));
-    return stale.length;
-  }
-
   /// Restores today's day-state from today's stored snapshot, if one exists.
   ///
   /// Used when the device clock moves backwards (e.g. the user set the date a

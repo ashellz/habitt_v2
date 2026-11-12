@@ -48,16 +48,6 @@ Future<void> updateLastOpenedDate(
   } else {
     // Else I set it to old one
     lastOpenedDate = DateTime.parse(temp);
-    // today's check already ran: clear progress an earlier version's reset
-    // left on today (see HabitProvider.clearStaleDayProgress), once a launch
-    if (!NewDayGate._staleProgressChecked &&
-        _isSameDay(lastOpenedDate, DateTime.now())) {
-      NewDayGate._staleProgressChecked = true;
-      if (await habitProvider.clearStaleDayProgress() > 0) {
-        await habitProvider.assignStreaks();
-        statsProvider.perfectDaysStreak = statsProvider.refreshPerfectStreak();
-      }
-    }
     // I check for new day
     await checkForNewDay(
       prefs,
@@ -76,7 +66,6 @@ class NewDayGate {
   static Future<void>? _check;
   static _RunningSync? _sync;
   static Future<void> Function()? _runner;
-  static bool _staleProgressChecked = false;
 
   /// How long the check waits for HabitProvider's first load before it gives
   /// up for this call (see [updateLastOpenedDate]).
@@ -170,7 +159,6 @@ class NewDayGate {
     _check = null;
     _sync = null;
     _runner = null;
-    _staleProgressChecked = false;
     firstLoadLimit = const Duration(seconds: 30);
     stuckSyncLimit = const Duration(minutes: 2);
     stuckSyncPoll = const Duration(seconds: 10);
@@ -228,9 +216,6 @@ Future<void> checkForNewDay(
   NewDayGate._check = check;
   return check;
 }
-
-bool _isSameDay(DateTime a, DateTime b) =>
-    a.year == b.year && a.month == b.month && a.day == b.day;
 
 bool _isForwardNewDay(DateTime lastOpenedDate) {
   final now = DateTime.now();
