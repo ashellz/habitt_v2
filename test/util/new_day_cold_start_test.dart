@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -146,12 +147,12 @@ void main() {
       live: [habit(1)],
       lastOpened: yesterday.add(const Duration(hours: 20)),
     );
-    NewDayGate.firstLoadLimit = Duration.zero;
-    final notLoaded = HabitProvider();
-    // the first load can't have finished within the same event
+    NewDayGate.firstLoadLimit = const Duration(milliseconds: 50);
+    final notLoaded = _NeverLoaded();
     await updateLastOpenedDate(notLoaded, sp, st);
     expect(await lastOpenedPref(), isNot(contains(_k(today))));
-    await notLoaded.firstLoadDone;
+    expect(live(1).completed, isTrue);
+    await notLoaded.realFirstLoad;
   });
 
   test('progress an earlier reset left on today is cleared', () async {
@@ -210,4 +211,12 @@ void main() {
     await updateLastOpenedDate(p, sp, st);
     expect(live(1).completed, isTrue);
   });
+}
+
+/// A provider whose first load never reports done.
+class _NeverLoaded extends HabitProvider {
+  Future<void> get realFirstLoad => super.firstLoadDone;
+
+  @override
+  Future<void> get firstLoadDone => Completer<void>().future;
 }
