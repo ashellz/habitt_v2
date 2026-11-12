@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/providers/color_provider.dart';
-import 'package:habitt/widgets/default/dual_option_selector.dart';
+import 'package:habitt/widgets/default/new_default_switch.dart';
 import 'package:provider/provider.dart';
 
-/// Android only: whether habit alarms ring during Do Not Disturb, as an
-/// Off / Alarms selector ("Alarms" makes clear regular reminders stay quiet).
+/// Android only: whether habit alarms ring during Do Not Disturb, as a
+/// regular toggle row.
 /// The same widget is used on the notification settings page and in the
 /// dialog shown the first time an alarm is turned on. See
 /// docs/habit_alarms.md.
@@ -15,7 +15,6 @@ class AlarmDndSetting extends StatelessWidget {
     required this.ringDuringDnd,
     required this.onChanged,
     this.color,
-    this.selectorColor,
   });
 
   final bool ringDuringDnd;
@@ -23,9 +22,6 @@ class AlarmDndSetting extends StatelessWidget {
 
   /// Background of the row; defaults to the settings page card colour.
   final Color? color;
-
-  /// Background of the Off / Alarms pill; defaults to the field colour.
-  final Color? selectorColor;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +32,10 @@ class AlarmDndSetting extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
       children: [
-        // ─── Selector row ─────────────────────────────────────
+        // ─── Toggle row ───────────────────────────────────────
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.only(top: 4, left: 12, right: 4, bottom: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           clipBehavior: Clip.antiAlias,
           decoration: ShapeDecoration(
             color: color ?? (cp.isDark ? cp.habitBg : cp.bg),
@@ -60,21 +56,7 @@ class AlarmDndSetting extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 190,
-                child: DualOptionSelector<bool>(
-                  firstLabel: loc.alarmDndOff,
-                  secondLabel: loc.alarmDndAlarms,
-                  firstValue: false,
-                  secondValue: true,
-                  selectedValue: ringDuringDnd,
-                  allowDeselect: false,
-                  color: selectorColor,
-                  onSelect: (value) {
-                    if (value != null) onChanged(value);
-                  },
-                ),
-              ),
+              NewDefaultSwitch(value: ringDuringDnd, onChanged: onChanged),
             ],
           ),
         ),

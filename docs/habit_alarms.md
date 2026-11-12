@@ -75,16 +75,16 @@ DND "Total silence", or alarms turned off in the user's DND settings, mute the
 alarm stream regardless.
 
 UI (Android only, `AlarmDndSetting` in `lib/widgets/notification/`): an
-**Off / Alarms** selector ("Alarms" makes clear regular reminders still stay
-quiet) with a short explanation. It shows in two places:
+**Ring through DND** toggle (a regular `NewDefaultSwitch` row) with a short
+explanation. It shows in two places:
 
 - Notification settings, "Alarms" section under the sound section. Part of the
   page's draft, saved with Save like the rest.
 - `maybeShowAlarmDndDialog` (`alarm_dnd_dialog.dart`): the first time the user
   checks Alarm on any habit, before the alarm permission requests, a dialog
-  with the same selector and a tip that it can be changed in Notification
+  with the same toggle and a tip that it can be changed in Notification
   settings. Asked once (`notifications_alarm_dnd_asked`), however the dialog
-  is closed; closing it keeps whatever the selector shows.
+  is closed; closing it keeps whatever the toggle shows.
 
 ## Replaced / removed reminder slots
 

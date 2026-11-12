@@ -3865,20 +3865,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get alarmSettingsTitle => 'Sveglie';
 
   @override
-  String get alarmDndTitle => 'Non disturbare';
-
-  @override
-  String get alarmDndOff => 'Off';
-
-  @override
-  String get alarmDndAlarms => 'Sveglie';
+  String get alarmDndTitle => 'Suona in modalità DND';
 
   @override
   String get alarmDndDesc =>
-      'Le sveglie suonano sempre quando il telefono è in silenzioso. Scegli se devono suonare anche con Non disturbare attivo. I promemoria normali restano comunque silenziosi.';
+      'Se attivo, le sveglie suoneranno anche in modalità DND.';
 
   @override
-  String get alarmDndDialogTitle => 'Suonare con Non disturbare?';
+  String get alarmDndDialogTitle => 'Suonare in modalità DND?';
 
   @override
   String get alarmDndDialogTip =>

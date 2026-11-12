@@ -1406,10 +1406,8 @@
   "alarmRingingChannelName": "Ringing alarms",
   "alarmSilenceAction": "Silence",
   "alarmSettingsTitle": "Alarms",
-  "alarmDndTitle": "Do Not Disturb",
-  "alarmDndOff": "Off",
-  "alarmDndAlarms": "Alarms",
-  "alarmDndDesc": "Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.",
-  "alarmDndDialogTitle": "Ring during Do Not Disturb?",
+  "alarmDndTitle": "Ring through DND",
+  "alarmDndDesc": "If enabled, alarms will ring through Do not Disturb mode.",
+  "alarmDndDialogTitle": "Ring through DND?",
   "alarmDndDialogTip": "You can change this anytime in Notification settings."
 }

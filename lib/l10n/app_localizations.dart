@@ -6481,31 +6481,19 @@ abstract class AppLocalizations {
   /// No description provided for @alarmDndTitle.
   ///
   /// In en, this message translates to:
-  /// **'Do Not Disturb'**
+  /// **'Ring through DND'**
   String get alarmDndTitle;
-
-  /// No description provided for @alarmDndOff.
-  ///
-  /// In en, this message translates to:
-  /// **'Off'**
-  String get alarmDndOff;
-
-  /// No description provided for @alarmDndAlarms.
-  ///
-  /// In en, this message translates to:
-  /// **'Alarms'**
-  String get alarmDndAlarms;
 
   /// No description provided for @alarmDndDesc.
   ///
   /// In en, this message translates to:
-  /// **'Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.'**
+  /// **'If enabled, alarms will ring through Do not Disturb mode.'**
   String get alarmDndDesc;
 
   /// No description provided for @alarmDndDialogTitle.
   ///
   /// In en, this message translates to:
-  /// **'Ring during Do Not Disturb?'**
+  /// **'Ring through DND?'**
   String get alarmDndDialogTitle;
 
   /// No description provided for @alarmDndDialogTip.

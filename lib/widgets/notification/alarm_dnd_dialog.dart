@@ -10,7 +10,7 @@ import 'package:habitt/widgets/notification/alarm_dnd_setting.dart';
 import 'package:provider/provider.dart';
 
 /// Asks once (Android, the first time any habit's alarm is turned on) whether
-/// alarms should ring during Do Not Disturb, with the same selector as the
+/// alarms should ring during Do Not Disturb, with the same toggle as the
 /// notification settings page. Does nothing on later calls or other platforms.
 Future<void> maybeShowAlarmDndDialog(BuildContext context) async {
   if (!Platform.isAndroid) return;
@@ -37,7 +37,6 @@ Future<void> maybeShowAlarmDndDialog(BuildContext context) async {
                 ringDuringDnd: ringDuringDnd,
                 // the dialog itself has the settings card colour
                 color: cp.field,
-                selectorColor: cp.isDark ? cp.habitBg : cp.bg,
                 onChanged: (value) => setState(() => ringDuringDnd = value),
               ),
             );

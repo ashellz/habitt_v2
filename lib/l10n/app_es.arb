@@ -1366,10 +1366,8 @@
   "alarmRingingChannelName": "Alarmas sonando",
   "alarmSilenceAction": "Silenciar",
   "alarmSettingsTitle": "Alarmas",
-  "alarmDndTitle": "No molestar",
-  "alarmDndOff": "Desactivado",
-  "alarmDndAlarms": "Alarmas",
-  "alarmDndDesc": "Las alarmas siempre suenan cuando tu teléfono está en silencio. Elige si también suenan con No molestar activado. Los recordatorios normales siguen en silencio en cualquier caso.",
-  "alarmDndDialogTitle": "¿Sonar con No molestar?",
+  "alarmDndTitle": "Sonar en modo DND",
+  "alarmDndDesc": "Si está activado, las alarmas sonarán también en modo DND.",
+  "alarmDndDialogTitle": "¿Sonar en modo DND?",
   "alarmDndDialogTip": "Puedes cambiarlo cuando quieras en los ajustes de notificaciones."
 }

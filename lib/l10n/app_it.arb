@@ -1365,10 +1365,8 @@
   "alarmRingingChannelName": "Sveglie in corso",
   "alarmSilenceAction": "Silenzia",
   "alarmSettingsTitle": "Sveglie",
-  "alarmDndTitle": "Non disturbare",
-  "alarmDndOff": "Off",
-  "alarmDndAlarms": "Sveglie",
-  "alarmDndDesc": "Le sveglie suonano sempre quando il telefono è in silenzioso. Scegli se devono suonare anche con Non disturbare attivo. I promemoria normali restano comunque silenziosi.",
-  "alarmDndDialogTitle": "Suonare con Non disturbare?",
+  "alarmDndTitle": "Suona in modalità DND",
+  "alarmDndDesc": "Se attivo, le sveglie suoneranno anche in modalità DND.",
+  "alarmDndDialogTitle": "Suonare in modalità DND?",
   "alarmDndDialogTip": "Puoi cambiarlo quando vuoi nelle impostazioni delle notifiche."
 }

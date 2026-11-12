@@ -3859,20 +3859,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get alarmSettingsTitle => 'Alarmas';
 
   @override
-  String get alarmDndTitle => 'No molestar';
-
-  @override
-  String get alarmDndOff => 'Desactivado';
-
-  @override
-  String get alarmDndAlarms => 'Alarmas';
+  String get alarmDndTitle => 'Sonar en modo DND';
 
   @override
   String get alarmDndDesc =>
-      'Las alarmas siempre suenan cuando tu teléfono está en silencio. Elige si también suenan con No molestar activado. Los recordatorios normales siguen en silencio en cualquier caso.';
+      'Si está activado, las alarmas sonarán también en modo DND.';
 
   @override
-  String get alarmDndDialogTitle => '¿Sonar con No molestar?';
+  String get alarmDndDialogTitle => '¿Sonar en modo DND?';
 
   @override
   String get alarmDndDialogTip =>

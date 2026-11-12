@@ -3833,20 +3833,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alarmSettingsTitle => 'Alarms';
 
   @override
-  String get alarmDndTitle => 'Do Not Disturb';
-
-  @override
-  String get alarmDndOff => 'Off';
-
-  @override
-  String get alarmDndAlarms => 'Alarms';
+  String get alarmDndTitle => 'Ring through DND';
 
   @override
   String get alarmDndDesc =>
-      'Alarms always ring when your phone is on silent. Choose whether they also ring during Do Not Disturb. Regular reminders stay quiet either way.';
+      'If enabled, alarms will ring through Do not Disturb mode.';
 
   @override
-  String get alarmDndDialogTitle => 'Ring during Do Not Disturb?';
+  String get alarmDndDialogTitle => 'Ring through DND?';
 
   @override
   String get alarmDndDialogTip =>

@@ -3833,20 +3833,14 @@ class AppLocalizationsBs extends AppLocalizations {
   String get alarmSettingsTitle => 'Alarmi';
 
   @override
-  String get alarmDndTitle => 'Ne uznemiravaj';
-
-  @override
-  String get alarmDndOff => 'Isključeno';
-
-  @override
-  String get alarmDndAlarms => 'Alarmi';
+  String get alarmDndTitle => 'Zvoni tokom DND-a';
 
   @override
   String get alarmDndDesc =>
-      'Alarmi uvijek zvone kad je telefon na nečujnom. Odaberi da li zvone i dok je uključeno Ne uznemiravaj. Obični podsjetnici ostaju tihi u svakom slučaju.';
+      'Ako je uključeno, alarmi će zvoniti i tokom DND načina.';
 
   @override
-  String get alarmDndDialogTitle => 'Zvoniti tokom Ne uznemiravaj?';
+  String get alarmDndDialogTitle => 'Zvoniti tokom DND-a?';
 
   @override
   String get alarmDndDialogTip =>

@@ -1366,10 +1366,8 @@
   "alarmRingingChannelName": "Klingelnde Alarme",
   "alarmSilenceAction": "Stumm",
   "alarmSettingsTitle": "Alarme",
-  "alarmDndTitle": "Bitte nicht stören",
-  "alarmDndOff": "Aus",
-  "alarmDndAlarms": "Alarme",
-  "alarmDndDesc": "Alarme klingeln immer, wenn dein Handy stummgeschaltet ist. Wähle, ob sie auch bei „Bitte nicht stören“ klingeln. Normale Erinnerungen bleiben dabei immer still.",
-  "alarmDndDialogTitle": "Bei „Bitte nicht stören“ klingeln?",
+  "alarmDndTitle": "Bei DND klingeln",
+  "alarmDndDesc": "Wenn aktiviert, klingeln Alarme auch im DND-Modus.",
+  "alarmDndDialogTitle": "Bei DND klingeln?",
   "alarmDndDialogTip": "Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern."
 }

@@ -3868,20 +3868,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get alarmSettingsTitle => 'Alarme';
 
   @override
-  String get alarmDndTitle => 'Bitte nicht stören';
-
-  @override
-  String get alarmDndOff => 'Aus';
-
-  @override
-  String get alarmDndAlarms => 'Alarme';
+  String get alarmDndTitle => 'Bei DND klingeln';
 
   @override
   String get alarmDndDesc =>
-      'Alarme klingeln immer, wenn dein Handy stummgeschaltet ist. Wähle, ob sie auch bei „Bitte nicht stören“ klingeln. Normale Erinnerungen bleiben dabei immer still.';
+      'Wenn aktiviert, klingeln Alarme auch im DND-Modus.';
 
   @override
-  String get alarmDndDialogTitle => 'Bei „Bitte nicht stören“ klingeln?';
+  String get alarmDndDialogTitle => 'Bei DND klingeln?';
 
   @override
   String get alarmDndDialogTip =>
