@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Upload the built IPA to TestFlight with per-locale What's New from release_notes.txt
 
+### ios submit
+
+```sh
+[bundle exec] fastlane ios submit
+```
+
+Submit the already-uploaded TestFlight build to App Store review (release notes only)
+
 ### ios release
 
 ```sh

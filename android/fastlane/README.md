@@ -39,6 +39,14 @@ Submit a new Beta Build to Crashlytics Beta
 
 Upload the built AAB to the Play internal testing track with per-locale changelogs
 
+### android promote
+
+```sh
+[bundle exec] fastlane android promote
+```
+
+Promote the internal track build to production
+
 ### android deploy
 
 ```sh
