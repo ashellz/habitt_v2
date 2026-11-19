@@ -137,6 +137,31 @@ void main() {
       final provider = build()..noteStreak(12);
       expect(provider.reviewMilestoneReached, isTrue);
     });
+
+    group('engagement route (no streak needed)', () {
+      late SupportProvider provider;
+
+      void useFor(int days, {int completions = 10}) {
+        prefs.setInt(kTotalCompletionsKey, completions);
+        provider = build();
+        now = now.add(Duration(days: days));
+      }
+
+      test('is reached after 7 days of use and 10 completions', () {
+        useFor(7);
+        expect(provider.reviewMilestoneReached, isTrue);
+      });
+
+      test('is not reached before 7 days of use', () {
+        useFor(6);
+        expect(provider.reviewMilestoneReached, isFalse);
+      });
+
+      test('is not reached with fewer than 10 completions', () {
+        useFor(30, completions: 9);
+        expect(provider.reviewMilestoneReached, isFalse);
+      });
+    });
   });
 
   group('main-page banner', () {

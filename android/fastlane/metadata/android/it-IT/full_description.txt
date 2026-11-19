@@ -28,6 +28,11 @@ Habitt conserva tutto sul tuo dispositivo. Quando vuoi una copia cloud, connetti
 AVVIO RAPIDO
 Importa tutte le tue abitudini da altre app come HabitKit. Usa un modello predefinito per iniziare in pochi secondi: svegliarsi presto, andare a letto presto, palestra, corsa, camminata, bere acqua, lavarsi i denti, skincare, nutrizione, studio, lettura, farmaci, sessioni di produttività e altro ancora.
 
+PIÙ DI UN TRACKER DI ABITUDINI
+• Sincronizzazione salute: passi, sonno, esercizio, minuti di mindfulness e calorie arrivano direttamente da Health Connect. Sola lettura, e tutto resta sul tuo dispositivo.
+• Sveglie per le abitudini che non puoi perdere, come i farmaci. Suonano finché non le spegni.
+• Un suono di notifica per ogni abitudine e temi colore per il tuo stile. Tutto gratis.
+
 ASPETTO
 Modalità chiara e scura.
 

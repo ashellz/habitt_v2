@@ -28,6 +28,11 @@ Habitt speichert alles auf deinem Gerät. Wenn du eine Cloud-Kopie möchtest, ve
 SCHNELLSTART
 Importiere all deine Gewohnheiten aus anderen Apps wie HabitKit. Nutze eine vorgefertigte Vorlage, um in Sekunden loszulegen: früh aufstehen, früh ins Bett, Fitnessstudio, Laufen, Spazieren, Wasser trinken, Zähne putzen, Hautpflege, Ernährung, Lernen, Lesen, Medikamente, Produktivitätssessions und mehr.
 
+MEHR ALS EIN GEWOHNHEITS-TRACKER
+• Health-Sync: Schritte, Schlaf, Training, Achtsamkeitsminuten und Kalorien kommen direkt aus Health Connect. Nur lesend, alles bleibt auf deinem Gerät.
+• Wecker für Gewohnheiten, die du nicht verpassen darfst, etwa Medikamente. Sie klingeln, bis du sie beendest.
+• Ein Benachrichtigungston pro Gewohnheit und Akzentfarben für deinen Stil. Alles kostenlos.
+
 ERSCHEINUNGSBILD
 Dunkler und heller Modus.
 

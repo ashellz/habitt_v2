@@ -28,6 +28,11 @@ O Habitt guarda tudo no seu dispositivo. Quando quiser uma cópia na nuvem, ligu
 INÍCIO RÁPIDO
 Importe todos os seus hábitos de outras apps como o HabitKit. Use um modelo pronto para começar em segundos: acordar cedo, deitar cedo, ginásio, corrida, caminhada, beber água, lavar os dentes, cuidados com a pele, alimentação, estudo, leitura, medicação, sessões de produtividade e mais.
 
+MAIS DO QUE UM REGISTO DE HÁBITOS
+• Sincronização de saúde: passos, sono, exercício, minutos de atenção plena e calorias vêm diretamente do Health Connect. Apenas leitura, e tudo fica no dispositivo.
+• Alarmes para hábitos que não podem falhar, como a medicação. Tocam até serem desligados.
+• Um som de notificação para cada hábito e temas de cor ao seu gosto. Tudo grátis.
+
 ASPETO
 Modo escuro e claro.
 

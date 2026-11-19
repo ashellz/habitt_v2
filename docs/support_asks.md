@@ -25,7 +25,7 @@ and the pure [`AskBudget`](../lib/services/ask_budget.dart). Surfaces live in
 
 | Surface | Where | When it shows | Spends the budget? |
 |---|---|---|---|
-| **Review prompt** (native) | after the celebration, or at launch/resume | first perfect-days streak of 7, 90-day guard, native review available | yes |
+| **Review prompt** (native) | after the celebration, or at launch/resume | first perfect-days streak of 7 **or** 7 days of use and 10 completions, 90-day guard, native review available | yes |
 | **Milestone support card** | inside the streak celebration dialog | the celebration shows and the streak crossed 7 or 30 | yes |
 | **Main-page banner** | end of the habit list (list view) | 7 days of use, 10 completions, dismiss schedule, budget free | no, it yields |
 | **Support sheet** | theme pick, opening cloud backup setup | at most every 30 days | no, user-initiated |
@@ -84,21 +84,28 @@ path. The celebration is always on; there is no preference for it. Steps:
    ([`evaluateStreakCelebration`](../lib/util/perfect_streak_celebration.dart)).
 4. Pick at most one ask with `planMomentAsk`, in the order of
    `kMomentAskPriority`: **review first, then the milestone card**. The review is
-   possible when the 7-streak was reached, the 90-day guard has passed and the
+   possible when the review milestone is reached (a perfect-days streak of 7, or
+   7 days of use and 10 completions), the 90-day guard has passed and the
    native review is available. The card is possible when a milestone was crossed
    (highest wins, a back-filled day can jump over one) and asks are not hidden.
    The budget is claimed only after the ask is known to be possible.
 5. Show the celebration (with the card if it won), then request the review
    **after** the dialog is dismissed, never on top of it.
 
-Net effect: at the first 7-day streak most users get the review prompt; the
+Net effect: at the first 7-day streak, or once a user has 7 days of use and 10
+completions (whichever comes first; the engagement route can show at launch or
+resume with no celebration), most users get the review prompt; the
 support card first appears at 30 days. Users already covered by the review's
 90-day guard get the card at 7. To flip the priority, reorder
 `kMomentAskPriority`. A review blocked by the budget is not lost:
-`support_streak7_reached` persists, so it fires on a later free day.
+the streak flag persists and the engagement route is recomputed from
+`support_first_seen_ms` and `total_habit_completions`, so it fires on a later free day.
 
 ## Review prompt
 
+`SupportProvider.reviewMilestoneReached` (`support_streak7_reached` or
+`reviewEngagementReached`, thresholds `reviewMinDaysOfUse` and
+`reviewMinCompletions`) gates it; the 90-day guard lives in
 `FeedbackService.canRequestReview()` (90-day guard on `review_last_requested_ms`
 plus the platform's `isAvailable()`, no side effects) and `requestReview()`
 (requests and stamps the guard). The old completion-triggered review is gone.

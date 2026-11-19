@@ -1,1 +1,1 @@
-rastreador,produtividade,disciplina,offline,backup,lembrete,diario,motivacao,agua,academia,sono
+rastreador,disciplina,lembrete,motivacao,agua,study,learning,reading,focus,timer,todo,tasks,list

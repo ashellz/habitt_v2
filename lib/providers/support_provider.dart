@@ -98,9 +98,21 @@ class SupportProvider extends ChangeNotifier {
     return claimed;
   }
 
-  // if streak >= 7 then its true
+  /// Days of use and completions that make a user "engaged" for the review
+  /// ask, so people who never string 7 perfect days together still get asked.
+  static const int reviewMinDaysOfUse = 7;
+  static const int reviewMinCompletions = 10;
+
+  /// Whether the user has used the app long enough and completed enough habits
+  /// to be asked for a review, regardless of any streak.
+  bool get reviewEngagementReached =>
+      _calendarDaysBetween(firstSeen, _clock()) >= reviewMinDaysOfUse &&
+      completions >= reviewMinCompletions;
+
+  /// True once the review may be asked: a perfect-days streak reached 7 (sticky)
+  /// or the user is engaged (7 days of use and 10 completions).
   bool get reviewMilestoneReached =>
-      _prefs.getBool(_kStreakReachedKey) ?? false;
+      (_prefs.getBool(_kStreakReachedKey) ?? false) || reviewEngagementReached;
 
   // notes every streak change so it can mark the milestone reached
   void noteStreak(int streak) {

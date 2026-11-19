@@ -15,7 +15,43 @@
 
 default_platform(:android)
 
+# Google Play limits, in characters (not bytes).
+PLAY_LIMITS = { "title" => 30, "short_description" => 80, "full_description" => 4000 }.freeze
+
+# Fails the lane on any over-limit text so Play never gets a half-applied listing.
+def check_play_metadata!
+  errors = []
+  Dir.glob("metadata/android/*/").sort.each do |dir|
+    locale = File.basename(dir)
+    PLAY_LIMITS.each do |file, max|
+      path = File.join(dir, "#{file}.txt")
+      next unless File.exist?(path)
+      text = File.read(path, encoding: "UTF-8").strip
+      errors << "#{locale}/#{file}: #{text.length}/#{max} chars" if text.length > max
+    end
+  end
+  UI.user_error!("Metadata over limit:\n  #{errors.join("\n  ")}") unless errors.empty?
+  UI.success("Play metadata within limits")
+end
+
 platform :android do
+  desc "Check title/short/full description lengths for every locale (offline)"
+  lane :check_metadata do
+    check_play_metadata!
+  end
+
+  desc "Validate, then upload the store listing text only (title, short and full description) for all locales"
+  lane :metadata do
+    check_play_metadata!
+    upload_to_play_store(
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")

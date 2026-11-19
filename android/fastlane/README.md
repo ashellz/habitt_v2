@@ -15,6 +15,22 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
+### android check_metadata
+
+```sh
+[bundle exec] fastlane android check_metadata
+```
+
+Check title/short/full description lengths for every locale (offline)
+
+### android metadata
+
+```sh
+[bundle exec] fastlane android metadata
+```
+
+Validate, then upload the store listing text only (title, short and full description) for all locales
+
 ### android test
 
 ```sh

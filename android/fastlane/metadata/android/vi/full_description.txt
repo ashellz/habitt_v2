@@ -28,6 +28,11 @@ Habitt lưu mọi thứ trên thiết bị của bạn. Khi cần bản sao trê
 BẮT ĐẦU NHANH
 Nhập toàn bộ thói quen từ các ứng dụng khác như HabitKit. Dùng mẫu có sẵn để bắt đầu trong vài giây: dậy sớm, ngủ sớm, tập gym, chạy bộ, đi bộ, uống nước, đánh răng, chăm sóc da, dinh dưỡng, học tập, đọc sách, uống thuốc, phiên làm việc tập trung và nhiều hơn nữa.
 
+HƠN CẢ MỘT ỨNG DỤNG THEO DÕI THÓI QUEN
+• Đồng bộ sức khỏe: số bước chân, giấc ngủ, tập luyện, phút chánh niệm và calo lấy thẳng từ Health Connect. Chỉ đọc, và mọi thứ vẫn nằm trên thiết bị của bạn.
+• Báo thức cho những thói quen không thể bỏ lỡ, như uống thuốc. Chuông reo đến khi bạn tắt.
+• Chọn âm báo riêng cho từng thói quen và giao diện màu theo phong cách của bạn. Tất cả đều miễn phí.
+
 GIAO DIỆN
 Chế độ tối và sáng.
 

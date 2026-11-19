@@ -9,7 +9,10 @@ import 'app_localizations_bs.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_tr.dart';
 
 // ignore_for_file: type=lint
 
@@ -101,7 +104,10 @@ abstract class AppLocalizations {
     Locale('de'),
     Locale('en'),
     Locale('es'),
+    Locale('fr'),
     Locale('it'),
+    Locale('pt'),
+    Locale('tr'),
   ];
 
   /// No description provided for @accentColor.
@@ -6513,8 +6519,16 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['bs', 'de', 'en', 'es', 'it'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'bs',
+    'de',
+    'en',
+    'es',
+    'fr',
+    'it',
+    'pt',
+    'tr',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -6531,8 +6545,14 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
     case 'it':
       return AppLocalizationsIt();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'tr':
+      return AppLocalizationsTr();
   }
 
   throw FlutterError(

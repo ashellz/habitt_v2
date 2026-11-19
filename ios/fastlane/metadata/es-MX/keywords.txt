@@ -1,1 +1,1 @@
-rastreador,productividad,salud,offline,respaldo,recordatorio,diario,disciplina,agua,gym,meditar
+rastreador,recordatorio,disciplina,diario,health,fitness,workout,gym,sleep,water,diet,weight,steps

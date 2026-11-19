@@ -28,6 +28,11 @@ Habitt her şeyi cihazında saklar. Bulutta bir kopya istediğinde Google hesab�
 HIZLI BAŞLANGIÇ
 Tüm alışkanlıklarını HabitKit gibi diğer uygulamalardan içe aktar. Hazır bir şablonla saniyeler içinde başla: erken kalkmak, erken yatmak, spor salonu, koşu, yürüyüş, su içmek, diş fırçalamak, cilt bakımı, beslenme, ders çalışmak, kitap okumak, ilaçlar, verimlilik seansları ve daha fazlası.
 
+BİR ALIŞKANLIK TAKİBİNDEN FAZLASI
+• Sağlık senkronizasyonu: adımlar, uyku, egzersiz, farkındalık dakikaları ve kaloriler doğrudan Health Connect'ten gelir. Yalnızca okuma yapılır ve her şey cihazında kalır.
+• İlaç gibi kaçırmaman gereken alışkanlıklar için alarmlar. Sen kapatana kadar çalarlar.
+• Her alışkanlık için ayrı bildirim sesi ve tarzına uygun vurgu temaları. Hepsi ücretsiz.
+
 GÖRÜNÜM
 Koyu ve açık tema.
 

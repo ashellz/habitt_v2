@@ -28,6 +28,11 @@ Habitt conserve tout sur votre appareil. Si vous voulez une copie dans le cloud,
 DÉMARRAGE RAPIDE
 Importez toutes vos habitudes depuis d'autres applications comme HabitKit. Utilisez un modèle prêt à l'emploi pour démarrer en quelques secondes : se lever tôt, se coucher tôt, salle de sport, course, marche, boire de l'eau, se brosser les dents, soin de la peau, nutrition, étude, lecture, médicaments, sessions de productivité, et plus encore.
 
+PLUS QU'UN SUIVI D'HABITUDES
+• Synchro santé : pas, sommeil, exercice, minutes de pleine conscience et calories viennent directement de Health Connect. Lecture seule, et tout reste sur votre appareil.
+• Des alarmes pour les habitudes à ne pas manquer, comme un médicament. Elles sonnent jusqu'à ce que vous les arrêtiez.
+• Un son de notification par habitude et des thèmes de couleur à votre goût. Tout est gratuit.
+
 APPARENCE
 Mode sombre et clair.
 

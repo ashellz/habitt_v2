@@ -1,4 +1,4 @@
-Habitt is a habit tracker built around one idea: your data belongs to you.
+Habitt is a private habit tracker built around one idea: your data belongs to you.
 No account required. No internet needed. No analytics, no ads.
 
 TRACK YOUR WAY
@@ -27,6 +27,11 @@ Habitt stores everything on your device. When you want a cloud copy, connect you
 
 QUICK START
 Import all your habits from other habit tracking apps such as HabitKit. Use a premade template to get going in seconds: wake up early, go to bed early, gym, running, walking, drink water, brush teeth, skin care, nutrition, studying, reading, medications, productivity sessions, and more.
+
+MORE THAN A HABIT TRACKER
+• Health sync: steps, sleep, exercise, mindful minutes and calories come straight from Health Connect. Read-only, and it all stays on your device.
+• Alarms for habits you can't miss, like medication. They ring until you dismiss them.
+• A notification sound for each habit, and accent themes to match your style. All free.
 
 APPEARANCE
 Dark and light mode.

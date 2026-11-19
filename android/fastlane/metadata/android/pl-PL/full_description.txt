@@ -28,6 +28,11 @@ Habitt przechowuje wszystko na twoim urządzeniu. Gdy zechcesz kopię w chmurze,
 SZYBKI START
 Zaimportuj wszystkie nawyki z innych aplikacji, takich jak HabitKit. Skorzystaj z gotowego szablonu, by zacząć w kilka sekund: wczesne wstawanie, wczesne kładzenie się spać, siłownia, bieganie, spacery, picie wody, mycie zębów, pielęgnacja skóry, odżywianie, nauka, czytanie, leki, sesje produktywności i więcej.
 
+WIĘCEJ NIŻ TRACKER NAWYKÓW
+• Synchronizacja zdrowia: kroki, sen, ćwiczenia, minuty uważności i kalorie trafiają prosto z Health Connect. Tylko do odczytu, a wszystko zostaje na Twoim urządzeniu.
+• Alarmy dla nawyków, o których nie wolno zapomnieć, np. leków. Dzwonią, dopóki ich nie wyłączysz.
+• Osobny dźwięk powiadomienia dla każdego nawyku i motywy kolorystyczne w Twoim stylu. Wszystko za darmo.
+
 WYGLĄD
 Tryb ciemny i jasny.
 

@@ -15,6 +15,22 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios check_metadata
+
+```sh
+[bundle exec] fastlane ios check_metadata
+```
+
+Check name/subtitle/keywords/description lengths for every locale (offline)
+
+### ios metadata
+
+```sh
+[bundle exec] fastlane ios metadata
+```
+
+Validate, then upload store text only (name, subtitle, keywords, description). No binary, no screenshots, no review submission
+
 ### ios internal
 
 ```sh

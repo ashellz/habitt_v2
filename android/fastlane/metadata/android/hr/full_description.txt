@@ -28,6 +28,11 @@ Habitt sve čuva na tvom uređaju. Ako želiš kopiju u cloudu, poveži Google r
 BRZI POČETAK
 Prebaci sve navike iz drugih aplikacija poput HabitKit-a. Koristi spremne navike za početak za samo nekoliko sekundi: rano ustajanje, rano lijeganje, teretana, trčanje, hodanje, pijenje vode, pranje zuba, njega kože, prehrana, učenje, čitanje, lijekovi, produktivne sesije i još mnogo toga.
 
+VIŠE OD TRACKERA NAVIKA
+• Sinkronizacija zdravlja: koraci, san, vježbanje, minute svjesnosti i kalorije dolaze izravno iz Health Connecta. Samo za čitanje, a sve ostaje na tvom uređaju.
+• Alarmi za navike koje ne smiješ propustiti, poput lijekova. Zvone dok ih ne isključiš.
+• Zvuk obavijesti za svaku naviku i teme boja po tvom stilu. Sve je besplatno.
+
 IZGLED
 Tamni i svijetli način prikaza.
 
