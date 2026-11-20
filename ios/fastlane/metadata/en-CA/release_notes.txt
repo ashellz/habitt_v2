@@ -1,1 +1,2 @@
-Improvements, polishing and bug fixes.
+New languages: Turkish, Portuguese and French.
+Plus app improvements and bug fixes.

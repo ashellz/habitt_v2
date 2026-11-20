@@ -1,1 +1,2 @@
-Ulepszenia, dopracowania i poprawki błędów.
+Nowe języki: turecki, portugalski i francuski.
+Dodatkowo ulepszenia aplikacji i poprawki błędów.

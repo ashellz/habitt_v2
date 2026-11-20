@@ -1,1 +1,2 @@
-Cải tiến, tinh chỉnh và sửa lỗi.
+Ngôn ngữ mới: tiếng Thổ Nhĩ Kỳ, tiếng Bồ Đào Nha và tiếng Pháp.
+Ngoài ra còn có các cải tiến ứng dụng và sửa lỗi.

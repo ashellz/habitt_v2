@@ -1,1 +1,2 @@
-Verbeteringen, verfijningen en bugfixes.
+Nieuwe talen: Turks, Portugees en Frans.
+Ook app-verbeteringen en bugfixes.

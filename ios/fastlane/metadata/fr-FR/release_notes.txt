@@ -1,1 +1,2 @@
-Améliorations, peaufinage et corrections de bugs.
+Nouvelles langues : turc, portugais et français.
+Ainsi que des améliorations de l'app et des corrections de bugs.

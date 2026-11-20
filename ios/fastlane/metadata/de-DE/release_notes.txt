@@ -1,1 +1,2 @@
-Verbesserungen, Feinschliff und Fehlerbehebungen.
+Neue Sprachen: Türkisch, Portugiesisch und Französisch.
+Dazu App-Verbesserungen und Fehlerbehebungen.

@@ -1,1 +1,2 @@
-Poboljšanja, dorade i ispravci grešaka.
+Novi jezici: turski, portugalski i francuski.
+Također poboljšanja aplikacije i ispravci grešaka.

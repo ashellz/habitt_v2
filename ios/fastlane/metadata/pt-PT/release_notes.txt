@@ -1,1 +1,2 @@
-Melhorias, afinações e correções de erros.
+Novos idiomas: turco, português e francês.
+Além de melhorias na app e correções de erros.
