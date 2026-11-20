@@ -50,6 +50,11 @@ Quick-start habits: wake up early, go to bed early, brush teeth, skin care, show
 - Per-habit notifications with configurable times, weekdays and personalized texts
 - Morning, Mid-day, Wrap up notifications, schedulable per day of the week
 - Select from 10 notifications sounds
+- Habit alarms: switch a habit's reminder to an alarm that rings until dismissed (even in silent mode on Android), made for urgent habits like medication
+
+**Apple Health & Health Connect**
+- Link a habit to steps, sleep, exercise minutes, mindful minutes or calories and progress syncs automatically
+- Read-only, processed on your device, synced on app open/resume
 
 **Appearance**
 - Dark and light mode
@@ -62,35 +67,31 @@ Quick-start habits: wake up early, go to bed early, brush teeth, skin care, show
 - Local AES-256-GCM encryption (PBKDF2-HMAC-SHA256, 200 000 iterations), with optional PIN protection on the encryption key
 
 **Localization**
-English, German, Spanish, Italian, Bosnian
+English, German, Spanish, Italian, French, Portuguese, Turkish, Bosnian
 
 **Future features**
 
-***Currently worked on (0):***
-(0) Apple Health and Health Connect integrations:
-- Sync calories, sleep, workouts, steps and more from your health app to Habitt, this will complete and add progress to your habits automatically
-
-(1) Habit goals:
+***Currently worked on:***
+(0) Habit goals:
 - Add habit amount/duration goal, improvement sheets will show until goal is reached and no more
 
-(2) Show habit next day if missed
+(1) Show habit next day if missed
 - For weekly, monthly and custom habit intervals, add toggle option: if habit is missed show it the next day and the next day until the next schedule. Why? You may want to eat omega 3 food every 3 days but you miss it once, instead of waiting 3 days again, just do it tomorrow
 
-(3) Daily planner:
+(2) Daily planner:
 - Adjust time range for habits, this existed before new design, logic is there but it just needs to be added to new design
 
-(4) More notification personalizations:
+(3) More notification personalizations:
 - Personalize day period notifications based on habit period completion progress, personalize premade habit template notifications more than they are now
 
-(5) Premade habit benefits:
+(4) Premade habit benefits:
 - Add new UI elements to match premade habits better: such as importing glasses when adding amount of water drank to Drink water habit. Also customizable button presets user can make to add +10 or +50 / +10m or +1h by one press
 
-(6) Habits from onboarding:
+(5) Habits from onboarding:
 - Upgrade onboarding to ask you questions and add premade habits based on your answers
 
 Other features:
 - Time counter telling you how long you're working on this habit, maybe show a strength graph over time as well
-- Urgent habits (like medicine) get an alarm option for notification
 - Widgets
 - Live notifications like duolingo before habits reset if not all are completed
 
@@ -104,6 +105,7 @@ Other features:
 | State management | Provider (ChangeNotifier) |
 | Local storage | Hive CE |
 | Notifications | Awesome Notifications |
+| Health data | `health` (Apple HealthKit / Health Connect, read-only) |
 | Charts | fl_chart |
 | Backup storage | Google Drive API, iCloud (`icloud_storage`) |
 | Auth (backup only) | Firebase Auth + Google Sign-In |

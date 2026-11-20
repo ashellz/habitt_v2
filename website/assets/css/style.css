@@ -578,6 +578,7 @@ section { position: relative; }
 .tile.w2 { grid-column: span 2; }
 .tile.w3 { grid-column: span 3; }
 .tile.w4 { grid-column: span 4; }
+.tile.w6 { grid-column: span 6; }
 .tile.tall { grid-row: span 2; }
 .tile .art { margin-top: auto; padding-top: 18px; }
 .tile.health { background: linear-gradient(160deg, var(--blue-wash), var(--bg-2) 60%); }
@@ -823,7 +824,7 @@ footer { padding: 70px 0 50px; }
   .hero-stage { height: 640px; max-width: 560px; width: 100%; margin: 0 auto; }
   .flow { grid-template-columns: 1fr; }
   .bento { grid-template-columns: repeat(2, 1fr); }
-  .tile.w2, .tile.w3, .tile.w4 { grid-column: span 2; }
+  .tile.w2, .tile.w3, .tile.w4, .tile.w6 { grid-column: span 2; }
   .tile.tall { grid-row: auto; }
   .compare-wrap, .import-grid, .indie { grid-template-columns: 1fr; }
   .compare-wrap .section-head, .indie .section-head { margin-bottom: 0; }
@@ -853,7 +854,7 @@ footer { padding: 70px 0 50px; }
   .badge { height: 56px; padding: 0 18px 0 14px; }
   .badge b { font-size: 18px; }
   .bento { grid-template-columns: 1fr; }
-  .tile.w2, .tile.w3, .tile.w4 { grid-column: auto; }
+  .tile.w2, .tile.w3, .tile.w4, .tile.w6 { grid-column: auto; }
   .periods { grid-template-columns: repeat(2, 1fr); }
   .transfer .app img { width: 84px; height: 84px; border-radius: 20px; }
   .transfer .lane { left: 96px; right: 96px; top: 42px; }
