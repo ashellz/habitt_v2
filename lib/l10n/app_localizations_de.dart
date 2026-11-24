@@ -3880,4 +3880,45 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern.';
+
+  @override
+  String get widgetDayComplete => 'Tag geschafft';
+
+  @override
+  String get widgetDayCompleteBody => 'Alle Gewohnheiten erledigt. Bis morgen.';
+
+  @override
+  String get widgetNothingToday => 'Heute ist nichts geplant';
+
+  @override
+  String get widgetStartStreak =>
+      'Schließe heute alle Gewohnheiten ab, um einen Streak zu starten';
+
+  @override
+  String get widgetStreakName => 'Streak';
+
+  @override
+  String get widgetStreakDescription =>
+      'Dein Streak perfekter Tage und wie es um ihn steht.';
+
+  @override
+  String get widgetStreakWeekName => 'Streak-Woche';
+
+  @override
+  String get widgetStreakWeekDescription =>
+      'Dein Streak mit den letzten 7 Tagen.';
+
+  @override
+  String get widgetTodayRingName => 'Tagesring';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Die heutigen Gewohnheiten als Ring, der sich füllt.';
+
+  @override
+  String get widgetUpNextName => 'Als Nächstes';
+
+  @override
+  String get widgetUpNextDescription =>
+      'Die Gewohnheiten für diese Tageszeit, mit deinem Streak.';
 }

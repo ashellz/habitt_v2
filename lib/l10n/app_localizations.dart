@@ -6507,6 +6507,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can change this anytime in Notification settings.'**
   String get alarmDndDialogTip;
+
+  /// Home screen widget: shown when every habit today is done
+  ///
+  /// In en, this message translates to:
+  /// **'Day complete'**
+  String get widgetDayComplete;
+
+  /// No description provided for @widgetDayCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All habits done. See you tomorrow.'**
+  String get widgetDayCompleteBody;
+
+  /// No description provided for @widgetNothingToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing scheduled today'**
+  String get widgetNothingToday;
+
+  /// No description provided for @widgetStartStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete every habit today to start a streak'**
+  String get widgetStartStreak;
+
+  /// Name of the Streak home screen widget in the system widget picker
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get widgetStreakName;
+
+  /// No description provided for @widgetStreakDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your perfect-days streak and how it\'s doing.'**
+  String get widgetStreakDescription;
+
+  /// No description provided for @widgetStreakWeekName.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak week'**
+  String get widgetStreakWeekName;
+
+  /// No description provided for @widgetStreakWeekDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your streak with the last 7 days.'**
+  String get widgetStreakWeekDescription;
+
+  /// No description provided for @widgetTodayRingName.
+  ///
+  /// In en, this message translates to:
+  /// **'Today ring'**
+  String get widgetTodayRingName;
+
+  /// No description provided for @widgetTodayRingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s habits as one ring, filling as you go.'**
+  String get widgetTodayRingDescription;
+
+  /// No description provided for @widgetUpNextName.
+  ///
+  /// In en, this message translates to:
+  /// **'Up next'**
+  String get widgetUpNextName;
+
+  /// No description provided for @widgetUpNextDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The habits for this part of the day, with your streak.'**
+  String get widgetUpNextDescription;
 }
 
 class _AppLocalizationsDelegate

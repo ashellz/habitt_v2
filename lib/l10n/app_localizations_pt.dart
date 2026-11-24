@@ -3867,4 +3867,45 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'Você pode mudar isso a qualquer momento nas configurações de notificação.';
+
+  @override
+  String get widgetDayComplete => 'Dia concluído';
+
+  @override
+  String get widgetDayCompleteBody => 'Todos os hábitos feitos. Até amanhã.';
+
+  @override
+  String get widgetNothingToday => 'Nada agendado para hoje';
+
+  @override
+  String get widgetStartStreak =>
+      'Conclua todos os hábitos hoje para começar uma sequência';
+
+  @override
+  String get widgetStreakName => 'Sequência';
+
+  @override
+  String get widgetStreakDescription =>
+      'Sua sequência de dias perfeitos e como ela está.';
+
+  @override
+  String get widgetStreakWeekName => 'Sequência da semana';
+
+  @override
+  String get widgetStreakWeekDescription =>
+      'Sua sequência com os últimos 7 dias.';
+
+  @override
+  String get widgetTodayRingName => 'Anel de hoje';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Os hábitos de hoje em um anel que vai se enchendo.';
+
+  @override
+  String get widgetUpNextName => 'A seguir';
+
+  @override
+  String get widgetUpNextDescription =>
+      'Os hábitos desta parte do dia, com sua sequência.';
 }

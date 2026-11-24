@@ -1033,5 +1033,17 @@
   "alarmDndTitle": "Sonner en mode Ne pas déranger",
   "alarmDndDesc": "Si activé, les alarmes sonneront même en mode Ne pas déranger.",
   "alarmDndDialogTitle": "Sonner en mode Ne pas déranger ?",
-  "alarmDndDialogTip": "Tu peux le modifier à tout moment dans les réglages de notifications."
+  "alarmDndDialogTip": "Tu peux le modifier à tout moment dans les réglages de notifications.",
+  "widgetDayComplete": "Journée terminée",
+  "widgetDayCompleteBody": "Toutes les habitudes sont faites. À demain.",
+  "widgetNothingToday": "Rien de prévu aujourd'hui",
+  "widgetStartStreak": "Termine toutes tes habitudes aujourd'hui pour lancer une série",
+  "widgetStreakName": "Série",
+  "widgetStreakDescription": "Ta série de jours parfaits et son état.",
+  "widgetStreakWeekName": "Série de la semaine",
+  "widgetStreakWeekDescription": "Ta série avec les 7 derniers jours.",
+  "widgetTodayRingName": "Anneau du jour",
+  "widgetTodayRingDescription": "Les habitudes du jour dans un anneau qui se remplit.",
+  "widgetUpNextName": "À suivre",
+  "widgetUpNextDescription": "Les habitudes de ce moment de la journée, avec ta série."
 }

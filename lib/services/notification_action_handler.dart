@@ -186,6 +186,14 @@ class NotificationActionHandler {
     await drainPending?.call();
   }
 
+  /// Opens [habitId] the way a notification tap does (see
+  /// [_navigateToHabit]): the log-progress dialog over the main page when the
+  /// habit can be logged by hand, its details page otherwise. Safe before the
+  /// navigator exists: the route is replayed by [consumePendingRoute]. Also
+  /// used for home screen widget taps (WidgetLaunchHandler).
+  static void openHabit(int habitId, {DateTime? day}) =>
+      _navigateToHabit(habitId, day);
+
   /// Resolves a notification tap.
   ///
   /// Amount and duration habits that can be logged by hand open the

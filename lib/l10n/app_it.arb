@@ -1368,5 +1368,17 @@
   "alarmDndTitle": "Suona in modalità DND",
   "alarmDndDesc": "Se attivo, le sveglie suoneranno anche in modalità DND.",
   "alarmDndDialogTitle": "Suonare in modalità DND?",
-  "alarmDndDialogTip": "Puoi cambiarlo quando vuoi nelle impostazioni delle notifiche."
+  "alarmDndDialogTip": "Puoi cambiarlo quando vuoi nelle impostazioni delle notifiche.",
+  "widgetDayComplete": "Giornata completata",
+  "widgetDayCompleteBody": "Tutte le abitudini fatte. A domani.",
+  "widgetNothingToday": "Niente in programma oggi",
+  "widgetStartStreak": "Completa tutte le abitudini oggi per iniziare una serie",
+  "widgetStreakName": "Serie",
+  "widgetStreakDescription": "La tua serie di giorni perfetti e come sta andando.",
+  "widgetStreakWeekName": "Serie settimanale",
+  "widgetStreakWeekDescription": "La tua serie con gli ultimi 7 giorni.",
+  "widgetTodayRingName": "Anello di oggi",
+  "widgetTodayRingDescription": "Le abitudini di oggi in un anello che si riempie.",
+  "widgetUpNextName": "Prossime",
+  "widgetUpNextDescription": "Le abitudini di questa parte della giornata, con la tua serie."
 }

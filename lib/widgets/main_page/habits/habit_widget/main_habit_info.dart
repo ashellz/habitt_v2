@@ -9,11 +9,8 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
-import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/format_minutes_of_day.dart';
-import 'package:habitt/util/get_duration_string.dart';
-import 'package:habitt/util/get_sleep_amount_string.dart';
-import 'package:habitt/util/resolve_amount_label_for_value.dart';
+import 'package:habitt/util/habit_progress.dart';
 import 'package:habitt/widgets/habit_widget/habit_tag.dart';
 import 'package:habitt/widgets/habit_widget/next_scheduled_tag.dart';
 import 'package:provider/provider.dart';
@@ -42,72 +39,13 @@ class MainHabitInfo extends StatelessWidget {
     final liveDurationSeconds = context.select<TimerProvider, int?>(
       (t) => t.liveProgressFor(habit.id),
     );
-    final int durationCompletedValue =
-        liveDurationSeconds ?? habit.durationCompleted;
-
-    final bool hasProgress =
-        isAmount || isTimeOfDay
-            ? habit.amountCompleted > 0
-            : durationCompletedValue > 0;
-    final bool isCompleted = habit.completed;
-
-    String amountText() {
-      if (habit.healthMetric == HealthMetricType.sleep) {
-        return getSleepAmountString(habit);
-      }
-      final loc = AppLocalizations.of(context)!;
-      final sp = context.read<StateProvider>();
-      final int amountForLabel =
-          hasProgress && !isCompleted
-              ? habit.amount
-              : (isCompleted ? habit.amountCompleted : habit.amount);
-      final String amountLabel = resolveAmountLabelForValue(
-        habit.amountLabel.isEmpty
-            ? AmountLabelPreset.times.plural
-            : habit.amountLabel,
-        amountForLabel,
-        loc,
-        customSingulars: sp.customSingulars,
-      );
-
-      if (hasProgress && !isCompleted) {
-        return "${habit.amountCompleted} / ${habit.amount} $amountLabel";
-      } else if (isCompleted) {
-        return "${habit.amountCompleted} $amountLabel";
-      }
-      return "${habit.amount} $amountLabel";
-    }
-
-    String durationText() {
-      if ((hasProgress && !isCompleted) &&
-          durationCompletedValue < habit.duration) {
-        return "${getDurationString(durationCompletedValue)} / ${getDurationString(habit.duration)}";
-      } else if (isCompleted || durationCompletedValue >= habit.duration) {
-        return getDurationString(durationCompletedValue);
-      }
-      return getDurationString(habit.duration);
-    }
-
-    String timeOfDayText() {
-      // show the real logged start bedtime or wake time once there is one, otherwise the target
-      return formatMinutesOfDay(
-        context,
-        hasProgress ? habit.amountCompleted : habit.amount,
-      );
-    }
-
-    String getText() {
-      switch (habit.trackingType) {
-        case HabitTrackingType.amount:
-          return amountText();
-        case HabitTrackingType.duration:
-          return durationText();
-        case HabitTrackingType.timeOfDay:
-          return timeOfDayText();
-        default:
-          return "";
-      }
-    }
+    String getText() => habitProgressText(
+      habit,
+      loc: AppLocalizations.of(context)!,
+      customSingulars: context.read<StateProvider>().customSingulars,
+      formatTime: (minutes) => formatMinutesOfDay(context, minutes),
+      liveDurationSeconds: liveDurationSeconds,
+    );
 
     final loc = AppLocalizations.of(context)!;
 

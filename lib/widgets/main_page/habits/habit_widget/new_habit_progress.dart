@@ -7,6 +7,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
+import 'package:habitt/util/habit_progress.dart';
 import 'package:habitt/util/hold_complete_tip.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/default/checkmark.dart';
@@ -35,42 +36,9 @@ class NewHabitProgress extends StatefulWidget {
   State<NewHabitProgress> createState() => _NewHabitProgressState();
 }
 
-// how far past target + tolerance the pie stays empty for timeOfDay habits
-const int _timeOfDayProgressWindowMinutes = 240;
-
 class _NewHabitProgressState extends State<NewHabitProgress> {
-  double getProgressValue({int? liveDurationSeconds}) {
-    final habit = widget.habit;
-
-    if (habit.completed || habit.skipped) return 1.0;
-
-    // timeOfDay (bedtime/wake time): earlier is better, values are minutes of
-    // day. Nothing logged = no progress; otherwise the pie fills as the logged
-    // time gets closer to target + tolerance (completed is handled above).
-    if (habit.tracksTimeOfDay) {
-      if (habit.amountCompleted <= 0) return 0.0;
-      final lateness =
-          habit.amountCompleted - (habit.amount + habit.toleranceMinutes);
-      if (lateness <= 0) return 1.0;
-      return (1 - lateness / _timeOfDayProgressWindowMinutes).clamp(0.0, 1.0);
-    }
-
-    if (habit.tracksAmount) {
-      if (habit.amount <= 0) return 0.0; // avoiding division by zero
-      final progress = habit.amountCompleted / habit.amount;
-      return progress.clamp(0.0, 1.0);
-    }
-
-    if (habit.tracksDuration) {
-      // use timer progress if available, otherwise use the habits completed duration
-      if (habit.duration <= 0) return 0.0; // avoiding division by zero
-      final completed = liveDurationSeconds ?? habit.durationCompleted;
-      final progress = completed / habit.duration;
-      return progress.clamp(0.0, 1.0);
-    }
-
-    return 0.0;
-  }
+  double getProgressValue({int? liveDurationSeconds}) =>
+      habitProgressValue(widget.habit, liveDurationSeconds: liveDurationSeconds);
 
   double _scale = 1.0;
 

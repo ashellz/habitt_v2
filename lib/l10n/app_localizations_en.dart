@@ -3845,4 +3845,44 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'You can change this anytime in Notification settings.';
+
+  @override
+  String get widgetDayComplete => 'Day complete';
+
+  @override
+  String get widgetDayCompleteBody => 'All habits done. See you tomorrow.';
+
+  @override
+  String get widgetNothingToday => 'Nothing scheduled today';
+
+  @override
+  String get widgetStartStreak =>
+      'Complete every habit today to start a streak';
+
+  @override
+  String get widgetStreakName => 'Streak';
+
+  @override
+  String get widgetStreakDescription =>
+      'Your perfect-days streak and how it\'s doing.';
+
+  @override
+  String get widgetStreakWeekName => 'Streak week';
+
+  @override
+  String get widgetStreakWeekDescription => 'Your streak with the last 7 days.';
+
+  @override
+  String get widgetTodayRingName => 'Today ring';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Today\'s habits as one ring, filling as you go.';
+
+  @override
+  String get widgetUpNextName => 'Up next';
+
+  @override
+  String get widgetUpNextDescription =>
+      'The habits for this part of the day, with your streak.';
 }

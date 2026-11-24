@@ -3852,4 +3852,44 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'Bunu istediğin zaman Bildirim ayarlarından değiştirebilirsin.';
+
+  @override
+  String get widgetDayComplete => 'Gün tamamlandı';
+
+  @override
+  String get widgetDayCompleteBody =>
+      'Tüm alışkanlıklar bitti. Yarın görüşürüz.';
+
+  @override
+  String get widgetNothingToday => 'Bugün planlanan bir şey yok';
+
+  @override
+  String get widgetStartStreak =>
+      'Seri başlatmak için bugün tüm alışkanlıkları tamamla';
+
+  @override
+  String get widgetStreakName => 'Seri';
+
+  @override
+  String get widgetStreakDescription => 'Mükemmel günler serin ve durumu.';
+
+  @override
+  String get widgetStreakWeekName => 'Haftalık seri';
+
+  @override
+  String get widgetStreakWeekDescription => 'Son 7 günle birlikte serin.';
+
+  @override
+  String get widgetTodayRingName => 'Bugünün halkası';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Bugünün alışkanlıkları, doldukça dolan tek bir halkada.';
+
+  @override
+  String get widgetUpNextName => 'Sıradaki';
+
+  @override
+  String get widgetUpNextDescription =>
+      'Günün bu bölümündeki alışkanlıklar ve serin.';
 }
