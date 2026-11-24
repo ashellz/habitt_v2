@@ -34,7 +34,7 @@ class BillingService {
     if (Platform.isAndroid) return _androidApiKey;
     return '';
   }
-
+ 
   static Future<bool> checkHasPro() async {
     try {
       final customerInfo = await Purchases.getCustomerInfo();

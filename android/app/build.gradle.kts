@@ -41,35 +41,42 @@ android {
         versionName = flutter.versionName
     }
    
-    signingConfigs {
-        getByName("debug") {
-            storeFile = file(keystoreProperties["debugStoreFile"] as String)
-            storePassword = keystoreProperties["debugStorePassword"] as String
-            keyAlias = keystoreProperties["debugKeyAlias"] as String
-            keyPassword = keystoreProperties["debugKeyPassword"] as String
-        }
+    // Signing keys live in the gitignored android/key.properties. Without it
+    // (fresh checkout) debug uses the default Android debug keystore.
+    val hasKeyProperties = keystorePropertiesFile.exists()
 
-        create("release") {
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
+    signingConfigs {
+        if (hasKeyProperties) {
+            getByName("debug") {
+                storeFile = file(keystoreProperties["debugStoreFile"] as String)
+                storePassword = keystoreProperties["debugStorePassword"] as String
+                keyAlias = keystoreProperties["debugKeyAlias"] as String
+                keyPassword = keystoreProperties["debugKeyPassword"] as String
+            }
+
+            create("release") {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
         }
     }
 
     buildTypes {
-        getByName("debug") {
-            signingConfig = signingConfigs.getByName("debug")
-        }
+        if (hasKeyProperties) {
+            getByName("debug") {
+                signingConfig = signingConfigs.getByName("debug")
+            }
 
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            getByName("release") {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 }
 
 kotlin {
-    jvmToolchain(17)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
     }
