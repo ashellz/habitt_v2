@@ -167,6 +167,19 @@ iOS registers the `habitt` URL scheme in `ios/Runner/Info.plist`. Android
 needs the `es.antonborri.home_widget.action.LAUNCH` intent filter on
 `MainActivity`.
 
+Android, after the process died with the task still alive (memory pressure,
+`kill`): the tap recreates `MainActivity` with the task's old intent and
+delivers the tap through `onNewIntent` before Dart listens, so home_widget
+would drop it. `MainActivity.onNewIntent` therefore keeps a widget launch as
+the activity's intent (`initiallyLaunchedFromHomeWidget()` then reports it),
+and `onCreate` neutralises a restored widget-launch intent so reopening the
+app later does not replay an old tap.
+
+`adb shell am force-stop` cancels all of the app's PendingIntents, widget
+taps included: the first tap afterwards only wakes the app (Glance redraws
+the widget with new intents), the second one opens it. Normal process death
+does not do this.
+
 ## Native side
 
 iOS is not built yet (see `openspec/changes/home-widgets-readonly/tasks.md`
