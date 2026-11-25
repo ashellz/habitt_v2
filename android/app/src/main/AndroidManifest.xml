@@ -24,6 +24,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Home screen widget taps (habitt://widget/...), reported by home_widget
+                 to WidgetLaunchHandler. See docs/home_widgets.md. -->
+            <intent-filter>
+                <action android:name="es.antonborri.home_widget.action.LAUNCH"/>
+            </intent-filter>
             <!-- Lets Health Connect route its permissions-rationale link into this activity -->
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
@@ -55,6 +60,64 @@
             android:name=".HabitAlarmRingService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback"/>
+        <!-- Home screen widgets (Jetpack Glance), read-only. See docs/home_widgets.md. -->
+        <receiver
+            android:name=".widgets.StreakWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_streak_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_streak_info"/>
+        </receiver>
+        <receiver
+            android:name=".widgets.StreakWeekWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_streak_week_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_streak_week_info"/>
+        </receiver>
+        <receiver
+            android:name=".widgets.TodayRingWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_today_ring_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_today_ring_info"/>
+        </receiver>
+        <receiver
+            android:name=".widgets.UpNextWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_up_next_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_up_next_info"/>
+        </receiver>
+        <!-- Redraws the widgets at part-of-day boundaries and the day start, and
+             after clock, time zone and locale changes, reboots and app updates. -->
+        <receiver
+            android:name=".widgets.WidgetRefreshReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+            </intent-filter>
+        </receiver>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

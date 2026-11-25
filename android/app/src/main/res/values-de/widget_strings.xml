@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_de.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="widget_streak_name">Streak</string>
+    <string name="widget_streak_description">Dein Streak perfekter Tage und wie es um ihn steht.</string>
+    <string name="widget_streak_week_name">Streak-Woche</string>
+    <string name="widget_streak_week_description">Dein Streak mit den letzten 7 Tagen.</string>
+    <string name="widget_today_ring_name">Tagesring</string>
+    <string name="widget_today_ring_description">Die heutigen Gewohnheiten als Ring, der sich füllt.</string>
+    <string name="widget_up_next_name">Als Nächstes</string>
+    <string name="widget_up_next_description">Die Gewohnheiten für diese Tageszeit, mit deinem Streak.</string>
+    <string name="widget_open_app">Öffne Habitt, um deine Gewohnheiten hier zu sehen</string>
+</resources>

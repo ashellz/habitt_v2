@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_tr.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="widget_streak_name">Seri</string>
+    <string name="widget_streak_description">Mükemmel günler serin ve durumu.</string>
+    <string name="widget_streak_week_name">Haftalık seri</string>
+    <string name="widget_streak_week_description">Son 7 günle birlikte serin.</string>
+    <string name="widget_today_ring_name">Bugünün halkası</string>
+    <string name="widget_today_ring_description">Bugünün alışkanlıkları, doldukça dolan tek bir halkada.</string>
+    <string name="widget_up_next_name">Sıradaki</string>
+    <string name="widget_up_next_description">Günün bu bölümündeki alışkanlıklar ve serin.</string>
+    <string name="widget_open_app">Alışkanlıklarını burada görmek için Habitt\'i aç</string>
+</resources>

@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services")
     // END: FlutterFire Configuration
     id("kotlin-android")
+    id("org.jetbrains.kotlin.plugin.compose")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -84,4 +85,18 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+android {
+    // Jetpack Glance (home screen widgets, docs/home_widgets.md) is Compose based
+    buildFeatures {
+        compose = true
+    }
+}
+
+dependencies {
+    implementation("androidx.glance:glance-appwidget:1.2.0")
+    testImplementation("junit:junit:4.13.2")
+    // android.jar's org.json is a stub in JVM unit tests
+    testImplementation("org.json:json:20240303")
 }

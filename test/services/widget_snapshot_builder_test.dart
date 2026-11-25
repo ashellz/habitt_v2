@@ -321,6 +321,8 @@ void main() {
     test('strings follow the app language', () {
       final snap = _build(today: [_habit(1, 'A')], locale: 'bs');
       expect(snap['strings']['daysStreak'], 'dana streak');
+      expect(snap['strings']['day'], 'dan');
+      expect(snap['strings']['days'], 'dana');
       expect(snap['today']['upNext']['morning']['label'], 'Jutro');
     });
 

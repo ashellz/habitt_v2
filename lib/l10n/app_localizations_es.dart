@@ -3910,4 +3910,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get widgetUpNextDescription =>
       'Los hábitos de este momento del día, con tu racha.';
+
+  @override
+  String get widgetOpenApp => 'Abre Habitt para ver tus hábitos aquí';
 }

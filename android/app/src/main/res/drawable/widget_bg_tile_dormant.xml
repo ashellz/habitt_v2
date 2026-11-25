@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home screen widgets (docs/home_widgets.md). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="18dp"/>
+            <gradient android:angle="225" android:startColor="#FFFEEE" android:endColor="#FFF2CF"/>
+        </shape>
+    </item>
+    <item android:width="130dp" android:height="130dp" android:gravity="bottom|right" android:right="-46dp" android:bottom="-46dp">
+        <shape android:shape="oval">
+            <gradient android:type="radial" android:gradientRadius="62dp" android:startColor="#5CFFB331" android:endColor="#00FFB331"/>
+        </shape>
+    </item>
+    <item android:drawable="@drawable/widget_art_streak_fade" android:width="80dp" android:height="94dp" android:gravity="bottom|right" android:right="-20dp" android:bottom="-38dp"/>
+</layer-list>

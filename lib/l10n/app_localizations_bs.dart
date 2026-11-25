@@ -3884,4 +3884,7 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get widgetUpNextDescription =>
       'Navike za ovaj dio dana, uz tvoj streak.';
+
+  @override
+  String get widgetOpenApp => 'Otvori Habitt da vidiš svoje navike ovdje';
 }

@@ -6579,6 +6579,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The habits for this part of the day, with your streak.'**
   String get widgetUpNextDescription;
+
+  /// Home screen widget: shown before the app has run once, so the widget has no data yet
+  ///
+  /// In en, this message translates to:
+  /// **'Open Habitt to see your habits here'**
+  String get widgetOpenApp;
 }
 
 class _AppLocalizationsDelegate

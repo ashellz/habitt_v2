@@ -3885,4 +3885,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get widgetUpNextDescription =>
       'The habits for this part of the day, with your streak.';
+
+  @override
+  String get widgetOpenApp => 'Open Habitt to see your habits here';
 }

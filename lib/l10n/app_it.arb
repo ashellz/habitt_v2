@@ -1380,5 +1380,6 @@
   "widgetTodayRingName": "Anello di oggi",
   "widgetTodayRingDescription": "Le abitudini di oggi in un anello che si riempie.",
   "widgetUpNextName": "Prossime",
-  "widgetUpNextDescription": "Le abitudini di questa parte della giornata, con la tua serie."
+  "widgetUpNextDescription": "Le abitudini di questa parte della giornata, con la tua serie.",
+  "widgetOpenApp": "Apri Habitt per vedere qui le tue abitudini"
 }

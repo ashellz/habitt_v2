@@ -3892,4 +3892,8 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get widgetUpNextDescription =>
       'Günün bu bölümündeki alışkanlıklar ve serin.';
+
+  @override
+  String get widgetOpenApp =>
+      'Alışkanlıklarını burada görmek için Habitt\'i aç';
 }

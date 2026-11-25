@@ -79,6 +79,8 @@ class WidgetSnapshotBuilder {
       'strings': {
         'dayStreak': '${loc.day} ${loc.streak}',
         'daysStreak': '${loc.days} ${loc.streak}',
+        'day': loc.day,
+        'days': loc.days,
         'dayComplete': loc.widgetDayComplete,
         'dayCompleteBody': loc.widgetDayCompleteBody,
         'nothingToday': loc.widgetNothingToday,

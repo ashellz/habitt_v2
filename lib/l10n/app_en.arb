@@ -1422,6 +1422,8 @@
   "widgetTodayRingDescription": "Today's habits as one ring, filling as you go.",
   "widgetUpNextName": "Up next",
   "widgetUpNextDescription": "The habits for this part of the day, with your streak.",
+  "widgetOpenApp": "Open Habitt to see your habits here",
+  "@widgetOpenApp": {"description": "Home screen widget: shown before the app has run once, so the widget has no data yet"},
   "@widgetDayComplete": {"description": "Home screen widget: shown when every habit today is done"},
   "@widgetStreakName": {"description": "Name of the Streak home screen widget in the system widget picker"}
 }
