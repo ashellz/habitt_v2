@@ -1,2 +1,2 @@
-Novos idiomas: turco, português e francês.
+Novidade: widgets para a tela inicial. Sua sequência, o progresso de hoje e o próximo hábito sempre à vista.
 Além de melhorias no app e correções de bugs.

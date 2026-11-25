@@ -1,2 +1,2 @@
-Yeni diller: Türkçe, Portekizce ve Fransızca.
+Yeni: ana ekran widget'ları. Serini, bugünkü ilerlemeni ve sıradaki alışkanlığını ana ekranında gör.
 Ayrıca uygulama iyileştirmeleri ve hata düzeltmeleri.
