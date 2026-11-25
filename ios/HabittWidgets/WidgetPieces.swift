@@ -19,7 +19,10 @@ struct EmberArt: View {
   var body: some View {
     let ember = Ember(health, dark: palette.dark)
     let (glow, glowOffset) = size == .card ? (CGFloat(180), CGFloat(58)) : (130, 46)
-    ZStack(alignment: .bottomTrailing) {
+    // an overlay on an empty view: the glow and art are bigger than the
+    // card and must not take part in layout (they would widen Up next's tile)
+    Color.clear.overlay(alignment: .bottomTrailing) {
+      ZStack(alignment: .bottomTrailing) {
       if !palette.tinted {
         Circle()
           .fill(
@@ -39,8 +42,8 @@ struct EmberArt: View {
           .opacity(p.opacity)
           .offset(x: -p.right * u, y: -p.bottom * u)
       }
+      }
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
   }
 
   private struct Piece {
