@@ -3910,5 +3910,8 @@ class AppLocalizationsPt extends AppLocalizations {
       'Os hábitos desta parte do dia, com sua sequência.';
 
   @override
-  String get widgetOpenApp => 'Abra o Habitt para ver seus hábitos aqui';
+  String get dayStreakLabel => 'dia de sequência';
+
+  @override
+  String get daysStreakLabel => 'dias de sequência';
 }

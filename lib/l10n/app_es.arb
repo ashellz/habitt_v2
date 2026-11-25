@@ -1382,5 +1382,6 @@
   "widgetTodayRingDescription": "Los hábitos de hoy en un anillo que se va llenando.",
   "widgetUpNextName": "A continuación",
   "widgetUpNextDescription": "Los hábitos de este momento del día, con tu racha.",
-  "widgetOpenApp": "Abre Habitt para ver tus hábitos aquí"
+  "dayStreakLabel": "día de racha",
+  "daysStreakLabel": "días de racha"
 }

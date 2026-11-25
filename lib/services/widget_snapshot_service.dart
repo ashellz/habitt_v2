@@ -217,6 +217,7 @@ class WidgetSnapshotService {
         customSingulars: state.customSingulars,
         formatTime: (minutes) => _formatTime(minutes, localeCode),
         theme: colors.theme,
+        hasHabits: habits.habits.any((h) => h.isDeleted != true),
       ),
     );
   }

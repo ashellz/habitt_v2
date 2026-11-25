@@ -1046,5 +1046,6 @@
   "widgetTodayRingDescription": "Bugünün alışkanlıkları, doldukça dolan tek bir halkada.",
   "widgetUpNextName": "Sıradaki",
   "widgetUpNextDescription": "Günün bu bölümündeki alışkanlıklar ve serin.",
-  "widgetOpenApp": "Alışkanlıklarını burada görmek için Habitt'i aç"
+  "dayStreakLabel": "günlük seri",
+  "daysStreakLabel": "günlük seri"
 }

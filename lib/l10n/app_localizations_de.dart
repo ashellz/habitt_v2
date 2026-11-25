@@ -3923,6 +3923,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Gewohnheiten für diese Tageszeit, mit deinem Streak.';
 
   @override
-  String get widgetOpenApp =>
-      'Öffne Habitt, um deine Gewohnheiten hier zu sehen';
+  String get dayStreakLabel => 'Tag Streak';
+
+  @override
+  String get daysStreakLabel => 'Tage Streak';
 }

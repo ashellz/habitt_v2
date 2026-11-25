@@ -74,18 +74,21 @@ class WidgetSnapshotBuilder {
       'generatedAt': input.now.toIso8601String(),
       'dayKey': _dayKey(today),
       'nextDayStartsAt': tomorrow.toIso8601String(),
+      // false: the app has no habits at all (not just none today)
+      'hasHabits': input.hasHabits,
       'theme': {
         'light': {'accent': _hex(input.theme.light.main)},
         'dark': {'accent': _hex(input.theme.dark.main)},
       },
       'strings': {
-        'dayStreak': '${loc.day} ${loc.streak}',
-        'daysStreak': '${loc.days} ${loc.streak}',
+        'dayStreak': loc.dayStreakLabel,
+        'daysStreak': loc.daysStreakLabel,
         'day': loc.day,
         'days': loc.days,
         'dayComplete': loc.widgetDayComplete,
         'dayCompleteBody': loc.widgetDayCompleteBody,
         'nothingToday': loc.widgetNothingToday,
+        'noHabits': loc.youHaventAddedAnyHabitsYet,
       },
       'today': _dayBlock(input, input.todayHabits, todayStreak),
       'tomorrow': _dayBlock(input, input.tomorrowHabits, tomorrowStreak),
@@ -269,6 +272,7 @@ class WidgetSnapshotInput {
     required this.customSingulars,
     required this.formatTime,
     required this.theme,
+    this.hasHabits = true,
   });
 
   final DateTime now;
@@ -296,4 +300,8 @@ class WidgetSnapshotInput {
   /// Minutes since midnight → localized clock time.
   final String Function(int minutes) formatTime;
   final AppTheme theme;
+
+  /// Whether the app has any habit at all (deleted ones aside), so the
+  /// widgets can tell "no habits yet" from "nothing today".
+  final bool hasHabits;
 }

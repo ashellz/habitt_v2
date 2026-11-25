@@ -125,7 +125,8 @@ class _PlanHabitsState extends State<PlanHabits> {
     bool isToday,
     String dayKey,
   ) {
-    final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
+    final perfectDaysStreak =
+        context.watch<StatsProvider>().shownPerfectDaysStreak;
     final listHeight = calculateHabitsListHeight(context, perfectDaysStreak);
 
     if (sections.isEmpty) {

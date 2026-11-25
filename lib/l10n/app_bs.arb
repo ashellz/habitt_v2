@@ -1372,5 +1372,6 @@
   "widgetTodayRingDescription": "Današnje navike u jednom krugu koji se puni.",
   "widgetUpNextName": "Sljedeće",
   "widgetUpNextDescription": "Navike za ovaj dio dana, uz tvoj streak.",
-  "widgetOpenApp": "Otvori Habitt da vidiš svoje navike ovdje"
+  "dayStreakLabel": "dan streak",
+  "daysStreakLabel": "dana streak"
 }

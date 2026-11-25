@@ -3924,5 +3924,8 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les habitudes de ce moment de la journée, avec ta série.';
 
   @override
-  String get widgetOpenApp => 'Ouvre Habitt pour voir tes habitudes ici';
+  String get dayStreakLabel => 'jour de série';
+
+  @override
+  String get daysStreakLabel => 'jours de série';
 }

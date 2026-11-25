@@ -1046,5 +1046,6 @@
   "widgetTodayRingDescription": "Os hábitos de hoje em um anel que vai se enchendo.",
   "widgetUpNextName": "A seguir",
   "widgetUpNextDescription": "Os hábitos desta parte do dia, com sua sequência.",
-  "widgetOpenApp": "Abra o Habitt para ver seus hábitos aqui"
+  "dayStreakLabel": "dia de sequência",
+  "daysStreakLabel": "dias de sequência"
 }

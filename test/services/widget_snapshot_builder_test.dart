@@ -49,6 +49,7 @@ Map<String, dynamic> _build({
   int streak = 12,
   int tailMisses = 0,
   String locale = 'en',
+  bool hasHabits = true,
 }) {
   final todayHabits = today ?? const <Habit>[];
   return WidgetSnapshotBuilder.build(
@@ -71,6 +72,7 @@ Map<String, dynamic> _build({
       customSingulars: const {},
       formatTime: (m) => '${m ~/ 60}:${(m % 60).toString().padLeft(2, '0')}',
       theme: ThemeCatalog.habitt,
+      hasHabits: hasHabits,
     ),
   );
 }
@@ -339,6 +341,21 @@ void main() {
       expect(snap['strings']['day'], 'dan');
       expect(snap['strings']['days'], 'dana');
       expect(snap['today']['upNext']['morning']['label'], 'Jutro');
+    });
+
+    test('streak labels are lower case, as on the home page card', () {
+      final snap = _build(today: [_habit(1, 'A')]);
+      expect(snap['strings']['dayStreak'], 'day streak');
+      expect(snap['strings']['daysStreak'], 'days streak');
+    });
+
+    test('no habits at all is told apart from nothing today', () {
+      final none = _build(hasHabits: false, streak: 0);
+      expect(none['hasHabits'], isFalse);
+      expect(none['strings']['noHabits'], 'You haven’t added any habits yet');
+      expect(none['today']['total'], 0);
+      expect(none['today']['streak']['count'], 0);
+      expect(_build()['hasHabits'], isTrue);
     });
 
     test('the whole snapshot is plain JSON', () {

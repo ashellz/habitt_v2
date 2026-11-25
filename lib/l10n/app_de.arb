@@ -1382,5 +1382,6 @@
   "widgetTodayRingDescription": "Die heutigen Gewohnheiten als Ring, der sich füllt.",
   "widgetUpNextName": "Als Nächstes",
   "widgetUpNextDescription": "Die Gewohnheiten für diese Tageszeit, mit deinem Streak.",
-  "widgetOpenApp": "Öffne Habitt, um deine Gewohnheiten hier zu sehen"
+  "dayStreakLabel": "Tag Streak",
+  "daysStreakLabel": "Tage Streak"
 }

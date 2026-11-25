@@ -1046,5 +1046,6 @@
   "widgetTodayRingDescription": "Les habitudes du jour dans un anneau qui se remplit.",
   "widgetUpNextName": "À suivre",
   "widgetUpNextDescription": "Les habitudes de ce moment de la journée, avec ta série.",
-  "widgetOpenApp": "Ouvre Habitt pour voir tes habitudes ici"
+  "dayStreakLabel": "jour de série",
+  "daysStreakLabel": "jours de série"
 }

@@ -522,7 +522,8 @@ class _NewHabitsState extends State<NewHabits>
       selectedCategoryId,
     );
 
-    final perfectDaysStreak = context.watch<StatsProvider>().perfectDaysStreak;
+    final perfectDaysStreak =
+        context.watch<StatsProvider>().shownPerfectDaysStreak;
     final habitsListHeight = calculateHabitsListHeight(
       context,
       perfectDaysStreak,
@@ -646,8 +647,7 @@ class _NewHabitsState extends State<NewHabits>
                 dayKey: dayKey,
               ),
             ),
-          if (otherHabits.isNotEmpty)
-            _otherHabitsSection(otherHabits, dayKey),
+          if (otherHabits.isNotEmpty) _otherHabitsSection(otherHabits, dayKey),
           if (bottomSpacing > 0) SizedBox(height: bottomSpacing),
         ],
       );

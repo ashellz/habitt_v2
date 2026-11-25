@@ -3894,6 +3894,8 @@ class AppLocalizationsTr extends AppLocalizations {
       'Günün bu bölümündeki alışkanlıklar ve serin.';
 
   @override
-  String get widgetOpenApp =>
-      'Alışkanlıklarını burada görmek için Habitt\'i aç';
+  String get dayStreakLabel => 'günlük seri';
+
+  @override
+  String get daysStreakLabel => 'günlük seri';
 }

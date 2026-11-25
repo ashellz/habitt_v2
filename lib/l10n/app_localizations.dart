@@ -6580,11 +6580,17 @@ abstract class AppLocalizations {
   /// **'The habits for this part of the day, with your streak.'**
   String get widgetUpNextDescription;
 
-  /// Home screen widget: shown before the app has run once, so the widget has no data yet
+  /// Under a streak count of 1, e.g. on the home page streak card and the widgets: '1 day streak'
   ///
   /// In en, this message translates to:
-  /// **'Open Habitt to see your habits here'**
-  String get widgetOpenApp;
+  /// **'day streak'**
+  String get dayStreakLabel;
+
+  /// Under a streak count other than 1: '12 days streak'
+  ///
+  /// In en, this message translates to:
+  /// **'days streak'**
+  String get daysStreakLabel;
 }
 
 class _AppLocalizationsDelegate

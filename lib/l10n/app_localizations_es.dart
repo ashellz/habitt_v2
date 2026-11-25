@@ -3912,5 +3912,8 @@ class AppLocalizationsEs extends AppLocalizations {
       'Los hábitos de este momento del día, con tu racha.';
 
   @override
-  String get widgetOpenApp => 'Abre Habitt para ver tus hábitos aquí';
+  String get dayStreakLabel => 'día de racha';
+
+  @override
+  String get daysStreakLabel => 'días de racha';
 }

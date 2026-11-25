@@ -43,7 +43,7 @@ class _MainPageTopSectionState extends State<MainPageTopSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final hasStreak = context.watch<StatsProvider>().perfectDaysStreak > 0;
+    final hasStreak = context.watch<StatsProvider>().shownPerfectDaysStreak > 0;
     final expansionController = widget.expansionController;
 
     return Padding(
