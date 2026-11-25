@@ -213,8 +213,8 @@ Changes after review of the open questions, tested on the same emulator.
 | 9+ habits: Today ring is one plain ring filled to the day's progress | **Passed** (4/9) | `20_ring_9_habits_continuous` |
 | Onboarding "Português (Brasil)" chip overflow: the name now shrinks to fit | **Passed** | `15_onboarding_chip_fixed` |
 
-Up next layouts for Android's taller cells (Q6), switched by
-`UpNextWidget.LAYOUT`; **Stretched is in use until you pick one**:
+Up next layouts for Android's taller cells (Q6). **C Stretched was chosen**;
+the switch and the other two were removed:
 
 | A Scaled (iOS design × up to 1.3) | B Centred (iOS sizes) | C Stretched (rows grow) |
 |---|---|---|
@@ -231,6 +231,6 @@ bug: a normal boundary update finishes in well under a second.
 Tests: `flutter analyze` 0 errors (149 issues, as before), `flutter test`
 759 passed, Kotlin `WidgetSnapshotTest` 15/15.
 
-Still to do: the picker previews (`drawable-nodpi/widget_preview_*.png`)
-show the old "day Streak" and the iOS-sized Up next. Recapture them once an
-Up next layout is chosen.
+The Streak and Up next picker previews were recaptured with the lower-case
+label and the stretched layout. The language chip now ends long names in
+"…", as the ClickUp bug asked, instead of shrinking them.

@@ -231,14 +231,10 @@ class TodayRingWidget : HabittWidget() {
 // ─── Up next ─────────────────────────────────────────────────────────
 
 /**
- * Up next layouts for Android's taller cells (a 4×2 is about 360×220 dp, the
- * iOS design is 364×170). Kept side by side while one is picked:
- * - [SCALED]: the iOS design scaled up to the widget's height.
- * - [CENTRED]: iOS sizes, the part label and rows centred vertically.
- * - [STRETCHED]: iOS text sizes, rows grow to fill the height.
+ * Android cells are taller than the iOS design (a 4×2 is about 360×220 dp
+ * against 364×170): Up next keeps the iOS text sizes and lets its rows grow
+ * to fill the height (40 to 56 dp).
  */
-enum class UpNextLayout { SCALED, CENTRED, STRETCHED }
-
 class UpNextWidget : HabittWidget() {
     /** Sizes of one layout at one widget size, in dp / sp. */
     private data class Dims(
@@ -246,24 +242,17 @@ class UpNextWidget : HabittWidget() {
         val rowH: Float, val rowGap: Float, val disc: Float, val emoji: Float, val name: Float, val meta: Float,
         val indicator: Float, val tileW: Float, val tileCount: Float, val tileLabel: Float, val badge: Float,
     ) {
-        fun scaled(u: Float) = Dims(
-            pad * u, headerH * u, headerGap * u, icon * u, label * u, rowH * u, rowGap * u, disc * u, emoji * u,
-            name * u, meta * u, indicator * u, tileW * u, tileCount * u, tileLabel * u, badge * u,
-        )
-
         /** How many rows fit under the header at [height]. */
         fun fit(height: Float) = ((height - 2 * pad - headerH - headerGap + rowGap) / (rowH + rowGap)).toInt().coerceIn(1, 3)
     }
 
-    private fun dims(height: Float): Dims = when (LAYOUT) {
-        UpNextLayout.CENTRED -> BASE
-        UpNextLayout.SCALED -> BASE.scaled((height / IOS_HEIGHT).coerceIn(1f, 1.3f))
-        UpNextLayout.STRETCHED -> {
-            val free = height - 2 * BASE.pad - BASE.headerH - BASE.headerGap
-            val rowGap = 6f
-            val rowH = ((free - 2 * rowGap) / 3).coerceIn(BASE.rowH, 56f)
-            BASE.copy(rowH = rowH, rowGap = rowGap, disc = (rowH - 10).coerceAtMost(38f), emoji = 16f, indicator = 24f)
-        }
+    /** Three rows share the height under the header; on an iOS-sized cell this is the iOS design. */
+    private fun dims(height: Float): Dims {
+        val free = height - 2 * BASE.pad - BASE.headerH - BASE.headerGap
+        val rowGap = 6f
+        val rowH = ((free - 2 * rowGap) / 3).coerceIn(BASE.rowH, 56f)
+        if (rowH <= BASE.rowH) return BASE
+        return BASE.copy(rowH = rowH, rowGap = rowGap, disc = (rowH - 10).coerceAtMost(38f), emoji = 16f, indicator = 24f)
     }
 
     @Composable
@@ -278,10 +267,7 @@ class UpNextWidget : HabittWidget() {
                 .clickable(WidgetLinks.home(context)),
         ) {
             Row(modifier = GlanceModifier.fillMaxSize().padding(d.pad.dp)) {
-                Column(
-                    modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
-                    verticalAlignment = if (LAYOUT == UpNextLayout.CENTRED) Alignment.CenterVertically else Alignment.Top,
-                ) {
+                Column(modifier = GlanceModifier.defaultWeight().fillMaxHeight()) {
                     when {
                         section != null -> {
                             Row(
@@ -402,11 +388,6 @@ class UpNextWidget : HabittWidget() {
     }
 
     companion object {
-        /** The layout in use while the variants are compared. */
-        val LAYOUT = UpNextLayout.STRETCHED
-
-        private const val IOS_HEIGHT = 170f
-
         /** The iOS design at 364×170. */
         private val BASE = Dims(
             pad = 10f, headerH = 16f, headerGap = 5f, icon = 13f, label = 12f,

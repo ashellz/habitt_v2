@@ -234,10 +234,10 @@ How it is drawn:
   icon (sun, moon, clock for Any time); "Day complete" when the section is null
   and the day has habits, `nothingToday` when it has none. Android cells are
   taller than the iOS design (a 4×2 is about 360×220 dp against 364×170), so
-  `UpNextWidget.LAYOUT` picks how to fill them: `SCALED` (the iOS design
-  scaled to the height, up to 1.3×), `CENTRED` (iOS sizes, centred
-  vertically) or `STRETCHED` (iOS text sizes, rows grow to fill, up to 56 dp).
-  Stretched is in use until one is chosen.
+  Up next keeps the iOS text sizes and lets its three rows grow to fill the
+  height (40 to 56 dp, 6 dp apart, bigger emoji discs). On an iOS-sized cell it
+  is the iOS design. (Scaled and centred variants were compared and dropped;
+  see `reports/android_widgets_report.md`.)
 - No habits in the app at all (`hasHabits` false): Today ring and Up next show
   the app's empty box art (`widget_art_empty_box`) over `noHabits`. Rows open Log
   progress, the rest of the widget the home page.
