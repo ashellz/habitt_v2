@@ -22,6 +22,19 @@ Future<void> updateLastOpenedDate(
   NewDayGate._runner ??=
       () => updateLastOpenedDate(habitProvider, stateProvider, statsProvider);
 
+  // The reset works on the live habits HabitProvider.init loads. At a cold
+  // start the home page runs this right after the first frame, which can be
+  // before init has loaded them: the reset then cleared an empty list and
+  // saved today as checked, and the habits loaded right after kept the last
+  // opened day's progress on today. Not loaded in time: skip, lastOpenedDate
+  // stays as it is and the next call (resume, sync) runs the check.
+  try {
+    await habitProvider.firstLoadDone.timeout(NewDayGate.firstLoadLimit);
+  } on TimeoutException {
+    debugPrint('[NEWDAY] habits not loaded yet, check postponed');
+    return;
+  }
+
   // I check if user has lastOpenedDate
   final temp = prefs.getString("lastOpenedDate");
 
@@ -53,6 +66,11 @@ class NewDayGate {
   static Future<void>? _check;
   static _RunningSync? _sync;
   static Future<void> Function()? _runner;
+
+  /// How long the check waits for HabitProvider's first load before it gives
+  /// up for this call (see [updateLastOpenedDate]).
+  @visibleForTesting
+  static Duration firstLoadLimit = const Duration(seconds: 30);
 
   /// A running sync showing no activity for this long is abandoned by the
   /// new-day check waiting for it (see [waitForRunningSync]).
@@ -141,6 +159,7 @@ class NewDayGate {
     _check = null;
     _sync = null;
     _runner = null;
+    firstLoadLimit = const Duration(seconds: 30);
     stuckSyncLimit = const Duration(minutes: 2);
     stuckSyncPoll = const Duration(seconds: 10);
   }
