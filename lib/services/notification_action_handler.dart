@@ -57,6 +57,26 @@ class NotificationActionHandler {
   /// second tap can't stack another one on top.
   static bool _logDialogOpen = false;
 
+  /// True from the moment a tap (notification or home screen widget) starts
+  /// opening a habit until its log-progress dialog closes, or right away when
+  /// the tap opens something else. The streak celebration waits for it, so it
+  /// never covers the dialog the user came for (see runStreakMoment).
+  static final ValueNotifier<bool> tapOpening = ValueNotifier(false);
+
+  /// Completes once no tap is opening a habit (immediately if none is).
+  static Future<void> waitUntilTapHandled() {
+    if (!tapOpening.value) return Future<void>.value();
+    final done = Completer<void>();
+    void listener() {
+      if (tapOpening.value) return;
+      tapOpening.removeListener(listener);
+      done.complete();
+    }
+
+    tapOpening.addListener(listener);
+    return done.future;
+  }
+
   /// Register listeners with awesome_notifications. Call once after initialize().
   static Future<void> registerListeners() async {
     await AwesomeNotifications().setListeners(
@@ -225,6 +245,20 @@ class NotificationActionHandler {
     // top of it and, with another day selected, log into the wrong day
     if (_logDialogOpen) return;
 
+    tapOpening.value = true;
+    try {
+      await _openFromTap(nav, habitId, day);
+    } finally {
+      // the dialog clears it when it closes
+      if (!_logDialogOpen) tapOpening.value = false;
+    }
+  }
+
+  static Future<void> _openFromTap(
+    NavigatorState nav,
+    int habitId,
+    DateTime? day,
+  ) async {
     final habitProvider = nav.context.read<HabitProvider>();
     // cold start: habits may still be loading when the tap is replayed
     await _waitUntilInitialized(habitProvider);
@@ -258,7 +292,10 @@ class NotificationActionHandler {
         context: overlayContext,
         builder:
             (_) => LogProgressDialog(progressType: progressType, habit: habit),
-      ).whenComplete(() => _logDialogOpen = false),
+      ).whenComplete(() {
+        _logDialogOpen = false;
+        tapOpening.value = false;
+      }),
     );
   }
 
