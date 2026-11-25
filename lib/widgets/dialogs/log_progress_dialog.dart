@@ -141,12 +141,12 @@ class LogProgressDialog extends StatelessWidget {
           )
         else if (progressType == ProgressType.amount)
           AmountProgressInput(
-            amount: habit.amount,
+            amount: habit.effectiveAmount,
             amountCompleted: habit.amountCompleted,
           )
         else
           DurationProgressInput(
-            duration: habit.duration,
+            duration: habit.effectiveDuration,
             durationCompleted: habit.durationCompleted,
           ),
         HealthOverrideTag(
@@ -176,9 +176,9 @@ class LogProgressDialog extends StatelessWidget {
       } else if (_isSleep) {
         return getDurationString(habit.amount * 60);
       } else if (progressType == ProgressType.amount) {
-        return "${habit.amount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, habit.amount, loc, customSingulars: customSingulars)}";
+        return "${habit.effectiveAmount} ${resolveAmountLabelForValue(habit.amountLabel.isEmpty ? loc.times : habit.amountLabel, habit.effectiveAmount, loc, customSingulars: customSingulars)}";
       } else {
-        return getDurationString(habit.duration);
+        return getDurationString(habit.effectiveDuration);
       }
     }
 

@@ -39,6 +39,7 @@ import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/notification_action_handler.dart';
 import 'package:habitt/services/notification_sounds.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
+import 'package:habitt/services/pending_day_goal_queue.dart';
 import 'package:habitt/services/habit_route_tracker.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -372,6 +373,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // it completes a habit if it isnt already completed
   // it does check for which day it was completed on
   Future<void> _drainPendingCompletions() async {
+    await _drainPendingDayGoals();
     final pending = await PendingCompletionQueue.peek();
     debugPrint('[NOTIF_DRAIN] peek found ${pending.length} pending');
     if (pending.isEmpty) return;
@@ -399,6 +401,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // remove pending from prefs
     await PendingCompletionQueue.removeAll(pending);
     debugPrint('[NOTIF_DRAIN] processed ${pending.length} entries');
+  }
+
+  /// Applies "Count it" presses from the goal check-in notification. Entries
+  /// for a past day are dropped: a lighter goal is for today only.
+  Future<void> _drainPendingDayGoals() async {
+    final pending = await PendingDayGoalQueue.peek();
+    if (pending.isEmpty) return;
+    final ctx = NotificationActionHandler.navigatorKey.currentContext;
+    if (ctx == null || !ctx.mounted) return;
+    final habitProvider = ctx.read<HabitProvider>();
+    if (!habitProvider.isInitialized) return;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    for (final p in pending) {
+      if (p.day != today) continue;
+      await habitProvider.setTodayGoal(p.habitId, p.goal);
+    }
+    await PendingDayGoalQueue.removeAll(pending);
   }
 
   @override

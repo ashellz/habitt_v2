@@ -6,6 +6,7 @@ import 'package:habitt/models/notification.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/notifications_provider.dart';
+import 'package:habitt/services/goal_check_in_notifications.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
@@ -49,6 +50,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   late bool _draftMasterEnabled;
   late bool _draftPeriodEnabled;
   late bool _draftHabitsEnabled;
+  late bool _draftGoalCheckInEnabled;
   late String _draftSoundKey;
   late bool _draftAlarmRingDuringDnd;
   final Map<NotificationPeriod, NotificationSettings> _draftSettings = {};
@@ -82,6 +84,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     _draftMasterEnabled = np.isMasterEnabled;
     _draftPeriodEnabled = np.arePeriodNotificationsEnabled;
     _draftHabitsEnabled = np.areHabitNotificationsEnabled;
+    _draftGoalCheckInEnabled = np.isGoalCheckInEnabled;
     _draftSoundKey = np.globalSoundKey;
     _draftAlarmRingDuringDnd = np.alarmRingDuringDnd;
     for (final period in NotificationPeriod.values) {
@@ -154,7 +157,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         _draftPeriodEnabled != np.arePeriodNotificationsEnabled ||
         _draftHabitsEnabled != np.areHabitNotificationsEnabled ||
         _draftSoundKey != np.globalSoundKey ||
-        _draftAlarmRingDuringDnd != np.alarmRingDuringDnd) {
+        _draftAlarmRingDuringDnd != np.alarmRingDuringDnd ||
+        _draftGoalCheckInEnabled != np.isGoalCheckInEnabled) {
       return true;
     }
 
@@ -272,6 +276,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (_draftAlarmRingDuringDnd != np.alarmRingDuringDnd) {
       await np.setAlarmRingDuringDnd(_draftAlarmRingDuringDnd);
     }
+
+    if (_draftGoalCheckInEnabled != np.goalCheckInSetting) {
+      await np.setGoalCheckInEnabled(_draftGoalCheckInEnabled);
+    }
+    await GoalCheckInNotifications.refresh(habitProvider, np);
 
     if (!mounted) {
       return;
@@ -396,6 +405,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                         setState(() {
                                           _draftPeriodEnabled = false;
                                           _draftHabitsEnabled = false;
+                                          _draftGoalCheckInEnabled = false;
                                           for (final p
                                               in NotificationPeriod.values) {
                                             final cur = _draftSettings[p];
@@ -498,6 +508,45 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                                   ),
                                 ],
                               ),
+                            ),
+                            Divider(color: cp.border, height: 32),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    spacing: 2,
+                                    children: [
+                                      Text(
+                                        loc.goalCheckInSettingTitle,
+                                        style: TextStyle(
+                                          color: cp.text,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        loc.goalCheckInSettingDesc,
+                                        style: TextStyle(
+                                          color: cp.greyText,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                NewDefaultSwitch(
+                                  value: _draftGoalCheckInEnabled,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _draftGoalCheckInEnabled = value;
+                                      if (value) _draftMasterEnabled = true;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),

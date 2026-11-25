@@ -24,12 +24,16 @@ class NotificationsProvider extends ChangeNotifier {
   static const String _alarmRingDuringDndKey =
       'notifications_alarm_ring_during_dnd';
   static const String _alarmDndAskedKey = 'notifications_alarm_dnd_asked';
+  static const String _goalCheckInKey = 'notifications_goal_check_in_enabled';
 
   // Android only: whether habit alarms ring during Do Not Disturb (silent mode
   // always rings). See docs/habit_alarms.md.
   bool _alarmRingDuringDnd = false;
   // whether the user was asked about it (first time turning on an alarm)
   bool _alarmDndAsked = false;
+
+  // the 20:25 goal check-in notification, see docs/goal_check_in.md
+  bool _goalCheckInEnabled = true;
 
   // App-wide default notification sound. Applies to any notification (period or
   // habit) that does not specify its own sound. Habits with a non-null soundKey
@@ -137,6 +141,7 @@ class NotificationsProvider extends ChangeNotifier {
     );
     _alarmRingDuringDnd = _prefs?.getBool(_alarmRingDuringDndKey) ?? false;
     _alarmDndAsked = _prefs?.getBool(_alarmDndAskedKey) ?? false;
+    _goalCheckInEnabled = _prefs?.getBool(_goalCheckInKey) ?? true;
     // the native alarm reads its own copy when it fires
     unawaited(AlarmRingService.setRingDuringDnd(_alarmRingDuringDnd));
 
@@ -360,6 +365,21 @@ class NotificationsProvider extends ChangeNotifier {
     if (_alarmDndAsked) return;
     _alarmDndAsked = true;
     await _prefs?.setBool(_alarmDndAskedKey, true);
+  }
+
+  // --- Goal check-in API ---
+
+  /// The stored goal check-in toggle, on its own (for the settings draft).
+  bool get goalCheckInSetting => _goalCheckInEnabled;
+
+  /// Whether the evening goal check-in notification may be scheduled.
+  bool get isGoalCheckInEnabled => _goalCheckInEnabled && _masterEnabled;
+
+  Future<void> setGoalCheckInEnabled(bool enabled) async {
+    if (_goalCheckInEnabled == enabled) return;
+    _goalCheckInEnabled = enabled;
+    await _prefs?.setBool(_goalCheckInKey, enabled);
+    notifyListeners();
   }
 
   // --- Global toggles API ---

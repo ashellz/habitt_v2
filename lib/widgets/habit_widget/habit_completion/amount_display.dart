@@ -41,7 +41,7 @@ class AmountDisplay extends StatelessWidget {
             color: skipped ? OldColorService.textMuted : Colors.white,
           ),
         ),
-        Text(habit.amount.toString(), style: textStyle),
+        Text(habit.effectiveAmount.toString(), style: textStyle),
       ],
     );
   }

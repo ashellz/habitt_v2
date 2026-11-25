@@ -32,7 +32,7 @@ flutter analyze
 flutter test
 
 # Run a single test file
-flutter test test/services/habit_strength_insight_text_service_test.dart
+flutter test test/services/goal_check_in_analyzer_test.dart
 
 # Build
 flutter build apk --release      # Android
@@ -119,6 +119,12 @@ Accent themes (Habitt green plus five more, free for everyone) are layered on `C
 Habits can optionally sync progress from Apple Health / Google Health Connect (steps, sleep, exercise minutes, mindful minutes, calories), read-only, on app open/resume. Documented in full at [`docs/health_sync.md`](docs/health_sync.md). Read it before touching `HealthService`, `HealthProvider`, or `Habit.healthMetric`.
 
 **Maintenance rule:** Any change to Health sync must also update `docs/health_sync.md`.
+
+### Goal Check-in
+
+Goal suggestions come from what was actually logged: once a week one sheet lists every lower/raise suggestion (`GoalCheckInAnalyzer`, `GoalCheckInFlow`), and in the evening (20:25, notification + in-app sheet) a habit that is behind can get a lighter goal for today only (`Habit.dayGoal`, `LighterDayPolicy`), 2 per habit per week, always offered when its streak ends tonight. Today's progress reads `effectiveAmount` / `effectiveDuration`; stats keep the usual goal. Documented in full at [`docs/goal_check_in.md`](docs/goal_check_in.md). Read it before touching the analyzer, the lighter-day policy, `Habit.dayGoal`, the check-in sheets or their notification.
+
+**Maintenance rule:** Any change to the goal check-in rules, the lighter-day goal, their timing or their state keys must also update `docs/goal_check_in.md`.
 
 ### Home Screen Widgets
 

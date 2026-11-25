@@ -10,6 +10,7 @@ import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/util/format_minutes_of_day.dart';
+import 'package:habitt/util/goal_value_format.dart';
 import 'package:habitt/util/habit_progress.dart';
 import 'package:habitt/widgets/habit_widget/habit_tag.dart';
 import 'package:habitt/widgets/habit_widget/next_scheduled_tag.dart';
@@ -93,6 +94,24 @@ class MainHabitInfo extends StatelessWidget {
                   getText(),
                   style: TextStyle(color: cp.lightGreyText, fontSize: 13),
                 ),
+                // a lighter goal today: say what the usual one is
+                if (habit.hasDayGoal && !habitsPage)
+                  Flexible(
+                    child: Text(
+                      loc.lighterDayUsualGoalNote(
+                        formatGoalValue(
+                          habit,
+                          habit.tracksDuration ? habit.duration : habit.amount,
+                          loc,
+                          customSingulars:
+                              context.read<StateProvider>().customSingulars,
+                        ),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: cp.main, fontSize: 13),
+                    ),
+                  ),
               ],
             ),
           )

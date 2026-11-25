@@ -422,6 +422,10 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                             .cachedDayProgress(date)
                             ?.clamp(0.0, 1.0) ??
                         0.0;
+                    // every habit done, at least one with a lighter goal
+                    final lighterDay =
+                        progressValue >= 1 &&
+                        habitProvider.dayHasLighterGoal(date);
                     final previousValue =
                         _previousProgressValuesByDate[dayKey]?.clamp(
                           0.0,
@@ -601,6 +605,7 @@ class _LastWeekProgressState extends State<LastWeekProgress>
                                           return CustomPaint(
                                             painter: PartialArcPainter(
                                               progress: animatedProgress,
+                                              dashed: lighterDay,
                                               color: progressColor(),
                                               backgroundColor:
                                                   emptyProgressColor(),
@@ -749,8 +754,12 @@ class PartialArcPainter extends CustomPainter {
   final Color backgroundColor;
   final double totalAngle; // in radians
 
+  /// Draws the progress as dashes: a day completed with a lighter goal.
+  final bool dashed;
+
   PartialArcPainter({
     required this.progress,
+    this.dashed = false,
     this.strokeWidth = 3.5,
     required this.color,
     this.backgroundColor = const Color(0xFFE0E0E0),
@@ -786,12 +795,32 @@ class PartialArcPainter extends CustomPainter {
     canvas.drawArc(arcRect, startAngle, totalAngle, false, bgPaint);
 
     // Draw foreground progress over it.
-    canvas.drawArc(arcRect, startAngle, sweepAngle, false, fgPaint);
+    if (!dashed) {
+      canvas.drawArc(arcRect, startAngle, sweepAngle, false, fgPaint);
+      return;
+    }
+    const dashes = 6;
+    final step = totalAngle / dashes;
+    canvas.drawArc(arcRect, startAngle, sweepAngle, false, bgPaint);
+    for (var i = 0; i < dashes; i++) {
+      final from = startAngle + i * step;
+      final dash = step * 0.6;
+      final remaining = startAngle + sweepAngle - from;
+      if (remaining <= 0) break;
+      canvas.drawArc(
+        arcRect,
+        from,
+        remaining < dash ? remaining : dash,
+        false,
+        fgPaint,
+      );
+    }
   }
 
   @override
   bool shouldRepaint(covariant PartialArcPainter oldDelegate) =>
       oldDelegate.progress != progress ||
+      oldDelegate.dashed != dashed ||
       oldDelegate.color != color ||
       oldDelegate.backgroundColor != backgroundColor ||
       oldDelegate.strokeWidth != strokeWidth;

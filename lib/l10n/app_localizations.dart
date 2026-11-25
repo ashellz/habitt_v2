@@ -6591,6 +6591,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'days streak'**
   String get daysStreakLabel;
+
+  /// No description provided for @goalCheckInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your weekly check-in'**
+  String get goalCheckInTitle;
+
+  /// No description provided for @goalCheckInAllSet.
+  ///
+  /// In en, this message translates to:
+  /// **'All set for this week'**
+  String get goalCheckInAllSet;
+
+  /// No description provided for @goalCheckInSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on what you logged in the last 2 weeks'**
+  String get goalCheckInSubtitle;
+
+  /// No description provided for @goalCheckInApplyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply all'**
+  String get goalCheckInApplyAll;
+
+  /// No description provided for @goalCheckInNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get goalCheckInNotNow;
+
+  /// No description provided for @goalCheckInUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get goalCheckInUndo;
+
+  /// No description provided for @goalCheckInLowerTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower to {value}'**
+  String goalCheckInLowerTo(String value);
+
+  /// No description provided for @goalCheckInRaiseTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Raise to {value}'**
+  String goalCheckInRaiseTo(String value);
+
+  /// No description provided for @goalCheckInLoweredTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowered to {value}'**
+  String goalCheckInLoweredTo(String value);
+
+  /// No description provided for @goalCheckInRaisedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Raised to {value}'**
+  String goalCheckInRaisedTo(String value);
+
+  /// No description provided for @goalCheckInSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Not for 2 weeks'**
+  String get goalCheckInSkipped;
+
+  /// No description provided for @goalCheckInReasonLower.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal met {met} of {total} days, you usually stop near {value}'**
+  String goalCheckInReasonLower(int met, int total, String value);
+
+  /// No description provided for @goalCheckInReasonLighter.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} lighter days lately, you usually reach {value}'**
+  String goalCheckInReasonLighter(int count, String value);
+
+  /// No description provided for @goalCheckInReasonRaise.
+  ///
+  /// In en, this message translates to:
+  /// **'Past your goal {count} of {total} days'**
+  String goalCheckInReasonRaise(int count, int total);
+
+  /// No description provided for @lighterDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a {goal} day?'**
+  String lighterDayTitle(String goal);
+
+  /// No description provided for @lighterDayDescPartial.
+  ///
+  /// In en, this message translates to:
+  /// **'You did {done} of {goal}. Lower today\'s goal and make your streak grow.'**
+  String lighterDayDescPartial(String done, String goal);
+
+  /// No description provided for @lighterDayTitleZero.
+  ///
+  /// In en, this message translates to:
+  /// **'A short one today?'**
+  String get lighterDayTitleZero;
+
+  /// No description provided for @lighterDayDescZeroMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'You missed {habit} yesterday. A shorter session still counts as completed.'**
+  String lighterDayDescZeroMissed(String habit);
+
+  /// No description provided for @lighterDayDescZero.
+  ///
+  /// In en, this message translates to:
+  /// **'A shorter session still counts as completed.'**
+  String get lighterDayDescZero;
+
+  /// No description provided for @lighterDayStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {count}-day streak ends tonight'**
+  String lighterDayStreakTitle(int count);
+
+  /// No description provided for @lighterDayStreakDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Even {value} keeps it going.'**
+  String lighterDayStreakDesc(String value);
+
+  /// No description provided for @lighterDayUsualGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual goal'**
+  String get lighterDayUsualGoal;
+
+  /// No description provided for @lighterDayToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get lighterDayToday;
+
+  /// No description provided for @lighterDayDoneOption.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} · done'**
+  String lighterDayDoneOption(String value);
+
+  /// No description provided for @lighterDayKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {value}'**
+  String lighterDayKeep(String value);
+
+  /// No description provided for @lighterDaySetTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Set to {value}'**
+  String lighterDaySetTo(String value);
+
+  /// No description provided for @lighterDayCountIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Count it'**
+  String get lighterDayCountIt;
+
+  /// No description provided for @lighterDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No lighter days left this week} =1{1 lighter day left this week} other{{count} lighter days left this week}}'**
+  String lighterDaysLeft(int count);
+
+  /// No description provided for @saveStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log any amount to keep your {count}-day streak'**
+  String saveStreakTitle(int count);
+
+  /// No description provided for @saveStreakDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used this week\'s lighter days. Any progress today keeps your streak alive.'**
+  String get saveStreakDesc;
+
+  /// No description provided for @saveStreakLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Log progress'**
+  String get saveStreakLog;
+
+  /// No description provided for @lighterDayUsualGoalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual goal {value}'**
+  String lighterDayUsualGoalNote(String value);
+
+  /// No description provided for @goalCheckInNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit}: {done} of {goal}'**
+  String goalCheckInNotifTitle(String habit, String done, String goal);
+
+  /// No description provided for @goalCheckInNotifBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a {goal} day? Lower today\'s goal and your streak can still grow.'**
+  String goalCheckInNotifBody(String goal);
+
+  /// No description provided for @goalCheckInNotifBodyZero.
+  ///
+  /// In en, this message translates to:
+  /// **'A short one still counts as completed. Pick a smaller goal for today.'**
+  String get goalCheckInNotifBodyZero;
+
+  /// No description provided for @goalCheckInNotifStreakBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {count}-day streak ends tonight. Even a little keeps it going.'**
+  String goalCheckInNotifStreakBody(int count);
+
+  /// No description provided for @goalCheckInNotifCountIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Count {value} for today'**
+  String goalCheckInNotifCountIt(String value);
+
+  /// No description provided for @goalCheckInNotifChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a smaller goal'**
+  String get goalCheckInNotifChoose;
+
+  /// No description provided for @goalCheckInSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal check-in'**
+  String get goalCheckInSettingTitle;
+
+  /// No description provided for @goalCheckInSettingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'An evening nudge at 20:25 to lower today\'s goal when a habit is behind'**
+  String get goalCheckInSettingDesc;
 }
 
 class _AppLocalizationsDelegate
