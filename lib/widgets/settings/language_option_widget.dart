@@ -74,35 +74,45 @@ class LanguageOptionWidget extends StatelessWidget {
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            spacing: 8,
             children: [
-              Row(
-                spacing: 10,
-                children: [
-                  if (languageOption.svgPath != null)
-                    SvgPicture.asset(
-                      languageOption.svgPath!,
-                      width: 20,
-                      height: 20,
-                    )
-                  else
-                    Icon(
-                      Icons.language_rounded,
-                      size: 20,
-                      color: cp.lightGreyText,
+              // takes the room the check leaves, so a long name like
+              // "Português (Brasil)" in a half-width chip shrinks instead
+              // of overflowing
+              Expanded(
+                child: Row(
+                  spacing: 10,
+                  children: [
+                    if (languageOption.svgPath != null)
+                      SvgPicture.asset(
+                        languageOption.svgPath!,
+                        width: 20,
+                        height: 20,
+                      )
+                    else
+                      Icon(
+                        Icons.language_rounded,
+                        size: 20,
+                        color: cp.lightGreyText,
+                      ),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          languageOption.displayName,
+                          textAlign: TextAlign.left,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: cp.text,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
-                  Text(
-                    languageOption.displayName,
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: cp.text,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               SizedBox(
                 width: 20,
