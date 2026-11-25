@@ -307,7 +307,7 @@ class HabitNotificationTextBuilder {
     ProgressRuleResult progressResult,
     String encouragement,
   ) {
-    if (!context.habit.tracksAmount || context.habit.amount <= 0) {
+    if (!context.habit.tracksAmount || context.habit.effectiveAmount <= 0) {
       return null;
     }
     return _buildProgressMessage(context, progressResult, encouragement);
@@ -321,9 +321,9 @@ class HabitNotificationTextBuilder {
     final l = context.localizations;
     final habit = context.habit;
 
-    if (habit.tracksAmount && habit.amount > 0) {
-      final completed = habit.amountCompleted.clamp(0, habit.amount);
-      final remaining = (habit.amount - completed).clamp(0, habit.amount);
+    if (habit.tracksAmount && habit.effectiveAmount > 0) {
+      final completed = habit.amountCompleted.clamp(0, habit.effectiveAmount);
+      final remaining = (habit.effectiveAmount - completed).clamp(0, habit.effectiveAmount);
 
       if (progressResult.state == HabitNotificationProgressState.notStarted) {
         return l.notificationCombinedAmountNotStarted(encouragement);
@@ -346,11 +346,11 @@ class HabitNotificationTextBuilder {
       if (progressResult.state == HabitNotificationProgressState.inProgress) {
         final label = resolveAmountLabelForValue(
           habit.amountLabel,
-          habit.amount,
+          habit.effectiveAmount,
           l,
           customSingulars: context.customSingulars,
         );
-        final progressText = '$completed/${habit.amount} $label';
+        final progressText = '$completed/${habit.effectiveAmount} $label';
         return l.notificationCombinedAmountInProgress(
           encouragement,
           progressText,
@@ -364,9 +364,9 @@ class HabitNotificationTextBuilder {
       return null;
     }
 
-    if (habit.tracksDuration && habit.duration > 0) {
-      final completed = habit.durationCompleted.clamp(0, habit.duration);
-      final remaining = (habit.duration - completed).clamp(0, habit.duration);
+    if (habit.tracksDuration && habit.effectiveDuration > 0) {
+      final completed = habit.durationCompleted.clamp(0, habit.effectiveDuration);
+      final remaining = (habit.effectiveDuration - completed).clamp(0, habit.effectiveDuration);
 
       if (progressResult.state == HabitNotificationProgressState.notStarted) {
         return l.notificationCombinedDurationNotStarted(encouragement);
@@ -382,7 +382,7 @@ class HabitNotificationTextBuilder {
 
       if (progressResult.state == HabitNotificationProgressState.inProgress) {
         final progressText =
-            '${_formatDuration(completed)}/${_formatDuration(habit.duration)}';
+            '${_formatDuration(completed)}/${_formatDuration(habit.effectiveDuration)}';
         return l.notificationCombinedDurationInProgress(
           encouragement,
           progressText,

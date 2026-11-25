@@ -72,20 +72,20 @@ class _HabitPrimaryActionButtonState extends State<HabitPrimaryActionButton> {
     }
 
     if (widget.habit.tracksAmount) {
-      if (widget.habit.amount <= 0) {
+      if (widget.habit.effectiveAmount <= 0) {
         return 0;
       }
-      return (widget.habit.amountCompleted / widget.habit.amount).clamp(
+      return (widget.habit.amountCompleted / widget.habit.effectiveAmount).clamp(
         0.0,
         1.0,
       );
     }
 
     if (widget.habit.tracksDuration) {
-      if (widget.habit.duration <= 0) {
+      if (widget.habit.effectiveDuration <= 0) {
         return 0;
       }
-      return (widget.habit.durationCompleted / widget.habit.duration).clamp(
+      return (widget.habit.durationCompleted / widget.habit.effectiveDuration).clamp(
         0.0,
         1.0,
       );

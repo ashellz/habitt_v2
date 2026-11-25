@@ -14,6 +14,7 @@ import 'package:habitt/widgets/default/checkmark.dart';
 import 'package:habitt/widgets/default/confetti_burst.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
 import 'package:habitt/widgets/dialogs/timer_dialog.dart';
+import 'package:habitt/widgets/goal_check_in/lighter_day_badge.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitProgress extends StatefulWidget {
@@ -100,6 +101,8 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
     // the timer provider marks the habit completed itself once the target is
     // reached, so habit.completed is all this needs to look at
     final showPie = progress > 0 && progress < 1;
+    // completed with a lighter goal for the day: a dashed check
+    final lighterDay = widget.habit.completed && widget.habit.hasDayGoal;
 
     return GestureDetector(
       onTap:
@@ -218,7 +221,7 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                   return ScaleTransition(scale: animation, child: child);
                 },
                 child: KeyedSubtree(
-                  key: ValueKey(showPie),
+                  key: ValueKey('$showPie-$lighterDay'),
                   child:
                       showPie
                           ? TweenAnimationBuilder<double>(
@@ -233,6 +236,8 @@ class _NewHabitProgressState extends State<NewHabitProgress> {
                               );
                             },
                           )
+                          : lighterDay
+                          ? LighterDayBadge(color: widget.color ?? cp.main)
                           : Checkmark(
                             value: widget.habit.completed,
                             secondaryCheckmarks: widget.secondaryCheckmarks,
