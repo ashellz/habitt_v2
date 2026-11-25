@@ -29,19 +29,39 @@ enum WidgetStore {
     load() ?? placeholder(now: now)
   }
 
-  static func placeholder(now: Date) -> WidgetSnapshot {
-    let s = { (key: String) in NSLocalizedString(key, comment: "") }
+  private static func s(_ key: String) -> String { NSLocalizedString(key, comment: "") }
+
+  /// The snapshot strings from the extension's own Localizable.strings.
+  private static var localStrings: WidgetSnapshot.Strings {
     let noHabits = s("youHaventAddedAnyHabitsYet")
-    return WidgetSnapshot.placeholder(
-      strings: .init(
-        dayStreak: s("dayStreakLabel"), daysStreak: s("daysStreakLabel"),
-        day: s("day"), days: s("days"),
-        dayComplete: "", dayCompleteBody: "",
-        nothingToday: noHabits, noHabits: noHabits
-      ),
+    return .init(
+      dayStreak: s("dayStreakLabel"), daysStreak: s("daysStreakLabel"),
+      day: s("day"), days: s("days"),
+      dayComplete: "", dayCompleteBody: "",
+      nothingToday: noHabits, noHabits: noHabits
+    )
+  }
+
+  static func placeholder(now: Date) -> WidgetSnapshot {
+    WidgetSnapshot.placeholder(
+      strings: localStrings,
       startStreak: s("widgetStartStreak"),
       weekLabels: weekLabels(endingAt: now),
       dayKey: ""
+    )
+  }
+
+  /// The widget gallery while the user has no habits yet (or never opened
+  /// the app): sample habits in the device language instead of an empty box.
+  static func gallery(now: Date) -> WidgetSnapshot {
+    if let stored = load(), stored.hasHabits { return stored }
+    return WidgetSnapshot.sample(
+      strings: localStrings,
+      names: ["premadeHabitBrushTeeth", "premadeHabitShower", "premadeHabitDrinkWater", "premadeHabitRead",
+              "premadeHabitMindfulness"].map(s),
+      partLabels: [.morning: s("morning"), .afternoon: s("afternoon"), .evening: s("evening")],
+      line: s("streakPraiseExtra2"),
+      weekLabels: weekLabels(endingAt: now)
     )
   }
 
@@ -64,12 +84,16 @@ struct HabittProvider: TimelineProvider {
   /// Names the widget in the log.
   let kind: String
 
+  /// Shown redacted while a widget loads: the gallery sample's shapes.
   func placeholder(in context: Context) -> HabittEntry {
-    HabittEntry(date: Date(), snapshot: WidgetStore.current(now: Date()))
+    HabittEntry(date: Date(), snapshot: WidgetStore.gallery(now: Date()))
   }
 
   func getSnapshot(in context: Context, completion: @escaping (HabittEntry) -> Void) {
-    completion(placeholder(in: context))
+    let now = Date()
+    // the gallery shows sample habits until the user has their own
+    let snapshot = context.isPreview ? WidgetStore.gallery(now: now) : WidgetStore.current(now: now)
+    completion(HabittEntry(date: now, snapshot: snapshot))
   }
 
   func getTimeline(in context: Context, completion: @escaping (Timeline<HabittEntry>) -> Void) {

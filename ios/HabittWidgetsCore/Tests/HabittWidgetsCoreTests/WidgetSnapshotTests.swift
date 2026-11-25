@@ -191,6 +191,25 @@ final class WidgetSnapshotTests: XCTestCase {
     XCTAssertEqual(hours, [4, 12, 19])
   }
 
+  func testGallerySample() {
+    let strings = WidgetSnapshot.Strings(
+      dayStreak: "day streak", daysStreak: "days streak", day: "day", days: "days",
+      dayComplete: "", dayCompleteBody: "", nothingToday: "", noHabits: "")
+    let s = WidgetSnapshot.sample(
+      strings: strings, names: ["Brush teeth", "Shower", "Drink water", "Read", "Mindfulness"],
+      partLabels: [.morning: "Morning", .afternoon: "Afternoon", .evening: "Evening"],
+      line: "Well done, you!", weekLabels: ["T", "W", "T", "F", "S", "S", "M"])
+    XCTAssertTrue(s.hasHabits)
+    XCTAssertEqual(s.today.streak.count, 12)
+    XCTAssertEqual(s.today.streak.week.count, 7)
+    XCTAssertEqual(s.today.ringHabits.map(\.name).first, "Brush teeth")
+    XCTAssertEqual(s.today.done, 1)
+    XCTAssertEqual(s.today.total, 5)
+    XCTAssertEqual(s.today.upNext(at: date("2026-11-24T20:00:00.000"), calendar: calendar)?.label, "Evening")
+    XCTAssertEqual(s.today.rows(s.today.upNext[.morning]!).map(\.id), [1, 2, 3])
+    XCTAssertEqual(s.block(at: Date()), s.today)
+  }
+
   func testPlaceholder() {
     let strings = WidgetSnapshot.Strings(
       dayStreak: "day streak", daysStreak: "days streak", day: "day", days: "days",

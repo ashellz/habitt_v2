@@ -13,3 +13,12 @@
 "day" = "gün";
 "days" = "gün";
 "widgetStartStreak" = "Seri başlatmak için bugün tüm alışkanlıkları tamamla";
+"premadeHabitBrushTeeth" = "Diş fırçalamak";
+"premadeHabitShower" = "Duş almak";
+"premadeHabitDrinkWater" = "Su içmek";
+"premadeHabitRead" = "Okumak";
+"premadeHabitMindfulness" = "Farkındalık";
+"morning" = "Sabah";
+"afternoon" = "Öğleden sonra";
+"evening" = "Akşam";
+"streakPraiseExtra2" = "Aferin sana!";

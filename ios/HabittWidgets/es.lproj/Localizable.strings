@@ -13,3 +13,12 @@
 "day" = "día";
 "days" = "días";
 "widgetStartStreak" = "Completa todos los hábitos hoy para empezar una racha";
+"premadeHabitBrushTeeth" = "Cepillarse los dientes";
+"premadeHabitShower" = "Ducha";
+"premadeHabitDrinkWater" = "Beber agua";
+"premadeHabitRead" = "Leer";
+"premadeHabitMindfulness" = "Mindfulness";
+"morning" = "Mañana";
+"afternoon" = "Por la tarde";
+"evening" = "Por la noche";
+"streakPraiseExtra2" = "¡Bien hecho, tú!";

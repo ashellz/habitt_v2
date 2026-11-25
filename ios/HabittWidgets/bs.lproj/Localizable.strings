@@ -13,3 +13,12 @@
 "day" = "dan";
 "days" = "dana";
 "widgetStartStreak" = "Završi sve navike danas da započneš streak";
+"premadeHabitBrushTeeth" = "Pranje zuba";
+"premadeHabitShower" = "Kupanje";
+"premadeHabitDrinkWater" = "Pijenje vode";
+"premadeHabitRead" = "Čitanje";
+"premadeHabitMindfulness" = "Svjesnost";
+"morning" = "Jutro";
+"afternoon" = "Popodne";
+"evening" = "Veče";
+"streakPraiseExtra2" = "E aferim ti!";

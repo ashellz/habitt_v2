@@ -115,6 +115,42 @@ public struct WidgetSnapshot: Equatable {
     )
   }
 
+  /// Sample data for the widget gallery while the user has no habits of
+  /// their own (the design canvas' "morning" state): a healthy 12 day
+  /// streak and five premade habits at different stages. `names`: brush
+  /// teeth, shower, drink water, read, mindfulness; `partLabels`: the
+  /// localized Morning / Afternoon / Evening.
+  public static func sample(
+    strings: Strings, names: [String], partLabels: [PartOfDay: String], line: String, weekLabels: [String]
+  ) -> WidgetSnapshot {
+    func name(_ i: Int) -> String { i < names.count ? names[i] : "" }
+    let habits = [
+      WidgetHabit(id: 1, emoji: "🪥", name: name(0), category: 2, progress: 1, state: .done),
+      WidgetHabit(id: 2, emoji: "🚿", name: name(1), category: 2, progress: 0.8, progressText: "8m / 10m", state: .partial),
+      WidgetHabit(id: 3, emoji: "💧", name: name(2), category: 1, progress: 0.25, progressText: "2 / 8", state: .partial),
+      WidgetHabit(id: 4, emoji: "📖", name: name(3), category: 4, progress: 0.6, progressText: "12 / 20", state: .partial),
+      WidgetHabit(id: 5, emoji: "🧘", name: name(4), category: 4, progress: 0, progressText: "0m / 10m", state: .todo),
+    ]
+    let days: [(WeekDay.Status, Double)] = [
+      (.perfect, 1), (.perfect, 1), (.perfect, 1), (.partial, 0.55), (.perfect, 1), (.perfect, 1), (.today, 0.6),
+    ]
+    let week = zip(weekLabels, days).map { WeekDay(label: $0, status: $1.0, progress: $1.1) }
+    var upNext: [PartOfDay: UpNextSection] = [:]
+    for part in PartOfDay.allCases {
+      upNext[part] = UpNextSection(label: partLabels[part] ?? "", icon: part.rawValue, habitIds: [1, 2, 3])
+    }
+    let block = DayBlock(
+      habits: habits, ring: habits.map(\.id), done: 1, total: habits.count, perfect: false,
+      streak: StreakInfo(count: 12, health: .healthy, perfectToday: false, line: line, week: week),
+      upNext: upNext
+    )
+    return WidgetSnapshot(
+      dayKey: "", nextDayStartsAt: .distantFuture,
+      accentLight: defaultAccentLight, accentDark: defaultAccentDark,
+      strings: strings, today: block, tomorrow: block, hasHabits: true
+    )
+  }
+
   /// Dart's `DateTime.toIso8601String()` of a local time
   /// (`2026-11-25T00:00:00.000`, optionally with microseconds), or a bare date.
   public static func parseLocalDateTime(_ s: String, calendar: Calendar) -> Date? {

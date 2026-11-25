@@ -26,6 +26,16 @@ const keys = [
   'day',
   'days',
   'widgetStartStreak',
+  // sample data for the widget gallery while the user has no habits
+  'premadeHabitBrushTeeth',
+  'premadeHabitShower',
+  'premadeHabitDrinkWater',
+  'premadeHabitRead',
+  'premadeHabitMindfulness',
+  'morning',
+  'afternoon',
+  'evening',
+  'streakPraiseExtra2',
 ];
 
 const _template = 'en';

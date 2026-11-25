@@ -281,7 +281,7 @@ Code in `ios/HabittWidgets/` plus one shared model:
 
 | File | Role |
 |---|---|
-| `ios/HabittWidgetsCore/Sources/HabittWidgetsCore/WidgetSnapshot.swift` | Snapshot model and `Codable` decoding (`v` must be 1, ids `Int64`, older snapshots fall back as on Android), `block(at:)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetTimeline.entryDates`, `WidgetLinks` (tap URLs), the placeholder. Foundation only; compiled into the extension as a source file and tested on the Mac with `cd ios/HabittWidgetsCore && swift test` (`Tests/.../WidgetSnapshotTests.swift`). |
+| `ios/HabittWidgetsCore/Sources/HabittWidgetsCore/WidgetSnapshot.swift` | Snapshot model and `Codable` decoding (`v` must be 1, ids `Int64`, older snapshots fall back as on Android), `block(at:)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetTimeline.entryDates`, `WidgetLinks` (tap URLs), the placeholder and the gallery sample. Foundation only; compiled into the extension as a source file and tested on the Mac with `cd ios/HabittWidgetsCore && swift test` (`Tests/.../WidgetSnapshotTests.swift`). |
 | `HabittWidgetsBundle.swift` | The `WidgetBundle` of the four widgets. |
 | `WidgetProvider.swift` | `HabittProvider` (one `TimelineProvider` for all kinds), `WidgetStore` (reads `UserDefaults(suiteName:)`, builds the placeholder from the extension's strings), logs each timeline under the `com.shellz.habitt.widgets` subsystem. |
 | `WidgetStyle.swift` | Colours (light, dark and tinted, from the design canvas; accent from the snapshot), `Ember` (mood gradient and glows), Satoshi fonts, `widgetBackground` (`containerBackground` on iOS 17+), `accentable`, `TintReader` (iOS 16+ `widgetRenderingMode`). |
@@ -311,8 +311,11 @@ How it is drawn:
   everywhere else use `widgetURL`.
 - Before the first snapshot the widgets draw `WidgetSnapshot.placeholder`:
   no habits, a 0 streak, weekday letters for the last 7 days, in the
-  language the extension's strings resolved to. The widget gallery shows the
-  real data (or this placeholder); there are no separate preview images.
+  language the extension's strings resolved to.
+- Widget gallery (`context.isPreview`): the user's real data once they have
+  habits; before that `WidgetSnapshot.sample` (a 12 day streak, five premade
+  habits at different stages) instead of the empty box. There are no
+  separate preview images.
 - Taps: `habitt://widget/home?homeWidget` and
   `habitt://widget/log?habit=<id>&homeWidget`. `AppDelegate` needs nothing:
   home_widget 0.10 registers as an application and scene delegate and picks
@@ -322,7 +325,9 @@ Generated resources (rerun after changing the source):
 
 - `dart run tool/gen_ios_widget_strings.dart`: `<lang>.lproj/Localizable.strings`
   (keyed by ARB key) from the `widget*Name` / `widget*Description` ARB keys and
-  the placeholder strings, for every `lib/l10n/app_<lang>.arb`.
+  the placeholder and gallery sample strings (`premadeHabit*`, `morning` /
+  `afternoon` / `evening`, `streakPraiseExtra2`), for every
+  `lib/l10n/app_<lang>.arb`.
 - `dart run tool/gen_ios_widget_art.dart`: `Assets.xcassets` image sets,
   `art_*` from the five app SVGs (filters and clip paths dropped, which the
   asset catalog cannot render) and the template `icon_*` (sun, moon, clock,

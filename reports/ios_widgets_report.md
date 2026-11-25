@@ -64,7 +64,7 @@ Changed:
 |---|---|---|
 | Dart analyzer | `flutter analyze` | 0 errors, 149 infos/warnings (same as the baseline) |
 | Dart tests | `flutter test` | 759 passed (same as the baseline) |
-| Swift tests | `cd ios/HabittWidgetsCore && swift test` | 14 / 14 passed |
+| Swift tests | `cd ios/HabittWidgetsCore && swift test` | 15 / 15 passed |
 | Extension alone | `xcodebuild -project ios/Runner.xcodeproj -target HabittWidgets -sdk iphonesimulator` | OK, no warnings in our files |
 | App | `FLUTTER_XCODE_ARCHS=arm64 flutter build ios --simulator --debug` | OK (see Bugs 1 for why not plain `flutter build ios --simulator`) |
 
@@ -141,8 +141,13 @@ timelines without starting it), then restored the real snapshot.
   Streak week header flame is muted for fading and icy for critical, and
   critical's perfect-day flames are dimmed (the canvas; Android draws them
   plain).
-- **No picker preview images**: the gallery shows the live widgets with the
-  user's data (or the placeholder before the first snapshot).
+- **Gallery previews are drawn, not images**: while the user has no habits
+  (or never opened the app) the gallery shows a sample: a 12 day streak and
+  five premade habits (Brush teeth done; Shower, Drink water, Read partial;
+  Mindfulness to do), named in the device language from existing ARB keys
+  (`premadeHabit*`, `morning` / `afternoon` / `evening`,
+  `streakPraiseExtra2`). Once the user has habits it shows their real data.
+  Shots `ios_17_gallery_sample_1`–`4`.
 - **Dynamic Type** is capped at `.xxLarge` inside the widgets, with longer
   text scaling down, so the fixed card layouts never overflow.
 - **Tinted mode**: emojis become silhouettes on a tinted home screen; that
@@ -163,14 +168,10 @@ timelines without starting it), then restored the real snapshot.
 3. **TestFlight**: one build to check the widgets on a real device (taps,
    gallery, tinted mode).
 
-## Open questions
+## Follow-up round
 
-1. The first screenshot commit (`1a55f76b`) added 32 MB of PNGs, replaced
-   by 1.9 MB of JPEGs in the next commit. The PNGs stay in the branch
-   history unless the branch is squashed or rewritten. Want me to do that
-   (needs a force push)?
-2. The gallery shows live data, which is the empty placeholder for a new
-   user. Do you want sample-data previews instead (`context.isPreview`)?
-   They would need sample habit names in all 8 languages.
-3. Dynamic Type stops at `.xxLarge` in the widgets. Fine, or should the
-   cards grow text further with fewer lines?
+- **History**: the branch was rewritten (force push with lease) so no
+  commit carries the 32 MB of PNG screenshots; only the JPEGs remain.
+- **Gallery sample**: added as above, tested on a fresh install (all four
+  previews). New test `testGallerySample` (15 / 15 Swift tests pass).
+- **Dynamic Type**: stays capped at `.xxLarge`.
