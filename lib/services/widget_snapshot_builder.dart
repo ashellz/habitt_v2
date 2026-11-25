@@ -32,16 +32,18 @@ class WidgetSnapshotBuilder {
     final todayPerfect = todayStatus == DayCompletionStatus.perfect;
 
     // today: the app's own streak (which leaves today out) plus today if it
-    // is already perfect, exactly like the home page streak card
+    // is already perfect, exactly like the home page streak card. Health
+    // follows that count, so a first perfect day is not "dormant".
+    final todayCount = input.streak + (todayPerfect ? 1 : 0);
     final todayHealth = resolveStreakHealth(
-      streak: input.streak,
+      streak: todayCount,
       tailMisses: input.tailMisses,
       todayIsSecure: todayPerfect,
     );
     final todayStreak = _streakBlock(
       input,
       day: today,
-      count: input.streak + (todayPerfect ? 1 : 0),
+      count: todayCount,
       health: todayHealth,
       perfectToday: todayPerfect,
       hasProgressToday: todayStatus == DayCompletionStatus.partial,

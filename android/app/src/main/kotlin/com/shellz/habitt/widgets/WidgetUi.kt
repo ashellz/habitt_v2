@@ -103,24 +103,24 @@ object WidgetColors {
 /** Per-mood background drawables (each has a -night variant). */
 object WidgetArt {
     fun streakCard(h: StreakInfo.Health) = when (h) {
-        StreakInfo.Health.HEALTHY -> R.drawable.widget_bg_streak_healthy
+        // dormant looks healthy, as on the home page streak card
+        StreakInfo.Health.HEALTHY, StreakInfo.Health.DORMANT -> R.drawable.widget_bg_streak_healthy
         StreakInfo.Health.FADING -> R.drawable.widget_bg_streak_fading
         StreakInfo.Health.CRITICAL -> R.drawable.widget_bg_streak_critical
-        StreakInfo.Health.DORMANT -> R.drawable.widget_bg_streak_dormant
     }
 
     fun streakTile(h: StreakInfo.Health) = when (h) {
-        StreakInfo.Health.HEALTHY -> R.drawable.widget_bg_tile_healthy
+        // dormant looks healthy, as on the home page streak card
+        StreakInfo.Health.HEALTHY, StreakInfo.Health.DORMANT -> R.drawable.widget_bg_tile_healthy
         StreakInfo.Health.FADING -> R.drawable.widget_bg_tile_fading
         StreakInfo.Health.CRITICAL -> R.drawable.widget_bg_tile_critical
-        StreakInfo.Health.DORMANT -> R.drawable.widget_bg_tile_dormant
     }
 
     fun week(h: StreakInfo.Health) = when (h) {
-        StreakInfo.Health.HEALTHY -> R.drawable.widget_bg_week_healthy
+        // dormant looks healthy, as on the home page streak card
+        StreakInfo.Health.HEALTHY, StreakInfo.Health.DORMANT -> R.drawable.widget_bg_week_healthy
         StreakInfo.Health.FADING -> R.drawable.widget_bg_week_fading
         StreakInfo.Health.CRITICAL -> R.drawable.widget_bg_week_critical
-        StreakInfo.Health.DORMANT -> R.drawable.widget_bg_week_dormant
     }
 }
 

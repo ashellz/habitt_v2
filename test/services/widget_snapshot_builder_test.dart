@@ -216,6 +216,21 @@ void main() {
       expect((streak['week'] as List).last['s'], 'perfect');
     });
 
+    test('a first perfect day starts the streak instead of inviting one', () {
+      final snap = _build(
+        today: [_habit(1, 'A', completed: true, amountCompleted: 1)],
+        streak: 0,
+      );
+      final streak = snap['today']['streak'];
+      expect(streak['count'], 1);
+      expect(streak['perfectToday'], true);
+      expect(streak['health'], 'healthy');
+      expect(
+        streak['line'],
+        isNot(lookupAppLocalizations(const Locale('en')).widgetStartStreak),
+      );
+    });
+
     test('tail misses make the streak fade, then critical', () {
       final fading = _build(today: [_habit(1, 'A')], tailMisses: 1);
       expect(fading['today']['streak']['health'], 'fading');
