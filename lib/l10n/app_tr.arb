@@ -1059,5 +1059,9 @@
   "watchCompleteHabit": "{name} tamamla",
   "watchUncompleteHabit": "{name} yapılmadı olarak işaretle",
   "watchLess": "Azalt",
-  "watchMore": "Artır"
+  "watchMore": "Artır",
+  "wearOpenOnPhone": "Habitt'i telefonunda aç",
+  "wearHealthNote": "Telefonundaki Health Connect'ten güncellenir",
+  "wearLogOnPhone": "Bunu telefonunda kaydet",
+  "wearUpdateNeededBody": "Senkronizasyonun sürmesi için Habitt'i telefonunda ve saatinde güncelle."
 }

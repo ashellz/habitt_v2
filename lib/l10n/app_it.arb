@@ -1394,5 +1394,9 @@
   "watchCompleteHabit": "Completa {name}",
   "watchUncompleteHabit": "Segna {name} come non fatta",
   "watchLess": "Meno",
-  "watchMore": "Più"
+  "watchMore": "Più",
+  "wearOpenOnPhone": "Apri Habitt sul tuo telefono",
+  "wearHealthNote": "Si aggiorna da Health Connect sul tuo telefono",
+  "wearLogOnPhone": "Registra questa sul tuo telefono",
+  "wearUpdateNeededBody": "Aggiorna Habitt sul telefono e sullo smartwatch per continuare a sincronizzare."
 }

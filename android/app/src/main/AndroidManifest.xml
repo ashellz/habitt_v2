@@ -60,6 +60,20 @@
             android:name=".HabitAlarmRingService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback"/>
+        <!-- Wear OS app: actions sent from the watch, queued even when the app
+             isn't running. See docs/watch_app.md. -->
+        <service
+            android:name=".watch.WearActionListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.REQUEST_RECEIVED"/>
+                <data android:scheme="wear" android:host="*" android:path="/habitt/action"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/habitt/action/"/>
+            </intent-filter>
+        </service>
         <!-- Home screen widgets (Jetpack Glance), read-only. See docs/home_widgets.md. -->
         <receiver
             android:name=".widgets.StreakWidgetReceiver"

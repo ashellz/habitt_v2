@@ -1385,5 +1385,9 @@
   "watchCompleteHabit": "Završi {name}",
   "watchUncompleteHabit": "Označi {name} kao nezavršeno",
   "watchLess": "Manje",
-  "watchMore": "Više"
+  "watchMore": "Više",
+  "wearOpenOnPhone": "Otvori Habitt na telefonu",
+  "wearHealthNote": "Ažurira se iz Health Connecta na telefonu",
+  "wearLogOnPhone": "Ovo zabilježi na telefonu",
+  "wearUpdateNeededBody": "Ažuriraj Habitt na telefonu i satu da bi sinhronizacija nastavila raditi."
 }

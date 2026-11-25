@@ -3934,4 +3934,17 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get watchMore => 'Više';
+
+  @override
+  String get wearOpenOnPhone => 'Otvori Habitt na telefonu';
+
+  @override
+  String get wearHealthNote => 'Ažurira se iz Health Connecta na telefonu';
+
+  @override
+  String get wearLogOnPhone => 'Ovo zabilježi na telefonu';
+
+  @override
+  String get wearUpdateNeededBody =>
+      'Ažuriraj Habitt na telefonu i satu da bi sinhronizacija nastavila raditi.';
 }

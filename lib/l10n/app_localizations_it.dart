@@ -3968,4 +3968,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get watchMore => 'Più';
+
+  @override
+  String get wearOpenOnPhone => 'Apri Habitt sul tuo telefono';
+
+  @override
+  String get wearHealthNote => 'Si aggiorna da Health Connect sul tuo telefono';
+
+  @override
+  String get wearLogOnPhone => 'Registra questa sul tuo telefono';
+
+  @override
+  String get wearUpdateNeededBody =>
+      'Aggiorna Habitt sul telefono e sullo smartwatch per continuare a sincronizzare.';
 }

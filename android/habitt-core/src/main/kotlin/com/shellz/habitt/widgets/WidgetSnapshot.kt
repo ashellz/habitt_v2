@@ -10,7 +10,8 @@ import java.time.LocalTime
  * The widget snapshot the Flutter app writes (key `habitt_snapshot`, see
  * docs/home_widgets.md). The widgets only draw it: every habit, streak and
  * schedule decision was already made in Dart. Pure Kotlin + org.json so it is
- * unit tested on the JVM.
+ * unit tested on the JVM, and shared with the Wear OS app (docs/watch_app.md),
+ * which also reads the watch fields (`completed`, `log`, `labels`, `watchAcks`).
  */
 data class WidgetSnapshot(
     val dayKey: String,
@@ -22,6 +23,8 @@ data class WidgetSnapshot(
     val tomorrow: DayBlock,
     /** False when the app has no habits at all, not just none today. */
     val hasHabits: Boolean = true,
+    /** Ids of watch actions the app has applied or dropped, oldest first (docs/watch_app.md). */
+    val watchAcks: List<String> = emptyList(),
 ) {
     data class Strings(
         val dayStreak: String,
@@ -32,6 +35,8 @@ data class WidgetSnapshot(
         val dayCompleteBody: String,
         val nothingToday: String,
         val noHabits: String = DEFAULT_NO_HABITS,
+        /** Every snapshot string by key, in the app's language (the watch reads its texts here). */
+        val labels: Map<String, String> = emptyMap(),
     ) {
         fun streakLabel(count: Int) = if (count == 1) dayStreak else daysStreak
 
@@ -41,8 +46,25 @@ data class WidgetSnapshot(
     /** The block the widgets show at [now]: `tomorrow` once the next day has started. */
     fun blockAt(now: LocalDateTime): DayBlock = if (!now.isBefore(nextDayStartsAt)) tomorrow else today
 
+    /** The `yyyy-MM-dd` key of the day shown at [now]: `dayKey`, or tomorrow's once the next day started. */
+    fun shownDayKey(now: LocalDateTime): String =
+        if (!now.isBefore(nextDayStartsAt)) nextDayStartsAt.toLocalDate().toString() else dayKey
+
     companion object {
         const val VERSION = 1
+
+        /**
+         * The snapshot's `v` without parsing the rest; null when unreadable. The
+         * watch uses it to tell "from a newer app" apart from "malformed".
+         */
+        fun peekVersion(json: String?): Int? {
+            if (json.isNullOrBlank()) return null
+            return try {
+                JSONObject(json).let { if (it.has("v")) it.getInt("v") else null }
+            } catch (e: Exception) {
+                null
+            }
+        }
 
         /** Parses [json]; null for no snapshot, another version or anything malformed. */
         fun parse(json: String?): WidgetSnapshot? {
@@ -69,10 +91,16 @@ data class WidgetSnapshot(
                         dayCompleteBody = s.optString("dayCompleteBody", ""),
                         nothingToday = s.optString("nothingToday", ""),
                         noHabits = s.optString("noHabits", DEFAULT_NO_HABITS),
+                        labels = s.keys().asSequence()
+                            .mapNotNull { k -> (s.opt(k) as? String)?.let { k to it } }
+                            .toMap(),
                     ),
                     today = DayBlock.parse(o.getJSONObject("today")),
                     tomorrow = DayBlock.parse(o.getJSONObject("tomorrow")),
                     hasHabits = o.optBoolean("hasHabits", true),
+                    watchAcks = o.optJSONArray("watchAcks").let { a ->
+                        if (a == null) emptyList() else (0 until a.length()).mapNotNull { a.opt(it) as? String }
+                    },
                 )
             } catch (e: Exception) {
                 null
@@ -135,10 +163,57 @@ data class WidgetHabit(
     val progress: Double,
     val progressText: String,
     val state: State,
+    /** The habit's own completed flag (`state` done also covers skipped). */
+    val completed: Boolean = state == State.DONE,
+    val log: HabitLog = HabitLog.NONE,
 ) {
     enum class State { DONE, PARTIAL, TODO }
 
     val isDone get() = state == State.DONE
+
+    /** Health-linked and time-of-day habits only show their state on the watch. */
+    val watchReadOnly get() = log.healthLinked || log.kind == HabitLog.Kind.TIME_OF_DAY
+}
+
+/** How a habit is logged, for the watch apps. Durations are in seconds. */
+data class HabitLog(
+    val kind: Kind?,
+    val target: Int,
+    val value: Int,
+    /** Amount label for the target, already localized ("pages"); "" otherwise. */
+    val unit: String = "",
+    /** 1 for amounts, 60 (a minute) for durations. */
+    val step: Int = 1,
+    val healthLinked: Boolean = false,
+    /** Amount or duration without Health sync: the watch can set its value. */
+    val watchLoggable: Boolean = false,
+) {
+    enum class Kind(val key: String) {
+        AMOUNT("amount"),
+        DURATION("duration"),
+        TIME_OF_DAY("timeOfDay");
+
+        companion object {
+            fun of(key: String?): Kind? = entries.firstOrNull { it.key == key }
+        }
+    }
+
+    companion object {
+        val NONE = HabitLog(kind = null, target = 0, value = 0)
+
+        fun parse(o: JSONObject?): HabitLog {
+            if (o == null) return NONE
+            return HabitLog(
+                kind = Kind.of(if (o.isNull("type")) null else o.optString("type")),
+                target = o.optInt("target", 0),
+                value = o.optInt("value", 0),
+                unit = o.optString("unit", ""),
+                step = o.optInt("step", 1).coerceAtLeast(1),
+                healthLinked = o.optBoolean("healthLinked", false),
+                watchLoggable = o.optBoolean("watchLoggable", false),
+            )
+        }
+    }
 }
 
 data class WeekDay(val label: String, val status: Status, val progress: Double) {
@@ -179,6 +254,11 @@ data class DayBlock(
     companion object {
         fun parse(o: JSONObject): DayBlock {
             val habits = o.optJSONArray("habits").objects().map { h ->
+                val state = when (h.optString("state")) {
+                    "done" -> WidgetHabit.State.DONE
+                    "partial" -> WidgetHabit.State.PARTIAL
+                    else -> WidgetHabit.State.TODO
+                }
                 WidgetHabit(
                     id = h.getLong("id"),
                     emoji = h.optString("emoji", ""),
@@ -187,11 +267,9 @@ data class DayBlock(
                     optional = h.optBoolean("optional", false),
                     progress = h.optDouble("progress", 0.0).coerceIn(0.0, 1.0),
                     progressText = h.optString("progressText", ""),
-                    state = when (h.optString("state")) {
-                        "done" -> WidgetHabit.State.DONE
-                        "partial" -> WidgetHabit.State.PARTIAL
-                        else -> WidgetHabit.State.TODO
-                    },
+                    state = state,
+                    completed = if (h.has("completed")) h.optBoolean("completed") else state == WidgetHabit.State.DONE,
+                    log = HabitLog.parse(h.optJSONObject("log")),
                 )
             }
             val s = o.optJSONObject("streak") ?: JSONObject()

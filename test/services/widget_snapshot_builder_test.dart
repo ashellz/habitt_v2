@@ -349,6 +349,12 @@ void main() {
       expect(snap['strings']['optional'], isNotEmpty);
       expect(snap['strings']['watchShowHabits'], 'Prikaži navike');
       expect(snap['strings']['watchOfTarget'], 'od %@');
+      expect(
+        snap['strings']['wearHealthNote'],
+        'Ažurira se iz Health Connecta na telefonu',
+      );
+      expect(snap['strings']['wearLogOnPhone'], 'Ovo zabilježi na telefonu');
+      expect(snap['strings']['wearUpdateNeededBody'], isNotEmpty);
     });
 
     test('streak labels are lower case, as on the home page card', () {

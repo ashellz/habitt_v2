@@ -3,6 +3,7 @@
 - **Privacy-First:** We do not collect your habit data. Everything stays on your device.
 - **Optional Sync:** If you choose to sync with Google Drive, the data is encrypted on your device. We cannot read it.
 - **Health Data (Optional):** If you choose to link a habit to Apple Health or Health Connect, Habitt reads that data on your device only to update your habit progress. It is never sent to us or anyone else, never used for ads, and never written back.
+- **Smartwatch Apps (Optional):** If you use Habitt on an Apple Watch or a Wear OS watch, today's habits and the changes you make on the watch travel only between your phone and your watch, never to us.
 - **No Analytics/Ads:** We don’t track your behavior or show ads.
 - **Voluntary Support:** Payments are handled securely by Apple, Google, and RevenueCat.
 
@@ -10,7 +11,8 @@
 
 ### FULL PRIVACY POLICY
 
-**Effective Date:** May 9, 2026
+**Effective Date:** May 9, 2026  
+**Last Updated:** November 25, 2026
 
 **1. INTRODUCTION**  
 Habitt ("the App") is published by ThinkingApp (Legal Entity: Ibrahim Bećirović), based in Pordenone, Italy. We are committed to a "privacy-by-design" approach. This policy explains how we handle the very limited data involved in your use of the App.
@@ -29,6 +31,7 @@ We do not collect or store:
 **4. OPTIONAL DATA PROCESSING**
 
 - **Cloud Sync:** If you enable Google Drive sync, the App requests access to your Google Drive to create a backup file. All data is encrypted locally on your device before transfer. We do not hold the encryption keys and cannot access this data.
+- **Smartwatch Apps:** If you install Habitt on an Apple Watch or a Wear OS watch (such as a Pixel Watch or Galaxy Watch), the phone app sends the watch a summary of today's habits (names, emoji, progress, completion and streak) so the watch can show them, and the watch sends back the habits you complete, un-complete or log there. This data goes directly between your phone and your watch and is never sent to us. On Apple Watch it uses Apple's WatchConnectivity. On Wear OS it uses the Wearable Data Layer of Google Play services: when your watch and phone are close it travels over Bluetooth or your local Wi-Fi, and when your watch is away from your phone but connected to Wi-Fi or a mobile network, Google relays it through its servers for your Google account, as it does for other phone–watch data such as notifications. Uninstalling Habitt from the watch removes the data stored there.
 - **Authentication:** We use Firebase Authentication solely to facilitate the connection between the App and your Google account.
 - **Payments:** If you choose a voluntary subscription, processing is handled by Apple App Store/Google Play Store and RevenueCat. We see only a transaction ID and subscription status; we never see your credit card details.
 
@@ -58,6 +61,7 @@ We process data based on:
 We use the following processors:
 
 - **Google (Firebase/Drive):** For authentication and storage.
+- **Google Play services (Wear OS Data Layer):** Only if you use the Wear OS app, to carry data between your phone and your watch (see Section 4).
 - **RevenueCat:** For managing subscription status.
 - **Apple/Google:** For payment processing.
 

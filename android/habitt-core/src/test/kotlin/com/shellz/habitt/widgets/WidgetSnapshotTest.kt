@@ -1,5 +1,6 @@
 package com.shellz.habitt.widgets
 
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -237,5 +238,62 @@ class WidgetSnapshotTest {
     fun `a day start that is not midnight is honoured`() {
         val start = LocalDateTime.of(2026, 11, 25, 2, 30)
         assertEquals(start, WidgetClock.nextUpdate(LocalDateTime.of(2026, 11, 25, 1, 0), start))
+    }
+
+    // ─── watch fields (docs/watch_app.md) ────────────────────────────
+
+    @Test
+    fun `old snapshots have no watch fields`() {
+        val s = WidgetSnapshot.parse(full)!!
+        val brush = s.today.habit(1)!!
+        assertTrue(brush.completed)
+        assertEquals(HabitLog.NONE, brush.log)
+        assertTrue(s.watchAcks.isEmpty())
+        assertEquals("Day complete", s.strings.labels["dayComplete"])
+    }
+
+    @Test
+    fun `reads the watch fields`() {
+        val habits = """
+            [
+              {"id": 7, "emoji": "📖", "name": "Read", "progress": 0.3, "progressText": "3 / 10 pages", "state": "partial",
+               "completed": false,
+               "log": {"type": "amount", "target": 10, "value": 3, "unit": "pages", "step": 1,
+                       "healthLinked": false, "watchLoggable": true}},
+              {"id": 8, "emoji": "🚶", "name": "Steps", "progress": 1.0, "progressText": "8,000", "state": "done",
+               "completed": false,
+               "log": {"type": "amount", "target": 8000, "value": 8000, "unit": "steps", "step": 1,
+                       "healthLinked": true, "watchLoggable": false}},
+              {"id": 9, "emoji": "⏰", "name": "Wake", "progress": 0.0, "progressText": "", "state": "todo",
+               "log": {"type": "timeOfDay", "target": 0, "value": 0, "unit": "", "step": 1}},
+              {"id": 10, "emoji": "🧘", "name": "Plain", "progress": 0.0, "state": "todo",
+               "log": {"type": null, "target": 0, "value": 0}}
+            ]
+        """
+        val json = JSONObject(snapshot(today = block(habits = habits)))
+            .put("watchAcks", org.json.JSONArray(listOf("a", "b")))
+        json.getJSONObject("strings").put("wearHealthNote", "Updates from Health Connect on your phone")
+        val s = WidgetSnapshot.parse(json.toString())!!
+        val read = s.today.habit(7)!!
+        assertEquals(HabitLog(HabitLog.Kind.AMOUNT, 10, 3, "pages", 1, false, true), read.log)
+        assertFalse(read.completed)
+        assertFalse(read.watchReadOnly)
+        val steps = s.today.habit(8)!!
+        assertTrue(steps.isDone)
+        assertFalse(steps.completed)
+        assertTrue(steps.watchReadOnly)
+        assertTrue(s.today.habit(9)!!.watchReadOnly)
+        assertNull(s.today.habit(10)!!.log.kind)
+        assertEquals(listOf("a", "b"), s.watchAcks)
+        assertEquals("Updates from Health Connect on your phone", s.strings.labels["wearHealthNote"])
+    }
+
+    @Test
+    fun `peeks the version of any snapshot`() {
+        assertEquals(1, WidgetSnapshot.peekVersion(full))
+        assertEquals(2, WidgetSnapshot.peekVersion(snapshot(v = 2)))
+        assertNull(WidgetSnapshot.peekVersion("nope"))
+        assertNull(WidgetSnapshot.peekVersion(null))
+        assertNull(WidgetSnapshot.parse(snapshot(v = 2)))
     }
 }

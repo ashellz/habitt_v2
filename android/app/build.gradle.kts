@@ -96,6 +96,10 @@ android {
 
 dependencies {
     implementation("androidx.glance:glance-appwidget:1.2.0")
+    // the snapshot model, shared with the Wear OS app (docs/watch_app.md)
+    implementation(project(":habitt-core"))
+    // Wear OS Data Layer: snapshot to the watch, actions back (docs/watch_app.md)
+    implementation("com.google.android.gms:play-services-wearable:19.0.0")
     testImplementation("junit:junit:4.13.2")
     // android.jar's org.json is a stub in JVM unit tests
     testImplementation("org.json:json:20240303")

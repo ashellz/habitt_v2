@@ -94,14 +94,14 @@ class WidgetSnapshotBuilder {
         'dayCompleteBody': loc.widgetDayCompleteBody,
         'nothingToday': loc.widgetNothingToday,
         'noHabits': loc.youHaventAddedAnyHabitsYet,
-        // Apple Watch list
+        // watch list (Apple Watch and Wear OS)
         'today': loc.today,
         'anyTime': loc.anyTime,
         'morning': loc.morning,
         'afternoon': loc.afternoon,
         'evening': loc.evening,
         'optional': loc.optional,
-        // Apple Watch UI, in the app's language rather than the watch's;
+        // watch UI, in the app's language rather than the watch's;
         // `%@` marks where the watch puts its value
         'watchShowHabits': loc.watchShowHabits,
         'watchHealthNote': loc.watchHealthNote,
@@ -113,10 +113,14 @@ class WidgetSnapshotBuilder {
         'watchMore': loc.watchMore,
         'watchUpdateNeeded': loc.watchUpdateNeeded,
         'watchUpdateNeededBody': loc.watchUpdateNeededBody,
+        // Wear OS wording of the texts above that name the iPhone or Apple Health
+        'wearHealthNote': loc.wearHealthNote,
+        'wearLogOnPhone': loc.wearLogOnPhone,
+        'wearUpdateNeededBody': loc.wearUpdateNeededBody,
       },
       'today': _dayBlock(input, input.todayHabits, todayStreak),
       'tomorrow': _dayBlock(input, input.tomorrowHabits, tomorrowStreak),
-      // ids of the Apple Watch actions the app has applied (docs/watch_app.md)
+      // ids of the watch actions the app has applied (docs/watch_app.md)
       'watchAcks': input.watchAcks.length > maxWatchAcks
           ? input.watchAcks.sublist(input.watchAcks.length - maxWatchAcks)
           : List<String>.from(input.watchAcks),

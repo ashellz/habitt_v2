@@ -1444,5 +1444,11 @@
   "@watchCompleteHabit": {"description": "Apple Watch: accessibility label of a habit's check when not done", "placeholders": {"name": {"type": "String"}}},
   "@watchUncompleteHabit": {"description": "Apple Watch: accessibility label of a habit's check when done", "placeholders": {"name": {"type": "String"}}},
   "@watchOpenOnIPhone": {"description": "Apple Watch app before the iPhone app sent any data"},
-  "@watchLogOnIPhone": {"description": "Apple Watch: tapping a habit that can only be logged on the phone (bedtime, wake time)"}
+  "@watchLogOnIPhone": {"description": "Apple Watch: tapping a habit that can only be logged on the phone (bedtime, wake time)"},
+  "wearOpenOnPhone": "Open Habitt on your phone",
+  "wearHealthNote": "Updates from Health Connect on your phone",
+  "wearLogOnPhone": "Log this one on your phone",
+  "wearUpdateNeededBody": "Update Habitt on your phone and watch to keep syncing.",
+  "@wearOpenOnPhone": {"description": "Wear OS app before the phone app sent any data"},
+  "@wearLogOnPhone": {"description": "Wear OS: tapping a habit that can only be logged on the phone (bedtime, wake time)"}
 }

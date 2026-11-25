@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not translated: the app's name, and the Data Layer capability the phone
+     looks for (docs/watch_app.md). -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@array/android_wear_capabilities">
+    <string name="app_name" translatable="false">Habitt</string>
+    <string-array name="android_wear_capabilities" translatable="false">
+        <item>habitt_watch</item>
+    </string-array>
+</resources>

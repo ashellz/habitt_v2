@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-/// One change made on the Apple Watch (docs/watch_app.md). Values are
+/// One change made on the watch (Apple Watch or Wear OS, docs/watch_app.md). Values are
 /// absolute ("set 8 pages"), never increments, so a resend is harmless.
 class WatchAction {
   /// Action versions this app can apply. Add to it, never remove: an older
@@ -114,20 +114,26 @@ WatchActionPlan collapseWatchActions(List<WatchAction> queued) {
   );
 }
 
-/// Where received watch actions wait to be applied. On iOS the native
-/// `WatchBridge` owns the queue (it appends from the WatchConnectivity
-/// callbacks), so reads and removals go through it and never race an append.
+/// Where received watch actions wait to be applied. The native bridge owns
+/// the queue (`WatchBridge` on iOS appends from the WatchConnectivity
+/// callbacks, `WearBridge` on Android from the Wear OS listener service), so
+/// reads and removals go through it and never race an append.
 abstract class WatchQueueStore {
   Future<List<WatchAction>> peek();
   Future<void> remove(Iterable<String> ids);
 }
 
-/// The `habitt/watch` method channel to `ios/Runner/WatchBridge.swift`.
+/// The `habitt/watch` method channel to `ios/Runner/WatchBridge.swift` and
+/// `android/app/.../watch/WearBridge.kt`.
 class WatchChannel {
   static const MethodChannel channel = MethodChannel('habitt/watch');
 
+  /// iOS (`WatchBridge.swift`, Apple Watch) and Android (`WearBridge.kt`,
+  /// Wear OS).
   static bool get isAvailable =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
 }
 
 class MethodChannelWatchQueueStore implements WatchQueueStore {

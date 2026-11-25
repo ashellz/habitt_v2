@@ -10,9 +10,9 @@ import 'package:habitt/services/watch_action_queue.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// The phone side of the Apple Watch app (docs/watch_app.md): applies the
-/// actions the watch sends and remembers which ones were applied, so the
-/// next snapshot can tell the watch ([acks]).
+/// The phone side of the watch apps (Apple Watch and Wear OS,
+/// docs/watch_app.md): applies the actions the watch sends and remembers
+/// which ones were applied, so the next snapshot can tell the watch ([acks]).
 class WatchSyncService {
   WatchSyncService({
     required this.store,
@@ -69,7 +69,7 @@ class WatchSyncService {
           await Future<void>.delayed(const Duration(milliseconds: 400));
           await afterDrain?.call();
         } finally {
-          // lets iOS suspend the app again (see WatchBridge)
+          // lets iOS suspend the app again (see WatchBridge; no-op on Android)
           unawaited(
             WatchChannel.channel
                 .invokeMethod('drainDone')

@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
+import com.shellz.habitt.watch.WearBridge
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -46,6 +47,8 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        // Wear OS app: snapshot out, watch actions in (docs/watch_app.md)
+        WearBridge.register(this, flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "habitt/alarm_screen")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
@@ -100,6 +103,11 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        WearBridge.unregister(flutterEngine.dartExecutor.binaryMessenger)
+        super.cleanUpFlutterEngine(flutterEngine)
     }
 
     // awesome_notifications opens the app with this action for both a tap and

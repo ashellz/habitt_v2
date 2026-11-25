@@ -3942,4 +3942,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get watchMore => 'Artır';
+
+  @override
+  String get wearOpenOnPhone => 'Habitt\'i telefonunda aç';
+
+  @override
+  String get wearHealthNote => 'Telefonundaki Health Connect\'ten güncellenir';
+
+  @override
+  String get wearLogOnPhone => 'Bunu telefonunda kaydet';
+
+  @override
+  String get wearUpdateNeededBody =>
+      'Senkronizasyonun sürmesi için Habitt\'i telefonunda ve saatinde güncelle.';
 }

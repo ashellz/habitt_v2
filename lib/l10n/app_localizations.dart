@@ -6663,6 +6663,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get watchMore;
+
+  /// Wear OS app before the phone app sent any data
+  ///
+  /// In en, this message translates to:
+  /// **'Open Habitt on your phone'**
+  String get wearOpenOnPhone;
+
+  /// No description provided for @wearHealthNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates from Health Connect on your phone'**
+  String get wearHealthNote;
+
+  /// Wear OS: tapping a habit that can only be logged on the phone (bedtime, wake time)
+  ///
+  /// In en, this message translates to:
+  /// **'Log this one on your phone'**
+  String get wearLogOnPhone;
+
+  /// No description provided for @wearUpdateNeededBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Habitt on your phone and watch to keep syncing.'**
+  String get wearUpdateNeededBody;
 }
 
 class _AppLocalizationsDelegate

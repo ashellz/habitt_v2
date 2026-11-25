@@ -1959,7 +1959,7 @@ class HabitProvider extends ChangeNotifier {
     );
   }
 
-  /// Applies a change made on the Apple Watch (docs/watch_app.md) to the
+  /// Applies a change made on the watch (docs/watch_app.md) to the
   /// action's day through the same code as the app, without sound. Returns
   /// false when nothing changed: unknown, deleted or paused habit, a habit
   /// the watch may not change (Health-linked, time of day), a value already

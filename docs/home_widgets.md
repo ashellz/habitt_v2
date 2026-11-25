@@ -118,12 +118,14 @@ Stored as a JSON string under the key `habitt_snapshot`.
 - **Parts of day** follow `categoryIdForMinutes`: Morning 04–12, Afternoon
   12–19, Evening 19–04. Natives pick the block for the current clock time.
 
-### Fields for the Apple Watch
+### Fields for the watch apps
 
 Each habit also carries `completed` and a `log` object, the strings block has
 the list labels (`today`, `anyTime`, `morning`, `afternoon`, `evening`,
-`optional`), and the top level has `watchAcks`. They are additive (`v` stays
-1) and the widgets ignore them. See `docs/watch_app.md`.
+`optional`) and the watch UI text (`watch*`, plus the Wear OS wording
+`wearHealthNote`, `wearLogOnPhone`, `wearUpdateNeededBody`), and the top
+level has `watchAcks`. They are additive (`v` stays 1) and the widgets ignore
+them. Used by the Apple Watch and Wear OS apps, see `docs/watch_app.md`.
 
 ## When the snapshot is written
 
@@ -144,8 +146,9 @@ them. So a write made in the background is remembered, and on the next resume
 (`WidgetSnapshotService.resumed`) the widgets are asked to redraw again, even
 if the snapshot didn't change since.
 
-Every write also goes to the Apple Watch app (`WatchSyncService.pushSnapshot`
-from `HomeWidgetSnapshotWriter`, see `docs/watch_app.md`).
+Every write also goes to the watch apps (`WatchSyncService.pushSnapshot`
+from `HomeWidgetSnapshotWriter`: the Apple Watch on iOS, the Wear OS Data
+Layer on Android, see `docs/watch_app.md`).
 
 **Known gap:** a notification "Complete" pressed while the app is not running
 is queued (`PendingCompletionQueue`) and only applied, and shown in widgets,
@@ -228,7 +231,7 @@ Code in `android/app/src/main/kotlin/com/shellz/habitt/widgets/`:
 
 | File | Role |
 |---|---|
-| `WidgetSnapshot.kt` | Parses the snapshot (`v` must be 1), `placeholder` for before the first one, `blockAt(now)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetClock.nextUpdate`. Pure Kotlin + org.json, tested in `android/app/src/test/.../WidgetSnapshotTest.kt` (`./gradlew :app:testDebugUnitTest`). |
+| `WidgetSnapshot.kt` | Parses the snapshot (`v` must be 1), `placeholder` for before the first one, `blockAt(now)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetClock.nextUpdate`. Pure Kotlin + org.json in the `:habitt-core` module (`android/habitt-core`, shared with the Wear OS app, which also reads the watch fields), tested in `android/habitt-core/src/test/.../WidgetSnapshotTest.kt` (`./gradlew :habitt-core:test`). |
 | `HabittWidgets.kt` | The four `GlanceAppWidget`s and receivers (`HomeWidgetGlanceWidgetReceiver`, state from home_widget's preferences, `SizeMode.Exact`). |
 | `WidgetUi.kt` | Colours (light/dark pairs from the design canvas, accent from the snapshot), tap links, bitmaps for what RemoteViews cannot draw (ring segments, week arcs, pies), shared pieces. |
 | `WidgetRefresh.kt` | The boundary alarm and its receiver (see above). |
@@ -276,11 +279,13 @@ Generated resources (rerun after changing the source):
 
 - `dart run tool/svg_to_vector_drawable.dart`: `widget_art_*` VectorDrawables
   from `assets/images/new-svg/streak.svg`, `streak-fade.svg`, `ice-left.svg`,
-  `ice-over.svg`, `empty-box.svg` (drop shadow dropped).
+  `ice-over.svg`, `empty-box.svg` (drop shadow dropped), and the Wear OS
+  app's `wear_art_streak`.
 - `dart run tool/gen_android_widget_strings.dart`: `values[-xx]/widget_strings.xml`
   from the `widget*Name` / `widget*Description` ARB keys, plus the strings
   the placeholder needs (`youHaventAddedAnyHabitsYet`, `dayStreakLabel`,
-  `daysStreakLabel`, `day`, `days`, `widgetStartStreak`).
+  `daysStreakLabel`, `day`, `days`, `widgetStartStreak`). The same tool
+  writes the Wear OS app's `wear_strings.xml` (`docs/watch_app.md`).
 
 ### iOS (SwiftUI + WidgetKit)
 

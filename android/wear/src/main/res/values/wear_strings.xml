@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_en.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="wear_today">Today</string>
+    <string name="wear_any_time">Any time</string>
+    <string name="wear_morning">Morning</string>
+    <string name="wear_afternoon">Afternoon</string>
+    <string name="wear_evening">Evening</string>
+    <string name="wear_optional">Optional</string>
+    <string name="wear_open_on_phone">Open Habitt on your phone</string>
+    <string name="wear_open_on_phone_body">Your habits show up here once it syncs.</string>
+    <string name="wear_update_needed">Update Habitt</string>
+    <string name="wear_update_needed_body">Update Habitt on your phone and watch to keep syncing.</string>
+    <string name="wear_health_note">Updates from Health Connect on your phone</string>
+    <string name="wear_log_on_phone">Log this one on your phone</string>
+    <string name="wear_show_habits">Show habits</string>
+    <string name="wear_of_target">of %1$s</string>
+    <string name="wear_complete_habit">Complete %1$s</string>
+    <string name="wear_uncomplete_habit">Mark %1$s as not done</string>
+    <string name="wear_less">Less</string>
+    <string name="wear_more">More</string>
+    <string name="wear_no_habits">You haven’t added any habits yet</string>
+    <string name="wear_nothing_today">Nothing scheduled today</string>
+</resources>

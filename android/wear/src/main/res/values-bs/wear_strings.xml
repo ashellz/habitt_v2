@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_bs.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="wear_today">Danas</string>
+    <string name="wear_any_time">Bilo kada</string>
+    <string name="wear_morning">Jutro</string>
+    <string name="wear_afternoon">Popodne</string>
+    <string name="wear_evening">Veče</string>
+    <string name="wear_optional">Opcionalno</string>
+    <string name="wear_open_on_phone">Otvori Habitt na telefonu</string>
+    <string name="wear_open_on_phone_body">Tvoje navike će se pojaviti ovdje nakon sinhronizacije.</string>
+    <string name="wear_update_needed">Ažuriraj Habitt</string>
+    <string name="wear_update_needed_body">Ažuriraj Habitt na telefonu i satu da bi sinhronizacija nastavila raditi.</string>
+    <string name="wear_health_note">Ažurira se iz Health Connecta na telefonu</string>
+    <string name="wear_log_on_phone">Ovo zabilježi na telefonu</string>
+    <string name="wear_show_habits">Prikaži navike</string>
+    <string name="wear_of_target">od %1$s</string>
+    <string name="wear_complete_habit">Završi %1$s</string>
+    <string name="wear_uncomplete_habit">Označi %1$s kao nezavršeno</string>
+    <string name="wear_less">Manje</string>
+    <string name="wear_more">Više</string>
+    <string name="wear_no_habits">Još niste dodali nijednu naviku.</string>
+    <string name="wear_nothing_today">Danas ništa nije zakazano</string>
+</resources>

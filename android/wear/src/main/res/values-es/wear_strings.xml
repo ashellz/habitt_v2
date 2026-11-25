@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_es.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="wear_today">Hoy</string>
+    <string name="wear_any_time">En cualquier momento</string>
+    <string name="wear_morning">Mañana</string>
+    <string name="wear_afternoon">Por la tarde</string>
+    <string name="wear_evening">Por la noche</string>
+    <string name="wear_optional">Opcional</string>
+    <string name="wear_open_on_phone">Abre Habitt en tu teléfono</string>
+    <string name="wear_open_on_phone_body">Tus hábitos aparecerán aquí cuando se sincronice.</string>
+    <string name="wear_update_needed">Actualiza Habitt</string>
+    <string name="wear_update_needed_body">Actualiza Habitt en tu teléfono y tu reloj para seguir sincronizando.</string>
+    <string name="wear_health_note">Se actualiza desde Health Connect en tu teléfono</string>
+    <string name="wear_log_on_phone">Registra este en tu teléfono</string>
+    <string name="wear_show_habits">Ver hábitos</string>
+    <string name="wear_of_target">de %1$s</string>
+    <string name="wear_complete_habit">Completar %1$s</string>
+    <string name="wear_uncomplete_habit">Marcar %1$s como no hecho</string>
+    <string name="wear_less">Menos</string>
+    <string name="wear_more">Más</string>
+    <string name="wear_no_habits">Aún no has añadido ningún hábito</string>
+    <string name="wear_nothing_today">Nada programado para hoy</string>
+</resources>

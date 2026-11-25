@@ -74,7 +74,7 @@ class HomeWidgetSnapshotWriter implements WidgetSnapshotWriter {
       debugPrint('[WIDGETS] saving the snapshot failed: $e');
       return;
     }
-    // the Apple Watch app draws the same snapshot (docs/watch_app.md)
+    // the watch apps draw the same snapshot (docs/watch_app.md)
     unawaited(WatchSyncService.pushSnapshot(json));
     await reload();
   }
