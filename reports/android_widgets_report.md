@@ -197,3 +197,40 @@ Notes on the tap tests:
   assets; the critical composition offsets are in the drawables
   (`widget_bg_streak_critical.xml`, `widget_bg_tile_critical.xml`).
 - Taps need `homeWidget` in the URL query (already in the docs).
+
+## Follow-up round (2026-11-25)
+
+Changes after review of the open questions, tested on the same emulator.
+
+| Item | Result | Shots |
+|---|---|---|
+| Lower-case "days streak" (Q1) in the app card and all widgets, via new `dayStreakLabel` / `daysStreakLabel` ARB keys in all 8 languages | **Passed** | `17_*` |
+| First perfect day (Q2): the home page card shows "1 day streak" instead of hiding (`StatsProvider.shownPerfectDaysStreak`), widgets match | **Passed** | `17_first_perfect_day_app_card`, `17_first_perfect_day_widgets` |
+| Streak celebration after a widget tap (Q3): waits until Log progress closes. App killed, clock moved to the next day, Up next row tapped: Log progress first, celebration after Cancel | **Passed** | `19_widget_tap_log_progress_first`, `19_celebration_after_log_closed` |
+| No habits at all: Today ring and Up next show the empty box art and "You haven't added any habits yet" (snapshot `hasHabits` / `strings.noHabits`) | **Passed** | `16_*` |
+| Fresh install, before the first snapshot: no habits and a 0 streak instead of "Open Habitt" (native placeholder in the device language) | **Passed** | `15_fresh_install_*` |
+| Dormant Streak card shows 0, "days streak" and the invite line | **Passed** | `15_fresh_install_streaks` |
+| 9+ habits: Today ring is one plain ring filled to the day's progress | **Passed** (4/9) | `20_ring_9_habits_continuous` |
+| Onboarding "Português (Brasil)" chip overflow: the name now shrinks to fit | **Passed** | `15_onboarding_chip_fixed` |
+
+Up next layouts for Android's taller cells (Q6), switched by
+`UpNextWidget.LAYOUT`; **Stretched is in use until you pick one**:
+
+| A Scaled (iOS design × up to 1.3) | B Centred (iOS sizes) | C Stretched (rows grow) |
+|---|---|---|
+| ![](shots/18_upnext_A_scaled.png) | ![](shots/18_upnext_B_centred.png) | ![](shots/18_upnext_C_stretched.png) |
+
+Scaled fills the cell but truncates longer names ("Mindfuln…") and makes the
+tile wider; Centred keeps iOS proportions and leaves bands above and below;
+Stretched keeps the text sizes and spreads the rows.
+
+Note: killing the process one second after a time change interrupted one
+widget's redraw (it caught up on the next update). That was the test, not a
+bug: a normal boundary update finishes in well under a second.
+
+Tests: `flutter analyze` 0 errors (149 issues, as before), `flutter test`
+759 passed, Kotlin `WidgetSnapshotTest` 15/15.
+
+Still to do: the picker previews (`drawable-nodpi/widget_preview_*.png`)
+show the old "day Streak" and the iOS-sized Up next. Recapture them once an
+Up next layout is chosen.
