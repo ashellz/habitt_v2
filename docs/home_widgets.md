@@ -225,7 +225,11 @@ How it is drawn:
   icon (sun, moon, clock for Any time); "Day complete" when the section is null
   and the day has habits, `nothingToday` when it has none. Rows open Log
   progress, the rest of the widget the home page.
-- Streak / Streak week open the home page. Dormant streak: only the invite line.
+- Streak / Streak week open the home page. Dormant streak: only the invite line,
+  drawn with the healthy look (as the home page streak card does).
+- Picker previews: `drawable-nodpi/widget_preview_*.png`, cropped from emulator
+  screenshots of the real widgets (light, Habitt green). Recapture them when a
+  widget's look changes.
 - `MainActivity` has the `es.antonborri.home_widget.action.LAUNCH` intent
   filter; taps use home_widget's `actionStartActivity<MainActivity>(context, uri)`.
 
