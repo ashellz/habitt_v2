@@ -160,15 +160,14 @@ class _NewPerfectDaysStreakState extends State<NewPerfectDaysStreak>
     final cp = context.watch<ColorProvider>();
     final statsProvider = context.watch<StatsProvider>();
 
-    final health = statsProvider.perfectDaysHealth;
+    // counts today once it is perfect, so a first perfect day shows "1"
+    final health = statsProvider.shownPerfectDaysHealth;
     if (health == StreakHealth.dormant) return const SizedBox.shrink();
 
     final loc = AppLocalizations.of(context)!;
     final todayStatus = statsProvider.todayCompletionStatus;
 
-    final displayStreak =
-        statsProvider.perfectDaysStreak +
-        (todayStatus == DayCompletionStatus.perfect ? 1 : 0);
+    final displayStreak = statsProvider.shownPerfectDaysStreak;
 
     final copy = _copyFor(
       loc: loc,
@@ -238,7 +237,9 @@ class _NewPerfectDaysStreakState extends State<NewPerfectDaysStreak>
                   spacing: 4,
                   children: [
                     Text(
-                      '${displayStreak == 1 ? loc.day : loc.days} ${loc.streak}',
+                      displayStreak == 1
+                          ? loc.dayStreakLabel
+                          : loc.daysStreakLabel,
                       style: TextStyle(
                         color: cp.text,
                         fontSize: 16,

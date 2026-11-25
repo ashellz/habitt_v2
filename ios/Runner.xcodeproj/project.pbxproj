@@ -3,20 +3,32 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0CCB646DDFE0B5AD042C6F6D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F6222950B87319FF59E8975C /* GoogleService-Info.plist */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		16E86C801202B74B14260029 /* WidgetStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91229BF2376D5C38329E63E9 /* WidgetStyle.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3A48B5CF6409BD965BD45A22 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90A0F55C210C4E21040EF85 /* Pods_Runner.framework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		3EB752513D6F7F6438AAC0C7 /* WidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE2D98AA8E63CC2F39B772 /* WidgetProvider.swift */; };
+		472F5E8EB9F85BDB833E3F79 /* Satoshi-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6EE1BFEC654011A2BD6DA07E /* Satoshi-Bold.otf */; };
+		6BB045FFF9B5711AAB918A11 /* UpNextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B01526E3F6F79E12EFDD03 /* UpNextWidget.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		7698FF75604DD7782BD90866 /* StreakWeekWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02979F45E954D930EE2F4F7 /* StreakWeekWidget.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		9C7F0F02E11744C55DA764BB /* Satoshi-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8EBB8A900E1E056DD9291F0C /* Satoshi-Medium.otf */; };
+		9F4F62DEA114359BEE471994 /* HabittWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 292781507A3737C2FFF92079 /* HabittWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A19EC620B6DB61A2CA24681D /* TodayRingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73345EADCDC4717614E276A3 /* TodayRingWidget.swift */; };
+		A6E3E1BA03736848A4885DC9 /* Satoshi-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F9F12C4FBDFAD4A214EED1A /* Satoshi-Regular.otf */; };
+		A76F96A67E04861E5AA53D98 /* WidgetPieces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB0E7C3CC418E87B33DB0F3 /* WidgetPieces.swift */; };
+		B2E0848FF610E1178A977D52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38C0D0B8425CA3A7780D3ADE /* Localizable.strings */; };
+		B5F7767FC997255A0E3144F4 /* HabittWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16ECE85A5DE16522A16884 /* HabittWidgetsBundle.swift */; };
 		BE8E6AA44D5E48186B826206 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */; };
 		E5561DF12F3F018200C9A6AD /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5561DF02F3F018200C9A6AD /* StoreKit.framework */; };
 		E577240B2FEF7F7F00D55421 /* sound_03.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724012FEF7F7F00D55421 /* sound_03.aiff */; };
@@ -30,6 +42,9 @@
 		E57724132FEF7F7F00D55421 /* sound_10.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724092FEF7F7F00D55421 /* sound_10.aiff */; };
 		E57724142FEF7F7F00D55421 /* sound_04.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E577240A2FEF7F7F00D55421 /* sound_04.aiff */; };
 		E57724150FEF7F7F00D55421 /* completion.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724140FEF7F7F00D55421 /* completion.aiff */; };
+		EBDCE99DE5825F7A0153877B /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A374302A4C156A63C53BC518 /* WidgetSnapshot.swift */; };
+		FB6416262512AE4F7FCC979C /* StreakWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5989A3ED073D5288592366 /* StreakWidget.swift */; };
+		FFE50A3B4AD022A546408554 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7395FBB27B9EBF8E378220F0 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,9 +55,27 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
+		42DFA054480B0F8EC4C639E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F9F340FFD9AC42E3B924AA6F;
+			remoteInfo = HabittWidgets;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		11FC79428C7EBB514BE697C0 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9F4F62DEA114359BEE471994 /* HabittWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -56,19 +89,38 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		021B26EED6B477463369E241 /* HabittWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = HabittWidgets.entitlements; sourceTree = "<group>"; };
+		0A06408819669FC8659D6AD5 /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		143BFC07A03FB6E5A0AC5B62 /* bs */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = bs; path = bs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		1D2E185C6100B1A962F325A4 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1F9F12C4FBDFAD4A214EED1A /* Satoshi-Regular.otf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Satoshi-Regular.otf"; sourceTree = "<group>"; };
+		21AE2D98AA8E63CC2F39B772 /* WidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetProvider.swift; sourceTree = "<group>"; };
+		292781507A3737C2FFF92079 /* HabittWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HabittWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C16ECE85A5DE16522A16884 /* HabittWidgetsBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HabittWidgetsBundle.swift; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		4104D3E70BBB040E70ED7E9B /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		515AA1CC161803B806664A3F /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
+		52B01526E3F6F79E12EFDD03 /* UpNextWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpNextWidget.swift; sourceTree = "<group>"; };
 		55DC1F64F198973ADBE23CC6 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		5DB0E7C3CC418E87B33DB0F3 /* WidgetPieces.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetPieces.swift; sourceTree = "<group>"; };
+		6CD0D36FBEAC826823729FBB /* tr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6E9FAD033F413BB6366E843D /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6EE1BFEC654011A2BD6DA07E /* Satoshi-Bold.otf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Satoshi-Bold.otf"; sourceTree = "<group>"; };
+		73345EADCDC4717614E276A3 /* TodayRingWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TodayRingWidget.swift; sourceTree = "<group>"; };
+		7395FBB27B9EBF8E378220F0 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7F5989A3ED073D5288592366 /* StreakWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreakWidget.swift; sourceTree = "<group>"; };
+		81B33777901E7251649DBFBD /* it */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		850D9DA39E4C029C435D0309 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8EBB8A900E1E056DD9291F0C /* Satoshi-Medium.otf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Satoshi-Medium.otf"; sourceTree = "<group>"; };
+		91229BF2376D5C38329E63E9 /* WidgetStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetStyle.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,7 +128,12 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A02979F45E954D930EE2F4F7 /* StreakWeekWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreakWeekWidget.swift; sourceTree = "<group>"; };
+		A374302A4C156A63C53BC518 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HabittWidgets.xcconfig; sourceTree = "<group>"; };
+		CE3FBCB66479B6C1A67E4845 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D36013FB9DAED249C3810028 /* pt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E52BC54E2FD903E2008D92AC /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		E5561DF02F3F018200C9A6AD /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E57724012FEF7F7F00D55421 /* sound_03.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_03.aiff; path = sounds/sound_03.aiff; sourceTree = "<group>"; };
@@ -91,6 +148,7 @@
 		E577240A2FEF7F7F00D55421 /* sound_04.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_04.aiff; path = sounds/sound_04.aiff; sourceTree = "<group>"; };
 		E57724140FEF7F7F00D55421 /* completion.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = completion.aiff; path = sounds/completion.aiff; sourceTree = "<group>"; };
 		E90A0F55C210C4E21040EF85 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EACF1185180C7C158073899F /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EC880FEF948B0C967D675413 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		F6222950B87319FF59E8975C /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F8661C5EFE0C5B696B99DC1E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
@@ -115,9 +173,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FD4FF271C860A726D88BADCA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2283104DF0831FB7CC4E7F22 /* HabittWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				2C16ECE85A5DE16522A16884 /* HabittWidgetsBundle.swift */,
+				21AE2D98AA8E63CC2F39B772 /* WidgetProvider.swift */,
+				91229BF2376D5C38329E63E9 /* WidgetStyle.swift */,
+				5DB0E7C3CC418E87B33DB0F3 /* WidgetPieces.swift */,
+				7F5989A3ED073D5288592366 /* StreakWidget.swift */,
+				A02979F45E954D930EE2F4F7 /* StreakWeekWidget.swift */,
+				73345EADCDC4717614E276A3 /* TodayRingWidget.swift */,
+				52B01526E3F6F79E12EFDD03 /* UpNextWidget.swift */,
+				B6558B6C62218CB41E5DCE1C /* Core */,
+				7395FBB27B9EBF8E378220F0 /* Assets.xcassets */,
+				38C0D0B8425CA3A7780D3ADE /* Localizable.strings */,
+				BB5A424FF4795DB52DA23EBF /* Fonts */,
+				CE3FBCB66479B6C1A67E4845 /* Info.plist */,
+				021B26EED6B477463369E241 /* HabittWidgets.entitlements */,
+				CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */,
+			);
+			path = HabittWidgets;
+			sourceTree = "<group>";
+		};
 		331C8082294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -172,6 +259,7 @@
 				5ADE64FB1E03613BEB1812A9 /* Pods */,
 				A870ED3EF8F669248ABEFB51 /* Frameworks */,
 				F6222950B87319FF59E8975C /* GoogleService-Info.plist */,
+				2283104DF0831FB7CC4E7F22 /* HabittWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -180,6 +268,7 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
+				292781507A3737C2FFF92079 /* HabittWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,14 +289,42 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		A6CDFB9D5DA9CFB818E51DEF /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		A870ED3EF8F669248ABEFB51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				E5561DF02F3F018200C9A6AD /* StoreKit.framework */,
 				E90A0F55C210C4E21040EF85 /* Pods_Runner.framework */,
 				C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */,
+				A6CDFB9D5DA9CFB818E51DEF /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B6558B6C62218CB41E5DCE1C /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A374302A4C156A63C53BC518 /* WidgetSnapshot.swift */,
+			);
+			name = Core;
+			path = ../HabittWidgetsCore/Sources/HabittWidgetsCore;
+			sourceTree = "<group>";
+		};
+		BB5A424FF4795DB52DA23EBF /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				1F9F12C4FBDFAD4A214EED1A /* Satoshi-Regular.otf */,
+				8EBB8A900E1E056DD9291F0C /* Satoshi-Medium.otf */,
+				6EE1BFEC654011A2BD6DA07E /* Satoshi-Bold.otf */,
+			);
+			name = Fonts;
+			path = "../../assets/new-fonts";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,6 +360,7 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				11FC79428C7EBB514BE697C0 /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				B83C50CF0C345B2C5A40C383 /* [CP] Embed Pods Frameworks */,
 				8EF1FFB65B82E6D636BFEAE0 /* [CP] Copy Pods Resources */,
@@ -250,6 +368,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CE0DB4A7C7775765C0642CDA /* PBXTargetDependency */,
 			);
 			name = Runner;
 			packageProductDependencies = (
@@ -258,6 +377,23 @@
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
+		};
+		F9F340FFD9AC42E3B924AA6F /* HabittWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88B526FCD9A58DD5B7EF9E7D /* Build configuration list for PBXNativeTarget "HabittWidgets" */;
+			buildPhases = (
+				4E962839AB6F2395A0E59A46 /* Sources */,
+				FD4FF271C860A726D88BADCA /* Frameworks */,
+				3753524BF5A836C3ACFA3A64 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HabittWidgets;
+			productName = HabittWidgets;
+			productReference = 292781507A3737C2FFF92079 /* HabittWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -277,6 +413,9 @@
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
 					};
+					F9F340FFD9AC42E3B924AA6F = {
+						CreatedOnToolsVersion = 27.0;
+					};
 				};
 			};
 			buildConfigurationList = 97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */;
@@ -286,10 +425,17 @@
 			knownRegions = (
 				en,
 				Base,
+				bs,
+				de,
+				es,
+				fr,
+				it,
+				pt,
+				tr,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
+				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -297,6 +443,7 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
+				F9F340FFD9AC42E3B924AA6F /* HabittWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -306,6 +453,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3753524BF5A836C3ACFA3A64 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFE50A3B4AD022A546408554 /* Assets.xcassets in Resources */,
+				B2E0848FF610E1178A977D52 /* Localizable.strings in Resources */,
+				A6E3E1BA03736848A4885DC9 /* Satoshi-Regular.otf in Resources */,
+				9C7F0F02E11744C55DA764BB /* Satoshi-Medium.otf in Resources */,
+				472F5E8EB9F85BDB833E3F79 /* Satoshi-Bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,9 +540,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -435,9 +598,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -473,6 +640,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4E962839AB6F2395A0E59A46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5F7767FC997255A0E3144F4 /* HabittWidgetsBundle.swift in Sources */,
+				3EB752513D6F7F6438AAC0C7 /* WidgetProvider.swift in Sources */,
+				16E86C801202B74B14260029 /* WidgetStyle.swift in Sources */,
+				A76F96A67E04861E5AA53D98 /* WidgetPieces.swift in Sources */,
+				FB6416262512AE4F7FCC979C /* StreakWidget.swift in Sources */,
+				7698FF75604DD7782BD90866 /* StreakWeekWidget.swift in Sources */,
+				A19EC620B6DB61A2CA24681D /* TodayRingWidget.swift in Sources */,
+				6BB045FFF9B5711AAB918A11 /* UpNextWidget.swift in Sources */,
+				EBDCE99DE5825F7A0153877B /* WidgetSnapshot.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -490,9 +673,30 @@
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
 		};
+		CE0DB4A7C7775765C0642CDA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HabittWidgets;
+			target = F9F340FFD9AC42E3B924AA6F /* HabittWidgets */;
+			targetProxy = 42DFA054480B0F8EC4C639E2 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		38C0D0B8425CA3A7780D3ADE /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6E9FAD033F413BB6366E843D /* en */,
+				143BFC07A03FB6E5A0AC5B62 /* bs */,
+				850D9DA39E4C029C435D0309 /* de */,
+				EACF1185180C7C158073899F /* es */,
+				0A06408819669FC8659D6AD5 /* fr */,
+				81B33777901E7251649DBFBD /* it */,
+				D36013FB9DAED249C3810028 /* pt */,
+				6CD0D36FBEAC826823729FBB /* tr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -512,6 +716,36 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1C3C195B16338080C7C8AD41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HabittWidgets/HabittWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = CGYK83WV76;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HabittWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shellz.habitt.HabittWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -640,6 +874,37 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+			};
+			name = Profile;
+		};
+		3C8336EFC194E6E4BDB1C722 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HabittWidgets/HabittWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = CGYK83WV76;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HabittWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shellz.habitt.HabittWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Profile;
 		};
@@ -813,6 +1078,37 @@
 			};
 			name = Release;
 		};
+		9D635E9BFE01096A375F9F1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HabittWidgets/HabittWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = CGYK83WV76;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HabittWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shellz.habitt.HabittWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -822,6 +1118,16 @@
 				331C8088294A63A400263BE5 /* Debug */,
 				331C8089294A63A400263BE5 /* Release */,
 				331C808A294A63A400263BE5 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88B526FCD9A58DD5B7EF9E7D /* Build configuration list for PBXNativeTarget "HabittWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D635E9BFE01096A375F9F1A /* Release */,
+				1C3C195B16338080C7C8AD41 /* Debug */,
+				3C8336EFC194E6E4BDB1C722 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -849,7 +1155,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
+		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};

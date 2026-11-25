@@ -5,6 +5,7 @@ import 'package:habitt/providers/support_provider.dart';
 import 'package:habitt/services/alarm_screen_service.dart';
 import 'package:habitt/services/ask_budget.dart';
 import 'package:habitt/services/feedback_service.dart';
+import 'package:habitt/services/notification_action_handler.dart';
 import 'package:habitt/util/perfect_streak_celebration.dart';
 import 'package:habitt/util/streak_milestones.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +69,9 @@ Future<void> runStreakMoment(BuildContext context) async {
     if (ask != null) support.tryClaimAsk(ask);
 
     if (celebration != null) {
+      // the app was opened by tapping a habit (widget or notification): let
+      // its Log progress dialog close first instead of covering it
+      await NotificationActionHandler.waitUntilTapHandled();
       if (!context.mounted) return;
       await showStreakCelebration(
         context,

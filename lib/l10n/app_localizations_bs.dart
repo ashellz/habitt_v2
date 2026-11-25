@@ -3845,4 +3845,49 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'Ovo uvijek možeš promijeniti u postavkama obavijesti.';
+
+  @override
+  String get widgetDayComplete => 'Dan završen';
+
+  @override
+  String get widgetDayCompleteBody => 'Sve navike urađene. Vidimo se sutra.';
+
+  @override
+  String get widgetNothingToday => 'Danas ništa nije zakazano';
+
+  @override
+  String get widgetStartStreak => 'Završi sve navike danas da započneš streak';
+
+  @override
+  String get widgetStreakName => 'Streak';
+
+  @override
+  String get widgetStreakDescription =>
+      'Tvoj streak savršenih dana i kako mu ide.';
+
+  @override
+  String get widgetStreakWeekName => 'Streak sedmica';
+
+  @override
+  String get widgetStreakWeekDescription => 'Tvoj streak sa zadnjih 7 dana.';
+
+  @override
+  String get widgetTodayRingName => 'Današnji krug';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Današnje navike u jednom krugu koji se puni.';
+
+  @override
+  String get widgetUpNextName => 'Sljedeće';
+
+  @override
+  String get widgetUpNextDescription =>
+      'Navike za ovaj dio dana, uz tvoj streak.';
+
+  @override
+  String get dayStreakLabel => 'dan streak';
+
+  @override
+  String get daysStreakLabel => 'dana streak';
 }

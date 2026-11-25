@@ -221,6 +221,20 @@ class StatsProvider extends ChangeNotifier {
     todayIsSecure: todayCompletionStatus == DayCompletionStatus.perfect,
   );
 
+  /// The streak the home page card and the widgets show: [perfectDaysStreak]
+  /// (which leaves today out) plus today once it is perfect, so a first
+  /// perfect day already reads "1 day streak".
+  int get shownPerfectDaysStreak =>
+      perfectDaysStreak +
+      (todayCompletionStatus == DayCompletionStatus.perfect ? 1 : 0);
+
+  /// Health of [shownPerfectDaysStreak]; dormant only while it is 0.
+  StreakHealth get shownPerfectDaysHealth => resolveStreakHealth(
+    streak: shownPerfectDaysStreak,
+    tailMisses: perfectDaysTailMisses,
+    todayIsSecure: todayCompletionStatus == DayCompletionStatus.perfect,
+  );
+
   set perfectDaysStreak(int value) {
     _perfectDaysStreak = value;
     notifyListeners();

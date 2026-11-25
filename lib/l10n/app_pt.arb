@@ -1033,5 +1033,19 @@
   "alarmDndTitle": "Tocar no Não Perturbe",
   "alarmDndDesc": "Se ativado, os alarmes tocarão mesmo com o modo Não Perturbe ligado.",
   "alarmDndDialogTitle": "Tocar no modo Não Perturbe?",
-  "alarmDndDialogTip": "Você pode mudar isso a qualquer momento nas configurações de notificação."
+  "alarmDndDialogTip": "Você pode mudar isso a qualquer momento nas configurações de notificação.",
+  "widgetDayComplete": "Dia concluído",
+  "widgetDayCompleteBody": "Todos os hábitos feitos. Até amanhã.",
+  "widgetNothingToday": "Nada agendado para hoje",
+  "widgetStartStreak": "Conclua todos os hábitos hoje para começar uma sequência",
+  "widgetStreakName": "Sequência",
+  "widgetStreakDescription": "Sua sequência de dias perfeitos e como ela está.",
+  "widgetStreakWeekName": "Sequência da semana",
+  "widgetStreakWeekDescription": "Sua sequência com os últimos 7 dias.",
+  "widgetTodayRingName": "Anel de hoje",
+  "widgetTodayRingDescription": "Os hábitos de hoje em um anel que vai se enchendo.",
+  "widgetUpNextName": "A seguir",
+  "widgetUpNextDescription": "Os hábitos desta parte do dia, com sua sequência.",
+  "dayStreakLabel": "dia de sequência",
+  "daysStreakLabel": "dias de sequência"
 }

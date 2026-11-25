@@ -1369,5 +1369,19 @@
   "alarmDndTitle": "Bei DND klingeln",
   "alarmDndDesc": "Wenn aktiviert, klingeln Alarme auch im DND-Modus.",
   "alarmDndDialogTitle": "Bei DND klingeln?",
-  "alarmDndDialogTip": "Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern."
+  "alarmDndDialogTip": "Du kannst das jederzeit in den Benachrichtigungseinstellungen ändern.",
+  "widgetDayComplete": "Tag geschafft",
+  "widgetDayCompleteBody": "Alle Gewohnheiten erledigt. Bis morgen.",
+  "widgetNothingToday": "Heute ist nichts geplant",
+  "widgetStartStreak": "Schließe heute alle Gewohnheiten ab, um einen Streak zu starten",
+  "widgetStreakName": "Streak",
+  "widgetStreakDescription": "Dein Streak perfekter Tage und wie es um ihn steht.",
+  "widgetStreakWeekName": "Streak-Woche",
+  "widgetStreakWeekDescription": "Dein Streak mit den letzten 7 Tagen.",
+  "widgetTodayRingName": "Tagesring",
+  "widgetTodayRingDescription": "Die heutigen Gewohnheiten als Ring, der sich füllt.",
+  "widgetUpNextName": "Als Nächstes",
+  "widgetUpNextDescription": "Die Gewohnheiten für diese Tageszeit, mit deinem Streak.",
+  "dayStreakLabel": "Tag Streak",
+  "daysStreakLabel": "Tage Streak"
 }

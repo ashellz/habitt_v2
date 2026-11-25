@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home screen widgets: white mask, tinted at runtime (docs/home_widgets.md). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="20dp"/>
+    <solid android:color="#FFFFFF"/>
+</shape>

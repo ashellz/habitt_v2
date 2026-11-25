@@ -90,7 +90,10 @@ path. The celebration is always on; there is no preference for it. Steps:
    (highest wins, a back-filled day can jump over one) and asks are not hidden.
    The budget is claimed only after the ask is known to be possible.
 5. Show the celebration (with the card if it won), then request the review
-   **after** the dialog is dismissed, never on top of it.
+   **after** the dialog is dismissed, never on top of it. When the app was
+   opened by tapping a habit (home screen widget or notification), the
+   celebration first waits for that tap's Log progress dialog to close
+   (`NotificationActionHandler.waitUntilTapHandled`), so it never covers it.
 
 Net effect: at the first 7-day streak, or once a user has 7 days of use and 10
 completions (whichever comes first; the engagement route can show at launch or

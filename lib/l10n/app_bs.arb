@@ -1359,5 +1359,19 @@
   "alarmDndTitle": "Zvoni tokom DND-a",
   "alarmDndDesc": "Ako je uključeno, alarmi će zvoniti i tokom DND načina.",
   "alarmDndDialogTitle": "Zvoniti tokom DND-a?",
-  "alarmDndDialogTip": "Ovo uvijek možeš promijeniti u postavkama obavijesti."
+  "alarmDndDialogTip": "Ovo uvijek možeš promijeniti u postavkama obavijesti.",
+  "widgetDayComplete": "Dan završen",
+  "widgetDayCompleteBody": "Sve navike urađene. Vidimo se sutra.",
+  "widgetNothingToday": "Danas ništa nije zakazano",
+  "widgetStartStreak": "Završi sve navike danas da započneš streak",
+  "widgetStreakName": "Streak",
+  "widgetStreakDescription": "Tvoj streak savršenih dana i kako mu ide.",
+  "widgetStreakWeekName": "Streak sedmica",
+  "widgetStreakWeekDescription": "Tvoj streak sa zadnjih 7 dana.",
+  "widgetTodayRingName": "Današnji krug",
+  "widgetTodayRingDescription": "Današnje navike u jednom krugu koji se puni.",
+  "widgetUpNextName": "Sljedeće",
+  "widgetUpNextDescription": "Navike za ovaj dio dana, uz tvoj streak.",
+  "dayStreakLabel": "dan streak",
+  "daysStreakLabel": "dana streak"
 }

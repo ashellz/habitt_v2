@@ -3871,4 +3871,49 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'Puedes cambiarlo cuando quieras en los ajustes de notificaciones.';
+
+  @override
+  String get widgetDayComplete => 'Día completado';
+
+  @override
+  String get widgetDayCompleteBody => 'Todos los hábitos hechos. Hasta mañana.';
+
+  @override
+  String get widgetNothingToday => 'Nada programado para hoy';
+
+  @override
+  String get widgetStartStreak =>
+      'Completa todos los hábitos hoy para empezar una racha';
+
+  @override
+  String get widgetStreakName => 'Racha';
+
+  @override
+  String get widgetStreakDescription => 'Tu racha de días perfectos y cómo va.';
+
+  @override
+  String get widgetStreakWeekName => 'Racha semanal';
+
+  @override
+  String get widgetStreakWeekDescription => 'Tu racha con los últimos 7 días.';
+
+  @override
+  String get widgetTodayRingName => 'Anillo de hoy';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Los hábitos de hoy en un anillo que se va llenando.';
+
+  @override
+  String get widgetUpNextName => 'A continuación';
+
+  @override
+  String get widgetUpNextDescription =>
+      'Los hábitos de este momento del día, con tu racha.';
+
+  @override
+  String get dayStreakLabel => 'día de racha';
+
+  @override
+  String get daysStreakLabel => 'días de racha';
 }

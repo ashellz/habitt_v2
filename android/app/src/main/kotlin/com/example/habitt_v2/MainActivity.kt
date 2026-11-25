@@ -20,6 +20,12 @@ class MainActivity : FlutterFragmentActivity() {
     // See docs/habit_alarms.md.
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Recreated after the process died: the intent is the one that opened
+        // the task, possibly an old home widget tap. Don't replay it; a new tap
+        // arrives through onNewIntent. See docs/home_widgets.md.
+        if (savedInstanceState != null && isWidgetLaunch(intent)) {
+            intent = Intent(intent).setAction(Intent.ACTION_MAIN).setData(null)
+        }
         super.onCreate(savedInstanceState)
         if (isAlarmLaunch(intent)) setShowOverLockScreen(true)
     }
@@ -27,7 +33,16 @@ class MainActivity : FlutterFragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (isAlarmLaunch(intent)) setShowOverLockScreen(true)
+        // A widget tap that recreates the activity after process death comes
+        // here before Dart listens for taps, so home_widget drops it. Keeping
+        // it as the activity's intent lets initiallyLaunchedFromHomeWidget()
+        // report it instead. Warm taps are handled by the plugin's stream as
+        // before; Dart reads the initial launch only once.
+        if (isWidgetLaunch(intent)) setIntent(intent)
     }
+
+    private fun isWidgetLaunch(intent: Intent?) =
+        intent?.action == "es.antonborri.home_widget.action.LAUNCH"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

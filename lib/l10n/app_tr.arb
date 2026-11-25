@@ -1033,5 +1033,19 @@
   "alarmDndTitle": "Rahatsız Etme sırasında çal",
   "alarmDndDesc": "Etkinleştirilirse alarmlar Rahatsız Etme modunda da çalar.",
   "alarmDndDialogTitle": "Rahatsız Etme sırasında çalsın mı?",
-  "alarmDndDialogTip": "Bunu istediğin zaman Bildirim ayarlarından değiştirebilirsin."
+  "alarmDndDialogTip": "Bunu istediğin zaman Bildirim ayarlarından değiştirebilirsin.",
+  "widgetDayComplete": "Gün tamamlandı",
+  "widgetDayCompleteBody": "Tüm alışkanlıklar bitti. Yarın görüşürüz.",
+  "widgetNothingToday": "Bugün planlanan bir şey yok",
+  "widgetStartStreak": "Seri başlatmak için bugün tüm alışkanlıkları tamamla",
+  "widgetStreakName": "Seri",
+  "widgetStreakDescription": "Mükemmel günler serin ve durumu.",
+  "widgetStreakWeekName": "Haftalık seri",
+  "widgetStreakWeekDescription": "Son 7 günle birlikte serin.",
+  "widgetTodayRingName": "Bugünün halkası",
+  "widgetTodayRingDescription": "Bugünün alışkanlıkları, doldukça dolan tek bir halkada.",
+  "widgetUpNextName": "Sıradaki",
+  "widgetUpNextDescription": "Günün bu bölümündeki alışkanlıklar ve serin.",
+  "dayStreakLabel": "günlük seri",
+  "daysStreakLabel": "günlük seri"
 }

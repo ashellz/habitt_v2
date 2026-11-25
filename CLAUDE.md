@@ -120,6 +120,12 @@ Habits can optionally sync progress from Apple Health / Google Health Connect (s
 
 **Maintenance rule:** Any change to Health sync must also update `docs/health_sync.md`.
 
+### Home Screen Widgets
+
+Read-only iOS/Android home screen widgets (Streak, Streak week, Today ring, Up next) draw a JSON "widget snapshot" the app precomputes (`WidgetSnapshotBuilder`, written by `WidgetSnapshotService` through `home_widget`); widget taps go through `WidgetLaunchHandler`. Documented in full at [`docs/home_widgets.md`](docs/home_widgets.md). Read it before touching the snapshot, the widget services, `habit_progress.dart` or the native widget code.
+
+**Maintenance rule:** Any change to the widgets, the snapshot fields or when it is written must also update `docs/home_widgets.md`.
+
 ### Third-Party Integrations
 
 - **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions (currently voluntary support only, no feature gating)
@@ -128,6 +134,7 @@ Habits can optionally sync progress from Apple Health / Google Health Connect (s
 - **iCloud** (`icloud_storage`) — optional encrypted backup/restore (iOS only), key synced via iCloud Keychain
 - **Awesome Notifications** — local push notification scheduling
 - **`health`** — read-only Apple HealthKit / Google Health Connect access for habit progress sync (see Health Sync above)
+- **`home_widget`** — shares the widget snapshot with the native home screen widgets and reports widget taps (see Home Screen Widgets above)
 
 ## Code Generation
 

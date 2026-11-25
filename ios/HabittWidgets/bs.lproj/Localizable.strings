@@ -1,0 +1,24 @@
+/* Generated from lib/l10n/app_bs.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Streak";
+"widgetStreakDescription" = "Tvoj streak savršenih dana i kako mu ide.";
+"widgetStreakWeekName" = "Streak sedmica";
+"widgetStreakWeekDescription" = "Tvoj streak sa zadnjih 7 dana.";
+"widgetTodayRingName" = "Današnji krug";
+"widgetTodayRingDescription" = "Današnje navike u jednom krugu koji se puni.";
+"widgetUpNextName" = "Sljedeće";
+"widgetUpNextDescription" = "Navike za ovaj dio dana, uz tvoj streak.";
+"youHaventAddedAnyHabitsYet" = "Još niste dodali nijednu naviku.";
+"dayStreakLabel" = "dan streak";
+"daysStreakLabel" = "dana streak";
+"day" = "dan";
+"days" = "dana";
+"widgetStartStreak" = "Završi sve navike danas da započneš streak";
+"premadeHabitBrushTeeth" = "Pranje zuba";
+"premadeHabitShower" = "Kupanje";
+"premadeHabitDrinkWater" = "Pijenje vode";
+"premadeHabitRead" = "Čitanje";
+"premadeHabitMindfulness" = "Svjesnost";
+"morning" = "Jutro";
+"afternoon" = "Popodne";
+"evening" = "Veče";
+"streakPraiseExtra2" = "E aferim ti!";

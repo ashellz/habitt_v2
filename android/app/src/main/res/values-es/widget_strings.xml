@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_es.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="widget_streak_name">Racha</string>
+    <string name="widget_streak_description">Tu racha de días perfectos y cómo va.</string>
+    <string name="widget_streak_week_name">Racha semanal</string>
+    <string name="widget_streak_week_description">Tu racha con los últimos 7 días.</string>
+    <string name="widget_today_ring_name">Anillo de hoy</string>
+    <string name="widget_today_ring_description">Los hábitos de hoy en un anillo que se va llenando.</string>
+    <string name="widget_up_next_name">A continuación</string>
+    <string name="widget_up_next_description">Los hábitos de este momento del día, con tu racha.</string>
+    <string name="widget_no_habits">Aún no has añadido ningún hábito</string>
+    <string name="widget_day_streak">día de racha</string>
+    <string name="widget_days_streak">días de racha</string>
+    <string name="widget_day">día</string>
+    <string name="widget_days">días</string>
+    <string name="widget_start_streak">Completa todos los hábitos hoy para empezar una racha</string>
+</resources>

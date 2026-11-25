@@ -1,0 +1,24 @@
+/* Generated from lib/l10n/app_en.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Streak";
+"widgetStreakDescription" = "Your perfect-days streak and how it's doing.";
+"widgetStreakWeekName" = "Streak week";
+"widgetStreakWeekDescription" = "Your streak with the last 7 days.";
+"widgetTodayRingName" = "Today ring";
+"widgetTodayRingDescription" = "Today's habits as one ring, filling as you go.";
+"widgetUpNextName" = "Up next";
+"widgetUpNextDescription" = "The habits for this part of the day, with your streak.";
+"youHaventAddedAnyHabitsYet" = "You haven’t added any habits yet";
+"dayStreakLabel" = "day streak";
+"daysStreakLabel" = "days streak";
+"day" = "day";
+"days" = "days";
+"widgetStartStreak" = "Complete every habit today to start a streak";
+"premadeHabitBrushTeeth" = "Brush teeth";
+"premadeHabitShower" = "Shower";
+"premadeHabitDrinkWater" = "Drink water";
+"premadeHabitRead" = "Read";
+"premadeHabitMindfulness" = "Mindfulness";
+"morning" = "Morning";
+"afternoon" = "Afternoon";
+"evening" = "Evening";
+"streakPraiseExtra2" = "Well done, you!";

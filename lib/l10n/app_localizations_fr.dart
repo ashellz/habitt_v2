@@ -3880,4 +3880,52 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get alarmDndDialogTip =>
       'Tu peux le modifier à tout moment dans les réglages de notifications.';
+
+  @override
+  String get widgetDayComplete => 'Journée terminée';
+
+  @override
+  String get widgetDayCompleteBody =>
+      'Toutes les habitudes sont faites. À demain.';
+
+  @override
+  String get widgetNothingToday => 'Rien de prévu aujourd\'hui';
+
+  @override
+  String get widgetStartStreak =>
+      'Termine toutes tes habitudes aujourd\'hui pour lancer une série';
+
+  @override
+  String get widgetStreakName => 'Série';
+
+  @override
+  String get widgetStreakDescription =>
+      'Ta série de jours parfaits et son état.';
+
+  @override
+  String get widgetStreakWeekName => 'Série de la semaine';
+
+  @override
+  String get widgetStreakWeekDescription =>
+      'Ta série avec les 7 derniers jours.';
+
+  @override
+  String get widgetTodayRingName => 'Anneau du jour';
+
+  @override
+  String get widgetTodayRingDescription =>
+      'Les habitudes du jour dans un anneau qui se remplit.';
+
+  @override
+  String get widgetUpNextName => 'À suivre';
+
+  @override
+  String get widgetUpNextDescription =>
+      'Les habitudes de ce moment de la journée, avec ta série.';
+
+  @override
+  String get dayStreakLabel => 'jour de série';
+
+  @override
+  String get daysStreakLabel => 'jours de série';
 }

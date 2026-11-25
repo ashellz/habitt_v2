@@ -1,0 +1,24 @@
+/* Generated from lib/l10n/app_it.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Serie";
+"widgetStreakDescription" = "La tua serie di giorni perfetti e come sta andando.";
+"widgetStreakWeekName" = "Serie settimanale";
+"widgetStreakWeekDescription" = "La tua serie con gli ultimi 7 giorni.";
+"widgetTodayRingName" = "Anello di oggi";
+"widgetTodayRingDescription" = "Le abitudini di oggi in un anello che si riempie.";
+"widgetUpNextName" = "Prossime";
+"widgetUpNextDescription" = "Le abitudini di questa parte della giornata, con la tua serie.";
+"youHaventAddedAnyHabitsYet" = "Non hai ancora aggiunto nessuna abitudine";
+"dayStreakLabel" = "giorno di serie";
+"daysStreakLabel" = "giorni di serie";
+"day" = "giorno";
+"days" = "giorni";
+"widgetStartStreak" = "Completa tutte le abitudini oggi per iniziare una serie";
+"premadeHabitBrushTeeth" = "Lavarsi i denti";
+"premadeHabitShower" = "Doccia";
+"premadeHabitDrinkWater" = "Bere acqua";
+"premadeHabitRead" = "Leggere";
+"premadeHabitMindfulness" = "Mindfulness";
+"morning" = "Mattina";
+"afternoon" = "Pomeriggio";
+"evening" = "Sera";
+"streakPraiseExtra2" = "Bravo, proprio tu!";

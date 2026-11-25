@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_bs.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="widget_streak_name">Streak</string>
+    <string name="widget_streak_description">Tvoj streak savršenih dana i kako mu ide.</string>
+    <string name="widget_streak_week_name">Streak sedmica</string>
+    <string name="widget_streak_week_description">Tvoj streak sa zadnjih 7 dana.</string>
+    <string name="widget_today_ring_name">Današnji krug</string>
+    <string name="widget_today_ring_description">Današnje navike u jednom krugu koji se puni.</string>
+    <string name="widget_up_next_name">Sljedeće</string>
+    <string name="widget_up_next_description">Navike za ovaj dio dana, uz tvoj streak.</string>
+    <string name="widget_no_habits">Još niste dodali nijednu naviku.</string>
+    <string name="widget_day_streak">dan streak</string>
+    <string name="widget_days_streak">dana streak</string>
+    <string name="widget_day">dan</string>
+    <string name="widget_days">dana</string>
+    <string name="widget_start_streak">Završi sve navike danas da započneš streak</string>
+</resources>

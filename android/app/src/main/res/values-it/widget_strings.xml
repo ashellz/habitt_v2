@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_it.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="widget_streak_name">Serie</string>
+    <string name="widget_streak_description">La tua serie di giorni perfetti e come sta andando.</string>
+    <string name="widget_streak_week_name">Serie settimanale</string>
+    <string name="widget_streak_week_description">La tua serie con gli ultimi 7 giorni.</string>
+    <string name="widget_today_ring_name">Anello di oggi</string>
+    <string name="widget_today_ring_description">Le abitudini di oggi in un anello che si riempie.</string>
+    <string name="widget_up_next_name">Prossime</string>
+    <string name="widget_up_next_description">Le abitudini di questa parte della giornata, con la tua serie.</string>
+    <string name="widget_no_habits">Non hai ancora aggiunto nessuna abitudine</string>
+    <string name="widget_day_streak">giorno di serie</string>
+    <string name="widget_days_streak">giorni di serie</string>
+    <string name="widget_day">giorno</string>
+    <string name="widget_days">giorni</string>
+    <string name="widget_start_streak">Completa tutte le abitudini oggi per iniziare una serie</string>
+</resources>

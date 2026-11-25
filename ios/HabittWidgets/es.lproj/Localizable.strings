@@ -1,0 +1,24 @@
+/* Generated from lib/l10n/app_es.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Racha";
+"widgetStreakDescription" = "Tu racha de días perfectos y cómo va.";
+"widgetStreakWeekName" = "Racha semanal";
+"widgetStreakWeekDescription" = "Tu racha con los últimos 7 días.";
+"widgetTodayRingName" = "Anillo de hoy";
+"widgetTodayRingDescription" = "Los hábitos de hoy en un anillo que se va llenando.";
+"widgetUpNextName" = "A continuación";
+"widgetUpNextDescription" = "Los hábitos de este momento del día, con tu racha.";
+"youHaventAddedAnyHabitsYet" = "Aún no has añadido ningún hábito";
+"dayStreakLabel" = "día de racha";
+"daysStreakLabel" = "días de racha";
+"day" = "día";
+"days" = "días";
+"widgetStartStreak" = "Completa todos los hábitos hoy para empezar una racha";
+"premadeHabitBrushTeeth" = "Cepillarse los dientes";
+"premadeHabitShower" = "Ducha";
+"premadeHabitDrinkWater" = "Beber agua";
+"premadeHabitRead" = "Leer";
+"premadeHabitMindfulness" = "Mindfulness";
+"morning" = "Mañana";
+"afternoon" = "Por la tarde";
+"evening" = "Por la noche";
+"streakPraiseExtra2" = "¡Bien hecho, tú!";

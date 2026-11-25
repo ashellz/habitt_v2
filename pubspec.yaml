@@ -80,6 +80,7 @@ dependencies:
   audioplayers: ^6.8.0
   health: 
   permission_handler: ^13.0.1
+  home_widget: ^0.10.0
 
 
 dev_dependencies:
