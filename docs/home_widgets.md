@@ -138,8 +138,10 @@ the next time the app opens.
 The snapshot carries `tomorrow` and `nextDayStartsAt`, so widgets switch days
 on their own:
 
-- **iOS**: the `TimelineProvider` returns entries for now, 12:00, 19:00 and
-  `nextDayStartsAt` (then the `tomorrow` block).
+- **iOS**: the `TimelineProvider` returns entries for now, every 04:00,
+  12:00 and 19:00 in the next 24 hours and `nextDayStartsAt` (from then on
+  the `tomorrow` block), with reload policy `.atEnd`. WidgetKit renders them
+  on its own schedule, so a boundary can show up a little late.
 - **Android**: widgets choose today/tomorrow and the part of day from the
   clock whenever they render. `WidgetRefresh` keeps one inexact alarm
   (`AlarmManager.setWindow`, `RTC`, 10 minute window, so no exact-alarm
@@ -190,8 +192,7 @@ does not do this.
 
 ## Native side
 
-iOS is not built yet (see `openspec/changes/home-widgets-readonly/tasks.md`
-groups 1 and 4). Names the Dart side uses (`HomeWidgetKinds`):
+Names the Dart side uses (`HomeWidgetKinds`):
 
 | | iOS widget `kind` | Android receiver |
 |---|---|---|
@@ -262,6 +263,76 @@ Generated resources (rerun after changing the source):
   from the `widget*Name` / `widget*Description` ARB keys, plus the strings
   the placeholder needs (`youHaventAddedAnyHabitsYet`, `dayStreakLabel`,
   `daysStreakLabel`, `day`, `days`, `widgetStartStreak`).
+
+### iOS (SwiftUI + WidgetKit)
+
+A Widget Extension target `HabittWidgets` (bundle id
+`com.shellz.habitt.HabittWidgets`, iOS 15.6+) embedded in Runner through an
+"Embed Foundation Extensions" phase placed before Flutter's "Thin Binary"
+script (after it Xcode reports a dependency cycle). Both targets carry the
+App Group `group.com.shellz.habitt` (`Runner/Runner.entitlements`,
+`HabittWidgets/HabittWidgets.entitlements`). The extension is not in the
+Podfile and links no Flutter, pod or Swift package: its base configuration
+`HabittWidgets.xcconfig` includes only `Flutter/Generated.xcconfig`, for
+`FLUTTER_BUILD_NAME` / `FLUTTER_BUILD_NUMBER`, so its version always matches
+the app's.
+
+Code in `ios/HabittWidgets/` plus one shared model:
+
+| File | Role |
+|---|---|
+| `ios/HabittWidgetsCore/Sources/HabittWidgetsCore/WidgetSnapshot.swift` | Snapshot model and `Codable` decoding (`v` must be 1, ids `Int64`, older snapshots fall back as on Android), `block(at:)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetTimeline.entryDates`, `WidgetLinks` (tap URLs), the placeholder. Foundation only; compiled into the extension as a source file and tested on the Mac with `cd ios/HabittWidgetsCore && swift test` (`Tests/.../WidgetSnapshotTests.swift`). |
+| `HabittWidgetsBundle.swift` | The `WidgetBundle` of the four widgets. |
+| `WidgetProvider.swift` | `HabittProvider` (one `TimelineProvider` for all kinds), `WidgetStore` (reads `UserDefaults(suiteName:)`, builds the placeholder from the extension's strings), logs each timeline under the `com.shellz.habitt.widgets` subsystem. |
+| `WidgetStyle.swift` | Colours (light, dark and tinted, from the design canvas; accent from the snapshot), `Ember` (mood gradient and glows), Satoshi fonts, `widgetBackground` (`containerBackground` on iOS 17+), `accentable`, `TintReader` (iOS 16+ `widgetRenderingMode`). |
+| `WidgetPieces.swift` | Ember art (glow, flame, ice), badge, accent check, pie, ring arc, no-habits state, card border. |
+| `StreakWidget.swift`, `StreakWeekWidget.swift`, `TodayRingWidget.swift`, `UpNextWidget.swift` | The four widgets. |
+
+How it is drawn:
+
+- Every configuration uses `contentMarginsDisabled()` and draws edge to
+  edge; sizes are the design's 170 / 364×170 points times the widget's scale
+  (`u`), so smaller and larger phones keep the proportions. The system clips
+  to its own corner radius.
+- Light/dark follows the system (`colorScheme`). On a tinted or clear home
+  screen (iOS 18+ accented rendering) the colours switch to the design's
+  "iOS tinted" values, glows are dropped, artwork is desaturated and the ring
+  fill, checks and pies take the tint (`widgetAccentable`).
+- The ember glow and artwork are an overlay: they are bigger than the card
+  and must not take part in layout (the tile's glow once widened Up next's
+  104 pt tile over its padding).
+- Text is Satoshi (Regular, Medium, Bold), bundled from `assets/new-fonts` via
+  `UIAppFonts`. It follows Dynamic Type up to `.xxLarge`; longer text scales
+  down (`minimumScaleFactor`) rather than overflowing.
+- Today ring: `RingArc` segments (stroke 26, butt caps, 4° gaps), emojis
+  centred on their segments; above 8 habits one plain ring to the day's
+  progress. Up next: header, up to three rows (`Link` to Log progress),
+  "Day complete", `nothingToday` or the empty box, and the streak tile. Taps
+  everywhere else use `widgetURL`.
+- Before the first snapshot the widgets draw `WidgetSnapshot.placeholder`:
+  no habits, a 0 streak, weekday letters for the last 7 days, in the
+  language the extension's strings resolved to. The widget gallery shows the
+  real data (or this placeholder); there are no separate preview images.
+- Taps: `habitt://widget/home?homeWidget` and
+  `habitt://widget/log?habit=<id>&homeWidget`. `AppDelegate` needs nothing:
+  home_widget 0.10 registers as an application and scene delegate and picks
+  the URL up on cold start (`scene(_:willConnectTo:)`) and warm start.
+
+Generated resources (rerun after changing the source):
+
+- `dart run tool/gen_ios_widget_strings.dart`: `<lang>.lproj/Localizable.strings`
+  (keyed by ARB key) from the `widget*Name` / `widget*Description` ARB keys and
+  the placeholder strings, for every `lib/l10n/app_<lang>.arb`.
+- `dart run tool/gen_ios_widget_art.dart`: `Assets.xcassets` image sets,
+  `art_*` from the five app SVGs (filters and clip paths dropped, which the
+  asset catalog cannot render) and the template `icon_*` (sun, moon, clock,
+  check). A new language also needs its region in the project's
+  `knownRegions` and a reference in the `Localizable.strings` variant group.
+
+Building for the simulator with Xcode 27: `lipo -verify_arch` rejects two
+architectures, so `flutter build ios --simulator` fails in Flutter's own
+`debug_unpack_ios` step. Build one architecture instead:
+`FLUTTER_XCODE_ARCHS=arm64 flutter build ios --simulator` (or `flutter run`).
 
 ## Adding or changing a widget
 
