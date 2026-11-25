@@ -1,0 +1,14 @@
+/* Generated from lib/l10n/app_tr.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"watchOpenOnIPhone" = "Habitt'i iPhone'unda aç";
+"watchOpenOnIPhoneBody" = "Alışkanlıkların senkronize edildiğinde burada görünür.";
+"watchUpdateNeeded" = "Habitt'i güncelle";
+"watchUpdateNeededBody" = "Senkronizasyonun sürmesi için Habitt'i iPhone ve Apple Watch'unda güncelle.";
+"watchHealthNote" = "iPhone'undaki Apple Sağlık'tan güncellenir";
+"watchLogOnIPhone" = "Bunu iPhone'unda kaydet";
+"watchShowHabits" = "Alışkanlıkları göster";
+"watchOfTarget" = "/ %@";
+"watchCompleteHabit" = "%@ tamamla";
+"watchUncompleteHabit" = "%@ yapılmadı olarak işaretle";
+"watchLess" = "Azalt";
+"watchMore" = "Artır";
+"today" = "Bugün";

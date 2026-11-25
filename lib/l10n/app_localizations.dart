@@ -6591,6 +6591,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'days streak'**
   String get daysStreakLabel;
+
+  /// Apple Watch app before the iPhone app sent any data
+  ///
+  /// In en, this message translates to:
+  /// **'Open Habitt on your iPhone'**
+  String get watchOpenOnIPhone;
+
+  /// No description provided for @watchOpenOnIPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your habits show up here once it syncs.'**
+  String get watchOpenOnIPhoneBody;
+
+  /// No description provided for @watchUpdateNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Habitt'**
+  String get watchUpdateNeeded;
+
+  /// No description provided for @watchUpdateNeededBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Habitt on your iPhone and Apple Watch to keep syncing.'**
+  String get watchUpdateNeededBody;
+
+  /// No description provided for @watchHealthNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates from Apple Health on your iPhone'**
+  String get watchHealthNote;
+
+  /// Apple Watch: tapping a habit that can only be logged on the phone (bedtime, wake time)
+  ///
+  /// In en, this message translates to:
+  /// **'Log this one on your iPhone'**
+  String get watchLogOnIPhone;
+
+  /// No description provided for @watchShowHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Show habits'**
+  String get watchShowHabits;
+
+  /// Apple Watch log screen, under the logged value: 'of 10 pages', 'of 10m'
+  ///
+  /// In en, this message translates to:
+  /// **'of {target}'**
+  String watchOfTarget(String target);
+
+  /// Apple Watch: accessibility label of a habit's check when not done
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {name}'**
+  String watchCompleteHabit(String name);
+
+  /// Apple Watch: accessibility label of a habit's check when done
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {name} as not done'**
+  String watchUncompleteHabit(String name);
+
+  /// No description provided for @watchLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get watchLess;
+
+  /// No description provided for @watchMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get watchMore;
 }
 
 class _AppLocalizationsDelegate

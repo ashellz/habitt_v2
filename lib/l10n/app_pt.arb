@@ -1047,5 +1047,17 @@
   "widgetUpNextName": "A seguir",
   "widgetUpNextDescription": "Os hábitos desta parte do dia, com sua sequência.",
   "dayStreakLabel": "dia de sequência",
-  "daysStreakLabel": "dias de sequência"
+  "daysStreakLabel": "dias de sequência",
+  "watchOpenOnIPhone": "Abra o Habitt no seu iPhone",
+  "watchOpenOnIPhoneBody": "Os seus hábitos aparecem aqui depois de sincronizar.",
+  "watchUpdateNeeded": "Atualize o Habitt",
+  "watchUpdateNeededBody": "Atualize o Habitt no seu iPhone e Apple Watch para continuar a sincronizar.",
+  "watchHealthNote": "Atualizado a partir do Apple Saúde no seu iPhone",
+  "watchLogOnIPhone": "Registe esta no seu iPhone",
+  "watchShowHabits": "Ver hábitos",
+  "watchOfTarget": "de {target}",
+  "watchCompleteHabit": "Concluir {name}",
+  "watchUncompleteHabit": "Marcar {name} como não feito",
+  "watchLess": "Menos",
+  "watchMore": "Mais"
 }

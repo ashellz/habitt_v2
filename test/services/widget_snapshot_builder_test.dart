@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:habitt/l10n/app_localizations.dart';
 import 'package:habitt/models/habit.dart';
+import 'package:habitt/models/health_metric_type.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/theme_catalog.dart';
 import 'package:habitt/services/widget_snapshot_builder.dart';
@@ -50,6 +51,7 @@ Map<String, dynamic> _build({
   int tailMisses = 0,
   String locale = 'en',
   bool hasHabits = true,
+  List<String> watchAcks = const [],
 }) {
   final todayHabits = today ?? const <Habit>[];
   return WidgetSnapshotBuilder.build(
@@ -73,6 +75,7 @@ Map<String, dynamic> _build({
       formatTime: (m) => '${m ~/ 60}:${(m % 60).toString().padLeft(2, '0')}',
       theme: ThemeCatalog.habitt,
       hasHabits: hasHabits,
+      watchAcks: watchAcks,
     ),
   );
 }
@@ -341,6 +344,9 @@ void main() {
       expect(snap['strings']['day'], 'dan');
       expect(snap['strings']['days'], 'dana');
       expect(snap['today']['upNext']['morning']['label'], 'Jutro');
+      expect(snap['strings']['morning'], 'Jutro');
+      expect(snap['strings']['today'], isNotEmpty);
+      expect(snap['strings']['optional'], isNotEmpty);
     });
 
     test('streak labels are lower case, as on the home page card', () {
@@ -363,6 +369,78 @@ void main() {
       expect(() => jsonEncode(snap), returnsNormally);
       expect(snap['v'], WidgetSnapshotBuilder.version);
       expect(snap['dayKey'], '2026-11-24');
+    });
+  });
+
+  group('watch fields', () {
+    Map<String, dynamic> row(Habit h) =>
+        (_build(today: [h])['today']['habits'] as List).first
+            as Map<String, dynamic>;
+
+    test('amount habit carries target, value, unit and step', () {
+      final r = row(_habit(1, 'Read', amount: 10, amountCompleted: 3));
+      expect(r['completed'], isFalse);
+      expect(r['log'], {
+        'type': 'amount',
+        'target': 10,
+        'value': 3,
+        'unit': 'times',
+        'step': 1,
+        'healthLinked': false,
+        'watchLoggable': true,
+      });
+    });
+
+    test('duration habit is in seconds with a one minute step', () {
+      final h = buildTestHabit(
+        id: 2,
+        name: 'Meditate',
+        trackingType: HabitTrackingType.duration,
+        duration: 600,
+        durationCompleted: 240,
+        premadeHabitType: null,
+      )..trackingType = HabitTrackingType.duration;
+      final log = row(h)['log'] as Map<String, dynamic>;
+      expect(log['type'], 'duration');
+      expect(log['target'], 600);
+      expect(log['value'], 240);
+      expect(log['step'], 60);
+      expect(log['unit'], '');
+      expect(log['watchLoggable'], isTrue);
+    });
+
+    test('time of day and no tracking type cannot be logged', () {
+      final tod = row(_habit(1, 'Bedtime', type: HabitTrackingType.timeOfDay));
+      expect(tod['log']['type'], 'timeOfDay');
+      expect(tod['log']['watchLoggable'], isFalse);
+
+      final plain = row(_habit(2, 'Make bed', type: null));
+      expect(plain['log']['type'], isNull);
+      expect(plain['log']['watchLoggable'], isFalse);
+    });
+
+    test('a Health-linked habit is read-only on the watch', () {
+      final h = _habit(1, 'Steps', amount: 8000, amountCompleted: 6240)
+        ..healthMetric = HealthMetricType.steps;
+      final log = row(h)['log'] as Map<String, dynamic>;
+      expect(log['healthLinked'], isTrue);
+      expect(log['watchLoggable'], isFalse);
+    });
+
+    test('completed flag follows the habit', () {
+      final r = row(_habit(1, 'A', completed: true, amountCompleted: 1));
+      expect(r['completed'], isTrue);
+      expect(r['state'], 'done');
+    });
+
+    test('watchAcks pass through, keeping the newest 50', () {
+      expect(_build()['watchAcks'], isEmpty);
+      expect(_build(watchAcks: ['a', 'b'])['watchAcks'], ['a', 'b']);
+      final many = [for (int i = 0; i < 60; i++) 'id$i'];
+      final acks = _build(watchAcks: many)['watchAcks'] as List;
+      expect(acks.length, 50);
+      expect(acks.first, 'id10');
+      expect(acks.last, 'id59');
     });
   });
 }

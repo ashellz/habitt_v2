@@ -116,6 +116,13 @@ Stored as a JSON string under the key `habitt_snapshot`.
 - **Parts of day** follow `categoryIdForMinutes`: Morning 04–12, Afternoon
   12–19, Evening 19–04. Natives pick the block for the current clock time.
 
+### Fields for the Apple Watch
+
+Each habit also carries `completed` and a `log` object, the strings block has
+the list labels (`today`, `anyTime`, `morning`, `afternoon`, `evening`,
+`optional`), and the top level has `watchAcks`. They are additive (`v` stays
+1) and the widgets ignore them. See `docs/watch_app.md`.
+
 ## When the snapshot is written
 
 `WidgetSnapshotService.start` (after the first frame in `main.dart`) listens
@@ -128,6 +135,9 @@ merges and notification completions drained on open, since all of them notify
 
 It also refreshes on resume (the day may have changed) and writes immediately
 on pause, so the widgets are current when the app is backgrounded.
+
+Every write also goes to the Apple Watch app (`WatchSyncService.pushSnapshot`
+from `HomeWidgetSnapshotWriter`, see `docs/watch_app.md`).
 
 **Known gap:** a notification "Complete" pressed while the app is not running
 is queued (`PendingCompletionQueue`) and only applied, and shown in widgets,

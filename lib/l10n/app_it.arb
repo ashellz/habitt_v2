@@ -1382,5 +1382,17 @@
   "widgetUpNextName": "Prossime",
   "widgetUpNextDescription": "Le abitudini di questa parte della giornata, con la tua serie.",
   "dayStreakLabel": "giorno di serie",
-  "daysStreakLabel": "giorni di serie"
+  "daysStreakLabel": "giorni di serie",
+  "watchOpenOnIPhone": "Apri Habitt sul tuo iPhone",
+  "watchOpenOnIPhoneBody": "Le tue abitudini appariranno qui dopo la sincronizzazione.",
+  "watchUpdateNeeded": "Aggiorna Habitt",
+  "watchUpdateNeededBody": "Aggiorna Habitt su iPhone e Apple Watch per continuare a sincronizzare.",
+  "watchHealthNote": "Si aggiorna da Apple Salute sul tuo iPhone",
+  "watchLogOnIPhone": "Registra questa sul tuo iPhone",
+  "watchShowHabits": "Mostra abitudini",
+  "watchOfTarget": "di {target}",
+  "watchCompleteHabit": "Completa {name}",
+  "watchUncompleteHabit": "Segna {name} come non fatta",
+  "watchLess": "Meno",
+  "watchMore": "Più"
 }

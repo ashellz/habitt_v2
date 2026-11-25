@@ -15,6 +15,7 @@ import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/providers/support_provider.dart';
+import 'package:habitt/services/watch_action_queue.dart';
 import 'package:habitt/services/completion_sound_player.dart';
 import 'package:habitt/services/notification_service.dart';
 import 'package:habitt/util/check_reorder_categories.dart';
@@ -1958,6 +1959,81 @@ class HabitProvider extends ChangeNotifier {
     );
   }
 
+  /// Applies a change made on the Apple Watch (docs/watch_app.md) to the
+  /// action's day through the same code as the app, without sound. Returns
+  /// false when nothing changed: unknown, deleted or paused habit, a habit
+  /// the watch may not change (Health-linked, time of day), a value already
+  /// there. Either way the action is done with and gets acknowledged.
+  bool applyWatchAction(
+    WatchAction action,
+    BuildContext context,
+    StateProvider stateProvider,
+  ) {
+    final today = DateTime.now();
+    final todaySimple = DateTime(today.year, today.month, today.day);
+    final day = action.day;
+
+    Habit? habit;
+    final source =
+        day == todaySimple
+            ? habits
+            : getHabitsFromDay(day, hydrateMissing: true);
+    for (final h in source) {
+      if (h.id == action.habitId) {
+        habit = h;
+        break;
+      }
+    }
+    debugPrint(
+      '[WATCH] apply ${action.type.name} id=${action.habitId} day=$day '
+      'value=${action.value} found=${habit != null}',
+    );
+    if (habit == null || habit.isDeleted == true || habit.isPaused == true) {
+      return false;
+    }
+    if (habit.healthMetric != null || habit.tracksTimeOfDay) return false;
+
+    final id = habit.id;
+    final isDone = habit.completed || habit.skipped;
+    switch (action.type) {
+      case WatchActionType.complete:
+        if (isDone) return false;
+        completeHabit(id, context, stateProvider, playSound: false, day: day);
+        return true;
+      case WatchActionType.uncomplete:
+        if (!isDone) return false;
+        // the habit card's un-check: back to not done, progress reset
+        completeHabit(id, context, stateProvider, playSound: false, day: day);
+        return true;
+      case WatchActionType.setAmount:
+        final value = action.value;
+        if (!habit.tracksAmount || value == null || value < 0) return false;
+        if (value == habit.amountCompleted) return false;
+        updateHabitAmountCompleted(
+          id,
+          value,
+          context,
+          day: day,
+          playSound: false,
+        );
+        return true;
+      case WatchActionType.setDuration:
+        final value = action.value;
+        if (!habit.tracksDuration || value == null || value < 0) return false;
+        if (value == habit.durationCompleted) return false;
+        updateHabitDurationCompleted(
+          id,
+          value,
+          context,
+          day: day,
+          playSound: false,
+        );
+        return true;
+      case WatchActionType.unknown:
+        return false;
+    }
+  }
+
   void skipHabit(
     int id,
     BuildContext context,
@@ -2282,13 +2358,15 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitAmountCompleted(
     int id,
     int amountCompleted,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    DateTime? day,
+    bool playSound = true,
+  }) async {
     habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = selectedDate ?? today;
+    final _selectedDate = day ?? selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -2316,7 +2394,7 @@ class HabitProvider extends ChangeNotifier {
       habit.updateHabitAmountCompleted(amountCompleted);
     }
     final isNowCompleted = habit.completed;
-    if (!wasCompleted && isNowCompleted) {
+    if (playSound && !wasCompleted && isNowCompleted) {
       playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
     }
     debugPrint("Habit is now completed: $isNowCompleted");
@@ -2655,13 +2733,15 @@ class HabitProvider extends ChangeNotifier {
   void updateHabitDurationCompleted(
     int id,
     int durationCompleted,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    DateTime? day,
+    bool playSound = true,
+  }) async {
     habitStatsProvider?.invalidateHabit(id);
     late Habit habit;
 
     final today = DateTime.now();
-    final _selectedDate = selectedDate ?? today;
+    final _selectedDate = day ?? selectedDate ?? today;
     final todaySimple = DateTime(today.year, today.month, today.day);
     final daySimple = DateTime(
       _selectedDate.year,
@@ -2682,7 +2762,7 @@ class HabitProvider extends ChangeNotifier {
     _markHealthManualOverride(habit);
     habit.updateHabitDurationCompleted(durationCompleted);
     final isNowCompleted = habit.completed;
-    if (!wasCompleted && isNowCompleted) {
+    if (playSound && !wasCompleted && isNowCompleted) {
       playCompletionSound(context, daySimple, isOptionalHabit: habit.optional);
     }
     if (wasCompleted != isNowCompleted) {

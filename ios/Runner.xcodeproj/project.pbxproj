@@ -3,22 +3,31 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0CCB646DDFE0B5AD042C6F6D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F6222950B87319FF59E8975C /* GoogleService-Info.plist */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		16E86C801202B74B14260029 /* WidgetStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91229BF2376D5C38329E63E9 /* WidgetStyle.swift */; };
+		23699A203550B5565684F034 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A374302A4C156A63C53BC518 /* WidgetSnapshot.swift */; };
+		2668A5075837D223297A4410 /* HabittWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DBB9CAE9784DF54C1E0C2542 /* HabittWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3A48B5CF6409BD965BD45A22 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90A0F55C210C4E21040EF85 /* Pods_Runner.framework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3EB752513D6F7F6438AAC0C7 /* WidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AE2D98AA8E63CC2F39B772 /* WidgetProvider.swift */; };
+		3FE6C62252C5CDAEE90D294C /* WatchBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EAD59242EE6A9889A14F7A /* WatchBridge.swift */; };
 		472F5E8EB9F85BDB833E3F79 /* Satoshi-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6EE1BFEC654011A2BD6DA07E /* Satoshi-Bold.otf */; };
+		49CE063891D7D31FC11214C9 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1720C48B3BE2FFABAEFAADA /* HabitDetailView.swift */; };
+		5301BD693DDEA6EB0912A7B4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E48C2167536A88319F28552D /* Localizable.strings */; };
+		5657C5BA47E8BF244092AC89 /* HabitIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7838AE1B3B1F67641D90FD5F /* HabitIndicator.swift */; };
 		6BB045FFF9B5711AAB918A11 /* UpNextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B01526E3F6F79E12EFDD03 /* UpNextWidget.swift */; };
+		6F963C3E59119400BD1AFE45 /* WatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635333D8A7F461D7E69A36DA /* WatchState.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		756FDC2B992356E52CC3B3C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A82C0B0796F7AE8652B905A /* Assets.xcassets */; };
 		7698FF75604DD7782BD90866 /* StreakWeekWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02979F45E954D930EE2F4F7 /* StreakWeekWidget.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		87BB44368E0D501B4ACF4887 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D1C0E45028F7EC26C99B62 /* TodayView.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -30,6 +39,9 @@
 		B2E0848FF610E1178A977D52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38C0D0B8425CA3A7780D3ADE /* Localizable.strings */; };
 		B5F7767FC997255A0E3144F4 /* HabittWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16ECE85A5DE16522A16884 /* HabittWidgetsBundle.swift */; };
 		BE8E6AA44D5E48186B826206 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */; };
+		C4638BA03C55BCADB22D21D3 /* WatchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEB0506ECE93753A5C8D5AE /* WatchStore.swift */; };
+		CC4F67D3942C230EF454F57A /* HabittWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC74EE7946D11DED7C12A20 /* HabittWatchApp.swift */; };
+		E21997A2F5529C098487BC48 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039D60B4D0C969B37201634C /* Foundation.framework */; };
 		E5561DF12F3F018200C9A6AD /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5561DF02F3F018200C9A6AD /* StoreKit.framework */; };
 		E577240B2FEF7F7F00D55421 /* sound_03.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724012FEF7F7F00D55421 /* sound_03.aiff */; };
 		E577240C2FEF7F7F00D55421 /* sound_06.aiff in Resources */ = {isa = PBXBuildFile; fileRef = E57724022FEF7F7F00D55421 /* sound_06.aiff */; };
@@ -54,6 +66,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
+		};
+		3BA3A7FC85C878475C1EEFC9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B1F9A92CE98A46C25BC9A15;
+			remoteInfo = HabittWatch;
 		};
 		42DFA054480B0F8EC4C639E2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -86,10 +105,22 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1BBDDCFE9F6268246F78BDF /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				2668A5075837D223297A4410 /* HabittWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		021B26EED6B477463369E241 /* HabittWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = HabittWidgets.entitlements; sourceTree = "<group>"; };
+		039D60B4D0C969B37201634C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		0A06408819669FC8659D6AD5 /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		143BFC07A03FB6E5A0AC5B62 /* bs */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = bs; path = bs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
@@ -97,16 +128,23 @@
 		1D2E185C6100B1A962F325A4 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1F9F12C4FBDFAD4A214EED1A /* Satoshi-Regular.otf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Satoshi-Regular.otf"; sourceTree = "<group>"; };
 		21AE2D98AA8E63CC2F39B772 /* WidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetProvider.swift; sourceTree = "<group>"; };
+		2583F77998091D5BE698D71E /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2611DF36CFE76DA4C233EA06 /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		292781507A3737C2FFF92079 /* HabittWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HabittWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C16ECE85A5DE16522A16884 /* HabittWidgetsBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HabittWidgetsBundle.swift; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A82C0B0796F7AE8652B905A /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		40F08BA60A8C3A24A60265EE /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4104D3E70BBB040E70ED7E9B /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		43A25514337B59C39704652B /* pt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		515AA1CC161803B806664A3F /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		52B01526E3F6F79E12EFDD03 /* UpNextWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpNextWidget.swift; sourceTree = "<group>"; };
 		55DC1F64F198973ADBE23CC6 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		5DB0E7C3CC418E87B33DB0F3 /* WidgetPieces.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetPieces.swift; sourceTree = "<group>"; };
+		635333D8A7F461D7E69A36DA /* WatchState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchState.swift; sourceTree = "<group>"; };
+		6512EC314EDDF3C479807B86 /* bs */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = bs; path = bs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6CD0D36FBEAC826823729FBB /* tr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6E9FAD033F413BB6366E843D /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6EE1BFEC654011A2BD6DA07E /* Satoshi-Bold.otf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Satoshi-Bold.otf"; sourceTree = "<group>"; };
@@ -114,11 +152,13 @@
 		7395FBB27B9EBF8E378220F0 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7838AE1B3B1F67641D90FD5F /* HabitIndicator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HabitIndicator.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7F5989A3ED073D5288592366 /* StreakWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreakWidget.swift; sourceTree = "<group>"; };
 		81B33777901E7251649DBFBD /* it */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		850D9DA39E4C029C435D0309 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		85D1C0E45028F7EC26C99B62 /* TodayView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		8EBB8A900E1E056DD9291F0C /* Satoshi-Medium.otf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Satoshi-Medium.otf"; sourceTree = "<group>"; };
 		91229BF2376D5C38329E63E9 /* WidgetStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetStyle.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -129,11 +169,17 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A02979F45E954D930EE2F4F7 /* StreakWeekWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreakWeekWidget.swift; sourceTree = "<group>"; };
+		A0C23E9D56816DDBACBF601C /* tr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A374302A4C156A63C53BC518 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
+		B1720C48B3BE2FFABAEFAADA /* HabitDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
+		BFEB0506ECE93753A5C8D5AE /* WatchStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchStore.swift; sourceTree = "<group>"; };
 		C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB6C5C9A6C8D1D4407CAA02D /* HabittWatch.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HabittWatch.xcconfig; sourceTree = "<group>"; };
+		CBB046718AC749725A5FE47D /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HabittWidgets.xcconfig; sourceTree = "<group>"; };
 		CE3FBCB66479B6C1A67E4845 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D36013FB9DAED249C3810028 /* pt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DBB9CAE9784DF54C1E0C2542 /* HabittWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabittWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52BC54E2FD903E2008D92AC /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		E5561DF02F3F018200C9A6AD /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E57724012FEF7F7F00D55421 /* sound_03.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = sound_03.aiff; path = sounds/sound_03.aiff; sourceTree = "<group>"; };
@@ -151,10 +197,21 @@
 		EACF1185180C7C158073899F /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EC880FEF948B0C967D675413 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		F6222950B87319FF59E8975C /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F7B0B3E51A1B65A77C87A6C8 /* it */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F7EAD59242EE6A9889A14F7A /* WatchBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchBridge.swift; sourceTree = "<group>"; };
 		F8661C5EFE0C5B696B99DC1E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		FAC74EE7946D11DED7C12A20 /* HabittWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HabittWatchApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3BE210DE190FC1C482C75F4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E21997A2F5529C098487BC48 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -213,6 +270,22 @@
 			path = RunnerTests;
 			sourceTree = "<group>";
 		};
+		541F7C1ED7FEC364FBDF8E6C /* HabittWatch */ = {
+			isa = PBXGroup;
+			children = (
+				CB6C5C9A6C8D1D4407CAA02D /* HabittWatch.xcconfig */,
+				FAC74EE7946D11DED7C12A20 /* HabittWatchApp.swift */,
+				BFEB0506ECE93753A5C8D5AE /* WatchStore.swift */,
+				85D1C0E45028F7EC26C99B62 /* TodayView.swift */,
+				B1720C48B3BE2FFABAEFAADA /* HabitDetailView.swift */,
+				7838AE1B3B1F67641D90FD5F /* HabitIndicator.swift */,
+				3A82C0B0796F7AE8652B905A /* Assets.xcassets */,
+				E48C2167536A88319F28552D /* Localizable.strings */,
+			);
+			name = HabittWatch;
+			path = HabittWatch;
+			sourceTree = "<group>";
+		};
 		5ADE64FB1E03613BEB1812A9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,6 +333,7 @@
 				A870ED3EF8F669248ABEFB51 /* Frameworks */,
 				F6222950B87319FF59E8975C /* GoogleService-Info.plist */,
 				2283104DF0831FB7CC4E7F22 /* HabittWidgets */,
+				541F7C1ED7FEC364FBDF8E6C /* HabittWatch */,
 			);
 			sourceTree = "<group>";
 		};
@@ -269,6 +343,7 @@
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
 				292781507A3737C2FFF92079 /* HabittWidgets.appex */,
+				DBB9CAE9784DF54C1E0C2542 /* HabittWatch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -285,8 +360,17 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				F7EAD59242EE6A9889A14F7A /* WatchBridge.swift */,
 			);
 			path = Runner;
+			sourceTree = "<group>";
+		};
+		A4B8A3DE23065B231CE7437D /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				039D60B4D0C969B37201634C /* Foundation.framework */,
+			);
+			name = watchOS;
 			sourceTree = "<group>";
 		};
 		A6CDFB9D5DA9CFB818E51DEF /* iOS */ = {
@@ -303,6 +387,7 @@
 				E90A0F55C210C4E21040EF85 /* Pods_Runner.framework */,
 				C7F0E81230C1768E4D85E604 /* Pods_RunnerTests.framework */,
 				A6CDFB9D5DA9CFB818E51DEF /* iOS */,
+				A4B8A3DE23065B231CE7437D /* watchOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -311,6 +396,7 @@
 			isa = PBXGroup;
 			children = (
 				A374302A4C156A63C53BC518 /* WidgetSnapshot.swift */,
+				635333D8A7F461D7E69A36DA /* WatchState.swift */,
 			);
 			name = Core;
 			path = ../HabittWidgetsCore/Sources/HabittWidgetsCore;
@@ -330,6 +416,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1B1F9A92CE98A46C25BC9A15 /* HabittWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C8A40134D126D683EB9F0AD /* Build configuration list for PBXNativeTarget "HabittWatch" */;
+			buildPhases = (
+				565B71EF80CF2D56EFE7A00C /* Sources */,
+				3BE210DE190FC1C482C75F4F /* Frameworks */,
+				E561712B1432806BC06E363C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HabittWatch;
+			productName = HabittWatch;
+			productReference = DBB9CAE9784DF54C1E0C2542 /* HabittWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
 		331C8080294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
@@ -361,6 +464,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				11FC79428C7EBB514BE697C0 /* Embed Foundation Extensions */,
+				C1BBDDCFE9F6268246F78BDF /* Embed Watch Content */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				B83C50CF0C345B2C5A40C383 /* [CP] Embed Pods Frameworks */,
 				8EF1FFB65B82E6D636BFEAE0 /* [CP] Copy Pods Resources */,
@@ -369,6 +473,7 @@
 			);
 			dependencies = (
 				CE0DB4A7C7775765C0642CDA /* PBXTargetDependency */,
+				47C6DF798C951F5AA7780B40 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			packageProductDependencies = (
@@ -435,7 +540,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
+				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -444,6 +549,7 @@
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
 				F9F340FFD9AC42E3B924AA6F /* HabittWidgets */,
+				1B1F9A92CE98A46C25BC9A15 /* HabittWatch */,
 			);
 		};
 /* End PBXProject section */
@@ -488,6 +594,15 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				0CCB646DDFE0B5AD042C6F6D /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E561712B1432806BC06E363C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				756FDC2B992356E52CC3B3C5 /* Assets.xcassets in Resources */,
+				5301BD693DDEA6EB0912A7B4 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,13 +655,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -598,13 +709,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -656,12 +763,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		565B71EF80CF2D56EFE7A00C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC4F67D3942C230EF454F57A /* HabittWatchApp.swift in Sources */,
+				C4638BA03C55BCADB22D21D3 /* WatchStore.swift in Sources */,
+				87BB44368E0D501B4ACF4887 /* TodayView.swift in Sources */,
+				49CE063891D7D31FC11214C9 /* HabitDetailView.swift in Sources */,
+				5657C5BA47E8BF244092AC89 /* HabitIndicator.swift in Sources */,
+				23699A203550B5565684F034 /* WidgetSnapshot.swift in Sources */,
+				6F963C3E59119400BD1AFE45 /* WatchState.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				3FE6C62252C5CDAEE90D294C /* WatchBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,6 +794,12 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		47C6DF798C951F5AA7780B40 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HabittWatch;
+			target = 1B1F9A92CE98A46C25BC9A15 /* HabittWatch */;
+			targetProxy = 3BA3A7FC85C878475C1EEFC9 /* PBXContainerItemProxy */;
 		};
 		CE0DB4A7C7775765C0642CDA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -713,9 +841,58 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		E48C2167536A88319F28552D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6512EC314EDDF3C479807B86 /* bs */,
+				CBB046718AC749725A5FE47D /* de */,
+				2583F77998091D5BE698D71E /* en */,
+				40F08BA60A8C3A24A60265EE /* es */,
+				2611DF36CFE76DA4C233EA06 /* fr */,
+				F7B0B3E51A1B65A77C87A6C8 /* it */,
+				43A25514337B59C39704652B /* pt */,
+				A0C23E9D56816DDBACBF601C /* tr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0D103600D19FAA8C675D46CC /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB6C5C9A6C8D1D4407CAA02D /* HabittWatch.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = CGYK83WV76;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Habitt;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.shellz.habitt;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shellz.habitt.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Profile;
+		};
 		1C3C195B16338080C7C8AD41 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE3454C1D8202D2B24A0538A /* HabittWidgets.xcconfig */;
@@ -907,6 +1084,40 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Profile;
+		};
+		51A46B6FB5F1DC77548F9FBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB6C5C9A6C8D1D4407CAA02D /* HabittWatch.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = CGYK83WV76;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Habitt;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.shellz.habitt;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shellz.habitt.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1109,6 +1320,39 @@
 			};
 			name = Release;
 		};
+		ECC665BBBB61C7C7E33C148B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB6C5C9A6C8D1D4407CAA02D /* HabittWatch.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = CGYK83WV76;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Habitt;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.shellz.habitt;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.shellz.habitt.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1152,10 +1396,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		9C8A40134D126D683EB9F0AD /* Build configuration list for PBXNativeTarget "HabittWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				51A46B6FB5F1DC77548F9FBE /* Release */,
+				ECC665BBBB61C7C7E33C148B /* Debug */,
+				0D103600D19FAA8C675D46CC /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
+		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};

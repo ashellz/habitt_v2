@@ -1427,5 +1427,22 @@
   "@dayStreakLabel": {"description": "Under a streak count of 1, e.g. on the home page streak card and the widgets: '1 day streak'"},
   "@daysStreakLabel": {"description": "Under a streak count other than 1: '12 days streak'"},
   "@widgetDayComplete": {"description": "Home screen widget: shown when every habit today is done"},
-  "@widgetStreakName": {"description": "Name of the Streak home screen widget in the system widget picker"}
+  "@widgetStreakName": {"description": "Name of the Streak home screen widget in the system widget picker"},
+  "watchOpenOnIPhone": "Open Habitt on your iPhone",
+  "watchOpenOnIPhoneBody": "Your habits show up here once it syncs.",
+  "watchUpdateNeeded": "Update Habitt",
+  "watchUpdateNeededBody": "Update Habitt on your iPhone and Apple Watch to keep syncing.",
+  "watchHealthNote": "Updates from Apple Health on your iPhone",
+  "watchLogOnIPhone": "Log this one on your iPhone",
+  "watchShowHabits": "Show habits",
+  "watchOfTarget": "of {target}",
+  "watchCompleteHabit": "Complete {name}",
+  "watchUncompleteHabit": "Mark {name} as not done",
+  "watchLess": "Less",
+  "watchMore": "More",
+  "@watchOfTarget": {"description": "Apple Watch log screen, under the logged value: 'of 10 pages', 'of 10m'", "placeholders": {"target": {"type": "String"}}},
+  "@watchCompleteHabit": {"description": "Apple Watch: accessibility label of a habit's check when not done", "placeholders": {"name": {"type": "String"}}},
+  "@watchUncompleteHabit": {"description": "Apple Watch: accessibility label of a habit's check when done", "placeholders": {"name": {"type": "String"}}},
+  "@watchOpenOnIPhone": {"description": "Apple Watch app before the iPhone app sent any data"},
+  "@watchLogOnIPhone": {"description": "Apple Watch: tapping a habit that can only be logged on the phone (bedtime, wake time)"}
 }

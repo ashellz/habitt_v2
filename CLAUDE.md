@@ -126,6 +126,12 @@ Read-only iOS/Android home screen widgets (Streak, Streak week, Today ring, Up n
 
 **Maintenance rule:** Any change to the widgets, the snapshot fields or when it is written must also update `docs/home_widgets.md`.
 
+### Apple Watch App
+
+A small watchOS app (`ios/HabittWatch`) shows today's habits to complete, un-complete or log. It draws the widget snapshot the phone pushes over WatchConnectivity and sends absolute actions back, which the phone queues (`WatchBridge`) and applies through `HabitProvider.applyWatchAction` (`WatchSyncService`). The phone stays the source of truth. Documented in full at [`docs/watch_app.md`](docs/watch_app.md). Read it before touching the watch target, `WatchBridge`, `WatchSyncService`, the snapshot's watch fields or `applyWatchAction`.
+
+**Maintenance rule:** Any change to the watch app, its protocol (snapshot fields, actions, versions) or when actions are applied must also update `docs/watch_app.md`.
+
 ### Third-Party Integrations
 
 - **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions (currently voluntary support only, no feature gating)

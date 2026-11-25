@@ -1047,5 +1047,17 @@
   "widgetUpNextName": "Sıradaki",
   "widgetUpNextDescription": "Günün bu bölümündeki alışkanlıklar ve serin.",
   "dayStreakLabel": "günlük seri",
-  "daysStreakLabel": "günlük seri"
+  "daysStreakLabel": "günlük seri",
+  "watchOpenOnIPhone": "Habitt'i iPhone'unda aç",
+  "watchOpenOnIPhoneBody": "Alışkanlıkların senkronize edildiğinde burada görünür.",
+  "watchUpdateNeeded": "Habitt'i güncelle",
+  "watchUpdateNeededBody": "Senkronizasyonun sürmesi için Habitt'i iPhone ve Apple Watch'unda güncelle.",
+  "watchHealthNote": "iPhone'undaki Apple Sağlık'tan güncellenir",
+  "watchLogOnIPhone": "Bunu iPhone'unda kaydet",
+  "watchShowHabits": "Alışkanlıkları göster",
+  "watchOfTarget": "/ {target}",
+  "watchCompleteHabit": "{name} tamamla",
+  "watchUncompleteHabit": "{name} yapılmadı olarak işaretle",
+  "watchLess": "Azalt",
+  "watchMore": "Artır"
 }

@@ -3898,4 +3898,48 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get daysStreakLabel => 'günlük seri';
+
+  @override
+  String get watchOpenOnIPhone => 'Habitt\'i iPhone\'unda aç';
+
+  @override
+  String get watchOpenOnIPhoneBody =>
+      'Alışkanlıkların senkronize edildiğinde burada görünür.';
+
+  @override
+  String get watchUpdateNeeded => 'Habitt\'i güncelle';
+
+  @override
+  String get watchUpdateNeededBody =>
+      'Senkronizasyonun sürmesi için Habitt\'i iPhone ve Apple Watch\'unda güncelle.';
+
+  @override
+  String get watchHealthNote => 'iPhone\'undaki Apple Sağlık\'tan güncellenir';
+
+  @override
+  String get watchLogOnIPhone => 'Bunu iPhone\'unda kaydet';
+
+  @override
+  String get watchShowHabits => 'Alışkanlıkları göster';
+
+  @override
+  String watchOfTarget(String target) {
+    return '/ $target';
+  }
+
+  @override
+  String watchCompleteHabit(String name) {
+    return '$name tamamla';
+  }
+
+  @override
+  String watchUncompleteHabit(String name) {
+    return '$name yapılmadı olarak işaretle';
+  }
+
+  @override
+  String get watchLess => 'Azalt';
+
+  @override
+  String get watchMore => 'Artır';
 }

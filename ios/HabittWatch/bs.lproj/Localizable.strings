@@ -1,0 +1,14 @@
+/* Generated from lib/l10n/app_bs.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"watchOpenOnIPhone" = "Otvori Habitt na iPhoneu";
+"watchOpenOnIPhoneBody" = "Tvoje navike će se pojaviti ovdje nakon sinhronizacije.";
+"watchUpdateNeeded" = "Ažuriraj Habitt";
+"watchUpdateNeededBody" = "Ažuriraj Habitt na iPhoneu i Apple Watchu da bi sinhronizacija nastavila raditi.";
+"watchHealthNote" = "Ažurira se iz Apple Healtha na iPhoneu";
+"watchLogOnIPhone" = "Ovo zabilježi na iPhoneu";
+"watchShowHabits" = "Prikaži navike";
+"watchOfTarget" = "od %@";
+"watchCompleteHabit" = "Završi %@";
+"watchUncompleteHabit" = "Označi %@ kao nezavršeno";
+"watchLess" = "Manje";
+"watchMore" = "Više";
+"today" = "Danas";

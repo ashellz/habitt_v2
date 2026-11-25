@@ -1,0 +1,5 @@
+// The watch app's base settings: only the app's version from Flutter's
+// Generated.xcconfig (FLUTTER_BUILD_NAME / FLUTTER_BUILD_NUMBER), so the watch
+// app's version always matches the iPhone app's, which the App Store requires
+// for an embedded watch app. Not Flutter/Debug.xcconfig: no Pods here.
+#include? "../Flutter/Generated.xcconfig"

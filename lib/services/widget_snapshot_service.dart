@@ -12,6 +12,7 @@ import 'package:habitt/providers/language_provider.dart';
 import 'package:habitt/providers/state_provider.dart';
 import 'package:habitt/providers/stats_provider.dart';
 import 'package:habitt/services/notification_action_handler.dart';
+import 'package:habitt/services/watch_sync_service.dart';
 import 'package:habitt/services/widget_snapshot_builder.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
@@ -69,6 +70,8 @@ class HomeWidgetSnapshotWriter implements WidgetSnapshotWriter {
       debugPrint('[WIDGETS] saving the snapshot failed: $e');
       return;
     }
+    // the Apple Watch app draws the same snapshot (docs/watch_app.md)
+    unawaited(WatchSyncService.pushSnapshot(json));
     // each kind on its own: a build without one of them must not stop the rest
     final isIos = defaultTargetPlatform == TargetPlatform.iOS;
     final kinds = isIos ? HomeWidgetKinds.ios : HomeWidgetKinds.android;
@@ -218,6 +221,7 @@ class WidgetSnapshotService {
         formatTime: (minutes) => _formatTime(minutes, localeCode),
         theme: colors.theme,
         hasHabits: habits.habits.any((h) => h.isDeleted != true),
+        watchAcks: WatchSyncService.instance?.acks ?? const [],
       ),
     );
   }

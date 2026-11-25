@@ -3890,4 +3890,48 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get daysStreakLabel => 'dana streak';
+
+  @override
+  String get watchOpenOnIPhone => 'Otvori Habitt na iPhoneu';
+
+  @override
+  String get watchOpenOnIPhoneBody =>
+      'Tvoje navike će se pojaviti ovdje nakon sinhronizacije.';
+
+  @override
+  String get watchUpdateNeeded => 'Ažuriraj Habitt';
+
+  @override
+  String get watchUpdateNeededBody =>
+      'Ažuriraj Habitt na iPhoneu i Apple Watchu da bi sinhronizacija nastavila raditi.';
+
+  @override
+  String get watchHealthNote => 'Ažurira se iz Apple Healtha na iPhoneu';
+
+  @override
+  String get watchLogOnIPhone => 'Ovo zabilježi na iPhoneu';
+
+  @override
+  String get watchShowHabits => 'Prikaži navike';
+
+  @override
+  String watchOfTarget(String target) {
+    return 'od $target';
+  }
+
+  @override
+  String watchCompleteHabit(String name) {
+    return 'Završi $name';
+  }
+
+  @override
+  String watchUncompleteHabit(String name) {
+    return 'Označi $name kao nezavršeno';
+  }
+
+  @override
+  String get watchLess => 'Manje';
+
+  @override
+  String get watchMore => 'Više';
 }

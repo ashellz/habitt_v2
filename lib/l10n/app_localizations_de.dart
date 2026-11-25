@@ -3927,4 +3927,49 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get daysStreakLabel => 'Tage Streak';
+
+  @override
+  String get watchOpenOnIPhone => 'Öffne Habitt auf deinem iPhone';
+
+  @override
+  String get watchOpenOnIPhoneBody =>
+      'Deine Gewohnheiten erscheinen hier, sobald synchronisiert wurde.';
+
+  @override
+  String get watchUpdateNeeded => 'Habitt aktualisieren';
+
+  @override
+  String get watchUpdateNeededBody =>
+      'Aktualisiere Habitt auf deinem iPhone und deiner Apple Watch, um weiter zu synchronisieren.';
+
+  @override
+  String get watchHealthNote =>
+      'Wird aus Apple Health auf deinem iPhone aktualisiert';
+
+  @override
+  String get watchLogOnIPhone => 'Trag das auf deinem iPhone ein';
+
+  @override
+  String get watchShowHabits => 'Gewohnheiten zeigen';
+
+  @override
+  String watchOfTarget(String target) {
+    return 'von $target';
+  }
+
+  @override
+  String watchCompleteHabit(String name) {
+    return '$name abschließen';
+  }
+
+  @override
+  String watchUncompleteHabit(String name) {
+    return '$name als nicht erledigt markieren';
+  }
+
+  @override
+  String get watchLess => 'Weniger';
+
+  @override
+  String get watchMore => 'Mehr';
 }

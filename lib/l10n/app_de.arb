@@ -1383,5 +1383,17 @@
   "widgetUpNextName": "Als Nächstes",
   "widgetUpNextDescription": "Die Gewohnheiten für diese Tageszeit, mit deinem Streak.",
   "dayStreakLabel": "Tag Streak",
-  "daysStreakLabel": "Tage Streak"
+  "daysStreakLabel": "Tage Streak",
+  "watchOpenOnIPhone": "Öffne Habitt auf deinem iPhone",
+  "watchOpenOnIPhoneBody": "Deine Gewohnheiten erscheinen hier, sobald synchronisiert wurde.",
+  "watchUpdateNeeded": "Habitt aktualisieren",
+  "watchUpdateNeededBody": "Aktualisiere Habitt auf deinem iPhone und deiner Apple Watch, um weiter zu synchronisieren.",
+  "watchHealthNote": "Wird aus Apple Health auf deinem iPhone aktualisiert",
+  "watchLogOnIPhone": "Trag das auf deinem iPhone ein",
+  "watchShowHabits": "Gewohnheiten zeigen",
+  "watchOfTarget": "von {target}",
+  "watchCompleteHabit": "{name} abschließen",
+  "watchUncompleteHabit": "{name} als nicht erledigt markieren",
+  "watchLess": "Weniger",
+  "watchMore": "Mehr"
 }

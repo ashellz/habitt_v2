@@ -44,6 +44,10 @@ import shared_preferences_foundation
       }
     }
 
+    // Apple Watch app: receive watch actions even when launched in the
+    // background for one, before Flutter is up (see WatchBridge).
+    WatchBridge.shared.activate()
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -54,6 +58,9 @@ import shared_preferences_foundation
     }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HabitNotificationStatus") {
       HabitNotificationStatusBridge.register(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HabittWatch") {
+      WatchBridge.shared.register(messenger: registrar.messenger())
     }
   }
 

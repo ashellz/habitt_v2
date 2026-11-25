@@ -1047,5 +1047,17 @@
   "widgetUpNextName": "À suivre",
   "widgetUpNextDescription": "Les habitudes de ce moment de la journée, avec ta série.",
   "dayStreakLabel": "jour de série",
-  "daysStreakLabel": "jours de série"
+  "daysStreakLabel": "jours de série",
+  "watchOpenOnIPhone": "Ouvre Habitt sur ton iPhone",
+  "watchOpenOnIPhoneBody": "Tes habitudes apparaîtront ici après la synchronisation.",
+  "watchUpdateNeeded": "Mets à jour Habitt",
+  "watchUpdateNeededBody": "Mets à jour Habitt sur ton iPhone et ton Apple Watch pour continuer la synchronisation.",
+  "watchHealthNote": "Mis à jour depuis Apple Santé sur ton iPhone",
+  "watchLogOnIPhone": "Enregistre celle-ci sur ton iPhone",
+  "watchShowHabits": "Voir les habitudes",
+  "watchOfTarget": "sur {target}",
+  "watchCompleteHabit": "Terminer {name}",
+  "watchUncompleteHabit": "Marquer {name} comme non fait",
+  "watchLess": "Moins",
+  "watchMore": "Plus"
 }

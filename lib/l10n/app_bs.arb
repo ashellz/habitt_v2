@@ -1373,5 +1373,17 @@
   "widgetUpNextName": "Sljedeće",
   "widgetUpNextDescription": "Navike za ovaj dio dana, uz tvoj streak.",
   "dayStreakLabel": "dan streak",
-  "daysStreakLabel": "dana streak"
+  "daysStreakLabel": "dana streak",
+  "watchOpenOnIPhone": "Otvori Habitt na iPhoneu",
+  "watchOpenOnIPhoneBody": "Tvoje navike će se pojaviti ovdje nakon sinhronizacije.",
+  "watchUpdateNeeded": "Ažuriraj Habitt",
+  "watchUpdateNeededBody": "Ažuriraj Habitt na iPhoneu i Apple Watchu da bi sinhronizacija nastavila raditi.",
+  "watchHealthNote": "Ažurira se iz Apple Healtha na iPhoneu",
+  "watchLogOnIPhone": "Ovo zabilježi na iPhoneu",
+  "watchShowHabits": "Prikaži navike",
+  "watchOfTarget": "od {target}",
+  "watchCompleteHabit": "Završi {name}",
+  "watchUncompleteHabit": "Označi {name} kao nezavršeno",
+  "watchLess": "Manje",
+  "watchMore": "Više"
 }
