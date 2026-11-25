@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Današnje navike u jednom krugu koji se puni.</string>
     <string name="widget_up_next_name">Sljedeće</string>
     <string name="widget_up_next_description">Navike za ovaj dio dana, uz tvoj streak.</string>
-    <string name="widget_open_app">Otvori Habitt da vidiš svoje navike ovdje</string>
+    <string name="widget_no_habits">Još niste dodali nijednu naviku.</string>
+    <string name="widget_day_streak">dan streak</string>
+    <string name="widget_days_streak">dana streak</string>
+    <string name="widget_day">dan</string>
+    <string name="widget_days">dana</string>
+    <string name="widget_start_streak">Završi sve navike danas da započneš streak</string>
 </resources>

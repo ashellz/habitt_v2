@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Die heutigen Gewohnheiten als Ring, der sich füllt.</string>
     <string name="widget_up_next_name">Als Nächstes</string>
     <string name="widget_up_next_description">Die Gewohnheiten für diese Tageszeit, mit deinem Streak.</string>
-    <string name="widget_open_app">Öffne Habitt, um deine Gewohnheiten hier zu sehen</string>
+    <string name="widget_no_habits">Du hast noch keine Gewohnheiten hinzugefügt</string>
+    <string name="widget_day_streak">Tag Streak</string>
+    <string name="widget_days_streak">Tage Streak</string>
+    <string name="widget_day">Tag</string>
+    <string name="widget_days">Tage</string>
+    <string name="widget_start_streak">Schließe heute alle Gewohnheiten ab, um einen Streak zu starten</string>
 </resources>

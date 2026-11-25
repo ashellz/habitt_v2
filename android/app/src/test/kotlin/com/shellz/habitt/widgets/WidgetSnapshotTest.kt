@@ -150,6 +150,36 @@ class WidgetSnapshotTest {
         assertEquals(listOf(1L, big), s.today.upNext[PartOfDay.MORNING]!!.habitIds)
     }
 
+    @Test
+    fun `no habits at all comes with its own text`() {
+        val s = WidgetSnapshot.parse(
+            full.replace("\"dayKey\"", "\"hasHabits\": false, \"dayKey\"")
+                .replace("\"nothingToday\": \"Nothing today\"", "\"nothingToday\": \"Nothing today\", \"noHabits\": \"No habits yet\""),
+        )!!
+        assertFalse(s.hasHabits)
+        assertEquals("No habits yet", s.strings.noHabits)
+        // older snapshots have neither: habits assumed, English text
+        val old = WidgetSnapshot.parse(full)!!
+        assertTrue(old.hasHabits)
+        assertEquals(WidgetSnapshot.DEFAULT_NO_HABITS, old.strings.noHabits)
+    }
+
+    @Test
+    fun `placeholder before the first snapshot has no habits and a 0 streak`() {
+        val strings = WidgetSnapshot.parse(full)!!.strings
+        val labels = listOf("W", "T", "F", "S", "S", "M", "T")
+        val s = WidgetSnapshot.placeholder(strings, "Start a streak", labels, java.time.LocalDate.of(2026, 11, 24))
+        assertFalse(s.hasHabits)
+        val block = s.blockAt(LocalDateTime.of(2030, 1, 1, 9, 0))
+        assertEquals(0, block.streak.count)
+        assertEquals(StreakInfo.Health.DORMANT, block.streak.health)
+        assertEquals("Start a streak", block.streak.line)
+        assertEquals(labels, block.streak.week.map { it.label })
+        assertEquals(WeekDay.Status.TODAY, block.streak.week.last().status)
+        assertEquals(0, block.total)
+        assertNull(block.upNextAt(LocalTime.of(9, 0)))
+    }
+
     // ─── block by clock ──────────────────────────────────────────────
 
     @Test

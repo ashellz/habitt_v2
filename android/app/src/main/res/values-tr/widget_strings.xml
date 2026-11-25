@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Bugünün alışkanlıkları, doldukça dolan tek bir halkada.</string>
     <string name="widget_up_next_name">Sıradaki</string>
     <string name="widget_up_next_description">Günün bu bölümündeki alışkanlıklar ve serin.</string>
-    <string name="widget_open_app">Alışkanlıklarını burada görmek için Habitt\'i aç</string>
+    <string name="widget_no_habits">Henüz hiç alışkanlık eklemedin</string>
+    <string name="widget_day_streak">günlük seri</string>
+    <string name="widget_days_streak">günlük seri</string>
+    <string name="widget_day">gün</string>
+    <string name="widget_days">gün</string>
+    <string name="widget_start_streak">Seri başlatmak için bugün tüm alışkanlıkları tamamla</string>
 </resources>

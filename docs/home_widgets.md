@@ -58,8 +58,11 @@ Stored as a JSON string under the key `habitt_snapshot`.
   "generatedAt": "2026-11-24T08:30:00.000",
   "dayKey": "2026-11-24",          // the local day `today` describes
   "nextDayStartsAt": "2026-11-25T00:00:00.000",
+  "hasHabits": true,               // false: no habits in the app at all (not just none today)
   "theme": { "light": { "accent": "#02D382" }, "dark": { "accent": "#11F29B" } },
-  "strings": { "dayStreak", "daysStreak", "day", "days", "dayComplete", "dayCompleteBody", "nothingToday" },
+  "strings": { "dayStreak", "daysStreak", "day", "days", "dayComplete", "dayCompleteBody", "nothingToday", "noHabits" },
+                                   // dayStreak/daysStreak: the dayStreakLabel/daysStreakLabel ARB keys
+                                   // ("day streak" / "days streak"), shared with the home page card
   "today":    DayBlock,
   "tomorrow": DayBlock             // today ended as it is now; used after nextDayStartsAt
 }
@@ -103,7 +106,8 @@ Stored as a JSON string under the key `habitt_snapshot`.
   in `ring`, `done`, `total` or `perfect`.
 - **Streak**: `today.streak.count` = `StatsProvider.perfectDaysStreak` (which
   leaves today out) + 1 when today is perfect, exactly like the home streak
-  card; health via `resolveStreakHealth`. `tomorrow.streak` runs
+  card (`StatsProvider.shownPerfectDaysStreak`), so a first perfect day
+  reads "1 day streak" in both; health via `resolveStreakHealth`. `tomorrow.streak` runs
   `computeCurrentStreak` over every day status up to and including today.
 - **Up next section**: for the current part P it tries P, then Any time, then
   the later parts, then the earlier ones, and takes the first that still has
@@ -163,6 +167,10 @@ later one:
   hand (no tracking type, Health-linked, already done).
 - `home` → back to the first route and the main tab.
 
+When a tap is the first open of a new day, the streak celebration waits for
+that Log progress dialog to close (`NotificationActionHandler.tapOpening`,
+see `docs/support_asks.md`) instead of covering it.
+
 iOS registers the `habitt` URL scheme in `ios/Runner/Info.plist`. Android
 needs the `es.antonborri.home_widget.action.LAUNCH` intent filter on
 `MainActivity`.
@@ -201,7 +209,7 @@ Code in `android/app/src/main/kotlin/com/shellz/habitt/widgets/`:
 
 | File | Role |
 |---|---|
-| `WidgetSnapshot.kt` | Parses the snapshot (`v` must be 1, else "Open Habitt"), `blockAt(now)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetClock.nextUpdate`. Pure Kotlin + org.json, tested in `android/app/src/test/.../WidgetSnapshotTest.kt` (`./gradlew :app:testDebugUnitTest`). |
+| `WidgetSnapshot.kt` | Parses the snapshot (`v` must be 1), `placeholder` for before the first one, `blockAt(now)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetClock.nextUpdate`. Pure Kotlin + org.json, tested in `android/app/src/test/.../WidgetSnapshotTest.kt` (`./gradlew :app:testDebugUnitTest`). |
 | `HabittWidgets.kt` | The four `GlanceAppWidget`s and receivers (`HomeWidgetGlanceWidgetReceiver`, state from home_widget's preferences, `SizeMode.Exact`). |
 | `WidgetUi.kt` | Colours (light/dark pairs from the design canvas, accent from the snapshot), tap links, bitmaps for what RemoteViews cannot draw (ring segments, week arcs, pies), shared pieces. |
 | `WidgetRefresh.kt` | The boundary alarm and its receiver (see above). |
@@ -218,15 +226,27 @@ How it is drawn:
   only on Android 12+, so on 8–11 the glow can show at the corners.
 - Text uses the system font (widgets cannot use Satoshi).
 - Today ring: track, fill (both tinted masks) and an emoji layer drawn with
-  `Canvas` at the widget's size; no emojis above 8 habits; `done/total` or an
-  accent check in the centre. Tap: Log progress of the first counted habit not
+  `Canvas` at the widget's size; `done/total` or an accent check in the
+  centre. Above 8 habits the segments give way to one plain ring filled to the
+  day's progress (done habits count 1, partial ones their share), no emojis. Tap: Log progress of the first counted habit not
   done, home when perfect or empty.
 - Up next: as many rows as fit the height (at most 3), the section's label and
   icon (sun, moon, clock for Any time); "Day complete" when the section is null
-  and the day has habits, `nothingToday` when it has none. Rows open Log
+  and the day has habits, `nothingToday` when it has none. Android cells are
+  taller than the iOS design (a 4×2 is about 360×220 dp against 364×170), so
+  `UpNextWidget.LAYOUT` picks how to fill them: `SCALED` (the iOS design
+  scaled to the height, up to 1.3×), `CENTRED` (iOS sizes, centred
+  vertically) or `STRETCHED` (iOS text sizes, rows grow to fill, up to 56 dp).
+  Stretched is in use until one is chosen.
+- No habits in the app at all (`hasHabits` false): Today ring and Up next show
+  the app's empty box art (`widget_art_empty_box`) over `noHabits`. Rows open Log
   progress, the rest of the widget the home page.
-- Streak / Streak week open the home page. Dormant streak: only the invite line,
-  drawn with the healthy look (as the home page streak card does).
+- Streak / Streak week open the home page. Dormant streak: 0, "days streak"
+  and the invite line, drawn with the healthy look (as the home page streak
+  card does).
+- Before the app wrote its first snapshot (installed, not opened yet) the
+  widgets draw `WidgetStore.placeholder`: no habits, a 0 streak and an empty
+  week, from the native strings in the device language.
 - Picker previews: `drawable-nodpi/widget_preview_*.png`, cropped from emulator
   screenshots of the real widgets (light, Habitt green). Recapture them when a
   widget's look changes.
@@ -237,9 +257,11 @@ Generated resources (rerun after changing the source):
 
 - `dart run tool/svg_to_vector_drawable.dart`: `widget_art_*` VectorDrawables
   from `assets/images/new-svg/streak.svg`, `streak-fade.svg`, `ice-left.svg`,
-  `ice-over.svg` (drop shadow dropped).
+  `ice-over.svg`, `empty-box.svg` (drop shadow dropped).
 - `dart run tool/gen_android_widget_strings.dart`: `values[-xx]/widget_strings.xml`
-  from the `widget*Name`, `widget*Description` and `widgetOpenApp` ARB keys.
+  from the `widget*Name` / `widget*Description` ARB keys, plus the strings
+  the placeholder needs (`youHaventAddedAnyHabitsYet`, `dayStreakLabel`,
+  `daysStreakLabel`, `day`, `days`, `widgetStartStreak`).
 
 ## Adding or changing a widget
 

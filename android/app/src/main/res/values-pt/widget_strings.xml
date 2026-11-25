@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Os hábitos de hoje em um anel que vai se enchendo.</string>
     <string name="widget_up_next_name">A seguir</string>
     <string name="widget_up_next_description">Os hábitos desta parte do dia, com sua sequência.</string>
-    <string name="widget_open_app">Abra o Habitt para ver seus hábitos aqui</string>
+    <string name="widget_no_habits">Você ainda não adicionou nenhum hábito</string>
+    <string name="widget_day_streak">dia de sequência</string>
+    <string name="widget_days_streak">dias de sequência</string>
+    <string name="widget_day">dia</string>
+    <string name="widget_days">dias</string>
+    <string name="widget_start_streak">Conclua todos os hábitos hoje para começar uma sequência</string>
 </resources>

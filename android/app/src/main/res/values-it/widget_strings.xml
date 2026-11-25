@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Le abitudini di oggi in un anello che si riempie.</string>
     <string name="widget_up_next_name">Prossime</string>
     <string name="widget_up_next_description">Le abitudini di questa parte della giornata, con la tua serie.</string>
-    <string name="widget_open_app">Apri Habitt per vedere qui le tue abitudini</string>
+    <string name="widget_no_habits">Non hai ancora aggiunto nessuna abitudine</string>
+    <string name="widget_day_streak">giorno di serie</string>
+    <string name="widget_days_streak">giorni di serie</string>
+    <string name="widget_day">giorno</string>
+    <string name="widget_days">giorni</string>
+    <string name="widget_start_streak">Completa tutte le abitudini oggi per iniziare una serie</string>
 </resources>

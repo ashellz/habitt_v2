@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Los hábitos de hoy en un anillo que se va llenando.</string>
     <string name="widget_up_next_name">A continuación</string>
     <string name="widget_up_next_description">Los hábitos de este momento del día, con tu racha.</string>
-    <string name="widget_open_app">Abre Habitt para ver tus hábitos aquí</string>
+    <string name="widget_no_habits">Aún no has añadido ningún hábito</string>
+    <string name="widget_day_streak">día de racha</string>
+    <string name="widget_days_streak">días de racha</string>
+    <string name="widget_day">día</string>
+    <string name="widget_days">días</string>
+    <string name="widget_start_streak">Completa todos los hábitos hoy para empezar una racha</string>
 </resources>

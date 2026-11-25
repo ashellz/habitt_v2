@@ -1,6 +1,6 @@
 // Generates the Android home screen widget strings (picker names and
-// descriptions, the "Open Habitt" state) from the ARB files, which stay the
-// source of truth. Run after changing any of the keys below:
+// descriptions, the look before the first snapshot) from the ARB files,
+// which stay the source of truth. Run after changing any of the keys below:
 //
 //   dart run tool/gen_android_widget_strings.dart
 //
@@ -19,7 +19,13 @@ const keys = {
   'widgetTodayRingDescription': 'widget_today_ring_description',
   'widgetUpNextName': 'widget_up_next_name',
   'widgetUpNextDescription': 'widget_up_next_description',
-  'widgetOpenApp': 'widget_open_app',
+  // the widgets' look before the app wrote its first snapshot: no habits, 0 streak
+  'youHaventAddedAnyHabitsYet': 'widget_no_habits',
+  'dayStreakLabel': 'widget_day_streak',
+  'daysStreakLabel': 'widget_days_streak',
+  'day': 'widget_day',
+  'days': 'widget_days',
+  'widgetStartStreak': 'widget_start_streak',
 };
 
 const _template = 'en';
@@ -35,7 +41,8 @@ void main() {
         ..sort((a, b) => a.path.compareTo(b.path));
 
   for (final arb in arbs) {
-    final lang = RegExp(r'app_([a-z]{2})\.arb$').firstMatch(arb.path)!.group(1)!;
+    final lang =
+        RegExp(r'app_([a-z]{2})\.arb$').firstMatch(arb.path)!.group(1)!;
     final data = jsonDecode(arb.readAsStringSync()) as Map<String, dynamic>;
     final buffer =
         StringBuffer()
@@ -54,7 +61,9 @@ void main() {
         }
         continue; // falls back to the English values/ string
       }
-      buffer.writeln('    <string name="${entry.value}">${_escape(value)}</string>');
+      buffer.writeln(
+        '    <string name="${entry.value}">${_escape(value)}</string>',
+      );
       count++;
     }
     buffer.writeln('</resources>');

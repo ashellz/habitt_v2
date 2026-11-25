@@ -9,5 +9,10 @@
     <string name="widget_today_ring_description">Today\'s habits as one ring, filling as you go.</string>
     <string name="widget_up_next_name">Up next</string>
     <string name="widget_up_next_description">The habits for this part of the day, with your streak.</string>
-    <string name="widget_open_app">Open Habitt to see your habits here</string>
+    <string name="widget_no_habits">You haven’t added any habits yet</string>
+    <string name="widget_day_streak">day streak</string>
+    <string name="widget_days_streak">days streak</string>
+    <string name="widget_day">day</string>
+    <string name="widget_days">days</string>
+    <string name="widget_start_streak">Complete every habit today to start a streak</string>
 </resources>

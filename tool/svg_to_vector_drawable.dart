@@ -15,6 +15,7 @@ const _files = {
   'assets/images/new-svg/streak-fade.svg': 'widget_art_streak_fade',
   'assets/images/new-svg/ice-left.svg': 'widget_art_ice_left',
   'assets/images/new-svg/ice-over.svg': 'widget_art_ice_over',
+  'assets/images/new-svg/empty-box.svg': 'widget_art_empty_box',
 };
 
 void main() {

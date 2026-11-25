@@ -20,6 +20,8 @@ data class WidgetSnapshot(
     val strings: Strings,
     val today: DayBlock,
     val tomorrow: DayBlock,
+    /** False when the app has no habits at all, not just none today. */
+    val hasHabits: Boolean = true,
 ) {
     data class Strings(
         val dayStreak: String,
@@ -29,6 +31,7 @@ data class WidgetSnapshot(
         val dayComplete: String,
         val dayCompleteBody: String,
         val nothingToday: String,
+        val noHabits: String = DEFAULT_NO_HABITS,
     ) {
         fun streakLabel(count: Int) = if (count == 1) dayStreak else daysStreak
 
@@ -65,15 +68,48 @@ data class WidgetSnapshot(
                         dayComplete = s.optString("dayComplete", "Day complete"),
                         dayCompleteBody = s.optString("dayCompleteBody", ""),
                         nothingToday = s.optString("nothingToday", ""),
+                        noHabits = s.optString("noHabits", DEFAULT_NO_HABITS),
                     ),
                     today = DayBlock.parse(o.getJSONObject("today")),
                     tomorrow = DayBlock.parse(o.getJSONObject("tomorrow")),
+                    hasHabits = o.optBoolean("hasHabits", true),
                 )
             } catch (e: Exception) {
                 null
             }
         }
 
+        /**
+         * What the widgets show before the app wrote its first snapshot (just
+         * installed, never opened): no habits and a streak of 0, in the
+         * device language. Never rolls over to a "tomorrow".
+         */
+        fun placeholder(strings: Strings, startStreak: String, weekLabels: List<String>, today: LocalDate): WidgetSnapshot {
+            val week = weekLabels.mapIndexed { i, label ->
+                WeekDay(label, if (i == weekLabels.lastIndex) WeekDay.Status.TODAY else WeekDay.Status.NONE, 0.0)
+            }
+            val block = DayBlock(
+                habits = emptyList(),
+                ring = emptyList(),
+                done = 0,
+                total = 0,
+                perfect = false,
+                streak = StreakInfo(0, StreakInfo.Health.DORMANT, false, startStreak, week),
+                upNext = PartOfDay.entries.associateWith { null },
+            )
+            return WidgetSnapshot(
+                dayKey = today.toString(),
+                nextDayStartsAt = LocalDateTime.MAX,
+                accentLight = DEFAULT_ACCENT_LIGHT,
+                accentDark = DEFAULT_ACCENT_DARK,
+                strings = strings,
+                today = block,
+                tomorrow = block,
+                hasHabits = false,
+            )
+        }
+
+        const val DEFAULT_NO_HABITS = "You haven’t added any habits yet"
         const val DEFAULT_ACCENT_LIGHT = 0xFF02D382.toInt()
         const val DEFAULT_ACCENT_DARK = 0xFF11F29B.toInt()
 

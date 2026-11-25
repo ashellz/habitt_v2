@@ -39,6 +39,7 @@ import com.shellz.habitt.MainActivity
 import com.shellz.habitt.R
 import es.antonborri.home_widget.HomeWidgetPlugin
 import es.antonborri.home_widget.actionStartActivity
+import java.time.LocalDate
 import androidx.glance.color.ColorProvider as dayNight
 
 /** Snapshot storage shared with the Dart side (`HomeWidgetKinds`). */
@@ -47,6 +48,31 @@ object WidgetStore {
 
     fun load(context: Context): WidgetSnapshot? =
         WidgetSnapshot.parse(HomeWidgetPlugin.getData(context).getString(SNAPSHOT_KEY, null))
+
+    /** Before the first snapshot: no habits, a 0 streak, in the device language. */
+    fun placeholder(context: Context): WidgetSnapshot {
+        val r = context.resources
+        val locale = r.configuration.locales[0]
+        val today = LocalDate.now()
+        val labels = (6 downTo 0).map {
+            today.minusDays(it.toLong()).dayOfWeek.getDisplayName(java.time.format.TextStyle.NARROW, locale)
+        }
+        return WidgetSnapshot.placeholder(
+            strings = WidgetSnapshot.Strings(
+                dayStreak = r.getString(R.string.widget_day_streak),
+                daysStreak = r.getString(R.string.widget_days_streak),
+                day = r.getString(R.string.widget_day),
+                days = r.getString(R.string.widget_days),
+                dayComplete = "",
+                dayCompleteBody = "",
+                nothingToday = r.getString(R.string.widget_no_habits),
+                noHabits = r.getString(R.string.widget_no_habits),
+            ),
+            startStreak = r.getString(R.string.widget_start_streak),
+            weekLabels = labels,
+            today = today,
+        )
+    }
 }
 
 /** Widget taps: URIs `WidgetLaunchHandler` understands, launched through home_widget. */
@@ -166,6 +192,8 @@ object WidgetBitmaps {
 
     /** Today ring ("Beads") geometry on a 170 unit card: r 60, stroke 26, 4° gaps, butt caps. */
     class Ring(val sidePx: Int, val segments: List<WidgetHabit>) {
+        /** Too many habits for segments: one plain ring filled to the day's progress. */
+        val continuous = segments.size > MAX_EMOJIS
         private val u = sidePx / 170f
         private val c = sidePx / 2f
         private val step = if (segments.isEmpty()) 360f else 360f / segments.size
@@ -184,12 +212,17 @@ object WidgetBitmaps {
 
         fun track(): Bitmap = mask(sidePx) { p ->
             stroke(p)
-            if (segments.isEmpty()) drawOval(rect, p)
+            if (segments.isEmpty() || continuous) return@mask drawOval(rect, p)
             segments.indices.forEach { i -> val (a, sweep) = span(i); drawArc(rect, a, sweep, false, p) }
         }
 
         fun fill(): Bitmap = mask(sidePx) { p ->
             stroke(p)
+            if (continuous) {
+                val total = segments.sumOf { if (it.isDone) 1.0 else it.progress } / segments.size
+                if (total >= 1) drawOval(rect, p) else if (total > 0) drawArc(rect, -90f, (360 * total).toFloat(), false, p)
+                return@mask
+            }
             segments.forEachIndexed { i, h ->
                 if (h.progress <= 0 && !h.isDone) return@forEachIndexed
                 val (a, sweep) = span(i)
@@ -198,10 +231,10 @@ object WidgetBitmaps {
             }
         }
 
-        /** The habits' emojis centred on their segments; empty above eight habits. */
+        /** The habits' emojis centred on their segments; none on a continuous ring. */
         fun emojis(): Bitmap {
             val bmp = Bitmap.createBitmap(sidePx, sidePx, Bitmap.Config.ARGB_8888)
-            if (segments.size > MAX_EMOJIS) return bmp
+            if (continuous) return bmp
             val canvas = Canvas(bmp)
             val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 textSize = 17 * u
@@ -279,23 +312,16 @@ fun AccentCheck(snapshot: WidgetSnapshot, size: Dp) {
 fun style(size: TextUnit, color: androidx.glance.unit.ColorProvider, weight: FontWeight = FontWeight.Normal, align: TextAlign? = null) =
     TextStyle(color = color, fontSize = size, fontWeight = weight, textAlign = align)
 
-/** Shown before the app has written its first snapshot. */
+/** No habits in the app at all: the app's empty box art over its text. */
 @Composable
-fun OpenAppState(context: Context) {
-    Box(
-        modifier = GlanceModifier.fillMaxSize().cornerRadius(24.dp)
-            .background(ImageProvider(R.drawable.widget_bg_plain))
-            .clickable(WidgetLinks.home(context)),
-        contentAlignment = Alignment.Center,
+fun NoHabitsState(snapshot: WidgetSnapshot, art: Dp, text: TextUnit, modifier: GlanceModifier = GlanceModifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = GlanceModifier.padding(14.dp)) {
-            Image(ImageProvider(R.drawable.widget_art_streak), null, GlanceModifier.size(34.dp))
-            Spacer(GlanceModifier.height(8.dp))
-            Text(
-                context.getString(R.string.widget_open_app),
-                style = style(13.sp, WidgetColors.text, FontWeight.Medium, TextAlign.Center),
-                maxLines = 3,
-            )
-        }
+        Image(ImageProvider(R.drawable.widget_art_empty_box), null, GlanceModifier.size(art))
+        Spacer(GlanceModifier.height(10.dp))
+        Text(snapshot.strings.noHabits, style = style(text, WidgetColors.subPlain, FontWeight.Medium, TextAlign.Center), maxLines = 3)
     }
 }
