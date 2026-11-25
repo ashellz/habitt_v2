@@ -55,7 +55,12 @@ On top of the widget snapshot (`v` 1, additive, widgets ignore them):
   the amount label for the target, already localized. `watchLoggable` is true
   only for amount/duration habits without Health sync.
 - `strings`: `today`, `anyTime`, `morning`, `afternoon`, `evening`,
-  `optional` (list labels in the app's language).
+  `optional` (list labels) and the watch UI text (`watchShowHabits`,
+  `watchHealthNote`, `watchLogOnIPhone`, `watchOfTarget`, `watchCompleteHabit`,
+  `watchUncompleteHabit`, `watchLess`, `watchMore`, `watchUpdateNeeded`,
+  `watchUpdateNeededBody`; `%@` marks the value), all in the **app's**
+  language. The watch reads every string through `WatchStore.text(key)`: the
+  snapshot's, else its own `.lproj` translation (before the first sync).
 - top level `watchAcks`: ids of the last 50 watch actions the phone applied
   or dropped, oldest first.
 
@@ -76,6 +81,14 @@ On top of the widget snapshot (`v` 1, additive, widgets ignore them):
   app in the background), otherwise or on failure with `transferUserInfo`
   (delivered once the devices reconnect). Actions created before the session
   activated are sent on activation. Nothing else is ever resent.
+
+When Dart is running (also suspended, woken by `sendMessage`), the bridge
+starts a background task before telling Dart, so the app stays awake while
+`WatchSyncService` applies the actions and writes the snapshot right away
+(`afterDrain` → `WidgetSnapshotService.flush`, which also reloads the widgets
+and pushes to the watch). Dart ends it with `drainDone`; it also ends by
+itself after 20 s. Without it iOS suspended the app before the 500 ms
+debounce, so widgets only caught up on the next open.
 
 On the phone, `WatchBridge` appends each action to the queue
 (`UserDefaults.standard`, key `habitt_watch_pending_actions`, JSON array,

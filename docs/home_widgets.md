@@ -109,7 +109,9 @@ Stored as a JSON string under the key `habitt_snapshot`.
   card (`StatsProvider.shownPerfectDaysStreak`), so a first perfect day
   reads "1 day streak" in both; health via `resolveStreakHealth`. `tomorrow.streak` runs
   `computeCurrentStreak` over every day status up to and including today.
-- **Up next section**: for the current part P it tries P, then Any time, then
+- **Up next section**: optional habits are left out (they never count
+  towards the day, and Day complete takes over once the required ones are
+  done). For the current part P it tries P, then Any time, then
   the later parts, then the earlier ones, and takes the first that still has
   something not done. At most three rows in app order; in a longer section,
   done habits make room first.
@@ -135,6 +137,12 @@ merges and notification completions drained on open, since all of them notify
 
 It also refreshes on resume (the day may have changed) and writes immediately
 on pause, so the widgets are current when the app is backgrounded.
+
+iOS throttles widget reloads asked for while the app is in the background (an
+Apple Watch action can wake it, see `docs/watch_app.md`), and often drops
+them. So a write made in the background is remembered, and on the next resume
+(`WidgetSnapshotService.resumed`) the widgets are asked to redraw again, even
+if the snapshot didn't change since.
 
 Every write also goes to the Apple Watch app (`WatchSyncService.pushSnapshot`
 from `HomeWidgetSnapshotWriter`, see `docs/watch_app.md`).

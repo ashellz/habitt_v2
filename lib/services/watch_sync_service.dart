@@ -44,7 +44,14 @@ class WatchSyncService {
   static WatchSyncService? get instance => _instance;
 
   /// Starts the service for the running app. Call once after the first frame.
-  static Future<WatchSyncService?> start({VoidCallback? onAcksChanged}) async {
+  ///
+  /// [afterDrain] runs after actions sent while the app was running (often in
+  /// the background, woken by the watch) were applied: it should write the
+  /// snapshot right away, before iOS suspends the app again.
+  static Future<WatchSyncService?> start({
+    VoidCallback? onAcksChanged,
+    Future<void> Function()? afterDrain,
+  }) async {
     if (!WatchChannel.isAvailable) return null;
     final prefs = await SharedPreferences.getInstance();
     final service = WatchSyncService(
@@ -55,7 +62,21 @@ class WatchSyncService {
     );
     _instance = service;
     WatchChannel.channel.setMethodCallHandler((call) async {
-      if (call.method == 'actionsAvailable') await service.drain();
+      if (call.method == 'actionsAvailable') {
+        try {
+          await service.drain();
+          // the habit changes land a moment after applyWatchAction returns
+          await Future<void>.delayed(const Duration(milliseconds: 400));
+          await afterDrain?.call();
+        } finally {
+          // lets iOS suspend the app again (see WatchBridge)
+          unawaited(
+            WatchChannel.channel
+                .invokeMethod('drainDone')
+                .catchError((_) => null),
+          );
+        }
+      }
       return null;
     });
     return service;
@@ -82,9 +103,15 @@ class WatchSyncService {
     // a redelivered action that was already applied must not run again: the
     // user may have changed the habit on the phone since
     final seen = _acks.toSet();
-    final repeats = [for (final a in all) if (seen.contains(a.id)) a.id];
+    final repeats = [
+      for (final a in all)
+        if (seen.contains(a.id)) a.id,
+    ];
     if (repeats.isNotEmpty) await store.remove(repeats);
-    final queued = [for (final a in all) if (!seen.contains(a.id)) a];
+    final queued = [
+      for (final a in all)
+        if (!seen.contains(a.id)) a,
+    ];
     if (queued.isEmpty) return;
     final plan = collapseWatchActions(queued);
     if (plan.apply.isEmpty && plan.superseded.isEmpty) return;
@@ -100,8 +127,10 @@ class WatchSyncService {
     if (_acks.length > maxAcks) _acks.removeRange(0, _acks.length - maxAcks);
     await prefs.setStringList(acksKey, _acks);
     onAcksChanged?.call();
-    debugPrint('[WATCH] applied ${plan.apply.length}, '
-        'superseded ${plan.superseded.length}');
+    debugPrint(
+      '[WATCH] applied ${plan.apply.length}, '
+      'superseded ${plan.superseded.length}',
+    );
   }
 
   void dispose() {

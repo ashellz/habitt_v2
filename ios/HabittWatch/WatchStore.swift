@@ -63,6 +63,17 @@ final class WatchStore: NSObject, ObservableObject {
     snapshot?.strings.labels[key] ?? fallback
   }
 
+  /// UI text in the app's language from the snapshot, else the watch's own
+  /// translation (before the first sync, or an older iPhone app).
+  func text(_ key: String) -> String {
+    snapshot?.strings.labels[key] ?? L(key)
+  }
+
+  /// `text(key)` with its `%@` filled in.
+  func text(_ key: String, _ arg: String) -> String {
+    String(format: text(key), arg)
+  }
+
   // MARK: Actions
 
   /// The check: completes a habit that isn't done, un-completes one that is.

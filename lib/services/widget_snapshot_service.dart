@@ -42,7 +42,11 @@ class HomeWidgetKinds {
 /// Where a finished snapshot goes. The real one is [HomeWidgetSnapshotWriter];
 /// tests pass a fake.
 abstract class WidgetSnapshotWriter {
+  /// Stores the snapshot and asks the widgets to redraw.
   Future<void> write(String json);
+
+  /// Asks the widgets to redraw from the stored snapshot.
+  Future<void> reload();
 }
 
 /// Saves the snapshot where the widgets read it (App Group defaults on iOS,
@@ -72,6 +76,16 @@ class HomeWidgetSnapshotWriter implements WidgetSnapshotWriter {
     }
     // the Apple Watch app draws the same snapshot (docs/watch_app.md)
     unawaited(WatchSyncService.pushSnapshot(json));
+    await reload();
+  }
+
+  @override
+  Future<void> reload() async {
+    if (kIsWeb) return;
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
     // each kind on its own: a build without one of them must not stop the rest
     final isIos = defaultTargetPlatform == TargetPlatform.iOS;
     final kinds = isIos ? HomeWidgetKinds.ios : HomeWidgetKinds.android;
@@ -97,14 +111,30 @@ class WidgetSnapshotService {
     required this.collect,
     required this.writer,
     this.debounce = const Duration(milliseconds: 500),
-  });
+    bool Function()? isForeground,
+  }) : isForeground = isForeground ?? _appInForeground;
 
   /// Builds the current snapshot, or null when the app's data is not loaded.
   final Map<String, dynamic>? Function() collect;
   final WidgetSnapshotWriter writer;
   final Duration debounce;
 
+  /// Whether the app is in the foreground. Widget reloads asked for in the
+  /// background (e.g. a watch action woke the app) are throttled by iOS and
+  /// often never happen, so those are asked for again on [resumed].
+  final bool Function() isForeground;
+
   Timer? _timer;
+  bool _reloadOnResume = false;
+
+  static bool _appInForeground() {
+    try {
+      final state = WidgetsBinding.instance.lifecycleState;
+      return state == null || state == AppLifecycleState.resumed;
+    } catch (_) {
+      return true; // no binding (tests)
+    }
+  }
   String? _lastWritten;
   Future<void> _writing = Future.value();
 
@@ -147,6 +177,21 @@ class WidgetSnapshotService {
     _timer = Timer(debounce, () => unawaited(flush()));
   }
 
+  /// The app came to the foreground: writes now if the snapshot changed, and
+  /// redraws the widgets if the last write happened in the background, even
+  /// when nothing changed since (that write's reload was likely dropped).
+  Future<void> resumed() {
+    _timer?.cancel();
+    _timer = null;
+    return _writing = _writing.then((_) async {
+      await _writeIfChanged();
+      if (_reloadOnResume) {
+        _reloadOnResume = false;
+        await writer.reload();
+      }
+    });
+  }
+
   /// Writes now if the snapshot changed (e.g. when the app is paused).
   Future<void> flush() {
     _timer?.cancel();
@@ -171,6 +216,7 @@ class WidgetSnapshotService {
 
     await writer.write(jsonEncode(snapshot));
     _lastWritten = comparable;
+    _reloadOnResume = !isForeground();
   }
 
   void dispose() {

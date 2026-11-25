@@ -101,6 +101,18 @@ class WidgetSnapshotBuilder {
         'afternoon': loc.afternoon,
         'evening': loc.evening,
         'optional': loc.optional,
+        // Apple Watch UI, in the app's language rather than the watch's;
+        // `%@` marks where the watch puts its value
+        'watchShowHabits': loc.watchShowHabits,
+        'watchHealthNote': loc.watchHealthNote,
+        'watchLogOnIPhone': loc.watchLogOnIPhone,
+        'watchOfTarget': loc.watchOfTarget('%@'),
+        'watchCompleteHabit': loc.watchCompleteHabit('%@'),
+        'watchUncompleteHabit': loc.watchUncompleteHabit('%@'),
+        'watchLess': loc.watchLess,
+        'watchMore': loc.watchMore,
+        'watchUpdateNeeded': loc.watchUpdateNeeded,
+        'watchUpdateNeededBody': loc.watchUpdateNeededBody,
       },
       'today': _dayBlock(input, input.todayHabits, todayStreak),
       'tomorrow': _dayBlock(input, input.tomorrowHabits, tomorrowStreak),
@@ -195,7 +207,7 @@ class WidgetSnapshotBuilder {
   }
 
   /// What Up next shows while [part] is the current part of the day: the
-  /// first section with something left to do, trying [part], then Any time,
+  /// first section with a required habit left to do, trying [part], then Any time,
   /// then the later parts, then the earlier ones. At most [maxUpNextRows]
   /// rows in app order; when the section is longer, done habits make room
   /// first.
@@ -213,7 +225,12 @@ class WidgetSnapshotBuilder {
         if (p < part) p,
     ];
     for (final category in order) {
-      final section = rows.where((r) => r['category'] == category).toList();
+      // optional habits never count towards the day, and once the required
+      // ones are done the widget shows Day complete, so Up Next skips them
+      final section =
+          rows
+              .where((r) => r['category'] == category && r['optional'] != true)
+              .toList();
       if (!section.any((r) => r['state'] != 'done')) continue;
       while (section.length > maxUpNextRows) {
         final firstDone = section.indexWhere((r) => r['state'] == 'done');

@@ -30,9 +30,9 @@ struct RootView: View {
     if let snapshot = store.snapshot, let block = store.block {
       TodayView(snapshot: snapshot, block: block)
     } else if store.updateNeeded {
-      MessageView(symbol: "arrow.down.circle", title: L("watchUpdateNeeded"), message: L("watchUpdateNeededBody"))
+      MessageView(symbol: "arrow.down.circle", title: store.text("watchUpdateNeeded"), message: store.text("watchUpdateNeededBody"))
     } else {
-      MessageView(symbol: "iphone", title: L("watchOpenOnIPhone"), message: L("watchOpenOnIPhoneBody"))
+      MessageView(symbol: "iphone", title: store.text("watchOpenOnIPhone"), message: store.text("watchOpenOnIPhoneBody"))
     }
   }
 }
@@ -72,7 +72,7 @@ struct TodayView: View {
         list
       }
     }
-    .navigationTitle(store.label("today", L("today")))
+    .navigationTitle(store.label("today", store.text("today")))
     .onChange(of: block.perfect) { _, perfect in
       if !perfect { showListWhenComplete = false }
     }
@@ -82,7 +82,7 @@ struct TodayView: View {
     ScrollView {
       VStack(alignment: .leading, spacing: 6) {
         if store.updateNeeded {
-          Text(L("watchUpdateNeededBody"))
+          Text(store.text("watchUpdateNeededBody"))
             .font(.footnote)
             .foregroundStyle(WatchColors.secondary)
             .padding(.horizontal, 4)
@@ -154,7 +154,20 @@ struct HabitRow: View {
     .padding(.leading, 9)
     .padding(.trailing, 4)
     .frame(minHeight: 52)
-    .background(WatchColors.row, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    .background {
+      // done habits turn green like the phone's card: accent at 10% with a
+      // 20% border, sweeping in from the leading edge
+      let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+      ZStack {
+        shape.fill(habit.isDone ? Color.black : WatchColors.row)
+        Rectangle()
+          .fill(store.accent.opacity(0.1))
+          .scaleEffect(x: habit.isDone ? 1 : 0.001, anchor: .leading)
+      }
+      .clipShape(shape)
+      .overlay(shape.strokeBorder(store.accent.opacity(habit.isDone ? 0.2 : 0), lineWidth: 1))
+      .animation(.easeInOut(duration: 0.35), value: habit.isDone)
+    }
   }
 
   private var label: some View {
@@ -192,7 +205,7 @@ struct HabitRow: View {
   }
 
   private var checkLabel: String {
-    habit.isDone ? L("watchUncompleteHabit", habit.name) : L("watchCompleteHabit", habit.name)
+    habit.isDone ? store.text("watchUncompleteHabit", habit.name) : store.text("watchCompleteHabit", habit.name)
   }
 }
 
@@ -214,12 +227,20 @@ struct DayCompleteView: View {
           .multilineTextAlignment(.center)
         let count = block.streak.count
         if count > 0 {
-          Label("\(count) \(snapshot.strings.streakLabel(count))", systemImage: "flame")
-            .font(.footnote)
-            .foregroundStyle(WatchColors.secondary)
-            .symbolRenderingMode(.multicolor)
+          // the app's streak flame (assets/images/new-svg/streak.svg, as in the widgets)
+          HStack(spacing: 5) {
+            Image("art_streak")
+              .resizable()
+              .scaledToFit()
+              .frame(width: 18, height: 18)
+              .accessibilityHidden(true)
+            Text("\(count) \(snapshot.strings.streakLabel(count))")
+              .font(.footnote)
+              .foregroundStyle(WatchColors.secondary)
+          }
+          .accessibilityElement(children: .combine)
         }
-        Button(L("watchShowHabits"), action: showList)
+        Button(store.text("watchShowHabits"), action: showList)
           .foregroundStyle(store.accent)
           .padding(.top, 6)
       }

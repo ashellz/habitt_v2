@@ -43,15 +43,16 @@ struct HabitIndicator: View {
       case .partial:
         ZStack {
           PieShape(progress: min(max(progress, 0), 1)).fill(accent)
+            // only the pie itself tweens slowly, like the phone's (1250 ms)
+            .animation(.easeInOut(duration: 1.25), value: progress)
           Circle().inset(by: unit).stroke(accent.opacity(0.2), lineWidth: 2 * unit)
         }
         .transition(.scale)
       }
     }
     .frame(width: size, height: size)
-    // the pie tweens like the phone's (1250 ms), the pie/check swap scales (300 ms)
-    .animation(.easeInOut(duration: 1.25), value: progress)
-    .animation(.easeInOut(duration: 0.3), value: state)
+    // the swap between check and pie is quick
+    .animation(.easeOut(duration: 0.18), value: state)
   }
 }
 

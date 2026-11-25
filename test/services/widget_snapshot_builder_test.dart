@@ -347,6 +347,8 @@ void main() {
       expect(snap['strings']['morning'], 'Jutro');
       expect(snap['strings']['today'], isNotEmpty);
       expect(snap['strings']['optional'], isNotEmpty);
+      expect(snap['strings']['watchShowHabits'], 'Prikaži navike');
+      expect(snap['strings']['watchOfTarget'], 'od %@');
     });
 
     test('streak labels are lower case, as on the home page card', () {
@@ -370,6 +372,20 @@ void main() {
       expect(snap['v'], WidgetSnapshotBuilder.version);
       expect(snap['dayKey'], '2026-11-24');
     });
+  });
+
+  test('Up next leaves optional habits out', () {
+    final snap = _build(
+      today: [
+        _habit(1, 'Required', category: 2),
+        _habit(2, 'Optional', category: 2, optional: true),
+        _habit(3, 'Only optional', category: 4, optional: true),
+      ],
+    );
+    final upNext = snap['today']['upNext'] as Map<String, dynamic>;
+    expect(upNext['morning']['habits'], [1]);
+    // evening has only an optional habit: falls back to morning
+    expect(upNext['evening']['habits'], [1]);
   });
 
   group('watch fields', () {

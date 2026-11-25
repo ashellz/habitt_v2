@@ -75,7 +75,10 @@ final class WidgetSnapshotTests: XCTestCase {
     XCTAssertEqual(s.today.upNext[.afternoon]?.icon, "anyTime")
     XCTAssertNil(s.today.upNext[.evening])
     XCTAssertEqual(s.tomorrow.streak.health, .dormant)
-    XCTAssertEqual(s.strings.labels, ["today": "Danas", "morning": "Jutro", "optional": "Neobavezno"])
+    XCTAssertEqual(s.strings.labels["today"], "Danas")
+    XCTAssertEqual(s.strings.labels["morning"], "Jutro")
+    XCTAssertEqual(s.strings.labels["dayStreak"], "day streak")
+    XCTAssertNil(s.strings.labels["evening"])
   }
 
   func testSixteenDigitIdsStayExact() throws {

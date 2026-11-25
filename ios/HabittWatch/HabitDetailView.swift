@@ -18,7 +18,7 @@ struct HabitDetailView: View {
       .navigationTitle("\(habit.emoji) \(habit.name)")
     } else {
       // the habit left today's list (deleted, paused, new day)
-      MessageView(symbol: "checklist", title: store.label("today", L("today")), message: nil)
+      MessageView(symbol: "checklist", title: store.label("today", store.text("today")), message: nil)
     }
   }
 }
@@ -30,19 +30,23 @@ struct LogView: View {
   let habit: WidgetHabit
 
   @State private var value: Int
+  /// The crown counts steps (1 per page, 1 per minute), not seconds, so a
+  /// duration moves by a minute per detent like an amount moves by one.
   @State private var crown: Double
   @State private var pending: Task<Void, Never>?
 
   init(habit: WidgetHabit) {
     self.habit = habit
     _value = State(initialValue: habit.log.value)
-    _crown = State(initialValue: Double(habit.log.value))
+    _crown = State(initialValue: Double(habit.log.value / max(habit.log.step, 1)))
   }
 
   private var log: HabitLog { habit.log }
   private var step: Int { max(log.step, 1) }
   private var isDuration: Bool { log.kind == .duration }
-  private var maxValue: Int { max(log.target * 3, step * 20) }
+  /// No practical cap, like the phone: a day (durations) or 9999 (amounts).
+  private var maxValue: Int { max(isDuration ? 24 * 3600 : 9999, log.target) }
+  private var maxSteps: Int { maxValue / step }
   private var progress: Double { log.target > 0 ? min(Double(value) / Double(log.target), 1) : 0 }
 
   var body: some View {
@@ -54,7 +58,7 @@ struct LogView: View {
             .font(.system(size: 40, weight: .bold, design: .rounded).monospacedDigit())
             .contentTransition(.numericText(value: Double(value)))
             .animation(.snappy, value: value)
-          Text(L("watchOfTarget", targetText))
+          Text(store.text("watchOfTarget", targetText))
             .font(.footnote)
             .foregroundStyle(WatchColors.secondary)
             .lineLimit(1)
@@ -71,17 +75,17 @@ struct LogView: View {
     }
     .focusable()
     .digitalCrownRotation(
-      $crown, from: 0, through: Double(maxValue), by: Double(step), sensitivity: .medium,
+      $crown, from: 0, through: Double(maxSteps), by: 1, sensitivity: .medium,
       isContinuous: false, isHapticFeedbackEnabled: true
     )
     .onChange(of: crown) { _, new in
-      set(Int((new / Double(step)).rounded()) * step, fromCrown: true)
+      set(Int(new.rounded()) * step, fromCrown: true)
     }
     .onChange(of: habit.log.value) { _, new in
       // the phone's value arrived (or another change): follow it unless editing
       if pending == nil, new != value {
         value = new
-        crown = Double(new)
+        crown = Double(new / step)
       }
     }
     .onDisappear { flush() }
@@ -122,7 +126,7 @@ struct LogView: View {
       .background(filled ? store.accent : WatchColors.row, in: Capsule())
     }
     .buttonStyle(.plain)
-    .accessibilityLabel(delta > 0 ? L("watchMore") : L("watchLess"))
+    .accessibilityLabel(delta > 0 ? store.text("watchMore") : store.text("watchLess"))
   }
 
   /// Shows the new value at once and sends it ~0.8 s after the last change,
@@ -131,7 +135,7 @@ struct LogView: View {
     let clamped = min(max(new, 0), maxValue)
     guard clamped != value else { return }
     value = clamped
-    if !fromCrown { crown = Double(clamped) }
+    if !fromCrown { crown = Double(clamped / step) }
     pending?.cancel()
     pending = Task { @MainActor in
       try? await Task.sleep(for: .milliseconds(800))
@@ -155,27 +159,54 @@ struct ReadOnlyView: View {
   @EnvironmentObject private var store: WatchStore
   let habit: WidgetHabit
 
+  /// The phone's progress text split like the log screen: "14m / 20m" →
+  /// "14m" big and "of 20m" under it, so it never wraps inside the ring.
+  private var parts: (main: String, sub: String?) {
+    let text = habit.progressText
+    if let range = text.range(of: " / ") {
+      let target = String(text[range.upperBound...])
+      return (String(text[..<range.lowerBound]), store.text("watchOfTarget", target))
+    }
+    return (text.isEmpty ? habit.emoji : text, nil)
+  }
+
   var body: some View {
     ScrollView {
-      VStack(spacing: 8) {
+      VStack(spacing: 10) {
         ZStack {
           ProgressRing(progress: habit.progress, accent: store.accent, lineWidth: 7, duration: 1.25)
-          Text(habit.progressText.isEmpty ? habit.emoji : habit.progressText)
-            .font(.system(size: 20, weight: .bold, design: .rounded).monospacedDigit())
-            .multilineTextAlignment(.center)
-            .minimumScaleFactor(0.6)
-            .padding(.horizontal, 16)
+          VStack(spacing: 0) {
+            Text(parts.main)
+              .font(.system(size: 26, weight: .bold, design: .rounded).monospacedDigit())
+            if let sub = parts.sub {
+              Text(sub)
+                .font(.footnote)
+                .foregroundStyle(WatchColors.secondary)
+            }
+          }
+          .lineLimit(1)
+          .minimumScaleFactor(0.5)
+          .padding(.horizontal, 14)
         }
-        .frame(width: 110, height: 110)
-        HStack(alignment: .top, spacing: 6) {
-          Image(systemName: habit.log.healthLinked ? "heart" : "iphone")
-            .foregroundStyle(habit.log.healthLinked ? Color(hex: 0xFF6B81) : store.accent)
-          Text(habit.log.healthLinked ? L("watchHealthNote") : L("watchLogOnIPhone"))
+        .frame(width: 100, height: 100)
+        .padding(.top, 6)
+
+        HStack(alignment: .center, spacing: 8) {
+          if habit.log.healthLinked {
+            Image("AppleHealth")
+              .resizable()
+              .scaledToFit()
+              .frame(width: 24, height: 24)
+              .accessibilityHidden(true)
+          } else {
+            Image(systemName: "iphone").foregroundStyle(store.accent)
+          }
+          Text(habit.log.healthLinked ? store.text("watchHealthNote") : store.text("watchLogOnIPhone"))
             .font(.footnote)
             .foregroundStyle(Color(hex: 0xD1D1D6))
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(10)
-        .frame(maxWidth: .infinity, alignment: .leading)
         .background(WatchColors.row, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
       }
     }

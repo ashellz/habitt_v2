@@ -36,8 +36,8 @@ public struct WidgetSnapshot: Equatable {
     public var dayCompleteBody: String
     public var nothingToday: String
     public var noHabits: String
-    /// Apple Watch list labels, in the app's language: today, anyTime,
-    /// morning, afternoon, evening, optional. Missing in older snapshots.
+    /// Every snapshot string by key, in the app's language (the Apple Watch
+    /// reads its list labels and UI text from here). Empty in old snapshots.
     public var labels: [String: String] = [:]
 
     public init(
@@ -103,12 +103,7 @@ public struct WidgetSnapshot: Equatable {
         dayCompleteBody: s?.dayCompleteBody ?? "",
         nothingToday: s?.nothingToday ?? "",
         noHabits: s?.noHabits ?? defaultNoHabits,
-        labels: s.map { s in
-          [
-            "today": s.today, "anyTime": s.anyTime, "morning": s.morning,
-            "afternoon": s.afternoon, "evening": s.evening, "optional": s.optional,
-          ].compactMapValues { $0 }
-        } ?? [:]
+        labels: (try? JSONDecoder().decode(RawStringsMap.self, from: data))?.strings ?? [:]
       ),
       today: DayBlock(raw: today),
       tomorrow: DayBlock(raw: tomorrow),
@@ -497,12 +492,11 @@ private struct RawStrings: Decodable {
   var dayCompleteBody: String?
   var nothingToday: String?
   var noHabits: String?
-  var today: String?
-  var anyTime: String?
-  var morning: String?
-  var afternoon: String?
-  var evening: String?
-  var optional: String?
+}
+
+/// The same `strings` block, every key.
+private struct RawStringsMap: Decodable {
+  var strings: [String: String]?
 }
 
 fileprivate struct RawBlock: Decodable {

@@ -334,6 +334,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       await _drainPendingCompletions();
       await WatchSyncService.start(
         onAcksChanged: () => WidgetSnapshotService.instance?.markDirty(),
+        afterDrain: () async => WidgetSnapshotService.instance?.flush(),
       );
       await WatchSyncService.instance?.drain();
       await WidgetLaunchHandler.start();
@@ -357,8 +358,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       NotificationActionHandler.consumePendingRoute();
       _drainPendingCompletions();
       WatchSyncService.instance?.drain();
-      // the day or part of day may have changed while away
-      WidgetSnapshotService.instance?.markDirty();
+      // the day or part of day may have changed while away, and a write
+      // made in the background may not have reached the widgets
+      WidgetSnapshotService.instance?.resumed();
     } else if (state == AppLifecycleState.paused) {
       // leave the widgets current before the app is suspended
       WidgetSnapshotService.instance?.flush();

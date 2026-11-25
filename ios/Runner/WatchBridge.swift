@@ -1,5 +1,6 @@
 import Flutter
 import Foundation
+import UIKit
 import WatchConnectivity
 
 // The iPhone side of the Apple Watch app (docs/watch_app.md).
@@ -25,6 +26,11 @@ final class WatchBridge: NSObject, WCSessionDelegate {
 
   private var channel: FlutterMethodChannel?
   private let defaults = UserDefaults.standard
+  /// Keeps the app running while Dart applies a watch action that woke it in
+  /// the background, so the snapshot (widgets, watch) is written before iOS
+  /// suspends it again. Ended by `drainDone`, or after `backgroundGrace`.
+  private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+  private static let backgroundGrace: TimeInterval = 20
 
   /// Starts WCSession. Call from `didFinishLaunching`, so actions that woke
   /// the app in the background are received even before Flutter is up.
@@ -48,6 +54,9 @@ final class WatchBridge: NSObject, WCSessionDelegate {
         result(self.queueJSON())
       case "removeActions":
         self.remove(ids: Set((call.arguments as? [String]) ?? []))
+        result(nil)
+      case "drainDone":
+        self.endBackgroundTask()
         result(nil)
       default:
         result(FlutterMethodNotImplemented)
@@ -95,8 +104,27 @@ final class WatchBridge: NSObject, WCSessionDelegate {
       queue.append(action)
       if queue.count > Self.maxQueue { queue.removeFirst(queue.count - Self.maxQueue) }
       self.save(queue)
-      self.channel?.invokeMethod("actionsAvailable", arguments: nil)
+      if self.channel != nil {
+        self.beginBackgroundTask()
+        self.channel?.invokeMethod("actionsAvailable", arguments: nil)
+      }
     }
+  }
+
+  private func beginBackgroundTask() {
+    guard backgroundTask == .invalid else { return }
+    backgroundTask = UIApplication.shared.beginBackgroundTask(withName: "habitt.watchAction") { [weak self] in
+      self?.endBackgroundTask()
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + Self.backgroundGrace) { [weak self] in
+      self?.endBackgroundTask()
+    }
+  }
+
+  private func endBackgroundTask() {
+    guard backgroundTask != .invalid else { return }
+    UIApplication.shared.endBackgroundTask(backgroundTask)
+    backgroundTask = .invalid
   }
 
   private func queue() -> [[String: Any]] {
