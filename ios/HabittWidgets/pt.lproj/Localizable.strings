@@ -1,0 +1,15 @@
+/* Generated from lib/l10n/app_pt.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Sequência";
+"widgetStreakDescription" = "Sua sequência de dias perfeitos e como ela está.";
+"widgetStreakWeekName" = "Sequência da semana";
+"widgetStreakWeekDescription" = "Sua sequência com os últimos 7 dias.";
+"widgetTodayRingName" = "Anel de hoje";
+"widgetTodayRingDescription" = "Os hábitos de hoje em um anel que vai se enchendo.";
+"widgetUpNextName" = "A seguir";
+"widgetUpNextDescription" = "Os hábitos desta parte do dia, com sua sequência.";
+"youHaventAddedAnyHabitsYet" = "Você ainda não adicionou nenhum hábito";
+"dayStreakLabel" = "dia de sequência";
+"daysStreakLabel" = "dias de sequência";
+"day" = "dia";
+"days" = "dias";
+"widgetStartStreak" = "Conclua todos os hábitos hoje para começar uma sequência";

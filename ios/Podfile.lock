@@ -111,6 +111,8 @@ PODS:
     - GTMSessionFetcher/Core
   - health (13.3.2):
     - Flutter
+  - home_widget (0.0.1):
+    - Flutter
   - icloud_storage (0.0.1):
     - Flutter
   - image_picker_ios (0.0.1):
@@ -162,6 +164,7 @@ DEPENDENCIES:
   - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - health (from `.symlinks/plugins/health/ios`)
+  - home_widget (from `.symlinks/plugins/home_widget/ios`)
   - icloud_storage (from `.symlinks/plugins/icloud_storage/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
@@ -225,6 +228,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/darwin"
   health:
     :path: ".symlinks/plugins/health/ios"
+  home_widget:
+    :path: ".symlinks/plugins/home_widget/ios"
   icloud_storage:
     :path: ".symlinks/plugins/icloud_storage/ios"
   image_picker_ios:
@@ -272,6 +277,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 217a876b249c3c585a54fd6f73e6b58c4f5c4238
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   health: 72947bca89ee7906256d6f650db061ca4b2f92c7
+  home_widget: 54b4f6b36ed8d64cfee594a476225c35c3e45091
   icloud_storage: e55639f0c0d7cb2b0ba9c0b3d5968ccca9cd9aa2
   image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
   in_app_review: 7dd1ea365263f834b8464673f9df72c80c17c937

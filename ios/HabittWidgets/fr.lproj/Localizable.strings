@@ -1,0 +1,15 @@
+/* Generated from lib/l10n/app_fr.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Série";
+"widgetStreakDescription" = "Ta série de jours parfaits et son état.";
+"widgetStreakWeekName" = "Série de la semaine";
+"widgetStreakWeekDescription" = "Ta série avec les 7 derniers jours.";
+"widgetTodayRingName" = "Anneau du jour";
+"widgetTodayRingDescription" = "Les habitudes du jour dans un anneau qui se remplit.";
+"widgetUpNextName" = "À suivre";
+"widgetUpNextDescription" = "Les habitudes de ce moment de la journée, avec ta série.";
+"youHaventAddedAnyHabitsYet" = "Tu n’as encore ajouté aucune habitude";
+"dayStreakLabel" = "jour de série";
+"daysStreakLabel" = "jours de série";
+"day" = "jour";
+"days" = "jours";
+"widgetStartStreak" = "Termine toutes tes habitudes aujourd'hui pour lancer une série";

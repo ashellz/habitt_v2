@@ -1,0 +1,15 @@
+/* Generated from lib/l10n/app_tr.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"widgetStreakName" = "Seri";
+"widgetStreakDescription" = "Mükemmel günler serin ve durumu.";
+"widgetStreakWeekName" = "Haftalık seri";
+"widgetStreakWeekDescription" = "Son 7 günle birlikte serin.";
+"widgetTodayRingName" = "Bugünün halkası";
+"widgetTodayRingDescription" = "Bugünün alışkanlıkları, doldukça dolan tek bir halkada.";
+"widgetUpNextName" = "Sıradaki";
+"widgetUpNextDescription" = "Günün bu bölümündeki alışkanlıklar ve serin.";
+"youHaventAddedAnyHabitsYet" = "Henüz hiç alışkanlık eklemedin";
+"dayStreakLabel" = "günlük seri";
+"daysStreakLabel" = "günlük seri";
+"day" = "gün";
+"days" = "gün";
+"widgetStartStreak" = "Seri başlatmak için bugün tüm alışkanlıkları tamamla";

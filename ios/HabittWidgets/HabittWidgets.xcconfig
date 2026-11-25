@@ -1,0 +1,6 @@
+// The widget extension's base settings: only the app's version from
+// Flutter's Generated.xcconfig (FLUTTER_BUILD_NAME / FLUTTER_BUILD_NUMBER, so
+// the extension's version always matches the app's). Deliberately not
+// Flutter/Debug.xcconfig: that pulls in the Runner's Pods, which the
+// extension must not link.
+#include? "../Flutter/Generated.xcconfig"
