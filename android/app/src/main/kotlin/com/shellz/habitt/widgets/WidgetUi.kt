@@ -54,7 +54,7 @@ object WidgetLinks {
     fun home(context: Context): Action =
         actionStartActivity<MainActivity>(context, Uri.parse("habitt://widget/home"))
 
-    fun log(context: Context, habitId: Int): Action =
+    fun log(context: Context, habitId: Long): Action =
         actionStartActivity<MainActivity>(context, Uri.parse("habitt://widget/log?habit=$habitId"))
 }
 

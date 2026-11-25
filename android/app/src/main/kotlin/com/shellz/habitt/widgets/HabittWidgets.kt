@@ -314,7 +314,10 @@ class UpNextWidget : HabittWidget() {
                     Spacer(GlanceModifier.width(9.dp))
                     Column(modifier = GlanceModifier.defaultWeight()) {
                         Text(habit.name, style = style(13.5.sp, WidgetColors.text, FontWeight.Medium), maxLines = 1)
-                        Text(habit.progressText, style = style(11.sp, WidgetColors.subPlain), maxLines = 1)
+                        // checkbox habits have no progress text: keep the name centred
+                        if (habit.progressText.isNotBlank()) {
+                            Text(habit.progressText, style = style(11.sp, WidgetColors.subPlain), maxLines = 1)
+                        }
                     }
                     Spacer(GlanceModifier.width(6.dp))
                     Indicator(context, snapshot, habit)

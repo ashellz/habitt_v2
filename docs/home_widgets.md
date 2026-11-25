@@ -59,7 +59,7 @@ Stored as a JSON string under the key `habitt_snapshot`.
   "dayKey": "2026-11-24",          // the local day `today` describes
   "nextDayStartsAt": "2026-11-25T00:00:00.000",
   "theme": { "light": { "accent": "#02D382" }, "dark": { "accent": "#11F29B" } },
-  "strings": { "dayStreak", "daysStreak", "dayComplete", "dayCompleteBody", "nothingToday" },
+  "strings": { "dayStreak", "daysStreak", "day", "days", "dayComplete", "dayCompleteBody", "nothingToday" },
   "today":    DayBlock,
   "tomorrow": DayBlock             // today ended as it is now; used after nextDayStartsAt
 }
@@ -137,8 +137,16 @@ on their own:
 - **iOS**: the `TimelineProvider` returns entries for now, 12:00, 19:00 and
   `nextDayStartsAt` (then the `tomorrow` block).
 - **Android**: widgets choose today/tomorrow and the part of day from the
-  clock whenever they render; updates are scheduled at those boundaries
-  (`HomeWidget.scheduleWidgetUpdates`).
+  clock whenever they render. `WidgetRefresh` keeps one inexact alarm
+  (`AlarmManager.setWindow`, `RTC`, 10 minute window, so no exact-alarm
+  permission and no wake-ups) armed for the next of 00:00, 04:00, 12:00,
+  19:00 and `nextDayStartsAt`; `WidgetRefreshReceiver` redraws all four
+  widgets and arms the next one. It also redraws on `TIME_SET`,
+  `TIMEZONE_CHANGED`, `LOCALE_CHANGED`, `BOOT_COMPLETED` and
+  `MY_PACKAGE_REPLACED` (alarms do not survive the last two). The alarm is
+  re-armed whenever a widget renders and cancelled when none is placed. The
+  plugin's `HomeWidget.scheduleWidgetUpdates` is not used: it would use exact
+  alarms here, since the app holds `SCHEDULE_EXACT_ALARM` for habit alarms.
 
 Opening the app rewrites the snapshot from real data, correcting anything the
 `tomorrow` block could not know.
@@ -161,8 +169,8 @@ needs the `es.antonborri.home_widget.action.LAUNCH` intent filter on
 
 ## Native side
 
-Not built yet in this repository; see `openspec/changes/home-widgets-readonly/tasks.md`
-groups 1, 4 and 5. Names the Dart side already uses (`HomeWidgetKinds`):
+iOS is not built yet (see `openspec/changes/home-widgets-readonly/tasks.md`
+groups 1 and 4). Names the Dart side uses (`HomeWidgetKinds`):
 
 | | iOS widget `kind` | Android receiver |
 |---|---|---|
@@ -173,6 +181,48 @@ groups 1, 4 and 5. Names the Dart side already uses (`HomeWidgetKinds`):
 
 App Group: `group.com.shellz.habitt`. Widget picker names and descriptions
 are the `widget*Name` / `widget*Description` ARB keys.
+
+### Android (Jetpack Glance)
+
+Code in `android/app/src/main/kotlin/com/shellz/habitt/widgets/`:
+
+| File | Role |
+|---|---|
+| `WidgetSnapshot.kt` | Parses the snapshot (`v` must be 1, else "Open Habitt"), `blockAt(now)` (tomorrow from `nextDayStartsAt` on), `PartOfDay` (04/12/19), `WidgetClock.nextUpdate`. Pure Kotlin + org.json, tested in `android/app/src/test/.../WidgetSnapshotTest.kt` (`./gradlew :app:testDebugUnitTest`). |
+| `HabittWidgets.kt` | The four `GlanceAppWidget`s and receivers (`HomeWidgetGlanceWidgetReceiver`, state from home_widget's preferences, `SizeMode.Exact`). |
+| `WidgetUi.kt` | Colours (light/dark pairs from the design canvas, accent from the snapshot), tap links, bitmaps for what RemoteViews cannot draw (ring segments, week arcs, pies), shared pieces. |
+| `WidgetRefresh.kt` | The boundary alarm and its receiver (see above). |
+
+How it is drawn:
+
+- **Light/dark without a redraw**: backgrounds are drawables with `-night`
+  variants (`widget_bg_streak_*`, `widget_bg_tile_*`, `widget_bg_week_*`,
+  `widget_bg_plain`, `widget_bg_upnext`: gradient, radial glow and artwork in
+  one `layer-list`), and every other shape is a white mask (vector or bitmap)
+  tinted with a day/night `ColorProvider`. On Android 12+ the launcher switches
+  both itself; older versions pick the mode at the next redraw.
+- Corner radius 24 (Up next rows 20, its streak tile 18); `cornerRadius` clips
+  only on Android 12+, so on 8–11 the glow can show at the corners.
+- Text uses the system font (widgets cannot use Satoshi).
+- Today ring: track, fill (both tinted masks) and an emoji layer drawn with
+  `Canvas` at the widget's size; no emojis above 8 habits; `done/total` or an
+  accent check in the centre. Tap: Log progress of the first counted habit not
+  done, home when perfect or empty.
+- Up next: as many rows as fit the height (at most 3), the section's label and
+  icon (sun, moon, clock for Any time); "Day complete" when the section is null
+  and the day has habits, `nothingToday` when it has none. Rows open Log
+  progress, the rest of the widget the home page.
+- Streak / Streak week open the home page. Dormant streak: only the invite line.
+- `MainActivity` has the `es.antonborri.home_widget.action.LAUNCH` intent
+  filter; taps use home_widget's `actionStartActivity<MainActivity>(context, uri)`.
+
+Generated resources (rerun after changing the source):
+
+- `dart run tool/svg_to_vector_drawable.dart`: `widget_art_*` VectorDrawables
+  from `assets/images/new-svg/streak.svg`, `streak-fade.svg`, `ice-left.svg`,
+  `ice-over.svg` (drop shadow dropped).
+- `dart run tool/gen_android_widget_strings.dart`: `values[-xx]/widget_strings.xml`
+  from the `widget*Name`, `widget*Description` and `widgetOpenApp` ARB keys.
 
 ## Adding or changing a widget
 

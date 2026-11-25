@@ -84,23 +84,23 @@ class WidgetSnapshotTest {
 
         val today = s.today
         assertEquals(4, today.habits.size)
-        assertEquals(listOf(1, 5, 7), today.ring)
+        assertEquals(listOf(1L, 5L, 7L), today.ring)
         assertEquals(1, today.done)
         assertEquals(3, today.total)
         assertFalse(today.perfect)
-        val shower = today.habit(5)!!
+        val shower = today.habit(5L)!!
         assertEquals("🚿", shower.emoji)
         assertEquals(WidgetHabit.State.PARTIAL, shower.state)
         assertEquals(0.8, shower.progress, 1e-9)
         assertEquals("8m / 10m", shower.progressText)
-        assertTrue(today.habit(9)!!.optional)
+        assertTrue(today.habit(9L)!!.optional)
 
         assertEquals(3, today.streak.count)
         assertEquals(StreakInfo.Health.HEALTHY, today.streak.health)
         assertEquals(WeekDay.Status.PERFECT, today.streak.week[0].status)
         assertEquals(WeekDay.Status.TODAY, today.streak.week[1].status)
         assertEquals(0.25, today.streak.week[1].progress, 1e-9)
-        assertEquals(listOf(1, 5), today.upNext[PartOfDay.MORNING]!!.habitIds)
+        assertEquals(listOf(1L, 5L), today.upNext[PartOfDay.MORNING]!!.habitIds)
         assertEquals(0, s.tomorrow.streak.count)
     }
 
@@ -129,8 +129,8 @@ class WidgetSnapshotTest {
     @Test
     fun `ring tap goes to the first counted habit not done`() {
         val today = WidgetSnapshot.parse(full)!!.today
-        assertEquals(5, today.firstNotDone()!!.id)
-        assertEquals(listOf(1, 5, 7), today.ringHabits().map { it.id })
+        assertEquals(5L, today.firstNotDone()!!.id)
+        assertEquals(listOf(1L, 5L, 7L), today.ringHabits().map { it.id })
     }
 
     @Test
@@ -139,6 +139,15 @@ class WidgetSnapshotTest {
         val s = WidgetSnapshot.parse(snapshot(today = block(habits = done, ring = "[1, 5, 7]", done = 3, total = 3, perfect = true)))!!
         assertNull(s.today.firstNotDone())
         assertTrue(s.today.perfect)
+    }
+
+    @Test
+    fun `real habit ids do not fit an Int`() {
+        // the app uses microsecond timestamps as ids
+        val big = 1795574050137094L
+        val s = WidgetSnapshot.parse(full.replace("\"id\": 5,", "\"id\": $big,").replace("[1, 5]", "[1, $big]"))!!
+        assertEquals("Shower", s.today.habit(big)!!.name)
+        assertEquals(listOf(1L, big), s.today.upNext[PartOfDay.MORNING]!!.habitIds)
     }
 
     // ─── block by clock ──────────────────────────────────────────────
@@ -169,7 +178,7 @@ class WidgetSnapshotTest {
     fun `Up next picks the section for the clock`() {
         val today = WidgetSnapshot.parse(full)!!.today
         assertEquals("Morning", today.upNextAt(LocalTime.of(4, 0))!!.label)
-        assertEquals(listOf(7), today.upNextAt(LocalTime.of(12, 0))!!.habitIds)
+        assertEquals(listOf(7L), today.upNextAt(LocalTime.of(12, 0))!!.habitIds)
         assertEquals("evening", today.upNextAt(LocalTime.of(19, 0))!!.icon)
         assertEquals("evening", today.upNextAt(LocalTime.of(3, 59))!!.icon)
     }

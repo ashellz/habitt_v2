@@ -91,7 +91,7 @@ data class WidgetSnapshot(
 }
 
 data class WidgetHabit(
-    val id: Int,
+    val id: Long,
     val emoji: String,
     val name: String,
     val category: Int,
@@ -119,18 +119,18 @@ data class StreakInfo(
     enum class Health { HEALTHY, FADING, CRITICAL, DORMANT }
 }
 
-data class UpNextSection(val label: String, val icon: String, val habitIds: List<Int>)
+data class UpNextSection(val label: String, val icon: String, val habitIds: List<Long>)
 
 data class DayBlock(
     val habits: List<WidgetHabit>,
-    val ring: List<Int>,
+    val ring: List<Long>,
     val done: Int,
     val total: Int,
     val perfect: Boolean,
     val streak: StreakInfo,
     val upNext: Map<PartOfDay, UpNextSection?>,
 ) {
-    fun habit(id: Int): WidgetHabit? = habits.firstOrNull { it.id == id }
+    fun habit(id: Long): WidgetHabit? = habits.firstOrNull { it.id == id }
 
     /** Ring segments in order, as habits. */
     fun ringHabits(): List<WidgetHabit> = ring.mapNotNull { habit(it) }
@@ -144,7 +144,7 @@ data class DayBlock(
         fun parse(o: JSONObject): DayBlock {
             val habits = o.optJSONArray("habits").objects().map { h ->
                 WidgetHabit(
-                    id = h.getInt("id"),
+                    id = h.getLong("id"),
                     emoji = h.optString("emoji", ""),
                     name = h.optString("name", ""),
                     category = h.optInt("category", 1),
@@ -189,13 +189,13 @@ data class DayBlock(
                     UpNextSection(
                         label = sec.optString("label", ""),
                         icon = sec.optString("icon", part.key),
-                        habitIds = sec.optJSONArray("habits").ints(),
+                        habitIds = sec.optJSONArray("habits").longs(),
                     )
                 }
             }
             return DayBlock(
                 habits = habits,
-                ring = o.optJSONArray("ring").ints(),
+                ring = o.optJSONArray("ring").longs(),
                 done = o.optInt("done", 0),
                 total = o.optInt("total", 0),
                 perfect = o.optBoolean("perfect", false),
@@ -207,8 +207,8 @@ data class DayBlock(
         private fun JSONArray?.objects(): List<JSONObject> =
             if (this == null) emptyList() else (0 until length()).mapNotNull { optJSONObject(it) }
 
-        private fun JSONArray?.ints(): List<Int> =
-            if (this == null) emptyList() else (0 until length()).map { getInt(it) }
+        private fun JSONArray?.longs(): List<Long> =
+            if (this == null) emptyList() else (0 until length()).map { getLong(it) }
     }
 }
 
