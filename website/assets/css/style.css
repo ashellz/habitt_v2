@@ -682,15 +682,15 @@ section { position: relative; }
 .hw-embers .top b { font-size: 28px; font-weight: 700; line-height: 1; letter-spacing: -.5px; }
 .hw-embers .top span { font-size: 13px; font-weight: 500; color: var(--hw-sub); padding-top: 6px; }
 .hw-embers .copy { position: relative; font-size: 12px; line-height: 1.3; color: var(--hw-sub); margin-top: 6px; }
-.hw-embers .week { margin-top: auto; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
-.hw-embers .week span { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.hw-embers .week small { font-size: 10px; font-weight: 500; color: var(--hw-sub); }
-.hw-embers .week .today small { font-weight: 700; color: var(--hw-text); }
-.hw-embers .week i { width: 18px; height: 18px; display: grid; place-items: center; }
-.hw-embers .week img { width: 17px; height: 17px; }
-.hw-embers .week circle { fill: none; stroke-width: 2.4; }
-.hw-embers .week .trk { stroke: var(--hw-ember-track); }
-.hw-embers .week .acc { stroke: var(--hw-acc); stroke-linecap: round; }
+.hw-embers .hw-week { margin-top: auto; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.hw-embers .hw-week span { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.hw-embers .hw-week small { font-size: 10px; font-weight: 500; color: var(--hw-sub); }
+.hw-embers .hw-week .today small { font-weight: 700; color: var(--hw-text); }
+.hw-embers .hw-week i { width: 18px; height: 18px; display: grid; place-items: center; }
+.hw-embers .hw-week img { width: 17px; height: 17px; }
+.hw-embers .hw-week circle { fill: none; stroke-width: 2.4; }
+.hw-embers .hw-week .trk { stroke: var(--hw-ember-track); }
+.hw-embers .hw-week .acc { stroke: var(--hw-acc); stroke-linecap: round; }
 
 /* Ring · beads */
 .hw-ring svg { position: absolute; left: -1px; top: -1px; }
