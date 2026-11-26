@@ -1,0 +1,3 @@
+Neu: Widgets für den Startbildschirm. Behalte Serie, Fortschritt von heute und die nächste Gewohnheit im Blick.
+Neu: Wear OS-App. Erledige und erfasse die Gewohnheiten von heute direkt auf deiner Uhr.
+Dazu App-Verbesserungen und Fehlerbehebungen.

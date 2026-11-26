@@ -272,6 +272,15 @@ How it is drawn:
 - Picker previews: `drawable-nodpi/widget_preview_*.png`, cropped from emulator
   screenshots of the real widgets (light, Habitt green). Recapture them when a
   widget's look changes.
+- **R8 must keep the widget classes apart**: Glance maps each receiver to its
+  `GlanceAppWidget` by class name, and `updateAll()` finds a widget's IDs
+  through that map. R8 used to merge the four `HabittWidget` subclasses into
+  one class (horizontal class merging), so the boundary refresh drew the
+  Streak widget into every widget until the next per-widget update.
+  `android/app/proguard-rules.pro` keeps every `GlanceAppWidget` subclass in
+  the package; a new widget there is covered automatically. Check: in
+  `build/app/outputs/mapping/release/mapping.txt` each widget has its own
+  `com.shellz.habitt.widgets.<Name>Widget -> …` line.
 - `MainActivity` has the `es.antonborri.home_widget.action.LAUNCH` intent
   filter; taps use home_widget's `actionStartActivity<MainActivity>(context, uri)`.
 
