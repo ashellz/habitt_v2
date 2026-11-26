@@ -1,0 +1,3 @@
+Yeni: ana ekran widget'ları. Serini, bugünkü ilerlemeni ve sıradaki alışkanlığını ana ekranında gör.
+Yeni: Wear OS uygulaması. Bugünkü alışkanlıklarını doğrudan saatinden tamamla ve kaydet.
+Ayrıca uygulama iyileştirmeleri ve hata düzeltmeleri.

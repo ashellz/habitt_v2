@@ -1,0 +1,3 @@
+Novidade: widgets para a tela inicial. Sua sequência, o progresso de hoje e o próximo hábito sempre à vista.
+Novidade: app para Wear OS. Conclua e registre os hábitos de hoje direto do relógio.
+Além de melhorias no app e correções de bugs.
