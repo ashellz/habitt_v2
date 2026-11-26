@@ -397,5 +397,8 @@ Uploading (fastlane, never deletes other screenshots):
   shots per Play locale (`WEAR_LOCALES`). `fastlane android watch_listing`,
   for when the watch apps are on Play production, uploads the listing text
   and sets every locale's phone screenshots to the English set: en-US's
-  first 7 plus the Wear OS slide in place of the 8th (Themes).
+  first 7 plus the Wear OS slide in place of the 8th (Themes), and re-syncs
+  the Wear OS shots. Both Play lanes upload as "not sent for review": the
+  changes wait in Play Console's Publishing overview until you send them.
+- Wear OS shots: translated where a language set exists, English elsewhere.
 - Locales without their own shots fall back to the store's default language.

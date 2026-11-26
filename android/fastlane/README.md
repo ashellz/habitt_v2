@@ -31,6 +31,22 @@ Check title/short/full description lengths for every locale (offline)
 
 Validate, then upload the store listing text only (title, short and full description) for all locales
 
+### android wear_screenshots
+
+```sh
+[bundle exec] fastlane android wear_screenshots
+```
+
+Upload the Wear OS screenshots to every Play locale (translated where available, English elsewhere). Touches only wearScreenshots. Not sent for review: publish from Publishing overview
+
+### android watch_listing
+
+```sh
+[bundle exec] fastlane android watch_listing
+```
+
+Watch listing for Play: listing text (widgets + Wear OS), the Wear OS screenshots, and the same 8 English phone screenshots in every locale (en-US's first 7 + the Wear OS slide in place of Themes). Not sent for review: publish from Publishing overview
+
 ### android test
 
 ```sh

@@ -47,6 +47,14 @@ Upload the built IPA to TestFlight with per-locale What's New from release_notes
 
 Submit the already-uploaded TestFlight build to App Store review (release notes only)
 
+### ios watch_screenshots
+
+```sh
+[bundle exec] fastlane ios watch_screenshots
+```
+
+Stage the watch screenshots (all languages) and the en-US iPhone watch slide, then upload them and the store text to the given version (created if needed). Adds screenshots, never deletes. No review submission
+
 ### ios release
 
 ```sh
