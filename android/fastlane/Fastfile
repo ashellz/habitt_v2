@@ -52,6 +52,70 @@ platform :android do
     )
   end
 
+  # Language of the watch screenshots (marketing/watch_screenshots/wear_os/<lang>)
+  # → the Play locales that get them. Other locales fall back to en-US.
+  WEAR_LOCALES = {
+    "en" => %w[en-US en-GB en-AU en-CA], "de" => %w[de-DE], "es" => %w[es-ES es-419],
+    "fr" => %w[fr-FR fr-CA], "it" => %w[it-IT], "pt" => %w[pt-BR pt-PT], "tr" => %w[tr-TR], "bs" => %w[hr]
+  }.freeze
+  PLAY_STAGE = File.expand_path("../../build/store_screenshots/android", __dir__)
+
+  desc "Upload the Wear OS screenshots (all languages) to the Play listing. Touches only wearScreenshots"
+  lane :wear_screenshots do
+    src = File.expand_path("../../marketing/watch_screenshots/wear_os", __dir__)
+    FileUtils.rm_rf(PLAY_STAGE)
+    WEAR_LOCALES.each do |lang, locales|
+      locales.each do |locale|
+        dir = File.join(PLAY_STAGE, locale, "images", "wearScreenshots")
+        FileUtils.mkdir_p(dir)
+        Dir.glob(File.join(src, lang, "*.png")).sort.each { |png| FileUtils.cp(png, dir) }
+      end
+    end
+    upload_to_play_store(
+      metadata_path: PLAY_STAGE,
+      skip_upload_apk: true, skip_upload_aab: true, skip_upload_metadata: true,
+      skip_upload_changelogs: true, skip_upload_images: true,
+      sync_image_upload: true
+    )
+  end
+
+  desc "When the watch apps are on Play production: upload the listing text (widgets + Wear OS) and add the Wear OS phone slide. A locale with a full set (8) gets it in place of the last one (Themes), others get it appended. Keeps every other phone screenshot"
+  lane :watch_listing do
+    check_play_metadata!
+    require "open-uri"
+    slide = File.expand_path("../../marketing/watch_screenshots/phone_slides/wear_os_phone_1206x2622.png", __dir__)
+    slide_sha = Digest::SHA256.file(slide).hexdigest
+    Supply.config = FastlaneCore::Configuration.create(Supply::Options.available_options,
+                                                       { json_key: File.expand_path("key.json", __dir__), package_name: "com.shellz.habitt" })
+    client = Supply::Client.make_from_config
+    client.begin_edit(package_name: "com.shellz.habitt")
+    FileUtils.rm_rf(PLAY_STAGE)
+    client.listings.each do |listing|
+      images = client.fetch_images(image_type: "phoneScreenshots", language: listing.language)
+      next if images.empty? || images.any? { |i| i.sha256 == slide_sha }
+      dir = File.join(PLAY_STAGE, listing.language, "images", "phoneScreenshots")
+      FileUtils.mkdir_p(dir)
+      keep = images.size >= 8 ? images.first(7) : images
+      keep.each_with_index { |img, i| File.binwrite(File.join(dir, format("%02d.png", i + 1)), URI.open(img.url).read) }
+      FileUtils.cp(slide, File.join(dir, format("%02d.png", keep.size + 1)))
+      UI.message("#{listing.language}: #{images.size} phone screenshots → #{keep.size + 1}")
+    end
+    client.abort_current_edit
+    # text from the repo, phone screenshots from the stage (keeping the rest unchanged)
+    Dir.glob("metadata/android/*/").each do |dir|
+      locale = File.basename(dir)
+      FileUtils.mkdir_p(File.join(PLAY_STAGE, locale))
+      %w[title.txt short_description.txt full_description.txt video.txt].each do |f|
+        FileUtils.cp(File.join(dir, f), File.join(PLAY_STAGE, locale)) if File.exist?(File.join(dir, f))
+      end
+    end
+    upload_to_play_store(
+      metadata_path: PLAY_STAGE,
+      skip_upload_apk: true, skip_upload_aab: true, skip_upload_changelogs: true,
+      skip_upload_images: true, sync_image_upload: true
+    )
+  end
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
