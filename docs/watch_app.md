@@ -387,6 +387,13 @@ paired phone, so every language shows the same habits:
    Large Round emulator, 454×454, `adb root` for the 9:41 clock) write
    `marketing/watch_screenshots/{watchos,wear_os}/<lang>/<n>_<shot>.png`.
    The scripts' headers list the build and install steps.
+   `capture_wear.sh` waits for each screen to be drawn (a marker text in the
+   `uiautomator dump`) instead of fixed sleeps, scrolls the list to the same
+   spot in every language (slow swipes, measured, retaken if off) and resets
+   the clock to 9:41 right before each shot; it exits 1 naming any shot it
+   couldn't get right. `capture_watchos.sh` can't save into `~/Documents`
+   (the simulator lacks the permission and the script stops silently): run a
+   copy with `OUT` pointing elsewhere and copy the PNGs in.
 
 Play wants Wear OS screenshots square and unmasked (it rounds them itself),
 with nothing added, so they are uploaded exactly as captured.
