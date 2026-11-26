@@ -1413,5 +1413,21 @@
   "goalCheckInNotifCountIt": "Uračunaj {value} za danas",
   "goalCheckInNotifChoose": "Izaberi manji cilj",
   "goalCheckInSettingTitle": "Provjera cilja",
-  "goalCheckInSettingDesc": "Večernji podsjetnik u 20:25 da smanjiš današnji cilj kad navika kasni"
+  "goalCheckInSettingDesc": "Večernji podsjetnik u 20:25 da smanjiš današnji cilj kad navika kasni",
+  "watchOpenOnIPhone": "Otvori Habitt na iPhoneu",
+  "watchOpenOnIPhoneBody": "Tvoje navike će se pojaviti ovdje nakon sinhronizacije.",
+  "watchUpdateNeeded": "Ažuriraj Habitt",
+  "watchUpdateNeededBody": "Ažuriraj Habitt na iPhoneu i Apple Watchu da bi sinhronizacija nastavila raditi.",
+  "watchHealthNote": "Ažurira se iz Apple Healtha na iPhoneu",
+  "watchLogOnIPhone": "Ovo zabilježi na iPhoneu",
+  "watchShowHabits": "Prikaži navike",
+  "watchOfTarget": "od {target}",
+  "watchCompleteHabit": "Završi {name}",
+  "watchUncompleteHabit": "Označi {name} kao nezavršeno",
+  "watchLess": "Manje",
+  "watchMore": "Više",
+  "wearOpenOnPhone": "Otvori Habitt na telefonu",
+  "wearHealthNote": "Ažurira se iz Health Connecta na telefonu",
+  "wearLogOnPhone": "Ovo zabilježi na telefonu",
+  "wearUpdateNeededBody": "Ažuriraj Habitt na telefonu i satu da bi sinhronizacija nastavila raditi."
 }

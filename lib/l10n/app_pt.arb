@@ -1087,5 +1087,21 @@
   "goalCheckInNotifCountIt": "Contar {value} para hoje",
   "goalCheckInNotifChoose": "Escolher uma meta menor",
   "goalCheckInSettingTitle": "Check-in de meta",
-  "goalCheckInSettingDesc": "Um lembrete à noite, às 20:25, para baixar a meta de hoje quando um hábito está atrasado"
+  "goalCheckInSettingDesc": "Um lembrete à noite, às 20:25, para baixar a meta de hoje quando um hábito está atrasado",
+  "watchOpenOnIPhone": "Abra o Habitt no seu iPhone",
+  "watchOpenOnIPhoneBody": "Os seus hábitos aparecem aqui depois de sincronizar.",
+  "watchUpdateNeeded": "Atualize o Habitt",
+  "watchUpdateNeededBody": "Atualize o Habitt no seu iPhone e Apple Watch para continuar a sincronizar.",
+  "watchHealthNote": "Atualizado a partir do Apple Saúde no seu iPhone",
+  "watchLogOnIPhone": "Registe esta no seu iPhone",
+  "watchShowHabits": "Ver hábitos",
+  "watchOfTarget": "de {target}",
+  "watchCompleteHabit": "Concluir {name}",
+  "watchUncompleteHabit": "Marcar {name} como não feito",
+  "watchLess": "Menos",
+  "watchMore": "Mais",
+  "wearOpenOnPhone": "Abra o Habitt no seu celular",
+  "wearHealthNote": "Atualizado a partir do Health Connect no seu celular",
+  "wearLogOnPhone": "Registre este no seu celular",
+  "wearUpdateNeededBody": "Atualize o Habitt no seu celular e relógio para continuar sincronizando."
 }

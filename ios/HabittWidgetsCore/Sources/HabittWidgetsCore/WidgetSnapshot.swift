@@ -24,6 +24,8 @@ public struct WidgetSnapshot: Equatable {
   public var tomorrow: DayBlock
   /// False when the app has no habits at all, not just none today.
   public var hasHabits: Bool
+  /// Ids of Apple Watch actions the app has applied (docs/watch_app.md).
+  public var watchAcks: [String] = []
 
   public struct Strings: Equatable {
     public var dayStreak: String
@@ -34,10 +36,14 @@ public struct WidgetSnapshot: Equatable {
     public var dayCompleteBody: String
     public var nothingToday: String
     public var noHabits: String
+    /// Every snapshot string by key, in the app's language (the Apple Watch
+    /// reads its list labels and UI text from here). Empty in old snapshots.
+    public var labels: [String: String] = [:]
 
     public init(
       dayStreak: String, daysStreak: String, day: String, days: String,
-      dayComplete: String, dayCompleteBody: String, nothingToday: String, noHabits: String
+      dayComplete: String, dayCompleteBody: String, nothingToday: String, noHabits: String,
+      labels: [String: String] = [:]
     ) {
       self.dayStreak = dayStreak
       self.daysStreak = daysStreak
@@ -47,6 +53,7 @@ public struct WidgetSnapshot: Equatable {
       self.dayCompleteBody = dayCompleteBody
       self.nothingToday = nothingToday
       self.noHabits = noHabits
+      self.labels = labels
     }
 
     public func streakLabel(_ count: Int) -> String { count == 1 ? dayStreak : daysStreak }
@@ -57,6 +64,15 @@ public struct WidgetSnapshot: Equatable {
   public func block(at now: Date) -> DayBlock { now >= nextDayStartsAt ? tomorrow : today }
 
   // MARK: Decoding
+
+  /// The snapshot's `v`, without decoding the rest; nil when unreadable. The
+  /// watch uses it to tell "from a newer app" apart from "malformed".
+  public static func peekVersion(_ json: String?) -> Int? {
+    guard let json, let data = json.data(using: .utf8),
+      let raw = try? JSONDecoder().decode(RawVersion.self, from: data)
+    else { return nil }
+    return raw.v
+  }
 
   /// Parses `json`; nil for no snapshot, another version or anything malformed.
   /// Times in the snapshot are local (Dart's `toIso8601String()` of a local
@@ -86,11 +102,13 @@ public struct WidgetSnapshot: Equatable {
         dayComplete: s?.dayComplete ?? "Day complete",
         dayCompleteBody: s?.dayCompleteBody ?? "",
         nothingToday: s?.nothingToday ?? "",
-        noHabits: s?.noHabits ?? defaultNoHabits
+        noHabits: s?.noHabits ?? defaultNoHabits,
+        labels: (try? JSONDecoder().decode(RawStringsMap.self, from: data))?.strings ?? [:]
       ),
       today: DayBlock(raw: today),
       tomorrow: DayBlock(raw: tomorrow),
-      hasHabits: raw.hasHabits ?? true
+      hasHabits: raw.hasHabits ?? true,
+      watchAcks: raw.watchAcks ?? []
     )
   }
 
@@ -197,12 +215,19 @@ public struct WidgetHabit: Equatable {
   public var progress: Double
   public var progressText: String
   public var state: State
+  /// The habit's own completed flag (`state` done also covers skipped).
+  public var completed: Bool
+  public var log: HabitLog
 
   public var isDone: Bool { state == .done }
 
+  /// Health-linked and time-of-day habits only show their state on the watch.
+  public var watchReadOnly: Bool { log.healthLinked || log.kind == .timeOfDay }
+
   public init(
     id: Int64, emoji: String, name: String, category: Int = 1, optional: Bool = false,
-    progress: Double, progressText: String = "", state: State
+    progress: Double, progressText: String = "", state: State, completed: Bool? = nil,
+    log: HabitLog = .none
   ) {
     self.id = id
     self.emoji = emoji
@@ -212,6 +237,39 @@ public struct WidgetHabit: Equatable {
     self.progress = progress
     self.progressText = progressText
     self.state = state
+    self.completed = completed ?? (state == .done)
+    self.log = log
+  }
+}
+
+/// How a habit is logged, for the Apple Watch. Durations are in seconds.
+public struct HabitLog: Equatable {
+  public enum Kind: String { case amount, duration, timeOfDay }
+
+  public var kind: Kind?
+  public var target: Int
+  public var value: Int
+  /// Amount label for the target, already localized ("pages"); "" otherwise.
+  public var unit: String
+  public var step: Int
+  public var healthLinked: Bool
+  /// Amount or duration without Health sync: the watch can set its value.
+  public var watchLoggable: Bool
+
+  public static let none = HabitLog(
+    kind: nil, target: 0, value: 0, unit: "", step: 1, healthLinked: false, watchLoggable: false)
+
+  public init(
+    kind: Kind?, target: Int, value: Int, unit: String = "", step: Int = 1,
+    healthLinked: Bool = false, watchLoggable: Bool = false
+  ) {
+    self.kind = kind
+    self.target = target
+    self.value = value
+    self.unit = unit
+    self.step = step
+    self.healthLinked = healthLinked
+    self.watchLoggable = watchLoggable
   }
 }
 
@@ -316,7 +374,19 @@ public struct DayBlock: Equatable {
         optional: h.optional ?? false,
         progress: min(max(h.progress ?? 0, 0), 1),
         progressText: h.progressText ?? "",
-        state: WidgetHabit.State(rawValue: h.state ?? "") ?? .todo
+        state: WidgetHabit.State(rawValue: h.state ?? "") ?? .todo,
+        completed: h.completed,
+        log: h.log.map { l in
+          HabitLog(
+            kind: l.type.flatMap { HabitLog.Kind(rawValue: $0) },
+            target: l.target ?? 0,
+            value: l.value ?? 0,
+            unit: l.unit ?? "",
+            step: max(l.step ?? 1, 1),
+            healthLinked: l.healthLinked ?? false,
+            watchLoggable: l.watchLoggable ?? false
+          )
+        } ?? .none
       )
     }
     ring = raw.ring ?? []
@@ -400,6 +470,11 @@ private struct RawSnapshot: Decodable {
   var strings: RawStrings?
   var today: RawBlock?
   var tomorrow: RawBlock?
+  var watchAcks: [String]?
+}
+
+private struct RawVersion: Decodable {
+  var v: Int?
 }
 
 private struct RawTheme: Decodable {
@@ -417,6 +492,11 @@ private struct RawStrings: Decodable {
   var dayCompleteBody: String?
   var nothingToday: String?
   var noHabits: String?
+}
+
+/// The same `strings` block, every key.
+private struct RawStringsMap: Decodable {
+  var strings: [String: String]?
 }
 
 fileprivate struct RawBlock: Decodable {
@@ -438,6 +518,18 @@ fileprivate struct RawHabit: Decodable {
   var progress: Double?
   var progressText: String?
   var state: String?
+  var completed: Bool?
+  var log: RawLog?
+}
+
+fileprivate struct RawLog: Decodable {
+  var type: String?
+  var target: Int?
+  var value: Int?
+  var unit: String?
+  var step: Int?
+  var healthLinked: Bool?
+  var watchLoggable: Bool?
 }
 
 fileprivate struct RawStreak: Decodable {

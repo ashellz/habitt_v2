@@ -5,7 +5,9 @@ import 'package:habitt/models/app_theme.dart';
 import 'package:habitt/models/habit.dart';
 import 'package:habitt/models/streak_health.dart';
 import 'package:habitt/providers/stats_provider.dart';
+import 'package:habitt/util/amount_label_preset.dart';
 import 'package:habitt/util/habit_progress.dart';
+import 'package:habitt/util/resolve_amount_label_for_value.dart';
 import 'package:habitt/util/streak_praise.dart';
 import 'package:intl/intl.dart';
 
@@ -22,6 +24,9 @@ class WidgetSnapshotBuilder {
   /// Habit category ids (see CategoryProvider).
   static const int anyTime = 1, morning = 2, afternoon = 3, evening = 4;
   static const int maxUpNextRows = 3;
+
+  /// How many applied watch action ids the snapshot carries back.
+  static const int maxWatchAcks = 50;
 
   static Map<String, dynamic> build(WidgetSnapshotInput input) {
     final today = _dateOnly(input.now);
@@ -89,9 +94,36 @@ class WidgetSnapshotBuilder {
         'dayCompleteBody': loc.widgetDayCompleteBody,
         'nothingToday': loc.widgetNothingToday,
         'noHabits': loc.youHaventAddedAnyHabitsYet,
+        // watch list (Apple Watch and Wear OS)
+        'today': loc.today,
+        'anyTime': loc.anyTime,
+        'morning': loc.morning,
+        'afternoon': loc.afternoon,
+        'evening': loc.evening,
+        'optional': loc.optional,
+        // watch UI, in the app's language rather than the watch's;
+        // `%@` marks where the watch puts its value
+        'watchShowHabits': loc.watchShowHabits,
+        'watchHealthNote': loc.watchHealthNote,
+        'watchLogOnIPhone': loc.watchLogOnIPhone,
+        'watchOfTarget': loc.watchOfTarget('%@'),
+        'watchCompleteHabit': loc.watchCompleteHabit('%@'),
+        'watchUncompleteHabit': loc.watchUncompleteHabit('%@'),
+        'watchLess': loc.watchLess,
+        'watchMore': loc.watchMore,
+        'watchUpdateNeeded': loc.watchUpdateNeeded,
+        'watchUpdateNeededBody': loc.watchUpdateNeededBody,
+        // Wear OS wording of the texts above that name the iPhone or Apple Health
+        'wearHealthNote': loc.wearHealthNote,
+        'wearLogOnPhone': loc.wearLogOnPhone,
+        'wearUpdateNeededBody': loc.wearUpdateNeededBody,
       },
       'today': _dayBlock(input, input.todayHabits, todayStreak),
       'tomorrow': _dayBlock(input, input.tomorrowHabits, tomorrowStreak),
+      // ids of the watch actions the app has applied (docs/watch_app.md)
+      'watchAcks': input.watchAcks.length > maxWatchAcks
+          ? input.watchAcks.sublist(input.watchAcks.length - maxWatchAcks)
+          : List<String>.from(input.watchAcks),
     };
   }
 
@@ -138,11 +170,49 @@ class WidgetSnapshotBuilder {
       ),
       'state': done ? 'done' : (progress > 0 ? 'partial' : 'todo'),
       'canLog': h.hasTrackingType,
+      'completed': h.completed,
+      'log': _logBlock(input, h),
+    };
+  }
+
+  /// What the Apple Watch needs to log progress for [h]. Durations are in
+  /// seconds. Only amount and duration habits without Health sync can be
+  /// changed from the watch (a habit without a tracking type is completed
+  /// with the check, which is not logging).
+  static Map<String, dynamic> _logBlock(WidgetSnapshotInput input, Habit h) {
+    final type = switch (h.trackingType) {
+      HabitTrackingType.amount => 'amount',
+      HabitTrackingType.duration => 'duration',
+      HabitTrackingType.timeOfDay => 'timeOfDay',
+      _ => null,
+    };
+    final isDuration = type == 'duration';
+    final unit =
+        type == 'amount'
+            ? resolveAmountLabelForValue(
+              h.amountLabel.isEmpty
+                  ? AmountLabelPreset.times.plural
+                  : h.amountLabel,
+              h.effectiveAmount,
+              input.loc,
+              customSingulars: input.customSingulars,
+            )
+            : '';
+    return {
+      'type': type,
+      // today's goal, a lighter day's included, like the progress text
+      'target': isDuration ? h.effectiveDuration : h.effectiveAmount,
+      'value': isDuration ? h.durationCompleted : h.amountCompleted,
+      'unit': unit,
+      'step': isDuration ? 60 : 1,
+      'healthLinked': h.healthMetric != null,
+      'watchLoggable':
+          (type == 'amount' || type == 'duration') && h.healthMetric == null,
     };
   }
 
   /// What Up next shows while [part] is the current part of the day: the
-  /// first section with something left to do, trying [part], then Any time,
+  /// first section with a required habit left to do, trying [part], then Any time,
   /// then the later parts, then the earlier ones. At most [maxUpNextRows]
   /// rows in app order; when the section is longer, done habits make room
   /// first.
@@ -160,7 +230,12 @@ class WidgetSnapshotBuilder {
         if (p < part) p,
     ];
     for (final category in order) {
-      final section = rows.where((r) => r['category'] == category).toList();
+      // optional habits never count towards the day, and once the required
+      // ones are done the widget shows Day complete, so Up Next skips them
+      final section =
+          rows
+              .where((r) => r['category'] == category && r['optional'] != true)
+              .toList();
       if (!section.any((r) => r['state'] != 'done')) continue;
       while (section.length > maxUpNextRows) {
         final firstDone = section.indexWhere((r) => r['state'] == 'done');
@@ -273,6 +348,7 @@ class WidgetSnapshotInput {
     required this.formatTime,
     required this.theme,
     this.hasHabits = true,
+    this.watchAcks = const <String>[],
   });
 
   final DateTime now;
@@ -304,4 +380,7 @@ class WidgetSnapshotInput {
   /// Whether the app has any habit at all (deleted ones aside), so the
   /// widgets can tell "no habits yet" from "nothing today".
   final bool hasHabits;
+
+  /// Ids of watch actions applied or dropped, oldest first.
+  final List<String> watchAcks;
 }

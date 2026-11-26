@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from lib/l10n/app_tr.arb by tool/gen_android_widget_strings.dart. Do not edit. -->
+<resources>
+    <string name="wear_today">Bugün</string>
+    <string name="wear_any_time">Herhangi bir zaman</string>
+    <string name="wear_morning">Sabah</string>
+    <string name="wear_afternoon">Öğleden sonra</string>
+    <string name="wear_evening">Akşam</string>
+    <string name="wear_optional">İsteğe bağlı</string>
+    <string name="wear_open_on_phone">Habitt\'i telefonunda aç</string>
+    <string name="wear_open_on_phone_body">Alışkanlıkların senkronize edildiğinde burada görünür.</string>
+    <string name="wear_update_needed">Habitt\'i güncelle</string>
+    <string name="wear_update_needed_body">Senkronizasyonun sürmesi için Habitt\'i telefonunda ve saatinde güncelle.</string>
+    <string name="wear_health_note">Telefonundaki Health Connect\'ten güncellenir</string>
+    <string name="wear_log_on_phone">Bunu telefonunda kaydet</string>
+    <string name="wear_show_habits">Alışkanlıkları göster</string>
+    <string name="wear_of_target">/ %1$s</string>
+    <string name="wear_complete_habit">%1$s tamamla</string>
+    <string name="wear_uncomplete_habit">%1$s yapılmadı olarak işaretle</string>
+    <string name="wear_less">Azalt</string>
+    <string name="wear_more">Artır</string>
+    <string name="wear_no_habits">Henüz hiç alışkanlık eklemedin</string>
+    <string name="wear_nothing_today">Bugün planlanan bir şey yok</string>
+</resources>

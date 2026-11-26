@@ -32,6 +32,7 @@ import 'package:habitt/providers/sync_devices_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
 import 'package:habitt/services/widget_launch_handler.dart';
 import 'package:habitt/services/widget_snapshot_service.dart';
+import 'package:habitt/services/watch_sync_service.dart';
 import 'package:habitt/services/billing_service.dart';
 import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/profile_image_provider.dart';
@@ -332,6 +333,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       await NotificationActionHandler.handleColdStart();
       NotificationActionHandler.consumePendingRoute();
       await _drainPendingCompletions();
+      await WatchSyncService.start(
+        onAcksChanged: () => WidgetSnapshotService.instance?.markDirty(),
+        afterDrain: () async => WidgetSnapshotService.instance?.flush(),
+      );
+      await WatchSyncService.instance?.drain();
       await WidgetLaunchHandler.start();
     });
   }
@@ -340,6 +346,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     WidgetSnapshotService.instance?.dispose();
+    WatchSyncService.instance?.dispose();
     if (NotificationActionHandler.drainPending == _drainPendingCompletions) {
       NotificationActionHandler.drainPending = null;
     }
@@ -351,8 +358,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       NotificationActionHandler.consumePendingRoute();
       _drainPendingCompletions();
-      // the day or part of day may have changed while away
-      WidgetSnapshotService.instance?.markDirty();
+      WatchSyncService.instance?.drain();
+      // the day or part of day may have changed while away, and a write
+      // made in the background may not have reached the widgets
+      WidgetSnapshotService.instance?.resumed();
     } else if (state == AppLifecycleState.paused) {
       // leave the widgets current before the app is suspended
       WidgetSnapshotService.instance?.flush();

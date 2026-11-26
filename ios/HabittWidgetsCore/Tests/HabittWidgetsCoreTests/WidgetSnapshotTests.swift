@@ -28,7 +28,8 @@ final class WidgetSnapshotTests: XCTestCase {
       "strings": {
         "dayStreak": "day streak", "daysStreak": "days streak", "day": "day", "days": "days",
         "dayComplete": "Day complete", "dayCompleteBody": "All 2 habits done.",
-        "nothingToday": "Nothing scheduled today", "noHabits": "No habits"
+        "nothingToday": "Nothing scheduled today", "noHabits": "No habits",
+        "today": "Danas", "morning": "Jutro", "optional": "Neobavezno"
       },
       "today": {
         "habits": [
@@ -74,6 +75,10 @@ final class WidgetSnapshotTests: XCTestCase {
     XCTAssertEqual(s.today.upNext[.afternoon]?.icon, "anyTime")
     XCTAssertNil(s.today.upNext[.evening])
     XCTAssertEqual(s.tomorrow.streak.health, .dormant)
+    XCTAssertEqual(s.strings.labels["today"], "Danas")
+    XCTAssertEqual(s.strings.labels["morning"], "Jutro")
+    XCTAssertEqual(s.strings.labels["dayStreak"], "day streak")
+    XCTAssertNil(s.strings.labels["evening"])
   }
 
   func testSixteenDigitIdsStayExact() throws {
@@ -223,5 +228,43 @@ final class WidgetSnapshotTests: XCTestCase {
     XCTAssertEqual(p.today.streak.week.first?.status, WeekDay.Status.none)
     XCTAssertEqual(p.block(at: Date()), p.today)
     XCTAssertEqual(WidgetLinks.ring(p.today), WidgetLinks.home)
+  }
+
+  func testDecodesWatchFields() throws {
+    let withWatch = json
+      .replacingOccurrences(
+        of: "\"state\": \"partial\", \"canLog\": true }",
+        with: """
+          "state": "partial", "canLog": true, "completed": false,
+          "log": { "type": "duration", "target": 600, "value": 480, "unit": "", "step": 60,
+            "healthLinked": false, "watchLoggable": true } }
+          """)
+      .replacingOccurrences(of: "\"hasHabits\": true,", with: "\"hasHabits\": true, \"watchAcks\": [\"a1\", \"a2\"],")
+    let s = try XCTUnwrap(WidgetSnapshot.decode(withWatch, calendar: calendar))
+    XCTAssertEqual(s.watchAcks, ["a1", "a2"])
+    let shower = s.today.habits[0]
+    XCTAssertEqual(shower.log.kind, .duration)
+    XCTAssertEqual(shower.log.target, 600)
+    XCTAssertEqual(shower.log.value, 480)
+    XCTAssertEqual(shower.log.step, 60)
+    XCTAssertTrue(shower.log.watchLoggable)
+    XCTAssertFalse(shower.completed)
+    XCTAssertFalse(shower.watchReadOnly)
+  }
+
+  func testOlderSnapshotHasNoWatchFields() throws {
+    let s = try XCTUnwrap(WidgetSnapshot.decode(json, calendar: calendar))
+    XCTAssertEqual(s.watchAcks, [])
+    XCTAssertEqual(s.today.habits[0].log, .none)
+    XCTAssertFalse(s.today.habits[0].completed)
+    // a done habit without the flag counts as completed
+    XCTAssertTrue(s.today.habits[1].completed)
+  }
+
+  func testPeekVersion() {
+    XCTAssertEqual(WidgetSnapshot.peekVersion(json), 1)
+    XCTAssertEqual(WidgetSnapshot.peekVersion("{\"v\": 3, \"other\": true}"), 3)
+    XCTAssertNil(WidgetSnapshot.peekVersion("nope"))
+    XCTAssertNil(WidgetSnapshot.peekVersion(nil))
   }
 }

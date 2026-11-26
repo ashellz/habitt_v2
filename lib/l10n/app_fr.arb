@@ -1087,5 +1087,21 @@
   "goalCheckInNotifCountIt": "Compter {value} pour aujourd'hui",
   "goalCheckInNotifChoose": "Choisir un objectif plus petit",
   "goalCheckInSettingTitle": "Bilan d'objectif",
-  "goalCheckInSettingDesc": "Un rappel le soir à 20:25 pour baisser l'objectif du jour quand une habitude prend du retard"
+  "goalCheckInSettingDesc": "Un rappel le soir à 20:25 pour baisser l'objectif du jour quand une habitude prend du retard",
+  "watchOpenOnIPhone": "Ouvre Habitt sur ton iPhone",
+  "watchOpenOnIPhoneBody": "Tes habitudes apparaîtront ici après la synchronisation.",
+  "watchUpdateNeeded": "Mets à jour Habitt",
+  "watchUpdateNeededBody": "Mets à jour Habitt sur ton iPhone et ton Apple Watch pour continuer la synchronisation.",
+  "watchHealthNote": "Mis à jour depuis Apple Santé sur ton iPhone",
+  "watchLogOnIPhone": "Enregistre celle-ci sur ton iPhone",
+  "watchShowHabits": "Voir les habitudes",
+  "watchOfTarget": "sur {target}",
+  "watchCompleteHabit": "Terminer {name}",
+  "watchUncompleteHabit": "Marquer {name} comme non fait",
+  "watchLess": "Moins",
+  "watchMore": "Plus",
+  "wearOpenOnPhone": "Ouvre Habitt sur ton téléphone",
+  "wearHealthNote": "Mis à jour depuis Health Connect sur ton téléphone",
+  "wearLogOnPhone": "Enregistre celle-ci sur ton téléphone",
+  "wearUpdateNeededBody": "Mets à jour Habitt sur ton téléphone et ta montre pour continuer la synchronisation."
 }

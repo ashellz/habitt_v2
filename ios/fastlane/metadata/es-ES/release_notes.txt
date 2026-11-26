@@ -1,2 +1,2 @@
-Nuevos idiomas: turco, portugués y francés.
+Novedad: widgets para la pantalla de inicio. Tu racha, el progreso de hoy y el siguiente hábito, siempre a la vista.
 Además, mejoras en la app y corrección de errores.

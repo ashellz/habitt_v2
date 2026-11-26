@@ -4104,4 +4104,62 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get goalCheckInSettingDesc =>
       'Un rappel le soir à 20:25 pour baisser l\'objectif du jour quand une habitude prend du retard';
+
+  @override
+  String get watchOpenOnIPhone => 'Ouvre Habitt sur ton iPhone';
+
+  @override
+  String get watchOpenOnIPhoneBody =>
+      'Tes habitudes apparaîtront ici après la synchronisation.';
+
+  @override
+  String get watchUpdateNeeded => 'Mets à jour Habitt';
+
+  @override
+  String get watchUpdateNeededBody =>
+      'Mets à jour Habitt sur ton iPhone et ton Apple Watch pour continuer la synchronisation.';
+
+  @override
+  String get watchHealthNote => 'Mis à jour depuis Apple Santé sur ton iPhone';
+
+  @override
+  String get watchLogOnIPhone => 'Enregistre celle-ci sur ton iPhone';
+
+  @override
+  String get watchShowHabits => 'Voir les habitudes';
+
+  @override
+  String watchOfTarget(String target) {
+    return 'sur $target';
+  }
+
+  @override
+  String watchCompleteHabit(String name) {
+    return 'Terminer $name';
+  }
+
+  @override
+  String watchUncompleteHabit(String name) {
+    return 'Marquer $name comme non fait';
+  }
+
+  @override
+  String get watchLess => 'Moins';
+
+  @override
+  String get watchMore => 'Plus';
+
+  @override
+  String get wearOpenOnPhone => 'Ouvre Habitt sur ton téléphone';
+
+  @override
+  String get wearHealthNote =>
+      'Mis à jour depuis Health Connect sur ton téléphone';
+
+  @override
+  String get wearLogOnPhone => 'Enregistre celle-ci sur ton téléphone';
+
+  @override
+  String get wearUpdateNeededBody =>
+      'Mets à jour Habitt sur ton téléphone et ta montre pour continuer la synchronisation.';
 }

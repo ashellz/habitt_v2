@@ -132,6 +132,12 @@ Read-only iOS/Android home screen widgets (Streak, Streak week, Today ring, Up n
 
 **Maintenance rule:** Any change to the widgets, the snapshot fields or when it is written must also update `docs/home_widgets.md`.
 
+### Watch Apps (Apple Watch, Wear OS)
+
+Two small native watch apps show today's habits to complete, un-complete or log: watchOS (`ios/HabittWatch`, SwiftUI) and Wear OS (`android/wear`, Compose for Wear OS, sharing the Kotlin snapshot model in `android/habitt-core` with the widgets). Both draw the widget snapshot the phone pushes (WatchConnectivity / Wear OS Data Layer) and send the same absolute actions back, which the phone queues natively (`WatchBridge.swift` / `WearBridge.kt`) and applies through `HabitProvider.applyWatchAction` (`WatchSyncService`). The phone stays the source of truth. Documented in full at [`docs/watch_app.md`](docs/watch_app.md). Read it before touching either watch app, the bridges, `WatchSyncService`, the snapshot's watch fields or `applyWatchAction`.
+
+**Maintenance rule:** Any change to the watch app, its protocol (snapshot fields, actions, versions) or when actions are applied must also update `docs/watch_app.md`.
+
 ### Third-Party Integrations
 
 - **RevenueCat** (`purchases_flutter`) — in-app purchases/subscriptions (currently voluntary support only, no feature gating)
@@ -141,6 +147,7 @@ Read-only iOS/Android home screen widgets (Streak, Streak week, Today ring, Up n
 - **Awesome Notifications** — local push notification scheduling
 - **`health`** — read-only Apple HealthKit / Google Health Connect access for habit progress sync (see Health Sync above)
 - **`home_widget`** — shares the widget snapshot with the native home screen widgets and reports widget taps (see Home Screen Widgets above)
+- **Wear OS Data Layer** (`play-services-wearable`, native) — phone ↔ Wear OS watch sync (see Watch Apps above)
 
 ## Code Generation
 

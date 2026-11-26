@@ -1,5 +1,5 @@
-// Converts the flat SVG artwork the Android home screen widgets use into
-// VectorDrawables. Only what those files contain is supported: <path>
+// Converts the flat SVG artwork the Android home screen widgets and the Wear
+// OS app use into VectorDrawables. Only what those files contain is supported: <path>
 // elements with fill, fill-opacity, opacity and fill-rule. Groups, filters
 // (the drop shadow of streak-fade.svg), clip paths and defs are dropped.
 //
@@ -8,22 +8,28 @@
 // See docs/home_widgets.md.
 import 'dart:io';
 
-const _out = 'android/app/src/main/res/drawable';
+const _widgets = 'android/app/src/main/res/drawable';
+const _wear = 'android/wear/src/main/res/drawable';
 
-const _files = {
-  'assets/images/new-svg/streak.svg': 'widget_art_streak',
-  'assets/images/new-svg/streak-fade.svg': 'widget_art_streak_fade',
-  'assets/images/new-svg/ice-left.svg': 'widget_art_ice_left',
-  'assets/images/new-svg/ice-over.svg': 'widget_art_ice_over',
-  'assets/images/new-svg/empty-box.svg': 'widget_art_empty_box',
-};
+/// (source SVG, output drawable without `.xml`)
+const _files = [
+  ('assets/images/new-svg/streak.svg', '$_widgets/widget_art_streak'),
+  ('assets/images/new-svg/streak-fade.svg', '$_widgets/widget_art_streak_fade'),
+  ('assets/images/new-svg/ice-left.svg', '$_widgets/widget_art_ice_left'),
+  ('assets/images/new-svg/ice-over.svg', '$_widgets/widget_art_ice_over'),
+  ('assets/images/new-svg/empty-box.svg', '$_widgets/widget_art_empty_box'),
+  // the Wear OS app's day complete streak flame (docs/watch_app.md)
+  ('assets/images/new-svg/streak.svg', '$_wear/wear_art_streak'),
+];
 
 void main() {
-  for (final entry in _files.entries) {
-    final svg = File(entry.key).readAsStringSync();
-    final xml = convert(svg, source: entry.key);
-    File('$_out/${entry.value}.xml').writeAsStringSync(xml);
-    stdout.writeln('${entry.key} -> $_out/${entry.value}.xml');
+  for (final (source, out) in _files) {
+    final svg = File(source).readAsStringSync();
+    final xml = convert(svg, source: source);
+    File('$out.xml')
+      ..parent.createSync(recursive: true)
+      ..writeAsStringSync(xml);
+    stdout.writeln('$source -> $out.xml');
   }
 }
 

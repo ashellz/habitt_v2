@@ -4066,4 +4066,61 @@ class AppLocalizationsBs extends AppLocalizations {
   @override
   String get goalCheckInSettingDesc =>
       'Večernji podsjetnik u 20:25 da smanjiš današnji cilj kad navika kasni';
+
+  @override
+  String get watchOpenOnIPhone => 'Otvori Habitt na iPhoneu';
+
+  @override
+  String get watchOpenOnIPhoneBody =>
+      'Tvoje navike će se pojaviti ovdje nakon sinhronizacije.';
+
+  @override
+  String get watchUpdateNeeded => 'Ažuriraj Habitt';
+
+  @override
+  String get watchUpdateNeededBody =>
+      'Ažuriraj Habitt na iPhoneu i Apple Watchu da bi sinhronizacija nastavila raditi.';
+
+  @override
+  String get watchHealthNote => 'Ažurira se iz Apple Healtha na iPhoneu';
+
+  @override
+  String get watchLogOnIPhone => 'Ovo zabilježi na iPhoneu';
+
+  @override
+  String get watchShowHabits => 'Prikaži navike';
+
+  @override
+  String watchOfTarget(String target) {
+    return 'od $target';
+  }
+
+  @override
+  String watchCompleteHabit(String name) {
+    return 'Završi $name';
+  }
+
+  @override
+  String watchUncompleteHabit(String name) {
+    return 'Označi $name kao nezavršeno';
+  }
+
+  @override
+  String get watchLess => 'Manje';
+
+  @override
+  String get watchMore => 'Više';
+
+  @override
+  String get wearOpenOnPhone => 'Otvori Habitt na telefonu';
+
+  @override
+  String get wearHealthNote => 'Ažurira se iz Health Connecta na telefonu';
+
+  @override
+  String get wearLogOnPhone => 'Ovo zabilježi na telefonu';
+
+  @override
+  String get wearUpdateNeededBody =>
+      'Ažuriraj Habitt na telefonu i satu da bi sinhronizacija nastavila raditi.';
 }

@@ -1,2 +1,2 @@
-Nouvelles langues : turc, portugais et français.
+Nouveau : widgets pour l'écran d'accueil. Votre série, la progression du jour et la prochaine habitude, toujours visibles.
 Ainsi que des améliorations de l'app et des corrections de bugs.

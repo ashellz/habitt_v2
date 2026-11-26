@@ -6,9 +6,13 @@ import 'package:habitt/services/widget_snapshot_service.dart';
 
 class _FakeWriter implements WidgetSnapshotWriter {
   final writes = <String>[];
+  int reloads = 0;
 
   @override
   Future<void> write(String json) async => writes.add(json);
+
+  @override
+  Future<void> reload() async => reloads++;
 }
 
 void main() {
@@ -17,14 +21,17 @@ void main() {
   late int builds;
   // made inside each fakeAsync zone, so its writes run on the fake clock
   late WidgetSnapshotService Function() make;
+  var foreground = true;
 
   setUp(() {
     writer = _FakeWriter();
     current = {'v': 1, 'generatedAt': 't0', 'done': 0};
     builds = 0;
+    foreground = true;
     make =
         () => WidgetSnapshotService(
           writer: writer,
+          isForeground: () => foreground,
           collect: () {
             builds++;
             final c = current;
@@ -61,6 +68,58 @@ void main() {
       async.elapse(const Duration(seconds: 1));
       expect(writer.writes, hasLength(2));
       expect(jsonDecode(writer.writes.last)['done'], 1);
+    });
+  });
+
+  test('a write in the background redraws the widgets on resume', () {
+    fakeAsync((async) {
+      final service = make();
+      service.flush();
+      async.flushMicrotasks();
+      expect(writer.writes, hasLength(1));
+
+      // a watch action applied while the app is in the background
+      foreground = false;
+      current = {'v': 1, 'done': 1};
+      service.flush();
+      async.flushMicrotasks();
+      expect(writer.writes, hasLength(2));
+
+      // opened: nothing new to write, but the widgets are asked again
+      foreground = true;
+      service.resumed();
+      async.flushMicrotasks();
+      expect(writer.writes, hasLength(2));
+      expect(writer.reloads, 1);
+
+      // only once
+      service.resumed();
+      async.flushMicrotasks();
+      expect(writer.reloads, 1);
+    });
+  });
+
+  test('resume after a foreground write does not reload again', () {
+    fakeAsync((async) {
+      final service = make();
+      service.flush();
+      async.flushMicrotasks();
+      service.resumed();
+      async.flushMicrotasks();
+      expect(writer.writes, hasLength(1));
+      expect(writer.reloads, 0);
+    });
+  });
+
+  test('resume writes a changed snapshot at once', () {
+    fakeAsync((async) {
+      final service = make();
+      service.flush();
+      async.flushMicrotasks();
+      current = {'v': 1, 'done': 2};
+      service.resumed();
+      async.flushMicrotasks();
+      expect(writer.writes, hasLength(2));
     });
   });
 

@@ -1,0 +1,14 @@
+/* Generated from lib/l10n/app_es.arb by tool/gen_ios_widget_strings.dart. Do not edit. */
+"watchOpenOnIPhone" = "Abre Habitt en tu iPhone";
+"watchOpenOnIPhoneBody" = "Tus hábitos aparecerán aquí cuando se sincronice.";
+"watchUpdateNeeded" = "Actualiza Habitt";
+"watchUpdateNeededBody" = "Actualiza Habitt en tu iPhone y Apple Watch para seguir sincronizando.";
+"watchHealthNote" = "Se actualiza desde Apple Salud en tu iPhone";
+"watchLogOnIPhone" = "Registra este en tu iPhone";
+"watchShowHabits" = "Ver hábitos";
+"watchOfTarget" = "de %@";
+"watchCompleteHabit" = "Completar %@";
+"watchUncompleteHabit" = "Marcar %@ como no hecho";
+"watchLess" = "Menos";
+"watchMore" = "Más";
+"today" = "Hoy";

@@ -1087,5 +1087,21 @@
   "goalCheckInNotifCountIt": "Bugün için {value} say",
   "goalCheckInNotifChoose": "Daha küçük bir hedef seç",
   "goalCheckInSettingTitle": "Hedef değerlendirmesi",
-  "goalCheckInSettingDesc": "Bir alışkanlık geride kaldığında bugünün hedefini düşürmek için 20:25'te akşam hatırlatması"
+  "goalCheckInSettingDesc": "Bir alışkanlık geride kaldığında bugünün hedefini düşürmek için 20:25'te akşam hatırlatması",
+  "watchOpenOnIPhone": "Habitt'i iPhone'unda aç",
+  "watchOpenOnIPhoneBody": "Alışkanlıkların senkronize edildiğinde burada görünür.",
+  "watchUpdateNeeded": "Habitt'i güncelle",
+  "watchUpdateNeededBody": "Senkronizasyonun sürmesi için Habitt'i iPhone ve Apple Watch'unda güncelle.",
+  "watchHealthNote": "iPhone'undaki Apple Sağlık'tan güncellenir",
+  "watchLogOnIPhone": "Bunu iPhone'unda kaydet",
+  "watchShowHabits": "Alışkanlıkları göster",
+  "watchOfTarget": "/ {target}",
+  "watchCompleteHabit": "{name} tamamla",
+  "watchUncompleteHabit": "{name} yapılmadı olarak işaretle",
+  "watchLess": "Azalt",
+  "watchMore": "Artır",
+  "wearOpenOnPhone": "Habitt'i telefonunda aç",
+  "wearHealthNote": "Telefonundaki Health Connect'ten güncellenir",
+  "wearLogOnPhone": "Bunu telefonunda kaydet",
+  "wearUpdateNeededBody": "Senkronizasyonun sürmesi için Habitt'i telefonunda ve saatinde güncelle."
 }
