@@ -33,6 +33,10 @@ MEHR ALS EIN GEWOHNHEITS-TRACKER
 • Wecker für Gewohnheiten, die du nicht verpassen darfst, etwa Medikamente. Sie klingeln, bis du sie beendest.
 • Ein Benachrichtigungston pro Gewohnheit und Akzentfarben für deinen Stil. Alles kostenlos.
 
+WIDGETS UND WEAR OS
+• Widgets für den Startbildschirm: deine Streak, deine Woche, dein Fortschritt heute und was als Nächstes ansteht.
+• Wear OS: Gewohnheiten abhaken, Mengen und Minuten eintragen und sehen, wann dein Tag geschafft ist.
+
 ERSCHEINUNGSBILD
 Dunkler und heller Modus.
 

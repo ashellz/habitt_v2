@@ -95,8 +95,18 @@ class WatchStore private constructor(context: Context) {
 
     // ─── Lifecycle ────────────────────────────────────────
 
+    /** Store screenshots only (debug builds, docs/watch_app.md): a fixed snapshot, no phone. */
+    private var screenshotMode = false
+
+    fun showScreenshot(json: String) {
+        screenshotMode = true
+        _state.value = State(snapshot = WidgetSnapshot.parse(json))
+        refreshClock()
+    }
+
     /** While the app is visible: follow the phone's snapshot. */
     fun start() {
+        if (screenshotMode) return
         if (started++ == 0) {
             try {
                 dataClient.addListener(listener)

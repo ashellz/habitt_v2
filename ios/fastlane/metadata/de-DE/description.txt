@@ -28,6 +28,10 @@ Habitt speichert alles auf deinem Gerät. Wenn du eine Cloud-Kopie möchtest, ve
 SCHNELLSTART
 Importiere all deine Gewohnheiten aus anderen Apps wie HabitKit. Nutze eine vorgefertigte Vorlage, um in Sekunden loszulegen: früh aufstehen, früh ins Bett, Fitnessstudio, Laufen, Spazieren, Wasser trinken, Zähne putzen, Hautpflege, Ernährung, Lernen, Lesen, Medikamente, Produktivitätssessions und mehr.
 
+WIDGETS UND APPLE WATCH
+• Widgets für den Startbildschirm: deine Streak, deine Woche, dein Fortschritt heute und was als Nächstes ansteht.
+• Apple Watch: Gewohnheiten abhaken, Mengen und Minuten eintragen und sehen, wann dein Tag geschafft ist.
+
 ERSCHEINUNGSBILD
 Dunkler und heller Modus.
 

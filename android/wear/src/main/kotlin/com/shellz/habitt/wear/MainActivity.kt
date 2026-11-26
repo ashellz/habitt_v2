@@ -1,6 +1,9 @@
 package com.shellz.habitt.wear
 
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import androidx.compose.runtime.LaunchedEffect
+import java.io.File
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -32,7 +35,22 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { WearApp(store) }
+        val openHabit = screenshotSetup()
+        setContent { WearApp(store, openHabit) }
+    }
+
+    /**
+     * Store screenshots, debug builds only (docs/watch_app.md): extra
+     * `screenshotSnapshot` names a snapshot file in the app's files dir,
+     * `screenshotOpen` a habit whose screen opens. Returns that habit id.
+     */
+    private fun screenshotSetup(): Long? {
+        if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE == 0) return null
+        val name = intent.getStringExtra("screenshotSnapshot") ?: return null
+        val file = File(filesDir, name)
+        if (!file.exists()) return null
+        store.showScreenshot(file.readText())
+        return intent.getStringExtra("screenshotOpen")?.toLongOrNull()
     }
 
     override fun onStart() {
@@ -52,12 +70,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun WearApp(store: WatchStore) {
+fun WearApp(store: WatchStore, openHabit: Long? = null) {
     val state by store.state.collectAsState()
     val context = LocalContext.current
     val text = remember(state.snapshot) { WearText(context, state.snapshot) }
     val accent = Color(state.accent)
     val nav = rememberSwipeDismissableNavController()
+    LaunchedEffect(openHabit) { openHabit?.let { nav.navigate("habit/$it") } }
 
     MaterialTheme(colorScheme = MaterialTheme.colorScheme.copy(primary = accent)) {
         AppScaffold(timeText = { TimeText() }) {

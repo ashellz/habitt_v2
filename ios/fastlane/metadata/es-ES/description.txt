@@ -28,6 +28,10 @@ Habitt almacena todo en tu dispositivo. Cuando quieras una copia en la nube, con
 INICIO RÁPIDO
 Importa todos tus hábitos desde otras apps como HabitKit. Usa una plantilla prediseñada para empezar en segundos: madrugar, acostarse temprano, gimnasio, correr, caminar, beber agua, cepillarse los dientes, cuidado de la piel, nutrición, estudiar, leer, medicamentos, sesiones de productividad y más.
 
+WIDGETS Y APPLE WATCH
+• Widgets en la pantalla de inicio: tu racha, tu semana, el progreso de hoy y lo que viene a continuación.
+• Apple Watch: marca tus hábitos, registra cantidades y minutos, y mira cuándo completas el día.
+
 APARIENCIA
 Modo oscuro y claro.
 

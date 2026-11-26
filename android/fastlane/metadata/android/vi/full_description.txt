@@ -33,6 +33,10 @@ HƠN CẢ MỘT ỨNG DỤNG THEO DÕI THÓI QUEN
 • Báo thức cho những thói quen không thể bỏ lỡ, như uống thuốc. Chuông reo đến khi bạn tắt.
 • Chọn âm báo riêng cho từng thói quen và giao diện màu theo phong cách của bạn. Tất cả đều miễn phí.
 
+TIỆN ÍCH VÀ WEAR OS
+• Tiện ích màn hình chính: chuỗi ngày, tuần của bạn, tiến độ hôm nay và việc tiếp theo.
+• Wear OS: đánh dấu thói quen, ghi số lượng và số phút, và biết khi nào bạn hoàn thành cả ngày.
+
 GIAO DIỆN
 Chế độ tối và sáng.
 

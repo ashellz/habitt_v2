@@ -28,6 +28,10 @@ Habitt przechowuje wszystko na twoim urządzeniu. Gdy zechcesz kopię w chmurze,
 SZYBKI START
 Zaimportuj wszystkie nawyki z innych aplikacji, takich jak HabitKit. Skorzystaj z gotowego szablonu, by zacząć w kilka sekund: wczesne wstawanie, wczesne kładzenie się spać, siłownia, bieganie, spacery, picie wody, mycie zębów, pielęgnacja skóry, odżywianie, nauka, czytanie, leki, sesje produktywności i więcej.
 
+WIDŻETY I APPLE WATCH
+• Widżety na ekranie głównym: seria, tydzień, dzisiejsze postępy i to, co dalej.
+• Apple Watch: odhaczaj nawyki, zapisuj ilości i minuty i zobacz, kiedy dzień jest zaliczony.
+
 WYGLĄD
 Tryb ciemny i jasny.
 

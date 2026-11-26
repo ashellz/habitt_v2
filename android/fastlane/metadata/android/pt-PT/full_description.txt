@@ -33,6 +33,10 @@ MAIS DO QUE UM REGISTO DE HÁBITOS
 • Alarmes para hábitos que não podem falhar, como a medicação. Tocam até serem desligados.
 • Um som de notificação para cada hábito e temas de cor ao seu gosto. Tudo grátis.
 
+WIDGETS E WEAR OS
+• Widgets no ecrã principal: a sua sequência, a sua semana, o progresso de hoje e o que vem a seguir.
+• Wear OS: marque hábitos, registe quantidades e minutos e veja quando o seu dia está completo.
+
 ASPETO
 Modo escuro e claro.
 
