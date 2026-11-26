@@ -1095,7 +1095,7 @@
   "watchHealthNote": "iPhone'undaki Apple Sağlık'tan güncellenir",
   "watchLogOnIPhone": "Bunu iPhone'unda kaydet",
   "watchShowHabits": "Alışkanlıkları göster",
-  "watchOfTarget": "/ {target}",
+  "watchOfTarget": "/{target}",
   "watchCompleteHabit": "{name} tamamla",
   "watchUncompleteHabit": "{name} yapılmadı olarak işaretle",
   "watchLess": "Azalt",

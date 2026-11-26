@@ -14,7 +14,7 @@
     <string name="wear_health_note">Se actualiza desde Health Connect en tu teléfono</string>
     <string name="wear_log_on_phone">Registra este en tu teléfono</string>
     <string name="wear_show_habits">Ver hábitos</string>
-    <string name="wear_of_target">/ %1$s</string>
+    <string name="wear_of_target">/%1$s</string>
     <string name="wear_complete_habit">Completar %1$s</string>
     <string name="wear_uncomplete_habit">Marcar %1$s como no hecho</string>
     <string name="wear_less">Menos</string>

@@ -6,7 +6,7 @@
 "watchHealthNote" = "iPhone'undaki Apple Sağlık'tan güncellenir";
 "watchLogOnIPhone" = "Bunu iPhone'unda kaydet";
 "watchShowHabits" = "Alışkanlıkları göster";
-"watchOfTarget" = "/ %@";
+"watchOfTarget" = "/%@";
 "watchCompleteHabit" = "%@ tamamla";
 "watchUncompleteHabit" = "%@ yapılmadı olarak işaretle";
 "watchLess" = "Azalt";

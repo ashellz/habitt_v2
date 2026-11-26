@@ -1431,7 +1431,7 @@
   "watchHealthNote": "Se actualiza desde Apple Salud en tu iPhone",
   "watchLogOnIPhone": "Registra este en tu iPhone",
   "watchShowHabits": "Ver hábitos",
-  "watchOfTarget": "/ {target}",
+  "watchOfTarget": "/{target}",
   "watchCompleteHabit": "Completar {name}",
   "watchUncompleteHabit": "Marcar {name} como no hecho",
   "watchLess": "Menos",

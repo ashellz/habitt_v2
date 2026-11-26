@@ -105,13 +105,8 @@ fun LogScreen(habit: WidgetHabit, accent: Color, text: WearText, store: WatchSto
     }
 
     val progress = if (log.target > 0) minOf(value.toDouble() / log.target, 1.0) else 0.0
-    val targetText = if (isDuration) {
-        WatchOverlay.durationString(log.target)
-    } else if (log.unit.isEmpty()) {
-        "${log.target}"
-    } else {
-        "${log.target} ${log.unit}"
-    }
+    // Just the goal ("10", "10m"), no unit: the line reads "/10" so it fits in the ring.
+    val targetText = if (isDuration) WatchOverlay.durationString(log.target) else "${log.target}"
 
     ScreenScaffold {
         Box(

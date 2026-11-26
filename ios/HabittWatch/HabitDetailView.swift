@@ -103,9 +103,9 @@ struct LogView: View {
     }
   }
 
+  /// Just the goal ("10", "10m"), no unit: the line reads "/10" so it fits in the ring.
   private var targetText: String {
-    if isDuration { return WatchOverlay.durationString(log.target) }
-    return log.unit.isEmpty ? "\(log.target)" : "\(log.target) \(log.unit)"
+    isDuration ? WatchOverlay.durationString(log.target) : "\(log.target)"
   }
 
   private func stepButton(_ delta: Int, filled: Bool) -> some View {

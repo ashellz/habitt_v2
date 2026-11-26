@@ -6,7 +6,7 @@
 "watchHealthNote" = "Ažurira se iz Apple Healtha na iPhoneu";
 "watchLogOnIPhone" = "Ovo zabilježi na iPhoneu";
 "watchShowHabits" = "Prikaži navike";
-"watchOfTarget" = "/ %@";
+"watchOfTarget" = "/%@";
 "watchCompleteHabit" = "Završi %@";
 "watchUncompleteHabit" = "Označi %@ kao nezavršeno";
 "watchLess" = "Manje";
