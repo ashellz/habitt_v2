@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/Satoshi-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/Satoshi-Black.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=2">
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
 
   <script>
     // Set the theme before first paint so there is no flash.
@@ -91,6 +91,7 @@
       <nav class="nav-links" aria-label="Sections">
         <a href="#privacy">Privacy</a>
         <a href="#features">Features</a>
+        <a href="#everywhere">Watch</a>
         <a href="#screens">Screens</a>
         <a href="#import">Switch apps</a>
         <a href="#faq">FAQ</a>
@@ -108,6 +109,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#privacy">Privacy</a>
     <a href="#features">Features</a>
+    <a href="#everywhere">Widgets &amp; watch</a>
     <a href="#screens">Screens</a>
     <a href="#import">Switch apps</a>
     <a href="#faq">FAQ</a>
@@ -426,6 +428,89 @@
       </div>
     </section>
 
+    <!-- ─── Widgets & watch ─────────────────────────────── -->
+    <section class="pad" id="everywhere" style="padding-top:0">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow reveal">Beyond your phone</span>
+          <h2 class="split">On your home screen. <span class="hl">On your wrist.</span></h2>
+          <p class="lead reveal">Check today at a glance with home screen widgets, and tick habits off from your Apple Watch or Wear OS watch. Still private: your phone keeps every habit, and nothing passes through a server.</p>
+        </div>
+
+        <div class="reach">
+          <!-- Widgets -->
+          <article class="reach-card widgets reveal">
+            <div class="widget-board" aria-label="Habitt home screen widgets: Streak, Streak week, Today ring and Up next">
+              <div class="wdg wdg-streak" aria-hidden="true">
+                <span class="flame">🔥</span>
+                <b>15</b>
+                <small>days streak</small>
+              </div>
+              <div class="wdg wdg-week" aria-hidden="true">
+                <div class="wk-top"><span>🔥</span><b>15</b></div>
+                <div class="embers"><i></i><i></i><i></i><i></i><i></i><i></i><i class="today"></i></div>
+                <div class="wk-days"><span>T</span><span>F</span><span>S</span><span>S</span><span>M</span><span>T</span><span>W</span></div>
+              </div>
+              <div class="wdg wdg-next" aria-hidden="true">
+                <div class="next-list">
+                  <small>Morning</small>
+                  <div class="next-row"><span class="e">🛏️</span><span class="n">Make bed</span><span class="st done"><svg><use href="#i-check"/></svg></span></div>
+                  <div class="next-row"><span class="e">💧</span><span class="n">Drink water<em>2 / 6 glasses</em></span><span class="st part"></span></div>
+                  <div class="next-row"><span class="e">🧘</span><span class="n">Meditate<em>6m / 10m</em></span><span class="st half"></span></div>
+                </div>
+                <div class="next-streak"><span>🔥</span><b>15</b><small>days</small></div>
+              </div>
+              <div class="wdg wdg-ring" aria-hidden="true">
+                <svg viewBox="0 0 100 100">
+                  <circle class="bead done" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-1.5"/>
+                  <circle class="bead done" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-21.5"/>
+                  <circle class="bead done" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-41.5"/>
+                  <circle class="bead" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-61.5"/>
+                  <circle class="bead" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-81.5"/>
+                </svg>
+                <div class="ring-mid"><b>3/5</b><small>today</small></div>
+              </div>
+              <div class="wdg-apps" aria-hidden="true"><img src="assets/img/icon.png" alt="" width="64" height="64" loading="lazy"><i></i><i></i><i></i></div>
+            </div>
+            <div class="reach-copy">
+              <h3>Home screen widgets</h3>
+              <p>Four widgets for iPhone and Android: your streak, the last seven days, a ring for today's progress and what's up next. Tap one to jump straight to logging that habit.</p>
+              <div class="reach-tags"><span>Streak</span><span>Streak week</span><span>Today ring</span><span>Up next</span></div>
+            </div>
+          </article>
+
+          <!-- Watch -->
+          <article class="reach-card watch reveal" style="--d:.1s">
+            <div class="watch-stage" id="watchStage">
+              <figure class="watch-face aw">
+                <img src="assets/img/watch/watchos-today.webp" data-shot="today" alt="Apple Watch: today's habits with a progress bar" width="422" height="514" loading="lazy">
+                <figcaption>Apple Watch</figcaption>
+              </figure>
+              <figure class="watch-face wo">
+                <img src="assets/img/watch/wear-os-today.webp" data-shot="today" alt="Wear OS: today's habits" width="454" height="454" loading="lazy">
+                <figcaption>Wear OS</figcaption>
+              </figure>
+            </div>
+            <div class="watch-tabs" role="group" aria-label="Watch screens">
+              <button type="button" class="on" data-shot="today" aria-pressed="true">Today</button>
+              <button type="button" data-shot="log_amount" aria-pressed="false">Log amount</button>
+              <button type="button" data-shot="log_duration" aria-pressed="false">Log time</button>
+              <button type="button" data-shot="day_complete" aria-pressed="false">Day complete</button>
+            </div>
+            <div class="reach-copy">
+              <h3>Apple Watch &amp; Wear OS</h3>
+              <ul>
+                <li><svg><use href="#i-check"/></svg>See today's habits, check them off or undo a tap</li>
+                <li><svg><use href="#i-check"/></svg>Log glasses, pages or minutes right from your wrist</li>
+                <li><svg><use href="#i-check"/></svg>Finish the day and see your streak grow</li>
+                <li><svg><use href="#i-lock"/></svg>Phone and watch talk directly. No account, no server.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- ─── Light / dark compare ────────────────────────── -->
     <section class="pad" style="padding-top:0">
       <div class="container compare-wrap">
@@ -561,8 +646,12 @@
             <div class="answer">Completely. Internet is only used for optional cloud backup.</div>
           </details>
           <details>
+            <summary>Does the watch app send my habits anywhere?<i></i></summary>
+            <div class="answer">No. Your phone keeps all your habits. It sends today's list straight to your paired Apple Watch or Wear OS watch, and what you tap on the watch goes straight back to the phone. Nothing goes through a Habitt server, because there isn't one.</div>
+          </details>
+          <details>
             <summary>Which platforms are supported?<i></i></summary>
-            <div class="answer">iPhone (iOS 15.6 or later) and Android. Habitt is available on the <a href="https://apps.apple.com/app/id6745617462" rel="noopener">App Store</a> and <a href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener">Google Play</a>.</div>
+            <div class="answer">iPhone (iOS 15.6 or later) and Android, with home screen widgets on both, plus companion apps for Apple Watch and Wear OS watches. Habitt is available on the <a href="https://apps.apple.com/app/id6745617462" rel="noopener">App Store</a> and <a href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener">Google Play</a>.</div>
           </details>
         </div>
       </div>
@@ -595,6 +684,7 @@
             <li><a href="https://apps.apple.com/app/id6745617462" rel="noopener">App Store</a></li>
             <li><a href="https://play.google.com/store/apps/details?id=com.shellz.habitt" rel="noopener">Google Play</a></li>
             <li><a href="#features">Features</a></li>
+            <li><a href="#everywhere">Widgets &amp; watch</a></li>
           </ul>
         </div>
         <div>
@@ -621,6 +711,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/main.js?v=2" defer></script>
+  <script src="assets/js/main.js?v=3" defer></script>
 </body>
 </html>
