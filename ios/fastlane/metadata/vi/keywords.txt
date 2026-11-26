@@ -1,1 +1,1 @@
-nhac nho,nang suat,dong luc,the duc,uong nuoc,alarm,alert,notification,sound,monthly,custom,interval
+nhac nho,nang suat,dong luc,the duc,uong nuoc,tien ich,dong ho,alarm,notification,monthly,interval

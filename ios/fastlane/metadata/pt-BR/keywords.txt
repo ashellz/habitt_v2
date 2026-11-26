@@ -1,1 +1,1 @@
-rastreador,disciplina,lembrete,motivacao,agua,study,learning,reading,focus,timer,todo,tasks,list
+rastreador,disciplina,lembrete,motivacao,agua,relogio,study,reading,focus,timer,todo,tasks,list

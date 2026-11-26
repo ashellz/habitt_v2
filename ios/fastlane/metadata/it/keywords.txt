@@ -1,1 +1,1 @@
-streak,produttività,salute,offline,backup,promemoria,quotidiano,coaching,forza,autodisciplina,sport
+streak,produttività,salute,offline,orologio,promemoria,quotidiano,coaching,autodisciplina,sport

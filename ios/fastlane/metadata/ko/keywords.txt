@@ -1,1 +1,1 @@
-체크리스트,자기관리,갓생,플래너,알림,물마시기,운동,공부,독서,명상,progress,statistics,insights,chart,graph,analytics,history,log
+체크리스트,자기관리,갓생,플래너,알림,물마시기,운동,공부,독서,명상,위젯,워치,progress,statistics,insights,chart,analytics,history

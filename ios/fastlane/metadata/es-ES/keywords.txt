@@ -1,1 +1,1 @@
-rachas,productividad,salud,offline,backup,recordatorio,diario,coaching,fuerza,disciplina,autocuidado
+rachas,productividad,salud,offline,backup,recordatorio,diario,coaching,reloj,disciplina,autocuidado

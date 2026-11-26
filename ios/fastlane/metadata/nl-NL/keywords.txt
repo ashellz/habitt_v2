@@ -1,1 +1,1 @@
-tracker,productiviteit,discipline,offline,backup,herinnering,dagelijks,motivatie,water,sport,slaap
+tracker,productiviteit,discipline,offline,horloge,herinnering,dagelijks,motivatie,water,sport,slaap
