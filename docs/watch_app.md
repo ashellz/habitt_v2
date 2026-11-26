@@ -387,3 +387,18 @@ paired phone, so every language shows the same habits:
 
 Play wants Wear OS screenshots square and unmasked (it rounds them itself),
 with nothing added, so they are uploaded exactly as captured.
+
+Uploading (fastlane, never deletes other screenshots):
+- `ios`: `fastlane ios watch_screenshots version:<x.y.z>` stages the Apple
+  Watch shots per App Store locale (`WATCH_LOCALES`) plus the en-US iPhone
+  slide (`marketing/watch_screenshots/phone_slides/`), then uploads them and
+  the store text to that version (created if needed), without submitting.
+- `android`: `fastlane android wear_screenshots` uploads only the Wear OS
+  shots per Play locale (`WEAR_LOCALES`). `fastlane android watch_listing`,
+  for when the watch apps are on Play production, uploads the listing text
+  and sets every locale's phone screenshots to the English set: en-US's
+  first 7 plus the Wear OS slide in place of the 8th (Themes), and re-syncs
+  the Wear OS shots. Both Play lanes upload as "not sent for review": the
+  changes wait in Play Console's Publishing overview until you send them.
+- Wear OS shots: translated where a language set exists, English elsewhere.
+- Locales without their own shots fall back to the store's default language.

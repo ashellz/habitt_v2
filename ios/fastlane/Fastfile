@@ -100,6 +100,41 @@ platform :ios do
     )
   end
 
+  # Store language of the watch screenshots (marketing/watch_screenshots/watchos/<lang>)
+  # → the App Store locales that get them. Other locales fall back to en-US.
+  WATCH_LOCALES = {
+    "en" => %w[en-US en-AU en-CA en-GB], "de" => %w[de-DE], "es" => %w[es-ES es-MX],
+    "fr" => %w[fr-FR fr-CA], "it" => %w[it], "pt" => %w[pt-BR pt-PT], "tr" => %w[tr], "bs" => %w[hr]
+  }.freeze
+
+  desc "Stage the watch screenshots (all languages) and the en-US iPhone watch slide, then upload them and the store text to the given version (created if needed). Adds screenshots, never deletes. No review submission"
+  lane :watch_screenshots do |options|
+    version = options[:version] || UI.user_error!("pass version:<x.y.z>")
+    check_ios_metadata!
+    src = File.expand_path("../../marketing/watch_screenshots", __dir__)
+    stage = File.expand_path("../../build/store_screenshots/ios", __dir__)
+    FileUtils.rm_rf(stage)
+    WATCH_LOCALES.each do |lang, locales|
+      locales.each do |locale|
+        FileUtils.mkdir_p(File.join(stage, locale))
+        Dir.glob(File.join(src, "watchos", lang, "*.png")).sort.each do |png|
+          FileUtils.cp(png, File.join(stage, locale, "watch_#{File.basename(png)}"))
+        end
+      end
+    end
+    FileUtils.cp(File.join(src, "phone_slides", "apple_watch_iphone_1206x2622.png"), File.join(stage, "en-US", "iphone_9_watch.png"))
+    deliver(
+      api_key_path: File.expand_path("~/.appstoreconnect/private_keys/api_key.json"),
+      app_version: version,
+      screenshots_path: stage,
+      overwrite_screenshots: false,
+      skip_binary_upload: true,
+      force: true,
+      submit_for_review: false,
+      precheck_include_in_app_purchases: false
+    )
+  end
+
   desc "Push a new release build to the App Store"
   lane :release do
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
