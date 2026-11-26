@@ -6,7 +6,7 @@
 "watchHealthNote" = "Si aggiorna da Apple Salute sul tuo iPhone";
 "watchLogOnIPhone" = "Registra questa sul tuo iPhone";
 "watchShowHabits" = "Mostra abitudini";
-"watchOfTarget" = "di %@";
+"watchOfTarget" = "/%@";
 "watchCompleteHabit" = "Completa %@";
 "watchUncompleteHabit" = "Segna %@ come non fatta";
 "watchLess" = "Meno";

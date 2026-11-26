@@ -1421,7 +1421,7 @@
   "watchHealthNote": "Ažurira se iz Apple Healtha na iPhoneu",
   "watchLogOnIPhone": "Ovo zabilježi na iPhoneu",
   "watchShowHabits": "Prikaži navike",
-  "watchOfTarget": "od {target}",
+  "watchOfTarget": "/{target}",
   "watchCompleteHabit": "Završi {name}",
   "watchUncompleteHabit": "Označi {name} kao nezavršeno",
   "watchLess": "Manje",

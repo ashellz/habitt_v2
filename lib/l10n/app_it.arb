@@ -1430,7 +1430,7 @@
   "watchHealthNote": "Si aggiorna da Apple Salute sul tuo iPhone",
   "watchLogOnIPhone": "Registra questa sul tuo iPhone",
   "watchShowHabits": "Mostra abitudini",
-  "watchOfTarget": "di {target}",
+  "watchOfTarget": "/{target}",
   "watchCompleteHabit": "Completa {name}",
   "watchUncompleteHabit": "Segna {name} come non fatta",
   "watchLess": "Meno",

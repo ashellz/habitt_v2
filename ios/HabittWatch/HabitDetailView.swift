@@ -103,9 +103,9 @@ struct LogView: View {
     }
   }
 
+  /// Just the goal ("10", "10m"), no unit: the line reads "/10" so it fits in the ring.
   private var targetText: String {
-    if isDuration { return WatchOverlay.durationString(log.target) }
-    return log.unit.isEmpty ? "\(log.target)" : "\(log.target) \(log.unit)"
+    isDuration ? WatchOverlay.durationString(log.target) : "\(log.target)"
   }
 
   private func stepButton(_ delta: Int, filled: Bool) -> some View {
@@ -160,7 +160,7 @@ struct ReadOnlyView: View {
   let habit: WidgetHabit
 
   /// The phone's progress text split like the log screen: "14m / 20m" →
-  /// "14m" big and "of 20m" under it, so it never wraps inside the ring.
+  /// "14m" big and "/ 20m" under it, so it never wraps inside the ring.
   private var parts: (main: String, sub: String?) {
     let text = habit.progressText
     if let range = text.range(of: " / ") {

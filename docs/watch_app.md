@@ -78,7 +78,10 @@ On top of the widget snapshot (`v` 1, additive, widgets ignore them):
   `optional` (list labels) and the watch UI text (`watchShowHabits`,
   `watchHealthNote`, `watchLogOnIPhone`, `watchOfTarget`, `watchCompleteHabit`,
   `watchUncompleteHabit`, `watchLess`, `watchMore`, `watchUpdateNeeded`,
-  `watchUpdateNeededBody`; `%@` marks the value), plus the Wear OS wording of
+  `watchUpdateNeededBody`; `%@` marks the value; `watchOfTarget` is the goal
+  line under the big number on the log and read-only screens and is "/%@"
+  in every language; the log screen fills in only the goal, without the
+  unit ("/10", durations "/10m"), so it fits inside the ring), plus the Wear OS wording of
   the texts that name the iPhone or Apple Health (`wearHealthNote`,
   `wearLogOnPhone`, `wearUpdateNeededBody`), all in the **app's** language. The watch reads every string through `WatchStore.text(key)`: the
   snapshot's, else its own `.lproj` translation (before the first sync).
@@ -384,6 +387,13 @@ paired phone, so every language shows the same habits:
    Large Round emulator, 454×454, `adb root` for the 9:41 clock) write
    `marketing/watch_screenshots/{watchos,wear_os}/<lang>/<n>_<shot>.png`.
    The scripts' headers list the build and install steps.
+   `capture_wear.sh` waits for each screen to be drawn (a marker text in the
+   `uiautomator dump`) instead of fixed sleeps, scrolls the list to the same
+   spot in every language (slow swipes, measured, retaken if off) and resets
+   the clock to 9:41 right before each shot; it exits 1 naming any shot it
+   couldn't get right. `capture_watchos.sh` can't save into `~/Documents`
+   (the simulator lacks the permission and the script stops silently): run a
+   copy with `OUT` pointing elsewhere and copy the PNGs in.
 
 Play wants Wear OS screenshots square and unmasked (it rounds them itself),
 with nothing added, so they are uploaded exactly as captured.

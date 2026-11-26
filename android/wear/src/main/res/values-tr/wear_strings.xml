@@ -14,7 +14,7 @@
     <string name="wear_health_note">Telefonundaki Health Connect\'ten güncellenir</string>
     <string name="wear_log_on_phone">Bunu telefonunda kaydet</string>
     <string name="wear_show_habits">Alışkanlıkları göster</string>
-    <string name="wear_of_target">/ %1$s</string>
+    <string name="wear_of_target">/%1$s</string>
     <string name="wear_complete_habit">%1$s tamamla</string>
     <string name="wear_uncomplete_habit">%1$s yapılmadı olarak işaretle</string>
     <string name="wear_less">Azalt</string>

@@ -4130,7 +4130,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String watchOfTarget(String target) {
-    return 'sur $target';
+    return '/$target';
   }
 
   @override
