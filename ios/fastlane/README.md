@@ -29,7 +29,7 @@ Check name/subtitle/keywords/description lengths for every locale (offline)
 [bundle exec] fastlane ios metadata
 ```
 
-Validate, then upload store text only (name, subtitle, keywords, description). No binary, no screenshots, no review submission
+Validate, then upload store text only (name, subtitle, keywords, description) to version:<x.y.z> (or the editable one). No binary, no screenshots, no review submission
 
 ### ios internal
 

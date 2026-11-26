@@ -54,11 +54,12 @@ platform :ios do
     check_ios_metadata!
   end
 
-  desc "Validate, then upload store text only (name, subtitle, keywords, description). No binary, no screenshots, no review submission"
-  lane :metadata do
+  desc "Validate, then upload store text only (name, subtitle, keywords, description) to version:<x.y.z> (or the editable one). No binary, no screenshots, no review submission"
+  lane :metadata do |options|
     check_ios_metadata!
     deliver(
       api_key_path: File.expand_path("~/.appstoreconnect/private_keys/api_key.json"),
+      app_version: options[:version],
       skip_binary_upload: true,
       skip_screenshots: true,
       force: true,
