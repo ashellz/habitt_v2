@@ -1,0 +1,1166 @@
+{
+  "_comment": "English source text -> translations for the store images. UI labels follow lib/l10n ARB wording. Keys match the Figma text layers / slide HTML exactly (\\n = line break).",
+  "langs": [
+    "bs",
+    "de",
+    "es",
+    "fr",
+    "it",
+    "pt",
+    "tr"
+  ],
+  "strings": {
+    "Build habits that actually stick": {
+      "bs": "Gradi navike koje zaista traju",
+      "de": "Gewohnheiten, die wirklich bleiben",
+      "es": "Crea hábitos que de verdad duran",
+      "fr": "Des habitudes qui durent vraiment",
+      "it": "Crea abitudini che durano davvero",
+      "pt": "Crie hábitos que realmente ficam",
+      "tr": "Gerçekten kalıcı alışkanlıklar edin"
+    },
+    "Track progress. Stay consistent. Grow daily.": {
+      "bs": "Prati napredak. Budi dosljedan. Rasti svaki dan.",
+      "de": "Fortschritt verfolgen. Dranbleiben. Täglich wachsen.",
+      "es": "Sigue tu progreso. Sé constante. Crece cada día.",
+      "fr": "Suis tes progrès. Reste régulier. Progresse chaque jour.",
+      "it": "Segui i progressi. Sii costante. Cresci ogni giorno.",
+      "pt": "Acompanhe o progresso. Seja constante. Cresça todo dia.",
+      "tr": "İlerlemeni takip et. İstikrarlı ol. Her gün geliş."
+    },
+    "Track habits your way": {
+      "bs": "Prati navike po svom",
+      "de": "Gewohnheiten nach deiner Art",
+      "es": "Tus hábitos, a tu manera",
+      "fr": "Tes habitudes, à ta façon",
+      "it": "Le tue abitudini, a modo tuo",
+      "pt": "Seus hábitos, do seu jeito",
+      "tr": "Alışkanlıklar, senin tarzında"
+    },
+    "Track habits\nyour way": {
+      "bs": "Prati navike\npo svom",
+      "de": "Gewohnheiten\nnach deiner Art",
+      "es": "Tus hábitos,\na tu manera",
+      "fr": "Tes habitudes,\nà ta façon",
+      "it": "Le tue abitudini,\na modo tuo",
+      "pt": "Seus hábitos,\ndo seu jeito",
+      "tr": "Alışkanlıklar,\nsenin tarzında"
+    },
+    "Count reps, measure duration,\nor simply mark as complete": {
+      "bs": "Broji ponavljanja, mjeri trajanje\nili samo označi kao završeno",
+      "de": "Wiederholungen zählen, Dauer messen\noder einfach abhaken",
+      "es": "Cuenta repeticiones, mide la duración\no simplemente márcalo como hecho",
+      "fr": "Compte les répétitions, mesure la durée\nou coche simplement",
+      "it": "Conta le ripetizioni, misura la durata\no segna semplicemente come fatto",
+      "pt": "Conte repetições, meça a duração\nou apenas marque como concluído",
+      "tr": "Tekrarları say, süreyi ölç\nya da sadece tamamlandı işaretle"
+    },
+    "See your real consistency": {
+      "bs": "Vidi svoju pravu dosljednost",
+      "de": "Sieh deine echte Beständigkeit",
+      "es": "Mira tu constancia real",
+      "fr": "Vois ta vraie régularité",
+      "it": "Scopri la tua vera costanza",
+      "pt": "Veja sua consistência real",
+      "tr": "Gerçek istikrarını gör"
+    },
+    "Streaks, strength, weekly ratios\nand activity heatmap": {
+      "bs": "Streakovi, čvrstoća, sedmični omjeri\ni mapa aktivnosti",
+      "de": "Streaks, Stärke, Wochenquoten\nund Aktivitäts-Heatmap",
+      "es": "Rachas, fuerza, ratios semanales\ny mapa de actividad",
+      "fr": "Séries, force, ratios hebdo\net carte d'activité",
+      "it": "Serie, forza, rapporti settimanali\ne mappa delle attività",
+      "pt": "Sequências, força, proporções semanais\ne mapa de atividade",
+      "tr": "Seriler, güç, haftalık oranlar\nve etkinlik ısı haritası"
+    },
+    "Never miss\na habit": {
+      "bs": "Nikad ne\npropusti naviku",
+      "de": "Verpasse\nkeine Gewohnheit",
+      "es": "No pierdas\nningún hábito",
+      "fr": "Ne rate\naucune habitude",
+      "it": "Non perdere\nun'abitudine",
+      "pt": "Nunca perca\num hábito",
+      "tr": "Hiçbir\nalışkanlığı kaçırma"
+    },
+    "Morning, mid-day and wrap-up reminders with full control": {
+      "bs": "Jutarnji, podnevni i večernji podsjetnici pod tvojom kontrolom",
+      "de": "Erinnerungen am Morgen, mittags und zum Tagesabschluss, ganz nach deinen Wünschen",
+      "es": "Recordatorios de mañana, mediodía y cierre del día, a tu medida",
+      "fr": "Rappels du matin, de midi et du soir, entièrement réglables",
+      "it": "Promemoria di mattina, metà giornata e fine giornata, sotto il tuo controllo",
+      "pt": "Lembretes de manhã, meio-dia e fim do dia, com controle total",
+      "tr": "Sabah, öğle ve gün sonu hatırlatıcıları, tamamen senin kontrolünde"
+    },
+    "Designed\nfor any mood": {
+      "bs": "Za svako\nraspoloženje",
+      "de": "Gemacht für\njede Stimmung",
+      "es": "Diseñada\npara cada ánimo",
+      "fr": "Pensée pour\nchaque humeur",
+      "it": "Pensata per\nogni umore",
+      "pt": "Feito para\nqualquer humor",
+      "tr": "Her ruh haline\nuygun tasarım"
+    },
+    "Light, Dark or System mode": {
+      "bs": "Svijetli, tamni ili sistem",
+      "de": "Hell, Dunkel oder System",
+      "es": "Claro, oscuro o sistema",
+      "fr": "Clair, sombre ou système",
+      "it": "Chiaro, scuro o sistema",
+      "pt": "Claro, escuro ou sistema",
+      "tr": "Açık, koyu veya sistem"
+    },
+    "Habit details": {
+      "bs": "Detalji navike",
+      "de": "Details zur Gewohnheit",
+      "es": "Detalles del hábito",
+      "fr": "Détails de l'habitude",
+      "it": "Dettagli sull'abitudine",
+      "pt": "Detalhes do hábito",
+      "tr": "Alışkanlık detayları"
+    },
+    "March 2026": {
+      "bs": "Mart 2026",
+      "de": "März 2026",
+      "es": "Marzo 2026",
+      "fr": "Mars 2026",
+      "it": "Marzo 2026",
+      "pt": "Março 2026",
+      "tr": "Mart 2026"
+    },
+    "Mon": {
+      "bs": "Pon",
+      "de": "Mo",
+      "es": "Lun",
+      "fr": "Lun",
+      "it": "Lun",
+      "pt": "Seg",
+      "tr": "Pzt"
+    },
+    "Tue": {
+      "bs": "Uto",
+      "de": "Di",
+      "es": "Mar",
+      "fr": "Mar",
+      "it": "Mar",
+      "pt": "Ter",
+      "tr": "Sal"
+    },
+    "Wed": {
+      "bs": "Sri",
+      "de": "Mi",
+      "es": "Mié",
+      "fr": "Mer",
+      "it": "Mer",
+      "pt": "Qua",
+      "tr": "Çar"
+    },
+    "Thu": {
+      "bs": "Čet",
+      "de": "Do",
+      "es": "Jue",
+      "fr": "Jeu",
+      "it": "Gio",
+      "pt": "Qui",
+      "tr": "Per"
+    },
+    "Fri": {
+      "bs": "Pet",
+      "de": "Fr",
+      "es": "Vie",
+      "fr": "Ven",
+      "it": "Ven",
+      "pt": "Sex",
+      "tr": "Cum"
+    },
+    "Sat": {
+      "bs": "Sub",
+      "de": "Sa",
+      "es": "Sáb",
+      "fr": "Sam",
+      "it": "Sab",
+      "pt": "Sáb",
+      "tr": "Cmt"
+    },
+    "Sun": {
+      "bs": "Ned",
+      "de": "So",
+      "es": "Dom",
+      "fr": "Dim",
+      "it": "Dom",
+      "pt": "Dom",
+      "tr": "Paz"
+    },
+    "Wednesday": {
+      "bs": "Srijeda",
+      "de": "Mittwoch",
+      "es": "Miércoles",
+      "fr": "Mercredi",
+      "it": "Mercoledì",
+      "pt": "Quarta",
+      "tr": "Çarşamba"
+    },
+    "Sunday": {
+      "bs": "Nedjelja",
+      "de": "Sonntag",
+      "es": "Domingo",
+      "fr": "Dimanche",
+      "it": "Domenica",
+      "pt": "Domingo",
+      "tr": "Pazar"
+    },
+    "Completed": {
+      "bs": "Završeno",
+      "de": "Abgeschlossen",
+      "es": "Completado",
+      "fr": "Terminée",
+      "it": "Completato",
+      "pt": "Concluído",
+      "tr": "Tamamlandı"
+    },
+    "Skipped": {
+      "bs": "Preskočeno",
+      "de": "Übersprungen",
+      "es": "Omitido",
+      "fr": "Sautée",
+      "it": "Saltato",
+      "pt": "Pulado",
+      "tr": "Atlandı"
+    },
+    "Current streak": {
+      "bs": "Trenutni streak",
+      "de": "Aktueller Streak",
+      "es": "Racha actual",
+      "fr": "Série en cours",
+      "it": "Serie attuale",
+      "pt": "Sequência atual",
+      "tr": "Mevcut seri"
+    },
+    "Longest streak": {
+      "bs": "Najduži streak",
+      "de": "Längster Streak",
+      "es": "Racha más larga",
+      "fr": "Plus longue série",
+      "it": "Serie più lunga",
+      "pt": "Maior sequência",
+      "tr": "En uzun seri"
+    },
+    "3 days": {
+      "bs": "3 dana",
+      "de": "3 Tage",
+      "es": "3 días",
+      "fr": "3 jours",
+      "it": "3 giorni",
+      "pt": "3 dias",
+      "tr": "3 gün"
+    },
+    "10 days": {
+      "bs": "10 dana",
+      "de": "10 Tage",
+      "es": "10 días",
+      "fr": "10 jours",
+      "it": "10 giorni",
+      "pt": "10 dias",
+      "tr": "10 gün"
+    },
+    "Сompletion ratio": {
+      "bs": "Omjer ispunjavanja",
+      "de": "Abschlussquote",
+      "es": "Ratio de finalización",
+      "fr": "Ratio de réalisation",
+      "it": "Rapporto di completamento",
+      "pt": "Proporção de conclusão",
+      "tr": "Tamamlama oranı"
+    },
+    "Last 7 days": {
+      "bs": "Zadnjih 7 dana",
+      "de": "Letzte 7 Tage",
+      "es": "Últimos 7 días",
+      "fr": "7 derniers jours",
+      "it": "Ultimi 7 giorni",
+      "pt": "Últimos 7 dias",
+      "tr": "Son 7 gün"
+    },
+    "Completion rate": {
+      "bs": "Stopa ispunjavanja",
+      "de": "Abschlussrate",
+      "es": "Tasa de finalización",
+      "fr": "Taux de réalisation",
+      "it": "Tasso di completamento",
+      "pt": "Taxa de conclusão",
+      "tr": "Tamamlama oranı"
+    },
+    "Consistency": {
+      "bs": "Konzistentnost",
+      "de": "Beständigkeit",
+      "es": "Constancia",
+      "fr": "Régularité",
+      "it": "Costanza",
+      "pt": "Consistência",
+      "tr": "Tutarlılık"
+    },
+    "Your activity over time": {
+      "bs": "Vaša aktivnost tokom vremena",
+      "de": "Deine Aktivität im Zeitverlauf",
+      "es": "Tu actividad a lo largo del tiempo",
+      "fr": "Ton activité au fil du temps",
+      "it": "La tua attività nel tempo",
+      "pt": "Sua atividade ao longo do tempo",
+      "tr": "Zaman içindeki etkinliğin"
+    },
+    "Less": {
+      "bs": "Manje",
+      "de": "Weniger",
+      "es": "Menos",
+      "fr": "Moins",
+      "it": "Meno",
+      "pt": "Menos",
+      "tr": "Az"
+    },
+    "More": {
+      "bs": "Više",
+      "de": "Mehr",
+      "es": "Más",
+      "fr": "Plus",
+      "it": "Di più",
+      "pt": "Mais",
+      "tr": "Çok"
+    },
+    "Read a book": {
+      "bs": "Čitanje knjige",
+      "de": "Ein Buch lesen",
+      "es": "Leer un libro",
+      "fr": "Lire un livre",
+      "it": "Leggere un libro",
+      "pt": "Ler um livro",
+      "tr": "Kitap okuma"
+    },
+    "10 min": {
+      "bs": "10 min",
+      "de": "10 Min.",
+      "es": "10 min",
+      "fr": "10 min",
+      "it": "10 min",
+      "pt": "10 min",
+      "tr": "10 dk"
+    },
+    "30 min": {
+      "bs": "30 min",
+      "de": "30 Min.",
+      "es": "30 min",
+      "fr": "30 min",
+      "it": "30 min",
+      "pt": "30 min",
+      "tr": "30 dk"
+    },
+    "Strength": {
+      "bs": "Čvrstoća",
+      "de": "Stärke",
+      "es": "Fuerza",
+      "fr": "Force",
+      "it": "Forza",
+      "pt": "Força",
+      "tr": "Güç"
+    },
+    "Mark as complete": {
+      "bs": "Označi završeno",
+      "de": "Abhaken",
+      "es": "Marcar hecho",
+      "fr": "Terminé !",
+      "it": "Fatto!",
+      "pt": "Concluir",
+      "tr": "Tamamla"
+    },
+    "Good morning,\r": {
+      "bs": "Dobro jutro,\r",
+      "de": "Guten Morgen,\r",
+      "es": "Buenos días,\r",
+      "fr": "Bonjour,\r",
+      "it": "Buongiorno,\r",
+      "pt": "Bom dia,\r",
+      "tr": "Günaydın,\r"
+    },
+    "All": {
+      "bs": "Sve",
+      "de": "Alle",
+      "es": "Todos",
+      "fr": "Tout",
+      "it": "Tutti",
+      "pt": "Todos",
+      "tr": "Tümü"
+    },
+    "Any time": {
+      "bs": "Bilo kada",
+      "de": "Jederzeit",
+      "es": "Cualquier hora",
+      "fr": "N'importe quand",
+      "it": "Sempre",
+      "pt": "Qualquer hora",
+      "tr": "Her zaman"
+    },
+    "Morning": {
+      "bs": "Jutro",
+      "de": "Morgen",
+      "es": "Mañana",
+      "fr": "Matin",
+      "it": "Mattina",
+      "pt": "Manhã",
+      "tr": "Sabah"
+    },
+    "Afternoon": {
+      "bs": "Popodne",
+      "de": "Nachmittag",
+      "es": "Tarde",
+      "fr": "Après-midi",
+      "it": "Pomeriggio",
+      "pt": "Tarde",
+      "tr": "Öğleden sonra"
+    },
+    "Home": {
+      "bs": "Početna",
+      "de": "Start",
+      "es": "Inicio",
+      "fr": "Accueil",
+      "it": "Home",
+      "pt": "Início",
+      "tr": "Ana sayfa"
+    },
+    "Habits": {
+      "bs": "Navike",
+      "de": "Gewohnheiten",
+      "es": "Hábitos",
+      "fr": "Habitudes",
+      "it": "Abitudini",
+      "pt": "Hábitos",
+      "tr": "Alışkanlıklar"
+    },
+    "Calendar": {
+      "bs": "Kalendar",
+      "de": "Kalender",
+      "es": "Calendario",
+      "fr": "Calendrier",
+      "it": "Calendario",
+      "pt": "Calendário",
+      "tr": "Takvim"
+    },
+    "Profile": {
+      "bs": "Profil",
+      "de": "Profil",
+      "es": "Perfil",
+      "fr": "Profil",
+      "it": "Profilo",
+      "pt": "Perfil",
+      "tr": "Profil"
+    },
+    "Learning": {
+      "bs": "Učenje",
+      "de": "Lernen",
+      "es": "Aprender",
+      "fr": "Apprendre",
+      "it": "Studio",
+      "pt": "Estudo",
+      "tr": "Öğrenme"
+    },
+    "01:00 / 05:30 hours": {
+      "bs": "01:00 / 05:30 sati",
+      "de": "01:00 / 05:30 Stunden",
+      "es": "01:00 / 05:30 horas",
+      "fr": "01:00 / 05:30 heures",
+      "it": "01:00 / 05:30 ore",
+      "pt": "01:00 / 05:30 horas",
+      "tr": "01:00 / 05:30 saat"
+    },
+    "Drink water": {
+      "bs": "Pijenje vode",
+      "de": "Wasser trinken",
+      "es": "Beber agua",
+      "fr": "Boire de l'eau",
+      "it": "Bere acqua",
+      "pt": "Beber água",
+      "tr": "Su içmek"
+    },
+    "1 / 8 glasses": {
+      "bs": "1 / 8 čaša",
+      "de": "1 / 8 Gläser",
+      "es": "1 / 8 vasos",
+      "fr": "1 / 8 verres",
+      "it": "1 / 8 bicchieri",
+      "pt": "1 / 8 copos",
+      "tr": "1 / 8 bardak"
+    },
+    "Meditation": {
+      "bs": "Meditacija",
+      "de": "Meditation",
+      "es": "Meditación",
+      "fr": "Méditation",
+      "it": "Meditazione",
+      "pt": "Meditação",
+      "tr": "Meditasyon"
+    },
+    "Morning meditation": {
+      "bs": "Jutarnja meditacija",
+      "de": "Morgenmeditation",
+      "es": "Meditación matutina",
+      "fr": "Méditation du matin",
+      "it": "Meditazione mattutina",
+      "pt": "Meditação matinal",
+      "tr": "Sabah meditasyonu"
+    },
+    "Add new": {
+      "bs": "Dodaj novu",
+      "de": "Neu hinzufügen",
+      "es": "Añadir nuevo",
+      "fr": "Ajouter",
+      "it": "Aggiungi",
+      "pt": "Adicionar",
+      "tr": "Yeni ekle"
+    },
+    "Days Streak": {
+      "bs": "Dana streak",
+      "de": "Tage Streak",
+      "es": "Días de racha",
+      "fr": "Jours de série",
+      "it": "Giorni di serie",
+      "pt": "Dias de sequência",
+      "tr": "Günlük seri"
+    },
+    "You are doing really great!": {
+      "bs": "Odlično ti ide!",
+      "de": "Du machst das wirklich toll!",
+      "es": "¡Lo estás haciendo muy bien!",
+      "fr": "Tu t'en sors vraiment bien !",
+      "it": "Stai andando alla grande!",
+      "pt": "Você está indo muito bem!",
+      "tr": "Harika gidiyorsun!"
+    },
+    "Settings": {
+      "bs": "Postavke",
+      "de": "Einstellungen",
+      "es": "Ajustes",
+      "fr": "Paramètres",
+      "it": "Impostazioni",
+      "pt": "Configurações",
+      "tr": "Ayarlar"
+    },
+    "Language": {
+      "bs": "Jezik",
+      "de": "Sprache",
+      "es": "Idioma",
+      "fr": "Langue",
+      "it": "Lingua",
+      "pt": "Idioma",
+      "tr": "Dil"
+    },
+    "Choose app language": {
+      "bs": "Odaberi jezik aplikacije",
+      "de": "Sprache der App wählen",
+      "es": "Elige el idioma",
+      "fr": "Choisis la langue",
+      "it": "Scegli la lingua dell'app",
+      "pt": "Escolher idioma do app",
+      "tr": "Uygulama dilini seç"
+    },
+    "EN": {
+      "bs": "BS",
+      "de": "DE",
+      "es": "ES",
+      "fr": "FR",
+      "it": "IT",
+      "pt": "PT",
+      "tr": "TR"
+    },
+    "Appearance": {
+      "bs": "Izgled",
+      "de": "Erscheinungsbild",
+      "es": "Apariencia",
+      "fr": "Apparence",
+      "it": "Aspetto",
+      "pt": "Aparência",
+      "tr": "Görünüm"
+    },
+    "Display empty categories": {
+      "bs": "Prikaži prazne kategorije",
+      "de": "Leere Kategorien anzeigen",
+      "es": "Mostrar categorías vacías",
+      "fr": "Afficher les catégories vides",
+      "it": "Mostra categorie vuote",
+      "pt": "Mostrar categorias vazias",
+      "tr": "Boş kategorileri göster"
+    },
+    "Mode": {
+      "bs": "Način rada",
+      "de": "Modus",
+      "es": "Modo",
+      "fr": "Mode",
+      "it": "Modalità",
+      "pt": "Modo",
+      "tr": "Mod"
+    },
+    "Light": {
+      "bs": "Svijetli",
+      "de": "Hell",
+      "es": "Claro",
+      "fr": "Clair",
+      "it": "Chiaro",
+      "pt": "Claro",
+      "tr": "Açık"
+    },
+    "Dark": {
+      "bs": "Tamni",
+      "de": "Dunkel",
+      "es": "Oscuro",
+      "fr": "Sombre",
+      "it": "Scuro",
+      "pt": "Escuro",
+      "tr": "Koyu"
+    },
+    "System": {
+      "bs": "Sistem",
+      "de": "System",
+      "es": "Sistema",
+      "fr": "Système",
+      "it": "Sistema",
+      "pt": "Sistema",
+      "tr": "Sistem"
+    },
+    "Preferences": {
+      "bs": "Preferencije",
+      "de": "Präferenzen",
+      "es": "Preferencias",
+      "fr": "Préférences",
+      "it": "Preferenze",
+      "pt": "Preferências",
+      "tr": "Tercihler"
+    },
+    "Haptic feedback (vibration)": {
+      "bs": "Haptički odziv (vibracija)",
+      "de": "Haptisches Feedback (Vibration)",
+      "es": "Respuesta háptica (vibración)",
+      "fr": "Retour haptique (vibration)",
+      "it": "Feedback aptico (vibrazione)",
+      "pt": "Feedback tátil (vibração)",
+      "tr": "Dokunsal geri bildirim (titreşim)"
+    },
+    "Sound": {
+      "bs": "Zvuk",
+      "de": "Ton",
+      "es": "Sonido",
+      "fr": "Son",
+      "it": "Suono",
+      "pt": "Som",
+      "tr": "Ses"
+    },
+    "12-hour format": {
+      "bs": "12-satni format",
+      "de": "12-Stunden-Format",
+      "es": "Formato de 12 horas",
+      "fr": "Format 12 heures",
+      "it": "Formato 12 ore",
+      "pt": "Formato de 12 horas",
+      "tr": "12 saat biçimi"
+    },
+    "Edit habit in the past": {
+      "bs": "Uređivanje prošlih dana",
+      "de": "Vergangene Tage bearbeiten",
+      "es": "Editar días pasados",
+      "fr": "Modifier les jours passés",
+      "it": "Modifica i giorni passati",
+      "pt": "Editar dias passados",
+      "tr": "Geçmiş günleri düzenle"
+    },
+    "Notification": {
+      "bs": "Obavijesti",
+      "de": "Benachrichtigungen",
+      "es": "Notificaciones",
+      "fr": "Notifications",
+      "it": "Notifiche",
+      "pt": "Notificações",
+      "tr": "Bildirimler"
+    },
+    "Enable notification": {
+      "bs": "Uključi obavijesti",
+      "de": "Benachrichtigungen an",
+      "es": "Activar notificaciones",
+      "fr": "Activer les notifications",
+      "it": "Attiva notifiche",
+      "pt": "Ativar notificações",
+      "tr": "Bildirimleri aç"
+    },
+    "Daily reminders": {
+      "bs": "Dnevni podsjetnici",
+      "de": "Tägliche Erinnerungen",
+      "es": "Recordatorios diarios",
+      "fr": "Rappels quotidiens",
+      "it": "Promemoria giornalieri",
+      "pt": "Lembretes diários",
+      "tr": "Günlük hatırlatıcılar"
+    },
+    "Morning reminder": {
+      "bs": "Jutarnji podsjetnik",
+      "de": "Morgenerinnerung",
+      "es": "Recordatorio matutino",
+      "fr": "Rappel du matin",
+      "it": "Promemoria mattutino",
+      "pt": "Lembrete da manhã",
+      "tr": "Sabah hatırlatıcısı"
+    },
+    "Time": {
+      "bs": "Vrijeme",
+      "de": "Zeit",
+      "es": "Hora",
+      "fr": "Heure",
+      "it": "Orario",
+      "pt": "Horário",
+      "tr": "Saat"
+    },
+    "Mid-day reminder": {
+      "bs": "Podnevni podsjetnik",
+      "de": "Mittagserinnerung",
+      "es": "Recordatorio de mediodía",
+      "fr": "Rappel de midi",
+      "it": "Promemoria di mezzogiorno",
+      "pt": "Lembrete do meio-dia",
+      "tr": "Öğle hatırlatıcısı"
+    },
+    "Wrap up reminder": {
+      "bs": "Večernji podsjetnik",
+      "de": "Abenderinnerung",
+      "es": "Recordatorio de cierre",
+      "fr": "Rappel du soir",
+      "it": "Promemoria serale",
+      "pt": "Lembrete do fim do dia",
+      "tr": "Gün sonu hatırlatıcısı"
+    },
+    "Private.\nOffline.\nNo account.": {
+      "bs": "Privatno.\nOffline.\nBez računa.",
+      "de": "Privat.\nOffline.\nOhne Konto.",
+      "es": "Privada.\nSin conexión.\nSin cuenta.",
+      "fr": "Privée.\nHors ligne.\nSans compte.",
+      "it": "Privata.\nOffline.\nSenza account.",
+      "pt": "Privado.\nOffline.\nSem conta.",
+      "tr": "Gizli.\nÇevrimdışı.\nHesapsız."
+    },
+    "No ads, no tracking. Your habits stay on your device.": {
+      "bs": "Bez reklama, bez praćenja. Tvoje navike ostaju na tvom uređaju.",
+      "de": "Keine Werbung, kein Tracking. Deine Gewohnheiten bleiben auf deinem Gerät.",
+      "es": "Sin anuncios ni rastreo. Tus hábitos se quedan en tu dispositivo.",
+      "fr": "Sans pub ni pistage. Tes habitudes restent sur ton appareil.",
+      "it": "Niente pubblicità né tracciamento. Le tue abitudini restano sul tuo dispositivo.",
+      "pt": "Sem anúncios, sem rastreamento. Seus hábitos ficam no seu dispositivo.",
+      "tr": "Reklam yok, takip yok. Alışkanlıkların cihazında kalır."
+    },
+    "Stays on your device": {
+      "bs": "Ostaje na tvom uređaju",
+      "de": "Bleibt auf deinem Gerät",
+      "es": "Se queda en tu dispositivo",
+      "fr": "Reste sur ton appareil",
+      "it": "Resta sul tuo dispositivo",
+      "pt": "Fica no seu dispositivo",
+      "tr": "Cihazında kalır"
+    },
+    "Works offline": {
+      "bs": "Radi bez interneta",
+      "de": "Funktioniert offline",
+      "es": "Funciona sin conexión",
+      "fr": "Fonctionne hors ligne",
+      "it": "Funziona offline",
+      "pt": "Funciona offline",
+      "tr": "Çevrimdışı çalışır"
+    },
+    "No account": {
+      "bs": "Bez računa",
+      "de": "Kein Konto nötig",
+      "es": "Sin cuenta",
+      "fr": "Sans compte",
+      "it": "Senza account",
+      "pt": "Sem conta",
+      "tr": "Hesap gerekmez"
+    },
+    "Encrypted backup": {
+      "bs": "Šifrirana rezervna kopija",
+      "de": "Verschlüsseltes Backup",
+      "es": "Copia de seguridad cifrada",
+      "fr": "Sauvegarde chiffrée",
+      "it": "Backup crittografato",
+      "pt": "Backup criptografado",
+      "tr": "Şifreli yedekleme"
+    },
+    "Walk": {
+      "bs": "Šetnja",
+      "de": "Spazieren gehen",
+      "es": "Caminar",
+      "fr": "Marche",
+      "it": "Camminata",
+      "pt": "Caminhada",
+      "tr": "Yürüyüş"
+    },
+    "8,420 / 10,000 steps": {
+      "bs": "8.420 / 10.000 koraka",
+      "de": "8.420 / 10.000 Schritte",
+      "es": "8420 / 10 000 pasos",
+      "fr": "8 420 / 10 000 pas",
+      "it": "8.420 / 10.000 passi",
+      "pt": "8.420 / 10.000 passos",
+      "tr": "8.420 / 10.000 adım"
+    },
+    "Workout": {
+      "bs": "Trening",
+      "de": "Training",
+      "es": "Entrenamiento",
+      "fr": "Entraînement",
+      "it": "Allenamento",
+      "pt": "Treino",
+      "tr": "Antrenman"
+    },
+    "25 / 45 min": {
+      "bs": "25 / 45 min",
+      "de": "25 / 45 Min.",
+      "es": "25 / 45 min",
+      "fr": "25 / 45 min",
+      "it": "25 / 45 min",
+      "pt": "25 / 45 min",
+      "tr": "25 / 45 dk"
+    },
+    "Sleep": {
+      "bs": "Spavanje",
+      "de": "Schlaf",
+      "es": "Sueño",
+      "fr": "Sommeil",
+      "it": "Sonno",
+      "pt": "Sono",
+      "tr": "Uyku"
+    },
+    "8 hours": {
+      "bs": "8 sati",
+      "de": "8 Stunden",
+      "es": "8 horas",
+      "fr": "8 heures",
+      "it": "8 ore",
+      "pt": "8 horas",
+      "tr": "8 saat"
+    },
+    "Make it\nyours": {
+      "bs": "Neka bude\ntvoja",
+      "de": "Mach sie\nzu deiner",
+      "es": "Hazla\ntuya",
+      "fr": "Fais-la\ntienne",
+      "it": "Rendila\ntua",
+      "pt": "Deixe do\nseu jeito",
+      "tr": "Kendine\ngöre ayarla"
+    },
+    "Six accent themes, free for everyone.": {
+      "bs": "Šest tema boja, besplatno za sve.",
+      "de": "Sechs Farbthemen, kostenlos für alle.",
+      "es": "Seis temas de color, gratis para todos.",
+      "fr": "Six thèmes de couleur, gratuits pour tous.",
+      "it": "Sei temi colore, gratis per tutti.",
+      "pt": "Seis temas de cor, grátis para todos.",
+      "tr": "Altı renk teması, herkese ücretsiz."
+    },
+    "45 min": {
+      "bs": "45 min",
+      "de": "45 Min.",
+      "es": "45 min",
+      "fr": "45 min",
+      "it": "45 min",
+      "pt": "45 min",
+      "tr": "45 dk"
+    },
+    "6h / 8h": {
+      "bs": "6 h / 8 h",
+      "de": "6 Std. / 8 Std.",
+      "es": "6 h / 8 h",
+      "fr": "6 h / 8 h",
+      "it": "6 h / 8 h",
+      "pt": "6 h / 8 h",
+      "tr": "6 sa / 8 sa"
+    },
+    "Habitt": {
+      "bs": "Habitt",
+      "de": "Habitt",
+      "es": "Habitt",
+      "fr": "Habitt",
+      "it": "Habitt",
+      "pt": "Habitt",
+      "tr": "Habitt"
+    },
+    "Lagoon": {
+      "bs": "Laguna",
+      "de": "Lagune",
+      "es": "Laguna",
+      "fr": "Lagune",
+      "it": "Laguna",
+      "pt": "Lagoa",
+      "tr": "Lagün"
+    },
+    "Ocean": {
+      "bs": "Okean",
+      "de": "Ozean",
+      "es": "Océano",
+      "fr": "Océan",
+      "it": "Oceano",
+      "pt": "Oceano",
+      "tr": "Okyanus"
+    },
+    "Indigo": {
+      "bs": "Indigo",
+      "de": "Indigo",
+      "es": "Índigo",
+      "fr": "Indigo",
+      "it": "Indaco",
+      "pt": "Índigo",
+      "tr": "İndigo"
+    },
+    "Violet": {
+      "bs": "Ljubičasta",
+      "de": "Violett",
+      "es": "Violeta",
+      "fr": "Violet",
+      "it": "Viola",
+      "pt": "Violeta",
+      "tr": "Menekşe"
+    },
+    "Orchid": {
+      "bs": "Orhideja",
+      "de": "Orchidee",
+      "es": "Orquídea",
+      "fr": "Orchidée",
+      "it": "Orchidea",
+      "pt": "Orquídea",
+      "tr": "Orkide"
+    },
+    "Steps": {
+      "bs": "Koraci",
+      "de": "Schritte",
+      "es": "Pasos",
+      "fr": "Pas",
+      "it": "Passi",
+      "pt": "Passos",
+      "tr": "Adımlar"
+    },
+    "7h 30m / 8h": {
+      "bs": "7 h 30 min / 8 h",
+      "de": "7 Std. 30 Min. / 8 Std.",
+      "es": "7 h 30 min / 8 h",
+      "fr": "7 h 30 / 8 h",
+      "it": "7 h 30 min / 8 h",
+      "pt": "7 h 30 min / 8 h",
+      "tr": "7 sa 30 dk / 8 sa"
+    },
+    "Exercise": {
+      "bs": "Vježbanje",
+      "de": "Training",
+      "es": "Ejercicio",
+      "fr": "Exercice",
+      "it": "Esercizio",
+      "pt": "Exercício",
+      "tr": "Egzersiz"
+    },
+    "25 / 30 min": {
+      "bs": "25 / 30 min",
+      "de": "25 / 30 Min.",
+      "es": "25 / 30 min",
+      "fr": "25 / 30 min",
+      "it": "25 / 30 min",
+      "pt": "25 / 30 min",
+      "tr": "25 / 30 dk"
+    },
+    "Mindful minutes": {
+      "bs": "Minute svjesnosti",
+      "de": "Achtsamkeitsminuten",
+      "es": "Minutos de mindfulness",
+      "fr": "Minutes de pleine conscience",
+      "it": "Minuti di mindfulness",
+      "pt": "Minutos de atenção plena",
+      "tr": "Farkındalık dakikaları"
+    },
+    "10 / 10 min": {
+      "bs": "10 / 10 min",
+      "de": "10 / 10 Min.",
+      "es": "10 / 10 min",
+      "fr": "10 / 10 min",
+      "it": "10 / 10 min",
+      "pt": "10 / 10 min",
+      "tr": "10 / 10 dk"
+    },
+    "Active calories": {
+      "bs": "Aktivne kalorije",
+      "de": "Aktive Kalorien",
+      "es": "Calorías activas",
+      "fr": "Calories actives",
+      "it": "Calorie attive",
+      "pt": "Calorias ativas",
+      "tr": "Aktif kalori"
+    },
+    "312 / 500 kcal": {
+      "bs": "312 / 500 kcal",
+      "de": "312 / 500 kcal",
+      "es": "312 / 500 kcal",
+      "fr": "312 / 500 kcal",
+      "it": "312 / 500 kcal",
+      "pt": "312 / 500 kcal",
+      "tr": "312 / 500 kcal"
+    },
+    "Syncs with\nApple Health": {
+      "bs": "Sinhronizacija\ns Apple Health",
+      "de": "Synchron mit\nApple Health",
+      "es": "Se sincroniza\ncon Apple Salud",
+      "fr": "Synchronisé\navec Apple Santé",
+      "it": "Si sincronizza\ncon Apple Salute",
+      "pt": "Sincroniza com\nApple Saúde",
+      "tr": "Apple Sağlık ile\nsenkronize"
+    },
+    "Syncs with\nHealth Connect": {
+      "bs": "Sinhronizacija\ns Health Connect",
+      "de": "Synchron mit\nHealth Connect",
+      "es": "Se sincroniza\ncon Health Connect",
+      "fr": "Synchronisé avec\nHealth Connect",
+      "it": "Si sincronizza\ncon Health Connect",
+      "pt": "Sincroniza com\nHealth Connect",
+      "tr": "Health Connect ile\nsenkronize"
+    },
+    "Link a habit to steps, sleep, exercise or mindful minutes and it fills itself in.": {
+      "bs": "Poveži naviku s koracima, spavanjem, vježbanjem ili minutama svjesnosti i ona se sama popunjava.",
+      "de": "Verknüpfe eine Gewohnheit mit Schritten, Schlaf, Training oder Achtsamkeit und sie füllt sich von selbst.",
+      "es": "Vincula un hábito a pasos, sueño, ejercicio o mindfulness y se completa solo.",
+      "fr": "Relie une habitude aux pas, au sommeil, au sport ou à la pleine conscience et elle se remplit toute seule.",
+      "it": "Collega un'abitudine a passi, sonno, esercizio o mindfulness e si compila da sola.",
+      "pt": "Vincule um hábito a passos, sono, exercício ou atenção plena e ele se preenche sozinho.",
+      "tr": "Bir alışkanlığı adım, uyku, egzersiz veya farkındalık dakikalarına bağla, kendiliğinden dolsun."
+    },
+    "Apple Health": {
+      "bs": "Apple Health",
+      "de": "Apple Health",
+      "es": "Apple Salud",
+      "fr": "Apple Santé",
+      "it": "Apple Salute",
+      "pt": "Apple Saúde",
+      "tr": "Apple Sağlık"
+    },
+    "Health Connect": {
+      "bs": "Health Connect",
+      "de": "Health Connect",
+      "es": "Health Connect",
+      "fr": "Health Connect",
+      "it": "Health Connect",
+      "pt": "Health Connect",
+      "tr": "Health Connect"
+    },
+    "Synced just now": {
+      "bs": "Upravo sinhronizovano",
+      "de": "Gerade synchronisiert",
+      "es": "Sincronizado ahora",
+      "fr": "Synchronisé à l'instant",
+      "it": "Sincronizzato ora",
+      "pt": "Sincronizado agora",
+      "tr": "Az önce senkronize edildi"
+    },
+    "Read-only": {
+      "bs": "Samo čitanje",
+      "de": "Nur Lesen",
+      "es": "Solo lectura",
+      "fr": "Lecture seule",
+      "it": "Sola lettura",
+      "pt": "Somente leitura",
+      "tr": "Salt okunur"
+    },
+    "Your health data stays on your phone.": {
+      "bs": "Tvoji zdravstveni podaci ostaju na telefonu.",
+      "de": "Deine Gesundheitsdaten bleiben auf dem Handy.",
+      "es": "Tus datos de salud se quedan en tu móvil.",
+      "fr": "Tes données de santé restent sur ton téléphone.",
+      "it": "I tuoi dati sulla salute restano sul telefono.",
+      "pt": "Seus dados de saúde ficam no seu celular.",
+      "tr": "Sağlık verilerin telefonunda kalır."
+    },
+    "Habits on\nyour wrist": {
+      "bs": "Navike na\ntvom zapešću",
+      "de": "Gewohnheiten\nam Handgelenk",
+      "es": "Tus hábitos\nen la muñeca",
+      "fr": "Tes habitudes\nau poignet",
+      "it": "Abitudini\nal polso",
+      "pt": "Hábitos\nno seu pulso",
+      "tr": "Alışkanlıklar\nbileğinde"
+    },
+    "Check off, log and keep your streak from Apple Watch.": {
+      "bs": "Označi, upiši i čuvaj svoj streak s Apple Watcha.",
+      "de": "Abhaken, eintragen und deinen Streak halten, direkt auf der Apple Watch.",
+      "es": "Marca, registra y mantén tu racha desde el Apple Watch.",
+      "fr": "Coche, note et garde ta série depuis ton Apple Watch.",
+      "it": "Spunta, registra e mantieni la serie da Apple Watch.",
+      "pt": "Marque, registre e mantenha sua sequência pelo Apple Watch.",
+      "tr": "Apple Watch'tan işaretle, kaydet ve serini koru."
+    },
+    "Check off, log and keep your streak from your Wear OS watch.": {
+      "bs": "Označi, upiši i čuvaj svoj streak s Wear OS sata.",
+      "de": "Abhaken, eintragen und deinen Streak halten, direkt auf deiner Wear OS Uhr.",
+      "es": "Marca, registra y mantén tu racha desde tu reloj Wear OS.",
+      "fr": "Coche, note et garde ta série depuis ta montre Wear OS.",
+      "it": "Spunta, registra e mantieni la serie dal tuo orologio Wear OS.",
+      "pt": "Marque, registre e mantenha sua sequência pelo relógio Wear OS.",
+      "tr": "Wear OS saatinden işaretle, kaydet ve serini koru."
+    },
+    "Tap to check off": {
+      "bs": "Dodirni za označavanje",
+      "de": "Tippen zum Abhaken",
+      "es": "Toca para marcar",
+      "fr": "Touche pour cocher",
+      "it": "Tocca per spuntare",
+      "pt": "Toque para marcar",
+      "tr": "İşaretlemek için dokun"
+    },
+    "Turn the Digital\nCrown to log": {
+      "bs": "Okreni Digital\nCrown za unos",
+      "de": "Mit der Digital\nCrown eintragen",
+      "es": "Gira la Digital\nCrown para anotar",
+      "fr": "Tourne la Digital\nCrown pour noter",
+      "it": "Ruota la Digital\nCrown per registrare",
+      "pt": "Gire a Digital\nCrown para registrar",
+      "tr": "Kaydetmek için\nDigital Crown'u çevir"
+    },
+    "Turn the crown\nto log": {
+      "bs": "Okreni krunicu\nza unos",
+      "de": "Mit der Krone\neintragen",
+      "es": "Gira la corona\npara anotar",
+      "fr": "Tourne la couronne\npour noter",
+      "it": "Ruota la corona\nper registrare",
+      "pt": "Gire a coroa\npara registrar",
+      "tr": "Kaydetmek için\ntaçı çevir"
+    },
+    "Syncs with\nyour iPhone": {
+      "bs": "Sinhronizacija\ns iPhoneom",
+      "de": "Synchron mit\ndeinem iPhone",
+      "es": "Se sincroniza\ncon tu iPhone",
+      "fr": "Synchronisé\navec ton iPhone",
+      "it": "Sincronizzato\ncon il tuo iPhone",
+      "pt": "Sincroniza com\nseu iPhone",
+      "tr": "iPhone'unla\nsenkronize"
+    },
+    "Syncs with\nyour phone": {
+      "bs": "Sinhronizacija\ns telefonom",
+      "de": "Synchron mit\ndeinem Handy",
+      "es": "Se sincroniza\ncon tu móvil",
+      "fr": "Synchronisé\navec ton téléphone",
+      "it": "Sincronizzato\ncon il telefono",
+      "pt": "Sincroniza com\nseu celular",
+      "tr": "Telefonunla\nsenkronize"
+    },
+    "12 day streak": {
+      "bs": "12 dana streak",
+      "de": "12 Tage Streak",
+      "es": "Racha de 12 días",
+      "fr": "Série de 12 jours",
+      "it": "Serie di 12 giorni",
+      "pt": "Sequência de 12 dias",
+      "tr": "12 günlük seri"
+    },
+    "Day complete": {
+      "bs": "Dan završen",
+      "de": "Tag geschafft",
+      "es": "Día completado",
+      "fr": "Journée terminée",
+      "it": "Giornata completata",
+      "pt": "Dia concluído",
+      "tr": "Gün tamamlandı"
+    }
+  }
+}
