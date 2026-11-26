@@ -1,1 +1,1 @@
-rastreador,recordatorio,disciplina,diario,health,fitness,workout,gym,sleep,water,diet,weight,steps
+rastreador,recordatorio,disciplina,diario,reloj,health,fitness,workout,gym,sleep,water,diet,steps

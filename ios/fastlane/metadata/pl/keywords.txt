@@ -1,1 +1,1 @@
-tracker,produktywnosc,offline,przypomnienie,dziennik,motywacja,silownia,woda,sen,czytanie,nauka
+tracker,produktywnosc,offline,przypomnienie,dziennik,motywacja,silownia,woda,sen,czytanie,zegarek

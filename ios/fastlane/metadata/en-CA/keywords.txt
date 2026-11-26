@@ -1,1 +1,1 @@
-planner,reminders,daily,checklist,offline,wellness,motivation,discipline,heatmap,calendar,coach,log
+widget,watch,planner,reminder,daily,checklist,offline,wellness,motivation,discipline,calendar,coach

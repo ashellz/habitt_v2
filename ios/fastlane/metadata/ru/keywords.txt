@@ -1,1 +1,1 @@
-рутина,напоминание,дневник,мотивация,спорт,selfcare,mindful,mood,morning,evening,ritual,wellbeing
+рутина,напоминание,дневник,мотивация,спорт,виджет,часы,selfcare,mindful,morning,evening,wellbeing
