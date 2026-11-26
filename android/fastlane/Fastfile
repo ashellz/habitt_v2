@@ -60,26 +60,31 @@ platform :android do
   }.freeze
   PLAY_STAGE = File.expand_path("../../build/store_screenshots/android", __dir__)
 
-  desc "Upload the Wear OS screenshots (all languages) to the Play listing. Touches only wearScreenshots"
-  lane :wear_screenshots do
+  # Wear OS screenshots in their own language where we have one, English elsewhere.
+  def stage_wear_screenshots
     src = File.expand_path("../../marketing/watch_screenshots/wear_os", __dir__)
-    FileUtils.rm_rf(PLAY_STAGE)
-    WEAR_LOCALES.each do |lang, locales|
-      locales.each do |locale|
-        dir = File.join(PLAY_STAGE, locale, "images", "wearScreenshots")
-        FileUtils.mkdir_p(dir)
-        Dir.glob(File.join(src, lang, "*.png")).sort.each { |png| FileUtils.cp(png, dir) }
-      end
+    lang_of = WEAR_LOCALES.flat_map { |lang, locales| locales.map { |l| [l, lang] } }.to_h
+    Dir.glob(File.expand_path("metadata/android/*/", __dir__)).each do |locale_dir|
+      locale = File.basename(locale_dir)
+      dir = File.join(PLAY_STAGE, locale, "images", "wearScreenshots")
+      FileUtils.mkdir_p(dir)
+      Dir.glob(File.join(src, lang_of.fetch(locale, "en"), "*.png")).sort.each { |png| FileUtils.cp(png, dir) }
     end
+  end
+
+  desc "Upload the Wear OS screenshots to every Play locale (translated where available, English elsewhere). Touches only wearScreenshots. Not sent for review: publish from Publishing overview"
+  lane :wear_screenshots do
+    FileUtils.rm_rf(PLAY_STAGE)
+    stage_wear_screenshots
     upload_to_play_store(
       metadata_path: PLAY_STAGE,
       skip_upload_apk: true, skip_upload_aab: true, skip_upload_metadata: true,
       skip_upload_changelogs: true, skip_upload_images: true,
-      sync_image_upload: true
+      sync_image_upload: true, changes_not_sent_for_review: true
     )
   end
 
-  desc "When the watch apps are on Play production: upload the listing text (widgets + Wear OS) and add the Wear OS phone slide. A locale with a full set (8) gets it in place of the last one (Themes), others get it appended. Keeps every other phone screenshot"
+  desc "Watch listing for Play: listing text (widgets + Wear OS), the Wear OS screenshots, and the same 8 English phone screenshots in every locale (en-US's first 7 + the Wear OS slide in place of Themes). Not sent for review: publish from Publishing overview"
   lane :watch_listing do
     check_play_metadata!
     require "open-uri"
@@ -89,36 +94,30 @@ platform :android do
                                                        { json_key: File.expand_path("key.json", __dir__), package_name: "com.shellz.habitt" })
     client = Supply::Client.make_from_config
     client.begin_edit(package_name: "com.shellz.habitt")
-    FileUtils.rm_rf(PLAY_STAGE)
-    # the screenshots are English everywhere: build the en-US set once
-    # (its first 7, the slide in place of the 8th, Themes) and give it to every locale
-    en = client.fetch_images(image_type: "phoneScreenshots", language: "en-US")
+    en = client.fetch_images(image_type: "phoneScreenshots", language: "en-US").reject { |i| i.sha256 == slide_sha }
     UI.user_error!("en-US has no phone screenshots") if en.empty?
-    en = en.reject { |i| i.sha256 == slide_sha }
+    FileUtils.rm_rf(PLAY_STAGE)
     en_set = File.join(PLAY_STAGE, "_en_set")
     FileUtils.mkdir_p(en_set)
     en.first(7).each_with_index { |img, i| File.binwrite(File.join(en_set, format("%02d.png", i + 1)), URI.open(img.url).read) }
     FileUtils.cp(slide, File.join(en_set, format("%02d.png", [en.size, 7].min + 1)))
-    client.listings.each do |listing|
-      dir = File.join(PLAY_STAGE, listing.language, "images", "phoneScreenshots")
-      FileUtils.mkdir_p(dir)
-      FileUtils.cp(Dir.glob(File.join(en_set, "*.png")), dir)
-    end
-    FileUtils.rm_rf(en_set)
-    UI.message("Every locale gets the en-US set: #{Dir.glob(File.join(PLAY_STAGE, 'en-US/images/phoneScreenshots/*.png')).size} phone screenshots")
     client.abort_current_edit
-    # text from the repo, phone screenshots from the stage (keeping the rest unchanged)
+
     Dir.glob("metadata/android/*/").each do |dir|
       locale = File.basename(dir)
-      FileUtils.mkdir_p(File.join(PLAY_STAGE, locale))
+      phone = File.join(PLAY_STAGE, locale, "images", "phoneScreenshots")
+      FileUtils.mkdir_p(phone)
+      FileUtils.cp(Dir.glob(File.join(en_set, "*.png")), phone)
       %w[title.txt short_description.txt full_description.txt video.txt].each do |f|
         FileUtils.cp(File.join(dir, f), File.join(PLAY_STAGE, locale)) if File.exist?(File.join(dir, f))
       end
     end
+    FileUtils.rm_rf(en_set)
+    stage_wear_screenshots
     upload_to_play_store(
       metadata_path: PLAY_STAGE,
       skip_upload_apk: true, skip_upload_aab: true, skip_upload_changelogs: true,
-      skip_upload_images: true, sync_image_upload: true
+      skip_upload_images: true, sync_image_upload: true, changes_not_sent_for_review: true
     )
   end
 
