@@ -1,2 +1,3 @@
 Yeni: ana ekran widget'ları. Serini, bugünkü ilerlemeni ve sıradaki alışkanlığını ana ekranında gör.
+Yeni: Apple Watch uygulaması. Bugünkü alışkanlıklarını doğrudan bileğinden tamamla ve kaydet.
 Ayrıca uygulama iyileştirmeleri ve hata düzeltmeleri.

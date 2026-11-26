@@ -1,2 +1,3 @@
 Novo: widgeti za početni zaslon. Niz, današnji napredak i sljedeća navika uvijek na vidiku.
+Novo: Apple Watch aplikacija. Dovrši i bilježi današnje navike izravno sa zapešća.
 Također poboljšanja aplikacije i ispravci grešaka.

@@ -1,0 +1,3 @@
+Mới: tiện ích màn hình chính. Theo dõi chuỗi ngày, tiến độ hôm nay và thói quen tiếp theo ngay trên màn hình chính.
+Mới: ứng dụng Wear OS. Hoàn thành và ghi lại thói quen hôm nay ngay trên đồng hồ.
+Ngoài ra còn có các cải tiến ứng dụng và sửa lỗi.

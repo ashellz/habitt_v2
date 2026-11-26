@@ -1,2 +1,3 @@
 Novidade: widgets para a tela inicial. Sua sequência, o progresso de hoje e o próximo hábito sempre à vista.
+Novidade: app para Apple Watch. Conclua e registre os hábitos de hoje direto do pulso.
 Além de melhorias no app e correções de bugs.

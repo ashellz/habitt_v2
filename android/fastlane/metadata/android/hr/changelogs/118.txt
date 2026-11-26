@@ -1,0 +1,3 @@
+Novo: widgeti za početni zaslon. Niz, današnji napredak i sljedeća navika uvijek na vidiku.
+Novo: Wear OS aplikacija. Dovrši i bilježi današnje navike izravno sa sata.
+Također poboljšanja aplikacije i ispravci grešaka.

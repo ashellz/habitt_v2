@@ -1,2 +1,3 @@
 Nouveau : widgets pour l'écran d'accueil. Votre série, la progression du jour et la prochaine habitude, toujours visibles.
+Nouveau : app Apple Watch. Validez et enregistrez les habitudes du jour depuis votre poignet.
 Ainsi que des améliorations de l'app et des corrections de bugs.

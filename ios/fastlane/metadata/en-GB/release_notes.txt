@@ -1,2 +1,3 @@
 New: home screen widgets. Keep your streak, today's progress and what's up next on your home screen.
+New: Apple Watch app. Complete and log today's habits right from your wrist.
 Plus app improvements and bug fixes.
