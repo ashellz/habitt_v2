@@ -28,6 +28,10 @@ Habitt lưu mọi thứ trên thiết bị của bạn. Khi cần bản sao trê
 BẮT ĐẦU NHANH
 Nhập toàn bộ thói quen từ các ứng dụng khác như HabitKit. Dùng mẫu có sẵn để bắt đầu trong vài giây: dậy sớm, ngủ sớm, tập gym, chạy bộ, đi bộ, uống nước, đánh răng, chăm sóc da, dinh dưỡng, học tập, đọc sách, uống thuốc, phiên làm việc tập trung và nhiều hơn nữa.
 
+TIỆN ÍCH VÀ APPLE WATCH
+• Tiện ích màn hình chính: chuỗi ngày, tuần của bạn, tiến độ hôm nay và việc tiếp theo.
+• Apple Watch: đánh dấu thói quen, ghi số lượng và số phút, và biết khi nào bạn hoàn thành cả ngày.
+
 GIAO DIỆN
 Chế độ tối và sáng.
 

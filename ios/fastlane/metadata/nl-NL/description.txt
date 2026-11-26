@@ -28,6 +28,10 @@ Habitt bewaart alles op je apparaat. Wil je een kopie in de cloud, koppel dan je
 SNEL STARTEN
 Importeer al je gewoontes uit andere apps zoals HabitKit. Gebruik een kant-en-klaar sjabloon om binnen enkele seconden te beginnen: vroeg opstaan, vroeg naar bed, sportschool, hardlopen, wandelen, water drinken, tandenpoetsen, huidverzorging, voeding, studeren, lezen, medicatie, productiviteitssessies en meer.
 
+WIDGETS EN APPLE WATCH
+• Widgets op je beginscherm: je reeks, je week, je voortgang van vandaag en wat er nog komt.
+• Apple Watch: vink gewoontes af, log aantallen en minuten en zie wanneer je dag compleet is.
+
 WEERGAVE
 Donkere en lichte modus.
 

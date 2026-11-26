@@ -28,6 +28,10 @@ Habitt conserve tout sur votre appareil. Si vous voulez une copie dans le cloud,
 DÉMARRAGE RAPIDE
 Importez toutes vos habitudes depuis d'autres applications comme HabitKit. Utilisez un modèle prêt à l'emploi pour démarrer en quelques secondes : se lever tôt, se coucher tôt, salle de sport, course, marche, boire de l'eau, se brosser les dents, soin de la peau, nutrition, étude, lecture, médicaments, sessions de productivité, et plus encore.
 
+WIDGETS ET APPLE WATCH
+• Widgets sur l'écran d'accueil : votre série, votre semaine, la progression du jour et ce qui vous attend ensuite.
+• Apple Watch : cochez vos habitudes, notez quantités et minutes, et voyez quand votre journée est complète.
+
 APPARENCE
 Mode sombre et clair.
 

@@ -33,6 +33,10 @@ PIÙ DI UN TRACKER DI ABITUDINI
 • Sveglie per le abitudini che non puoi perdere, come i farmaci. Suonano finché non le spegni.
 • Un suono di notifica per ogni abitudine e temi colore per il tuo stile. Tutto gratis.
 
+WIDGET E WEAR OS
+• Widget nella schermata Home: la tua streak, la tua settimana, i progressi di oggi e cosa ti aspetta.
+• Wear OS: spunta le abitudini, registra quantità e minuti e scopri quando la tua giornata è completa.
+
 ASPETTO
 Modalità chiara e scura.
 

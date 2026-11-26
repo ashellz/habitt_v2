@@ -28,6 +28,10 @@ Habitt sve čuva na tvom uređaju. Ako želiš kopiju u cloudu, poveži Google r
 BRZI POČETAK
 Prebaci sve navike iz drugih aplikacija poput HabitKit-a. Koristi spremne navike za početak za samo nekoliko sekundi: rano ustajanje, rano lijeganje, teretana, trčanje, hodanje, pijenje vode, pranje zuba, njega kože, prehrana, učenje, čitanje, lijekovi, produktivne sesije i još mnogo toga.
 
+WIDGETI I APPLE WATCH
+• Widgeti na početnom zaslonu: tvoj streak, tvoj tjedan, današnji napredak i što slijedi.
+• Apple Watch: označi navike, unesi količine i minute i vidi kad je dan završen.
+
 IZGLED
 Tamni i svijetli način prikaza.
 

@@ -33,6 +33,10 @@ BİR ALIŞKANLIK TAKİBİNDEN FAZLASI
 • İlaç gibi kaçırmaman gereken alışkanlıklar için alarmlar. Sen kapatana kadar çalarlar.
 • Her alışkanlık için ayrı bildirim sesi ve tarzına uygun vurgu temaları. Hepsi ücretsiz.
 
+WIDGET'LAR VE WEAR OS
+• Ana ekran widget'ları: serin, haftan, bugünkü ilerlemen ve sıradakiler.
+• Wear OS: alışkanlıkları işaretle, miktar ve dakika kaydet, günün ne zaman tamamlandığını gör.
+
 GÖRÜNÜM
 Koyu ve açık tema.
 

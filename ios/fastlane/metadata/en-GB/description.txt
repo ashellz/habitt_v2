@@ -28,6 +28,10 @@ Habitt stores everything on your device. When you want a cloud copy, connect you
 QUICK START
 Import all your habits from other habit tracking apps such as HabitKit. Use a premade template to get going in seconds: wake up early, go to bed early, gym, running, walking, drink water, brush teeth, skin care, nutrition, studying, reading, medications, productivity sessions, and more.
 
+WIDGETS AND APPLE WATCH
+• Home screen widgets: your streak, your week, today's progress and what's up next.
+• Apple Watch: check off habits, log amounts and minutes, and see when your day is complete.
+
 APPEARANCE
 Dark and light mode.
 

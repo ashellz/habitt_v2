@@ -33,6 +33,10 @@ WIĘCEJ NIŻ TRACKER NAWYKÓW
 • Alarmy dla nawyków, o których nie wolno zapomnieć, np. leków. Dzwonią, dopóki ich nie wyłączysz.
 • Osobny dźwięk powiadomienia dla każdego nawyku i motywy kolorystyczne w Twoim stylu. Wszystko za darmo.
 
+WIDŻETY I WEAR OS
+• Widżety na ekranie głównym: seria, tydzień, dzisiejsze postępy i to, co dalej.
+• Wear OS: odhaczaj nawyki, zapisuj ilości i minuty i zobacz, kiedy dzień jest zaliczony.
+
 WYGLĄD
 Tryb ciemny i jasny.
 

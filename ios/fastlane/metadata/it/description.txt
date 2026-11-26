@@ -28,6 +28,10 @@ Habitt conserva tutto sul tuo dispositivo. Quando vuoi una copia cloud, connetti
 AVVIO RAPIDO
 Importa tutte le tue abitudini da altre app come HabitKit. Usa un modello predefinito per iniziare in pochi secondi: svegliarsi presto, andare a letto presto, palestra, corsa, camminata, bere acqua, lavarsi i denti, skincare, nutrizione, studio, lettura, farmaci, sessioni di produttività e altro ancora.
 
+WIDGET E APPLE WATCH
+• Widget nella schermata Home: la tua streak, la tua settimana, i progressi di oggi e cosa ti aspetta.
+• Apple Watch: spunta le abitudini, registra quantità e minuti e scopri quando la tua giornata è completa.
+
 ASPETTO
 Modalità chiara e scura.
 

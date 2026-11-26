@@ -33,6 +33,10 @@ MÁS QUE UN RASTREADOR DE HÁBITOS
 • Alarmas para hábitos que no puedes olvidar, como los medicamentos. Suenan hasta que las apagas.
 • Un sonido de notificación para cada hábito y temas de color a tu estilo. Todo gratis.
 
+WIDGETS Y WEAR OS
+• Widgets en la pantalla de inicio: tu racha, tu semana, el progreso de hoy y lo que viene a continuación.
+• Wear OS: marca tus hábitos, registra cantidades y minutos, y mira cuándo completas el día.
+
 APARIENCIA
 Modo oscuro y claro.
 

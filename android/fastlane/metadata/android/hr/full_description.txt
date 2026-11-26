@@ -33,6 +33,10 @@ VIŠE OD TRACKERA NAVIKA
 • Alarmi za navike koje ne smiješ propustiti, poput lijekova. Zvone dok ih ne isključiš.
 • Zvuk obavijesti za svaku naviku i teme boja po tvom stilu. Sve je besplatno.
 
+WIDGETI I WEAR OS
+• Widgeti na početnom zaslonu: tvoj streak, tvoj tjedan, današnji napredak i što slijedi.
+• Wear OS: označi navike, unesi količine i minute i vidi kad je dan završen.
+
 IZGLED
 Tamni i svijetli način prikaza.
 

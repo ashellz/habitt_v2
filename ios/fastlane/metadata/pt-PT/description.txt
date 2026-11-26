@@ -28,6 +28,10 @@ O Habitt guarda tudo no seu dispositivo. Quando quiser uma cópia na nuvem, ligu
 INÍCIO RÁPIDO
 Importe todos os seus hábitos de outras apps como o HabitKit. Use um modelo pronto para começar em segundos: acordar cedo, deitar cedo, ginásio, corrida, caminhada, beber água, lavar os dentes, cuidados com a pele, alimentação, estudo, leitura, medicação, sessões de produtividade e mais.
 
+WIDGETS E APPLE WATCH
+• Widgets no ecrã principal: a sua sequência, a sua semana, o progresso de hoje e o que vem a seguir.
+• Apple Watch: marque hábitos, registe quantidades e minutos e veja quando o seu dia está completo.
+
 ASPETO
 Modo escuro e claro.
 

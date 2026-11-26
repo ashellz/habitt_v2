@@ -33,6 +33,10 @@ PLUS QU'UN SUIVI D'HABITUDES
 • Des alarmes pour les habitudes à ne pas manquer, comme un médicament. Elles sonnent jusqu'à ce que vous les arrêtiez.
 • Un son de notification par habitude et des thèmes de couleur à votre goût. Tout est gratuit.
 
+WIDGETS ET WEAR OS
+• Widgets sur l'écran d'accueil : votre série, votre semaine, la progression du jour et ce qui vous attend ensuite.
+• Wear OS : cochez vos habitudes, notez quantités et minutes, et voyez quand votre journée est complète.
+
 APPARENCE
 Mode sombre et clair.
 

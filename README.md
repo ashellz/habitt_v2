@@ -56,6 +56,14 @@ Quick-start habits: wake up early, go to bed early, brush teeth, skin care, show
 - Link a habit to steps, sleep, exercise minutes, mindful minutes or calories and progress syncs automatically
 - Read-only, processed on your device, synced on app open/resume
 
+**Home screen widgets**
+- iOS and Android widgets: Streak, Streak week, Today ring and Up next
+- Read-only, drawn from a snapshot the app writes on your device, tap to jump into the app
+
+**Apple Watch & Wear OS**
+- Today's habits on your wrist: check off or un-check habits, log amounts and durations, see Day complete with your streak
+- The phone stays the source of truth: the watch syncs straight with your phone (WatchConnectivity / Wear OS Data Layer), no server in between
+
 **Appearance**
 - Dark and light mode
 - Design done by professional designers, no AI-slop
@@ -92,7 +100,7 @@ English, German, Spanish, Italian, French, Portuguese, Turkish, Bosnian
 
 Other features:
 - Time counter telling you how long you're working on this habit, maybe show a strength graph over time as well
-- Widgets
+- Watch complications and tiles
 - Live notifications like duolingo before habits reset if not all are completed
 
 ---

@@ -33,6 +33,10 @@ MORE THAN A HABIT TRACKER
 • Alarms for habits you can't miss, like medication. They ring until you dismiss them.
 • A notification sound for each habit, and accent themes to match your style. All free.
 
+WIDGETS AND WEAR OS
+• Home screen widgets: your streak, your week, today's progress and what's up next.
+• Wear OS: check off habits, log amounts and minutes, and see when your day is complete.
+
 APPEARANCE
 Dark and light mode.
 
