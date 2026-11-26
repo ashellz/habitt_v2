@@ -69,7 +69,9 @@ On top of the widget snapshot (`v` 1, additive, widgets ignore them):
 
 - per habit: `completed` and
   `log: { type: amount|duration|timeOfDay|null, target, value, unit, step, healthLinked, watchLoggable }`.
-  Durations are in seconds, `step` is 1 (amount) or 60 (duration). `unit` is
+  `target` is today's goal (a lighter day's `dayGoal` when set, see
+  [goal_check_in.md](goal_check_in.md)). Durations are in seconds, `step` is
+  1 (amount) or 60 (duration). `unit` is
   the amount label for the target, already localized. `watchLoggable` is true
   only for amount/duration habits without Health sync.
 - `strings`: `today`, `anyTime`, `morning`, `afternoon`, `evening`,

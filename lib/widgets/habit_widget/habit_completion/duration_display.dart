@@ -23,7 +23,7 @@ class DurationDisplayState extends State<DurationDisplay> {
   @override
   void didUpdateWidget(DurationDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.habit.duration != oldWidget.habit.duration) {
+    if (widget.habit.effectiveDuration != oldWidget.habit.effectiveDuration) {
       _adjustFontSize();
     }
   }
@@ -35,7 +35,7 @@ class DurationDisplayState extends State<DurationDisplay> {
   }
 
   void _adjustFontSize() {
-    final currentBottomText = getDurationString(widget.habit.duration);
+    final currentBottomText = getDurationString(widget.habit.effectiveDuration);
 
     // Only recalculate if text changed or we haven't calculated before
     if (_lastBottomText == currentBottomText) return;
@@ -80,7 +80,7 @@ class DurationDisplayState extends State<DurationDisplay> {
     final durationCompletedString = getDurationString(
       widget.habit.durationCompleted,
     );
-    final durationString = getDurationString(widget.habit.duration);
+    final durationString = getDurationString(widget.habit.effectiveDuration);
 
     final TextStyle textStyle = TextStyle(
       shadows: [

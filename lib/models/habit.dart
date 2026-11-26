@@ -83,6 +83,10 @@ class Habit extends HiveObject {
   healthSessions; // individual workout or sleep sessions Health returned in a day
   bool
   healthManualOverride; // per-day: user edited progress by hand, so Health sync leaves this day's progress alone
+  // per-day: today's goal only (a "lighter day"), same unit as amount/duration
+  // (seconds for duration). 0 = none, the usual goal applies. Day-state: cleared
+  // at rollover, kept in day snapshots, merged with the day's progress.
+  int dayGoal;
   bool? isDeleted;
   bool? isPaused;
   // Stretches the habit was paused for, as [from, to] pairs (UTC): from is
@@ -143,6 +147,7 @@ class Habit extends HiveObject {
     this.toleranceMinutes = 0, // no forgiveness unless explicitly set
     List<HealthSessionDetail>? healthSessions,
     this.healthManualOverride = false,
+    this.dayGoal = 0,
     this.isDeleted,
     this.isPaused,
     List<DateTime>? pausedRanges,
@@ -177,6 +182,45 @@ class Habit extends HiveObject {
   // 0 for regular habits, >0 for sleep habits (15, 30, 60)
   int get effectiveToleranceMinutes =>
       healthMetric?.supportsTolerance == true ? toleranceMinutes : 0;
+
+  /// Whether today has a lighter goal ([dayGoal]) for an amount or duration
+  /// habit. Time-of-day habits never have one.
+  bool get hasDayGoal =>
+      dayGoal > 0 &&
+      (trackingType == HabitTrackingType.amount ||
+          trackingType == HabitTrackingType.duration);
+
+  /// The amount goal that applies today: [dayGoal] on a lighter day, else the
+  /// usual [amount]. Stats and goal suggestions read [amount] instead.
+  int get effectiveAmount =>
+      hasDayGoal && trackingType == HabitTrackingType.amount ? dayGoal : amount;
+
+  /// The duration goal (seconds) that applies today: [dayGoal] on a lighter
+  /// day, else the usual [duration].
+  int get effectiveDuration =>
+      hasDayGoal && trackingType == HabitTrackingType.duration
+          ? dayGoal
+          : duration;
+
+  /// Sets today's goal ([dayGoal], 0 clears it) and re-evaluates [completed]
+  /// against the goal that now applies. The usual goal is left alone.
+  void setDayGoal(int goal) {
+    final now = DateTime.now().toUtc();
+    dayGoal = goal < 0 ? 0 : goal;
+    timestamps['dayGoal'] = now;
+    final bool shouldBeCompleted;
+    if (trackingType == HabitTrackingType.duration) {
+      shouldBeCompleted = durationCompleted >= effectiveDuration;
+    } else if (trackingType == HabitTrackingType.amount) {
+      shouldBeCompleted = amountCompleted >= effectiveAmount;
+    } else {
+      return;
+    }
+    if (completed != shouldBeCompleted) {
+      completed = shouldBeCompleted;
+      timestamps['completed'] = now;
+    }
+  }
 
   bool hasAnyProgress() {
     return completed || amountCompleted > 0 || durationCompleted > 0;
@@ -260,6 +304,7 @@ class Habit extends HiveObject {
       toleranceMinutes: toleranceMinutes,
       healthSessions: healthSessions.map((s) => s.copy()).toList(),
       healthManualOverride: healthManualOverride,
+      dayGoal: dayGoal,
       isDeleted: isDeleted,
       isPaused: isPaused,
       pausedRanges: List<DateTime>.from(pausedRanges),
@@ -682,6 +727,7 @@ class Habit extends HiveObject {
     }
 
     if (trackingTypeChanged) {
+      dayGoal = 0;
       if (completed || amountCompleted != 0 || durationCompleted != 0) {
         completed = false;
         amountCompleted = 0;
@@ -692,15 +738,18 @@ class Habit extends HiveObject {
       }
     } else if (newTrackingType == HabitTrackingType.duration &&
         durationGoalChanged) {
-      final shouldBeCompleted = durationCompleted >= duration;
+      // a lighter goal at or above the new usual goal means nothing any more
+      if (dayGoal >= duration) dayGoal = 0;
+      final shouldBeCompleted = durationCompleted >= effectiveDuration;
       if (completed != shouldBeCompleted) {
         completed = shouldBeCompleted;
         timestamps['completed'] = now;
       }
     } else if (newTrackingType == HabitTrackingType.amount &&
         amountGoalChanged) {
+      if (dayGoal >= amount) dayGoal = 0;
       final shouldBeCompleted =
-          amountCompleted >= amount - effectiveToleranceMinutes;
+          amountCompleted >= effectiveAmount - effectiveToleranceMinutes;
       if (completed != shouldBeCompleted) {
         completed = shouldBeCompleted;
         timestamps['completed'] = now;
@@ -767,6 +816,7 @@ class Habit extends HiveObject {
     toleranceMinutes = merged.toleranceMinutes;
     healthSessions = merged.healthSessions.map((s) => s.copy()).toList();
     healthManualOverride = merged.healthManualOverride;
+    dayGoal = merged.dayGoal;
     isDeleted = merged.isDeleted;
     isPaused = merged.isPaused;
     pausedRanges = List<DateTime>.from(merged.pausedRanges);
@@ -831,7 +881,7 @@ class Habit extends HiveObject {
   /// habit it is 0, so this is the plain `>=` comparison.
   void updateHabitAmountCompleted(int amountCompleted) {
     final bool wasCompleted = completed;
-    if (amountCompleted >= amount - effectiveToleranceMinutes) {
+    if (amountCompleted >= effectiveAmount - effectiveToleranceMinutes) {
       completed = true;
     } else if (completed) {
       completed = false;
@@ -845,7 +895,7 @@ class Habit extends HiveObject {
 
   void updateHabitDurationCompleted(int durationCompleted) {
     final bool wasCompleted = completed;
-    if (durationCompleted >= duration) {
+    if (durationCompleted >= effectiveDuration) {
       completed = true;
     } else if (completed) {
       completed = false;
@@ -889,6 +939,7 @@ class Habit extends HiveObject {
     durationCompleted = 0;
     healthSessions = [];
     healthManualOverride = false;
+    dayGoal = 0;
     // not updating timestamp because this is an auto reset, not user action
     // updating timestamps would cause bad syncing
   }
@@ -1092,6 +1143,7 @@ class Habit extends HiveObject {
       'toleranceMinutes': toleranceMinutes,
       'healthSessions': healthSessions.map((s) => s.toMap()).toList(),
       'healthManualOverride': healthManualOverride,
+      'dayGoal': dayGoal,
       'isDeleted': isDeleted,
       'isPaused': isPaused,
       if (!forDay) ...{
@@ -1189,6 +1241,7 @@ class Habit extends HiveObject {
       toleranceMinutes: (m['toleranceMinutes'] as num?)?.toInt() ?? 0,
       healthSessions: _parseHealthSessions(m['healthSessions']),
       healthManualOverride: (m['healthManualOverride'] as bool?) ?? false,
+      dayGoal: (m['dayGoal'] as num?)?.toInt() ?? 0,
       isDeleted: m['isDeleted'] as bool?,
       isPaused: m['isPaused'] as bool?,
       pausedRanges: _parsePauseRanges(m['pausedRanges']),
@@ -1208,6 +1261,7 @@ class Habit extends HiveObject {
     'skipped',
     'amountCompleted',
     'durationCompleted',
+    'dayGoal',
   ];
 
   // Function to apply the same habit stats but from daysBox
@@ -1218,6 +1272,7 @@ class Habit extends HiveObject {
     durationCompleted = source.durationCompleted;
     healthSessions = source.healthSessions.map((s) => s.copy()).toList();
     healthManualOverride = source.healthManualOverride;
+    dayGoal = source.dayGoal;
 
     for (final key in dayStateKeys) {
       final ts = source.timestamps[key];
@@ -1261,6 +1316,7 @@ class Habit extends HiveObject {
     durationCompleted = 0;
     healthSessions = [];
     healthManualOverride = false;
+    dayGoal = 0;
     for (final key in dayStateKeys) {
       timestamps.remove(key);
     }
@@ -1392,6 +1448,7 @@ class Habit extends HiveObject {
         healthManualOverride,
         incoming.healthManualOverride,
       ),
+      dayGoal: pickDayState('dayGoal', dayGoal, incoming.dayGoal),
       streak: resolve('streak', streak, incoming.streak),
       longestStreak: resolve(
         'longestStreak',

@@ -10,7 +10,10 @@ import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/services/habit_route_tracker.dart';
 import 'package:habitt/services/main_tab_controller.dart';
 import 'package:habitt/services/notification_service.dart';
+import 'package:habitt/services/goal_check_in_notifications.dart';
 import 'package:habitt/services/pending_completion_queue.dart';
+import 'package:habitt/services/pending_day_goal_queue.dart';
+import 'package:habitt/util/goal_check_in_flow.dart';
 import 'package:habitt/services/unsaved_changes_guard.dart';
 import 'package:habitt/util/show_dialog_sheet.dart';
 import 'package:habitt/widgets/dialogs/log_progress_dialog.dart';
@@ -27,7 +30,9 @@ class NotificationActionHandler {
   static const String _payloadDayKey = 'habit_day';
 
   static bool _isHandledType(String? type) =>
-      type == _payloadTypeHabit || type == _payloadTypeTimerComplete;
+      type == _payloadTypeHabit ||
+      type == _payloadTypeTimerComplete ||
+      type == GoalCheckInNotifications.payloadType;
 
   /// Global navigator key so notifications can route without a widget context.
   static final GlobalKey<NavigatorState> navigatorKey =
@@ -106,6 +111,11 @@ class NotificationActionHandler {
     final habitId = int.tryParse(payload[_payloadHabitIdKey] ?? '');
     if (habitId == null) return;
 
+    if (payload[_payloadTypeKey] == GoalCheckInNotifications.payloadType) {
+      await _handleGoalCheckIn(action, habitId, payload);
+      return;
+    }
+
     // complete button action
     if (action.buttonKeyPressed == NotificationService.completeActionKey) {
       final day = _parseDay(payload[_payloadDayKey]);
@@ -135,6 +145,29 @@ class NotificationActionHandler {
     _navigateToHabit(habitId, day);
   }
 
+  /// Goal check-in notification: "Count it" sets today's goal to the logged
+  /// progress through [PendingDayGoalQueue], "Keep" does nothing, a tap or
+  /// "Choose a smaller goal" opens the lighter-day sheet for the habit.
+  static Future<void> _handleGoalCheckIn(
+    ReceivedAction action,
+    int habitId,
+    Map<String, String?> payload,
+  ) async {
+    final button = action.buttonKeyPressed;
+    if (button == GoalCheckInNotifications.keepAction) return;
+    if (button == GoalCheckInNotifications.countItAction) {
+      final day = _parseDay(payload[GoalCheckInNotifications.payloadDayKey]);
+      final goal = int.tryParse(
+        payload[GoalCheckInNotifications.payloadGoalKey] ?? '',
+      );
+      if (day == null || goal == null || goal <= 0) return;
+      await PendingDayGoalQueue.enqueue(habitId, day, goal);
+      await drainPending?.call();
+      return;
+    }
+    GoalCheckInFlow.requestLighterDay(habitId);
+  }
+
   /// On cold start, route to a habit if the app was launched from a tap.
   static Future<void> handleColdStart() async {
     final action = await AwesomeNotifications().getInitialNotificationAction(
@@ -143,8 +176,15 @@ class NotificationActionHandler {
     if (action == null) return;
     final payload = action.payload ?? const {};
     if (!_isHandledType(payload[_payloadTypeKey])) return;
-    if (action.buttonKeyPressed == NotificationService.completeActionKey) {
-      return; // completion handled via the queue, not navigation
+    if (action.buttonKeyPressed == NotificationService.completeActionKey ||
+        action.buttonKeyPressed == GoalCheckInNotifications.countItAction ||
+        action.buttonKeyPressed == GoalCheckInNotifications.keepAction) {
+      return; // handled via the queue (or nothing to do), not navigation
+    }
+    if (payload[_payloadTypeKey] == GoalCheckInNotifications.payloadType) {
+      final id = int.tryParse(payload[_payloadHabitIdKey] ?? '');
+      if (id != null) GoalCheckInFlow.requestLighterDay(id);
+      return;
     }
     final habitId = int.tryParse(payload[_payloadHabitIdKey] ?? '');
     if (habitId != null) {

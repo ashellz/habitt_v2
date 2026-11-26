@@ -413,6 +413,13 @@ void main() {
       });
     });
 
+    test("a lighter day's goal is the target", () {
+      final h = _habit(1, 'Read', amount: 10, amountCompleted: 3)..dayGoal = 5;
+      final r = row(h);
+      expect(r['log']['target'], 5);
+      expect(r['progressText'], contains('/ 5'));
+    });
+
     test('duration habit is in seconds with a one minute step', () {
       final h = buildTestHabit(
         id: 2,

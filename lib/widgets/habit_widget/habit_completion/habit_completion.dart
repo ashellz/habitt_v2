@@ -47,14 +47,14 @@ class _CompletionDisplayState extends State<CompletionDisplay> {
     if (habit.tracksAmount) {
       // Habit tracked by amount
       if (habit.amount <= 0) return 0.0; // Avoid divide by zero
-      final progress = habit.amountCompleted / habit.amount;
+      final progress = habit.amountCompleted / habit.effectiveAmount;
       return progress.clamp(0.0, 1.0);
     }
 
     if (habit.tracksDuration) {
       // Habit tracked by duration
       if (habit.duration <= 0) return 0.0; // Avoid divide by zero
-      final progress = habit.durationCompleted / habit.duration;
+      final progress = habit.durationCompleted / habit.effectiveDuration;
       return progress.clamp(0.0, 1.0);
     }
 

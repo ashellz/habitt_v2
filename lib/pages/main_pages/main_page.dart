@@ -8,7 +8,7 @@ import 'package:habitt/providers/color_provider.dart';
 import 'package:habitt/providers/habit_provider.dart';
 import 'package:habitt/providers/preferences_provider.dart';
 import 'package:habitt/providers/timer_provider.dart';
-import 'package:habitt/util/insight_sheet_flow.dart';
+import 'package:habitt/util/goal_check_in_flow.dart';
 import 'package:habitt/widgets/main_page/calendar_expansion_controller.dart';
 import 'package:habitt/widgets/main_page/home_habits_view.dart';
 import 'package:habitt/widgets/main_page/timer_pill_widget.dart';
@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   DateTime? _completionDay;
   late VoidCallback _habitProviderListener;
   bool _hasHabitListener = false;
-  final InsightSheetFlow _insightSheetFlow = InsightSheetFlow();
+  final GoalCheckInFlow _goalCheckInFlow = GoalCheckInFlow();
   late final AnimationController _calendarController;
   late final CalendarExpansionController _calendarExpansion;
   late final AnimationController _calendarHeightController;
@@ -71,7 +71,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         return;
       }
       _attachHabitProviderListener();
-      _insightSheetFlow.scheduleInsightEvaluation(
+      GoalCheckInFlow.requestedHabit.addListener(_onGoalCheckInRequested);
+      _goalCheckInFlow.scheduleEvaluation(
         context,
         isActive: () => mounted && widget.isActive,
         immediate: true,
@@ -86,7 +87,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     final becameActive = !oldWidget.isActive && widget.isActive;
     final lifecycleChanged = oldWidget.lifecycleTick != widget.lifecycleTick;
     if (becameActive || (lifecycleChanged && widget.isActive)) {
-      _insightSheetFlow.scheduleInsightEvaluation(
+      _goalCheckInFlow.scheduleEvaluation(
         context,
         isActive: () => mounted && widget.isActive,
         immediate: true,
@@ -96,7 +97,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _insightSheetFlow.dispose();
+    GoalCheckInFlow.requestedHabit.removeListener(_onGoalCheckInRequested);
+    _goalCheckInFlow.dispose();
     if (_hasHabitListener) {
       try {
         context.read<HabitProvider>().removeListener(_habitProviderListener);
@@ -283,6 +285,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
+  // a goal check-in notification was tapped while the app is open
+  void _onGoalCheckInRequested() {
+    if (!mounted || GoalCheckInFlow.requestedHabit.value == null) return;
+    _goalCheckInFlow.scheduleEvaluation(
+      context,
+      isActive: () => mounted && widget.isActive,
+      immediate: true,
+    );
+  }
+
   void _attachHabitProviderListener() {
     if (_hasHabitListener) {
       return;
@@ -293,7 +305,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       if (!mounted || !widget.isActive) {
         return;
       }
-      _insightSheetFlow.scheduleInsightEvaluation(
+      _goalCheckInFlow.scheduleEvaluation(
         context,
         isActive: () => mounted && widget.isActive,
       );

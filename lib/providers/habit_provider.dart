@@ -1418,18 +1418,18 @@ class HabitProvider extends ChangeNotifier {
         }
 
         if (habit.tracksAmount) {
-          if (habit.amount <= 0) {
+          if (habit.effectiveAmount <= 0) {
             return sum;
           }
-          return sum + (habit.amountCompleted / habit.amount).clamp(0.0, 1.0);
+          return sum + (habit.amountCompleted / habit.effectiveAmount).clamp(0.0, 1.0);
         }
 
         if (habit.tracksDuration) {
-          if (habit.duration <= 0) {
+          if (habit.effectiveDuration <= 0) {
             return sum;
           }
           return sum +
-              (habit.durationCompleted / habit.duration).clamp(0.0, 1.0);
+              (habit.durationCompleted / habit.effectiveDuration).clamp(0.0, 1.0);
         }
 
         return sum;
@@ -2432,6 +2432,75 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  /// Sets today's lighter goal ([Habit.dayGoal]) for habit [id], 0 clears it.
+  /// The usual goal stays. Completion is re-evaluated against it and saved the
+  /// same way logging progress is. [context] is null when a notification
+  /// action applies it without UI (no sound, no reorder). See
+  /// docs/goal_check_in.md.
+  Future<void> setTodayGoal(int id, int goal, {BuildContext? context}) async {
+    Habit? habit;
+    for (final h in habits) {
+      if (h.id == id) {
+        habit = h;
+        break;
+      }
+    }
+    if (habit == null) return;
+    habitStatsProvider?.invalidateHabit(id);
+
+    final now = DateTime.now();
+    final todaySimple = DateTime(now.year, now.month, now.day);
+    final wasCompleted = habit.completed;
+    habit.setDayGoal(goal);
+    final isNowCompleted = habit.completed;
+
+    if (context != null && context.mounted) {
+      if (!wasCompleted && isNowCompleted) {
+        playCompletionSound(
+          context,
+          todaySimple,
+          isOptionalHabit: habit.optional,
+        );
+      }
+      checkReorderCategories(context, habit);
+    }
+    if (wasCompleted != isNowCompleted) {
+      _updatePeriodCountersOnCompletionChange(
+        currentHabit: habit,
+        wasCompleted: wasCompleted,
+        isCompleted: isNowCompleted,
+        daySimple: todaySimple,
+        todaySimple: todaySimple,
+      );
+    }
+
+    await updateHabitInDB(habit, day: todaySimple);
+    await _syncNotificationsOnCompletionChange(
+      habit: habit,
+      wasCompleted: wasCompleted,
+      isNowCompleted: isNowCompleted,
+      daySimple: todaySimple,
+      todaySimple: todaySimple,
+    );
+    _refreshPerfectStreakForDayIfNeeded(todaySimple);
+    refreshTodaysHabits(notify: false);
+    notifyListeners();
+  }
+
+  /// Whether any habit on [date] was completed with a lighter goal, for the
+  /// dashed arc on the home week strip.
+  bool dayHasLighterGoal(DateTime date) {
+    final day = _normalizeDate(date);
+    final List<Habit> source;
+    if (day == _normalizeDate(DateTime.now())) {
+      source = todaysHabits;
+    } else {
+      final key = day.toIso8601String().split('T').first;
+      source = daysBox.get(key)?.habits ?? const <Habit>[];
+    }
+    return source.any((h) => h.completed && h.hasDayGoal);
+  }
+
   int? timerTargetDuration(int id, {required DateTime day}) {
     final normalizedDay = _normalizeDate(day);
     final List<Habit> source;
@@ -2443,7 +2512,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     for (final h in source) {
-      if (h.id == id) return h.tracksDuration ? h.duration : null;
+      if (h.id == id) return h.tracksDuration ? h.effectiveDuration : null;
     }
     return null;
   }

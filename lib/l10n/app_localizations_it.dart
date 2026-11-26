@@ -3926,6 +3926,182 @@ class AppLocalizationsIt extends AppLocalizations {
   String get daysStreakLabel => 'giorni di serie';
 
   @override
+  String get goalCheckInTitle => 'Il tuo check-in settimanale';
+
+  @override
+  String get goalCheckInAllSet => 'Tutto pronto per questa settimana';
+
+  @override
+  String get goalCheckInSubtitle =>
+      'In base a quello che hai registrato nelle ultime 2 settimane';
+
+  @override
+  String get goalCheckInApplyAll => 'Applica tutto';
+
+  @override
+  String get goalCheckInNotNow => 'Non ora';
+
+  @override
+  String get goalCheckInUndo => 'Annulla';
+
+  @override
+  String goalCheckInLowerTo(String value) {
+    return 'Abbassa a $value';
+  }
+
+  @override
+  String goalCheckInRaiseTo(String value) {
+    return 'Alza a $value';
+  }
+
+  @override
+  String goalCheckInLoweredTo(String value) {
+    return 'Abbassato a $value';
+  }
+
+  @override
+  String goalCheckInRaisedTo(String value) {
+    return 'Alzato a $value';
+  }
+
+  @override
+  String get goalCheckInSkipped => 'Non per 2 settimane';
+
+  @override
+  String goalCheckInReasonLower(int met, int total, String value) {
+    return 'Obiettivo raggiunto $met giorni su $total, di solito ti fermi intorno a $value';
+  }
+
+  @override
+  String goalCheckInReasonLighter(int count, String value) {
+    return '$count giorni più leggeri di recente, di solito arrivi a $value';
+  }
+
+  @override
+  String goalCheckInReasonRaise(int count, int total) {
+    return 'Oltre il tuo obiettivo $count giorni su $total';
+  }
+
+  @override
+  String lighterDayTitle(String goal) {
+    return 'Non è una giornata da $goal?';
+  }
+
+  @override
+  String lighterDayDescPartial(String done, String goal) {
+    return 'Hai fatto $done su $goal. Abbassa l\'obiettivo di oggi e fai crescere la tua serie.';
+  }
+
+  @override
+  String get lighterDayTitleZero => 'Qualcosa di breve oggi?';
+
+  @override
+  String lighterDayDescZeroMissed(String habit) {
+    return 'Ieri hai saltato $habit. Anche una sessione più breve conta come completata.';
+  }
+
+  @override
+  String get lighterDayDescZero =>
+      'Anche una sessione più breve conta come completata.';
+
+  @override
+  String lighterDayStreakTitle(int count) {
+    return 'La tua serie di $count giorni finisce stanotte';
+  }
+
+  @override
+  String lighterDayStreakDesc(String value) {
+    return 'Anche $value basta a mantenerla.';
+  }
+
+  @override
+  String get lighterDayUsualGoal => 'Obiettivo abituale';
+
+  @override
+  String get lighterDayToday => 'Oggi';
+
+  @override
+  String lighterDayDoneOption(String value) {
+    return '$value · fatto';
+  }
+
+  @override
+  String lighterDayKeep(String value) {
+    return 'Mantieni $value';
+  }
+
+  @override
+  String lighterDaySetTo(String value) {
+    return 'Imposta $value';
+  }
+
+  @override
+  String get lighterDayCountIt => 'Contalo';
+
+  @override
+  String lighterDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Restano $count giorni più leggeri questa settimana',
+      one: 'Resta 1 giorno più leggero questa settimana',
+      zero: 'Nessun giorno più leggero rimasto questa settimana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String saveStreakTitle(int count) {
+    return 'Registra qualsiasi quantità per mantenere la tua serie di $count giorni';
+  }
+
+  @override
+  String get saveStreakDesc =>
+      'Hai usato i giorni più leggeri di questa settimana. Qualsiasi progresso oggi mantiene viva la tua serie.';
+
+  @override
+  String get saveStreakLog => 'Registra progresso';
+
+  @override
+  String lighterDayUsualGoalNote(String value) {
+    return 'Obiettivo abituale $value';
+  }
+
+  @override
+  String goalCheckInNotifTitle(String habit, String done, String goal) {
+    return '$habit: $done su $goal';
+  }
+
+  @override
+  String goalCheckInNotifBody(String goal) {
+    return 'Non è una giornata da $goal? Abbassa l\'obiettivo di oggi e la tua serie può ancora crescere.';
+  }
+
+  @override
+  String get goalCheckInNotifBodyZero =>
+      'Anche qualcosa di breve conta come completato. Scegli un obiettivo più piccolo per oggi.';
+
+  @override
+  String goalCheckInNotifStreakBody(int count) {
+    return 'La tua serie di $count giorni finisce stanotte. Anche poco basta a mantenerla.';
+  }
+
+  @override
+  String goalCheckInNotifCountIt(String value) {
+    return 'Conta $value per oggi';
+  }
+
+  @override
+  String get goalCheckInNotifChoose => 'Scegli un obiettivo più piccolo';
+
+  @override
+  String get goalCheckInSettingTitle => 'Check-in obiettivo';
+
+  @override
+  String get goalCheckInSettingDesc =>
+      'Un promemoria serale alle 20:25 per abbassare l\'obiettivo di oggi quando un\'abitudine è indietro';
+
+  @override
   String get watchOpenOnIPhone => 'Apri Habitt sul tuo iPhone';
 
   @override

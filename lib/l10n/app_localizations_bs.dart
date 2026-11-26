@@ -3892,6 +3892,182 @@ class AppLocalizationsBs extends AppLocalizations {
   String get daysStreakLabel => 'dana streak';
 
   @override
+  String get goalCheckInTitle => 'Tvoj sedmični pregled';
+
+  @override
+  String get goalCheckInAllSet => 'Sve je spremno za ovu sedmicu';
+
+  @override
+  String get goalCheckInSubtitle =>
+      'Na osnovu onoga što si zabilježio u posljednje 2 sedmice';
+
+  @override
+  String get goalCheckInApplyAll => 'Primijeni sve';
+
+  @override
+  String get goalCheckInNotNow => 'Ne sada';
+
+  @override
+  String get goalCheckInUndo => 'Poništi';
+
+  @override
+  String goalCheckInLowerTo(String value) {
+    return 'Smanji na $value';
+  }
+
+  @override
+  String goalCheckInRaiseTo(String value) {
+    return 'Povećaj na $value';
+  }
+
+  @override
+  String goalCheckInLoweredTo(String value) {
+    return 'Smanjeno na $value';
+  }
+
+  @override
+  String goalCheckInRaisedTo(String value) {
+    return 'Povećano na $value';
+  }
+
+  @override
+  String get goalCheckInSkipped => 'Ne naredne 2 sedmice';
+
+  @override
+  String goalCheckInReasonLower(int met, int total, String value) {
+    return 'Cilj ispunjen $met od $total dana, obično staneš oko $value';
+  }
+
+  @override
+  String goalCheckInReasonLighter(int count, String value) {
+    return '$count lakših dana u zadnje vrijeme, obično dostigneš $value';
+  }
+
+  @override
+  String goalCheckInReasonRaise(int count, int total) {
+    return 'Iznad cilja $count od $total dana';
+  }
+
+  @override
+  String lighterDayTitle(String goal) {
+    return 'Nije dan za $goal?';
+  }
+
+  @override
+  String lighterDayDescPartial(String done, String goal) {
+    return 'Uradio si $done od $goal. Smanji današnji cilj i neka ti niz raste.';
+  }
+
+  @override
+  String get lighterDayTitleZero => 'Nešto kraće danas?';
+
+  @override
+  String lighterDayDescZeroMissed(String habit) {
+    return 'Jučer si propustio $habit. I kraća sesija se računa kao završena.';
+  }
+
+  @override
+  String get lighterDayDescZero => 'I kraća sesija se računa kao završena.';
+
+  @override
+  String lighterDayStreakTitle(int count) {
+    return 'Tvoj niz od $count dana završava večeras';
+  }
+
+  @override
+  String lighterDayStreakDesc(String value) {
+    return 'Čak i $value ga održava.';
+  }
+
+  @override
+  String get lighterDayUsualGoal => 'Uobičajeni cilj';
+
+  @override
+  String get lighterDayToday => 'Danas';
+
+  @override
+  String lighterDayDoneOption(String value) {
+    return '$value · urađeno';
+  }
+
+  @override
+  String lighterDayKeep(String value) {
+    return 'Zadrži $value';
+  }
+
+  @override
+  String lighterDaySetTo(String value) {
+    return 'Postavi na $value';
+  }
+
+  @override
+  String get lighterDayCountIt => 'Uračunaj';
+
+  @override
+  String lighterDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ostalo je $count lakših dana ove sedmice',
+      few: 'Ostala su $count lakša dana ove sedmice',
+      one: 'Ostao je 1 lakši dan ove sedmice',
+      zero: 'Nema više lakših dana ove sedmice',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String saveStreakTitle(int count) {
+    return 'Zabilježi bilo koliko da sačuvaš niz od $count dana';
+  }
+
+  @override
+  String get saveStreakDesc =>
+      'Iskoristio si lakše dane ove sedmice. Bilo kakav napredak danas čuva tvoj niz.';
+
+  @override
+  String get saveStreakLog => 'Zabilježi napredak';
+
+  @override
+  String lighterDayUsualGoalNote(String value) {
+    return 'Uobičajeni cilj $value';
+  }
+
+  @override
+  String goalCheckInNotifTitle(String habit, String done, String goal) {
+    return '$habit: $done od $goal';
+  }
+
+  @override
+  String goalCheckInNotifBody(String goal) {
+    return 'Nije dan za $goal? Smanji današnji cilj i niz i dalje može rasti.';
+  }
+
+  @override
+  String get goalCheckInNotifBodyZero =>
+      'I kraća sesija se računa kao završena. Izaberi manji cilj za danas.';
+
+  @override
+  String goalCheckInNotifStreakBody(int count) {
+    return 'Tvoj niz od $count dana završava večeras. I malo ga održava.';
+  }
+
+  @override
+  String goalCheckInNotifCountIt(String value) {
+    return 'Uračunaj $value za danas';
+  }
+
+  @override
+  String get goalCheckInNotifChoose => 'Izaberi manji cilj';
+
+  @override
+  String get goalCheckInSettingTitle => 'Provjera cilja';
+
+  @override
+  String get goalCheckInSettingDesc =>
+      'Večernji podsjetnik u 20:25 da smanjiš današnji cilj kad navika kasni';
+
+  @override
   String get watchOpenOnIPhone => 'Otvori Habitt na iPhoneu';
 
   @override

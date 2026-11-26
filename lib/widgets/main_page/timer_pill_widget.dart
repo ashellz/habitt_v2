@@ -52,7 +52,7 @@ class _TimerPillWidgetState extends State<TimerPillWidget> {
     final isRunning = habit != null ? timer.isRunning : _lastIsRunning;
     final progressSeconds =
         habit != null ? timer.liveProgressSeconds : _lastProgressSeconds;
-    final target = displayHabit.duration;
+    final target = displayHabit.effectiveDuration;
     final progress = target > 0 ? progressSeconds / target : 0.0;
     final atCap =
         target > 0 && progressSeconds > 0 && progressSeconds % target == 0;

@@ -27,16 +27,16 @@ double habitProgressValue(Habit habit, {int? liveDurationSeconds}) {
   }
 
   if (habit.tracksAmount) {
-    if (habit.amount <= 0) return 0.0; // avoiding division by zero
-    final progress = habit.amountCompleted / habit.amount;
+    if (habit.effectiveAmount <= 0) return 0.0; // avoiding division by zero
+    final progress = habit.amountCompleted / habit.effectiveAmount;
     return progress.clamp(0.0, 1.0);
   }
 
   if (habit.tracksDuration) {
     // use timer progress if available, otherwise use the habits completed duration
-    if (habit.duration <= 0) return 0.0; // avoiding division by zero
+    if (habit.effectiveDuration <= 0) return 0.0; // avoiding division by zero
     final completed = liveDurationSeconds ?? habit.durationCompleted;
-    final progress = completed / habit.duration;
+    final progress = completed / habit.effectiveDuration;
     return progress.clamp(0.0, 1.0);
   }
 
@@ -67,8 +67,8 @@ String habitProgressText(
     }
     final int amountForLabel =
         hasProgress && !isCompleted
-            ? habit.amount
-            : (isCompleted ? habit.amountCompleted : habit.amount);
+            ? habit.effectiveAmount
+            : (isCompleted ? habit.amountCompleted : habit.effectiveAmount);
     final String amountLabel = resolveAmountLabelForValue(
       habit.amountLabel.isEmpty
           ? AmountLabelPreset.times.plural
@@ -79,21 +79,21 @@ String habitProgressText(
     );
 
     if (hasProgress && !isCompleted) {
-      return "${habit.amountCompleted} / ${habit.amount} $amountLabel";
+      return "${habit.amountCompleted} / ${habit.effectiveAmount} $amountLabel";
     } else if (isCompleted) {
       return "${habit.amountCompleted} $amountLabel";
     }
-    return "${habit.amount} $amountLabel";
+    return "${habit.effectiveAmount} $amountLabel";
   }
 
   String durationText() {
     if ((hasProgress && !isCompleted) &&
-        durationCompletedValue < habit.duration) {
-      return "${getDurationString(durationCompletedValue)} / ${getDurationString(habit.duration)}";
-    } else if (isCompleted || durationCompletedValue >= habit.duration) {
+        durationCompletedValue < habit.effectiveDuration) {
+      return "${getDurationString(durationCompletedValue)} / ${getDurationString(habit.effectiveDuration)}";
+    } else if (isCompleted || durationCompletedValue >= habit.effectiveDuration) {
       return getDurationString(durationCompletedValue);
     }
-    return getDurationString(habit.duration);
+    return getDurationString(habit.effectiveDuration);
   }
 
   switch (habit.trackingType) {

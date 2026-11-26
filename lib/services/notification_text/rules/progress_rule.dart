@@ -21,9 +21,9 @@ class ProgressNotificationRule {
 
     final habit = context.habit;
 
-    if (habit.tracksAmount && habit.amount > 0) {
-      final completed = habit.amountCompleted.clamp(0, habit.amount);
-      final remaining = math.max(0, habit.amount - completed);
+    if (habit.tracksAmount && habit.effectiveAmount > 0) {
+      final completed = habit.amountCompleted.clamp(0, habit.effectiveAmount);
+      final remaining = math.max(0, habit.effectiveAmount - completed);
       final label = resolveAmountLabelForValue(
         habit.amountLabel,
         remaining,
@@ -69,7 +69,7 @@ class ProgressNotificationRule {
         );
       }
 
-      if (remaining == 1 || remaining <= _almostDoneThreshold(habit.amount)) {
+      if (remaining == 1 || remaining <= _almostDoneThreshold(habit.effectiveAmount)) {
         return ProgressRuleResult(
           state: HabitNotificationProgressState.almostDone,
           segment: HabitNotificationSegment(
@@ -93,10 +93,10 @@ class ProgressNotificationRule {
             key: NotificationTemplateKey.progressInProgressAmount,
             args: {
               'completed': completed,
-              'target': habit.amount,
+              'target': habit.effectiveAmount,
               'label': resolveAmountLabelForValue(
                 habit.amountLabel,
-                habit.amount,
+                habit.effectiveAmount,
                 l,
                 customSingulars: context.customSingulars,
               ),
@@ -107,9 +107,9 @@ class ProgressNotificationRule {
       );
     }
 
-    if (habit.tracksDuration && habit.duration > 0) {
-      final completed = habit.durationCompleted.clamp(0, habit.duration);
-      final remaining = math.max(0, habit.duration - completed);
+    if (habit.tracksDuration && habit.effectiveDuration > 0) {
+      final completed = habit.durationCompleted.clamp(0, habit.effectiveDuration);
+      final remaining = math.max(0, habit.effectiveDuration - completed);
 
       if (completed <= 0) {
         return ProgressRuleResult(
@@ -140,7 +140,7 @@ class ProgressNotificationRule {
         );
       }
 
-      if (remaining <= _almostDoneThreshold(habit.duration)) {
+      if (remaining <= _almostDoneThreshold(habit.effectiveDuration)) {
         return ProgressRuleResult(
           state: HabitNotificationProgressState.almostDone,
           segment: HabitNotificationSegment(
@@ -164,7 +164,7 @@ class ProgressNotificationRule {
             key: NotificationTemplateKey.progressInProgressDuration,
             args: {
               'completed': _formatDuration(completed),
-              'target': _formatDuration(habit.duration),
+              'target': _formatDuration(habit.effectiveDuration),
             },
           ),
           debugKey: 'progress.duration.inProgress',

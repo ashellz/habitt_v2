@@ -193,14 +193,15 @@ class WidgetSnapshotBuilder {
               h.amountLabel.isEmpty
                   ? AmountLabelPreset.times.plural
                   : h.amountLabel,
-              h.amount,
+              h.effectiveAmount,
               input.loc,
               customSingulars: input.customSingulars,
             )
             : '';
     return {
       'type': type,
-      'target': isDuration ? h.duration : h.amount,
+      // today's goal, a lighter day's included, like the progress text
+      'target': isDuration ? h.effectiveDuration : h.effectiveAmount,
       'value': isDuration ? h.durationCompleted : h.amountCompleted,
       'unit': unit,
       'step': isDuration ? 60 : 1,

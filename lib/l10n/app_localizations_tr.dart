@@ -3900,6 +3900,181 @@ class AppLocalizationsTr extends AppLocalizations {
   String get daysStreakLabel => 'günlük seri';
 
   @override
+  String get goalCheckInTitle => 'Haftalık değerlendirmen';
+
+  @override
+  String get goalCheckInAllSet => 'Bu hafta için her şey hazır';
+
+  @override
+  String get goalCheckInSubtitle => 'Son 2 haftada kaydettiklerine göre';
+
+  @override
+  String get goalCheckInApplyAll => 'Tümünü uygula';
+
+  @override
+  String get goalCheckInNotNow => 'Şimdi değil';
+
+  @override
+  String get goalCheckInUndo => 'Geri al';
+
+  @override
+  String goalCheckInLowerTo(String value) {
+    return '$value olarak düşür';
+  }
+
+  @override
+  String goalCheckInRaiseTo(String value) {
+    return '$value olarak artır';
+  }
+
+  @override
+  String goalCheckInLoweredTo(String value) {
+    return '$value olarak düşürüldü';
+  }
+
+  @override
+  String goalCheckInRaisedTo(String value) {
+    return '$value olarak artırıldı';
+  }
+
+  @override
+  String get goalCheckInSkipped => '2 hafta boyunca değil';
+
+  @override
+  String goalCheckInReasonLower(int met, int total, String value) {
+    return 'Hedef $total günün $met gününde tuttu, genelde $value civarında bırakıyorsun';
+  }
+
+  @override
+  String goalCheckInReasonLighter(int count, String value) {
+    return 'Son zamanlarda $count hafif gün, genelde $value seviyesine ulaşıyorsun';
+  }
+
+  @override
+  String goalCheckInReasonRaise(int count, int total) {
+    return '$total günün $count gününde hedefini aştın';
+  }
+
+  @override
+  String lighterDayTitle(String goal) {
+    return 'Bugün $goal günü değil mi?';
+  }
+
+  @override
+  String lighterDayDescPartial(String done, String goal) {
+    return '$goal hedefinin $done kadarını yaptın. Bugünün hedefini düşür ve serin büyüsün.';
+  }
+
+  @override
+  String get lighterDayTitleZero => 'Bugün kısa bir tane?';
+
+  @override
+  String lighterDayDescZeroMissed(String habit) {
+    return 'Dün $habit alışkanlığını kaçırdın. Daha kısa bir seans da tamamlanmış sayılır.';
+  }
+
+  @override
+  String get lighterDayDescZero =>
+      'Daha kısa bir seans da tamamlanmış sayılır.';
+
+  @override
+  String lighterDayStreakTitle(int count) {
+    return '$count günlük serin bu gece bitiyor';
+  }
+
+  @override
+  String lighterDayStreakDesc(String value) {
+    return '$value bile seriyi sürdürür.';
+  }
+
+  @override
+  String get lighterDayUsualGoal => 'Her zamanki hedef';
+
+  @override
+  String get lighterDayToday => 'Bugün';
+
+  @override
+  String lighterDayDoneOption(String value) {
+    return '$value · tamam';
+  }
+
+  @override
+  String lighterDayKeep(String value) {
+    return '$value kalsın';
+  }
+
+  @override
+  String lighterDaySetTo(String value) {
+    return '$value yap';
+  }
+
+  @override
+  String get lighterDayCountIt => 'Say';
+
+  @override
+  String lighterDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bu hafta $count hafif gün kaldı',
+      one: 'Bu hafta 1 hafif gün kaldı',
+      zero: 'Bu hafta hafif gün kalmadı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String saveStreakTitle(int count) {
+    return '$count günlük serini korumak için herhangi bir miktar kaydet';
+  }
+
+  @override
+  String get saveStreakDesc =>
+      'Bu haftanın hafif günlerini kullandın. Bugün yapacağın her ilerleme serini korur.';
+
+  @override
+  String get saveStreakLog => 'İlerleme kaydet';
+
+  @override
+  String lighterDayUsualGoalNote(String value) {
+    return 'Her zamanki hedef $value';
+  }
+
+  @override
+  String goalCheckInNotifTitle(String habit, String done, String goal) {
+    return '$habit: $goal hedefinin $done kadarı';
+  }
+
+  @override
+  String goalCheckInNotifBody(String goal) {
+    return 'Bugün $goal günü değil mi? Bugünün hedefini düşür, serin yine büyüyebilir.';
+  }
+
+  @override
+  String get goalCheckInNotifBodyZero =>
+      'Kısa bir tane de tamamlanmış sayılır. Bugün için daha küçük bir hedef seç.';
+
+  @override
+  String goalCheckInNotifStreakBody(int count) {
+    return '$count günlük serin bu gece bitiyor. Biraz bile onu sürdürür.';
+  }
+
+  @override
+  String goalCheckInNotifCountIt(String value) {
+    return 'Bugün için $value say';
+  }
+
+  @override
+  String get goalCheckInNotifChoose => 'Daha küçük bir hedef seç';
+
+  @override
+  String get goalCheckInSettingTitle => 'Hedef değerlendirmesi';
+
+  @override
+  String get goalCheckInSettingDesc =>
+      'Bir alışkanlık geride kaldığında bugünün hedefini düşürmek için 20:25\'te akşam hatırlatması';
+
+  @override
   String get watchOpenOnIPhone => 'Habitt\'i iPhone\'unda aç';
 
   @override
