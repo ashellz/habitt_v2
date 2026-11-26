@@ -40,6 +40,17 @@ final class WatchStore: NSObject, ObservableObject {
       outbox = saved
     }
     unsent = Set(defaults.stringArray(forKey: Self.unsentKey) ?? [])
+    #if DEBUG
+      // store screenshots (docs/watch_app.md): a fixed snapshot, no iPhone
+      if let path = ProcessInfo.processInfo.environment["HABITT_SCREENSHOT_SNAPSHOT"],
+        let json = try? String(contentsOfFile: path, encoding: .utf8)
+      {
+        snapshot = WidgetSnapshot.decode(json, calendar: calendar)
+        outbox = []
+        refreshClock()
+        return
+      }
+    #endif
     if WCSession.isSupported() {
       WCSession.default.delegate = self
       WCSession.default.activate()

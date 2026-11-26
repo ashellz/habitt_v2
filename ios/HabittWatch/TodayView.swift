@@ -12,9 +12,20 @@ enum WatchColors {
 struct RootView: View {
   @EnvironmentObject private var store: WatchStore
   @Environment(\.scenePhase) private var scenePhase
+  @State private var path: [Int64] = RootView.initialPath
+
+  /// Store screenshots only (docs/watch_app.md): opens a habit's screen on launch.
+  private static var initialPath: [Int64] {
+    #if DEBUG
+      if let raw = ProcessInfo.processInfo.environment["HABITT_SCREENSHOT_OPEN"], let id = Int64(raw) {
+        return [id]
+      }
+    #endif
+    return []
+  }
 
   var body: some View {
-    NavigationStack {
+    NavigationStack(path: $path) {
       content
         .navigationDestination(for: Int64.self) { id in
           HabitDetailView(habitId: id)

@@ -357,3 +357,33 @@ the Wear port again: `adb -s <phone> forward tcp:5601 tcp:5601`.
 
 On the phone emulator a debug build for all ABIs (~200 MB) may not fit;
 `flutter build apk --debug --target-platform android-arm64` is much smaller.
+
+## Store screenshots
+
+The App Store (Apple Watch) and Play Store (Wear OS) screenshots are taken
+from the real watch apps on simulators, with a fixed snapshot instead of a
+paired phone, so every language shows the same habits:
+
+1. `flutter test tool/store_screenshots/watch_fixtures_test.dart` writes
+   `marketing/watch_screenshots/fixtures/<lang>/<shot>.json` through the real
+   `WidgetSnapshotBuilder` (8 languages; shots `today`, `log_amount`,
+   `log_duration`, `day_complete`). The snapshots are for today's date, so
+   regenerate them on the day you capture.
+2. Debug builds only, both apps take a snapshot and a habit to open at launch:
+   - watchOS: environment `HABITT_SCREENSHOT_SNAPSHOT` (a file path) and
+     `HABITT_SCREENSHOT_OPEN` (a habit id), read in `WatchStore.init` and
+     `RootView`, behind `#if DEBUG`. The watch target's Debug configuration
+     doesn't set `DEBUG`, so build with `SWIFT_ACTIVE_COMPILATION_CONDITIONS=DEBUG`.
+     The WCSession isn't activated in this mode.
+   - Wear OS: intent extras `screenshotSnapshot` (a file name in the app's
+     files dir) and `screenshotOpen`, read in `MainActivity.screenshotSetup`
+     only when the app is debuggable; `WatchStore.showScreenshot` then skips
+     the Data Layer.
+3. `tool/store_screenshots/capture_watchos.sh` (Apple Watch Ultra 3
+   simulator, 422×514) and `tool/store_screenshots/capture_wear.sh` (Wear OS
+   Large Round emulator, 454×454, `adb root` for the 9:41 clock) write
+   `marketing/watch_screenshots/{watchos,wear_os}/<lang>/<n>_<shot>.png`.
+   The scripts' headers list the build and install steps.
+
+Play wants Wear OS screenshots square and unmasked (it rounds them itself),
+with nothing added, so they are uploaded exactly as captured.
