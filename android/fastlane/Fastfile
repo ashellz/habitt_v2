@@ -90,16 +90,22 @@ platform :android do
     client = Supply::Client.make_from_config
     client.begin_edit(package_name: "com.shellz.habitt")
     FileUtils.rm_rf(PLAY_STAGE)
+    # the screenshots are English everywhere: build the en-US set once
+    # (its first 7, the slide in place of the 8th, Themes) and give it to every locale
+    en = client.fetch_images(image_type: "phoneScreenshots", language: "en-US")
+    UI.user_error!("en-US has no phone screenshots") if en.empty?
+    en = en.reject { |i| i.sha256 == slide_sha }
+    en_set = File.join(PLAY_STAGE, "_en_set")
+    FileUtils.mkdir_p(en_set)
+    en.first(7).each_with_index { |img, i| File.binwrite(File.join(en_set, format("%02d.png", i + 1)), URI.open(img.url).read) }
+    FileUtils.cp(slide, File.join(en_set, format("%02d.png", [en.size, 7].min + 1)))
     client.listings.each do |listing|
-      images = client.fetch_images(image_type: "phoneScreenshots", language: listing.language)
-      next if images.empty? || images.any? { |i| i.sha256 == slide_sha }
       dir = File.join(PLAY_STAGE, listing.language, "images", "phoneScreenshots")
       FileUtils.mkdir_p(dir)
-      keep = images.size >= 8 ? images.first(7) : images
-      keep.each_with_index { |img, i| File.binwrite(File.join(dir, format("%02d.png", i + 1)), URI.open(img.url).read) }
-      FileUtils.cp(slide, File.join(dir, format("%02d.png", keep.size + 1)))
-      UI.message("#{listing.language}: #{images.size} phone screenshots → #{keep.size + 1}")
+      FileUtils.cp(Dir.glob(File.join(en_set, "*.png")), dir)
     end
+    FileUtils.rm_rf(en_set)
+    UI.message("Every locale gets the en-US set: #{Dir.glob(File.join(PLAY_STAGE, 'en-US/images/phoneScreenshots/*.png')).size} phone screenshots")
     client.abort_current_edit
     # text from the repo, phone screenshots from the stage (keeping the rest unchanged)
     Dir.glob("metadata/android/*/").each do |dir|

@@ -396,6 +396,6 @@ Uploading (fastlane, never deletes other screenshots):
 - `android`: `fastlane android wear_screenshots` uploads only the Wear OS
   shots per Play locale (`WEAR_LOCALES`). `fastlane android watch_listing`,
   for when the watch apps are on Play production, uploads the listing text
-  and adds the Wear OS phone slide: it replaces the last screenshot (Themes)
-  in a locale that already has 8, otherwise it is appended.
+  and sets every locale's phone screenshots to the English set: en-US's
+  first 7 plus the Wear OS slide in place of the 8th (Themes).
 - Locales without their own shots fall back to the store's default language.
