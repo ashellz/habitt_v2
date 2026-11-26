@@ -535,6 +535,40 @@
     });
   }
 
+  // ─── Watch platforms ───────────────────────────────────
+
+  var watchStage = $("#watchStage");
+  if (watchStage) {
+    var watchTabs = $$(".watch-tabs button");
+    var watchSets = $$(".watch-set", watchStage);
+    var current = 0, autoTimer = 0, userPicked = false;
+    var showSet = function (i) {
+      current = i;
+      watchTabs.forEach(function (b, j) {
+        b.classList.toggle("on", j === i);
+        b.setAttribute("aria-pressed", j === i ? "true" : "false");
+      });
+      watchSets.forEach(function (set, j) {
+        set.classList.toggle("on", j === i);
+        set.setAttribute("aria-hidden", j === i ? "false" : "true");
+      });
+    };
+    var stopAuto = function () { clearInterval(autoTimer); autoTimer = 0; };
+    watchTabs.forEach(function (b, i) {
+      b.addEventListener("click", function () { userPicked = true; stopAuto(); showSet(i); });
+    });
+    // Alternate between the platforms while the card is on screen, until the visitor picks one.
+    if (!reduceMotion) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !userPicked && !autoTimer) {
+            autoTimer = setInterval(function () { showSet((current + 1) % watchSets.length); }, 4000);
+          } else if (!e.isIntersecting) { stopAuto(); }
+        });
+      }, { threshold: 0.4 }).observe(watchStage);
+    }
+  }
+
   // ─── CTA floating ticks ────────────────────────────────
 
   var ticks = $("#ctaTicks");
