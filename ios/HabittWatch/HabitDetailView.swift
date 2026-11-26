@@ -160,7 +160,7 @@ struct ReadOnlyView: View {
   let habit: WidgetHabit
 
   /// The phone's progress text split like the log screen: "14m / 20m" →
-  /// "14m" big and "of 20m" under it, so it never wraps inside the ring.
+  /// "14m" big and "/ 20m" under it, so it never wraps inside the ring.
   private var parts: (main: String, sub: String?) {
     let text = habit.progressText
     if let range = text.range(of: " / ") {

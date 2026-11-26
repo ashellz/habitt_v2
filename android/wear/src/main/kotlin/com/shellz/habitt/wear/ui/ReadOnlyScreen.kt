@@ -35,7 +35,7 @@ import com.shellz.habitt.widgets.WidgetHabit
 @Composable
 fun ReadOnlyScreen(habit: WidgetHabit, accent: Color, text: WearText) {
     // the phone's progress text split like the log screen: "14m / 20m" → "14m"
-    // big and "of 20m" under it
+    // big and "/ 20m" under it
     val progressText = habit.progressText
     val split = progressText.indexOf(" / ")
     val main = if (split >= 0) progressText.substring(0, split) else progressText.ifEmpty { habit.emoji }

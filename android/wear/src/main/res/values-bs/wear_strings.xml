@@ -14,7 +14,7 @@
     <string name="wear_health_note">Ažurira se iz Health Connecta na telefonu</string>
     <string name="wear_log_on_phone">Ovo zabilježi na telefonu</string>
     <string name="wear_show_habits">Prikaži navike</string>
-    <string name="wear_of_target">od %1$s</string>
+    <string name="wear_of_target">/ %1$s</string>
     <string name="wear_complete_habit">Završi %1$s</string>
     <string name="wear_uncomplete_habit">Označi %1$s kao nezavršeno</string>
     <string name="wear_less">Manje</string>

@@ -78,7 +78,9 @@ On top of the widget snapshot (`v` 1, additive, widgets ignore them):
   `optional` (list labels) and the watch UI text (`watchShowHabits`,
   `watchHealthNote`, `watchLogOnIPhone`, `watchOfTarget`, `watchCompleteHabit`,
   `watchUncompleteHabit`, `watchLess`, `watchMore`, `watchUpdateNeeded`,
-  `watchUpdateNeededBody`; `%@` marks the value), plus the Wear OS wording of
+  `watchUpdateNeededBody`; `%@` marks the value; `watchOfTarget` is the goal
+  line under the big number on the log and read-only screens and is "/ %@"
+  in every language, e.g. "/ 10 pages", so it fits inside the ring), plus the Wear OS wording of
   the texts that name the iPhone or Apple Health (`wearHealthNote`,
   `wearLogOnPhone`, `wearUpdateNeededBody`), all in the **app's** language. The watch reads every string through `WatchStore.text(key)`: the
   snapshot's, else its own `.lproj` translation (before the first sync).

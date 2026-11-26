@@ -4126,7 +4126,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String watchOfTarget(String target) {
-    return 'di $target';
+    return '/ $target';
   }
 
   @override

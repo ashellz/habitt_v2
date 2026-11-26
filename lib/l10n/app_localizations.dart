@@ -6874,10 +6874,10 @@ abstract class AppLocalizations {
   /// **'Show habits'**
   String get watchShowHabits;
 
-  /// Apple Watch log screen, under the logged value: 'of 10 pages', 'of 10m'
+  /// Apple Watch / Wear OS log screen, under the logged value inside the ring: '/ 10 pages', '/ 10m'. Keep it as short as a slash, it must fit inside the ring
   ///
   /// In en, this message translates to:
-  /// **'of {target}'**
+  /// **'/ {target}'**
   String watchOfTarget(String target);
 
   /// Apple Watch: accessibility label of a habit's check when not done

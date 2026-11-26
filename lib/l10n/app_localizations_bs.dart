@@ -4092,7 +4092,7 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String watchOfTarget(String target) {
-    return 'od $target';
+    return '/ $target';
   }
 
   @override

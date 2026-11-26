@@ -14,7 +14,7 @@
     <string name="wear_health_note">Updates from Health Connect on your phone</string>
     <string name="wear_log_on_phone">Log this one on your phone</string>
     <string name="wear_show_habits">Show habits</string>
-    <string name="wear_of_target">of %1$s</string>
+    <string name="wear_of_target">/ %1$s</string>
     <string name="wear_complete_habit">Complete %1$s</string>
     <string name="wear_uncomplete_habit">Mark %1$s as not done</string>
     <string name="wear_less">Less</string>
