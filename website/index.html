@@ -27,7 +27,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/Satoshi-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/Satoshi-Black.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="assets/css/style.css?v=4">
 
   <script>
     // Set the theme before first paint so there is no flash.
@@ -420,8 +420,8 @@
           <article class="tile w6 reveal">
             <h3>Streak celebrations</h3>
             <p>Hit a new perfect-day milestone and Habitt throws a small party. Tiny dopamine, real momentum.</p>
-            <div class="art" style="display:flex;gap:10px;flex-wrap:wrap">
-              <span class="chip on" style="background:var(--orange);color:#fff">🔥 7 days</span><span class="chip">🔥 14 days</span><span class="chip">🔥 30 days</span><span class="chip">🔥 100 days</span><span class="chip">🏆 365 days</span>
+            <div class="art langs streaks">
+              <span class="on">🔥 7 days</span><span>🔥 14 days</span><span>🔥 30 days</span><span>🔥 100 days</span><span>🏆 365 days</span>
             </div>
           </article>
         </div>
@@ -440,37 +440,30 @@
         <div class="reach">
           <!-- Widgets -->
           <article class="reach-card widgets reveal">
-            <div class="widget-board" aria-label="Habitt home screen widgets: Streak, Streak week, Today ring and Up next">
-              <div class="wdg wdg-streak" aria-hidden="true">
-                <span class="flame">🔥</span>
-                <b>15</b>
-                <small>days streak</small>
-              </div>
-              <div class="wdg wdg-week" aria-hidden="true">
-                <div class="wk-top"><span>🔥</span><b>15</b></div>
-                <div class="embers"><i></i><i></i><i></i><i></i><i></i><i></i><i class="today"></i></div>
-                <div class="wk-days"><span>T</span><span>F</span><span>S</span><span>S</span><span>M</span><span>T</span><span>W</span></div>
-              </div>
-              <div class="wdg wdg-next" aria-hidden="true">
-                <div class="next-list">
-                  <small>Morning</small>
-                  <div class="next-row"><span class="e">🛏️</span><span class="n">Make bed</span><span class="st done"><svg><use href="#i-check"/></svg></span></div>
-                  <div class="next-row"><span class="e">💧</span><span class="n">Drink water<em>2 / 6 glasses</em></span><span class="st part"></span></div>
-                  <div class="next-row"><span class="e">🧘</span><span class="n">Meditate<em>6m / 10m</em></span><span class="st half"></span></div>
+            <div class="widget-board" role="img" aria-label="Habitt home screen widgets: a 12 day streak card, today's ring with 2 of 5 habits done, the morning's next habits and the streak week">
+              <div class="hw-scale">
+                <div class="hw hw-card">
+                  <div class="glow"></div>
+                  <img class="art-flame" src="assets/img/widgets/flame.svg" alt="" width="94" height="94">
+                  <div class="txt"><b>12</b><span>days streak</span><small>Well done, you!</small></div>
                 </div>
-                <div class="next-streak"><span>🔥</span><b>15</b><small>days</small></div>
+                <div class="hw hw-ring">
+                  <svg viewBox="0 0 170 170" width="170" height="170"><path class="trk" d="M 87.09 25.04 A 60 60 0 0 1 141.38 64.48"/><path class="acc" d="M 87.09 25.04 A 60 60 0 0 1 141.38 64.48"/><path class="trk" d="M 142.68 68.46 A 60 60 0 0 1 121.94 132.28"/><path class="acc" d="M 142.68 68.46 A 60 60 0 0 1 132.02 122.27"/><path class="trk" d="M 118.55 134.74 A 60 60 0 0 1 51.45 134.74"/><path class="acc" d="M 118.55 134.74 A 60 60 0 0 1 51.45 134.74"/><path class="trk" d="M 48.06 132.28 A 60 60 0 0 1 27.32 68.46"/><path class="acc" d="M 48.06 132.28 A 60 60 0 0 1 26.14 96.65"/><path class="trk" d="M 28.62 64.48 A 60 60 0 0 1 82.91 25.04"/></svg>
+                  <span style="left:108.3px;top:24.5px">🪥</span><span style="left:130.1px;top:91.5px">🚿</span><span style="left:73.0px;top:133.0px">🔥</span><span style="left:15.9px;top:91.5px">📖</span><span style="left:37.7px;top:24.5px">😴</span>
+                  <div class="mid"><b>2</b><i>/5</i></div>
+                </div>
+                <div class="hw hw-next">
+                  <div class="list"><div class="part"><svg viewBox="0 0 16 16" width="13" height="13"><circle cx="8" cy="8" r="3.2"/><path d="M8 1.5V3M8 13V14.5M1.5 8H3M13 8H14.5M3.4 3.4L4.4 4.4M11.6 11.6L12.6 12.6M3.4 12.6L4.4 11.6M11.6 4.4L12.6 3.4"/></svg>Morning</div><div class="row done"><span class="disc">🪥</span><span class="nm"><b>Brush teeth</b><small>Done</small></span><svg viewBox="0 0 24 24" width="22" height="22"><circle class="accf" cx="12" cy="12" r="12"/><path class="ink" d="M18.5486 8.60578C18.5488 8.7974 18.511 8.98717 18.4376 9.16415C18.3641 9.34114 18.2564 9.50185 18.1206 9.63703L11.3317 16.4269C11.058 16.7001 10.6871 16.8535 10.3005 16.8535C9.91377 16.8535 9.54288 16.7001 9.26921 16.4269L5.88718 13.0444C5.74229 12.9111 5.62584 12.75 5.54485 12.5706C5.46385 12.3912 5.41997 12.1973 5.41585 12.0005C5.41173 11.8037 5.44745 11.6081 5.52087 11.4255C5.59428 11.2428 5.70388 11.0769 5.84306 10.9378C5.98224 10.7986 6.14814 10.689 6.33077 10.6156C6.51339 10.5421 6.70899 10.5064 6.90578 10.5105C7.10257 10.5147 7.29649 10.5585 7.47589 10.6395C7.65528 10.7205 7.81644 10.837 7.94968 10.9819L10.2995 13.3317L16.0562 7.57312C16.2604 7.36909 16.5204 7.23014 16.8035 7.17382C17.0866 7.1175 17.38 7.14634 17.6467 7.25669C17.9134 7.36704 18.1414 7.55395 18.3019 7.79382C18.4624 8.03369 18.5483 8.31575 18.5486 8.60437V8.60578Z"/></svg></div><div class="row"><span class="disc">🚿</span><span class="nm"><b>Shower</b><small>8m / 10m</small></span><svg viewBox="0 0 24 24" width="22" height="22"><path class="accf" d="M 12 12 L 12 0 A 12 12 0 1 1 0.59 8.29 Z"/><circle class="pie" cx="12" cy="12" r="11"/></svg></div><div class="row"><span class="disc">💧</span><span class="nm"><b>Drink water</b><small>2 / 8 glasses</small></span><svg viewBox="0 0 24 24" width="22" height="22"><path class="accf" d="M 12 12 L 12 0 A 12 12 0 0 1 24.0 12.0 Z"/><circle class="pie" cx="12" cy="12" r="11"/></svg></div></div>
+                  <div class="tile"><div class="glow"></div><img src="assets/img/widgets/flame.svg" alt="" width="64" height="64"><b>12</b><span>days streak</span></div>
+                </div>
+                <div class="hw hw-embers">
+                  <div class="soft"></div>
+                  <div class="top"><img src="assets/img/widgets/flame.svg" alt="" width="22" height="22"><b>12</b><span>days</span></div>
+                  <small class="copy">Well done, you!</small>
+                  <div class="week"><span><small>M</small><i><img src="assets/img/widgets/flame.svg" alt="" width="17" height="17"></i></span><span><small>T</small><i><img src="assets/img/widgets/flame.svg" alt="" width="17" height="17"></i></span><span><small>W</small><i><img src="assets/img/widgets/flame.svg" alt="" width="17" height="17"></i></span><span><small>T</small><i><svg viewBox="0 0 18 18" width="18" height="18"><circle class="trk" cx="9" cy="9" r="7"/><circle class="acc" cx="9" cy="9" r="7" stroke-dasharray="24.2 44.0" transform="rotate(-90 9 9)"/></svg></i></span><span><small>F</small><i><img src="assets/img/widgets/flame.svg" alt="" width="17" height="17"></i></span><span><small>S</small><i><img src="assets/img/widgets/flame.svg" alt="" width="17" height="17"></i></span><span class="today"><small>S</small><i><svg viewBox="0 0 18 18" width="18" height="18"><circle class="trk" cx="9" cy="9" r="7"/><circle class="acc" cx="9" cy="9" r="7" stroke-dasharray="17.6 44.0" transform="rotate(-90 9 9)"/></svg></i></span></div>
+                </div>
+                <div class="hw-apps"><img src="assets/img/icon.png" alt="" width="66" height="66"><i></i><i></i><i></i></div>
               </div>
-              <div class="wdg wdg-ring" aria-hidden="true">
-                <svg viewBox="0 0 100 100">
-                  <circle class="bead done" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-1.5"/>
-                  <circle class="bead done" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-21.5"/>
-                  <circle class="bead done" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-41.5"/>
-                  <circle class="bead" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-61.5"/>
-                  <circle class="bead" cx="50" cy="50" r="40" pathLength="100" stroke-dasharray="17 83" stroke-dashoffset="-81.5"/>
-                </svg>
-                <div class="ring-mid"><b>3/5</b><small>today</small></div>
-              </div>
-              <div class="wdg-apps" aria-hidden="true"><img src="assets/img/icon.png" alt="" width="64" height="64" loading="lazy"><i></i><i></i><i></i></div>
             </div>
             <div class="reach-copy">
               <h3>Home screen widgets</h3>
@@ -482,25 +475,23 @@
           <!-- Watch -->
           <article class="reach-card watch reveal" style="--d:.1s">
             <div class="watch-stage" id="watchStage">
-              <figure class="watch-face aw">
-                <img src="assets/img/watch/watchos-today.webp" data-shot="today" alt="Apple Watch: today's habits with a progress bar" width="422" height="514" loading="lazy">
-                <figcaption>Apple Watch</figcaption>
-              </figure>
-              <figure class="watch-face wo">
-                <img src="assets/img/watch/wear-os-today.webp" data-shot="today" alt="Wear OS: today's habits" width="454" height="454" loading="lazy">
-                <figcaption>Wear OS</figcaption>
-              </figure>
+              <div class="watch-set on" data-set="apple">
+                <img class="w-back" src="assets/img/watch/apple-watch-today.webp" alt="Habitt on Apple Watch: today's habits, one done and one a third done" width="560" height="880" loading="lazy">
+                <img class="w-front" src="assets/img/watch/apple-watch-ultra-log.webp" alt="Habitt on Apple Watch Ultra: logging pages read, 6 of 10" width="620" height="940" loading="lazy">
+              </div>
+              <div class="watch-set" data-set="wear" aria-hidden="true">
+                <img class="w-back" src="assets/img/watch/wear-os-today.webp" alt="Habitt on a Wear OS watch: today's habits, one done and one a third done" width="620" height="940" loading="lazy">
+                <img class="w-front" src="assets/img/watch/wear-os-log.webp" alt="Habitt on a Wear OS watch: logging pages read, 6 of 10" width="408" height="612" loading="lazy">
+              </div>
             </div>
-            <div class="watch-tabs" role="group" aria-label="Watch screens">
-              <button type="button" class="on" data-shot="today" aria-pressed="true">Today</button>
-              <button type="button" data-shot="log_amount" aria-pressed="false">Log amount</button>
-              <button type="button" data-shot="log_duration" aria-pressed="false">Log time</button>
-              <button type="button" data-shot="day_complete" aria-pressed="false">Day complete</button>
+            <div class="watch-tabs" role="group" aria-label="Watch platform">
+              <button type="button" class="on" data-set="apple" aria-pressed="true">Apple Watch</button>
+              <button type="button" data-set="wear" aria-pressed="false">Wear OS</button>
             </div>
             <div class="reach-copy">
               <h3>Apple Watch &amp; Wear OS</h3>
               <ul>
-                <li><svg><use href="#i-check"/></svg>See today's habits, check them off or undo a tap</li>
+                <li><svg><use href="#i-check"/></svg>See today's habits and check them off</li>
                 <li><svg><use href="#i-check"/></svg>Log glasses, pages or minutes right from your wrist</li>
                 <li><svg><use href="#i-check"/></svg>Finish the day and see your streak grow</li>
                 <li><svg><use href="#i-lock"/></svg>Phone and watch talk directly. No account, no server.</li>
@@ -711,6 +702,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/main.js?v=3" defer></script>
+  <script src="assets/js/main.js?v=4" defer></script>
 </body>
 </html>

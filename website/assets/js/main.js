@@ -535,52 +535,38 @@
     });
   }
 
-  // ─── Watch screens ─────────────────────────────────────
+  // ─── Watch platforms ───────────────────────────────────
 
   var watchStage = $("#watchStage");
   if (watchStage) {
     var watchTabs = $$(".watch-tabs button");
-    var shots = watchTabs.map(function (b) { return b.getAttribute("data-shot"); });
-    var watchSrc = {
-      aw: function (s) { return "assets/img/watch/watchos-" + s + ".webp"; },
-      wo: function (s) { return "assets/img/watch/wear-os-" + s + ".webp"; }
-    };
-    var current = 0, autoTimer = 0, userPicked = false, warmed = false;
-    // Warm the cache once the section is near, so switching never flashes an empty face.
-    var warm = function () {
-      if (warmed) return;
-      warmed = true;
-      shots.forEach(function (s) { new Image().src = watchSrc.aw(s); new Image().src = watchSrc.wo(s); });
-    };
-    var showShot = function (i) {
+    var watchSets = $$(".watch-set", watchStage);
+    var current = 0, autoTimer = 0, userPicked = false;
+    var showSet = function (i) {
       current = i;
       watchTabs.forEach(function (b, j) {
         b.classList.toggle("on", j === i);
         b.setAttribute("aria-pressed", j === i ? "true" : "false");
       });
-      ["aw", "wo"].forEach(function (k) {
-        var img = $(".watch-face." + k + " img", watchStage);
-        var src = watchSrc[k](shots[i]);
-        if (reduceMotion) { img.src = src; return; }
-        img.classList.add("swap");
-        setTimeout(function () { img.src = src; img.classList.remove("swap"); }, 220);
+      watchSets.forEach(function (set, j) {
+        set.classList.toggle("on", j === i);
+        set.setAttribute("aria-hidden", j === i ? "false" : "true");
       });
     };
     var stopAuto = function () { clearInterval(autoTimer); autoTimer = 0; };
     watchTabs.forEach(function (b, i) {
-      b.addEventListener("click", function () { userPicked = true; stopAuto(); warm(); showShot(i); });
+      b.addEventListener("click", function () { userPicked = true; stopAuto(); showSet(i); });
     });
-    // Cycle through the screens while the section is on screen, until the visitor picks one.
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          warm();
-          if (!reduceMotion && !userPicked && !autoTimer) {
-            autoTimer = setInterval(function () { showShot((current + 1) % shots.length); }, 3200);
-          }
-        } else { stopAuto(); }
-      });
-    }, { threshold: 0.4 }).observe(watchStage);
+    // Alternate between the platforms while the card is on screen, until the visitor picks one.
+    if (!reduceMotion) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !userPicked && !autoTimer) {
+            autoTimer = setInterval(function () { showSet((current + 1) % watchSets.length); }, 4000);
+          } else if (!e.isIntersecting) { stopAuto(); }
+        });
+      }, { threshold: 0.4 }).observe(watchStage);
+    }
   }
 
   // ─── CTA floating ticks ────────────────────────────────
